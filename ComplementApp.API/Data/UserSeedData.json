@@ -2,7 +2,7 @@
     {
       "Username": "karina",
       "Gender": "female",
-      "DateOfBirth": "1994-04-27",
+      "DayOfBirth": "1994-04-27",
       "Password": "password",
       "KnownAs": "karina",
       "Created": "2017-03-14",
@@ -23,7 +23,7 @@
     {
       "Username": "sandra",
       "Gender": "female",
-      "DateOfBirth": "1981-10-02",
+      "DayOfBirth": "1981-10-02",
       "Password": "password",
       "KnownAs": "sandra",
       "Created": "2017-08-19",
@@ -44,7 +44,7 @@
     {
       "Username": "elisa",
       "Gender": "female",
-      "DateOfBirth": "1981-01-25",
+      "DayOfBirth": "1981-01-25",
       "Password": "password",
       "KnownAs": "elisa",
       "Created": "2017-05-06",
@@ -65,7 +65,7 @@
     {
       "Username": "paola",
       "Gender": "female",
-      "DateOfBirth": "1979-03-09",
+      "DayOfBirth": "1979-03-09",
       "Password": "password",
       "KnownAs": "Pao",
       "Created": "2017-08-17",
@@ -86,7 +86,7 @@
     {
       "Username": "laura",
       "Gender": "female",
-      "DateOfBirth": "1981-08-05",
+      "DayOfBirth": "1981-08-05",
       "Password": "password",
       "KnownAs": "Laura",
       "Created": "2017-06-12",
@@ -107,7 +107,7 @@
     {
       "Username": "bob",
       "Gender": "female",
-      "DateOfBirth": "1979-07-12",
+      "DayOfBirth": "1979-07-12",
       "Password": "password",
       "KnownAs": "bob",
       "Created": "2017-07-02",
@@ -128,7 +128,7 @@
     {
       "Username": "luis",
       "Gender": "male",
-      "DateOfBirth": "1954-05-12",
+      "DayOfBirth": "1954-05-12",
       "Password": "password",
       "KnownAs": "luis",
       "Created": "2017-06-24",
@@ -149,7 +149,7 @@
     {
       "Username": "marco",
       "Gender": "female",
-      "DateOfBirth": "1991-07-05",
+      "DayOfBirth": "1991-07-05",
       "Password": "password",
       "KnownAs": "marco",
       "Created": "2017-06-01",
@@ -170,7 +170,7 @@
     {
       "Username": "juan",
       "Gender": "male",
-      "DateOfBirth": "1978-12-28",
+      "DayOfBirth": "1978-12-28",
       "Password": "password",
       "KnownAs": "juan",
       "Created": "2017-05-08",
@@ -191,7 +191,7 @@
     {
       "Username": "pipe",
       "Gender": "male",
-      "DateOfBirth": "1965-02-21",
+      "DayOfBirth": "1965-02-21",
       "Password": "password",
       "KnownAs": "pipe",
       "Created": "2017-07-04",
