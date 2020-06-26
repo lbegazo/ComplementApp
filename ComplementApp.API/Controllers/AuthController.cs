@@ -51,7 +51,7 @@ namespace ComplementApp.API.Controllers
             //If the user has the token, the application does not need to go to the database
 
             if (userFromRepo == null)
-                return BadRequest("Username does not exists");
+                return BadRequest("El usuario no existe");
 
             /**************************Create the token************************************/
 

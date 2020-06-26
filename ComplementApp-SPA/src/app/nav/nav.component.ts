@@ -21,7 +21,7 @@ export class NavComponent implements OnInit {
   login() {
     this.authService.login(this.model).subscribe(
       (next) => {
-        this.alertify.success('Logged  in successfully');
+        this.alertify.success('Login correcto!!!');
       },
       (error) => {
         this.alertify.error(error);
@@ -38,7 +38,7 @@ export class NavComponent implements OnInit {
 
   logout() {
     localStorage.removeItem('token');
-    this.alertify.message('Logged out!!');
+    this.alertify.message('Su sesión ha sido cerrada');
     this.router.navigate(['/home']);
   }
 }
