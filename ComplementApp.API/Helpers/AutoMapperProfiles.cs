@@ -22,6 +22,8 @@ namespace ComplementApp.API.Helpers
             CreateMap<Photo, PhotoForDetailedDto>();
 
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<UserForRegisterDto, User>();
+
         }
     }
 }

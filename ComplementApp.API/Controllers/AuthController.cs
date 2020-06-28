@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using ComplementApp.API.Helpers;
+using AutoMapper;
 
 namespace ComplementApp.API.Controllers
 {
@@ -18,8 +20,10 @@ namespace ComplementApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _config = config;
             _repo = repo;
         }
@@ -32,11 +36,15 @@ namespace ComplementApp.API.Controllers
             if (await _repo.UserExists(userForRegisterDto.UserName))
                 return BadRequest("Username already exists");
 
-            var userToCreate = new User { Username = userForRegisterDto.UserName };
+            //var userToCreate = new User { Username = userForRegisterDto.UserName };
+            //The destination is userForRegisterDto
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+            //Esta linea es para evitar retornar User, porque contiene el password
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
 
-            return StatusCode(201);
+            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.Id }, userToReturn);
         }
 
         [HttpPost("Login")]
