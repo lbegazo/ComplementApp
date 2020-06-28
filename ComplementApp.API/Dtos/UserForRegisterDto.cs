@@ -19,7 +19,7 @@ namespace ComplementApp.API.Dtos
         public string KnownAs { get; set; }
 
         [Required]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DayOfBirth { get; set; }
         [Required]
         public string City { get; set; }
         [Required]

@@ -7,6 +7,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { JwtModule } from '@auth0/angular-jwt';
 import { RouterModule } from '@angular/router';
+import { TimeagoModule } from 'ngx-timeago';
 
 import { appRoutes } from './routes';
 import { AppComponent } from './app.component';
@@ -43,6 +44,7 @@ export function tokenGetter() {
     MemberCardComponent,
     MemberDetailComponent,
     MemberEditComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,7 @@ export function tokenGetter() {
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    TimeagoModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     JwtModule.forRoot({
       config: {

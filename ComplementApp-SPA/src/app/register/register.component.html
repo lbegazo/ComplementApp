@@ -63,12 +63,12 @@
     <input
       [ngClass]="{
         'is-invalid':
-          registerForm.get('dateOfBirth').errors &&
-          registerForm.get('dateOfBirth').touched
+          registerForm.get('dayOfBirth').errors &&
+          registerForm.get('dayOfBirth').touched
       }"
       class="form-control"
       placeholder="Date of Birth"
-      formControlName="dateOfBirth"
+      formControlName="dayOfBirth"
       type="text"
       bsDatepicker
       [bsConfig]="bsConfig"
@@ -76,8 +76,8 @@
     <div
       class="invalid-feedback"
       *ngIf="
-        registerForm.get('dateOfBirth').touched &&
-        registerForm.get('dateOfBirth').hasError('required')
+        registerForm.get('dayOfBirth').touched &&
+        registerForm.get('dayOfBirth').hasError('required')
       "
     >
       Date of Birth is required
@@ -206,7 +206,7 @@
     <button
       class="btn btn-success mr-2"
       type="submit"
-      [disabled]="!registerForm.status"
+      [disabled]="registerForm.invalid"
     >
       Register
     </button>

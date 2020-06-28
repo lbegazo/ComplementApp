@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
         gender: ['male'],
         username: ['', Validators.required],
         knownAs: ['', Validators.required],
-        dateOfBirth: [null, Validators.required],
+        dayOfBirth: [null, Validators.required],
         city: ['', Validators.required],
         country: ['', Validators.required],
         password: [
@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit {
   //       gender: new FormControl('male', Validators.required),
   //       username: new FormControl('', Validators.required),
   //       knownAs: new FormControl('', Validators.required),
-  //       dateOfBirth: new FormControl(null, Validators.required),
+  //       dayOfBirth: new FormControl(null, Validators.required),
   //       city: new FormControl('', Validators.required),
   //       country: new FormControl('', Validators.required),
   //       password: new FormControl('', [
