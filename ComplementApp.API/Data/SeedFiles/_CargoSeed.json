@@ -1,0 +1,44 @@
+[
+    {
+      "Codigo": "01",
+      "Descripcion": "PROFESIONAL ESPECIALIZADO 2028-20",
+      "Estado": 1,
+      "EsAdministrable": 0
+    },
+    {
+      "Codigo": "02",
+      "Descripcion": "PROFESIONAL ESPECIALIZADO 2028-24",
+      "Estado": 1,
+      "EsAdministrable": 0
+    },
+    {
+      "Codigo": "03",
+      "Descripcion": "DIRECTOR GENERAL",
+      "Estado": 1,
+      "EsAdministrable": 0
+    },
+    {
+      "Codigo": "04",
+      "Descripcion": "SUBDIRECTOR",
+      "Estado": 1,
+      "EsAdministrable": 0
+    },
+    {
+      "Codigo": "05",
+      "Descripcion": "SUBDIRECTOR-24",
+      "Estado": 1,
+      "EsAdministrable": 0
+    },
+    {
+      "Codigo": "06",
+      "Descripcion": "ASESOR-18",
+      "Estado": 1,
+      "EsAdministrable": 0
+    },
+    {
+      "Codigo": "07",
+      "Descripcion": "ASESOR-15",
+      "Estado": 1,
+      "EsAdministrable": 0
+    }
+  ]

@@ -1,0 +1,32 @@
+[
+  {
+    "Username": "luis",
+    "Password": "veritas",
+    "FechaCreacion": "2017-03-14",
+    "FechaUltimoAcceso": "2017-03-14",
+    "Nombres": "Luis",
+    "Apellidos": "Begazo Samanez",
+    "CargoId": "1",
+    "AreaId": "1"
+  },
+  {
+    "Username": "anapau",
+    "Password": "veritas",
+    "FechaCreacion": "2017-03-14",
+    "FechaUltimoAcceso": "2017-03-14",
+    "Nombres": "Ana Paula",
+    "Apellidos": "Begazo Acero",
+    "CargoId": "1",
+    "AreaId": "1"
+  },
+  {
+    "Username": "alex",
+    "Password": "veritas",
+    "FechaCreacion": "2017-03-14",
+    "FechaUltimoAcceso": "2017-03-14",
+    "Nombres": "Alexander",
+    "Apellidos": "Castañeda",
+    "CargoId": "1",
+    "AreaId": "1"
+  }
+]

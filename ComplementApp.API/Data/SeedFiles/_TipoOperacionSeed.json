@@ -1,0 +1,26 @@
+[
+  {
+    "Codigo": "01",
+    "Descripcion": "SOLICITUD INICIAL",
+    "Estado": 1,
+    "EsAdministrable": 0
+  },
+  {
+    "Codigo": "02",
+    "Descripcion": "ADICION",
+    "Estado": 1,
+    "EsAdministrable": 0
+  },
+  {
+    "Codigo": "03",
+    "Descripcion": "REDUCCION",
+    "Estado": 1,
+    "EsAdministrable": 0
+  },
+  {
+    "Codigo": "04",
+    "Descripcion": "ANULACION",
+    "Estado": 1,
+    "EsAdministrable": 0
+  }
+]

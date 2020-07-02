@@ -3,14 +3,16 @@ using System;
 using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200628180540_TB_TipoOperacion_Cargo_Area_Usuario")]
+    partial class TB_TipoOperacion_Cargo_Area_Usuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,47 +41,6 @@ namespace ComplementApp.API.Migrations
                     b.ToTable("TB_Area");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.CDP", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Cdp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Dependencia")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Estado")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Pro")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Proy")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Rubro")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Saldo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TB_CDP");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.Cargo", b =>
                 {
                     b.Property<int>("Id")
@@ -101,89 +62,6 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TB_Cargo");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.DetalleCDP", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ActividadBpin")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Area")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Cdp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Contrato")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Crp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Dependencia")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("IdArchivo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("IdSofi")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Paa")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PlanDeCompras")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Prod")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Proy")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Proyecto")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Responsable")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Rubro")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("SaldoAct")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("SaldoDisponible")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("SaldoTotal")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Tipo")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("ValorAct")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("ValorCDP")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("ValorOB")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("ValorOP")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("ValorRP")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TB_DetalleCDP");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.Photo", b =>

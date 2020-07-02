@@ -47,7 +47,11 @@ export class RegisterComponent implements OnInit {
         country: ['', Validators.required],
         password: [
           '',
-          [Validators.required, Validators.minLength(4), Validators.maxLength(8)],
+          [
+            Validators.required,
+            Validators.minLength(4),
+            Validators.maxLength(8),
+          ],
         ],
         confirmPassword: ['', Validators.required],
       },
@@ -65,7 +69,8 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.user = Object.assign({}, this.registerForm.value);
       this.authService.register(this.user).subscribe(
-        () => this.alertify.success('Registration successful'),
+        () =>
+          this.alertify.success('El usuario se registró satisfactoriamente'),
         (error) => {
           this.alertify.error(error);
         },
@@ -80,7 +85,7 @@ export class RegisterComponent implements OnInit {
 
   onCancel() {
     this.cancelRegisterEvent.emit(false);
-    this.alertify.error('Cancelled');
+    this.alertify.error('Cancelado');
   }
 
   // createRegisterFormUsingFormGroup() {

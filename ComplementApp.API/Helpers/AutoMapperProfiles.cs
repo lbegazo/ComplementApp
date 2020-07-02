@@ -9,6 +9,8 @@ namespace ComplementApp.API.Helpers
     {
         public AutoMapperProfiles()
         {
+            #region User
+
             CreateMap<User, UserForDetailedDto>()
                     .ForMember(dest => dest.PhotoUrl,
                                opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url))
@@ -20,10 +22,20 @@ namespace ComplementApp.API.Helpers
                     .ForMember(dest => dest.Age,
                                opt => opt.MapFrom(src => src.DayOfBirth.CalculateAge()));
             CreateMap<Photo, PhotoForDetailedDto>();
-
             CreateMap<UserForUpdateDto, User>();
             CreateMap<UserForRegisterDto, User>();
 
+            #endregion
+
+            #region Usuario
+
+            CreateMap<Usuario, UsuarioParaDetalleDto>();
+            CreateMap<UsuarioParaRegistrarDto, Usuario>();
+            CreateMap<UsuarioParaActualizar, Usuario>();
+            CreateMap<UsuarioParaDetalleDto, Usuario>();
+
+
+            #endregion User
         }
     }
 }

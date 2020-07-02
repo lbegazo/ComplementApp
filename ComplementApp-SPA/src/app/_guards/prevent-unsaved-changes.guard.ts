@@ -12,7 +12,7 @@ export class PreventUnsavedChanges
   canDeactivate(component: MemberEditComponent): boolean {
     if (component.editForm.dirty) {
       return confirm(
-        'Are you sure you want to continue? Any unsaved changed will be lost'
+        '¿Estas seguro de que quieres continuar? Los cambios en el formulario se perderán'
       );
     }
     return true;

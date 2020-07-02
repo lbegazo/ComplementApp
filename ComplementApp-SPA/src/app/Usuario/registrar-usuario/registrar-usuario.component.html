@@ -1,16 +1,16 @@
 <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-  <h2 class="text-center text-primary">Registro</h2>
+  <h2 class="text-center text-primary">Sign Up</h2>
   <hr />
 
   <div class="form-group">
-    <label class="control-label" style="margin-right: 10px;">Sexo: </label>
+    <label class="control-label" style="margin-right: 10px;">I am a: </label>
     <label class="radio-inline">
       <input
         class="mr-3"
         type="radio"
         value="male"
         formControlName="gender"
-      />Hombre
+      />Male
     </label>
     <label class="radio-inline ml-3">
       <input
@@ -18,7 +18,7 @@
         type="radio"
         value="female"
         formControlName="gender"
-      />Mujer
+      />Female
     </label>
   </div>
 
@@ -31,10 +31,10 @@
       }"
       type="text"
       class="form-control"
-      placeholder="Usuario"
+      placeholder="Username"
       formControlName="username"
     />
-    <div class="invalid-feedback">Por favor ingresa tu usuario</div>
+    <div class="invalid-feedback">Please choose a username</div>
   </div>
 
   <div class="form-group">
@@ -45,7 +45,7 @@
           registerForm.get('knownAs').touched
       }"
       class="form-control"
-      placeholder="Nombre"
+      placeholder="Known as"
       formControlName="knownAs"
     />
     <div
@@ -55,7 +55,7 @@
         registerForm.get('knownAs').hasError('required')
       "
     >
-      El nombre es requerido
+      Known as is required
     </div>
   </div>
 
@@ -67,7 +67,7 @@
           registerForm.get('dayOfBirth').touched
       }"
       class="form-control"
-      placeholder="Fecha de nacimiento"
+      placeholder="Date of Birth"
       formControlName="dayOfBirth"
       type="text"
       bsDatepicker
@@ -80,7 +80,7 @@
         registerForm.get('dayOfBirth').hasError('required')
       "
     >
-      La fecha de nacimiento es requerido
+      Date of Birth is required
     </div>
   </div>
 
@@ -91,7 +91,7 @@
           registerForm.get('city').errors && registerForm.get('city').touched
       }"
       class="form-control"
-      placeholder="Ciudad"
+      placeholder="City"
       formControlName="city"
     />
     <div
@@ -101,7 +101,7 @@
         registerForm.get('city').hasError('required')
       "
     >
-      Ciudad es requerido
+      City is required
     </div>
   </div>
 
@@ -113,7 +113,7 @@
           registerForm.get('country').touched
       }"
       class="form-control"
-      placeholder="Pais"
+      placeholder="Country"
       formControlName="country"
     />
     <div
@@ -123,7 +123,7 @@
         registerForm.get('country').hasError('required')
       "
     >
-      El pais es requerido
+      Country is required
     </div>
   </div>
 
@@ -146,7 +146,7 @@
         registerForm.get('password').hasError('required')
       "
     >
-      El password es requerido
+      Password is required
     </div>
     <div
       class="invalid-feedback"
@@ -155,7 +155,7 @@
         registerForm.get('password').touched
       "
     >
-      El password debe tener como mínimo 4 caracteres
+      Password must be at least 4 characters
     </div>
     <div
       class="invalid-feedback"
@@ -164,7 +164,7 @@
         registerForm.get('password').touched
       "
     >
-      El password no puede exceder de 8 caracteres
+      Password cannot exceed 8 characters
     </div>
   </div>
 
@@ -189,7 +189,7 @@
         registerForm.get('confirmPassword').touched
       "
     >
-      Password es requerido
+      Password is required
     </div>
     <div
       class="invalid-feedback"
@@ -198,7 +198,7 @@
         registerForm.get('confirmPassword').touched
       "
     >
-      Los passwords deben coincidir
+      Passwords must match
     </div> 
   </div>
 
@@ -208,13 +208,13 @@
       type="submit"
       [disabled]="registerForm.invalid"
     >
-      Registrarse
+      Register
     </button>
     <button class="btn btn-default" type="button" (click)="onCancel()">
-      Cancelar
+      Cancel
     </button>
   </div>
 </form>
 
-<!-- <p>Form value: {{ registerForm.value | json }}</p>
-<p>Form status: {{ registerForm.status | json }}</p> -->
+<p>Form value: {{ registerForm.value | json }}</p>
+<p>Form status: {{ registerForm.status | json }}</p>

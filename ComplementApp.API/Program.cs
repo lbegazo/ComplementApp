@@ -21,7 +21,12 @@ namespace ComplementApp.API
                 {
                     var context = services.GetRequiredService<DataContext>();
                     context.Database.Migrate();
+                    Seed.SeedCargo(context);
+                    Seed.SeedArea(context);
+                    Seed.SeedTipoOperacion(context);
+                    Seed.SeedUsuario(context);
                     Seed.SeedUsers(context);
+                    Seed.SeedRubroPresupuestal(context);
 
                 }
                 catch (Exception ex)
