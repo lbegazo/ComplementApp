@@ -27,7 +27,7 @@ namespace ComplementApp.API
                     Seed.SeedUsuario(context);
                     Seed.SeedUsers(context);
                     Seed.SeedRubroPresupuestal(context);
-
+                    Seed.SeedTipoDetalleModificacion(context);
                 }
                 catch (Exception ex)
                 {

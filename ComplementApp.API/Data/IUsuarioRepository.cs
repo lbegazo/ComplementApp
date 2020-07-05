@@ -9,5 +9,9 @@ namespace ComplementApp.API.Data
         Task<IEnumerable<Usuario>> ObtenerUsuarios();
 
         Task<Usuario> ObtenerUsuario(int id);
+
+        Task<IEnumerable<Cargo>> ObtenerCargos();
+
+        Task<IEnumerable<Area>> ObtenerAreas();
     }
 }

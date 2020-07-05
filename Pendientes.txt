@@ -1,0 +1,14 @@
+Sol inicial 
+	consulta: vacio en el campo CDP
+	Busco en detalle presupuestal CDP vacio y para el usuario
+	2 Firmas
+
+Adicionar 
+Modificacion
+Anulacion 3220
+	Detale de presupuesto Informacion del bien o servicio requerido(# CDP en la hoja detalle presupuestal)
+	Taeria el detalle del CDP
+	Aplica contrato No 2 firmas
+			Si 3 Firmas
+
+	

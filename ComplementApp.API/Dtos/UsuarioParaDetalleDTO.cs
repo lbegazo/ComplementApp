@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Dtos
@@ -21,5 +20,9 @@ namespace ComplementApp.API.Dtos
         public int CargoId { get; set; }
 
         public int AreaId { get; set; }
+
+        public string CargoDescripcion { get; set; }
+        
+        public string AreaDescripcion { get; set; }
     }
 }

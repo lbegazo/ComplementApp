@@ -9,5 +9,9 @@ namespace ComplementApp.API.Data
         Task InsertaCabeceraCDP(IList<CDP> lista);
 
         Task InsertaDetalleCDP(IList<DetalleCDP> lista);
+
+        bool EliminarCabeceraCDP();
+
+        bool EliminarDetalleCDP();
     }
 }

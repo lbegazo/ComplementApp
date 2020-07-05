@@ -27,8 +27,13 @@ import { MemberListResolver } from './_resolvers/memberlist.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolvers/member-edit-resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
-import { UsuarioDetalleComponent } from './Usuario/usuario-detalle/usuario-detalle.component';
 import { UsuarioDetalleResolver } from './_resolvers/usuario-detalle.resolver';
+import { UsuarioListComponent } from './Usuario/usuario-list/usuario-list.component';
+import { UsuarioEditComponent } from './Usuario/usuario-edit/usuario-edit.component';
+import { UsuarioDetailComponent } from './Usuario/usuario-detail/usuario-detail.component';
+import { UsuarioItemComponent } from './Usuario/usuario-list/usuario-item/usuario-item.component';
+import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.component';
+import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -46,7 +51,13 @@ export function tokenGetter() {
     MemberCardComponent,
     MemberDetailComponent,
     MemberEditComponent,
-    UsuarioDetalleComponent
+    UsuarioMainComponent,
+    UsuarioListComponent,
+    UsuarioListComponent,
+    UsuarioEditComponent,
+    UsuarioDetailComponent,
+    UsuarioItemComponent,
+    UsuarioStartComponent
   ],
   imports: [
     BrowserModule,

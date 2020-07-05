@@ -24,7 +24,7 @@ export class UsuarioDetalleResolver implements Resolve<Usuario> {
     return this.userService.ObtenerUsuario(+route.params['id']).pipe(
       catchError((error) => {
         this.alertify.error('Ocurrió un problema al cargar la información');
-        this.router.navigate(['/members']);
+        this.router.navigate(['/usuarios']);
         return of(null);
       })
     );

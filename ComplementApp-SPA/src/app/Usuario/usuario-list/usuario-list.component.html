@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-xs-12">
+      <button class="btn btn-success"
+              (click)="addUsuario()">Nuevo usuario</button>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-12">
+      <app-usuario-item 
+          *ngFor="let usuario of usuarios; let i=index" 
+          [usuario]="usuario"
+          [index]="i"></app-usuario-item>
+  </div>
+</div>

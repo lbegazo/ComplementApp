@@ -6,6 +6,7 @@ using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,9 +47,9 @@ namespace ComplementApp.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarUsuario(int id, UsuarioParaActualizar userForUpdateDto)
         {
-
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            //Para que el usuario actualice sus propios datos
+            // if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            //     return Unauthorized();
 
             var userFromRepo = await _repo.ObtenerUsuario(id);
 
@@ -59,6 +60,22 @@ namespace ComplementApp.API.Controllers
 
             throw new Exception($"Falló al actualizar el usuario {id} ");
 
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerAreas()
+        {
+            var datos = await _repo.ObtenerAreas();
+            return Ok(datos);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerCargos()
+        {
+            var datos = await _repo.ObtenerCargos();
+            return Ok(datos);
         }
 
     }

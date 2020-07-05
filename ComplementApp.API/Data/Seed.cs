@@ -80,7 +80,19 @@ namespace ComplementApp.API.Data
                 context.SaveChanges();
             }
         }
-
+        public static void SeedTipoDetalleModificacion(DataContext context)
+        {
+            if (!context.TipoDetalleModificacion.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoDetalleModificacion.json");
+                var items = JsonConvert.DeserializeObject<List<TipoDetalleModificacion>>(data);
+                foreach (var item in items)
+                {
+                    context.TipoDetalleModificacion.Add(item);
+                }
+                context.SaveChanges();
+            }
+        }
         public static void SeedUsers(DataContext context)
         {
             if (!context.Users.Any())
@@ -101,7 +113,6 @@ namespace ComplementApp.API.Data
                 context.SaveChanges();
             }
         }
-
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())

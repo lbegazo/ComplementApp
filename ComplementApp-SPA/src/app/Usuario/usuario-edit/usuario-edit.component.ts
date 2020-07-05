@@ -1,19 +1,18 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Usuario } from 'src/app/_models/usuario';
-import { Router } from '@angular/router';
-import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-registrar-usuario',
-  templateUrl: './registrar-usuario.component.html',
-  styleUrls: ['./registrar-usuario.component.css']
+  selector: 'app-usuario-edit',
+  templateUrl: './usuario-edit.component.html',
+  styleUrls: ['./usuario-edit.component.css'],
 })
-export class RegistrarUsuarioComponent implements OnInit {
-
+export class UsuarioEditComponent implements OnInit {
   @Output() cancelRegisterEvent = new EventEmitter();
-  usuario: Usuario;
+  user: Usuario;
   registerForm: FormGroup;
 
   constructor(
@@ -30,14 +29,19 @@ export class RegistrarUsuarioComponent implements OnInit {
   createRegisterForm() {
     this.registerForm = this.fb.group(
       {
+        gender: ['male'],
         username: ['', Validators.required],
         nombres: ['', Validators.required],
-        apellidos: [null, Validators.required],
-        areaId: ['', Validators.required],
-        cargoId: ['', Validators.required],
+        apellidos: ['', Validators.required],
+        cargo: ['', Validators.required],
+        area: ['', Validators.required],
         password: [
           '',
-          [Validators.required, Validators.minLength(4), Validators.maxLength(8)],
+          [
+            Validators.required,
+            Validators.minLength(4),
+            Validators.maxLength(8),
+          ],
         ],
         confirmPassword: ['', Validators.required],
       },
@@ -51,25 +55,16 @@ export class RegistrarUsuarioComponent implements OnInit {
       : { mismatch: true };
   }
 
-  onRegister() {
-    if (this.registerForm.valid) {
-      this.usuario = Object.assign({}, this.registerForm.value);
-      this.authService.register(this.usuario).subscribe(
-        () => this.alertify.success('La cuenta se registró satisfactoriamente'),
-        (error) => {
-          this.alertify.error(error);
-        },
-        () => {
-          this.authService.login(this.usuario).subscribe(() => {
-            this.router.navigate(['/members']);
-          });
-        }
-      );
-    }
-  }
+  onRegister()
+  {}
 
   onCancel() {
     this.cancelRegisterEvent.emit(false);
-    this.alertify.error('Cancelled');
-  }  
+    this.alertify.error('Cancelado');
+  }
+
+  cargarCargos()
+  {
+    
+  }
 }

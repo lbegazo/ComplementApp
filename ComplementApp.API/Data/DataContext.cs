@@ -30,5 +30,7 @@ namespace ComplementApp.API.Data
 
         public DbSet<DetalleCDP> DetalleCDP { get; set; }
 
+        public DbSet<TipoDetalleModificacion> TipoDetalleModificacion { get; set; }
+
     }
 }

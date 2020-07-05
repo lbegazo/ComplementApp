@@ -7,4 +7,6 @@ export interface Usuario {
   idArea: number;
   fechaCreacion: Date;
   fechaUltimoAcceso: Date;
+  cargoDescripcion: string;
+  areaDescripcion: string;
 }

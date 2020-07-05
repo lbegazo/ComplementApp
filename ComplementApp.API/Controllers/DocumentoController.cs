@@ -18,9 +18,12 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class DocumentoController : ControllerBase
     {
+        #region Propiedades
         private readonly IDocumentoRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+
+        #endregion Propiedades
 
         private IConfiguration _configuration { get; }
         public DocumentoController(IUnitOfWork unitOfWork, IDocumentoRepository repo, IMapper mapper, IConfiguration configuration)
@@ -32,22 +35,26 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult ActualizarBaseDeDatos()
+        public IActionResult ActualizarBaseDeDatos(string path)
         {
-            var path = _configuration.GetSection("AppSettings:pathArchivo").Value;
-            DataTable dtDetalle = ObtenerDetalleDeExcel(path);
-            DataTable dtCabecera = ObtenerCabeceraDeExcel(path);
+            var result = EliminarinformacionCDP();
 
-            #region Mapear listas
+            if (result)
+            {
+                path = _configuration.GetSection("AppSettings:pathArchivo").Value;
+                DataTable dtDetalle = ObtenerDetalleDeExcel(path);
+                DataTable dtCabecera = ObtenerCabeceraDeExcel(path);
 
-            List<CDP> listaDocumento = obtenerListaDeCDP(dtCabecera);
-            List<DetalleCDP> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
+                #region Mapear listas
 
-            #endregion Mapear listas
+                List<CDP> listaDocumento = obtenerListaDeCDP(dtCabecera);
+                List<DetalleCDP> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
 
-            _repo.InsertaCabeceraCDP(listaDocumento);
-            _repo.InsertaDetalleCDP(listaDetalle);
+                #endregion Mapear listas
 
+                _repo.InsertaCabeceraCDP(listaDocumento);
+                _repo.InsertaDetalleCDP(listaDetalle);
+            }
             return Ok();
         }
 
@@ -188,8 +195,8 @@ namespace ComplementApp.API.Controllers
         {
             CDP documento = null;
             List<CDP> listaDocumento = new List<CDP>();
-            int numValue =0;
-            decimal value=0;
+            int numValue = 0;
+            decimal value = 0;
             DateTime fecha;
 
             foreach (var row in dtCabecera.Rows)
@@ -197,31 +204,31 @@ namespace ComplementApp.API.Controllers
                 documento = new CDP();
                 documento.Dependencia = (row as DataRow).ItemArray[0].ToString();
 
-                 if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
                         documento.Proy = numValue;
 
                 if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
                         documento.Pro = numValue;
 
                 if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
                         documento.Cdp = numValue;
 
                 if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if(DateTime.TryParse((row as DataRow).ItemArray[4].ToString(), out fecha))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[4].ToString(), out fecha))
                         documento.Fecha = fecha;
 
                 documento.Estado = (row as DataRow).ItemArray[5].ToString();
                 documento.Rubro = (row as DataRow).ItemArray[6].ToString();
 
                 if (!(row as DataRow).ItemArray[7].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[7].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[7].ToString(), out value))
                         documento.Valor = value;
 
                 if (!(row as DataRow).ItemArray[8].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[8].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[8].ToString(), out value))
                         documento.Saldo = value;
 
                 documento.Tipo = (row as DataRow).ItemArray[9].ToString();
@@ -236,30 +243,30 @@ namespace ComplementApp.API.Controllers
         {
             DetalleCDP detalle = null;
             List<DetalleCDP> listaDocumento = new List<DetalleCDP>();
-            int numValue =0;
-            decimal value=0;
+            int numValue = 0;
+            decimal value = 0;
 
             foreach (var row in dtDetalle.Rows)
             {
                 detalle = new DetalleCDP();
                 if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
                         detalle.Crp = numValue;
 
                 if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
                         detalle.IdArchivo = numValue;
 
                 if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
                         detalle.Cdp = numValue;
 
                 if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
                         detalle.Proy = numValue;
 
                 if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[4].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[4].ToString(), out numValue))
                         detalle.Prod = numValue;
 
                 detalle.Proyecto = (row as DataRow).ItemArray[5].ToString();
@@ -270,49 +277,49 @@ namespace ComplementApp.API.Controllers
                 detalle.Rubro = (row as DataRow).ItemArray[10].ToString();
 
                 if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
                         detalle.ValorAct = value;
 
                 if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
                         detalle.SaldoAct = value;
 
                 if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
                         detalle.ValorCDP = value;
 
                 if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
                         detalle.ValorRP = value;
 
                 if (!(row as DataRow).ItemArray[15].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[15].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[15].ToString(), out value))
                         detalle.ValorOB = value;
 
                 if (!(row as DataRow).ItemArray[16].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[16].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[16].ToString(), out value))
                         detalle.ValorOP = value;
 
                 detalle.Contrato = (row as DataRow).ItemArray[17].ToString();
 
                 if (!(row as DataRow).ItemArray[18].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[18].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[18].ToString(), out value))
                         detalle.SaldoTotal = value;
 
                 if (!(row as DataRow).ItemArray[19].ToString().Equals(string.Empty))
-                    if(decimal.TryParse((row as DataRow).ItemArray[19].ToString(), out value))
+                    if (decimal.TryParse((row as DataRow).ItemArray[19].ToString(), out value))
                         detalle.SaldoDisponible = value;
 
                 detalle.Area = (row as DataRow).ItemArray[20].ToString();
 
                 if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
-                    if(Int32.TryParse((row as DataRow).ItemArray[21].ToString(), out numValue))
+                    if (Int32.TryParse((row as DataRow).ItemArray[21].ToString(), out numValue))
                         detalle.Paa = Convert.ToInt32((row as DataRow).ItemArray[21].ToString());
 
-                if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))                
-                    if(Int32.TryParse((row as DataRow).ItemArray[22].ToString(), out numValue))                    
+                if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[22].ToString(), out numValue))
                         detalle.IdSofi = numValue;
-                  
+
 
                 listaDocumento.Add(detalle);
             }
@@ -320,5 +327,15 @@ namespace ComplementApp.API.Controllers
             return listaDocumento;
         }
 
+        private bool EliminarinformacionCDP()
+        {
+            var resultado = false;
+            resultado = this._repo.EliminarCabeceraCDP();
+
+            if (resultado)
+                resultado = this._repo.EliminarDetalleCDP();
+
+            return resultado;
+        }
     }
 }

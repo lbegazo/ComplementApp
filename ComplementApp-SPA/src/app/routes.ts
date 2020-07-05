@@ -10,8 +10,11 @@ import { MemberListResolver } from './_resolvers/memberlist.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolvers/member-edit-resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
-import { UsuarioDetalleComponent } from './Usuario/usuario-detalle/usuario-detalle.component';
 import { UsuarioDetalleResolver } from './_resolvers/usuario-detalle.resolver';
+import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.component';
+import { UsuarioEditComponent } from './Usuario/usuario-edit/usuario-edit.component';
+import { UsuarioDetailComponent } from './Usuario/usuario-detail/usuario-detail.component';
+import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -22,9 +25,18 @@ export const appRoutes: Routes = [
     runGuardsAndResolvers: 'always',
     children: [
       {
-        path: 'usuario/:id',
-        component: UsuarioDetalleComponent,
-        resolve: { usuario: UsuarioDetalleResolver },
+        path: 'usuarios',
+        component: UsuarioMainComponent,
+        children: [
+          { path: '', component: UsuarioStartComponent },
+          { path: 'new', component: UsuarioEditComponent },
+          {
+            path: ':id',
+            component: UsuarioDetailComponent,
+            resolve: { usuario: UsuarioDetalleResolver },
+          },
+          { path: ':id/edit', component: UsuarioEditComponent },
+        ],
       },
       {
         path: 'members',
@@ -40,7 +52,7 @@ export const appRoutes: Routes = [
         path: 'member/edit',
         component: MemberEditComponent,
         resolve: { user: MemberEditResolver },
-        canDeactivate: [PreventUnsavedChanges]
+        canDeactivate: [PreventUnsavedChanges],
       },
       { path: 'messages', component: MessagesComponent },
       { path: 'lists', component: ListsComponent },

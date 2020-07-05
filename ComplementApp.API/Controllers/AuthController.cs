@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using ComplementApp.API.Helpers;
 using AutoMapper;
 
 namespace ComplementApp.API.Controllers
@@ -29,20 +28,20 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> register(UserForRegisterDto userForRegisterDto)
+        public async Task<IActionResult> register(UsuarioParaRegistrarDto userForRegisterDto)
         {
             userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.UserName))
-                return BadRequest("Username already exists");
+                return BadRequest("El username ya existe");
 
             //var userToCreate = new User { Username = userForRegisterDto.UserName };
             //The destination is userForRegisterDto
-            var userToCreate = _mapper.Map<User>(userForRegisterDto);
+            var userToCreate = _mapper.Map<Usuario>(userForRegisterDto);
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
             //Esta linea es para evitar retornar User, porque contiene el password
-            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser);
+            var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
 
             return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.Id }, userToReturn);
         }
