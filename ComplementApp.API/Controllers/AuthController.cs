@@ -61,12 +61,14 @@ namespace ComplementApp.API.Controllers
                 return BadRequest("El usuario no existe");
 
             /**************************Create the token************************************/
+            var role = userFromRepo.EsAdministrador ? 1 : 0;
 
-            //The token contains 2 claims: userId and username
+            //The token contains 3 claims: userId and username, Administrator
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username)
+                new Claim(ClaimTypes.Name, userFromRepo.Username),
+                new Claim(ClaimTypes.Role, role.ToString())
             };
 
             //The server has to sign the token(To have a valid token)

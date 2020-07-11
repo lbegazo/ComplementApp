@@ -163,9 +163,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<decimal>("SaldoTotal")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Tipo")
-                        .HasColumnType("TEXT");
-
                     b.Property<decimal>("ValorAct")
                         .HasColumnType("TEXT");
 
@@ -331,6 +328,9 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CargoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("EsAdministrador")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("FechaCreacion")

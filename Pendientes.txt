@@ -11,4 +11,11 @@ Anulacion 3220
 	Aplica contrato No 2 firmas
 			Si 3 Firmas
 
+
+
+proyecto
+actividad
+plan de compras
+rubro
+valores
 	

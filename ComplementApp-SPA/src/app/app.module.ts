@@ -8,6 +8,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { JwtModule } from '@auth0/angular-jwt';
 import { RouterModule } from '@angular/router';
 import { TimeagoModule } from 'ngx-timeago';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { appRoutes } from './routes';
 import { AppComponent } from './app.component';
@@ -34,6 +35,15 @@ import { UsuarioDetailComponent } from './Usuario/usuario-detail/usuario-detail.
 import { UsuarioItemComponent } from './Usuario/usuario-list/usuario-item/usuario-item.component';
 import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.component';
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
+import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
+import { CdpStartComponent } from './solicitudCdp/cdp-start/cdp-start.component';
+import { CdpDetailComponent } from './solicitudCdp/cdp-detail/cdp-detail.component';
+import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
+import { CdpListComponent } from './solicitudCdp/cdp-list/cdp-list.component';
+import { CdpComponent } from './solicitudCdp/cdp-list/cdp/cdp.component';
+import { CdpDetalleResolver } from './_resolvers/cdp-detalle.resolver';
+import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
+
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -57,7 +67,14 @@ export function tokenGetter() {
     UsuarioEditComponent,
     UsuarioDetailComponent,
     UsuarioItemComponent,
-    UsuarioStartComponent
+    UsuarioStartComponent,
+    CdpMainComponent,
+    CdpListComponent,
+    CdpStartComponent,
+    CdpDetailComponent,
+    CdpEditComponent,
+    CdpComponent,
+    ArchivoMainComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +83,7 @@ export function tokenGetter() {
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    FileUploadModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
@@ -85,6 +103,7 @@ export function tokenGetter() {
     MemberDetailResolver,
     MemberListResolver,
     MemberEditResolver,
+    CdpDetalleResolver,
     UsuarioDetalleResolver,
     PreventUnsavedChanges,
   ],

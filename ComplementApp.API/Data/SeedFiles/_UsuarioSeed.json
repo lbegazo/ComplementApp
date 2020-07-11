@@ -7,7 +7,8 @@
     "Nombres": "Luis",
     "Apellidos": "Begazo Samanez",
     "CargoId": "1",
-    "AreaId": "1"
+    "AreaId": "1",
+    "EsAdministrador": 1
   },
   {
     "Username": "anapau",
@@ -17,7 +18,8 @@
     "Nombres": "Ana Paula",
     "Apellidos": "Begazo Acero",
     "CargoId": "1",
-    "AreaId": "1"
+    "AreaId": "1",
+    "EsAdministrador": 0
   },
   {
     "Username": "alex",
@@ -27,6 +29,7 @@
     "Nombres": "Alexander",
     "Apellidos": "Castañeda",
     "CargoId": "1",
-    "AreaId": "1"
+    "AreaId": "1",
+    "EsAdministrador": 0
   }
 ]

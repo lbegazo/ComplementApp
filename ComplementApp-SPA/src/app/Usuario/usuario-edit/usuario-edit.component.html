@@ -1,7 +1,6 @@
 <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-  <h2 class="text-center text-primary">Registro</h2>
+  <h2 class="text-center text-primary">Registro de usuario</h2>
   <hr />
-
   <div class="form-group">
     <input
       [ngClass]="{
@@ -60,7 +59,7 @@
       Los apellidos son requeridos
     </div>
   </div>
-  
+
   <div class="form-group">
     <input
       type="password"
@@ -133,7 +132,71 @@
       "
     >
       Los passwords deben coincidir
-    </div> 
+    </div>
+  </div>
+  <div class="form-group">
+    <select
+      formControlName="areaControl"
+      (change)="onSelectArea()"
+      class="form-control"
+      [(ngModel)]="user.areaId"
+      [ngClass]="{
+        'is-invalid':
+          registerForm.get('areaControl').touched &&
+          registerForm.get('areaControl').hasError('required')
+      }"
+    >
+      <option [ngValue]="null" disabled>Selecciona el area</option>
+      <option *ngFor="let prf of areas" [ngValue]="prf">
+        {{ prf.descripcion }}
+      </option>
+    </select>
+    <div
+      class="invalid-feedback"
+      *ngIf="
+        registerForm.get('areaControl').touched &&
+        registerForm.get('areaControl').hasError('required')
+      "
+    >
+      El area es requerida
+    </div>
+  </div>
+
+  <div class="form-group">
+    <select
+      formControlName="cargoControl"
+      (change)="onSelectCargo()"
+      class="form-control"
+      [(ngModel)]="user.cargoId"
+      [ngClass]="{
+        'is-invalid':
+          registerForm.get('cargoControl').touched &&
+          registerForm.get('cargoControl').hasError('required')
+      }"
+    >
+      <option [ngValue]="null" disabled>Selecciona el cargo</option>
+      <option *ngFor="let prf of cargos" [ngValue]="prf">
+        {{ prf.descripcion }}
+      </option>
+    </select>
+    <div
+      class="invalid-feedback"
+      *ngIf="
+        registerForm.get('cargoControl').touched &&
+        registerForm.get('cargoControl').hasError('required')
+      "
+    >
+      El cargo es requerido
+    </div>
+  </div>
+  <div class="form-group">
+    <label>
+      <input
+        type="checkbox"
+        class="form-control"
+        formControlName="EsAdministradorControl"
+      /> Es Administrador
+    </label>
   </div>
 
   <div class="form-group text-center">
@@ -149,6 +212,4 @@
     </button>
   </div>
 </form>
-
-<!-- <p>Form value: {{ registerForm.value | json }}</p>
-<p>Form status: {{ registerForm.status | json }}</p> -->
+<p>Form value: {{ registerForm.value | json }}</p>

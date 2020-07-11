@@ -3,10 +3,12 @@ export interface Usuario {
   username: string;
   nombres: string;
   apellidos: string;
-  idCargo: number;
-  idArea: number;
+  password: string;
+  cargoId: number;
+  areaId: number;
   fechaCreacion: Date;
   fechaUltimoAcceso: Date;
   cargoDescripcion: string;
   areaDescripcion: string;
+  esAdministrador: number;
 }

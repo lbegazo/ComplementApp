@@ -18,7 +18,6 @@ namespace ComplementApp.API.Helpers
             var user = await repo.ObtenerUsuario(userId);
             user.FechaUltimoAcceso = DateTime.Now;
             await unitOfWork.CompleteAsync();
-
         }
     }
 }

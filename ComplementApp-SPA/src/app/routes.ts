@@ -15,28 +15,53 @@ import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.com
 import { UsuarioEditComponent } from './Usuario/usuario-edit/usuario-edit.component';
 import { UsuarioDetailComponent } from './Usuario/usuario-detail/usuario-detail.component';
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
+import { CdpStartComponent } from './solicitudCdp/cdp-start/cdp-start.component';
+import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
+import { CdpDetailComponent } from './solicitudCdp/cdp-detail/cdp-detail.component';
+import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
+import { CdpDetalleResolver } from './_resolvers/cdp-detalle.resolver';
+import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
+  {
+    path: 'usuarios',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: UsuarioMainComponent,
+    children: [
+      { path: '', component: UsuarioStartComponent },
+      { path: 'new', component: UsuarioEditComponent },
+      {
+        path: ':id',
+        component: UsuarioDetailComponent,
+        resolve: { usuario: UsuarioDetalleResolver },
+      },
+      { path: ':id/edit', component: UsuarioEditComponent },
+    ],
+  },
   {
     path: '',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     children: [
       {
-        path: 'usuarios',
-        component: UsuarioMainComponent,
+        path: 'cdp',
+        component: CdpMainComponent,
         children: [
-          { path: '', component: UsuarioStartComponent },
-          { path: 'new', component: UsuarioEditComponent },
+          { path: '', component: CdpStartComponent },
           {
             path: ':id',
-            component: UsuarioDetailComponent,
-            resolve: { usuario: UsuarioDetalleResolver },
+            component: CdpDetailComponent,
+            resolve: { cdp: CdpDetalleResolver },
           },
-          { path: ':id/edit', component: UsuarioEditComponent },
+          { path: ':id/edit', component: CdpEditComponent },
         ],
+      },
+      {
+        path: 'archivo',
+        component: ArchivoMainComponent,
       },
       {
         path: 'members',

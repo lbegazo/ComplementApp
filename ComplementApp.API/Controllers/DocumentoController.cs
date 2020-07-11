@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Data;
@@ -10,10 +11,11 @@ using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ComplementApp.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DocumentoController : ControllerBase
@@ -26,7 +28,8 @@ namespace ComplementApp.API.Controllers
         #endregion Propiedades
 
         private IConfiguration _configuration { get; }
-        public DocumentoController(IUnitOfWork unitOfWork, IDocumentoRepository repo, IMapper mapper, IConfiguration configuration)
+        public DocumentoController(IUnitOfWork unitOfWork, IDocumentoRepository repo,
+                                    IMapper mapper, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -37,11 +40,18 @@ namespace ComplementApp.API.Controllers
         [HttpPost]
         public IActionResult ActualizarBaseDeDatos(string path)
         {
+
             var result = EliminarinformacionCDP();
 
             if (result)
             {
-                path = _configuration.GetSection("AppSettings:pathArchivo").Value;
+                if (string.IsNullOrEmpty(path))
+                {
+                    path = _configuration.GetSection("AppSettings:pathArchivo").Value;
+                }
+                if (!System.IO.File.Exists(path))
+                    throw new ArgumentException("El archivo no existe!!!");
+
                 DataTable dtDetalle = ObtenerDetalleDeExcel(path);
                 DataTable dtCabecera = ObtenerCabeceraDeExcel(path);
 
@@ -52,8 +62,22 @@ namespace ComplementApp.API.Controllers
 
                 #endregion Mapear listas
 
-                _repo.InsertaCabeceraCDP(listaDocumento);
-                _repo.InsertaDetalleCDP(listaDetalle);
+                var taskCabecera = _repo.InsertaCabeceraCDP(listaDocumento);
+                var taskDetalle = _repo.InsertaDetalleCDP(listaDetalle);
+
+                taskCabecera.Wait();
+                taskDetalle.Wait();
+
+                bool EsCabeceraValida = taskCabecera.Result;
+                bool EsDetalleValida = taskCabecera.Result;
+
+                if (!EsCabeceraValida)
+                    throw new ArgumentException("No se pudo registrar la cabecera");
+
+                if (!EsDetalleValida)
+                    throw new ArgumentException("No se pudieron registrar los detalles");
+
+                //Thread.Sleep(3);
             }
             return Ok();
         }
@@ -323,7 +347,6 @@ namespace ComplementApp.API.Controllers
 
                 listaDocumento.Add(detalle);
             }
-
             return listaDocumento;
         }
 

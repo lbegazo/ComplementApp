@@ -6,8 +6,10 @@ namespace ComplementApp.API.Data
 {
     public interface ICDPRepository
     {
-        Task<IEnumerable<CDP>> ObtenerCDPsXFiltro(int numeroCDP);
+        Task<IEnumerable<CDP>> ObtenerListaCDP(string usuario);
 
-        Task<IEnumerable<DetalleCDP>> ObtenerItemsCDPxFiltro(string usuario, int numeroCDP);
+        Task<CDP> ObtenerCDP(string usuario, int numeroCDP);
+
+        Task<IEnumerable<DetalleCDP>> ObtenerDetalleDeCDP(string usuario, int numeroCDP);
     }
 }

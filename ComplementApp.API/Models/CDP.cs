@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
@@ -25,5 +26,6 @@ namespace ComplementApp.API.Models
         public decimal Saldo { get; set; }
 
         public string Tipo { get; set; }
+
     }
 }

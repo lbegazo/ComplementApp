@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,41 +15,77 @@ namespace ComplementApp.API.Data
         public DocumentoRepository(DataContext context)
         {
             _context = context;
-
         }
-        public async Task InsertaCabeceraCDP(IList<CDP> lista)
+        public async Task<bool> InsertaCabeceraCDP(IList<CDP> lista)
         {
-            CancellationToken cancellation = new CancellationToken(false);
-            var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true, BatchSize = 4000 };
-            await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+            try
+            {
+                CancellationToken cancellation = new CancellationToken(false);
+                var bulkConfig = new BulkConfig
+                {
+                    PreserveInsertOrder = true,
+                    SetOutputIdentity = true,
+                    BatchSize = 4000
+                };
+                await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task InsertaDetalleCDP(IList<DetalleCDP> lista)
+        public async Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista)
         {
-            CancellationToken cancellation = new CancellationToken(false);
-            var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true, BatchSize = 4000 };
-            await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+            try
+            {
+                CancellationToken cancellation = new CancellationToken(false);
+                var bulkConfig = new BulkConfig
+                {
+                    PreserveInsertOrder = true,
+                    SetOutputIdentity = true,
+                    BatchSize = 4000
+                };
+                await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("error " +ex.Message);
+            }
         }
 
         public bool EliminarCabeceraCDP()
         {
-            if(!_context.CDP.Any())
-                return true;
+            try
+            {
+                if (!_context.CDP.Any())
+                    return true;
 
-            if (_context.CDP.Any())
-                return _context.CDP.BatchDelete() > 0;
-
+                if (_context.CDP.Any())
+                    return _context.CDP.BatchDelete() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return false;
         }
 
         public bool EliminarDetalleCDP()
         {
-            if(!_context.DetalleCDP.Any())
+            try{
+            if (!_context.DetalleCDP.Any())
                 return true;
 
             if (_context.DetalleCDP.Any())
                 return _context.DetalleCDP.BatchDelete() > 0;
-
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
             return false;
         }
     }

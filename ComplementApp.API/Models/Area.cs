@@ -5,7 +5,7 @@ namespace ComplementApp.API.Models
     [Table("TB_Area")]
     public class Area
     {
-         public int Id { get; set; }
+        public int Id { get; set; }
 
         public string Codigo { get; set; }
 

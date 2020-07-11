@@ -13,19 +13,55 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
-        public async Task<IEnumerable<CDP>> ObtenerCDPsXFiltro(int numeroCDP)
+        public async Task<IEnumerable<CDP>> ObtenerListaCDP(string usuario)
         {
 
-            return await _context.CDP
-                            .Where(x => x.Cdp == numeroCDP).ToListAsync();
+            var cdps = await (from c in _context.CDP
+                              join d in _context.DetalleCDP on c.Cdp equals d.Cdp
+                              where d.Responsable == usuario
+                              group c by new
+                              {
+                                  c.Cdp,
+                                  c.Estado,
+                                  c.Fecha
+                              } into g
+                              select new CDP
+                              {
+                                  Cdp = g.Key.Cdp,
+                                  Estado = g.Key.Estado,
+                                  Fecha = g.Key.Fecha
+                              }).ToListAsync();
+            return cdps;
         }
 
-        public async Task<IEnumerable<DetalleCDP>> ObtenerItemsCDPxFiltro(string usuario, int numeroCDP)
+        public async Task<CDP> ObtenerCDP(string usuario, int numeroCDP)
         {
-             return await _context.DetalleCDP
-                            .Where(x => x.Cdp == numeroCDP)
-                            .Where(x =>x.Responsable == usuario)
-                            .ToListAsync();
+            var cdp = await (from c in _context.CDP
+                             join d in _context.DetalleCDP on c.Cdp equals d.Cdp
+                             where d.Responsable == usuario
+                             where c.Cdp == numeroCDP
+                             select c).FirstOrDefaultAsync();
+
+            // var rubrosPresupuestales = await ObtenerItemsPresupuestalesDeCdp(usuario, numeroCDP);
+            // cdp.RubrosPresupuestales = rubrosPresupuestales;
+
+            return cdp;
+        }
+
+
+        public async Task<IEnumerable<DetalleCDP>> ObtenerDetalleDeCDP(string usuario, int numeroCDP)
+        {
+            return await ObtenerItemsPresupuestalesDeCdp(usuario, numeroCDP);
+        }
+
+        private async Task<ICollection<DetalleCDP>> ObtenerItemsPresupuestalesDeCdp(string usuario, int numeroCDP)
+        {
+            var detalles = await (from d in _context.DetalleCDP
+                                 where d.Responsable == usuario
+                                 where d.Cdp == numeroCDP
+                                 select d).ToListAsync();
+
+            return detalles;
         }
     }
 }

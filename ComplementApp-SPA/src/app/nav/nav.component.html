@@ -3,27 +3,29 @@
     <a class="navbar-brand" [routerLink]="['/']">Complement App</a>
 
     <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
-      <li class="nav-item" routerLinkActive="active">
+      <!-- <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/members']">Matches </a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/lists']">Lists</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/messages']">Link</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
+      </li> -->
+      <li class="nav-item" routerLinkActive="active" *ngIf="esAdministrador()">
         <a class="nav-link" [routerLink]="['/usuarios']">Usuario</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/archivo']">Actualizar BD</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/cdp']">CDP</a>
       </li>
     </ul>
 
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
       <a class="dropdown-toggle text-light" dropdownToggle>
-        Welcome {{ authService.decodedToken?.unique_name | titlecase }}
+        Bienvenido {{ authService.decodedToken?.unique_name | titlecase }}
       </a>
       <div class="dropdown-menu mt-3" *dropdownMenu>
-        <a class="dropdown-item" [routerLink]="['/member/edit']"
-          ><i class="fa fa-user"></i> Edit Profile</a
+        <a
+          class="dropdown-item"
+          [routerLink]="['/usuarios/' + authService.decodedToken?.nameid]"
+          ><i class="fa fa-user"></i> Ver cuenta</a
         >
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" (click)="logout()"

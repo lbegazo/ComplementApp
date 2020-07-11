@@ -24,5 +24,7 @@ namespace ComplementApp.API.Dtos
         public string CargoDescripcion { get; set; }
         
         public string AreaDescripcion { get; set; }
+
+        public bool EsAdministrador {get; set;}
     }
 }

@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    this.alertify.error('No tienes permiso para continuar!!!');
+    this.alertify.error('No tienes permiso de administrador para continuar!!!');
     this.router.navigate(['/home']);
 
     return false;

@@ -39,7 +39,7 @@ namespace ComplementApp.API.Models
 
         public decimal ValorOP { get; set; }
 
-        public string Tipo { get; set; }
+        // public string Tipo { get; set; }
 
         public string Contrato { get; set; }
 

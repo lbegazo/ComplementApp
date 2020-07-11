@@ -23,7 +23,7 @@ export class UsuarioDetalleResolver implements Resolve<Usuario> {
   resolve(route: ActivatedRouteSnapshot): Observable<Usuario> {
     return this.userService.ObtenerUsuario(+route.params['id']).pipe(
       catchError((error) => {
-        this.alertify.error('Ocurrió un problema al cargar la información');
+        this.alertify.error('Ocurrió un problema al cargar el usuario');
         this.router.navigate(['/usuarios']);
         return of(null);
       })

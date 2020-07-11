@@ -44,12 +44,42 @@ namespace ComplementApp.API.Controllers
             return Ok(userForDetailed);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RegistrarUsuario(UsuarioParaRegistrarDto userForRegisterDto)
+        {
+            var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+
+            if (!usuarioLogueado.EsAdministrador)
+                return Unauthorized();
+
+            userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
+
+            if (await _repo.UserExists(userForRegisterDto.UserName))
+                return BadRequest("El username ya existe");
+
+            var userToCreate = _mapper.Map<Usuario>(userForRegisterDto);
+
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+            //Esta linea es para evitar retornar User, porque contiene el password
+            var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
+
+            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.Id }, userToReturn);
+
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarUsuario(int id, UsuarioParaActualizar userForUpdateDto)
         {
-            //Para que el usuario actualice sus propios datos
+            // Para que el usuario actualice sus propios datos
             // if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             //     return Unauthorized();
+
+            var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+
+            if (!usuarioLogueado.EsAdministrador)
+                return Unauthorized();
 
             var userFromRepo = await _repo.ObtenerUsuario(id);
 
@@ -58,18 +88,20 @@ namespace ComplementApp.API.Controllers
             if (await _unitOfWork.CompleteAsync())
                 return NoContent();
 
-            throw new Exception($"Falló al actualizar el usuario {id} ");
-
+            throw new Exception($"Actualizando el usuario {id} el proceso falló");
         }
 
+        [AllowAnonymous]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerAreas()
         {
-            var datos = await _repo.ObtenerAreas();
+        var datos = await _repo.ObtenerAreas();
             return Ok(datos);
         }
 
+
+        [AllowAnonymous]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerCargos()

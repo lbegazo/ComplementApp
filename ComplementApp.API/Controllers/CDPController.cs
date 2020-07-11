@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogUserActivity))]
+    // [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -24,21 +24,35 @@ namespace ComplementApp.API.Controllers
             _repo = repo;
         }
 
-        
-        
-        [Route("[action]/{numeroCDP}")]
+
+
+        [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerCDPsXFiltro(int numeroCDP)
+        public async Task<IActionResult> ObtenerListaCDP()
         {
-            System.Collections.Generic.IEnumerable<Models.CDP> enumerable = await _repo.ObtenerCDPsXFiltro(numeroCDP);
-            return base.Ok(enumerable);
+            string nombreCompleto = string.Empty;
+            nombreCompleto = await ObtenerNombreCompletoUsuario();
+
+            var cdps = await _repo.ObtenerListaCDP(nombreCompleto);
+            return base.Ok(cdps);
         }
 
-        
-        
         [Route("[action]/{numeroCDP}")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerDetalleCDPsXFiltro(int numeroCDP)
+        public async Task<IActionResult> ObtenerCDP(int numeroCDP)
+        {
+            string nombreCompleto = string.Empty;
+            nombreCompleto = await ObtenerNombreCompletoUsuario();
+
+            var cdps = await _repo.ObtenerCDP(nombreCompleto,numeroCDP);
+            return base.Ok(cdps);
+        }
+
+
+
+        [Route("[action]/{numeroCDP}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerDetalleDeCDP(int numeroCDP)
         {
             string nombreCompleto = string.Empty;
             nombreCompleto = await ObtenerNombreCompletoUsuario();
@@ -47,7 +61,7 @@ namespace ComplementApp.API.Controllers
             {
                 return NotFound();
             }
-            var CDPs = await _repo.ObtenerItemsCDPxFiltro(nombreCompleto, numeroCDP);
+            var CDPs = await _repo.ObtenerDetalleDeCDP(nombreCompleto, numeroCDP);
             return Ok(CDPs);
         }
 

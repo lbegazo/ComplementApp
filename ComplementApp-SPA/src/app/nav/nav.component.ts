@@ -27,13 +27,17 @@ export class NavComponent implements OnInit {
         this.alertify.error(error);
       },
       () => {
-        this.router.navigate(['/members']);
+        this.router.navigate(['/home']);
       }
     );
   }
 
   loggedIn() {
     return this.authService.loggedIn();
+  }
+
+  esAdministrador() {
+    return this.authService.esAdministrador();
   }
 
   logout() {
