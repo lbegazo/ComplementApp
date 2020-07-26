@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    //[ServiceFilter(typeof(LogActividadUsuario))]
+    [ServiceFilter(typeof(LogActividadUsuario))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -56,7 +56,7 @@ namespace ComplementApp.API.Controllers
             userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.UserName))
-                return BadRequest("El username ya existe");
+                return BadRequest("El usuario ya existe");
 
             var userToCreate = _mapper.Map<Usuario>(userForRegisterDto);
 
@@ -85,30 +85,32 @@ namespace ComplementApp.API.Controllers
 
             _mapper.Map(userForUpdateDto, userFromRepo);
 
-            if (await _unitOfWork.CompleteAsync())
+            await _unitOfWork.CompleteAsync();
+            return NoContent();
+
+            //throw new Exception($"Actualizando el usuario {id} el proceso falló");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> EliminarUsuario(int id)
+        {
+            var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+
+            if (!usuarioLogueado.EsAdministrador)
+                return Unauthorized();
+
+            if (idUsuarioLogueado == id)
+            {
+                return BadRequest("No se puede eliminar el usuario desde la misma cuenta de usuario");
+            }
+
+            if (await _repo.EliminarUsuario(id))
+            {
                 return NoContent();
+            }
 
-            throw new Exception($"Actualizando el usuario {id} el proceso falló");
+            throw new Exception($"No se pudo eliminar el usuario: {id}");
         }
-
-        [AllowAnonymous]
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> ObtenerAreas()
-        {
-        var datos = await _repo.ObtenerAreas();
-            return Ok(datos);
-        }
-
-
-        [AllowAnonymous]
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> ObtenerCargos()
-        {
-            var datos = await _repo.ObtenerCargos();
-            return Ok(datos);
-        }
-
     }
 }

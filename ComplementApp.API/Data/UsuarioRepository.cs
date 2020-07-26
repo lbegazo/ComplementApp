@@ -3,6 +3,10 @@ using System.Text;
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
+using EFCore.BulkExtensions;
+using System.Linq;
+using System.Threading;
+using System;
 
 namespace ComplementApp.API.Data
 {
@@ -35,9 +39,24 @@ namespace ComplementApp.API.Data
             return await _context.Usuario.Include(x => x.Area).Include(c => c.Cargo).FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<bool> EliminarUsuario(int id)
+        {
+            try
+            {
+                return await _context.Usuario.Where(x => x.Id == id).BatchDeleteAsync() > 0;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("error " + ex.Message);
+            }
+        }
+
         public async Task<IEnumerable<Usuario>> ObtenerUsuarios()
         {
-            return await _context.Usuario.ToListAsync();
+            return await _context.Usuario
+            .OrderBy(x => x.Nombres)
+            .ToListAsync();
         }
 
         public async Task<bool> UserExists(string username)
@@ -46,16 +65,6 @@ namespace ComplementApp.API.Data
                 return true;
 
             return false;
-        }
-
-        public async Task<IEnumerable<Cargo>> ObtenerCargos()
-        {
-            return await _context.Cargo.ToListAsync();
-        }
-
-        public async Task<IEnumerable<Area>> ObtenerAreas()
-        {
-            return await _context.Area.ToListAsync();
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

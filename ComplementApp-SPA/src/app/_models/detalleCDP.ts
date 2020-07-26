@@ -11,9 +11,11 @@ export interface DetalleCDP {
   responsable: string;
   dependencia: string;
   rubro: string;
+  rubroDescripcion: string;
   valorAct: number;
   saldoAct: number;
   valorCDP: number;
+  saldoCDP: number;
   valorRP: number;
   valorOB: number;
   valorOP: number;

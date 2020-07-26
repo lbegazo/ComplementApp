@@ -3,6 +3,7 @@ import { Usuario } from 'src/app/_models/usuario';
 import { UsuarioService } from 'src/app/_services/usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-usuario-detail',
@@ -12,28 +13,44 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 export class UsuarioDetailComponent implements OnInit {
   usuario: Usuario;
   constructor(
-    private usuarioServices: UsuarioService,
+    public authService: AuthService,
+    private usuarioService: UsuarioService,
     private route: ActivatedRoute,
     private router: Router,
     private alertify: AlertifyService
   ) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe((data) => {
       this.usuario = data['usuario'];
     });
-    // const id = +this.route.snapshot.params['id'];
-    // this.usuarioServices.ObtenerUsuario(id).subscribe(
-    //   (usuario: Usuario) => {
-    //     this.usuario = usuario;
-    //   },
-    //   (error) => {
-    //     this.alertify.error(error);
-    //   }
-    // );
   }
 
-  onEditUsuario() {
+  onModificarUsuario() {
     this.router.navigate(['edit'], { relativeTo: this.route });
+  }
+
+  onEliminarUsuario() {
+    this.alertify.confirm2(
+      'Mantenimiento usuario',
+      '¿Esta seguro que desea eliminar este registro?',
+      () => {
+        this.usuarioService.EliminarUsuario(this.usuario.id).subscribe(
+          (next) => {
+            this.alertify.success('El usuario se eliminó satisfactoriamente');
+          },
+          (error) => {
+            this.alertify.error(error);
+          },
+          () => {
+            this.router.navigate(['/usuarios']);
+          }
+        );
+      }
+    );
+  }
+
+  get esAdministrador() {
+    return this.authService.esAdministrador();
   }
 }

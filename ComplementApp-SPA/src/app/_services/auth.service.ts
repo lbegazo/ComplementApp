@@ -4,7 +4,6 @@ import { map } from 'rxjs/Operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
-import { Usuario } from '../_models/usuario';
 
 @Injectable({
   providedIn: 'root',

@@ -1,0 +1,117 @@
+.bordealo {
+  border: 1px solid #ccc;
+}
+
+.addPadding {
+  padding: 10px;
+}
+
+.withoutPadding {
+  padding: 0px;
+  padding-left: 0px;
+}
+
+.withoutBorder {
+  border: none;
+}
+
+.withoutBorderBotton {
+  border-bottom: none;
+}
+
+.inner {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+table td {
+  padding: 0px;
+  vertical-align: top;
+}
+
+.inner {
+  border-right: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+.inner-end {
+  padding: 5px 5px;
+}
+
+.aplicaBackground {
+  background-color: lavender;
+}
+
+.center {
+  text-align: center;
+  margin: auto;
+}
+
+.right {
+  text-align: right;
+}
+
+/*
+.top5 {
+    margin-top: 50px;
+  }
+  
+  .row {
+    border: 1px solid;
+  }
+  
+  .row + .row {
+    border-top: 0;
+  }
+  
+  .flx {
+    display: flex;
+  }
+  
+  .inner {
+     border-right: 1px solid;
+     padding: 10px 15px;
+      }
+  
+  .inner-end {
+    padding: 10px 15px;
+  }
+
+  .center {
+    text-align: center;
+    margin: auto;
+    }
+
+    .sinPadding{
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .aplicaBackground {
+        background-color: lavender;
+    }
+
+/*
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.verticalCenter {
+    vertical-align: center;
+}
+
+.cellSinPadding{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.border {
+    border:thin solid;
+}
+*/

@@ -8,8 +8,8 @@ Modificacion
 Anulacion 3220
 	Detale de presupuesto Informacion del bien o servicio requerido(# CDP en la hoja detalle presupuestal)
 	Taeria el detalle del CDP
-	Aplica contrato No 2 firmas
-			Si 3 Firmas
+	Aplica contrato No 2 firmas XX
+			Si 3 Firmas XX
 
 
 
@@ -19,3 +19,5 @@ plan de compras
 rubro
 valores
 	
+
+=+SI(R11="";"";SI(R14="";"REGISTRE EL OBJETO DEL BIEN O SERVICIO A CONTRATAR";SI(AP17="";"REGISTRE EL VALOR DE LA SOLICITUD"; SI(B22="";"REGISTRE EN EL CAMPO OBSERVACIONES LA JUSTIFICACION DE LA SOLICITUD";""))))

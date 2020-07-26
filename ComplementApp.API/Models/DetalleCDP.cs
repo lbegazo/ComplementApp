@@ -25,6 +25,7 @@ namespace ComplementApp.API.Models
         public string Responsable { get; set; }
 
         public string Dependencia { get; set; }
+
         public string Rubro { get; set; }
 
         public decimal ValorAct { get; set; }
@@ -38,8 +39,6 @@ namespace ComplementApp.API.Models
         public decimal ValorOB { get; set; }
 
         public decimal ValorOP { get; set; }
-
-        // public string Tipo { get; set; }
 
         public string Contrato { get; set; }
 

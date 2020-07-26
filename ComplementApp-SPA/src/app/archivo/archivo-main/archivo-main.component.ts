@@ -16,9 +16,7 @@ export class ArchivoMainComponent implements OnInit {
   baseUrl = environment.apiUrl;
   path: string;
 
-  constructor(
-    private alertify: AlertifyService
-  ) {}
+  constructor(private alertify: AlertifyService) {}
 
   ngOnInit() {
     this.initializeUploader();
@@ -45,8 +43,12 @@ export class ArchivoMainComponent implements OnInit {
     };
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
-      if (response) {
-        console.log(response);
+      if (status === 200) {
+        this.alertify.success('La base de datos se actualizó correctamente');
+      }
+      else
+      {
+        this.alertify.error('No se pudo actualizar la base de datos');
       }
     };
   }

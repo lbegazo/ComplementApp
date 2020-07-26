@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  CanDeactivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
+  CanDeactivate
 } from '@angular/router';
 import { MemberEditComponent } from '../members/member-edit/member-edit.component';
 
@@ -18,3 +16,4 @@ export class PreventUnsavedChanges
     return true;
   }
 }
+

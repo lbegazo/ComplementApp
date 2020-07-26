@@ -1,7 +1,21 @@
-<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+<form
+  #editForm="ngForm"
+  id="editForm"
+  [formGroup]="registerForm"
+  (ngSubmit)="onRegister()"
+>
   <h2 class="text-center text-primary">Registro de usuario</h2>
   <hr />
   <div class="form-group">
+    <div class="col-12">
+      <div *ngIf="editForm.dirty" class="alert alert-info">
+        <strong>Información:</strong> Has realizado cambios en el formulario.
+        Cualquier cambio no guardado se perderá!!!
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group" *ngIf="!editMode">
     <input
       [ngClass]="{
         'is-invalid':
@@ -12,6 +26,7 @@
       class="form-control"
       placeholder="Usuario"
       formControlName="username"
+      id="username"
     />
     <div class="invalid-feedback">Por favor ingresa tu usuario</div>
   </div>
@@ -23,9 +38,12 @@
           registerForm.get('nombres').errors &&
           registerForm.get('nombres').touched
       }"
+      type="text"
       class="form-control"
       placeholder="Nombres"
-      formControlName="nombres"
+      formControlName="nombres"      
+      #inputNombres
+      (input)="inputNombres.value = $event.target.value.toUpperCase()"
     />
     <div
       class="invalid-feedback"
@@ -45,9 +63,12 @@
           registerForm.get('apellidos').errors &&
           registerForm.get('apellidos').touched
       }"
+      type="text"
       class="form-control"
       placeholder="Apellidos"
       formControlName="apellidos"
+      #inputApellidos
+      (input)="inputApellidos.value = $event.target.value.toUpperCase()"
     />
     <div
       class="invalid-feedback"
@@ -60,7 +81,7 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" *ngIf="!editMode">
     <input
       type="password"
       [ngClass]="{
@@ -101,7 +122,7 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" *ngIf="!editMode">
     <input
       type="password"
       [ngClass]="{
@@ -134,20 +155,20 @@
       Los passwords deben coincidir
     </div>
   </div>
+
   <div class="form-group">
     <select
       formControlName="areaControl"
       (change)="onSelectArea()"
       class="form-control"
-      [(ngModel)]="user.areaId"
       [ngClass]="{
         'is-invalid':
           registerForm.get('areaControl').touched &&
           registerForm.get('areaControl').hasError('required')
       }"
     >
-      <option [ngValue]="null" disabled>Selecciona el area</option>
-      <option *ngFor="let prf of areas" [ngValue]="prf">
+      <option [value]="null" disabled>Selecciona el area</option>
+      <option *ngFor="let prf of areas" [value]="prf.id">
         {{ prf.descripcion }}
       </option>
     </select>
@@ -167,15 +188,14 @@
       formControlName="cargoControl"
       (change)="onSelectCargo()"
       class="form-control"
-      [(ngModel)]="user.cargoId"
       [ngClass]="{
         'is-invalid':
           registerForm.get('cargoControl').touched &&
           registerForm.get('cargoControl').hasError('required')
       }"
     >
-      <option [ngValue]="null" disabled>Selecciona el cargo</option>
-      <option *ngFor="let prf of cargos" [ngValue]="prf">
+      <option [value]="null" disabled>Selecciona el cargo</option>
+      <option *ngFor="let prf of cargos" [value]="prf.id">
         {{ prf.descripcion }}
       </option>
     </select>
@@ -189,13 +209,17 @@
       El cargo es requerido
     </div>
   </div>
-  <div class="form-group">
-    <label>
-      <input
-        type="checkbox"
-        class="form-control"
-        formControlName="EsAdministradorControl"
-      /> Es Administrador
+
+  <div class="form-check">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      formControlName="EsAdministradorControl"
+      [value]="user?.esAdministrador"
+      id="chkEsAdministrador"
+    />
+    <label class="form-check-label" for="chkEsAdministrador"
+      >Es Administrador
     </label>
   </div>
 
@@ -203,13 +227,13 @@
     <button
       class="btn btn-success mr-2"
       type="submit"
-      [disabled]="registerForm.invalid"
+      [disabled]="!registerForm.dirty"
+      id="btnGuardar"
     >
-      Registrarse
+      Registrar
     </button>
     <button class="btn btn-default" type="button" (click)="onCancel()">
       Cancelar
     </button>
   </div>
 </form>
-<p>Form value: {{ registerForm.value | json }}</p>

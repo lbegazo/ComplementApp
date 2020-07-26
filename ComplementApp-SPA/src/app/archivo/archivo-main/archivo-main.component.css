@@ -6,3 +6,9 @@ input[type=file]{
     color: transparent;
     
 }
+
+.divider {
+    width: 10px;
+    height: auto;
+    display: inline-block;
+  }

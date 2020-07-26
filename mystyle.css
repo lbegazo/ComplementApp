@@ -1,0 +1,11 @@
+	table { border-collapse: collapse; width:100%;}
+  
+	.border {border:1px solid #ccc;}
+  
+  .addPadding {
+    padding:10px;
+  }
+  
+	table th { border-bottom:1px solid #ccc; text-align: left; padding:10px; background:#33A1DE; color:#fff;}
+  
+	table td { padding:0px; border-bottom:1px solid #ccc; border-right:1px solid #ccc; vertical-align:top}

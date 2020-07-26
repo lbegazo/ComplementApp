@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
+using ComplementApp.API.Dtos;
 
 namespace ComplementApp.API.Data
 {
@@ -10,6 +11,6 @@ namespace ComplementApp.API.Data
 
         Task<CDP> ObtenerCDP(string usuario, int numeroCDP);
 
-        Task<IEnumerable<DetalleCDP>> ObtenerDetalleDeCDP(string usuario, int numeroCDP);
+        Task<IEnumerable<DetalleCDPDto>> ObtenerDetalleDeCDP(string usuario, int numeroCDP);
     }
 }

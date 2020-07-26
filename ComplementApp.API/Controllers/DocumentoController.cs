@@ -245,7 +245,7 @@ namespace ComplementApp.API.Controllers
                         documento.Fecha = fecha;
 
                 documento.Estado = (row as DataRow).ItemArray[5].ToString();
-                documento.Rubro = (row as DataRow).ItemArray[6].ToString();
+                documento.Rubro = (row as DataRow).ItemArray[6].ToString().Trim();
 
                 if (!(row as DataRow).ItemArray[7].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[7].ToString(), out value))
@@ -296,9 +296,9 @@ namespace ComplementApp.API.Controllers
                 detalle.Proyecto = (row as DataRow).ItemArray[5].ToString();
                 detalle.ActividadBpin = (row as DataRow).ItemArray[6].ToString();
                 detalle.PlanDeCompras = (row as DataRow).ItemArray[7].ToString();
-                detalle.Responsable = (row as DataRow).ItemArray[8].ToString();
+                detalle.Responsable = (row as DataRow).ItemArray[8].ToString().Trim();
                 detalle.Dependencia = (row as DataRow).ItemArray[9].ToString();
-                detalle.Rubro = (row as DataRow).ItemArray[10].ToString();
+                detalle.Rubro = (row as DataRow).ItemArray[10].ToString().Trim();
 
                 if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))

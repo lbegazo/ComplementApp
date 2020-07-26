@@ -1,3 +1,636 @@
-<p>
-  cdp-edit works!
-</p>
+<form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="cdpForm">
+  <div class="col-md-10" id="content" #content>
+    <table class="table table-bordered">
+      <tr class="addPadding">
+        <td style="padding-left: 0px;">
+          <table class="bordealo addPadding gfg">
+            <tr>
+              <td colspan="12" style="padding-left: 0px;">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-2 inner center" style="height: 60px;">
+                      <label class="col-form-label-sm"
+                        ><strong>Versión No. 5</strong></label
+                      >
+                    </div>
+                    <div class="col-8 inner center" style="height: 60px;">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >SOLICITUD DE REGISTRO / MODIFICACION - CERTIFICADO DE
+                          DISPONIBILIDAD PRESUPUESTAL</strong
+                        ></label
+                      >
+                    </div>
+                    <div class="col-2 inner center" style="height: 60px;">
+                      <img
+                        src="/assets/img/ane_logo.png"
+                        alt="ane"
+                        width="100"
+                        height="50"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="12" class="withoutBorder">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-2 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>FECHA SOLICITUD</strong></label
+                      >
+                    </div>
+                    <div class="col-1 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ today | date: "dd/MM/yyyy" }}</label
+                      >
+                    </div>
+                    <div class="col-2 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>ESTADO CDP</strong></label
+                      >
+                    </div>
+                    <div class="col-1 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ cdp?.estado }}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                colspan="12"
+                class="withoutPadding withoutBorder"
+                style="padding-left: 0px;"
+              >
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-2 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>I. TIPO DE OPERACIÓN</strong></label
+                      >
+                    </div>
+                    <div class="col-1 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ this.tipoOperacion?.descripcion }}</label
+                      >
+                    </div>
+                    <div class="col-2 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>NUMERO CDP</strong></label
+                      >
+                    </div>
+                    <div class="col-1 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ cdp?.cdp }}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                colspan="12"
+                class="withoutBorder withoutPadding"
+                style="padding-left: 0px; padding-bottom: 0px;"
+              >
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-2 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>II. INFORMACION SOLICITANTE</strong></label
+                      >
+                    </div>
+                    <div class="col-3 inner left">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ this.usuario?.nombres }}
+                        {{ this.usuario?.apellidos }}</label
+                      >
+                    </div>
+
+                    <div class="col-1 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>CARGO</strong></label
+                      >
+                    </div>
+                    <div class="col-3 inner left">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ this.usuario?.cargoDescripcion }}</label
+                      >
+                    </div>
+                    <div class="col-1 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong>AREA</strong></label
+                      >
+                    </div>
+                    <div class="col-2 inner left">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ this.usuario?.areaDescripcion }}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="12" class="withoutPadding withoutBorder">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-12 inner aplicaBackground left">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >III.INFORMACION DEL BIEN O SERVICIO REQUERIDO</strong
+                        ></label
+                      >
+                    </div>
+                  </div>
+                  <div class="row left">
+                    <div class="col-3 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >NUMERO DE ACTIVIDAD (SEGÚN PACC)</strong
+                        ></label
+                      >
+                    </div>
+                    <div class="col-1 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ itemCdp?.idArchivo }}</label
+                      >
+                    </div>
+                    <div class="col-2 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong>APLICA CONTRATO</strong></label
+                      >
+                    </div>
+                    <div class="col-1 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ itemCdp?.contrato }}</label
+                      >
+                    </div>
+                  </div>
+                  <div class="row left">
+                    <div class="col-3 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >NOMBRE DEL BIEN O SERVICIO (SEGÚN PAA)</strong
+                        ></label
+                      >
+                    </div>
+                    <div class="col-9 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ itemCdp?.planDeCompras }}</label
+                      >
+                    </div>
+                  </div>
+
+                  <div class="row left">
+                    <div class="col-3 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong>PROYECTO DE INVERSION</strong></label
+                      >
+                    </div>
+                    <div class="col-9 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ itemCdp?.proyecto }}</label
+                      >
+                    </div>
+                  </div>
+                  <div class="row left">
+                    <div class="col-3 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >ACTIVIDAD DEL PROYECTO DE INVERSION</strong
+                        ></label
+                      >
+                    </div>
+                    <div class="col-9 inner">
+                      <label class="form-control" class="col-form-label-sm">
+                        {{ itemCdp?.actividadBpin }}</label
+                      >
+                    </div>
+                  </div>
+                  <div class="row left">
+                    <div class="col-3 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >OBJETO DEL BIEN O SERVICIO A CONTRATAR</strong
+                        ></label
+                      >
+                    </div>
+                    <div class="col-9 inner" *ngIf="esSolicitudInicial">
+                      <input
+                        [ngClass]="{
+                          'is-invalid':
+                            cdpForm.get('objetoBienControl').errors &&
+                            cdpForm.get('objetoBienControl').touched
+                        }"
+                        type="textArea"
+                        class="form-control col-form-label-sm"
+                        maxlength="200"
+                        formControlName="objetoBienControl"
+                        value="{{ cdp?.tipo }}"
+                      />
+                      <div class="invalid-feedback">
+                        REGISTRE EL OBJETO DEL BIEN O SERVICIO A CONTRATAR
+                      </div>
+                    </div>
+                    <div class="col-9 inner" *ngIf="!esSolicitudInicial">
+                      <label class="col-form-label-sm"> {{ cdp?.tipo }}</label>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="12" class="withoutPadding withoutBorder">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-12 inner aplicaBackground">
+                      <label class="col-form-label-sm"
+                        ><strong
+                          >IV. INFORMACION DE CONCEPTO(S) DE GASTO</strong
+                        ></label
+                      >
+                    </div>
+                  </div>
+                  <div *ngIf="!esSolicitudInicial">
+                    <div class="row">
+                      <div class="col-2 inner aplicaBackground">
+                        <label class="col-form-label-sm"
+                          ><strong>CODIGO</strong></label
+                        >
+                      </div>
+                      <div class="col-5 inner aplicaBackground">
+                        <label class="col-form-label-sm"
+                          ><strong>DESCRIPCION</strong></label
+                        >
+                      </div>
+                      <div class="col-1 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>S. ACTIVIDAD</strong></label
+                        >
+                      </div>
+                      <div class="col-1 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>VALOR CDP</strong></label
+                        >
+                      </div>
+                      <div class="col-1 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>SALDO CDP</strong></label
+                        >
+                      </div>
+                      <div class="col-2 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>VALOR SOLICITUD</strong></label
+                        >
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-12">
+                        <div *ngIf="detalleCdp">
+                          <div
+                            formArrayName="rubrosControles"
+                            class="row"
+                            *ngFor="let item of detalleCdp; let i = index"
+                          >
+                            <ng-container [formGroupName]="i">
+                              <div class="col-2 inner left">
+                                <label class="col-form-label-sm">{{
+                                  item?.rubro
+                                }}</label>
+                              </div>
+                              <div class="col-5 inner left">
+                                <label class="col-form-label-sm">{{
+                                  item?.rubroDescripcion
+                                }}</label>
+                              </div>
+                              <div class="col-1 inner right">
+                                <label class="col-form-label-sm">{{
+                                  item?.valorAct | number: "1.0-3"
+                                }}</label>
+                              </div>
+                              <div class="col-1 inner right">
+                                <label class="col-form-label-sm">{{
+                                  item?.valorCDP | number: "1.0-3"
+                                }}</label>
+                              </div>
+                              <div class="col-1 inner right">
+                                <label class="col-form-label-sm">{{
+                                  item?.saldoCDP | number: "1.0-3"
+                                }}</label>
+                              </div>
+                              <div class="col-2 inner right">
+                                <input
+                                  type="text"
+                                  style="text-align: right;"
+                                  class="form-control col-form-label-sm"
+                                  formControlName="rubroControl"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div
+                                  class="error col-form-label-sm"
+                                  *ngIf="
+                                    rubrosControles.controls[i].get(
+                                      'rubroControl'
+                                    )?.errors &&
+                                    rubrosControles.controls[i].get(
+                                      'rubroControl'
+                                    )?.invalid
+                                  "
+                                >
+                                  REGISTRE EL VALOR DE LA SOLICITUD
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="esSolicitudInicial">
+                    <div class="row">
+                      <div class="col-2 inner aplicaBackground">
+                        <label class="col-form-label-sm"
+                          ><strong>CODIGO</strong></label
+                        >
+                      </div>
+                      <div class="col-5 inner aplicaBackground">
+                        <label class="col-form-label-sm"
+                          ><strong>DESCRIPCION</strong></label
+                        >
+                      </div>
+                      <div class="col-2 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>V. ACTIVIDAD</strong></label
+                        >
+                      </div>
+                      <div class="col-1 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>S. ACTIVIDAD</strong></label
+                        >
+                      </div>                     
+                      <div class="col-2 inner aplicaBackground center">
+                        <label class="col-form-label-sm"
+                          ><strong>VALOR SOLICITUD</strong></label
+                        >
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-12">
+                        <div *ngIf="detalleCdp">
+                          <div
+                            formArrayName="rubrosControles"
+                            class="row"
+                            *ngFor="let item of detalleCdp; let i = index"
+                          >
+                            <ng-container [formGroupName]="i">
+                              <div class="col-2 inner left">
+                                <label class="col-form-label-sm">{{
+                                  item?.rubro
+                                }}</label>
+                              </div>
+                              <div class="col-5 inner left">
+                                <label class="col-form-label-sm">{{
+                                  item?.planDeCompras
+                                }}</label>
+                              </div>
+                              <div class="col-2 inner right">
+                                <label class="col-form-label-sm">{{
+                                  item?.valorAct | number: "1.0-3"
+                                }}</label>
+                              </div>
+                              <div class="col-1 inner right">
+                                <label class="col-form-label-sm">{{
+                                  item?.saldoAct | number: "1.0-3"
+                                }}</label>
+                              </div>                              
+                              <div class="col-2 inner right">
+                                <input
+                                  type="text"
+                                  style="text-align: right;"
+                                  class="form-control col-form-label-sm"
+                                  formControlName="rubroControl"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div
+                                  class="error col-form-label-sm"
+                                  *ngIf="
+                                    rubrosControles.controls[i].get(
+                                      'rubroControl'
+                                    )?.errors &&
+                                    rubrosControles.controls[i].get(
+                                      'rubroControl'
+                                    )?.invalid
+                                  "
+                                >
+                                  REGISTRE EL VALOR DE LA SOLICITUD
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="12" class="withoutBorder withoutPadding">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-12 inner aplicaBackground center">
+                      <label class="col-form-label-sm"
+                        ><strong>V. DETALLE DE LA MODIFICACION.</strong></label
+                      >
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-7 inner">
+                      <select
+                        id="tipoDetalleControl"
+                        formControlName="tipoDetalleControl"
+                        class="form-control col-form-label-sm"
+                        (change)="onSelectTipoDetalle()"
+                        [ngClass]="{
+                          'is-invalid':
+                            cdpForm.get('tipoDetalleControl').touched &&
+                            cdpForm
+                              .get('tipoDetalleControl')
+                              .hasError('required')
+                        }"
+                      >
+                        <option value="" disabled
+                          >Seleccione el detalle de la modificación</option
+                        >
+                        <option
+                          *ngFor="let item of listaTipoDetalle"
+                          [ngValue]="item"
+                        >
+                          {{ item.descripcion }}
+                        </option>
+                      </select>
+                      <div
+                        class="invalid-feedback left"
+                        *ngIf="
+                          cdpForm.get('tipoDetalleControl').touched &&
+                          cdpForm.get('tipoDetalleControl').hasError('required')
+                        "
+                      >
+                        SELECCIONE EL DETALLE DE LA MODIFICACION
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="12" class="withoutBorder withoutPadding">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-12 inner aplicaBackground center">
+                      <label class="col-form-label-sm"
+                        ><strong>VI. OBSERVACIONES</strong></label
+                      >
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 inner">
+                      <input
+                        [ngClass]="{
+                          'is-invalid':
+                            cdpForm.get('observacionesControl').errors &&
+                            cdpForm.get('observacionesControl').touched
+                        }"
+                        type="textArea"
+                        class="form-control col-form-label-sm"
+                        maxlength="200"
+                        formControlName="observacionesControl"
+                        id="observacionesControl"
+                      />
+                      <div class="invalid-feedback left">
+                        REGISTRE EN EL CAMPO OBSERVACIONES LA JUSTIFICACION DE
+                        LA SOLICITUD
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                colspan="12"
+                class="bordealo withoutPadding withoutBorderBotton"
+              >
+                <div class="container-fluid">
+                  <div class="row">
+                    <div
+                      class="col-12 withBorderBotton aplicaBackground center"
+                    >
+                      <label class="col-form-label-sm"
+                        ><strong>VII. FIRMAS</strong></label
+                      >
+                    </div>
+                  </div>
+                  <div id="firma" class="row mt-3">
+                    <div class="col-3 aplicaBackground withoutPadding left">
+                      <label class="col-form-label-sm">
+                        FIRMA:
+                      </label>
+                    </div>
+                    <div style="width: 50px;"></div>
+                    <div class="col-3 aplicaBackground withoutPadding left">
+                      <label class="col-form-label-sm">
+                        FIRMA:
+                      </label>
+                    </div>
+                    <div style="width: 50px;"></div>
+                    <div
+                      class="col-3 aplicaBackground withoutPadding left"
+                      *ngIf="!esSolicitudInicial"
+                    >
+                      <label class="col-form-label-sm">
+                        FIRMA:
+                      </label>
+                    </div>
+                  </div>
+                  <div id="firma" class="row mb-3">
+                    <div class="col-3 withoutPadding">
+                      <label class="col-form-label-sm"
+                        ><small>
+                          NOMBRE DEL SOLICITANTE: {{ this.usuario?.nombres }}
+                          {{ this.usuario?.apellidos }}</small
+                        >
+                      </label>
+                    </div>
+                    <div style="width: 50px;"></div>
+                    <div class="col-3 withoutPadding">
+                      <label class="col-form-label-sm"
+                        ><small>
+                          ORDENADOR DEL GASTO: ANDREY GEOVANNY RODRIGUEZ
+                          LEON</small
+                        >
+                      </label>
+                    </div>
+                    <div style="width: 50px;"></div>
+                    <div
+                      class="col-3 withoutPadding"
+                      *ngIf="!esSolicitudInicial"
+                    >
+                      <label class="col-form-label-sm"
+                        ><small>
+                          CONTRATACION: HANS RONALD NIÑO GARCIA
+                        </small>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 withBorderBotton center">
+                      <label class="col-form-label-sm"
+                        >El presente documentos es firmado bajo los parámetros
+                        establecidos en el Decreto Legislativo 491 del 29 de
+                        marzo de 2020, concordante con la Resolución de la ANE
+                        nro. 113 y 137 de 2020</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</form>
+<div class="row mt-3">
+  <div class="col-12 addPaddingLeft left">
+    <button
+      type="submit"
+      class="btn btn-primary"
+      (click)="exportarPDF()"
+      [disabled]="!cdpForm.valid"
+    >
+      Exportar PDF
+    </button>
+  </div>
+</div>
+
+<p>Form value: {{ cdpForm.value | json }}</p>
+<p>Form status: {{ cdpForm.status | json }}</p>

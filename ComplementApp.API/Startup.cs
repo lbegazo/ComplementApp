@@ -54,7 +54,7 @@ namespace ComplementApp.API
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IDocumentoRepository, DocumentoRepository>();
             services.AddScoped<ICDPRepository, CDPRepository>();
-
+            services.AddScoped<IListaRepository, ListaRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>

@@ -15,12 +15,10 @@ import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.com
 import { UsuarioEditComponent } from './Usuario/usuario-edit/usuario-edit.component';
 import { UsuarioDetailComponent } from './Usuario/usuario-detail/usuario-detail.component';
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
-import { CdpStartComponent } from './solicitudCdp/cdp-start/cdp-start.component';
 import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
-import { CdpDetailComponent } from './solicitudCdp/cdp-detail/cdp-detail.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
-import { CdpDetalleResolver } from './_resolvers/cdp-detalle.resolver';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
+import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -38,7 +36,11 @@ export const appRoutes: Routes = [
         component: UsuarioDetailComponent,
         resolve: { usuario: UsuarioDetalleResolver },
       },
-      { path: ':id/edit', component: UsuarioEditComponent },
+      {
+        path: ':id/edit',
+        component: UsuarioEditComponent,
+        canDeactivate: [PreventUnsavedChangesUsuario],
+      },
     ],
   },
   {
@@ -50,13 +52,10 @@ export const appRoutes: Routes = [
         path: 'cdp',
         component: CdpMainComponent,
         children: [
-          { path: '', component: CdpStartComponent },
           {
-            path: ':id',
-            component: CdpDetailComponent,
-            resolve: { cdp: CdpDetalleResolver },
+            path: ':id/edit',
+            component: CdpEditComponent,
           },
-          { path: ':id/edit', component: CdpEditComponent },
         ],
       },
       {
@@ -85,14 +84,3 @@ export const appRoutes: Routes = [
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
-
-// {path: '', redirectTo: '/recipes', pathMatch: 'full'},
-// {path: 'recipes', component: RecipesComponent,
-//     children:[
-//               {path:'', component: RecipeStartComponent},
-//               {path:'new', component: RecipeEditComponent},
-//               {path:':id', component: RecipeDetailComponent},
-//               {path:':id/edit', component: RecipeEditComponent}
-//             ]
-// },
-// {path: 'shoppingList', component: ShoppingListComponent}

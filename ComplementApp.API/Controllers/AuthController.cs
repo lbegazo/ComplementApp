@@ -33,7 +33,7 @@ namespace ComplementApp.API.Controllers
             userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.UserName))
-                return BadRequest("El username ya existe");
+                return BadRequest("El usuario ya existe");
 
             //var userToCreate = new User { Username = userForRegisterDto.UserName };
             //The destination is userForRegisterDto
@@ -68,7 +68,8 @@ namespace ComplementApp.API.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username),
-                new Claim(ClaimTypes.Role, role.ToString())
+                new Claim(ClaimTypes.Role, role.ToString()),
+                new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos)
             };
 
             //The server has to sign the token(To have a valid token)

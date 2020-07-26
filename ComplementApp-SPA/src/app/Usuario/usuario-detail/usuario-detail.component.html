@@ -1,30 +1,54 @@
-<div class="container ">
+<div class="container">
   <div class="row">
     <div class="col-xs-12">
       <div class="card">
-        <h1>{{ usuario.nombres }} {{ usuario.apellidos }}</h1>
+        <h1>Vista general de la cuenta</h1>
         <div class="card-body">
           <div>
+            <strong>Nombre de usuario:</strong>
+            <p>{{ usuario?.username }}</p>
+          </div>
+          <div>
+            <strong>Usuario:</strong>
+            <p>{{ usuario?.nombres }} {{ usuario?.apellidos }}</p>
+          </div>
+          <div>
             <strong>Cargo:</strong>
-            <p>{{ usuario.cargoDescripcion }}</p>
+            <p>{{ usuario?.cargoDescripcion }}</p>
           </div>
           <div>
             <strong>Area:</strong>
-            <p>{{ usuario.areaDescripcion }}</p>
+            <p>{{ usuario?.areaDescripcion }}</p>
           </div>
           <div>
             <strong>Fecha de último acceso:</strong>
-            <p>{{ usuario.fechaUltimoAcceso | timeago }}</p>
+            <p>{{ usuario?.fechaUltimoAcceso | timeago }}</p>
           </div>
           <div>
             <strong>Fecha de creación:</strong>
-            <p>{{ usuario.fechaCreacion | date: "mediumDate" }}</p>
+            <p>{{ usuario?.fechaCreacion | date: "mediumDate" }}</p>
+          </div>
+          <div>
+            <strong>Tipo de usuario:</strong>
+            <div *ngIf="usuario.esAdministrador">
+              Administrador
+            </div>
+            <div *ngIf="!usuario.esAdministrador">
+              Usuario estándar
+            </div>
           </div>
         </div>
-        <div class="card-footer">
-          <div class="btn-group d-flex">
-            <button class="btn btn-primary w-100">Like</button>
-            <button class="btn btn-success w-100">Message</button>
+        <div class="card-footer justificar" *ngIf="esAdministrador">
+          <div>
+            <button class="btn btn-primary" (click)="onModificarUsuario()">
+              Modificar
+            </button>
+          </div>
+          <div class="divider"></div>
+          <div>
+            <button class="btn btn-danger" (click)="onEliminarUsuario()">
+              Eliminar
+            </button>
           </div>
         </div>
       </div>

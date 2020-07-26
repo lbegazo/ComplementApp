@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form
+            #editForm="ngForm"
+            id="editForm"
+            [formGroup]="popupCDPForm"
+          >
+            <div class="row">
+              <div class="col-2 inner aplicaBackground">
+                <label class="col-form-label-sm"><strong>CODIGO</strong></label>
+              </div>
+              <div class="col-6 inner aplicaBackground">
+                <label class="col-form-label-sm"
+                  ><strong>DESCRIPCION</strong></label
+                >
+              </div>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label-sm"
+                  ><strong>V. ACTIVIDAD</strong></label
+                >
+              </div>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label-sm"
+                  ><strong>S. ACTIVIDAD</strong></label
+                >
+              </div>
+            </div>
+            <div *ngIf="detalleCdp">
+              <div
+                formArrayName="rubrosControles"
+                class="row"
+                *ngFor="let item of detalleCdp; let i = index"
+              >
+                <ng-container [formGroupName]="i">
+                  <div class="col-2 inner left">
+                    <label>
+                      <input
+                        type="checkbox"
+                        [value]="item?.id"
+                        (change)="onCheckChange($event)"
+                      />
+                      {{ item?.rubro }}
+                    </label>
+                  </div>
+                  <div class="col-6 inner left">
+                    <label class="col-form-label-sm">{{
+                      item?.planDeCompras
+                    }}</label>
+                  </div>
+                  <div class="col-2 inner right">
+                    <label class="col-form-label-sm">{{
+                      item?.valorAct | number: "1.0-3"
+                    }}</label>
+                  </div>
+                  <div class="col-2 inner right">
+                    <label class="col-form-label-sm">{{
+                      item?.saldoAct | number: "1.0-3"
+                    }}</label>
+                  </div>                  
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="row addPaddingTop">
+              <div class="col-12 right withoutPadding">
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  (click)="onAceptar()"
+                >
+                  {{ closeBtnName }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

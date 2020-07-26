@@ -8,6 +8,7 @@ namespace ComplementApp.API.Models
     public class CDP
     {
         public int Id { get; set; }
+        
         public string Dependencia { get; set; }
 
         public int Proy { get; set; }
@@ -19,6 +20,7 @@ namespace ComplementApp.API.Models
         public DateTime Fecha { get; set; }
 
         public string Estado { get; set; }
+
         public string Rubro { get; set; }
 
         public decimal Valor { get; set; }

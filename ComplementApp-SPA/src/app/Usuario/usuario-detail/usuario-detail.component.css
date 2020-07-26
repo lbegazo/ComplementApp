@@ -1,3 +1,18 @@
 .card {
-    padding: 3rem;
+  padding: 3rem;
+}
+
+.car-body {
+  text-align: left;
+}
+
+.justificar {
+  display: flex;
+  justify-content: center;
+}
+
+.divider {
+  width: 10px;
+  height: auto;
+  display: inline-block;
 }

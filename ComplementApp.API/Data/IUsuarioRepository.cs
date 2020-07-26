@@ -7,14 +7,13 @@ namespace ComplementApp.API.Data
     public interface IUsuarioRepository
     {
         Task<Usuario> Register(Usuario user, string password);
+        
         Task<IEnumerable<Usuario>> ObtenerUsuarios();
 
-        Task<Usuario> ObtenerUsuario(int id);
-
-        Task<IEnumerable<Cargo>> ObtenerCargos();
-
-        Task<IEnumerable<Area>> ObtenerAreas();
+        Task<Usuario> ObtenerUsuario(int id);       
 
         Task<bool> UserExists(string username);
+
+        Task<bool> EliminarUsuario(int id);
     }
 }

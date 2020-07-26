@@ -9,6 +9,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { RouterModule } from '@angular/router';
 import { TimeagoModule } from 'ngx-timeago';
 import { FileUploadModule } from 'ng2-file-upload';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { appRoutes } from './routes';
 import { AppComponent } from './app.component';
@@ -36,13 +37,17 @@ import { UsuarioItemComponent } from './Usuario/usuario-list/usuario-item/usuari
 import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.component';
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
-import { CdpStartComponent } from './solicitudCdp/cdp-start/cdp-start.component';
 import { CdpDetailComponent } from './solicitudCdp/cdp-detail/cdp-detail.component';
 import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
 import { CdpListComponent } from './solicitudCdp/cdp-list/cdp-list.component';
 import { CdpComponent } from './solicitudCdp/cdp-list/cdp/cdp.component';
 import { CdpDetalleResolver } from './_resolvers/cdp-detalle.resolver';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
+import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
+import { CdpHeaderComponent } from './solicitudCdp/cdp-header/cdp-header.component';
+import { ItemComponent } from './solicitudCdp/cdp-edit/item/item.component';
+import { TwoDigitDecimaNumberDirective } from './_directives/two-digit-decima-number.directive';
+import { PopupCdpComponent } from './solicitudCdp/popup-cdp/popup-cdp.component';
 
 
 export function tokenGetter() {
@@ -70,11 +75,14 @@ export function tokenGetter() {
     UsuarioStartComponent,
     CdpMainComponent,
     CdpListComponent,
-    CdpStartComponent,
     CdpDetailComponent,
     CdpEditComponent,
     CdpComponent,
-    ArchivoMainComponent
+    ArchivoMainComponent,
+    CdpHeaderComponent,
+    ItemComponent,
+    TwoDigitDecimaNumberDirective,
+    PopupCdpComponent
   ],
   imports: [
     BrowserModule,
@@ -86,6 +94,7 @@ export function tokenGetter() {
     FileUploadModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
+    ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TimeagoModule.forRoot(),
     RouterModule.forRoot(appRoutes),
@@ -106,6 +115,7 @@ export function tokenGetter() {
     CdpDetalleResolver,
     UsuarioDetalleResolver,
     PreventUnsavedChanges,
+    PreventUnsavedChangesUsuario
   ],
   bootstrap: [AppComponent],
 })

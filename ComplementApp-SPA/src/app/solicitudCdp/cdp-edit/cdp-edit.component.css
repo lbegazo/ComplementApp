@@ -1,0 +1,81 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.bordealo {
+  border: 1px solid #ccc;
+}
+
+.addPadding {
+  padding: 10px;
+}
+
+.addPaddingLeft {
+  padding-left: 30px;
+}
+
+.withoutPadding {
+  padding: 0px;
+  padding-left: 0px;
+}
+
+.withoutBorder {
+  border: none;
+}
+
+.withoutBorderBotton {
+  border-bottom: none;
+}
+
+.withBorderBotton {
+  border-bottom: 1px solid #ccc;
+}
+
+.inner {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+table td {
+  padding: 0px;
+  vertical-align: top;
+}
+
+.inner {
+  border-right: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+.inner-end {
+  padding: 5px 5px;
+}
+
+.aplicaBackground {
+  background-color: lavender;
+}
+
+.gfg {
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+
+.center {
+  text-align: center;
+  margin: auto;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+#firma {
+  display: flex;
+  justify-content: center;
+}
