@@ -8,7 +8,7 @@ namespace ComplementApp.API.Models
     public class CDP
     {
         public int Id { get; set; }
-        
+
         public string Dependencia { get; set; }
 
         public int Proy { get; set; }
@@ -23,8 +23,10 @@ namespace ComplementApp.API.Models
 
         public string Rubro { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal Valor { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal Saldo { get; set; }
 
         public string Tipo { get; set; }

@@ -16,7 +16,7 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
-        public async Task<bool> InsertaCabeceraCDP(IList<CDP> lista)
+        public bool InsertaCabeceraCDP(IList<CDP> lista)
         {
             try
             {
@@ -27,7 +27,8 @@ namespace ComplementApp.API.Data
                     SetOutputIdentity = true,
                     BatchSize = 4000
                 };
-                await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+                //await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+                 _context.BulkInsert(lista);
                 return true;
             }
             catch (Exception ex)
@@ -36,7 +37,8 @@ namespace ComplementApp.API.Data
             }
         }
 
-        public async Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista)
+        //public async Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista)
+        public bool InsertaDetalleCDP(IList<DetalleCDP> lista)
         {
             try
             {
@@ -47,7 +49,8 @@ namespace ComplementApp.API.Data
                     SetOutputIdentity = true,
                     BatchSize = 4000
                 };
-                await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+                //await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
+                _context.BulkInsert(lista);
                 return true;
             }
             catch (Exception ex)

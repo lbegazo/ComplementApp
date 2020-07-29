@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ComplementApp.API.Migrations
+namespace ComplementApp.API.Migrations.SqliteMigrations
 {
-    [DbContext(typeof(DataContext))]
-    [Migration("20200710151537_CreateUsuarioCDPDetalleAndOther")]
-    partial class CreateUsuarioCDPDetalleAndOther
+    [DbContext(typeof(SqliteDataContext))]
+    [Migration("20200727191400_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4");
+                .HasAnnotation("ProductVersion", "3.1.6");
 
             modelBuilder.Entity("ComplementApp.API.Models.Area", b =>
                 {
@@ -69,13 +69,13 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Saldo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<string>("Tipo")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Valor")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.HasKey("Id");
 
@@ -157,28 +157,28 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("SaldoAct")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("SaldoDisponible")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("SaldoTotal")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("ValorAct")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("ValorCDP")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("ValorOB")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("ValorOP")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.Property<decimal>("ValorRP")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("decimal(30,8)");
 
                     b.HasKey("Id");
 

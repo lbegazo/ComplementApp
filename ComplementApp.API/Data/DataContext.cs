@@ -1,13 +1,23 @@
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ComplementApp.API.Data
 {
+    
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
+        protected readonly IConfiguration Configuration;
 
+        public DataContext(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            // connect to sql server database
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         public DbSet<Value> Values { get; set; }

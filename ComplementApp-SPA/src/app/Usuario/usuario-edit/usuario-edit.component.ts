@@ -133,8 +133,8 @@ export class UsuarioEditComponent implements OnInit {
     if (this.registerForm.valid) {
       if (!this.editMode) {
         this.user = Object.assign({}, this.registerForm.value);
-        this.user.nombres = this.user.nombres.toUpperCase();
-        this.user.apellidos = this.user.apellidos.toUpperCase();
+        this.user.nombres = this.user.nombres.toUpperCase().trim();
+        this.user.apellidos = this.user.apellidos.toUpperCase().trim();
         this.user.areaId = this.areaSelected;
         this.user.cargoId = this.cargoSelected;
         this.user.esAdministrador = this.registerForm.get(
@@ -155,8 +155,8 @@ export class UsuarioEditComponent implements OnInit {
         );
       } else {
         this.user = Object.assign({}, this.registerForm.value);
-        this.user.nombres = this.user.nombres.toUpperCase();
-        this.user.apellidos = this.user.apellidos.toUpperCase();
+        this.user.nombres = this.user.nombres.toUpperCase().trim();
+        this.user.apellidos = this.user.apellidos.toUpperCase().trim();
         this.user.areaId = this.areaSelected;
         this.user.cargoId = this.cargoSelected;
         this.user.esAdministrador = this.registerForm.get(

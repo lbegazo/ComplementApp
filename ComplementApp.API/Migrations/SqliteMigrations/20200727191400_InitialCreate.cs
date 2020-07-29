@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ComplementApp.API.Migrations
+namespace ComplementApp.API.Migrations.SqliteMigrations
 {
-    public partial class CreateUsuarioCDPDetalleAndOther : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,8 +52,8 @@ namespace ComplementApp.API.Migrations
                     Fecha = table.Column<DateTime>(nullable: false),
                     Estado = table.Column<string>(nullable: true),
                     Rubro = table.Column<string>(nullable: true),
-                    Valor = table.Column<decimal>(nullable: false),
-                    Saldo = table.Column<decimal>(nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    Saldo = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
                     Tipo = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -78,15 +78,15 @@ namespace ComplementApp.API.Migrations
                     Responsable = table.Column<string>(nullable: true),
                     Dependencia = table.Column<string>(nullable: true),
                     Rubro = table.Column<string>(nullable: true),
-                    ValorAct = table.Column<decimal>(nullable: false),
-                    SaldoAct = table.Column<decimal>(nullable: false),
-                    ValorCDP = table.Column<decimal>(nullable: false),
-                    ValorRP = table.Column<decimal>(nullable: false),
-                    ValorOB = table.Column<decimal>(nullable: false),
-                    ValorOP = table.Column<decimal>(nullable: false),
+                    ValorAct = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    SaldoAct = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    ValorCDP = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    ValorRP = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    ValorOB = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    ValorOP = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
                     Contrato = table.Column<string>(nullable: true),
-                    SaldoTotal = table.Column<decimal>(nullable: false),
-                    SaldoDisponible = table.Column<decimal>(nullable: false),
+                    SaldoTotal = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
+                    SaldoDisponible = table.Column<decimal>(type: "decimal(30,8)", nullable: false),
                     Area = table.Column<string>(nullable: true),
                     Paa = table.Column<int>(nullable: false),
                     IdSofi = table.Column<int>(nullable: false)
@@ -140,6 +140,44 @@ namespace ComplementApp.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Username = table.Column<string>(nullable: true),
+                    PasswordHash = table.Column<byte[]>(nullable: true),
+                    PasswordSalt = table.Column<byte[]>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
+                    DayOfBirth = table.Column<DateTime>(nullable: false),
+                    LastActive = table.Column<DateTime>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    KnownAs = table.Column<string>(nullable: true),
+                    Introduction = table.Column<string>(nullable: true),
+                    LookingFor = table.Column<string>(nullable: true),
+                    Interests = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Values",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Values", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TB_Usuario",
                 columns: table => new
                 {
@@ -173,6 +211,34 @@ namespace ComplementApp.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Url = table.Column<string>(nullable: true),
+                    DateAdded = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    IsMain = table.Column<bool>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photos_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_UserId",
+                table: "Photos",
+                column: "UserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_TB_Usuario_AreaId",
                 table: "TB_Usuario",
@@ -186,6 +252,9 @@ namespace ComplementApp.API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Photos");
+
             migrationBuilder.DropTable(
                 name: "TB_CDP");
 
@@ -203,6 +272,12 @@ namespace ComplementApp.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "TB_Usuario");
+
+            migrationBuilder.DropTable(
+                name: "Values");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "TB_Area");

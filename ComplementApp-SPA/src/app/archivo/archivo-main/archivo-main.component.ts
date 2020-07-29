@@ -28,16 +28,17 @@ export class ArchivoMainComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + 'documento/',
+      url: this.baseUrl + 'documento/upload',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
       allowedFileType: ['xls'],
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 5 * 1024 * 1024,
-      queueLimit: 1,
+      queueLimit: 1
     });
 
+   
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
@@ -45,9 +46,7 @@ export class ArchivoMainComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (status === 200) {
         this.alertify.success('La base de datos se actualizó correctamente');
-      }
-      else
-      {
+      } else {
         this.alertify.error('No se pudo actualizar la base de datos');
       }
     };

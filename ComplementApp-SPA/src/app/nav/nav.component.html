@@ -10,11 +10,11 @@
       <li class="nav-item" routerLinkActive="active" *ngIf="esAdministrador()">
         <a class="nav-link" [routerLink]="['/usuarios']">Usuario</a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
+      <li class="nav-item" routerLinkActive="active" *ngIf="esAdministrador()">
         <a class="nav-link" [routerLink]="['/archivo']">Actualizar BD</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/cdp']">CDP</a>
+        <a class="nav-link" [routerLink]="['/cdp']">Solicitud o Modificación de CDP</a>
       </li>
     </ul>
 
@@ -50,15 +50,19 @@
         [(ngModel)]="model.username"
         required
         #username="ngModel"
+        autocomplete="off" readonly 
+        onfocus="this.removeAttribute('readonly');" 
       />
       <input
         class="form-control mr-sm-2"
-        type="password"
+        type="password"     
         name="password"
         placeholder="Password"
         [(ngModel)]="model.password"
         required
-        #password="ngModel"
+        #password="ngModel"        
+        autocomplete="off" readonly 
+        onfocus="this.removeAttribute('readonly');"
       />
       <button
         [disabled]="!loginForm.valid"

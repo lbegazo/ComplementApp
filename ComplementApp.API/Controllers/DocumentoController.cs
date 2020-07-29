@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace ComplementApp.API.Controllers
 {
@@ -38,22 +41,25 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult ActualizarBaseDeDatos(string path)
+        [Route("upload")]
+        public IActionResult ActualizarBaseDeDatos()
         {
 
-            var result = EliminarinformacionCDP();
-
-            if (result)
+            if (Request.Form.Files.Count > 0)
             {
-                if (string.IsNullOrEmpty(path))
-                {
-                    path = _configuration.GetSection("AppSettings:pathArchivo").Value;
-                }
-                if (!System.IO.File.Exists(path))
-                    throw new ArgumentException("El archivo no existe!!!");
+                var result = EliminarInformacionCDP();
 
-                DataTable dtDetalle = ObtenerDetalleDeExcel(path);
-                DataTable dtCabecera = ObtenerCabeceraDeExcel(path);
+                IFormFile file = Request.Form.Files[0];
+
+                if (file == null || file.Length <= 0)
+                    return BadRequest("File is empty");
+
+                if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    return BadRequest("File extension is not supported");
+
+
+                DataTable dtDetalle = ObtenerDetalleDeExcel(file);
+                DataTable dtCabecera = ObtenerCabeceraDeExcel(file);
 
                 #region Mapear listas
 
@@ -65,11 +71,14 @@ namespace ComplementApp.API.Controllers
                 var taskCabecera = _repo.InsertaCabeceraCDP(listaDocumento);
                 var taskDetalle = _repo.InsertaDetalleCDP(listaDetalle);
 
-                taskCabecera.Wait();
-                taskDetalle.Wait();
+                // taskCabecera.Wait();
+                // taskDetalle.Wait();
 
-                bool EsCabeceraValida = taskCabecera.Result;
-                bool EsDetalleValida = taskCabecera.Result;
+                // bool EsCabeceraValida = taskCabecera.Result;
+                // bool EsDetalleValida = taskCabecera.Result;
+
+                bool EsCabeceraValida = taskCabecera;
+                bool EsDetalleValida = taskCabecera;
 
                 if (!EsCabeceraValida)
                     throw new ArgumentException("No se pudo registrar la cabecera");
@@ -78,9 +87,118 @@ namespace ComplementApp.API.Controllers
                     throw new ArgumentException("No se pudieron registrar los detalles");
 
                 //Thread.Sleep(3);
+
             }
+            else
+            {
+                return BadRequest("El archivo no pudo ser enviado al servidor web");
+            }
+
             return Ok();
         }
+
+        private static DataTable ObtenerDetalleDeExcel(IFormFile file)
+        {
+            DataTable dtDetalle = new DataTable();
+            bool hasHeader = true;
+            try
+            {
+                using (var package = new ExcelPackage())
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        file.CopyTo(stream);
+                        package.Load(stream);
+                    }
+
+                    #region Cargar Detalle
+
+                    var wsDetalle = package.Workbook.Worksheets["DetallePresup"];
+
+                    foreach (var firstRowCell in wsDetalle.Cells[1, 1, 1, 23])
+                    {
+                        dtDetalle.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
+                    var startRow = hasHeader ? 2 : 1;
+                    for (int rowNum = startRow; rowNum <= wsDetalle.Dimension.End.Row; rowNum++)
+                    {
+                        var wsRow = wsDetalle.Cells[rowNum, 1, rowNum, 23];
+                        DataRow row = dtDetalle.Rows.Add();
+
+                        foreach (var cell in wsRow)
+                        {
+                            row[cell.Start.Column - 1] = cell.Value;
+                        }
+                        //Me fijo en el ID de la hoja DetallePresup
+                        if (row.ItemArray[1].ToString().Equals(string.Empty))
+                        {
+                            dtDetalle.Rows.Remove(row);
+                            break;
+                        }
+                    }
+
+                    #endregion Cargar Detalle
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return dtDetalle;
+        }
+
+        private static DataTable ObtenerCabeceraDeExcel(IFormFile file)
+        {
+            DataTable dtCabecera1 = new DataTable();
+            bool hasHeader = true;
+            try
+            {
+                using (var package = new ExcelPackage())
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        file.CopyTo(stream);
+                        package.Load(stream);
+                    }
+
+                    #region Cargar Cabecera
+
+                    var wsCabecera = package.Workbook.Worksheets["BD"];
+
+                    foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, 10])
+                    {
+                        dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
+                    var startRow = hasHeader ? 2 : 1;
+                    for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
+                    {
+                        var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, 10];
+                        DataRow row = dtCabecera1.Rows.Add();
+                        foreach (var cell in wsRow)
+                        {
+                            row[cell.Start.Column - 1] = cell.Value;
+                        }
+                        //Me fijo en el CDP de la hoja BD
+                        if (row.ItemArray[3].ToString().Equals(string.Empty))
+                        {
+                            dtCabecera1.Rows.Remove(row);
+                            break;
+                        }
+
+                    }
+
+                    #endregion Cargar Cabecera                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return dtCabecera1;
+        }
+
+
 
         /// <summary>
         /// Consumir Servicio Rest del Banco de la República
@@ -115,6 +233,7 @@ namespace ComplementApp.API.Controllers
             }
             return result;
         }
+
 
         private static DataTable ObtenerDetalleDeExcel(string path)
         {
@@ -350,7 +469,7 @@ namespace ComplementApp.API.Controllers
             return listaDocumento;
         }
 
-        private bool EliminarinformacionCDP()
+        private bool EliminarInformacionCDP()
         {
             var resultado = false;
             resultado = this._repo.EliminarCabeceraCDP();

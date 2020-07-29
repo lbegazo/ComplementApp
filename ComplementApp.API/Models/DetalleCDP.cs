@@ -28,22 +28,31 @@ namespace ComplementApp.API.Models
 
         public string Rubro { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal ValorAct { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoAct { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal ValorCDP { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal ValorRP { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal ValorOB { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal ValorOP { get; set; }
 
         public string Contrato { get; set; }
 
+        [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoTotal { get; set; }
 
+
+        [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoDisponible { get; set; }
 
         public string Area { get; set; }
