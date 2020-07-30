@@ -1,36 +1,35 @@
 <form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="cdpForm">
-  <div class="col-md-10" id="content" #content>
+  <div class="col-md-12" id="content" #content>
     <table class="table table-bordered">
       <tr class="addPadding">
         <td style="padding-left: 0px;">
           <table class="bordealo addPadding gfg">
             <tr>
               <td colspan="12" style="padding-left: 0px;">
-                <div class="container-fluid">
-                  <div class="row">
-                    <div class="col-2 inner center" style="height: 60px;">
+                <table>
+                  <tr>
+                    <td style="width: 16%;"  style="vertical-align: middle;">
                       <label class="col-form-label-sm"
                         ><strong>Versión No. 5</strong></label
                       >
-                    </div>
-                    <div class="col-8 inner center" style="height: 60px;">
-                      <label class="col-form-label-sm"
-                        ><strong
-                          >SOLICITUD DE REGISTRO / MODIFICACION - CERTIFICADO DE
-                          DISPONIBILIDAD PRESUPUESTAL</strong
-                        ></label
-                      >
-                    </div>
-                    <div class="col-2 inner center" style="height: 60px;">
+                    </td>
+                    <td style="width: 68%;" style="vertical-align: middle;">
+                      <p>
+                      <strong
+                        >SOLICITUD DE REGISTRO / MODIFICACION - CERTIFICADO DE
+                        DISPONIBILIDAD PRESUPUESTAL</strong
+                      ></p>
+                    </td>
+                    <td style="width: 16%;"  style="vertical-align: middle;">
                       <img
-                        src="/assets/img/ane_logo.png"
-                        alt="ane"
-                        width="100"
-                        height="50"
-                      />
-                    </div>
-                  </div>
-                </div>
+                      src="/assets/img/ane_logo.png"
+                      alt="ane"
+                      width="100"
+                      height="60"
+                    />
+                    </td>
+                  </tr>
+                </table>                 
               </td>
             </tr>
             <tr>
@@ -47,12 +46,12 @@
                         {{ today | date: "dd/MM/yyyy" }}</label
                       >
                     </div>
-                    <div class="col-2 inner aplicaBackground left">
+                    <div class="col-1 inner aplicaBackground left">
                       <label class="col-form-label-sm"
                         ><strong>ESTADO CDP</strong></label
                       >
                     </div>
-                    <div class="col-1 inner">
+                    <div class="col-2 inner">
                       <label class="form-control" class="col-form-label-sm">
                         {{ cdp?.estado }}</label
                       >
@@ -80,12 +79,12 @@
                         {{ this.tipoOperacion?.descripcion }}</label
                       >
                     </div>
-                    <div class="col-2 inner aplicaBackground left">
+                    <div class="col-1 inner aplicaBackground left">
                       <label class="col-form-label-sm"
                         ><strong>NUMERO CDP</strong></label
                       >
                     </div>
-                    <div class="col-1 inner">
+                    <div class="col-2 inner">
                       <label class="form-control" class="col-form-label-sm">
                         {{ cdp?.cdp }}</label
                       >
@@ -117,7 +116,7 @@
 
                     <div class="col-1 inner aplicaBackground left">
                       <label class="col-form-label-sm"
-                        ><strong>CARGO</strong></label
+                        ><strong>AREA</strong></label
                       >
                     </div>
                     <div class="col-3 inner left">
@@ -127,7 +126,7 @@
                     </div>
                     <div class="col-1 inner aplicaBackground left">
                       <label class="col-form-label-sm"
-                        ><strong>AREA</strong></label
+                        ><strong>CARGO</strong></label
                       >
                     </div>
                     <div class="col-2 inner left">
@@ -460,7 +459,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-7 inner">
+                    <div class="col-12 inner">
                       <select
                         id="tipoDetalleControl"
                         formControlName="tipoDetalleControl"

@@ -17,8 +17,15 @@
 
 .deshabilitar {
     color: #ccc;
+
 }
 
 button {
     width: 100%;
 }
+
+/* table td {
+  border: 1px solid black;
+  width: 10%;
+} */
+

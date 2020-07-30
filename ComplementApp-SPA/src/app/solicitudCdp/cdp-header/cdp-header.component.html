@@ -1,109 +1,149 @@
-<form #editForm="ngForm" id="editForm" [formGroup]="registerForm">
+<form
+  #editForm="ngForm"
+  id="editForm"
+  [formGroup]="registerForm"
   
-  <div>
-    <div class="form-group row">
-      <div class="col-1 left">
-        <label class="col-form-label-md" for="fechaSolicitud"
-          ><strong>Fecha Solicitud</strong></label
-        >
-      </div>
-      <div class="col-2 left">
-        <label class="col-form-label-md" id="fechaSolicitud">
-          {{ today | date: "dd/MM/yyyy" }}</label
-        >
-      </div>
-      <div class="col-2 left">
-        <label class="col-form-label-md" for="estadoSolicitud"
-          ><strong>Estado Solicitud</strong></label
-        >
-      </div>
-      <div class="col-1 left">
-        <label class="col-form-label-md" id="estadoSolicitud">Generado</label>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-1 left">
-        <label
-          class="col-form-label-md"
-          for="tipoOperacion"
-          for="cdp"
-          [ngClass]="{ 'deshabilitar': habilitaBotonLimpiar }"
-          ><strong>Tipo Operación</strong></label
-        >
-      </div>
-      <div class="col-2 left">
-        <select
-          placeholder="Tipo de operación"
-          formControlName="tOperacionControl"
-          class="form-control"
-          (change)="onSelectTipoOperacion()"
-          [ngClass]="{
-            'is-invalid':
-              registerForm.get('tOperacionControl').touched &&
-              registerForm.get('tOperacionControl').hasError('required'),
-            'deshabilitar': habilitaBotonLimpiar
-          }"          
-        >
-          <option disabled value="">Selecciona tipo operación</option>
-          <option *ngFor="let item of listaTO" [ngValue]="item">
-            {{ item.descripcion }}
-          </option>
-        </select>
-        <div
-          class="invalid-feedback"
-          *ngIf="
-            registerForm.get('tOperacionControl').touched &&
-            registerForm.get('tOperacionControl').hasError('required')
-          "
-        >
-          El tipo de operación es requerido
-        </div>
-      </div>
-      <div class="col-2 left" *ngIf="!esSolicitudInicial">
-        <label
-          class="col-form-label-md"
-          for="cdp"
-          [ngClass]="{ 'deshabilitar': cdpSeleccionado }"
-          ><strong>Número de CDP</strong></label
-        >
-      </div>
-      <div class="col-1 left" *ngIf="!esSolicitudInicial">
-        <input
-          [ngClass]="{
-            'is-invalid':
-              registerForm.get('cdpControl').errors &&
-              registerForm.get('cdpControl').touched
-          }"
-          type="number"
-          class="form-control"
-          placeholder="CDP"
-          formControlName="cdpControl"
-          min="1"
-          onkeypress="return event.charCode >= 48"
-        />
-        <div class="invalid-feedback">Por favor ingrese el número de cdp</div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-1">
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="!registerForm.valid"
-          (click)="onBuscarCDP()"
-        >
-          Buscar
-        </button>
-      </div>
-      <div class="col-11" class="withoutPadding">
-        <button
-          type="submit"
-          class="btn btn-success"
-          (click)="onLimpiarCDP()"
-          [disabled]="!habilitaBotonLimpiar"
-        >
-          Limpiar
-        </button>
+>
+  <div  class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <table style="width: 100%;">
+          <tr>
+            <td style="width: 15%;">
+              <table style="width: 100%;">
+                <tr>
+                  <td>
+                    <label class="col-form-label-md" for="fechaSolicitud"
+                      ><strong>Fecha de Solicitud</strong></label
+                    >&nbsp;
+                    <label class="col-form-label-md" id="fechaSolicitud">
+                      {{ today | date: "dd/MM/yyyy" }}</label
+                    >
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="width: 15%;">
+              <table style="width: 100%;">
+                <tr>
+                  <td>
+                    <label class="col-form-label-md" for="estadoSolicitud"
+                      ><strong>Estado de Solicitud</strong></label
+                    >&nbsp;
+                    <label class="col-form-label-md" id="estadoSolicitud"
+                      >Generado</label
+                    >
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="width: 25%;">
+              <table style="width: 100%;">
+                <tr>
+                  <td>
+                    <label class="col-form-label-md"
+                      ><strong>Tipo de Operación</strong></label
+                    >&nbsp;
+                    <select
+                      placeholder="Tipo de operación"
+                      formControlName="tOperacionControl"
+                      class="form-control"
+                      style="width: 200px;display: inline-block"
+                      (change)="onSelectTipoOperacion()"
+                      [ngClass]="{
+                        'is-invalid':
+                          registerForm.get('tOperacionControl').touched &&
+                          registerForm
+                            .get('tOperacionControl')
+                            .hasError('required')
+                      }"
+                    >
+                      <option disabled value=""
+                        >Selecciona tipo operación</option
+                      >
+                      <option *ngFor="let item of listaTO" [ngValue]="item">
+                        {{ item.descripcion }}
+                      </option>
+                    </select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        registerForm.get('tOperacionControl').touched &&
+                        registerForm
+                          .get('tOperacionControl')
+                          .hasError('required')
+                      "
+                    >
+                      El tipo de operación es requerido
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="width: 20%;" *ngIf="!esSolicitudInicial">
+              <table style="width: 100%;">
+                <tr>
+                  <td >
+                    <label
+                      class="col-form-label-md"
+                      for="inputCDP"
+                      [ngClass]="{ deshabilitar: cdpSeleccionado }"
+                      ><strong>Número de CDP</strong></label
+                    >&nbsp;
+                    <input
+                      id="inputCDP"
+                      [ngClass]="{
+                        'is-invalid':
+                          registerForm.get('cdpControl').errors &&
+                          registerForm.get('cdpControl').touched
+                      }"
+                      type="number"
+                      class="form-control"
+                      style="width: 130px; display: inline-block"
+                      placeholder="CDP"
+                      formControlName="cdpControl"
+                      min="1"
+                      onkeypress="return event.charCode >= 48"
+                    />
+                    <div class="invalid-feedback">
+                      Por favor ingrese el número de cdp
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="width: 30%;">
+              <tr>
+                <td>
+                  <table style="width: 100%;">
+                    <tr>
+                      <td>
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          [disabled]="!registerForm.valid"
+                          (click)="onBuscarCDP()"
+                          style="width: 100px;"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarCDP()"
+                          [disabled]="!habilitaBotonLimpiar"
+                          style="width: 100px;"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
@@ -121,7 +161,7 @@
 </div>
 <div class="container-fluid mt-2">
   <div class="row no-gutters center">
-    <div class="col-12" *ngIf="rubroPresupuestalSinCdpSeleccionado?.length>0">
+    <div class="col-12" *ngIf="rubroPresupuestalSinCdpSeleccionado?.length > 0">
       <app-cdp-edit
         [cdp]="cdp"
         [tipoOperacion]="tipoOperacionSelecionado"
@@ -130,3 +170,6 @@
     </div>
   </div>
 </div>
+
+<!-- <p>Form value: {{ cdpForm.value | json }}</p>
+<p>Form status: {{ cdpForm.status | json }}</p> -->
