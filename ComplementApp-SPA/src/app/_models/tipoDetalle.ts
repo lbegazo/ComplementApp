@@ -1,4 +1,4 @@
 export interface TipoDetalle {
-  id: number;
-  descripcion: string;
+  tipoDetalleCDPId: number;
+  nombre: string;
 }

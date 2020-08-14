@@ -1,6 +1,6 @@
 export interface DetalleCDP {
   id: number;
-  crp: number;
+  pcpId: number;
   idArchivo: number;
   cdp: number;
   proy: number;
@@ -10,8 +10,8 @@ export interface DetalleCDP {
   planDeCompras: string;
   responsable: string;
   dependencia: string;
-  rubro: string;
-  rubroDescripcion: string;
+  identificacionRubro: string;
+  rubroNombre: string;
   valorAct: number;
   saldoAct: number;
   valorCDP: number;
@@ -19,11 +19,13 @@ export interface DetalleCDP {
   valorRP: number;
   valorOB: number;
   valorOP: number;
-  tipo: string;
-  contrato: string;
+  aplicaContrato: string;
   saldoTotal: number;
   saldoDisponible: number;
   area: string;
-  paa: number;
-  idSofi: number;
+  rp: number;
+  valor_Convenio: number;
+  convenio: number;
+  decreto: string;
+  valorSolicitud: number;
 }

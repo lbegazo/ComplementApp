@@ -24,16 +24,13 @@ namespace ComplementApp.API.Controllers
             _repo = repo;
         }
 
-
-
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerListaCDP()
         {
-            string nombreCompleto = string.Empty;
-            nombreCompleto = await ObtenerNombreCompletoUsuario();
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);            
 
-            var cdps = await _repo.ObtenerListaCDP(nombreCompleto);
+            var cdps = await _repo.ObtenerListaCDP(usuarioId);
             return base.Ok(cdps);
         }
 
@@ -41,43 +38,21 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerCDP(int numeroCDP)
         {
-            string nombreCompleto = string.Empty;
-            nombreCompleto = await ObtenerNombreCompletoUsuario();
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);     
 
-            var cdps = await _repo.ObtenerCDP(nombreCompleto,numeroCDP);
+            var cdps = await _repo.ObtenerCDP(usuarioId,numeroCDP);
             return base.Ok(cdps);
         }
-
-
 
         [Route("[action]/{numeroCDP}")]
         [HttpGet]
         public async Task<IActionResult> ObtenerDetalleDeCDP(int numeroCDP)
         {
-            string nombreCompleto = string.Empty;
-            nombreCompleto = await ObtenerNombreCompletoUsuario();
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);  
 
-            if (string.IsNullOrEmpty(nombreCompleto))
-            {
-                return NotFound();
-            }
-            var CDPs = await _repo.ObtenerDetalleDeCDP(nombreCompleto, numeroCDP);
+            var CDPs = await _repo.ObtenerDetalleDeCDP(usuarioId, numeroCDP);
             return Ok(CDPs);
-        }
-
-
-        private async Task<string> ObtenerNombreCompletoUsuario()
-        {
-            string nombreCompleto = string.Empty;
-            var idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var usuario = await _usuarioRepo.ObtenerUsuario(idUsuario);
-
-            if (usuario != null)
-            {
-                nombreCompleto = usuario.Nombres + " " + usuario.Apellidos;
-            }
-            return nombreCompleto;
-        }
+        }        
 
     }
 }

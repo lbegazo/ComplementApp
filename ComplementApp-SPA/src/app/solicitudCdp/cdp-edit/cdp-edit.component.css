@@ -69,6 +69,10 @@ table td {
   height: 100%;
 }
 
+.center2 {
+  text-align:center;
+}
+
 
 .right {
   text-align: right;
@@ -80,5 +84,13 @@ table td {
 
 #firma {
   display: flex;
-  justify-content: center;
+  justify-content: center; 
+}
+
+.small {
+  font-size: smaller;
+}
+
+.smaller {
+  font-size: 11px;
 }

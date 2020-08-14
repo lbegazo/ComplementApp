@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient,  HttpParams } from '@angular/common/http';
 import { Observable, Subject, throwError, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Usuario } from '../_models/usuario';
 import { catchError } from 'rxjs/Operators';
+import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,24 @@ export class UsuarioService {
   usuarios: Usuario[];
 
   constructor(private http: HttpClient) {}
+
+  // ObtenerUsuarios(page?, itemPerPage?): Observable<Usuario[]> {
+  //   const paginatedResult: PaginatedResult<Usuario[]> = new PaginatedResult<
+  //     Usuario[]
+  //   >();
+
+  //   let params = new HttpParams();
+
+  //   if (page != null && itemPerPage != null) {
+  //     params = params.append('pageNumber', page);
+  //     params = params.append('pageSize', itemPerPage);
+  //   }
+
+  //   return this.http.get<Usuario[]>(this.baseUrl + 'usuario', { observe: 'response', params})
+  //   .pipe(
+  //     map(res)
+  //   );
+  // }
 
   ObtenerUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.baseUrl + 'usuario');
@@ -33,7 +52,7 @@ export class UsuarioService {
           this.ActualizarListaUsuarios();
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
           this.errorHandler(error);
         }
       );

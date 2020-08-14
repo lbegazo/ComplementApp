@@ -35,7 +35,7 @@ export class UsuarioDetailComponent implements OnInit {
       'Mantenimiento usuario',
       '¿Esta seguro que desea eliminar este registro?',
       () => {
-        this.usuarioService.EliminarUsuario(this.usuario.id).subscribe(
+        this.usuarioService.EliminarUsuario(this.usuario.usuarioId).subscribe(
           (next) => {
             this.alertify.success('El usuario se eliminó satisfactoriamente');
           },

@@ -29,10 +29,14 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerUsuarios()
+        public async Task<IActionResult> ObtenerUsuarios([FromQuery] UserParams userParams)
         {
-            var usuarios = await _repo.ObtenerUsuarios();
-            var usersForList = _mapper.Map<IEnumerable<UsuarioParaDetalleDto>>(usuarios);
+            var pagedList = await _repo.ObtenerUsuarios(userParams);
+            var usersForList = _mapper.Map<IEnumerable<UsuarioParaDetalleDto>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
             return Ok(usersForList);
         }
 
@@ -64,7 +68,7 @@ namespace ComplementApp.API.Controllers
             //Esta linea es para evitar retornar User, porque contiene el password
             var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
 
-            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.Id }, userToReturn);
+            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.UsuarioId }, userToReturn);
 
         }
 

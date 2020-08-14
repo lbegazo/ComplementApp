@@ -1,0 +1,74 @@
+[
+  {
+    "Nombre": "CONTROL INTERNO ",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "COMUNICACIONES ",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "TRANSFORMACIÓN DIGITAL ",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "GESTIÓN INTERNACIONAL ",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "GESTIÓN DEL CONOCIMIENTO ",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "CALIDAD",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "DIRECCIÓN GENERAL",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "PLANEACION",
+    "Area": "DIRECCION GENERAL"
+  },
+  {
+    "Nombre": "GESTIÓN DE TALENTO HUMANO ",
+    "Area": "SUBDIRECCION DE SOPORTE INSTITUCIONAL"
+  },
+  {
+    "Nombre": "GESTIÓN FINANCIERA ",
+    "Area": "SUBDIRECCION DE SOPORTE INSTITUCIONAL"
+  },
+  {
+    "Nombre": "CONTRATACIÓN ",
+    "Area": "SUBDIRECCION DE SOPORTE INSTITUCIONAL"
+  },
+  {
+    "Nombre": "GESTIÓN ADMINISTRATIVA ",
+    "Area": "SUBDIRECCION DE SOPORTE INSTITUCIONAL"
+  },
+  {
+    "Nombre": "SUBDIRECCIÓN DE SOPORTE ",
+    "Area": "SUBDIRECCION DE SOPORTE INSTITUCIONAL"
+  },
+  {
+    "Nombre": "CONTROL TECNICO DEL ESPECTRO",
+    "Area": "SUBDIRECCION DE VIGILANCIA Y CONTROL"
+  },
+  {
+    "Nombre": "INVESTIGACIONES",
+    "Area": "SUBDIRECCION DE VIGILANCIA Y CONTROL"
+  },
+  {
+    "Nombre": "PLANEACION TECNICA",
+    "Area": "SUBDIRECCION DE GESTION Y PLANEACION TECNICA"
+  },
+  {
+    "Nombre": "INGENIERÍA DEL ESPECTRO",
+    "Area": "SUBDIRECCION DE GESTION Y PLANEACION TECNICA"
+  },
+  {
+    "Nombre": "GESTIÓN DE ESPECTRO ",
+    "Area": "SUBDIRECCION DE GESTION Y PLANEACION TECNICA"
+  }
+]

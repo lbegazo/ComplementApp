@@ -31,7 +31,7 @@ namespace ComplementApp.API.Data
             return await _context.TipoOperacion.ToListAsync();
         }
 
-        public async Task<IEnumerable<TipoDetalleModificacion>> ObtenerListaTipoDetalleModificacion()
+        public async Task<IEnumerable<TipoDetalleCDP>> ObtenerListaTipoDetalleModificacion()
         {
             return await _context.TipoDetalleModificacion.ToListAsync();
         }

@@ -71,7 +71,7 @@ export class CdpHeaderComponent implements OnInit {
     if (!this.esSolicitudInicial) {
       //#region No solicitud Inicial
       const numCdp = this.cdpControl.value;
-      // const numCdp = 11820;
+      //const numCdp = 120;
       this.cdpService.ObtenerCDP(numCdp).subscribe(
         (documento: Cdp) => {
           this.cdp = documento;
@@ -214,7 +214,7 @@ export class CdpHeaderComponent implements OnInit {
   onSelectTipoOperacion() {
     this.tipoOperacionSelecionado = this.tOperacionControl
       .value as TipoOperacion;
-    this.idTipoOperacionSelecionado = +this.tipoOperacionSelecionado.id;
+    this.idTipoOperacionSelecionado = +this.tipoOperacionSelecionado.tipoOperacionId;
 
     if (this.idTipoOperacionSelecionado === 4) {
       // Solicitud Inicial

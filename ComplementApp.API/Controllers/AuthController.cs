@@ -10,6 +10,7 @@ using System.Text;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComplementApp.API.Controllers
 {
@@ -20,11 +21,14 @@ namespace ComplementApp.API.Controllers
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+
+        private readonly DataContext _dataContext;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, DataContext dataContext)
         {
             _mapper = mapper;
             _config = config;
             _repo = repo;
+            _dataContext = dataContext;
         }
 
         [HttpPost("Register")]
@@ -43,7 +47,7 @@ namespace ComplementApp.API.Controllers
             //Esta linea es para evitar retornar User, porque contiene el password
             var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
 
-            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.Id }, userToReturn);
+            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.UsuarioId }, userToReturn);
         }
 
         [HttpPost("Login")]
@@ -66,7 +70,7 @@ namespace ComplementApp.API.Controllers
             //The token contains 3 claims: userId and username, Administrator
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.UsuarioId.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username),
                 new Claim(ClaimTypes.Role, role.ToString()),
                 new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos)
@@ -96,5 +100,17 @@ namespace ComplementApp.API.Controllers
 
         }
 
+
+
+        [HttpPost("CargarDatosIniciales")]
+        ///
+        ///Este método realiza la carga inicial de datos la aplicación
+        ///
+        public IActionResult CargarDatosIniciales()
+        {
+            _dataContext.Database.Migrate();
+            Seed.CargarDataInicial(_dataContext);
+            return Ok();
+        }
     }
 }

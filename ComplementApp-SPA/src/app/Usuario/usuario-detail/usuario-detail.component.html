@@ -14,15 +14,15 @@
           </div>
           <div>
             <strong>Cargo:</strong>
-            <p>{{ usuario?.cargoDescripcion }}</p>
+            <p>{{ usuario?.cargoNombre }}</p>
           </div>
           <div>
             <strong>Area:</strong>
-            <p>{{ usuario?.areaDescripcion }}</p>
+            <p>{{ usuario?.areaNombre }}</p>
           </div>
           <div>
             <strong>Fecha de último acceso:</strong>
-            <p>{{ usuario?.fechaUltimoAcceso | timeago }}</p>
+            <p>{{ usuario?.fechaUltimoAcceso | date }}</p>
           </div>
           <div>
             <strong>Fecha de creación:</strong>

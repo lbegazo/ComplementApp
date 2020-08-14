@@ -22,7 +22,7 @@ export class TwoDigitDecimaNumberDirective {
   constructor(private el: ElementRef) {}
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    console.log(this.el.nativeElement.value);
+    //console.log(this.el.nativeElement.value);
     // Allow Backspace, tab, end, and home keys
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;

@@ -1,32 +1,26 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
-    [Table("TB_DetalleCDP")]
+    [Table("TDetalleCDP")]
     public class DetalleCDP
     {
-        public int Id { get; set; }
-        public int Crp { get; set; }
+        public int DetalleCdpId { get; set; }
+
+        [Column(TypeName = "VARCHAR(10)")]
+        public string PcpId { get; set; }
 
         public int IdArchivo { get; set; }
 
-        public int Cdp { get; set; }
+        public long Cdp { get; set; }
 
         public int Proy { get; set; }
 
         public int Prod { get; set; }
 
-        public string Proyecto { get; set; }
-
-        public string ActividadBpin { get; set; }
-
+        [Column(TypeName = "VARCHAR(500)")]
         public string PlanDeCompras { get; set; }
-
-        public string Responsable { get; set; }
-
-        public string Dependencia { get; set; }
-
-        public string Rubro { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorAct { get; set; }
@@ -46,20 +40,37 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorOP { get; set; }
 
-        public string Contrato { get; set; }
+        [Column(TypeName = "VARCHAR(10)")]
+        public string AplicaContrato { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoTotal { get; set; }
 
-
         [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoDisponible { get; set; }
 
-        public string Area { get; set; }
+        public int Rp { get; set; }
 
-        public int Paa { get; set; }
+        [Column(TypeName = "decimal(30,8)")]
+        public decimal Valor_Convenio { get; set; }
 
-        public int IdSofi { get; set; }
+        public int Convenio { get; set; }
+
+        public int ActividadGeneralId { get; set; }
+
+        public int ActividadEspecificaId { get; set; }
+
+        public int UsuarioId { get; set; }
+
+        public Usuario Usuario { get; set; }
+
+        public int DependenciaId { get; set; }
+
+        public int AreaId { get; set; }
+
+        public int RubroPresupuestalId { get; set; }
+
+        public int DecretoId { get; set; }
 
     }
 }

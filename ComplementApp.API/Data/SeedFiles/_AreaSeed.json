@@ -1,20 +1,22 @@
-[
+[    
     {
       "Codigo": "01",
-      "Descripcion": "SOPORTE INSTITUCIONAL",
-      "Estado": 1,
-      "EsAdministrable": 0
-    },
+      "Nombre": "DIRECCION GENERAL",
+      "Estado": 1
+    },    
     {
       "Codigo": "02",
-      "Descripcion": "DIRECCIÓN GENERAL",
-      "Estado": 1,
-      "EsAdministrable": 0
+      "Nombre": "SUBDIRECCION DE SOPORTE INSTITUCIONAL",
+      "Estado": 1
     },
     {
       "Codigo": "03",
-      "Descripcion": "VIGILANCIA Y CONTROL",
-      "Estado": 1,
-      "EsAdministrable": 0
+      "Nombre": "SUBDIRECCION DE GESTION Y PLANEACION TECNICA",
+      "Estado": 1
+    },
+    {
+      "Codigo": "04",
+      "Nombre": "SUBDIRECCION DE VIGILANCIA Y CONTROL",
+      "Estado": 1
     }
   ]

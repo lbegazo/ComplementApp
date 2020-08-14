@@ -29,7 +29,7 @@ export class ListaService
   }
 
   ObtenerListaTipoDetalle(): Observable<TipoDetalle[]> {
-    return this.http.get<TipoOperacion[]>(this.baseUrl + 'lista/ObtenerListaTipoDetalleModificacion');
+    return this.http.get<TipoDetalle[]>(this.baseUrl + 'lista/ObtenerListaTipoDetalleModificacion');
   }
 
 

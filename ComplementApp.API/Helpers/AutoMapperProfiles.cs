@@ -30,8 +30,8 @@ namespace ComplementApp.API.Helpers
             #region Usuario
 
             CreateMap<Usuario, UsuarioParaDetalleDto>()
-                .ForMember(u => u.AreaDescripcion, opt => opt.MapFrom(u => u.Cargo.Descripcion))
-                .ForMember(u => u.CargoDescripcion, opt => opt.MapFrom(u => u.Area.Descripcion));
+                .ForMember(u => u.AreaNombre, opt => opt.MapFrom(u => u.Area.Nombre))
+                .ForMember(u => u.CargoNombre, opt => opt.MapFrom(u => u.Cargo.Nombre));
 
             CreateMap<UsuarioParaRegistrarDto, Usuario>();
             CreateMap<UsuarioParaActualizar, Usuario>();

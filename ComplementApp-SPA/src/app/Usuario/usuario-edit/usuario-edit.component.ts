@@ -31,16 +31,16 @@ export class UsuarioEditComponent implements OnInit {
   editMode = false;
   @Output() cancelRegisterEvent = new EventEmitter();
   user: Usuario = {
-    id: 0,
+    usuarioId: 0,
     username: '',
     nombres: '',
     apellidos: '',
     password: '',
     cargoId: 0,
     areaId: 0,
-    areaDescripcion: '',
-    cargoDescripcion: '',
-    esAdministrador: 0,
+    areaNombre: '',
+    cargoNombre: '',
+    esAdministrador: false,
     fechaCreacion: new Date(),
     fechaUltimoAcceso: new Date(),
   };
@@ -140,8 +140,8 @@ export class UsuarioEditComponent implements OnInit {
         this.user.esAdministrador = this.registerForm.get(
           'EsAdministradorControl'
         ).value
-          ? 1
-          : 0;
+          ? true
+          : false;
         this.usuarioService.RegistrarUsuario(this.user).subscribe(
           () => {
             this.alertify.success('El usuario se registró satisfactoriamente');
@@ -162,8 +162,8 @@ export class UsuarioEditComponent implements OnInit {
         this.user.esAdministrador = this.registerForm.get(
           'EsAdministradorControl'
         ).value
-          ? 1
-          : 0;
+          ? true
+          : false;
         // console.log(this.user);
         this.usuarioService
           .ActualizarUsuario(this.idUsuario, this.user)

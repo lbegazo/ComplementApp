@@ -1,0 +1,17 @@
+[
+  {
+    "Nombre": "Provisional",
+    "Descripcion": "Provisional",
+    "TipoDocumento": "DetallePresupuesto"
+  },
+  {
+    "Nombre": "Vigente",
+    "Descripcion": "Vigente",
+    "TipoDocumento": "DetallePresupuesto"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "DetallePresupuesto"
+  }
+]

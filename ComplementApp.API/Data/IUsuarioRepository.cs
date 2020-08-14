@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Data
@@ -8,7 +8,7 @@ namespace ComplementApp.API.Data
     {
         Task<Usuario> Register(Usuario user, string password);
         
-        Task<IEnumerable<Usuario>> ObtenerUsuarios();
+        Task<PagedList<Usuario>> ObtenerUsuarios(UserParams userParams);
 
         Task<Usuario> ObtenerUsuario(int id);       
 

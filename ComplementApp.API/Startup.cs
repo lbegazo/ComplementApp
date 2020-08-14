@@ -50,23 +50,25 @@ namespace ComplementApp.API
         {
             /*The order is not important*/
 
-            if (_env.IsProduction())
-                services.AddDbContext<DataContext>();
-            else
-                services.AddDbContext<DataContext, SqliteDataContext>();
+            services.AddDbContext<DataContext>();
+
+            // if (_env.IsProduction())
+            //     services.AddDbContext<DataContext>();
+            // else
+            //     services.AddDbContext<DataContext, SqliteDataContext>();
 
 
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlServer(Configuration["DefaultConnection"],
-                sqlServerOptionsAction: sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 3,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null);
-                });
-            });
+            // services.AddDbContext<DataContext>(options =>
+            // {
+            //     options.UseSqlServer(Configuration["DefaultConnection"],
+            //     sqlServerOptionsAction: sqlOptions =>
+            //     {
+            //         sqlOptions.EnableRetryOnFailure(
+            //         maxRetryCount: 3,
+            //         maxRetryDelay: TimeSpan.FromSeconds(30),
+            //         errorNumbersToAdd: null);
+            //     });
+            // });
 
             //Avoid use System.Text.Json package     
             services.AddControllers()

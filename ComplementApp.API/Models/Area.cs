@@ -1,18 +1,22 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
-    [Table("TB_Area")]
+    [Table("TArea")]
     public class Area
     {
-        public int Id { get; set; }
+        public int AreaId { get; set; }
 
+        [Required]
+        [Column(TypeName = "VARCHAR(10)")]
         public string Codigo { get; set; }
 
-        public string Descripcion { get; set; }
+        [Required]
+        [Column(TypeName = "VARCHAR(100)")]
+        public string Nombre { get; set; }
 
         public bool Estado { get; set; }
 
-        public bool EsAdministrable { get; set; }
     }
 }

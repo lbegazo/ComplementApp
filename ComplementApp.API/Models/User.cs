@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
+    [Table("TUser")]
     public class User
     {
         public int Id { get; set; }

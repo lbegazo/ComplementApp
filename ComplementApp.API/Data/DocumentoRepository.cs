@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 
@@ -16,19 +17,30 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
-        public bool InsertaCabeceraCDP(IList<CDP> lista)
+        public bool InsertaCabeceraCDP(IList<CDPDto> lista)
         {
             try
             {
-                CancellationToken cancellation = new CancellationToken(false);
-                var bulkConfig = new BulkConfig
-                {
-                    PreserveInsertOrder = true,
-                    SetOutputIdentity = true,
-                    BatchSize = 4000
-                };
+                #region Por Eliminar
+
+                // CancellationToken cancellation = new CancellationToken(false);
+                // var bulkConfig = new BulkConfig
+                // {
+                //     PreserveInsertOrder = true,
+                //     SetOutputIdentity = true,
+                //     BatchSize = 4000
+                // };
                 //await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
-                 _context.BulkInsert(lista);
+
+                #endregion Por Eliminar
+
+                #region Setear datos
+
+                List<CDP> listaCDP = obtenerListaCdp(lista);
+
+                #endregion Setear datos
+
+                _context.BulkInsert(listaCDP);
                 return true;
             }
             catch (Exception ex)
@@ -38,24 +50,22 @@ namespace ComplementApp.API.Data
         }
 
         //public async Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista)
-        public bool InsertaDetalleCDP(IList<DetalleCDP> lista)
+        public bool InsertaDetalleCDP(IList<DetalleCDPDto> lista)
         {
             try
             {
-                CancellationToken cancellation = new CancellationToken(false);
-                var bulkConfig = new BulkConfig
-                {
-                    PreserveInsertOrder = true,
-                    SetOutputIdentity = true,
-                    BatchSize = 4000
-                };
-                //await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
-                _context.BulkInsert(lista);
+                #region Setear datos
+
+                List<DetalleCDP> listaCDP = obtenerListaDetalleCdp(lista);
+
+                #endregion Setear datos
+
+                _context.BulkInsert(listaCDP);
                 return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("error " +ex.Message);
+                throw new Exception("error " + ex.Message);
             }
         }
 
@@ -78,18 +88,197 @@ namespace ComplementApp.API.Data
 
         public bool EliminarDetalleCDP()
         {
-            try{
-            if (!_context.DetalleCDP.Any())
-                return true;
+            try
+            {
+                if (!_context.DetalleCDP.Any())
+                    return true;
 
-            if (_context.DetalleCDP.Any())
-                return _context.DetalleCDP.BatchDelete() > 0;
+                if (_context.DetalleCDP.Any())
+                    return _context.DetalleCDP.BatchDelete() > 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
             return false;
+        }
+
+        private List<CDP> obtenerListaCdp(IList<CDPDto> lista)
+        {
+            List<CDP> listaCDP = new List<CDP>();
+            CDP cdp = null;
+
+            var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
+            var listaTerceros = _context.Tercero.ToList();
+
+            foreach (var item in lista)
+            {
+                cdp = new CDP();
+
+                cdp.Instancia = item.Instancia;
+                cdp.Cdp = item.Cdp;
+                cdp.Crp = item.Crp;
+                cdp.Obligacion = item.Obligacion;
+                cdp.OrdenPago = item.OrdenPago;
+                cdp.Fecha = item.Fecha;
+
+                cdp.ValorInicial = item.ValorInicial;
+                cdp.Operacion = item.Operacion;
+                cdp.ValorTotal = item.ValorTotal;
+                cdp.SaldoActual = item.SaldoActual;
+
+                cdp.Detalle1 = item.Detalle1;
+                cdp.Detalle2 = item.Detalle2;
+                cdp.Detalle3 = item.Detalle3;
+                cdp.Detalle4 = item.Detalle4;
+                cdp.Detalle5 = item.Detalle5;
+                cdp.Detalle6 = item.Detalle6;
+                cdp.Detalle7 = item.Detalle7;
+                cdp.Detalle8 = item.Detalle8;
+                cdp.Detalle9 = item.Detalle9;
+
+                //Rubro Presupuestal
+                if (!string.IsNullOrEmpty(item.IdentificacionRubro))
+                {
+                    var rubro = listaRubrosPresupuestales
+                                    .Where(c => c.Identificacion.ToUpper() == item.IdentificacionRubro.ToUpper())
+                                    .FirstOrDefault();
+                    if (rubro != null)
+                    {
+                        cdp.RubroPresupuestal = rubro;
+                        cdp.RubroPresupuestalId = rubro.RubroPresupuestalId;
+                    }
+                }
+
+                //Tercero
+                if (!string.IsNullOrEmpty(item.NumeroIdentificacion))
+                {
+                    var tercero = listaTerceros
+                                .Where(c => c.NumeroIdentificacion == item.NumeroIdentificacion
+                                            && c.TipoIdentificacion == item.TipoIdentificacion).FirstOrDefault();
+                    if (tercero != null)
+                    {
+                        cdp.Tercero = tercero;
+                        cdp.TerceroId = tercero.TerceroId;
+                    }
+                }
+                listaCDP.Add(cdp);
+            }
+
+            return listaCDP;
+        }
+
+
+        private List<DetalleCDP> obtenerListaDetalleCdp(IList<DetalleCDPDto> lista)
+        {
+            List<DetalleCDP> listaCDP = new List<DetalleCDP>();
+            DetalleCDP cdp = null;
+
+            var listaActividadGeneral = _context.ActividadGeneral.ToList();
+            var listaActividadEspecifica = _context.ActividadEspecifica.ToList();
+            var listaDependencia = _context.Dependencia.ToList();
+            var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
+            var listaUsuarios = _context.Usuario.ToList();
+            var listaArea = _context.Area.ToList();
+
+            foreach (var item in lista)
+            {
+                cdp = new DetalleCDP();
+
+                cdp.PcpId = item.PcpId;
+                cdp.IdArchivo = item.IdArchivo;
+                cdp.Cdp = item.Cdp;
+                cdp.Proy = item.Proy;
+                cdp.Prod = item.Prod;
+                cdp.PlanDeCompras = item.PlanDeCompras;
+                cdp.AplicaContrato = item.AplicaContrato;
+                cdp.Convenio = item.Convenio;
+                cdp.PlanDeCompras = item.PlanDeCompras;
+
+                cdp.ValorAct = item.ValorAct;
+                cdp.SaldoAct = item.SaldoAct;
+                cdp.ValorCDP = item.ValorCDP;
+                cdp.ValorRP = item.ValorRP;
+                cdp.ValorOB = item.ValorOB;
+                cdp.ValorOP = item.ValorOP;
+                cdp.SaldoTotal = item.SaldoTotal;
+                cdp.Valor_Convenio = item.Valor_Convenio;
+
+                //Actividad General
+                if (!string.IsNullOrEmpty(item.Proyecto))
+                {
+                    var actividad = listaActividadGeneral
+                                        .Where(c => c.Nombre.ToUpper() == item.Proyecto.ToUpper())
+                                        .FirstOrDefault();
+                    if (actividad != null)
+                        cdp.ActividadGeneralId = actividad.ActividadGeneralId;
+                }
+
+                //Actividad Especifica
+                if (!string.IsNullOrEmpty(item.ActividadBpin))
+                {
+                    var actividad = listaActividadEspecifica
+                                        .Where(c => c.Nombre.ToUpper() == item.ActividadBpin.ToUpper())
+                                        .FirstOrDefault();
+                    if (actividad != null)
+                        cdp.ActividadEspecificaId = actividad.ActividadEspecificaId;
+                }
+
+                //Dependencia
+                if (!string.IsNullOrEmpty(item.Dependencia))
+                {
+                    var dependencia = listaDependencia
+                                        .Where(c => c.Nombre.ToUpper() == item.Dependencia.ToUpper())
+                                        .FirstOrDefault();
+                    if (dependencia != null)
+                        cdp.DependenciaId = dependencia.DependenciaId;
+                }
+
+                //Rubro Presupuestal
+                if (!string.IsNullOrEmpty(item.IdentificacionRubro))
+                {
+                    var rubro = listaRubrosPresupuestales
+                                .Where(c => c.Identificacion.ToUpper() == item.IdentificacionRubro.ToUpper())
+                                .FirstOrDefault();
+                    if (rubro != null)
+                        cdp.RubroPresupuestalId = rubro.RubroPresupuestalId;
+                }
+
+                //Decreto
+                if (!string.IsNullOrEmpty(item.Decreto))
+                {
+                    var decreto = listaRubrosPresupuestales
+                                .Where(c => c.Identificacion.ToUpper() == item.Decreto.ToUpper())
+                                .FirstOrDefault();
+
+                    if (decreto != null)
+                        cdp.DecretoId = decreto.RubroPresupuestalId;
+                }
+
+                //Area
+                if (!string.IsNullOrEmpty(item.Area))
+                {
+                    var area = listaArea
+                                .Where(c => c.Nombre.ToUpper() == item.Area.ToUpper())
+                                .FirstOrDefault();
+
+                    if (area != null)
+                        cdp.AreaId = area.AreaId;
+                }
+
+                //Usuario
+                if (!string.IsNullOrEmpty(item.Responsable))
+                {
+                    var usuario = listaUsuarios
+                                .Where(c => c.Nombres.ToUpper() + " " + c.Apellidos.ToUpper() == item.Responsable.ToUpper())
+                                .FirstOrDefault();
+                    if (usuario != null)
+                        cdp.UsuarioId = usuario.UsuarioId;
+                }
+                listaCDP.Add(cdp);
+            }
+
+            return listaCDP;
         }
     }
 }

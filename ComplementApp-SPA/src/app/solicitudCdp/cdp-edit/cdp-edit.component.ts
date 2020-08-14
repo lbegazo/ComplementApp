@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
+import html2canvas from 'html2canvas';
 
 import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { Cdp } from 'src/app/_models/cdp';
@@ -20,6 +21,7 @@ import {
 import { ListaService } from 'src/app/_services/lista.service';
 import { TipoDetalle } from 'src/app/_models/tipoDetalle';
 import { CdpService } from 'src/app/_services/cdp.service';
+import { ValidarValorIngresado } from 'src/app/helpers/validarValorIngresado';
 
 @Component({
   selector: 'app-cdp-edit',
@@ -34,6 +36,7 @@ export class CdpEditComponent implements OnInit {
   @Input() cdp: Cdp;
   @Input() tipoOperacion: TipoOperacion;
   @Input() rubroPresupuestalesSeleccionado: DetalleCDP[];
+  cambiosConfirmados = false;
 
   itemCdp: DetalleCDP;
   cdpForm = new FormGroup({});
@@ -63,6 +66,7 @@ export class CdpEditComponent implements OnInit {
 
   createCdpForm() {
     let objetoBien = '';
+    const idTipoOperacion = this.tipoOperacion?.tipoOperacionId;
 
     if (!this.esSolicitudInicial) {
       //#region No Solicitud Inicial
@@ -77,7 +81,14 @@ export class CdpEditComponent implements OnInit {
             for (const detalle of this.detalleCdp) {
               this.arrayControls.push(
                 new FormGroup({
-                  rubroControl: new FormControl('', [Validators.required]),
+                  rubroControl: new FormControl('', [
+                    Validators.required,
+                    ValidarValorIngresado.valorIncorrecto(
+                      idTipoOperacion,
+                      detalle.valorAct,
+                      detalle.saldoCDP
+                    ),
+                  ]),
                 })
               );
             }
@@ -88,7 +99,7 @@ export class CdpEditComponent implements OnInit {
         }
       );
 
-      objetoBien = this.cdp?.tipo;
+      objetoBien = this.cdp?.detalle4;
 
       //#endregion No Solicitud Inicial
     } else {
@@ -103,7 +114,14 @@ export class CdpEditComponent implements OnInit {
         for (const detalle of this.detalleCdp) {
           this.arrayControls.push(
             new FormGroup({
-              rubroControl: new FormControl('', [Validators.required]),
+              rubroControl: new FormControl('', [
+                Validators.required,
+                ValidarValorIngresado.valorIncorrecto(
+                  idTipoOperacion,
+                  detalle.valorAct,
+                  detalle.saldoCDP
+                ),
+              ]),
             })
           );
         }
@@ -111,6 +129,7 @@ export class CdpEditComponent implements OnInit {
 
       //#endregion Solicitud Inicial
     }
+
     this.cdpForm = this.fb.group({
       objetoBienControl: new FormControl(objetoBien, Validators.required),
       observacionesControl: new FormControl('', Validators.required),
@@ -160,7 +179,34 @@ export class CdpEditComponent implements OnInit {
 
   onSelectTipoDetalle() {
     this.tipoDetalleSelected = this.tipoDetalleControl.value as TipoDetalle;
-    this.idTipoDetalle = +this.tipoDetalleSelected.id;
+    this.idTipoDetalle = +this.tipoDetalleSelected.tipoDetalleCDPId;
+  }
+
+  EliminarRubroPresupuestal(index: number) {
+    if (this.detalleCdp.length > 1) {
+      this.detalleCdp.splice(index, 1);
+      this.arrayControls.removeAt(index);
+    } else {
+      this.alertify.warning('Debe existir por lo menos un rubro presupuestal');
+    }
+  }
+
+  confirmarCambios() {
+    this.alertify.confirm2(
+      'Solicitud de CDP',
+      '¿Esta seguro que desea confirmar la solicitud de CDP?',
+      () => {
+        this.cambiosConfirmados = true;
+        const arrayControl = this.cdpForm.get('rubrosControles') as FormArray;
+        if (arrayControl) {
+          for (let index = 0; index < arrayControl.length; index++) {
+            const item = arrayControl.at(index);
+            const itemDetalle = this.detalleCdp[index];
+            itemDetalle.valorSolicitud = item.value.rubroControl;
+          }
+        }
+      }
+    );
   }
 
   exportarPDF() {
@@ -186,11 +232,12 @@ export class CdpEditComponent implements OnInit {
 
           let doc;
 
-          if (pdfWidth > pdfHeight) {
-            doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
-          } else {
-            doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
-          }
+          // if (pdfWidth > pdfHeight) {
+          //   doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
+          // } else {
+          //   doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
+          // }
+          doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
 
           const width = doc.internal.pageSize.getWidth();
           const height = doc.internal.pageSize.getHeight();
@@ -204,6 +251,7 @@ export class CdpEditComponent implements OnInit {
         // Error Handling
       });
   }
+
   // exportarPDF() {
   //   // parentdiv is the html element which has to be converted to PDF
   //   const data = document.getElementById('content');
@@ -273,7 +321,7 @@ export class CdpEditComponent implements OnInit {
   }
 
   get esSolicitudInicial() {
-    const idTipoOperacion = this.tipoOperacion?.id;
+    const idTipoOperacion = this.tipoOperacion?.tipoOperacionId;
     return idTipoOperacion === 4;
   }
 

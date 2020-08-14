@@ -1,478 +1,344 @@
 [
   {
     "Identificacion": "A-01-01-01",
-    "Descripcion": "SALARIO"
+    "Nombre": "SALARIO"
   },
   {
     "Identificacion": "A-01-01-01-001-001",
-    "Descripcion": "SUELDO BÁSICO"
-  },
-  {
-    "Identificacion": "A-01-01-01-001-001",
-    "Descripcion": "SUELDO BÁSICO"
+    "Nombre": "SUELDO BÁSICO",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-003",
-    "Descripcion": "PRIMA TÉCNICA SALARIAL"
-  },
-  {
-    "Identificacion": "A-01-01-01-001-003",
-    "Descripcion": "PRIMA TÉCNICA SALARIAL"
+    "Nombre": "PRIMA TÉCNICA SALARIAL",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-004",
-    "Descripcion": "SUBSIDIO DE ALIMENTACIÓN"
-  },
-  {
-    "Identificacion": "A-01-01-01-001-004",
-    "Descripcion": "SUBSIDIO DE ALIMENTACIÓN"
+    "Nombre": "SUBSIDIO DE ALIMENTACIÓN",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-005",
-    "Descripcion": "AUXILIO DE TRANSPORTE "
-  },
-  {
-    "Identificacion": "A-01-01-01-001-005",
-    "Descripcion": "AUXILIO DE TRANSPORTE "
+    "Nombre": "AUXILIO DE TRANSPORTE ",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-006",
-    "Descripcion": "PRIMA DE SERVICIO"
-  },
-  {
-    "Identificacion": "A-01-01-01-001-006",
-    "Descripcion": "PRIMA DE SERVICIO"
+    "Nombre": "PRIMA DE SERVICIO",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-007",
-    "Descripcion": "BONIFICACIÓN POR SERVICIOS PRESTADOS"
+    "Nombre": "BONIFICACIÓN POR SERVICIOS PRESTADOS",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
-    "Identificacion": "A-01-01-01-001-007",
-    "Descripcion": "BONIFICACIÓN POR SERVICIOS PRESTADOS"
+    "Identificacion": "A-01-01-01-001-008",
+    "Nombre": "HORAS EXTRAS, DOMINICALES, FESTIVOS Y RECARGOS",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-009",
-    "Descripcion": "PRIMA DE NAVIDAD"
-  },
-  {
-    "Identificacion": "A-01-01-01-001-009",
-    "Descripcion": "PRIMA DE NAVIDAD"
+    "Nombre": "PRIMA DE NAVIDAD",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-01-001-010",
-    "Descripcion": "PRIMA DE VACACIONES"
+    "Nombre": "PRIMA DE VACACIONES",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
-    "Identificacion": "A-01-01-01-001-010",
-    "Descripcion": "PRIMA DE VACACIONES"
+    "Identificacion": "A-01-01-01-001-012",
+    "Nombre": "AUXILIO DE CONECTIVIDAD DIGITAL ",
+    "IdentificacionPadre": "A-01-01-01"
   },
   {
     "Identificacion": "A-01-01-02",
-    "Descripcion": "CONTRIBUCIONES INHERENTES A LA NÓMINA"
+    "Nombre": "CONTRIBUCIONES INHERENTES A LA NÓMINA"
   },
   {
     "Identificacion": "A-01-01-02-001",
-    "Descripcion": "PENSIONES"
-  },
-  {
-    "Identificacion": "A-01-01-02-001",
-    "Descripcion": "PENSIONES"
+    "Nombre": "PENSIONES",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-02-002",
-    "Descripcion": "SALUD"
-  },
-  {
-    "Identificacion": "A-01-01-02-002",
-    "Descripcion": "SALUD"
+    "Nombre": "SALUD",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-02-003",
-    "Descripcion": "AUXILIO DE CESANTÍAS "
-  },
-  {
-    "Identificacion": "A-01-01-02-003",
-    "Descripcion": "AUXILIO DE CESANTÍAS "
+    "Nombre": "AUXILIO DE CESANTÍAS ",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-02-004",
-    "Descripcion": "CAJAS DE COMPENSACIÓN FAMILIAR"
-  },
-  {
-    "Identificacion": "A-01-01-02-004",
-    "Descripcion": "CAJAS DE COMPENSACIÓN FAMILIAR"
+    "Nombre": "CAJAS DE COMPENSACIÓN FAMILIAR",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-02-005",
-    "Descripcion": "APORTES GENERALES AL SISTEMA DE RIESGOS LABORALES"
-  },
-  {
-    "Identificacion": "A-01-01-02-005",
-    "Descripcion": "APORTES GENERALES AL SISTEMA DE RIESGOS LABORALES"
+    "Nombre": "APORTES GENERALES AL SISTEMA DE RIESGOS LABORALES",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-02-006",
-    "Descripcion": "APORTES AL ICBF"
-  },
-  {
-    "Identificacion": "A-01-01-02-006",
-    "Descripcion": "APORTES AL ICBF"
+    "Nombre": "APORTES AL ICBF",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-02-007",
-    "Descripcion": "APORTES AL SENA"
-  },
-  {
-    "Identificacion": "A-01-01-02-007",
-    "Descripcion": "APORTES AL SENA"
+    "Nombre": "APORTES AL SENA",
+    "IdentificacionPadre": "A-01-01-02"
   },
   {
     "Identificacion": "A-01-01-03",
-    "Descripcion": "REMUNERACIONES NO CONSTITUTIVAS DE FACTOR SALARIAL"
+    "Nombre": "REMUNERACIONES NO CONSTITUTIVAS DE FACTOR SALARIAL"
   },
   {
     "Identificacion": "A-01-01-03-001-001",
-    "Descripcion": "SUELDO DE VACACIONES"
+    "Nombre": "SUELDO DE VACACIONES",
+    "IdentificacionPadre": "A-01-01-03"
   },
   {
-    "Identificacion": "A-01-01-03-001-001",
-    "Descripcion": "SUELDO DE VACACIONES"
+    "Identificacion": "A-01-01-03-001-002",
+    "Nombre": "INDEMNIZACIÓN POR VACACIONES",
+    "IdentificacionPadre": "A-01-01-03"
   },
   {
     "Identificacion": "A-01-01-03-001-003",
-    "Descripcion": "BONIFICACIÓN ESPECIAL DE RECREACIÓN"
-  },
-  {
-    "Identificacion": "A-01-01-03-001-003",
-    "Descripcion": "BONIFICACIÓN ESPECIAL DE RECREACIÓN"
+    "Nombre": "BONIFICACIÓN ESPECIAL DE RECREACIÓN",
+    "IdentificacionPadre": "A-01-01-03"
   },
   {
     "Identificacion": "A-01-01-03-002",
-    "Descripcion": "PRIMA TÉCNICA NO SALARIAL"
-  },
-  {
-    "Identificacion": "A-01-01-03-002",
-    "Descripcion": "PRIMA TÉCNICA NO SALARIAL"
+    "Nombre": "PRIMA TÉCNICA NO SALARIAL",
+    "IdentificacionPadre": "A-01-01-03"
   },
   {
     "Identificacion": "A-01-01-03-016",
-    "Descripcion": "PRIMA DE COORDINACIÓN"
+    "Nombre": "PRIMA DE COORDINACIÓN",
+    "IdentificacionPadre": "A-01-01-03"
   },
   {
-    "Identificacion": "A-01-01-03-016",
-    "Descripcion": "PRIMA DE COORDINACIÓN"
-  },
-  {
-    "Identificacion": "A-01-01-04",
-    "Descripcion": "OTROS GASTOS DE PERSONAL - DISTRIBUCIÓN PREVIO CONCEPTO DGPPN"
-  },
-  {
-    "Identificacion": "A-02-02-01-002-008",
-    "Descripcion": "DOTACIÓN (PRENDAS DE VESTIR Y CALZADO)"
-  },
-  {
-    "Identificacion": "A-02-02-01-002-008",
-    "Descripcion": "DOTACIÓN (PRENDAS DE VESTIR Y CALZADO)"
-  },
-  {
-    "Identificacion": "A-02-02-01-003-003",
-    "Descripcion": "PRODUCTOS DE HORNOS DE COQUE; PRODUCTOS DE REFINACIÓN DE PETRÓLEO Y COMBUSTIBLE NUCLEAR"
-  },
-  {
-    "Identificacion": "A-02-02-01-003-003",
-    "Descripcion": "PRODUCTOS DE HORNOS DE COQUE; PRODUCTOS DE REFINACIÓN DE PETRÓLEO Y COMBUSTIBLE NUCLEAR"
-  },
-  {
-    "Identificacion": "A-02-02-01-003-008",
-    "Descripcion": "OTROS BIENES TRANSPORTABLES N.C.P."
-  },
-  {
-    "Identificacion": "A-02-02-01-003-008",
-    "Descripcion": "OTROS BIENES TRANSPORTABLES N.C.P."
-  },
-  {
-    "Identificacion": "A-02-02-02-005-004",
-    "Descripcion": "SERVICIOS DE CONSTRUCCIÓN"
-  },
-  {
-    "Identificacion": "A-02-02-02-005-004",
-    "Descripcion": "SERVICIOS DE CONSTRUCCIÓN"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-003",
-    "Descripcion": "ALOJAMIENTO; SERVICIOS DE SUMINISTROS DE COMIDAS Y BEBIDAS"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-003",
-    "Descripcion": "ALOJAMIENTO; SERVICIOS DE SUMINISTROS DE COMIDAS Y BEBIDAS"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-004",
-    "Descripcion": "SERVICIOS DE TRANSPORTE DE PASAJEROS"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-004",
-    "Descripcion": "SERVICIOS DE TRANSPORTE DE PASAJEROS"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-006",
-    "Descripcion": "SERVICIOS DE ALQUILER DE VEHÍCULOS DE TRANSPORTE CON OPERARIO"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-008",
-    "Descripcion": "SERVICIOS POSTALES Y DE MENSAJERÍA"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-008",
-    "Descripcion": "SERVICIOS POSTALES Y DE MENSAJERÍA"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-009",
-    "Descripcion": "SERVICIOS DE DISTRIBUCIÓN DE ELECTRICIDAD, GAS Y AGUA (POR CUENTA PROPIA)"
-  },
-  {
-    "Identificacion": "A-02-02-02-006-009",
-    "Descripcion": "SERVICIOS DE DISTRIBUCIÓN DE ELECTRICIDAD, GAS Y AGUA (POR CUENTA PROPIA)"
-  },
-  {
-    "Identificacion": "A-02-02-02-007-001",
-    "Descripcion": "SERVICIOS FINANCIEROS Y SERVICIOS CONEXOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-007-001",
-    "Descripcion": "SERVICIOS FINANCIEROS Y SERVICIOS CONEXOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-007-002",
-    "Descripcion": "SERVICIOS INMOBILIARIOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-007-002",
-    "Descripcion": "SERVICIOS INMOBILIARIOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-007-003",
-    "Descripcion": "SERVICIOS DE ARRENDAMIENTO O ALQUILER SIN OPERARIO"
-  },
-  {
-    "Identificacion": "A-02-02-02-007-003",
-    "Descripcion": "SERVICIOS DE ARRENDAMIENTO O ALQUILER SIN OPERARIO"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-002",
-    "Descripcion": "SERVICIOS JURÍDICOS Y CONTABLES"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-002",
-    "Descripcion": "SERVICIOS JURÍDICOS Y CONTABLES"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-003",
-    "Descripcion": "OTROS SERVICIOS PROFESIONALES, CIENTÍFICOS Y TÉCNICOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-003",
-    "Descripcion": "OTROS SERVICIOS PROFESIONALES, CIENTÍFICOS Y TÉCNICOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-004",
-    "Descripcion": "SERVICIOS DE TELECOMUNICACIONES, TRANSMISIÓN Y SUMINISTRO DE INFORMACIÓN"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-004",
-    "Descripcion": "SERVICIOS DE TELECOMUNICACIONES, TRANSMISIÓN Y SUMINISTRO DE INFORMACIÓN"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-005",
-    "Descripcion": "SERVICIOS DE SOPORTE"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-005",
-    "Descripcion": "SERVICIOS DE SOPORTE"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-007",
-    "Descripcion": "SERVICIOS DE MANTENIMIENTO, REPARACIÓN E INSTALACIÓN (EXCEPTO SERVICIOS DE CONSTRUCCIÓN)"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-007",
-    "Descripcion": "SERVICIOS DE MANTENIMIENTO, REPARACIÓN E INSTALACIÓN (EXCEPTO SERVICIOS DE CONSTRUCCIÓN)"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-009",
-    "Descripcion": "OTROS SERVICIOS DE FABRICACIÓN; SERVICIOS DE EDICIÓN, IMPRESIÓN Y REPRODUCCIÓN; SERVICIOS DE RECUPERACIÓN DE MATERIALES"
-  },
-  {
-    "Identificacion": "A-02-02-02-008-009",
-    "Descripcion": "OTROS SERVICIOS DE FABRICACIÓN; SERVICIOS DE EDICIÓN, IMPRESIÓN Y REPRODUCCIÓN; SERVICIOS DE RECUPERACIÓN DE MATERIALES"
-  },
-  {
-    "Identificacion": "A-02-02-02-009-003",
-    "Descripcion": "SERVICIOS PARA EL CUIDADO DE LA SALUD HUMANA Y SERVICIOS SOCIALES"
-  },
-  {
-    "Identificacion": "A-02-02-02-009-003",
-    "Descripcion": "SERVICIOS PARA EL CUIDADO DE LA SALUD HUMANA Y SERVICIOS SOCIALES"
-  },
-  {
-    "Identificacion": "A-02-02-02-009-006",
-    "Descripcion": "SERVICIOS DE ESPARCIMIENTO, CULTURALES Y DEPORTIVOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-009-006",
-    "Descripcion": "SERVICIOS DE ESPARCIMIENTO, CULTURALES Y DEPORTIVOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-009-007",
-    "Descripcion": "OTROS SERVICIOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-009-007",
-    "Descripcion": "OTROS SERVICIOS"
-  },
-  {
-    "Identificacion": "A-02-02-02-010",
-    "Descripcion": "VIÁTICOS DE LOS FUNCIONARIOS EN COMISIÓN"
-  },
-  {
-    "Identificacion": "A-02-02-02-010",
-    "Descripcion": "VIÁTICOS DE LOS FUNCIONARIOS EN COMISIÓN"
+    "Identificacion": "A-01-01-03-030",
+    "Nombre": "BONIFICACIÓN DE DIRECCIÓN",
+    "IdentificacionPadre": "A-01-01-03"
   },
   {
     "Identificacion": "A-02-02",
-    "Descripcion": "ADQUISICIONES DIFERENTES DE ACTIVOS"
+    "Nombre": "ADQUISICIONES DIFERENTES DE ACTIVOS"
   },
   {
-    "Identificacion": "A-03-03-04-007",
-    "Descripcion": "PROVISIÓN PARA GASTOS INSTITUCIONALES Y/O SECTORIALES CONTINGENTES- PREVIO CONCEPTO DGPPN"
+    "Identificacion": "A-02-02-01-002-008",
+    "Nombre": "DOTACIÓN (PRENDAS DE VESTIR Y CALZADO)",
+    "IdentificacionPadre": "A-02-02"
   },
   {
-    "Identificacion": "A-03-04-02-012",
-    "Descripcion": "INCAPACIDADES Y LICENCIAS DE MATERNIDAD Y PATERNIDAD (NO DE PENSIONES)"
-  },
-  {
-    "Identificacion": "A-03-04-02-012-001",
-    "Descripcion": "INCAPACIDADES (NO DE PENSIONES)"
-  },
-  {
-    "Identificacion": "A-03-04-02-012-001",
-    "Descripcion": "INCAPACIDADES (NO DE PENSIONES)"
-  },
-  {
-    "Identificacion": "A-03-04-02-012-002",
-    "Descripcion": "LICENCIAS DE MATERNIDAD Y PATERNIDAD (NO DE PENSIONES)"
-  },
-  {
-    "Identificacion": "A-03-04-02-012-002",
-    "Descripcion": "LICENCIAS DE MATERNIDAD Y PATERNIDAD (NO DE PENSIONES)"
-  },
-  {
-    "Identificacion": "A-03-04-02-029",
-    "Descripcion": "PLANES COMPLEMENTARIOS DE SALUD LEY 314 DE 1996 (NO DE PENSIONES)"
-  },
-  {
-    "Identificacion": "A-03-10-01-001",
-    "Descripcion": "SENTENCIAS"
-  },
-  {
-    "Identificacion": "A-08-01",
-    "Descripcion": "IMPUESTOS"
-  },
-  {
-    "Identificacion": "C-2301-0400-2",
-    "Descripcion": "FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUISICIÓN Y TRANSFERENCIA DE CONOCIMIENTO PARA EL BENEFICIO NACIONAL"
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301002-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE EVALUACIÓN - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUISICIÓN Y "
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301002-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE EVALUACIÓN - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUISICIÓN Y "
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301003-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE LINEAMIENTOS TÉCNICOS - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQ"
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301003-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE LINEAMIENTOS TÉCNICOS - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQ"
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301020-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE INFORMACIÓN DE ESPECTRO RADIOELÉCTRICO - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INT"
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301020-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE INFORMACIÓN DE ESPECTRO RADIOELÉCTRICO - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INT"
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301041-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE MONITOREO EN ESPECTRO - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUI"
-  },
-  {
-    "Identificacion": "C-2301-0400-2-0-2301041-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE MONITOREO EN ESPECTRO - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUI"
-  },
-  {
-    "Identificacion": "C-2399-0400-2",
-    "Descripcion": "DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL"
-  },
-  {
-    "Identificacion": "C-2399-0400-2-0-2399052-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE GESTION DOCUMENTAL - DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL"
-  },
-  {
-    "Identificacion": "C-2399-0400-2-0-2399052-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE GESTION DOCUMENTAL - DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL"
-  },
-  {
-    "Identificacion": "C-2399-0400-2-0-2399053-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE LINEAMIENTOS TÉCNICOS - DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL"
-  },
-  {
-    "Identificacion": "C-2399-0400-2-0-2399053-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE LINEAMIENTOS TÉCNICOS - DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL"
-  },
-  {
-    "Identificacion": "C-2399-0400-3",
-    "Descripcion": "MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "C-2399-0400-3-0-2399058-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE EDUCACIÓN INFORMAL PARA LA GESTIÓN ADMINISTRATIVA - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "C-2399-0400-3-0-2399058-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE EDUCACIÓN INFORMAL PARA LA GESTIÓN ADMINISTRATIVA - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "C-2399-0400-3-0-2399060-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE IMPLEMENTACIÓN SISTEMAS DE GESTIÓN - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "C-2399-0400-3-0-2399060-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE IMPLEMENTACIÓN SISTEMAS DE GESTIÓN - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "C-2399-0400-3-0-2399065-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIOS TECNOLÓGICOS - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "C-2399-0400-3-0-2399065-02",
-    "Descripcion": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIOS TECNOLÓGICOS - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
-  },
-  {
-    "Identificacion": "A-08-01-02-006",
-    "Descripcion": "IMPUESTO SOBRE VEHÍCULOS AUTOMOTORES"
-  },
-  {
-    "Identificacion": "A-08-01-02-001",
-    "Descripcion": "IMPUESTO PREDIAL Y SOBRETASA AMBIENTAL"
+    "Identificacion": "A-02-02-01-003-003",
+    "Nombre": "PRODUCTOS DE HORNOS DE COQUE; PRODUCTOS DE REFINACIÓN DE PETRÓLEO Y COMBUSTIBLE NUCLEAR",
+    "IdentificacionPadre": "A-02-02"
   },
   {
     "Identificacion": "A-02-02-01-003-005",
-    "Descripcion": "OTROS PRODUCTOS QUÍMICOS; FIBRAS ARTIFICIALES (O FIBRAS INDUSTRIALES HECHAS POR EL HOMBRE)"
+    "Nombre": "OTROS PRODUCTOS QUÍMICOS; FIBRAS ARTIFICIALES (O FIBRAS INDUSTRIALES HECHAS POR EL HOMBRE)",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-01-003-008",
+    "Nombre": "OTROS BIENES TRANSPORTABLES N.C.P.",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-01-004-008",
+    "Nombre": "APARATOS MÉDICOS, INSTRUMENTOS ÓPTICOS Y DE PRECISIÓN, RELOJES",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-005-004",
+    "Nombre": "SERVICIOS DE CONSTRUCCIÓN",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-006-003",
+    "Nombre": "ALOJAMIENTO; SERVICIOS DE SUMINISTROS DE COMIDAS Y BEBIDAS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-006-004",
+    "Nombre": "SERVICIOS DE TRANSPORTE DE PASAJEROS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-006-008",
+    "Nombre": "SERVICIOS POSTALES Y DE MENSAJERÍA",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-006-009",
+    "Nombre": "SERVICIOS DE DISTRIBUCIÓN DE ELECTRICIDAD, GAS Y AGUA (POR CUENTA PROPIA)",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-007-001",
+    "Nombre": "SERVICIOS FINANCIEROS Y SERVICIOS CONEXOS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-007-002",
+    "Nombre": "SERVICIOS INMOBILIARIOS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-007-003",
+    "Nombre": "SERVICIOS DE ARRENDAMIENTO O ALQUILER SIN OPERARIO",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-008-003",
+    "Nombre": "OTROS SERVICIOS PROFESIONALES, CIENTÍFICOS Y TÉCNICOS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-008-004",
+    "Nombre": "SERVICIOS DE TELECOMUNICACIONES, TRANSMISIÓN Y SUMINISTRO DE INFORMACIÓN",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-008-005",
+    "Nombre": "SERVICIOS DE SOPORTE",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-008-007",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO, REPARACIÓN E INSTALACIÓN (EXCEPTO SERVICIOS DE CONSTRUCCIÓN)",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-008-009",
+    "Nombre": "OTROS SERVICIOS DE FABRICACIÓN; SERVICIOS DE EDICIÓN, IMPRESIÓN Y REPRODUCCIÓN; SERVICIOS DE RECUPERACIÓN DE MATERIALES",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-009-003",
+    "Nombre": "SERVICIOS PARA EL CUIDADO DE LA SALUD HUMANA Y SERVICIOS SOCIALES",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-009-006",
+    "Nombre": "SERVICIOS DE ESPARCIMIENTO, CULTURALES Y DEPORTIVOS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-009-007",
+    "Nombre": "OTROS SERVICIOS",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-02-02-02-010",
+    "Nombre": "VIÁTICOS DE LOS FUNCIONARIOS EN COMISIÓN",
+    "IdentificacionPadre": "A-02-02"
+  },
+  {
+    "Identificacion": "A-03-04-02-012",
+    "Nombre": "INCAPACIDADES Y LICENCIAS DE MATERNIDAD Y PATERNIDAD (NO DE PENSIONES)"
+  },
+  {
+    "Identificacion": "A-03-04-02-012-001",
+    "Nombre": "INCAPACIDADES (NO DE PENSIONES)",
+    "IdentificacionPadre": "A-03-04-02-012"
+  },
+  {
+    "Identificacion": "A-03-04-02-012-002",
+    "Nombre": "LICENCIAS DE MATERNIDAD Y PATERNIDAD (NO DE PENSIONES)",
+    "IdentificacionPadre": "A-03-04-02-012"
+  },
+  {
+    "Identificacion": "A-08-01",
+    "Nombre": "IMPUESTOS"
+  },
+  {
+    "Identificacion": "A-08-01-02-001",
+    "Nombre": "IMPUESTO PREDIAL Y SOBRETASA AMBIENTAL",
+    "IdentificacionPadre": "A-08-01"
+  },
+  {
+    "Identificacion": "A-08-01-02-006",
+    "Nombre": "IMPUESTO SOBRE VEHÍCULOS AUTOMOTORES",
+    "IdentificacionPadre": "A-08-01"
+  },
+  {
+    "Identificacion": "C-2301-0400-2",
+    "Nombre": "FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUISICIÓN Y TRANSFERENCIA DE CONOCIMIENTO PARA EL BENEFICIO NACIONAL"
+  },
+  {
+    "Identificacion": "C-2301-0400-2-0-2301002-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE EVALUACIÓN - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUISICIÓN Y ",
+    "IdentificacionPadre": "C-2301-0400-2"
+  },
+  {
+    "Identificacion": "C-2301-0400-2-0-2301003-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE LINEAMIENTOS TÉCNICOS - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQ",
+    "IdentificacionPadre": "C-2301-0400-2"
+  },
+  {
+    "Identificacion": "C-2301-0400-2-0-2301020-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE INFORMACIÓN DE ESPECTRO RADIOELÉCTRICO - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INT",
+    "IdentificacionPadre": "C-2301-0400-2"
+  },
+  {
+    "Identificacion": "C-2301-0400-2-0-2301041-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE MONITOREO EN ESPECTRO - FORTALECIMIENTO DE LA PLANEACIÓN, GESTIÓN, VIGILANCIA Y CONTROL DEL ESPECTRO RADIOELÉCTRICO, ACORDE CON LA EVOLUCIÓN TECNOLÓGICA, LA INNOVACIÓN, ARMONIZACIÓN INTERNACIONAL, ADQUI",
+    "IdentificacionPadre": "C-2301-0400-2"
+  },
+  {
+    "Identificacion": "C-2399-0400-2",
+    "Nombre": "DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO NACIONAL"
+  },
+  {
+    "Identificacion": "C-2399-0400-2-0-2399052-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE GESTION DOCUMENTAL - DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL",
+    "IdentificacionPadre": "C-2399-0400-2"
+  },
+  {
+    "Identificacion": "C-2399-0400-2-0-2399053-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - DOCUMENTOS DE LINEAMIENTOS TÉCNICOS - DESARROLLO DE UN SISTEMA INTEGRADO DE GESTIÓN DOCUMENTAL Y DE ARCHIVO PARA LA AGENCIA NACIONAL DEL ESPECTRO  NACIONAL",
+    "IdentificacionPadre": "C-2399-0400-2"
+  },
+  {
+    "Identificacion": "C-2399-0400-3",
+    "Nombre": "MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ"
+  },
+  {
+    "Identificacion": "C-2399-0400-3-0-2399058-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE EDUCACIÓN INFORMAL PARA LA GESTIÓN ADMINISTRATIVA - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ",
+    "IdentificacionPadre": "C-2399-0400-3"
+  },
+  {
+    "Identificacion": "C-2399-0400-3-0-2399060-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIO DE IMPLEMENTACIÓN SISTEMAS DE GESTIÓN - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ",
+    "IdentificacionPadre": "C-2399-0400-3"
+  },
+  {
+    "Identificacion": "C-2399-0400-3-0-2399065-02",
+    "Nombre": "ADQUISICIÓN DE BIENES Y SERVICIOS - SERVICIOS TECNOLÓGICOS - MEJORAMIENTO DE LAS CAPACIDADES HUMANAS, TECNOLÓGICAS Y DE LA GESTIÓN INSTITUCIONAL EN LA AGENCIA NACIONAL DEL ESPECTRO  BOGOTÁ",
+    "IdentificacionPadre": "C-2399-0400-3"
+  },
+  {
+    "Identificacion": "A-01-01-04",
+    "Nombre": "OTROS GASTOS DE PERSONAL - DISTRIBUCIÓN PREVIO CONCEPTO"
+  },
+  {
+    "Identificacion": "A-03-03-04-007",
+    "Nombre": "PROVISIÓN PARA GASTOS INSTITUCIONALES Y/O SECTORIALES"
+  },
+  {
+    "Identificacion": "A-03-04-02-029",
+    "Nombre": "PLANES COMPLEMENTARIOS DE SALUD LEY 314 DE 1996 (NO PENSIONES)"
+  },
+  {
+    "Identificacion": "A-03-10-01-001",
+    "Nombre": "SENTENCIAS"
   }
 ]

@@ -2,16 +2,16 @@
   style="cursor: pointer;"
   class="list-group-item clearfix"
   routerLinkActive="active"
-  [routerLink]="[usuario.id]"
+  [routerLink]="[usuario.usuarioId]"
 >
   <div class="pull-left">
-    <h4
+    <h5
       class="list-group-item-heading"
       [ngClass]="{
         'esAdministrador': usuario.esAdministrador
       }"
     >
       {{ usuario.nombres }} {{ usuario.apellidos }}
-    </h4>
+    </h5>
   </div>
 </a>

@@ -1,5 +1,5 @@
 export interface Usuario {
-  id: number;
+  usuarioId: number;
   username: string;
   nombres: string;
   apellidos: string;
@@ -8,7 +8,7 @@ export interface Usuario {
   areaId: number;
   fechaCreacion: Date;
   fechaUltimoAcceso: Date;
-  cargoDescripcion: string;
-  areaDescripcion: string;
-  esAdministrador: number;
+  cargoNombre: string;
+  areaNombre: string;
+  esAdministrador: boolean;
 }

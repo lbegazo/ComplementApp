@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using ComplementApp.API.Dtos;
 
 namespace ComplementApp.API.Controllers
 {
@@ -23,10 +24,17 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class DocumentoController : ControllerBase
     {
+
         #region Propiedades
         private readonly IDocumentoRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+
+        const int numeroColumnasCabecera = 26;
+        const int numeroColumnasDetalle = 25;
+
+        const string nombreHojaCabecera = "BD";
+        const string nombreHojaDetalle = "DetallePresup";
 
         #endregion Propiedades
 
@@ -57,19 +65,26 @@ namespace ComplementApp.API.Controllers
                 if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
                     return BadRequest("File extension is not supported");
 
+                #region Obtener información del archivo excel
 
                 DataTable dtDetalle = ObtenerDetalleDeExcel(file);
                 DataTable dtCabecera = ObtenerCabeceraDeExcel(file);
 
-                #region Mapear listas
+                #endregion
 
-                List<CDP> listaDocumento = obtenerListaDeCDP(dtCabecera);
-                List<DetalleCDP> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
+                #region Mapear datos en la lista de Dtos
 
-                #endregion Mapear listas
+                List<CDPDto> listaDocumento = obtenerListaDeCDP(dtCabecera);
+                List<DetalleCDPDto> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
+
+                #endregion
+
+                #region Insertar lista en la base de datos
 
                 var taskCabecera = _repo.InsertaCabeceraCDP(listaDocumento);
                 var taskDetalle = _repo.InsertaDetalleCDP(listaDetalle);
+
+                #endregion Insertar lista en la base de datos
 
                 // taskCabecera.Wait();
                 // taskDetalle.Wait();
@@ -113,16 +128,16 @@ namespace ComplementApp.API.Controllers
 
                     #region Cargar Detalle
 
-                    var wsDetalle = package.Workbook.Worksheets["DetallePresup"];
+                    var wsDetalle = package.Workbook.Worksheets[nombreHojaDetalle];
 
-                    foreach (var firstRowCell in wsDetalle.Cells[1, 1, 1, 23])
+                    foreach (var firstRowCell in wsDetalle.Cells[1, 1, 1, numeroColumnasDetalle])
                     {
                         dtDetalle.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
                     }
                     var startRow = hasHeader ? 2 : 1;
                     for (int rowNum = startRow; rowNum <= wsDetalle.Dimension.End.Row; rowNum++)
                     {
-                        var wsRow = wsDetalle.Cells[rowNum, 1, rowNum, 23];
+                        var wsRow = wsDetalle.Cells[rowNum, 1, rowNum, numeroColumnasDetalle];
                         DataRow row = dtDetalle.Rows.Add();
 
                         foreach (var cell in wsRow)
@@ -164,16 +179,16 @@ namespace ComplementApp.API.Controllers
 
                     #region Cargar Cabecera
 
-                    var wsCabecera = package.Workbook.Worksheets["BD"];
+                    var wsCabecera = package.Workbook.Worksheets[nombreHojaCabecera];
 
-                    foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, 10])
+                    foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, numeroColumnasCabecera])
                     {
                         dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
                     }
                     var startRow = hasHeader ? 2 : 1;
                     for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
                     {
-                        var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, 10];
+                        var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, numeroColumnasCabecera];
                         DataRow row = dtCabecera1.Rows.Add();
                         foreach (var cell in wsRow)
                         {
@@ -197,8 +212,6 @@ namespace ComplementApp.API.Controllers
             }
             return dtCabecera1;
         }
-
-
 
         /// <summary>
         /// Consumir Servicio Rest del Banco de la República
@@ -234,6 +247,193 @@ namespace ComplementApp.API.Controllers
             return result;
         }
 
+        private List<CDPDto> obtenerListaDeCDP(DataTable dtCabecera)
+        {
+            CDPDto documento = null;
+            List<CDPDto> listaDocumento = new List<CDPDto>();
+            int numValue = 0;
+            decimal value = 0;
+            DateTime fecha;
+
+            foreach (var row in dtCabecera.Rows)
+            {
+                documento = new CDPDto();
+
+                //Instancia
+                if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
+                        documento.Instancia = numValue;
+
+                //Cdp
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
+                        documento.Cdp = numValue;
+
+                //Crp
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
+                        documento.Crp = numValue;
+
+                //Obligacion
+                if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
+                        documento.Obligacion = numValue;
+
+                //OrdenPago
+                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[4].ToString(), out numValue))
+                        documento.OrdenPago = numValue;
+
+                //Fecha
+                if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[5].ToString(), out fecha))
+                        documento.Fecha = fecha;
+
+                documento.Detalle1 = (row as DataRow).ItemArray[7].ToString();
+
+                //Rubro
+                documento.IdentificacionRubro = (row as DataRow).ItemArray[8].ToString().Trim();
+
+                if (!(row as DataRow).ItemArray[9].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[9].ToString(), out value))
+                        documento.ValorInicial = value;
+
+                if (!(row as DataRow).ItemArray[10].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[10].ToString(), out value))
+                        documento.Operacion = value;
+
+                if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
+                        documento.ValorTotal = value;
+
+                if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                        documento.SaldoActual = value;
+
+                documento.Detalle2 = (row as DataRow).ItemArray[13].ToString();
+                documento.Detalle3 = (row as DataRow).ItemArray[14].ToString();
+                documento.Detalle4 = (row as DataRow).ItemArray[16].ToString();
+
+                if (!(row as DataRow).ItemArray[17].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[17].ToString(), out numValue))
+                        documento.TipoIdentificacion = numValue;
+
+                documento.NumeroIdentificacion = (row as DataRow).ItemArray[18].ToString();
+
+                documento.Detalle5 = (row as DataRow).ItemArray[20].ToString();
+                documento.Detalle6 = (row as DataRow).ItemArray[21].ToString();
+                documento.Detalle7 = (row as DataRow).ItemArray[22].ToString();
+                documento.Detalle8 = (row as DataRow).ItemArray[23].ToString();
+                documento.Detalle9 = (row as DataRow).ItemArray[24].ToString();
+                documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();
+
+                listaDocumento.Add(documento);
+            }
+
+            return listaDocumento;
+        }
+
+        private List<DetalleCDPDto> obtenerListaDeDetalleCDP(DataTable dtDetalle)
+        {
+            DetalleCDPDto detalle = null;
+            List<DetalleCDPDto> listaDocumento = new List<DetalleCDPDto>();
+            int numValue = 0;
+            decimal value = 0;
+
+            foreach (var row in dtDetalle.Rows)
+            {
+                detalle = new DetalleCDPDto();
+
+                detalle.PcpId = (row as DataRow).ItemArray[0].ToString();
+
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
+                        detalle.IdArchivo = numValue;
+
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
+                        detalle.Cdp = numValue;
+
+                if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
+                        detalle.Proy = numValue;
+
+                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[4].ToString(), out numValue))
+                        detalle.Prod = numValue;
+
+                detalle.Proyecto = (row as DataRow).ItemArray[5].ToString();
+                detalle.ActividadBpin = (row as DataRow).ItemArray[6].ToString();
+                detalle.PlanDeCompras = (row as DataRow).ItemArray[7].ToString();
+                detalle.Responsable = (row as DataRow).ItemArray[8].ToString().Trim();
+                detalle.Dependencia = (row as DataRow).ItemArray[9].ToString();
+                detalle.IdentificacionRubro = (row as DataRow).ItemArray[10].ToString().Trim();
+
+                if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
+                        detalle.ValorAct = value;
+
+                if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                        detalle.SaldoAct = value;
+
+                if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
+                        detalle.ValorCDP = value;
+
+                if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
+                        detalle.ValorRP = value;
+
+                if (!(row as DataRow).ItemArray[15].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[15].ToString(), out value))
+                        detalle.ValorOB = value;
+
+                if (!(row as DataRow).ItemArray[16].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[16].ToString(), out value))
+                        detalle.ValorOP = value;
+
+                detalle.AplicaContrato = (row as DataRow).ItemArray[17].ToString();
+
+                if (!(row as DataRow).ItemArray[18].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[18].ToString(), out value))
+                        detalle.SaldoTotal = value;
+
+                if (!(row as DataRow).ItemArray[19].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[19].ToString(), out value))
+                        detalle.SaldoDisponible = value;
+
+                detalle.Area = (row as DataRow).ItemArray[20].ToString();
+
+                if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[21].ToString(), out numValue))
+                        detalle.Rp = Convert.ToInt32((row as DataRow).ItemArray[21].ToString());
+
+                if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[22].ToString(), out value))
+                        detalle.Valor_Convenio = value;
+
+                if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[23].ToString(), out numValue))
+                        detalle.Convenio = numValue;
+
+                detalle.Decreto = (row as DataRow).ItemArray[24].ToString();
+
+                listaDocumento.Add(detalle);
+            }
+            return listaDocumento;
+        }
+
+        private bool EliminarInformacionCDP()
+        {
+            var resultado = false;
+            resultado = this._repo.EliminarCabeceraCDP();
+
+            if (resultado)
+                resultado = this._repo.EliminarDetalleCDP();
+
+            return resultado;
+        }
 
         private static DataTable ObtenerDetalleDeExcel(string path)
         {
@@ -289,6 +489,7 @@ namespace ComplementApp.API.Controllers
         {
             DataTable dtCabecera1 = new DataTable();
             bool hasHeader = true;
+
             try
             {
                 using (var package = new ExcelPackage())
@@ -302,14 +503,14 @@ namespace ComplementApp.API.Controllers
 
                     var wsCabecera = package.Workbook.Worksheets["BD"];
 
-                    foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, 10])
+                    foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, numeroColumnasCabecera])
                     {
                         dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
                     }
                     var startRow = hasHeader ? 2 : 1;
                     for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
                     {
-                        var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, 10];
+                        var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, numeroColumnasCabecera];
                         DataRow row = dtCabecera1.Rows.Add();
                         foreach (var cell in wsRow)
                         {
@@ -334,150 +535,5 @@ namespace ComplementApp.API.Controllers
             return dtCabecera1;
         }
 
-        private List<CDP> obtenerListaDeCDP(DataTable dtCabecera)
-        {
-            CDP documento = null;
-            List<CDP> listaDocumento = new List<CDP>();
-            int numValue = 0;
-            decimal value = 0;
-            DateTime fecha;
-
-            foreach (var row in dtCabecera.Rows)
-            {
-                documento = new CDP();
-                documento.Dependencia = (row as DataRow).ItemArray[0].ToString();
-
-                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
-                        documento.Proy = numValue;
-
-                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
-                        documento.Pro = numValue;
-
-                if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
-                        documento.Cdp = numValue;
-
-                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if (DateTime.TryParse((row as DataRow).ItemArray[4].ToString(), out fecha))
-                        documento.Fecha = fecha;
-
-                documento.Estado = (row as DataRow).ItemArray[5].ToString();
-                documento.Rubro = (row as DataRow).ItemArray[6].ToString().Trim();
-
-                if (!(row as DataRow).ItemArray[7].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[7].ToString(), out value))
-                        documento.Valor = value;
-
-                if (!(row as DataRow).ItemArray[8].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[8].ToString(), out value))
-                        documento.Saldo = value;
-
-                documento.Tipo = (row as DataRow).ItemArray[9].ToString();
-
-                listaDocumento.Add(documento);
-            }
-
-            return listaDocumento;
-        }
-
-        private List<DetalleCDP> obtenerListaDeDetalleCDP(DataTable dtDetalle)
-        {
-            DetalleCDP detalle = null;
-            List<DetalleCDP> listaDocumento = new List<DetalleCDP>();
-            int numValue = 0;
-            decimal value = 0;
-
-            foreach (var row in dtDetalle.Rows)
-            {
-                detalle = new DetalleCDP();
-                if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
-                        detalle.Crp = numValue;
-
-                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
-                        detalle.IdArchivo = numValue;
-
-                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
-                        detalle.Cdp = numValue;
-
-                if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
-                        detalle.Proy = numValue;
-
-                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[4].ToString(), out numValue))
-                        detalle.Prod = numValue;
-
-                detalle.Proyecto = (row as DataRow).ItemArray[5].ToString();
-                detalle.ActividadBpin = (row as DataRow).ItemArray[6].ToString();
-                detalle.PlanDeCompras = (row as DataRow).ItemArray[7].ToString();
-                detalle.Responsable = (row as DataRow).ItemArray[8].ToString().Trim();
-                detalle.Dependencia = (row as DataRow).ItemArray[9].ToString();
-                detalle.Rubro = (row as DataRow).ItemArray[10].ToString().Trim();
-
-                if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
-                        detalle.ValorAct = value;
-
-                if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
-                        detalle.SaldoAct = value;
-
-                if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
-                        detalle.ValorCDP = value;
-
-                if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
-                        detalle.ValorRP = value;
-
-                if (!(row as DataRow).ItemArray[15].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[15].ToString(), out value))
-                        detalle.ValorOB = value;
-
-                if (!(row as DataRow).ItemArray[16].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[16].ToString(), out value))
-                        detalle.ValorOP = value;
-
-                detalle.Contrato = (row as DataRow).ItemArray[17].ToString();
-
-                if (!(row as DataRow).ItemArray[18].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[18].ToString(), out value))
-                        detalle.SaldoTotal = value;
-
-                if (!(row as DataRow).ItemArray[19].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[19].ToString(), out value))
-                        detalle.SaldoDisponible = value;
-
-                detalle.Area = (row as DataRow).ItemArray[20].ToString();
-
-                if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[21].ToString(), out numValue))
-                        detalle.Paa = Convert.ToInt32((row as DataRow).ItemArray[21].ToString());
-
-                if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
-                    if (Int32.TryParse((row as DataRow).ItemArray[22].ToString(), out numValue))
-                        detalle.IdSofi = numValue;
-
-
-                listaDocumento.Add(detalle);
-            }
-            return listaDocumento;
-        }
-
-        private bool EliminarInformacionCDP()
-        {
-            var resultado = false;
-            resultado = this._repo.EliminarCabeceraCDP();
-
-            if (resultado)
-                resultado = this._repo.EliminarDetalleCDP();
-
-            return resultado;
-        }
     }
 }

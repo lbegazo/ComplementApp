@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Data
@@ -10,9 +11,9 @@ namespace ComplementApp.API.Data
 
         // Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista);
 
-        bool InsertaCabeceraCDP(IList<CDP> lista);
+        bool InsertaCabeceraCDP(IList<CDPDto> lista);
 
-        bool InsertaDetalleCDP(IList<DetalleCDP> lista);
+        bool InsertaDetalleCDP(IList<DetalleCDPDto> lista);
 
         bool EliminarCabeceraCDP();
 

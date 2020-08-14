@@ -1,14 +1,21 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
-    [Table("TB_Usuario")]
+    [Table("TUsuario")]
     public class Usuario
     {
-        public int Id { get; set; }
+        public int UsuarioId { get; set; }
 
+        [Required]
+        [Column(TypeName = "VARCHAR(20)")]
         public string Username { get; set; }
+
+        [NotMapped]
+        public string  Password { get; set; }
 
         public byte[] PasswordHash { get; set; }
 
@@ -18,19 +25,25 @@ namespace ComplementApp.API.Models
 
         public DateTime FechaCreacion { get; set; }
 
+        [Required]
+        [Column(TypeName = "VARCHAR(100)")]
         public string Nombres { get; set; }
 
+        [Required]
+        [Column(TypeName = "VARCHAR(100)")]
         public string Apellidos { get; set; }
 
-        public int CargoId { get; set; }
+        public int? CargoId { get; set; }
 
         public Cargo Cargo { get; set; }
 
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
 
         public Area Area { get; set; }
 
         public bool EsAdministrador { get; set; }
+
+        public ICollection<UsuarioPerfil> UsuarioPerfiles { get; set; }
 
     }
 }

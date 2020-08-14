@@ -5,7 +5,7 @@ namespace ComplementApp.API.Dtos
 {
     public class UsuarioParaDetalleDto
     {
-        public int Id { get; set; }
+        public int UsuarioId { get; set; }
 
         public string Username { get; set; }
 
@@ -21,9 +21,9 @@ namespace ComplementApp.API.Dtos
 
         public int AreaId { get; set; }
 
-        public string CargoDescripcion { get; set; }
+        public string CargoNombre { get; set; }
         
-        public string AreaDescripcion { get; set; }
+        public string AreaNombre { get; set; }
 
         public bool EsAdministrador {get; set;}
     }

@@ -1,5 +1,5 @@
 export interface TipoOperacion {
-  id: number;
+  tipoOperacionId: number;
   codigo: string;
-  descripcion: string;
+  nombre: string;
 }

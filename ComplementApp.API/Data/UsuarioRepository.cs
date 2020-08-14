@@ -7,6 +7,7 @@ using EFCore.BulkExtensions;
 using System.Linq;
 using System.Threading;
 using System;
+using ComplementApp.API.Helpers;
 
 namespace ComplementApp.API.Data
 {
@@ -36,14 +37,16 @@ namespace ComplementApp.API.Data
 
         public async Task<Usuario> ObtenerUsuario(int id)
         {
-            return await _context.Usuario.Include(x => x.Area).Include(c => c.Cargo).FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Usuario
+                        .Include(x => x.Area)
+                        .Include(c => c.Cargo).FirstOrDefaultAsync(u => u.UsuarioId == id);
         }
 
         public async Task<bool> EliminarUsuario(int id)
         {
             try
             {
-                return await _context.Usuario.Where(x => x.Id == id).BatchDeleteAsync() > 0;
+                return await _context.Usuario.Where(x => x.UsuarioId == id).BatchDeleteAsync() > 0;
 
             }
             catch (Exception ex)
@@ -52,11 +55,14 @@ namespace ComplementApp.API.Data
             }
         }
 
-        public async Task<IEnumerable<Usuario>> ObtenerUsuarios()
+        public async Task<PagedList<Usuario>> ObtenerUsuarios(UserParams userParams)
         {
-            return await _context.Usuario
-            .OrderBy(x => x.Nombres)
-            .ToListAsync();
+            // return await _context.Usuario
+            //                     .OrderBy(x => x.Nombres)
+            //                     .ToListAsync();
+
+            var users = _context.Usuario;
+            return await PagedList<Usuario>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> UserExists(string username)
