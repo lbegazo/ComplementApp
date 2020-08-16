@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Directive({
-  selector: '[appTwoDigitDecimaNumber]'
+  selector: '[appTwoDigitDecimaNumber]',
 })
-export class TwoDigitDecimaNumberDirective  {
+export class TwoDigitDecimaNumberDirective {
   // Allow decimal numbers and negative values
   private regex: RegExp = new RegExp(/^\d*\.?\d{0,2}$/g);
   // Allow key codes for special events. Reflect :
@@ -23,13 +23,10 @@ export class TwoDigitDecimaNumberDirective  {
     'Delete',
   ];
 
-  constructor(
-    private el: ElementRef
-  ) {}
+  constructor(private el: ElementRef) {}
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    //console.log(this.el.nativeElement.value);
     // Allow Backspace, tab, end, and home keys
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
