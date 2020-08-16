@@ -160,7 +160,7 @@ export class CdpEditComponent implements OnInit {
     // });
 
     //#endregion No Eliminar
-  }
+  }  
 
   get rubrosControles() {
     return this.cdpForm.get('rubrosControles') as FormArray;
@@ -323,6 +323,22 @@ export class CdpEditComponent implements OnInit {
   get esSolicitudInicial() {
     const idTipoOperacion = this.tipoOperacion?.tipoOperacionId;
     return idTipoOperacion === 4;
+  }
+
+  get esAplicaContrato() {
+    return this.itemCdp?.aplicaContrato.toUpperCase() === 'SI' ? true : false;
+  }
+
+  get mostrarTerceraFirma() {
+    if (!this.esSolicitudInicial) {
+      if (!this.esAplicaContrato) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
   }
 
   get objetoBienControl() {

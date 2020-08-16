@@ -10,7 +10,7 @@
                 <table>
                   <tr>
                     <td style="width: 16%;" style="vertical-align: middle;">
-                      <small><strong>Versión No. 5</strong></small>
+                      <small><strong>Versión No. 6</strong></small>
                     </td>
                     <td style="width: 68%;" style="vertical-align: middle;">
                       <p>
@@ -44,17 +44,17 @@
                       <small><strong>FECHA SOLICITUD</strong></small>
                     </div>
                     <div class="col-1 inner">
-                      <label class="form-control" class="col-form-label-sm">
-                        {{ today | date: "dd/MM/yyyy" }}</label
-                      >
+                      <p class="medium">
+                        {{ today | date: "dd/MM/yyyy" }}
+                      </p>
                     </div>
                     <div class="col-1 inner aplicaBackground left">
                       <small><strong>ESTADO CDP</strong></small>
                     </div>
                     <div class="col-2 inner">
-                      <label class="form-control" class="col-form-label-sm">
-                        {{ cdp?.detalle1 }}</label
-                      >
+                      <p class="medium">
+                        {{ cdp?.detalle1 }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -72,17 +72,18 @@
                     <div class="col-2 inner aplicaBackground left">
                       <small><strong>I. TIPO DE OPERACIÓN</strong></small>
                     </div>
-                    <div class="col-2 inner small">
-                      <small>
-                        {{ this.tipoOperacion?.nombre }}</small>
+                    <div class="col-2 inner">
+                      <p class="medium">
+                        {{ this.tipoOperacion?.nombre }}
+                      </p>
                     </div>
                     <div class="col-1 inner aplicaBackground left">
                       <small><strong>NUMERO CDP</strong></small>
                     </div>
                     <div class="col-2 inner">
-                      <small>
-                        {{ cdp?.cdp }}</small
-                      >
+                      <p class="medium">
+                        {{ cdp?.cdp }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -102,34 +103,28 @@
                         ><strong>II. INFORMACION SOLICITANTE</strong></small
                       >
                     </div>
-                    <div class="col-3 inner left small">
-                      <small
-                        ><p>
-                          {{ this.usuario?.nombres }}
-                          {{ this.usuario?.apellidos }}
-                        </p></small
-                      >
+                    <div class="col-3 inner left">
+                      <p class="small">
+                        {{ this.usuario?.nombres }}
+                        {{ this.usuario?.apellidos }}
+                      </p>
                     </div>
 
                     <div class="col-1 inner aplicaBackground left">
                       <small><strong>AREA</strong></small>
                     </div>
-                    <div class="col-2 inner left small">
-                      <small
-                        ><p>
-                          {{ this.usuario?.areaNombre }}
-                        </p></small
-                      >
+                    <div class="col-2 inner left">
+                      <p class="small">
+                        {{ this.usuario?.areaNombre }}
+                      </p>
                     </div>
                     <div class="col-1 inner aplicaBackground left">
                       <small><strong>CARGO</strong></small>
                     </div>
-                    <div class="col-3 inner left small">
-                      <small
-                        ><p>
-                          {{ this.usuario?.cargoNombre }}
-                        </p></small
-                      >
+                    <div class="col-3 inner left">
+                      <p class="small">
+                        {{ this.usuario?.cargoNombre }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -150,7 +145,7 @@
                     </div>
                   </div>
                   <div class="row left">
-                    <div class="col-4 inner aplicaBackground">
+                    <div class="col-3 inner aplicaBackground">
                       <small
                         ><strong
                           >NUMERO DE ACTIVIDAD (SEGÚN PACC)</strong
@@ -158,74 +153,67 @@
                       >
                     </div>
                     <div class="col-1 inner">
-                      <label class="form-control" class="col-form-label-sm">
-                        {{ itemCdp?.idArchivo }}</label
-                      >
+                      <p class="medium">
+                        {{ itemCdp?.idArchivo }}</p>
                     </div>
                     <div class="col-2 inner aplicaBackground">
                       <small><strong>APLICA CONTRATO</strong></small>
                     </div>
                     <div class="col-1 inner">
-                      <label class="form-control" class="col-form-label-sm">
-                        {{ itemCdp?.aplicaContrato }}</label
-                      >
+                      <p class="medium">
+                        {{ itemCdp?.aplicaContrato }}</p>
                     </div>
                   </div>
                   <div class="row left">
-                    <div class="col-4 inner aplicaBackground">
+                    <div class="col-3 inner aplicaBackground">
                       <small
                         ><strong
                           >NOMBRE DEL BIEN O SERVICIO (SEGÚN PAA)</strong
                         ></small
                       >
                     </div>
-                    <div class="col-8 inner">
-                      <small
-                        ><p>{{ itemCdp?.planDeCompras }}</p></small
-                      >
+                    <div class="col-9 inner">
+                      <p class="medium">{{ itemCdp?.planDeCompras }}</p>
                     </div>
                   </div>
 
                   <div class="row left">
-                    <div class="col-4 inner aplicaBackground">
+                    <div class="col-3 inner aplicaBackground">
                       <small><strong>PROYECTO DE INVERSION</strong></small>
                     </div>
-                    <div class="col-8 inner small">
-                      <small>
+                    <div class="col-9 inner">
+                      <p class="medium">
                         {{ itemCdp?.proyecto }}
-                      </small>
+                      </p>
                     </div>
                   </div>
                   <div class="row left">
-                    <div class="col-4 inner aplicaBackground">
+                    <div class="col-3 inner aplicaBackground">
                       <small
                         ><strong
                           >ACTIVIDAD DEL PROYECTO DE INVERSION</strong
                         ></small
                       >
                     </div>
-                    <div class="col-8 inner small">
-                      <small
-                        ><p>
-                          {{ itemCdp?.actividadBpin }}
-                        </p></small
-                      >
+                    <div class="col-9 inner">
+                      <p class="medium">
+                        {{ itemCdp?.actividadBpin }}
+                      </p>
                     </div>
                   </div>
                   <div class="row left">
-                    <div class="col-4 inner aplicaBackground">
+                    <div class="col-3 inner aplicaBackground">
                       <small
                         ><strong
                           >OBJETO DEL BIEN O SERVICIO A CONTRATAR</strong
                         ></small
                       >
                     </div>
-                    <div class="col-8 inner" *ngIf="!esSolicitudInicial">
-                      <small
-                        ><p>
-                          {{ cdp?.detalle4 }}
-                        </p></small
-                      >
+                    <!--Objeto del bien-->
+                    <div class="col-9 inner" *ngIf="!esSolicitudInicial">
+                      <p class="medium">
+                        {{ cdp?.detalle4 }}
+                      </p>
                     </div>
                     <div class="col-8 inner" *ngIf="esSolicitudInicial">
                       <input
@@ -235,7 +223,7 @@
                             cdpForm.get('objetoBienControl').touched
                         }"
                         type="textArea"
-                        class="form-control col-form-label-sm"
+                        class="form-control medium"
                         maxlength="200"
                         formControlName="objetoBienControl"
                         placeholder="Ingrese el objeto del bien aquí"
@@ -346,7 +334,7 @@
                                   formControlName="rubroControl"
                                   appTwoDigitDecimaNumber
                                   placeholder="Ingrese valor solicitud"
-                                  value="{{ item?.valorSolicitud }}"
+                                  value="{{ item?.valorSolicitud }}"                                 
                                 />
                                 <div
                                   class="error col-form-label-sm"
@@ -528,14 +516,10 @@
                                 </button>
                               </div>
                               <div class="col-2 inner left small">
-                                <small>{{
-                                  item?.identificacionRubro
-                                }}</small>
+                                <small>{{ item?.identificacionRubro }}</small>
                               </div>
                               <div class="col-3 inner left">
-                              <small>{{
-                                  item?.planDeCompras
-                                }}</small>
+                                <small>{{ item?.planDeCompras }}</small>
                               </div>
                               <div class="col-2 inner right">
                                 <small>{{
@@ -641,14 +625,10 @@
                           >
                             <ng-container [formGroupName]="i">
                               <div class="col-2 inner left">
-                                <small>{{
-                                  item?.identificacionRubro
-                                }}</small>
+                                <small>{{ item?.identificacionRubro }}</small>
                               </div>
                               <div class="col-4 inner left">
-                                <small>{{
-                                  item?.planDeCompras
-                                }}</small>
+                                <small>{{ item?.planDeCompras }}</small>
                               </div>
                               <div class="col-2 inner right">
                                 <small>{{
@@ -693,7 +673,7 @@
                       <select
                         id="tipoDetalleControl"
                         formControlName="tipoDetalleControl"
-                        class="form-control col-form-label-sm"
+                        class="form-control medium"
                         (change)="onSelectTipoDetalle()"
                         [ngClass]="{
                           'is-invalid':
@@ -746,7 +726,7 @@
                             cdpForm.get('observacionesControl').touched
                         }"
                         type="textArea"
-                        class="form-control col-form-label-sm"
+                        class="form-control medium"
                         maxlength="200"
                         formControlName="observacionesControl"
                         id="observacionesControl"
@@ -788,7 +768,7 @@
                     <div style="width: 20px;"></div>
                     <div
                       class="col-3 aplicaBackground withoutPadding left"
-                      *ngIf="!esSolicitudInicial"
+                      *ngIf="mostrarTerceraFirma"
                     >
                       <small>
                         FIRMA:
@@ -815,7 +795,7 @@
                     <div style="width: 20px;"></div>
                     <div
                       class="col-3 withoutPadding left smaller"
-                      *ngIf="!esSolicitudInicial"
+                      *ngIf="mostrarTerceraFirma"
                     >
                       <p>
                         <small>
@@ -826,14 +806,12 @@
                   </div>
                   <!--Pie de pagina-->
                   <div class="row">
-                    <div class="col-12 withBorderBotton center small">
+                    <div class="col-12 withBorderBotton center">
                       <p>
-                        <small>
-                          El presente documentos es firmado bajo los parámetros
-                          establecidos en el Decreto Legislativo 491 del 29 de
-                          marzo de 2020, concordante con la Resolución de la ANE
-                          nro. 113 y 137 de 2020
-                        </small>
+                        El presente documento es firmado bajo los parámetros
+                        establecidos en el Decreto Legislativo 491 del 29 de
+                        marzo de 2020, concordante con la Resolución de la ANE
+                        nro. 113 y 180 de 2020
                       </p>
                     </div>
                   </div>

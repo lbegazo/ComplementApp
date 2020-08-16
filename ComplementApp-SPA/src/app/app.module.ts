@@ -48,6 +48,7 @@ import { CdpHeaderComponent } from './solicitudCdp/cdp-header/cdp-header.compone
 import { ItemComponent } from './solicitudCdp/cdp-edit/item/item.component';
 import { TwoDigitDecimaNumberDirective } from './_directives/two-digit-decima-number.directive';
 import { PopupCdpComponent } from './solicitudCdp/popup-cdp/popup-cdp.component';
+import { NumberCommaDirective } from './_directives/number-comma.directive';
 
 
 export function tokenGetter() {
@@ -82,7 +83,8 @@ export function tokenGetter() {
     CdpHeaderComponent,
     ItemComponent,
     TwoDigitDecimaNumberDirective,
-    PopupCdpComponent
+    PopupCdpComponent,
+    NumberCommaDirective
   ],
   imports: [
     BrowserModule,

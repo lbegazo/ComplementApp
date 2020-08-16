@@ -17,17 +17,19 @@ export class AlertifyService {
   }
 
   confirm2(title: string, message: string, okCallback: () => any) {
-    alertify.confirm(
-      title,
-      message,
-      (e: any) => {
-        if (e) {
-          okCallback();
-        } else {
-        }
-      },
-      () => {}
-    );
+    alertify
+      .confirm(
+        title,
+        message,
+        (e: any) => {
+          if (e) {
+            okCallback();
+          } else {
+          }
+        },
+        () => {}
+      )
+      .set('labels', { ok: 'Aceptar', cancel: 'Cancelar' });
   }
 
   success(message: string) {

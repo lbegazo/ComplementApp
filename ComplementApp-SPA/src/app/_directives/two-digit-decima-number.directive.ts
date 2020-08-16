@@ -1,9 +1,14 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Directive({
-  selector: '[appTwoDigitDecimaNumber]',
+  selector: '[appTwoDigitDecimaNumber]'
 })
-export class TwoDigitDecimaNumberDirective {
+export class TwoDigitDecimaNumberDirective  {
+  // Allow decimal numbers and negative values
   private regex: RegExp = new RegExp(/^\d*\.?\d{0,2}$/g);
   // Allow key codes for special events. Reflect :
   // Backspace, tab, end, home
@@ -12,14 +17,16 @@ export class TwoDigitDecimaNumberDirective {
     'Tab',
     'End',
     'Home',
-    '-',
     'ArrowLeft',
     'ArrowRight',
     'Del',
     'Delete',
   ];
 
-  constructor(private el: ElementRef) {}
+  constructor(
+    private el: ElementRef
+  ) {}
+
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     //console.log(this.el.nativeElement.value);
@@ -27,6 +34,7 @@ export class TwoDigitDecimaNumberDirective {
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
     }
+
     const current: string = this.el.nativeElement.value;
     const position = this.el.nativeElement.selectionStart;
     const next: string = [
@@ -34,6 +42,8 @@ export class TwoDigitDecimaNumberDirective {
       event.key === 'Decimal' ? '.' : event.key,
       current.slice(position),
     ].join('');
+
+    //console.log(next);
     if (next && !String(next).match(this.regex)) {
       event.preventDefault();
     }
