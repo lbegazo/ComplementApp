@@ -4,5 +4,5 @@ obj
 *.db
 git
 wwwroot
-appsetting.json
-appsetting.Development.json
+appsettings.json
+appsettings.Development.json
