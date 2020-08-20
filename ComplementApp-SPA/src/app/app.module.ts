@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { TimeagoModule } from 'ngx-timeago';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import localeEsCo from '@angular/common/locales/es-CO';
 
 import { appRoutes } from './routes';
 import { AppComponent } from './app.component';
@@ -49,7 +50,9 @@ import { ItemComponent } from './solicitudCdp/cdp-edit/item/item.component';
 import { TwoDigitDecimaNumberDirective } from './_directives/two-digit-decima-number.directive';
 import { PopupCdpComponent } from './solicitudCdp/popup-cdp/popup-cdp.component';
 import { NumberCommaDirective } from './_directives/number-comma.directive';
+import { registerLocaleData } from '@angular/common';
 
+registerLocaleData(localeEsCo, 'es-Co');
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -109,6 +112,7 @@ export function tokenGetter() {
     }),
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'es-Co' },
     ErrorInterceptorProvider,
     AuthService,
     MemberDetailResolver,
