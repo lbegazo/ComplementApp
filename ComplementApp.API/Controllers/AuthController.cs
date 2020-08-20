@@ -88,7 +88,7 @@ namespace ComplementApp.API.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = creds
             };
 

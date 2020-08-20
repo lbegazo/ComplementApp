@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { AuthService } from './_services/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -9,14 +9,16 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AppComponent implements OnInit {
   jwtHelper = new JwtHelperService();
-  /**
-   *
-   */
+
   constructor(private authServices: AuthService) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
     this.authServices.decodedToken = this.jwtHelper.decodeToken(token);
-    
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  clearLocalStorage(event) {
+    localStorage.clear();
   }
 }
