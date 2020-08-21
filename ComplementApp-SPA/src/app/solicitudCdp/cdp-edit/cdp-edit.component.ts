@@ -60,7 +60,11 @@ export class CdpEditComponent implements OnInit {
 
   ngOnInit() {
     this.cargarInformacionUsuario();
-    this.cargarTipoDetalle();
+
+    if (!this.esSolicitudInicial) {
+      this.cargarTipoDetalle();
+    }
+
     this.createCdpForm();
   }
 
@@ -101,6 +105,13 @@ export class CdpEditComponent implements OnInit {
 
       objetoBien = this.cdp?.detalle4;
 
+      this.cdpForm = this.fb.group({
+        objetoBienControl: new FormControl(objetoBien, Validators.required),
+        observacionesControl: new FormControl('', Validators.required),
+        tipoDetalleControl: new FormControl('', Validators.required),
+        rubrosControles: this.arrayControls,
+      });
+
       //#endregion No Solicitud Inicial
     } else {
       //#region Solicitud Inicial
@@ -127,15 +138,16 @@ export class CdpEditComponent implements OnInit {
         }
       }
 
+      this.cdpForm = this.fb.group({
+        objetoBienControl: new FormControl(objetoBien, Validators.required),
+        observacionesControl: new FormControl('', Validators.required),
+        tipoDetalleControl: new FormControl(''),
+        rubrosControles: this.arrayControls,
+      });
+      this.cdpForm.controls.tipoDetalleControl.disable();
+
       //#endregion Solicitud Inicial
     }
-
-    this.cdpForm = this.fb.group({
-      objetoBienControl: new FormControl(objetoBien, Validators.required),
-      observacionesControl: new FormControl('', Validators.required),
-      tipoDetalleControl: new FormControl('', Validators.required),
-      rubrosControles: this.arrayControls,
-    });
 
     //#region No Eliminar
 
@@ -160,7 +172,7 @@ export class CdpEditComponent implements OnInit {
     // });
 
     //#endregion No Eliminar
-  }  
+  }
 
   get rubrosControles() {
     return this.cdpForm.get('rubrosControles') as FormArray;
@@ -197,6 +209,7 @@ export class CdpEditComponent implements OnInit {
       '¿Esta seguro que desea confirmar la solicitud de CDP?',
       () => {
         this.cambiosConfirmados = true;
+
         const arrayControl = this.cdpForm.get('rubrosControles') as FormArray;
         if (arrayControl) {
           for (let index = 0; index < arrayControl.length; index++) {
@@ -205,6 +218,8 @@ export class CdpEditComponent implements OnInit {
             itemDetalle.valorSolicitud = item.value.rubroControl;
           }
         }
+
+        //this.cdpForm.controls.tipoDetalleControl.disable();
       }
     );
   }

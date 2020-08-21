@@ -154,14 +154,16 @@
                     </div>
                     <div class="col-1 inner">
                       <p class="medium">
-                        {{ itemCdp?.idArchivo }}</p>
+                        {{ itemCdp?.idArchivo }}
+                      </p>
                     </div>
                     <div class="col-2 inner aplicaBackground">
                       <small><strong>APLICA CONTRATO</strong></small>
                     </div>
                     <div class="col-1 inner">
                       <p class="medium">
-                        {{ itemCdp?.aplicaContrato }}</p>
+                        {{ itemCdp?.aplicaContrato }}
+                      </p>
                     </div>
                   </div>
                   <div class="row left">
@@ -215,7 +217,7 @@
                         {{ cdp?.detalle4 }}
                       </p>
                     </div>
-                    <div class="col-8 inner" *ngIf="esSolicitudInicial">
+                    <div class="col-9 inner" *ngIf="esSolicitudInicial">
                       <input
                         [ngClass]="{
                           'is-invalid':
@@ -228,6 +230,7 @@
                         formControlName="objetoBienControl"
                         placeholder="Ingrese el objeto del bien aquí"
                         value="{{ cdp?.detalle4 }}"
+                        [readonly]="cambiosConfirmados"
                       />
                       <div class="invalid-feedback">
                         REGISTRE EL OBJETO DEL BIEN O SERVICIO A CONTRATAR
@@ -334,7 +337,7 @@
                                   formControlName="rubroControl"
                                   appTwoDigitDecimaNumber
                                   placeholder="Ingrese valor solicitud"
-                                  value="{{ item?.valorSolicitud }}"                                 
+                                  value="{{ item?.valorSolicitud }}"
                                 />
                                 <div
                                   class="error col-form-label-sm"
@@ -668,10 +671,9 @@
                       >
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="row" *ngIf="!cambiosConfirmados">
                     <div class="col-12 inner">
                       <select
-                        id="tipoDetalleControl"
                         formControlName="tipoDetalleControl"
                         class="form-control medium"
                         (change)="onSelectTipoDetalle()"
@@ -704,6 +706,14 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="row" *ngIf="cambiosConfirmados">
+                    <div class="col-12 inner">
+                      <p class="medium left">
+                        {{ this.tipoDetalleSelected?.nombre }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -731,6 +741,7 @@
                         formControlName="observacionesControl"
                         id="observacionesControl"
                         placeholder="Ingrese las observaciones aquí"
+                        [readonly]="cambiosConfirmados"
                       />
                       <div class="invalid-feedback left">
                         REGISTRE EN EL CAMPO OBSERVACIONES LA JUSTIFICACION DE
@@ -807,7 +818,7 @@
                   <!--Pie de pagina-->
                   <div class="row">
                     <div class="col-12 withBorderBotton center">
-                      <p style="margin: 0 auto; width: 70%;" >
+                      <p style="margin: 0 auto; width: 70%;">
                         El presente documento es firmado bajo los parámetros
                         establecidos en el Decreto Legislativo 491 del 29 de
                         marzo de 2020, concordante con la Resolución de la ANE

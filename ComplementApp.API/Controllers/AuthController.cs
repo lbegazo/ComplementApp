@@ -53,16 +53,18 @@ namespace ComplementApp.API.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-
-            //throw new Exception("This is a Luis exception error");
-
-
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
             //If the user has the token, the application does not need to go to the database
 
             if (userFromRepo == null)
-                return BadRequest("El usuario no existe");
+            {
+                if (await _repo.UserExists(userForLoginDto.Username.ToLower()))
+                    return BadRequest("La clave no es la correcta");
+                else
+                    return BadRequest("El usuario no existe");
+            }
+
 
             /**************************Create the token************************************/
             var role = userFromRepo.EsAdministrador ? 1 : 0;
