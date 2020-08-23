@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
-    [Table("TRubroPresupuestal")]
-    public class RubroPresupuestal
+    [Table("TUsoPresupuestal")]
+    public class UsoPresupuestal
     {
-        public int RubroPresupuestalId { get; set; }
+        public int UsoPresupuestalId { get; set; }
 
         [Required]
         [Column(TypeName = "VARCHAR(100)")]
@@ -19,6 +17,10 @@ namespace ComplementApp.API.Models
         public string Nombre { get; set; }
 
         [Required]
-        public int? PadreRubroId { get; set; }
+        public bool MarcaAusteridad { get; set; }
+
+        public int? RubroPresupuestalId { get; set; }
+    
+        public RubroPresupuestal RubroPresupuestal { get; set; }
     }
 }

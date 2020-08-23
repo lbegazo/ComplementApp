@@ -3,14 +3,14 @@ import { ValidatorFn, AbstractControl } from '@angular/forms';
 export class ValidarValorIngresado {
   static valorIncorrecto(
     idTipoOperacion: number,
-    valorAct: number,
+    saldoAct: number,
     valorCDP: number
   ): ValidatorFn {
     return (c: AbstractControl): { [key: string]: boolean } | null => {
       if (idTipoOperacion === 4 || idTipoOperacion === 3) {
         if (
           (c.value || c.value === 0) &&
-          (isNaN(c.value) || c.value > valorAct)
+          (isNaN(c.value) || c.value > saldoAct)
         ) {
           // Solicitud inicial o adición
           return { valorIncorrecto: true };

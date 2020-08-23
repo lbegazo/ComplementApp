@@ -20,6 +20,7 @@ namespace ComplementApp.API.Data
             SeedEstado(context);
             SeedTercero(context);
             SeedActividadGeneral(context);
+            SeedUsoPresupuestal(context);
 
             SeedUsuario(context);
             SeedDependencia(context);
@@ -51,31 +52,35 @@ namespace ComplementApp.API.Data
             RubroPresupuestal rubro = null;
             RubroPresupuestal rubroPapa = null;
 
-            if (!context.RubroPresupuestal.Any())
+            //if (!context.RubroPresupuestal.Any())
             {
                 var data = File.ReadAllText("Data/SeedFiles/_RubroPresupuestalSeed.json");
                 var items = JsonConvert.DeserializeObject<List<RubroPresupuestalDto>>(data);
                 foreach (var item in items)
                 {
-                    rubro = new RubroPresupuestal();
+                    var rubroBd = obtenerRubroPresupuestal(context, item.Identificacion);
 
-                    if (string.IsNullOrEmpty(item.IdentificacionPadre))
+                    if (rubroBd == null)
                     {
-                        rubro.PadreRubroId = 0;
-                    }
-                    else
-                    {
-                        rubroPapa = obtenerRubroPresupuestal(context, item.IdentificacionPadre);
-                        rubro.PadreRubroId = rubroPapa.RubroPresupuestalId;
-                    }
-                    rubro.Nombre = item.Nombre;
-                    rubro.Identificacion = item.Identificacion;
+                        rubro = new RubroPresupuestal();
 
-                    context.RubroPresupuestal.Add(rubro);
-                    context.SaveChanges();
+                        if (string.IsNullOrEmpty(item.IdentificacionPadre))
+                        {
+                            rubro.PadreRubroId = 0;
+                        }
+                        else
+                        {
+                            rubroPapa = obtenerRubroPresupuestal(context, item.IdentificacionPadre);
+                            rubro.PadreRubroId = rubroPapa.RubroPresupuestalId;
+                        }
+                        rubro.Nombre = item.Nombre;
+                        rubro.Identificacion = item.Identificacion;
+
+                        context.RubroPresupuestal.Add(rubro);
+                        context.SaveChanges();
+                    }
                 }
             }
-
         }
         private static void SeedArea(DataContext context)
         {
@@ -144,18 +149,29 @@ namespace ComplementApp.API.Data
             }
         }
 
+        //La tabla estado puede tener nueva información
         private static void SeedEstado(DataContext context)
         {
-            if (!context.Estado.Any())
+            Estado nuevoEstado = null;
+            List<Estado> lista = new List<Estado>();
+
+            var data = File.ReadAllText("Data/SeedFiles/_Estado.json");
+            var items = JsonConvert.DeserializeObject<List<Estado>>(data);
+            foreach (var item in items)
             {
-                var data = File.ReadAllText("Data/SeedFiles/_Estado.json");
-                var items = JsonConvert.DeserializeObject<List<Estado>>(data);
-                foreach (var item in items)
+                var estado = obtenerEstado(context, item.Nombre);
+                if (estado == null)
                 {
-                    context.Estado.Add(item);
+                    nuevoEstado = new Estado();
+                    nuevoEstado.Nombre = item.Nombre;
+                    nuevoEstado.Descripcion = item.Descripcion;
+                    nuevoEstado.TipoDocumento = item.TipoDocumento;
+                    lista.Add(nuevoEstado);
                 }
-                context.SaveChanges();
             }
+            context.Estado.AddRange(lista);
+            context.SaveChanges();
+
         }
 
         private static void SeedActividadGeneral(DataContext context)
@@ -171,6 +187,7 @@ namespace ComplementApp.API.Data
                 context.SaveChanges();
             }
         }
+
         private static void SeedActividadEspecifica(DataContext context)
         {
             var listaActEspecifica = new List<ActividadEspecifica>();
@@ -217,6 +234,29 @@ namespace ComplementApp.API.Data
             }
         }
 
+        private static void SeedUsoPresupuestal(DataContext context)
+        {
+            var lista = new List<UsoPresupuestal>();
+            UsoPresupuestal uso = null;
+
+            if (!context.UsoPresupuestal.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_UsoPresupuestal.json");
+                var items = JsonConvert.DeserializeObject<List<UsoPresupuestalDto>>(data);
+                foreach (var item in items)
+                {
+                    uso = new UsoPresupuestal();
+                    uso.RubroPresupuestal = obtenerRubroPresupuestal(context, item.RubroPresupuestal);
+                    uso.Nombre = item.Nombre;
+                    uso.Identificacion = item.Identificacion;
+                    uso.MarcaAusteridad = item.MarcaAusteridad == "NO" ? false : true;
+                    lista.Add(uso);
+                }
+                context.UsoPresupuestal.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
         private static void SeedUsers(DataContext context)
         {
             if (!context.Users.Any())
@@ -237,6 +277,7 @@ namespace ComplementApp.API.Data
                 context.SaveChanges();
             }
         }
+
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -259,6 +300,11 @@ namespace ComplementApp.API.Data
         private static Area obtenerArea(DataContext context, string nombre)
         {
             return context.Area.Where(x => x.Nombre == nombre).FirstOrDefault();
+        }
+
+        private static Estado obtenerEstado(DataContext context, string nombre)
+        {
+            return context.Estado.Where(x => x.Nombre == nombre).FirstOrDefault();
         }
     }
 }

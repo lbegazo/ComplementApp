@@ -340,5 +340,10 @@
   {
     "Identificacion": "A-03-10-01-001",
     "Nombre": "SENTENCIAS"
+  },
+  {
+    "Identificacion": "A-02-02-02-008-002",
+    "Nombre": "SERVICIOS JURÍDICOS Y CONTABLES",
+    "IdentificacionPadre": "A-02-02"
   }
 ]

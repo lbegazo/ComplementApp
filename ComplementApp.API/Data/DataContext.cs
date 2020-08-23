@@ -46,6 +46,10 @@ namespace ComplementApp.API.Data
 
         public DbSet<TipoDetalleCDP> TipoDetalleModificacion { get; set; }
 
+        public DbSet<UsoPresupuestal> UsoPresupuestal { get; set; }
+
+        public DbSet<PlanPago> PlanPago { get; set; }
+
         public DbSet<Photo> Photos { get; set; }
 
         public DbSet<User> Users { get; set; }

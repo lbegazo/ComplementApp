@@ -1,0 +1,1118 @@
+[
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-01",
+    "Nombre": "CARBÓN COQUE Y SEMICOQUE, CARBÓN DE LIGNITO O CARBÓN DE HULLA; CARBÓN DE RETORTA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-02",
+    "Nombre": "ALQUITRÁN DE CARBÓN, DE CARBÓN LIGNITO, HULLA Y OTRAS TORTAS MINERALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-03",
+    "Nombre": "ACEITES DE PETRÓLEO O ACEITES OBTENIDOS DE MINERALES BITUMINOSOS (EXCEPTO LOS ACEITES CRUDOS); PREPARADOS N.C.P., QUE CONTENGAN POR LO MENOS EL 70% DE SU PESO EN ACEITES DE ESOS TIPOS Y CUYOS COMPONENTES BÁSICOS SEAN ESOS ACEITES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-04",
+    "Nombre": "GAS DE PETRÓLEO Y OTROS HIDROCARBUROS GASEOSOS (EXCEPTO GAS NATURAL)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-05",
+    "Nombre": "VASELINA, CERA DE PARAFINA, CERA DE PETRÓLEO DE MICROCRISTALINA, CERA CRUDA, OZOCERITA, CERA DE LIGNITO, CERA DE TURBA, OTRAS CERAS MINERALES Y PRODUCTOS SIMILARES, COQUE DE PETRÓLEO, BETÚN DE PETRÓLEO Y OTROS RESIDUOS DE LOS ACEITES DE PETRÓLEO O",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-06",
+    "Nombre": "ELEMENTOS RADIACTIVOS, ISÓTOPOS Y COMPUESTOS RADIACTIVOS; ALEACIONES, DISPERSIONES, PRODUCTOS CERÁMICOS Y MEZCLAS QUE CONTENGAN ESTOS ELEMENTOS, ISÓTOPOS O COMPUESTOS RADIACTIVOS; RESIDUOS RADIACTIVOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-003",
+    "Identificacion": "A-02-02-01-003-003-07",
+    "Nombre": "ELEMENTOS COMBUSTIBLES (CARTUCHOS) PARA REACTORES NUCLEARES O DE REACTORES NUCLEARES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-005",
+    "Identificacion": "A-02-02-01-003-005-04",
+    "Nombre": "PRODUCTOS QUÍMICOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-005",
+    "Identificacion": "A-02-02-01-003-005-05",
+    "Nombre": "FIBRAS TEXTILES MANUFACTURADAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-01-1",
+    "Nombre": "ASIENTOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-01-2",
+    "Nombre": "MUEBLES, DEL TIPO UTILIZADO EN OFICINAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-01-3",
+    "Nombre": "MUEBLES DE MADERA, DEL TIPO UTILIZADO EN LA COCINA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-01-4",
+    "Nombre": "OTROS MUEBLES N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-01-5",
+    "Nombre": "SOMIERES, COLCHONES CON MUELLES, RELLENOS O GUARNECIDOS INTERIORMENTE CON CUALQUIER MATERIAL, DE CAUCHO O PLÁSTICOS CELULARES, RECUBIERTOS O NO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-01-6",
+    "Nombre": "PARTES Y PIEZAS DE MUEBLES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-05",
+    "Nombre": "JUEGOS Y JUGUETES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-06",
+    "Nombre": "TIOVIVOS (CARRUSELES), COLUMPIOS, CASETAS DE TIRO Y DEMÁS ATRACCIONES DE FERIA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-07",
+    "Nombre": "CONSTRUCCIONES PREFABRICADAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-003-008",
+    "Identificacion": "A-02-02-01-003-008-09",
+    "Nombre": "OTROS ARTÍCULOS MANUFACTURADOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-01-004-008",
+    "Identificacion": "A-02-02-01-004-008-01",
+    "Nombre": "APARATOS MÉDICOS Y QUIRÚRGICOS Y APARATOS ORTÉSICOS Y PROTÉSICOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-01-1",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE EDIFICACIONES RESIDENCIALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-01-2",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE EDIFICACIONES NO RESIDENCIALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-1",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE CARRETERAS (EXCEPTO CARRETERAS ELEVADAS), CALLES, VÍAS FÉRREAS Y PISTAS DE ATERRIZAJE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-2",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE PUENTES, CARRETERAS ELEVADAS Y TÚNELES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-3",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE PUERTOS, CANALES, PRESAS, SISTEMAS DE RIEGO Y OTRAS OBRAS HIDRÁULICAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-4",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE TUBERÍAS PARA LA CONDUCCIÓN DE GAS A LARGA DISTANCIA, LÍNEAS DE COMUNICACIÓN Y CABLES DE PODER",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-5",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE TUBERÍAS Y CABLES LOCALES, Y OBRAS CONEXAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-6",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN EN MINAS Y PLANTAS INDUSTRIALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-7",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIONES DEPORTIVAS AL AIRE LIBRE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-02-9",
+    "Nombre": "SERVICIOS GENERALES DE CONSTRUCCIÓN DE OTRAS OBRAS DE INGENIERÍA CIVIL",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-03",
+    "Nombre": "SERVICIOS DE PREPARACIÓN DEL TERRENO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-04",
+    "Nombre": "MONTAJE Y ERECCIÓN DE CONSTRUCCIONES PREFABRICADAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-05",
+    "Nombre": "SERVICIOS ESPECIALES DE CONSTRUCCIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-06",
+    "Nombre": "SERVICIOS DE INSTALACIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-005-004",
+    "Identificacion": "A-02-02-02-005-004-07",
+    "Nombre": "SERVICIOS DE TERMINACIÓN Y ACABADOS DE EDIFICIOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-006-003",
+    "Identificacion": "A-02-02-02-006-003-01",
+    "Nombre": "SERVICIOS DE ALOJAMIENTO PARA ESTANCIAS CORTAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-006-003",
+    "Identificacion": "A-02-02-02-006-003-02",
+    "Nombre": "OTROS SERVICIOS DE ALOJAMIENTO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-006-003",
+    "Identificacion": "A-02-02-02-006-003-03",
+    "Nombre": "SERVICIOS DE SUMINISTRO DE COMIDAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-006-003",
+    "Identificacion": "A-02-02-02-006-003-04",
+    "Nombre": "SERVICIOS DE SUMINISTRO DE BEBIDAS PARA SU CONSUMO DENTRO DEL ESTABLECIMIENTO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-006-009",
+    "Identificacion": "A-02-02-02-006-009-01",
+    "Nombre": "SERVICIOS DE DISTRIBUCIÓN DE ELECTRICIDAD, Y SERVICIOS DE DISTRIBUCIÓN DE GAS (POR CUENTA PROPIA)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-006-009",
+    "Identificacion": "A-02-02-02-006-009-02",
+    "Nombre": "SERVICIOS DE DISTRIBUCIÓN DE AGUA (POR CUENTA PROPIA)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-01-1",
+    "Nombre": "SERVICIOS FINANCIEROS, EXCEPTO DE LA BANCA DE INVERSIÓN, SERVICIOS DE SEGUROS Y SERVICIOS DE PENSIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-01-2",
+    "Nombre": "SERVICIOS DE DEPÓSITO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-01-3",
+    "Nombre": "SERVICIOS DE CONCESIÓN DE CRÉDITO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-01-4",
+    "Nombre": "SERVICIOS DE LEASING (ARRENDAMIENTO FINANCIERO)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-01-9",
+    "Nombre": "OTROS SERVICIOS FINANCIEROS, EXCEPTO LOS SERVICIOS DE LA BANCA DE INVERSIÓN, SERVICIOS DE SEGUROS Y PENSIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-02",
+    "Nombre": "SERVICIOS DE LA BANCA DE INVERSIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-1",
+    "Nombre": "SERVICIOS DE SEGUROS VIDA (CON EXCLUSIÓN DE LOS SERVICIOS DE REASEGURO)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-2",
+    "Nombre": "SERVICIOS DE SEGUROS SOCIALES DE PENSIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-3",
+    "Nombre": "SERVICIOS DE SEGUROS SOCIALES DE SALUD Y RIESGOS LABORALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-4",
+    "Nombre": "SERVICIOS DE SEGUROS DE SALUD Y DE ACCIDENTES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-01",
+    "Nombre": "SERVICIOS DE SEGUROS DE VEHÍCULOS AUTOMOTORES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-02",
+    "Nombre": "SERVICIOS DE SEGUROS DE TRANSPORTE MARÍTIMO, DE AVIACIÓN Y OTROS MEDIOS DE TRANSPORTE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-03",
+    "Nombre": "SERVICIOS DE SEGUROS PARA TRANSPORTE DE MERCANCÍAS (FLETES)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-04",
+    "Nombre": "SERVICIOS DE SEGUROS CONTRA INCENDIO, TERREMOTO O SUSTRACCIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-05",
+    "Nombre": "SERVICIOS DE SEGUROS GENERALES DE RESPONSABILIDAD CIVIL",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-06",
+    "Nombre": "SERVICIOS DE SEGURO DE CUMPLIMIENTO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-07",
+    "Nombre": "SERVICIOS DE SEGURO OBLIGATORIO DE ACCIDENTES DE TRÁNSITO (SOAT)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-08",
+    "Nombre": "SERVICIOS DE SEGUROS DE VIAJE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-09",
+    "Nombre": "OTROS SERVICIOS DE SEGUROS DISTINTOS DE LOS SEGUROS DE VIDA N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-10",
+    "Nombre": "SEGURO DE INFIDELIDAD Y RIESGOS FINANCIEROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-5-11",
+    "Nombre": "SEGUROS EQUIPOS ELÉCTRICOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-03-6",
+    "Nombre": "SERVICIOS DE LAS SOCIEDADES DE CAPITALIZACIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-04",
+    "Nombre": "SERVICIOS DE REASEGURO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-05-1",
+    "Nombre": "SERVICIOS RELACIONADOS CON LA BANCA DE INVERSIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-05-2",
+    "Nombre": "SERVICIOS DE CORRETAJE RELACIONADOS CON LOS PRODUCTOS DE VALORES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-05-3",
+    "Nombre": "SERVICIOS DE ADMINISTRACIÓN DE CARTERAS, EXCEPTO LOS FONDOS DE PENSIONES Y CESANTÍAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-05-4",
+    "Nombre": "SERVICIOS FIDUCIARIOS Y DE CUSTODIA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-05-5",
+    "Nombre": "SERVICIOS RELACIONADOS CON LA ADMINISTRACIÓN DE LOS MERCADOS FINANCIEROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-05-9",
+    "Nombre": "OTROS SERVICIOS AUXILIARES A LOS SERVICIOS FINANCIEROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-06-1",
+    "Nombre": "SERVICIOS DE CORRETAJE Y AGENCIAS DE SEGUROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-06-2",
+    "Nombre": "SERVICIOS DE TASACIÓN DE LAS RECLAMACIONES AL SEGURO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-06-3",
+    "Nombre": "SERVICIOS ACTUARIALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-06-4",
+    "Nombre": "SERVICIOS DE ADMINISTRACIÓN DE FONDOS DE PENSIONES Y CESANTÍAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-06-9",
+    "Nombre": "OTROS SERVICIOS AUXILIARES DE SEGUROS, PENSIONES Y CESANTÍAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-001",
+    "Identificacion": "A-02-02-02-007-001-07",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO DE ACTIVOS FINANCIEROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-01-1",
+    "Nombre": "SERVICIOS DE ALQUILER O ARRENDAMIENTO CON O SIN OPCIÓN DE COMPRA RELATIVOS A BIENES INMUEBLES PROPIOS O ARRENDADOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-01-2",
+    "Nombre": "VENTA DE BIENES INMUEBLES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-01-3",
+    "Nombre": "SERVICIOS COMERCIALES RELACIONADOS CON TERRENOS DESOCUPADOS Y SUBDIVIDIDOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-02-1",
+    "Nombre": "SERVICIOS DE ADMINISTRACIÓN DE BIENES INMUEBLES A COMISIÓN O POR CONTRATO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-02-2",
+    "Nombre": "SERVICIO DE ARRENDAMIENTO DE BIENES INMUEBLES A COMISIÓN O POR CONTRATA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-02-3",
+    "Nombre": "SERVICIO DE VENTA DE BIENES INMUEBLES A COMISIÓN O POR CONTRATA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-02-4",
+    "Nombre": "SERVICIOS DE VENTA DE TERRENOS A COMISIÓN O POR CONTRATO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-002",
+    "Identificacion": "A-02-02-02-007-002-02-5",
+    "Nombre": "VALUACIONES INMOBILIARIAS A COMISIÓN O POR CONTRATO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-003",
+    "Identificacion": "A-02-02-02-007-003-01",
+    "Nombre": "SERVICIOS DE ARRENDAMIENTO O ALQUILER DE MAQUINARIA Y EQUIPO SIN OPERARIO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-007-003",
+    "Identificacion": "A-02-02-02-007-003-02",
+    "Nombre": "SERVICIOS DE ARRENDAMIENTO SIN OPCIÓN DE COMPRA DE OTROS BIENES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-002",
+    "Identificacion": "A-02-02-02-008-002-01",
+    "Nombre": "SERVICIOS JURÍDICOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-002",
+    "Identificacion": "A-02-02-02-008-002-02",
+    "Nombre": "SERVICIOS DE CONTABILIDAD, AUDITORÍA Y TENEDURÍA DE LIBROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-002",
+    "Identificacion": "A-02-02-02-008-002-03",
+    "Nombre": "SERVICIOS DE PREPARACIÓN Y ASESORAMIENTO TRIBUTARIO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-002",
+    "Identificacion": "A-02-02-02-008-002-04",
+    "Nombre": "SERVICIOS RELACIONADOS CON CASOS DE INSOLVENCIA Y LIQUIDACIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-1",
+    "Nombre": "SERVICIOS DE CONSULTORÍA EN ADMINISTRACIÓN Y SERVICIOS DE GESTIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-2",
+    "Nombre": "SERVICIOS DE CONSULTORÍA PRESTADOS A LAS EMPRESAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-3",
+    "Nombre": "SERVICIOS DE TECNOLOGÍA DE LA INFORMACIÓN (TI) DE CONSULTORÍA Y DE APOYO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-4",
+    "Nombre": "SERVICIOS DE DISEÑO Y DESARROLLO DE LA TECNOLOGÍA DE LA INFORMACIÓN (TI)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-5",
+    "Nombre": "SERVICIOS DE SUMINISTRO DE INFRAESTRUCTURA DE HOSTING Y DE TECNOLOGÍA DE LA INFORMACIÓN (TI)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-6",
+    "Nombre": "SERVICIOS DE GESTIÓN DE RED E INFRAESTRUCTURA DE TI",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-01-9",
+    "Nombre": "OTROS SERVICIOS DE GESTIÓN, EXCEPTO LOS SERVICIOS DE ADMINISTRACIÓN DE PROYECTOS DE CONSTRUCCIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-02",
+    "Nombre": "SERVICIOS DE ARQUITECTURA, SERVICIOS DE PLANEACIÓN URBANA Y ORDENACIÓN DEL TERRITORIO; SERVICIOS DE ARQUITECTURA PAISAJISTA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-03",
+    "Nombre": "SERVICIOS DE INGENIERÍA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-04-1",
+    "Nombre": "SERVICIOS DE PROSPECCIÓN GEOLÓGICA, GEOFÍSICA Y OTROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-04-2",
+    "Nombre": "SERVICIOS DE TOPOGRAFÍA DE SUPERFICIE Y CARTOGRAFÍA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-04-3",
+    "Nombre": "PRONÓSTICO DEL TIEMPO Y SERVICIOS METEOROLÓGICOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-04-4",
+    "Nombre": "SERVICIOS DE ENSAYO Y ANÁLISIS TÉCNICOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-05",
+    "Nombre": "SERVICIOS VETERINARIOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-06",
+    "Nombre": "SERVICIOS DE PUBLICIDAD Y EL SUMINISTRO DE ESPACIO O TIEMPO PUBLICITARIOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-07",
+    "Nombre": "SERVICIOS DE INVESTIGACIÓN DE MERCADOS Y DE ENCUESTAS DE OPINIÓN PÚBLICA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-08",
+    "Nombre": "SERVICIOS FOTOGRÁFICOS Y SERVICIOS DE REVELADO FOTOGRÁFICO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-003",
+    "Identificacion": "A-02-02-02-008-003-09",
+    "Nombre": "OTROS SERVICIOS PROFESIONALES Y TÉCNICOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-004",
+    "Identificacion": "A-02-02-02-008-004-01",
+    "Nombre": "SERVICIOS DE TELEFONÍA Y OTRAS TELECOMUNICACIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-004",
+    "Identificacion": "A-02-02-02-008-004-02",
+    "Nombre": "SERVICIOS DE TELECOMUNICACIONES A TRAVÉS DE INTERNET",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-004",
+    "Identificacion": "A-02-02-02-008-004-03",
+    "Nombre": "SERVICIOS DE CONTENIDOS EN LÍNEA (ON-LINE)",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-004",
+    "Identificacion": "A-02-02-02-008-004-04",
+    "Nombre": "SERVICIOS DE AGENCIAS DE NOTICIAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-004",
+    "Identificacion": "A-02-02-02-008-004-05",
+    "Nombre": "SERVICIOS DE BIBLIOTECAS Y ARCHIVOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-004",
+    "Identificacion": "A-02-02-02-008-004-06",
+    "Nombre": "SERVICIOS DE PROGRAMACIÓN, DISTRIBUCIÓN Y TRANSMISIÓN DE PROGRAMAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-01",
+    "Nombre": "SERVICIOS DE EMPLEO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-02",
+    "Nombre": "SERVICIOS DE INVESTIGACIÓN Y SEGURIDAD",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-03",
+    "Nombre": "SERVICIOS DE LIMPIEZA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-04",
+    "Nombre": "SERVICIOS DE EMPAQUE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-05",
+    "Nombre": "SERVICIOS DE ORGANIZACIÓN DE VIAJES, OPERADORES TURÍSTICOS Y SERVICIOS CONEXOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-1",
+    "Nombre": "SERVICIOS DE INFORMACIÓN CREDITICIA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-2",
+    "Nombre": "SERVICIOS DE AGENCIAS DE COBRANZA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-3",
+    "Nombre": "SERVICIOS AUXILIARES POR TELÉFONO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-4",
+    "Nombre": "SERVICIOS ADMINISTRATIVOS COMBINADOS DE OFICINA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-5",
+    "Nombre": "SERVICIOS AUXILIARES ESPECIALIZADOS DE OFICINA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-6",
+    "Nombre": "SERVICIOS DE ORGANIZACIÓN Y ASISTENCIA DE CONVENCIONES Y FERIAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-7",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y CUIDADO DEL PAISAJE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-005",
+    "Identificacion": "A-02-02-02-008-005-09-9",
+    "Nombre": "OTROS SERVICIOS DE APOYO Y DE INFORMACIÓN N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-01-1",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE PRODUCTOS METÁLICOS ELABORADOS, EXCEPTO MAQUINARIA Y EQUIPO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-01-2",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE MAQUINARIA DE OFICINA Y CONTABILIDAD",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-01-3",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE COMPUTADORES Y EQUIPO PERIFÉRICO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-01-4",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE MAQUINARIA Y EQUIPO DE TRANSPORTE",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-01-5",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE OTRA MAQUINARIA Y OTRO EQUIPO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-02-1",
+    "Nombre": "SERVICIOS DE REPARACIÓN DE CALZADO Y ARTÍCULOS DE CUERO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-02-2",
+    "Nombre": "SERVICIOS DE REPARACIÓN DE RELOJES Y JOYAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-02-3",
+    "Nombre": "SERVICIOS DE REPARACIÓN DE PRENDAS DE VESTIR Y TEXTILES PARA EL HOGAR",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-02-4",
+    "Nombre": "SERVICIOS DE REPARACIÓN DE MUEBLES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-02-9",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE OTROS BIENES N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-1",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE PRODUCTOS METÁLICOS ELABORADOS, EXCEPTO MAQUINARIA Y EQUIPO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-2",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE MAQUINARIA Y EQUIPO PARA EL SECTOR INDUSTRIAL",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-3",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE MAQUINARIA DE OFICINA, CONTABILIDAD Y COMPUTADORES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-4",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE EQUIPOS Y APARATOS DE RADIO, TELEVISIÓN Y COMUNICACIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-5",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE MAQUINARIA Y EQUIPO MÉDICO PROFESIONAL, E INSTRUMENTOS DE PRECISIÓN Y ÓPTICOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-6",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE MAQUINARIA Y APARATOS ELÉCTRICOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-007",
+    "Identificacion": "A-02-02-02-008-007-03-9",
+    "Nombre": "SERVICIOS DE INSTALACIÓN DE OTROS BIENES N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-009",
+    "Identificacion": "A-02-02-02-008-009-01",
+    "Nombre": "SERVICIOS DE EDICIÓN, IMPRESIÓN Y REPRODUCCIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-009",
+    "Identificacion": "A-02-02-02-008-009-02",
+    "Nombre": "SERVICIOS DE MOLDEADO, ESTAMPADO, EXTRUSIÓN Y FABRICACIÓN DE PRODUCTOS SIMILARES DE PLÁSTICO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-009",
+    "Identificacion": "A-02-02-02-008-009-03",
+    "Nombre": "SERVICIOS DE FUNDICIÓN, FORJA, ESTAMPADO Y FABRICACIÓN DE PRODUCTOS SIMILARES DE METALES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-008-009",
+    "Identificacion": "A-02-02-02-008-009-04",
+    "Nombre": "SERVICIOS DE RECUPERACIÓN DE MATERIALES, A COMISIÓN O POR CONTRATO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-003",
+    "Identificacion": "A-02-02-02-009-003-01",
+    "Nombre": "SERVICIOS DE SALUD HUMANA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-003",
+    "Identificacion": "A-02-02-02-009-003-02",
+    "Nombre": "SERVICIOS DE ATENCIÓN RESIDENCIAL PARA PERSONAS MAYORES Y CON DISCAPACIDAD",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-003",
+    "Identificacion": "A-02-02-02-009-003-03",
+    "Nombre": "OTROS SERVICIOS SOCIALES CON ALOJAMIENTO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-003",
+    "Identificacion": "A-02-02-02-009-003-04",
+    "Nombre": "SERVICIOS SOCIALES SIN ALOJAMIENTO PARA PERSONAS MAYORES Y CON DISCAPACIDAD",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-003",
+    "Identificacion": "A-02-02-02-009-003-05",
+    "Nombre": "OTROS SERVICIOS SOCIALES SIN ALOJAMIENTO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-01",
+    "Nombre": "SERVICIOS AUDIOVISUALES Y SERVICIOS CONEXOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-02",
+    "Nombre": "SERVICIOS DE PROMOCIÓN Y PRESENTACIÓN DE ARTES ESCÉNICAS Y EVENTOS DE ENTRETENIMIENTO EN VIVO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-03",
+    "Nombre": "SERVICIOS RELACIONADOS CON ACTORES Y OTROS ARTISTAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-04",
+    "Nombre": "SERVICIOS DE PRESERVACIÓN Y MUSEOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-05",
+    "Nombre": "SERVICIOS DEPORTIVOS Y DEPORTES RECREATIVOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-06",
+    "Nombre": "SERVICIOS DE ATLETAS Y SERVICIOS DE AUXILIARES CONEXOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-006",
+    "Identificacion": "A-02-02-02-009-006-09",
+    "Nombre": "OTROS SERVICIOS DE ESPARCIMIENTO Y DIVERSIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-007",
+    "Identificacion": "A-02-02-02-009-007-01",
+    "Nombre": "SERVICIOS DE LAVADO, LIMPIEZA Y TEÑIDO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-007",
+    "Identificacion": "A-02-02-02-009-007-02",
+    "Nombre": "SERVICIOS DE TRATAMIENTOS DE BELLEZA Y DE BIENESTAR FÍSICO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-007",
+    "Identificacion": "A-02-02-02-009-007-03",
+    "Nombre": "SERVICIOS FUNERARIOS, DE CREMACIÓN Y DE SEPULTURA",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "A-02-02-02-009-007",
+    "Identificacion": "A-02-02-02-009-007-09",
+    "Nombre": "OTROS SERVICIOS DIVERSOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301002-02",
+    "Identificacion": "A-02-02-02-008-005-09-9",
+    "Nombre": "OTROS SERVICIOS DE APOYO Y DE INFORMACIÓN N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301002-02",
+    "Identificacion": "A-02-01-01-006-002-01",
+    "Nombre": "INVESTIGACIÓN Y DESARROLLO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301003-02",
+    "Identificacion": "A-02-02-02-006-003-01",
+    "Nombre": "SERVICIOS DE ALOJAMIENTO PARA ESTANCIAS CORTAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301003-02",
+    "Identificacion": "A-02-02-02-006-004",
+    "Nombre": "SERVICIOS DE TRANSPORTE DE PASAJEROS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301003-02",
+    "Identificacion": "A-02-02-02-008-003-09",
+    "Nombre": "OTROS SERVICIOS PROFESIONALES Y TÉCNICOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301020-02",
+    "Identificacion": "A-02-02-02-008-005-09-9",
+    "Nombre": "OTROS SERVICIOS DE APOYO Y DE INFORMACIÓN N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301020-02",
+    "Identificacion": "A-02-02-02-010",
+    "Nombre": "VIÁTICOS DE LOS FUNCIONARIOS EN COMISIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301041-02",
+    "Identificacion": "A-02-02-01-004-004-09",
+    "Nombre": "OTRA MAQUINARIA PARA USOS ESPECIALES Y SUS PARTES Y PIEZAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301041-02",
+    "Identificacion": "A-02-02-02-008-004-01",
+    "Nombre": "SERVICIOS DE TELEFONÍA Y OTRAS TELECOMUNICACIONES",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2301-0400-2-0-2301041-02",
+    "Identificacion": "A-02-02-02-008-007-02-9",
+    "Nombre": "SERVICIOS DE MANTENIMIENTO Y REPARACIÓN DE OTROS BIENES N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-2-0-2399052-02",
+    "Identificacion": "A-02-02-02-008-003-01-1",
+    "Nombre": "SERVICIOS DE CONSULTORÍA EN ADMINISTRACIÓN Y SERVICIOS DE GESTIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-2-0-2399053-02",
+    "Identificacion": "A-02-02-02-008-005-09-9",
+    "Nombre": "OTROS SERVICIOS DE APOYO Y DE INFORMACIÓN N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399058-02",
+    "Identificacion": "A-02-02-02-008-003-01-1",
+    "Nombre": "SERVICIOS DE CONSULTORÍA EN ADMINISTRACIÓN Y SERVICIOS DE GESTIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399058-02",
+    "Identificacion": "A-02-02-02-008-003-09",
+    "Nombre": "OTROS SERVICIOS PROFESIONALES Y TÉCNICOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399060-02",
+    "Identificacion": "A-02-02-02-008-003-01-1",
+    "Nombre": "SERVICIOS DE CONSULTORÍA EN ADMINISTRACIÓN Y SERVICIOS DE GESTIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399060-02",
+    "Identificacion": "A-02-02-02-008-003-01-2",
+    "Nombre": "SERVICIOS DE CONSULTORÍA PRESTADOS A LAS EMPRESAS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399060-02",
+    "Identificacion": "A-02-02-02-008-003-01-3",
+    "Nombre": "SERVICIOS DE TECNOLOGÍA DE LA INFORMACIÓN (TI) DE CONSULTORÍA Y DE APOYO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399060-02",
+    "Identificacion": "A-02-02-02-008-003-09",
+    "Nombre": "OTROS SERVICIOS PROFESIONALES Y TÉCNICOS N.C.P.",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399065-02",
+    "Identificacion": "A-02-02-01-004-005-02",
+    "Nombre": "MAQUINARIA DE INFORMÁTICA Y SUS PARTES, PIEZAS Y ACCESORIOS",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399065-02",
+    "Identificacion": "A-02-02-02-008-003-01-1",
+    "Nombre": "SERVICIOS DE CONSULTORÍA EN ADMINISTRACIÓN Y SERVICIOS DE GESTIÓN",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399065-02",
+    "Identificacion": "A-02-02-02-008-003-01-3",
+    "Nombre": "SERVICIOS DE TECNOLOGÍA DE LA INFORMACIÓN (TI) DE CONSULTORÍA Y DE APOYO",
+    "MarcaAusteridad": "NO"
+  },
+  {
+    "RubroPresupuestal": "C-2399-0400-3-0-2399065-02",
+    "Identificacion": "A-02-02-02-008-003-01-6",
+    "Nombre": "SERVICIOS DE GESTIÓN DE RED E INFRAESTRUCTURA DE TI",
+    "MarcaAusteridad": "NO"
+  }
+]

@@ -13,5 +13,50 @@
     "Nombre": "Rechazado",
     "Descripcion": "Rechazado",
     "TipoDocumento": "DetallePresupuesto"
+  },
+  {
+    "Nombre": "Por Pagar",
+    "Descripcion": "Por Pagar",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Por Obligar",
+    "Descripcion": "Por Obligar",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Con liquidacion Deducciones",
+    "Descripcion": "Con liquidacion deducciones",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Obligado",
+    "Descripcion": "Obligado",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Pagado",
+    "Descripcion": "Pagado",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Autorizada",
+    "Descripcion": "Autorizada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Anulada",
+    "Descripcion": "Anulada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Pagada",
+    "Descripcion": "Pagada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Bloqueada",
+    "Descripcion": "Bloqueada",
+    "TipoDocumento": "OrdenPago"
   }
 ]

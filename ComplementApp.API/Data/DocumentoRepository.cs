@@ -49,6 +49,25 @@ namespace ComplementApp.API.Data
             }
         }
 
+        public bool InsertaPlanDePago(IList<PlanPagoDto> lista)
+        {
+            try
+            {
+                #region Setear datos
+
+                List<PlanPago> listaPlanPago = obtenerListaPlanPago(lista);
+
+                #endregion Setear datos
+
+                _context.BulkInsert(listaPlanPago);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         //public async Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista)
         public bool InsertaDetalleCDP(IList<DetalleCDPDto> lista)
         {
@@ -168,7 +187,6 @@ namespace ComplementApp.API.Data
             return listaCDP;
         }
 
-
         private List<DetalleCDP> obtenerListaDetalleCdp(IList<DetalleCDPDto> lista)
         {
             List<DetalleCDP> listaCDP = new List<DetalleCDP>();
@@ -280,5 +298,106 @@ namespace ComplementApp.API.Data
 
             return listaCDP;
         }
+
+        private List<PlanPago> obtenerListaPlanPago(IList<PlanPagoDto> lista)
+        {
+            List<PlanPago> listaCDP = new List<PlanPago>();
+            PlanPago cdp = null;
+
+            var listaTercero = _context.Tercero.ToList();
+            var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
+            var listaUsoPresupuestal = _context.UsoPresupuestal.ToList();
+            var listaEstadoPlanPago = _context.Estado
+                                            .Where(x => x.TipoDocumento.ToUpper() == "PLANDEPAGOS")
+                                            .ToList();
+            var listaEstadoOrdenPago = _context.Estado
+                                            .Where(x => x.TipoDocumento.ToUpper() == "ORDENPAGO")
+                                            .ToList();
+
+            foreach (var item in lista)
+            {
+                cdp = new PlanPago();
+
+                cdp.Cdp = item.Cdp;
+                cdp.Crp = item.Crp;
+                cdp.AnioPago = item.AnioPago;
+                cdp.MesPago = item.MesPago;
+                cdp.ValorInicial = item.ValorInicial;
+                cdp.ValorAPagar = item.ValorAPagar;
+                cdp.ValorPagado = item.ValorPagado;
+
+                cdp.Viaticos = item.Viaticos == "NO" ? false : true;
+                cdp.NumeroPago = item.NumeroPago;
+                cdp.NumeroRadicadoProveedor = item.NumeroRadicadoProveedor;
+                cdp.FechaRadicadoProveedor = item.FechaRadicadoProveedor;
+                cdp.NumeroRadicadoSupervisor = item.NumeroRadicadoSupervisor;
+                cdp.FechaRadicadoSupervisor = item.FechaRadicadoSupervisor;
+                cdp.NumeroFactura = item.NumeroFactura;
+                cdp.ValorFacturado = item.ValorFacturado;
+                cdp.Observaciones = item.Observaciones;
+                cdp.FechaFactura = item.FechaFactura;
+                cdp.Obligacion = item.Obligacion;
+                cdp.OrdenPago = item.OrdenPago;
+                cdp.FechaOrdenPago = item.FechaOrdenPago;
+                cdp.DiasAlPago = item.DiasAlPago;
+
+                //Tercero
+                if (item.TipoIdentificacionTercero > 0 &&
+                    !string.IsNullOrEmpty(item.IdentificacionTercero))
+                {
+                    var tercero = listaTercero
+                                        .Where(c => c.TipoIdentificacion == item.TipoIdentificacionTercero)
+                                        .Where(c => c.NumeroIdentificacion == item.IdentificacionTercero)
+                                        .FirstOrDefault();
+                    if (tercero != null)
+                        cdp.TerceroId = tercero.TerceroId;
+                }
+
+                //Estado PlanPago
+                if (!string.IsNullOrEmpty(item.EstadoPlanPago))
+                {
+                    var estado = listaEstadoPlanPago
+                                        .Where(c => c.Nombre.ToUpper() == item.EstadoPlanPago.ToUpper())
+                                        .FirstOrDefault();
+                    if (estado != null)
+                        cdp.EstadoPlanPagoId = estado.EstadoId;
+                }
+
+                //Estado OrdenPago
+                if (!string.IsNullOrEmpty(item.EstadoOrdenPago))
+                {
+                    var estado = listaEstadoOrdenPago
+                                        .Where(c => c.Nombre.ToUpper() == item.EstadoOrdenPago.ToUpper())
+                                        .FirstOrDefault();
+                    if (estado != null)
+                        cdp.EstadoOrdenPagoId = estado.EstadoId;
+                }
+
+                //Rubro Presupuestal
+                if (!string.IsNullOrEmpty(item.IdentificacionRubroPresupuestal))
+                {
+                    var rubro = listaRubrosPresupuestales
+                                .Where(c => c.Identificacion.ToUpper() == item.IdentificacionRubroPresupuestal.ToUpper())
+                                .FirstOrDefault();
+                    if (rubro != null)
+                        cdp.RubroPresupuestalId = rubro.RubroPresupuestalId;
+                }
+
+                //Uso Presupuestal
+                if (!string.IsNullOrEmpty(item.IdentificacionUsoPresupuestal))
+                {
+                    var uso = listaUsoPresupuestal
+                                .Where(c => c.Identificacion.ToUpper() == item.IdentificacionUsoPresupuestal.ToUpper())
+                                .FirstOrDefault();
+                    if (uso != null)
+                        cdp.UsoPresupuestalId = uso.UsoPresupuestalId;
+                }
+
+                listaCDP.Add(cdp);
+            }
+
+            return listaCDP;
+        }
+
     }
 }

@@ -89,7 +89,7 @@ export class CdpEditComponent implements OnInit {
                     Validators.required,
                     ValidarValorIngresado.valorIncorrecto(
                       idTipoOperacion,
-                      detalle.valorAct,
+                      detalle.saldoAct,
                       detalle.saldoCDP
                     ),
                   ]),
@@ -129,7 +129,7 @@ export class CdpEditComponent implements OnInit {
                 Validators.required,
                 ValidarValorIngresado.valorIncorrecto(
                   idTipoOperacion,
-                  detalle.valorAct,
+                  detalle.saldoAct,
                   detalle.saldoCDP
                 ),
               ]),

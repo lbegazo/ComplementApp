@@ -33,8 +33,12 @@ namespace ComplementApp.API.Controllers
         const int numeroColumnasCabecera = 26;
         const int numeroColumnasDetalle = 25;
 
+        const int numeroColumnasPlanPago = 29;
+
         const string nombreHojaCabecera = "BD";
         const string nombreHojaDetalle = "DetallePresup";
+
+        const string nombreHojaPlanPago = "PlanesPago";
 
         #endregion Propiedades
 
@@ -60,15 +64,16 @@ namespace ComplementApp.API.Controllers
                 IFormFile file = Request.Form.Files[0];
 
                 if (file == null || file.Length <= 0)
-                    return BadRequest("File is empty");
+                    return BadRequest("El archivo se encuentra vacío");
 
                 if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                    return BadRequest("File extension is not supported");
+                    return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
 
                 #region Obtener información del archivo excel
 
                 DataTable dtDetalle = ObtenerDetalleDeExcel(file);
                 DataTable dtCabecera = ObtenerCabeceraDeExcel(file);
+                DataTable dtPlanPago = ObtenerPlanPagosDeExcel(file);
 
                 #endregion
 
@@ -76,6 +81,7 @@ namespace ComplementApp.API.Controllers
 
                 List<CDPDto> listaDocumento = obtenerListaDeCDP(dtCabecera);
                 List<DetalleCDPDto> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
+                List<PlanPagoDto> listaPlanPago = obtenerListaDePlanPago(dtPlanPago);
 
                 #endregion
 
@@ -83,6 +89,7 @@ namespace ComplementApp.API.Controllers
 
                 var taskCabecera = _repo.InsertaCabeceraCDP(listaDocumento);
                 var taskDetalle = _repo.InsertaDetalleCDP(listaDetalle);
+                var taskPlanPago = _repo.InsertaPlanDePago(listaPlanPago);
 
                 #endregion Insertar lista en la base de datos
 
@@ -90,16 +97,20 @@ namespace ComplementApp.API.Controllers
                 // taskDetalle.Wait();
 
                 // bool EsCabeceraValida = taskCabecera.Result;
-                // bool EsDetalleValida = taskCabecera.Result;
+                // bool EsDetalleCorrecto = taskCabecera.Result;
 
-                bool EsCabeceraValida = taskCabecera;
-                bool EsDetalleValida = taskCabecera;
+                bool EsCabeceraCorrecto = taskCabecera;
+                bool EsDetalleCorrecto = taskCabecera;
+                bool EsPlanPagoCorrecto = taskPlanPago;
 
-                if (!EsCabeceraValida)
-                    throw new ArgumentException("No se pudo registrar la cabecera");
+                if (!EsCabeceraCorrecto)
+                    throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
 
-                if (!EsDetalleValida)
-                    throw new ArgumentException("No se pudieron registrar los detalles");
+                if (!EsDetalleCorrecto)
+                    throw new ArgumentException("No se pudieron registrar: " + nombreHojaDetalle);
+
+                if (!EsPlanPagoCorrecto)
+                    throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
 
                 //Thread.Sleep(3);
 
@@ -144,7 +155,8 @@ namespace ComplementApp.API.Controllers
                         {
                             row[cell.Start.Column - 1] = cell.Value;
                         }
-                        //Me fijo en el ID de la hoja DetallePresup
+                        //Dejo de leer la hoja del excel
+                        //Razón de la salida ID de la hoja DetallePresup
                         if (row.ItemArray[1].ToString().Equals(string.Empty))
                         {
                             dtDetalle.Rows.Remove(row);
@@ -194,8 +206,62 @@ namespace ComplementApp.API.Controllers
                         {
                             row[cell.Start.Column - 1] = cell.Value;
                         }
-                        //Me fijo en el CDP de la hoja BD
-                        if (row.ItemArray[3].ToString().Equals(string.Empty))
+                        //Dejo de leer la hoja del excel
+                        //Razón de la salida: CDP de la hoja BD
+                        if (row.ItemArray[1].ToString().Equals(string.Empty))
+                        {
+                            dtCabecera1.Rows.Remove(row);
+                            break;
+                        }
+
+                    }
+
+                    #endregion Cargar Cabecera                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return dtCabecera1;
+        }
+
+        private static DataTable ObtenerPlanPagosDeExcel(IFormFile file)
+        {
+            DataTable dtCabecera1 = new DataTable();
+            bool hasHeader = true;
+            try
+            {
+                using (var package = new ExcelPackage())
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        file.CopyTo(stream);
+                        package.Load(stream);
+                    }
+
+                    #region Cargar Cabecera
+
+                    var wsCabecera = package.Workbook.Worksheets[nombreHojaPlanPago];
+
+                    foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, numeroColumnasPlanPago
+])
+                    {
+                        dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
+                    var startRow = hasHeader ? 2 : 1;
+                    for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
+                    {
+                        var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, numeroColumnasPlanPago
+];
+                        DataRow row = dtCabecera1.Rows.Add();
+                        foreach (var cell in wsRow)
+                        {
+                            row[cell.Start.Column - 1] = cell.Value;
+                        }
+                        //Dejo de leer la hoja del excel
+                        //Razón de la salida: CDP de la hoja BD
+                        if (row.ItemArray[1].ToString().Equals(string.Empty))
                         {
                             dtCabecera1.Rows.Remove(row);
                             break;
@@ -424,6 +490,130 @@ namespace ComplementApp.API.Controllers
             return listaDocumento;
         }
 
+        private List<PlanPagoDto> obtenerListaDePlanPago(DataTable dtPlanPago)
+        {
+            PlanPagoDto documento = null;
+            List<PlanPagoDto> listaDocumento = new List<PlanPagoDto>();
+            int numValue = 0;
+            decimal value = 0;
+            DateTime fecha;
+
+            foreach (var row in dtPlanPago.Rows)
+            {
+                documento = new PlanPagoDto();
+
+                //Cdp
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
+                        documento.Cdp = numValue;
+
+                //Crp
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
+                        documento.Crp = numValue;
+
+                //AnioPago
+                if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[3].ToString(), out numValue))
+                        documento.AnioPago = numValue;
+
+                //MesPago
+                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[4].ToString(), out numValue))
+                        documento.MesPago = numValue;
+
+                //ValorInicial
+                if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
+                        documento.ValorInicial = value;
+
+                //ValorAdicion
+                if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
+                        documento.ValorAdicion = value;
+
+                //ValorAPagar
+                if (!(row as DataRow).ItemArray[7].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[7].ToString(), out value))
+                        documento.ValorAPagar = value;
+
+                //ValorPagado
+                if (!(row as DataRow).ItemArray[8].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[8].ToString(), out value))
+                        documento.ValorPagado = value;
+
+                documento.EstadoPlanPago = (row as DataRow).ItemArray[9].ToString();
+                documento.Viaticos = (row as DataRow).ItemArray[10].ToString();
+
+                //TipoIdentificacionTercero
+                if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[11].ToString(), out numValue))
+                        documento.TipoIdentificacionTercero = numValue;
+                //IdentificacionTercero
+                documento.IdentificacionTercero = (row as DataRow).ItemArray[12].ToString();
+
+                //NumeroPago
+                if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[13].ToString(), out numValue))
+                        documento.NumeroPago = numValue;
+
+                //IdentificacionRubroPresupuestal
+                documento.IdentificacionRubroPresupuestal = (row as DataRow).ItemArray[14].ToString();
+                //IdentificacionUsoPresupuestal
+                documento.IdentificacionUsoPresupuestal = (row as DataRow).ItemArray[15].ToString();
+
+                //Proveedor
+                documento.NumeroRadicadoProveedor = (row as DataRow).ItemArray[16].ToString();
+                if (!(row as DataRow).ItemArray[17].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[17].ToString(), out fecha))
+                        documento.FechaRadicadoProveedor = fecha;
+
+                //Supervisor
+                documento.NumeroRadicadoSupervisor = (row as DataRow).ItemArray[18].ToString();
+                if (!(row as DataRow).ItemArray[19].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[19].ToString(), out fecha))
+                        documento.FechaRadicadoSupervisor = fecha;
+
+                //Factura
+                documento.NumeroFactura = (row as DataRow).ItemArray[20].ToString();
+                if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[21].ToString(), out value))
+                        documento.ValorFacturado = value;
+                //FechaFactura
+                if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[23].ToString(), out fecha))
+                        documento.FechaFactura = fecha;
+
+                //Observaciones
+                documento.Observaciones = (row as DataRow).ItemArray[22].ToString();
+
+                //Obligacion
+                if (!(row as DataRow).ItemArray[24].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[24].ToString(), out numValue))
+                        documento.Obligacion = numValue;
+
+                //OrdenPago
+                if (!(row as DataRow).ItemArray[25].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[25].ToString(), out numValue))
+                        documento.OrdenPago = numValue;
+                //EstadoOrdenPago
+                documento.EstadoOrdenPago = (row as DataRow).ItemArray[26].ToString();
+                //FechaOrdenPago 
+                if (!(row as DataRow).ItemArray[27].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[27].ToString(), out fecha))
+                        documento.FechaOrdenPago = fecha;
+
+                //DiasAlPago
+                if (!(row as DataRow).ItemArray[28].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[28].ToString(), out numValue))
+                        documento.DiasAlPago = numValue;
+
+                listaDocumento.Add(documento);
+            }
+
+            return listaDocumento;
+        }
+
         private bool EliminarInformacionCDP()
         {
             var resultado = false;
@@ -534,6 +724,8 @@ namespace ComplementApp.API.Controllers
             }
             return dtCabecera1;
         }
+
+
 
     }
 }
