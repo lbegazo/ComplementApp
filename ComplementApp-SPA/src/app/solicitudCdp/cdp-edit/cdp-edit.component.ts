@@ -74,7 +74,7 @@ export class CdpEditComponent implements OnInit {
 
     if (!this.esSolicitudInicial) {
       //#region No Solicitud Inicial
-
+      
       this.cdpService.ObtenerDetalleDeCDP(this.cdp?.cdp).subscribe(
         (documento: DetalleCDP[]) => {
           this.detalleCdp = documento;

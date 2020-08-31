@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using ComplementApp.API.Dtos;
@@ -25,7 +26,7 @@ namespace ComplementApp.API.Helpers
             CreateMap<UserForUpdateDto, User>();
             CreateMap<UserForRegisterDto, User>();
 
-            #endregion
+            #endregion User
 
             #region Usuario
 
@@ -37,8 +38,16 @@ namespace ComplementApp.API.Helpers
             CreateMap<UsuarioParaActualizar, Usuario>();
             CreateMap<UsuarioParaDetalleDto, Usuario>();
 
+            #endregion Usuario
 
-            #endregion User
+            #region PlanPago
+
+            CreateMap<PlanPago, PlanPagoDto>()
+                .ForMember(u => u.ViaticosDescripcion, opt => opt.MapFrom(u => u.Viaticos ? "SI" : "NO"))
+                .ForMember(u => u.MesPagoDescripcion, opt => opt.MapFrom(u => u.MesPago > 0 && u.MesPago < 13 ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(u.MesPago).ToUpper() : string.Empty));
+            CreateMap<PlanPagoDto, PlanPago>();
+
+            #endregion PlanPago
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ComplementApp.API.Data
 {
@@ -34,6 +35,13 @@ namespace ComplementApp.API.Data
         public async Task<IEnumerable<TipoDetalleCDP>> ObtenerListaTipoDetalleModificacion()
         {
             return await _context.TipoDetalleModificacion.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion)
+        {
+            return await _context.Tercero
+                            .Where(t => t.NumeroIdentificacion.Contains(numeroIdentificacion))
+                            .ToListAsync();
         }
     }
 }

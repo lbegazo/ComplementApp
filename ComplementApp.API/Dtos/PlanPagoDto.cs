@@ -14,6 +14,8 @@ namespace ComplementApp.API.Dtos
 
         public int MesPago { get; set; }
 
+        public string MesPagoDescripcion { get; set; }
+
         public decimal ValorInicial { get; set; }
 
         public decimal ValorAdicion { get; set; }
@@ -22,7 +24,9 @@ namespace ComplementApp.API.Dtos
 
         public decimal ValorPagado { get; set; }
 
-        public string Viaticos { get; set; }
+        public bool Viaticos { get; set; }
+        
+        public string ViaticosDescripcion { get; set; }
 
         public int NumeroPago { get; set; }
 
@@ -32,7 +36,7 @@ namespace ComplementApp.API.Dtos
 
         public string NumeroRadicadoSupervisor { get; set; }
 
-        public DateTime FechaRadicadoSupervisor { get; set; }        
+        public DateTime FechaRadicadoSupervisor { get; set; }
 
         public string NumeroFactura { get; set; }
 
@@ -52,7 +56,7 @@ namespace ComplementApp.API.Dtos
 
         public int DiasAlPago { get; set; }
 
-        public int EstadoId { get; set; }
+        public int EstadoPlanPagoId { get; set; }
 
         public string EstadoPlanPago { get; set; }
 
@@ -64,10 +68,16 @@ namespace ComplementApp.API.Dtos
 
         public string IdentificacionRubroPresupuestal { get; set; }
 
-         public int UsoPresupuestalId { get; set; }
+        public int UsoPresupuestalId { get; set; }
 
         public string IdentificacionUsoPresupuestal { get; set; }
 
+        public int EstadoOrdenPagoId { get; set; }
+
         public string EstadoOrdenPago { get; set; }
+
+        public int TerceroId { get; set; }
+
+        public bool esRadicarFactura { get; set; }
     }
 }

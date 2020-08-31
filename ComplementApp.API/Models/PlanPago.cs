@@ -20,13 +20,13 @@ namespace ComplementApp.API.Models
         public decimal ValorInicial { get; set; }
 
          [Column(TypeName = "decimal(30,8)")]
-        public decimal ValorAdicion { get; set; }
+        public decimal? ValorAdicion { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorAPagar { get; set; }
 
          [Column(TypeName = "decimal(30,8)")]
-        public decimal ValorPagado { get; set; }
+        public decimal? ValorPagado { get; set; }
 
         public bool Viaticos { get; set; }
 
@@ -35,35 +35,35 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(250)")]
         public string NumeroRadicadoProveedor { get; set; }
 
-        public DateTime FechaRadicadoProveedor { get; set; }
+        public DateTime? FechaRadicadoProveedor { get; set; }
 
          [Column(TypeName = "VARCHAR(250)")]
         public string NumeroRadicadoSupervisor { get; set; }
 
-        public DateTime FechaRadicadoSupervisor { get; set; }        
+        public DateTime? FechaRadicadoSupervisor { get; set; }        
 
         [Column(TypeName = "VARCHAR(250)")]
         public string NumeroFactura { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
-        public decimal ValorFacturado { get; set; }
+        public decimal? ValorFacturado { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]
         public string Observaciones { get; set; }
 
-        public DateTime FechaFactura { get; set; }
+        public DateTime? FechaFactura { get; set; }
 
-        public long Obligacion { get; set; }
+        public long? Obligacion { get; set; }
 
-        public long OrdenPago { get; set; }
+        public long? OrdenPago { get; set; }
 
-        public DateTime FechaOrdenPago { get; set; }
+        public DateTime? FechaOrdenPago { get; set; }
 
-        public int DiasAlPago { get; set; }
+        public int? DiasAlPago { get; set; }
 
-        public int EstadoPlanPagoId { get; set; }
+        public int? EstadoPlanPagoId { get; set; }
 
-        public int EstadoOrdenPagoId { get; set; }
+        public int? EstadoOrdenPagoId { get; set; }
 
         public int TerceroId { get; set; }
 

@@ -8,13 +8,12 @@ import { TipoOperacion } from '../_models/tipoOperacion';
 import { TipoDetalle } from '../_models/tipoDetalle';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ListaService 
-{
+export class ListaService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ObtenerAreas(): Observable<Area[]> {
     return this.http.get<Area[]>(this.baseUrl + 'lista/ObtenerAreas');
@@ -25,12 +24,14 @@ export class ListaService
   }
 
   ObtenerListaTipoOperacion(): Observable<TipoOperacion[]> {
-    return this.http.get<TipoOperacion[]>(this.baseUrl + 'lista/ObtenerListaTipoOperacion');
+    return this.http.get<TipoOperacion[]>(
+      this.baseUrl + 'lista/ObtenerListaTipoOperacion'
+    );
   }
 
   ObtenerListaTipoDetalle(): Observable<TipoDetalle[]> {
-    return this.http.get<TipoDetalle[]>(this.baseUrl + 'lista/ObtenerListaTipoDetalleModificacion');
+    return this.http.get<TipoDetalle[]>(
+      this.baseUrl + 'lista/ObtenerListaTipoDetalleModificacion'
+    );
   }
-
-
 }

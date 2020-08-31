@@ -3,7 +3,9 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule, BsLocaleService  } from 'ngx-bootstrap/datepicker';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { esLocale } from 'ngx-bootstrap/locale';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { JwtModule } from '@auth0/angular-jwt';
 import { RouterModule } from '@angular/router';
@@ -11,6 +13,7 @@ import { TimeagoModule } from 'ngx-timeago';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import localeEsCo from '@angular/common/locales/es-CO';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 import { appRoutes } from './routes';
 import { AppComponent } from './app.component';
@@ -51,7 +54,12 @@ import { TwoDigitDecimaNumberDirective } from './_directives/two-digit-decima-nu
 import { PopupCdpComponent } from './solicitudCdp/popup-cdp/popup-cdp.component';
 import { NumberCommaDirective } from './_directives/number-comma.directive';
 import { registerLocaleData } from '@angular/common';
-
+import { PreventUnsavedChangesFactura } from './_guards/prevent-unsaved-changes-factura.guard';
+import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-main.component';
+import { FacturaEditComponent } from './facturaCompromiso/factura-edit/factura-edit.component';
+import { PopupBuscarFacturaComponent } from './facturaCompromiso/popup-buscar-factura/popup-buscar-factura.component';
+import { CausacionyLiquidacionComponent } from './CausacionyLiquidacion/CausacionyLiquidacion.component';
+defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
 
 export function tokenGetter() {
@@ -59,7 +67,7 @@ export function tokenGetter() {
 }
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     NavComponent,
     HomeComponent,
@@ -87,8 +95,12 @@ export function tokenGetter() {
     ItemComponent,
     TwoDigitDecimaNumberDirective,
     PopupCdpComponent,
-    NumberCommaDirective
-  ],
+    NumberCommaDirective,
+    FacturaMainComponent,
+    FacturaEditComponent,
+    PopupBuscarFacturaComponent,
+      CausacionyLiquidacionComponent
+   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -102,6 +114,7 @@ export function tokenGetter() {
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TimeagoModule.forRoot(),
+    TypeaheadModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     JwtModule.forRoot({
       config: {
@@ -121,8 +134,15 @@ export function tokenGetter() {
     CdpDetalleResolver,
     UsuarioDetalleResolver,
     PreventUnsavedChanges,
-    PreventUnsavedChangesUsuario
+    PreventUnsavedChangesUsuario,
+    PreventUnsavedChangesFactura,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor( private bsLocaleService: BsLocaleService){
+    this.bsLocaleService.use('es'); // fecha en español, datepicker
+  }
+
+
+}

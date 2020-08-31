@@ -322,24 +322,42 @@ namespace ComplementApp.API.Data
                 cdp.Crp = item.Crp;
                 cdp.AnioPago = item.AnioPago;
                 cdp.MesPago = item.MesPago;
-                cdp.ValorInicial = item.ValorInicial;
-                cdp.ValorAPagar = item.ValorAPagar;
-                cdp.ValorPagado = item.ValorPagado;
 
-                cdp.Viaticos = item.Viaticos == "NO" ? false : true;
-                cdp.NumeroPago = item.NumeroPago;
-                cdp.NumeroRadicadoProveedor = item.NumeroRadicadoProveedor;
-                cdp.FechaRadicadoProveedor = item.FechaRadicadoProveedor;
-                cdp.NumeroRadicadoSupervisor = item.NumeroRadicadoSupervisor;
-                cdp.FechaRadicadoSupervisor = item.FechaRadicadoSupervisor;
-                cdp.NumeroFactura = item.NumeroFactura;
-                cdp.ValorFacturado = item.ValorFacturado;
-                cdp.Observaciones = item.Observaciones;
-                cdp.FechaFactura = item.FechaFactura;
-                cdp.Obligacion = item.Obligacion;
-                cdp.OrdenPago = item.OrdenPago;
-                cdp.FechaOrdenPago = item.FechaOrdenPago;
-                cdp.DiasAlPago = item.DiasAlPago;
+                if (item.ValorInicial > 0)
+                    cdp.ValorInicial = item.ValorInicial;
+                if (item.ValorAPagar > 0)
+                    cdp.ValorAPagar = item.ValorAPagar;
+                if (item.ValorPagado > 0)
+                    cdp.ValorPagado = item.ValorPagado;
+
+                cdp.Viaticos = item.ViaticosDescripcion == "NO" ? false : true;
+
+                if (item.NumeroPago > 0)
+                    cdp.NumeroPago = item.NumeroPago;
+                if (!string.IsNullOrEmpty(item.NumeroRadicadoProveedor))
+                    cdp.NumeroRadicadoProveedor = item.NumeroRadicadoProveedor;
+                if (item.FechaRadicadoProveedor != DateTime.MinValue)
+                    cdp.FechaRadicadoProveedor = item.FechaRadicadoProveedor;
+                if (!string.IsNullOrEmpty(item.NumeroRadicadoSupervisor))
+                    cdp.NumeroRadicadoSupervisor = item.NumeroRadicadoSupervisor;
+                if (item.FechaRadicadoSupervisor != DateTime.MinValue)
+                    cdp.FechaRadicadoSupervisor = item.FechaRadicadoSupervisor;
+                if (!string.IsNullOrEmpty(item.NumeroFactura))
+                    cdp.NumeroFactura = item.NumeroFactura;
+                if (item.ValorFacturado > 0)
+                    cdp.ValorFacturado = item.ValorFacturado;
+                if (!string.IsNullOrEmpty(item.Observaciones))
+                    cdp.Observaciones = item.Observaciones;
+                if (item.FechaFactura != DateTime.MinValue)
+                    cdp.FechaFactura = item.FechaFactura;
+                if (item.Obligacion > 0)
+                    cdp.Obligacion = item.Obligacion;
+                if (item.OrdenPago > 0)
+                    cdp.OrdenPago = item.OrdenPago;
+                if (item.FechaOrdenPago != DateTime.MinValue)
+                    cdp.FechaOrdenPago = item.FechaOrdenPago;
+                if (item.DiasAlPago > 0)
+                    cdp.DiasAlPago = item.DiasAlPago;
 
                 //Tercero
                 if (item.TipoIdentificacionTercero > 0 &&

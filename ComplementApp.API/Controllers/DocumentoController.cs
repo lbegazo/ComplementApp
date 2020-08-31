@@ -505,12 +505,14 @@ namespace ComplementApp.API.Controllers
                 //Cdp
                 if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[1].ToString(), out numValue))
-                        documento.Cdp = numValue;
+                        if (numValue > 0)
+                            documento.Cdp = numValue;
 
                 //Crp
                 if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[2].ToString(), out numValue))
-                        documento.Crp = numValue;
+                        if (numValue > 0)
+                            documento.Crp = numValue;
 
                 //AnioPago
                 if (!(row as DataRow).ItemArray[3].ToString().Equals(string.Empty))
@@ -525,25 +527,29 @@ namespace ComplementApp.API.Controllers
                 //ValorInicial
                 if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
-                        documento.ValorInicial = value;
+                        if (value > 0)
+                            documento.ValorInicial = value;
 
                 //ValorAdicion
                 if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
-                        documento.ValorAdicion = value;
+                        if (value > 0)
+                            documento.ValorAdicion = value;
 
                 //ValorAPagar
                 if (!(row as DataRow).ItemArray[7].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[7].ToString(), out value))
-                        documento.ValorAPagar = value;
+                        if (value > 0)
+                            documento.ValorAPagar = value;
 
                 //ValorPagado
                 if (!(row as DataRow).ItemArray[8].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[8].ToString(), out value))
-                        documento.ValorPagado = value;
+                        if (value > 0)
+                            documento.ValorPagado = value;
 
                 documento.EstadoPlanPago = (row as DataRow).ItemArray[9].ToString();
-                documento.Viaticos = (row as DataRow).ItemArray[10].ToString();
+                documento.ViaticosDescripcion = (row as DataRow).ItemArray[10].ToString();
 
                 //TipoIdentificacionTercero
                 if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
@@ -555,7 +561,8 @@ namespace ComplementApp.API.Controllers
                 //NumeroPago
                 if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[13].ToString(), out numValue))
-                        documento.NumeroPago = numValue;
+                        if (numValue > 0)
+                            documento.NumeroPago = numValue;
 
                 //IdentificacionRubroPresupuestal
                 documento.IdentificacionRubroPresupuestal = (row as DataRow).ItemArray[14].ToString();
@@ -566,23 +573,27 @@ namespace ComplementApp.API.Controllers
                 documento.NumeroRadicadoProveedor = (row as DataRow).ItemArray[16].ToString();
                 if (!(row as DataRow).ItemArray[17].ToString().Equals(string.Empty))
                     if (DateTime.TryParse((row as DataRow).ItemArray[17].ToString(), out fecha))
-                        documento.FechaRadicadoProveedor = fecha;
+                        if (fecha != DateTime.MinValue)
+                            documento.FechaRadicadoProveedor = fecha;
 
                 //Supervisor
                 documento.NumeroRadicadoSupervisor = (row as DataRow).ItemArray[18].ToString();
                 if (!(row as DataRow).ItemArray[19].ToString().Equals(string.Empty))
                     if (DateTime.TryParse((row as DataRow).ItemArray[19].ToString(), out fecha))
-                        documento.FechaRadicadoSupervisor = fecha;
+                        if (fecha != DateTime.MinValue)
+                            documento.FechaRadicadoSupervisor = fecha;
 
                 //Factura
                 documento.NumeroFactura = (row as DataRow).ItemArray[20].ToString();
                 if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[21].ToString(), out value))
-                        documento.ValorFacturado = value;
+                        if (value > 0)
+                            documento.ValorFacturado = value;
                 //FechaFactura
                 if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
                     if (DateTime.TryParse((row as DataRow).ItemArray[23].ToString(), out fecha))
-                        documento.FechaFactura = fecha;
+                        if (fecha != DateTime.MinValue)
+                            documento.FechaFactura = fecha;
 
                 //Observaciones
                 documento.Observaciones = (row as DataRow).ItemArray[22].ToString();
@@ -590,23 +601,28 @@ namespace ComplementApp.API.Controllers
                 //Obligacion
                 if (!(row as DataRow).ItemArray[24].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[24].ToString(), out numValue))
-                        documento.Obligacion = numValue;
+                        if (numValue > 0)
+                            documento.Obligacion = numValue;
 
                 //OrdenPago
                 if (!(row as DataRow).ItemArray[25].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[25].ToString(), out numValue))
-                        documento.OrdenPago = numValue;
+                        if (numValue > 0)
+                            documento.OrdenPago = numValue;
+
                 //EstadoOrdenPago
                 documento.EstadoOrdenPago = (row as DataRow).ItemArray[26].ToString();
                 //FechaOrdenPago 
                 if (!(row as DataRow).ItemArray[27].ToString().Equals(string.Empty))
                     if (DateTime.TryParse((row as DataRow).ItemArray[27].ToString(), out fecha))
-                        documento.FechaOrdenPago = fecha;
+                        if (fecha != DateTime.MinValue)
+                            documento.FechaOrdenPago = fecha;
 
                 //DiasAlPago
                 if (!(row as DataRow).ItemArray[28].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[28].ToString(), out numValue))
-                        documento.DiasAlPago = numValue;
+                        if (numValue > 0)
+                            documento.DiasAlPago = numValue;
 
                 listaDocumento.Add(documento);
             }

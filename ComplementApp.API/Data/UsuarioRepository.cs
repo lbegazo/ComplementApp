@@ -1,13 +1,11 @@
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using EFCore.BulkExtensions;
 using System.Linq;
-using System.Threading;
 using System;
 using ComplementApp.API.Helpers;
+using System.Text;
 
 namespace ComplementApp.API.Data
 {

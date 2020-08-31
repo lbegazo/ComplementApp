@@ -57,5 +57,13 @@ namespace ComplementApp.API.Controllers
             return Ok(datos);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaTercero([FromQuery(Name = "numeroIdentificacion")] string numeroIdentificacion)
+        {
+            var datos = await _repo.ObtenerListaTercero(numeroIdentificacion);
+            return Ok(datos);
+        }
+
     }
 }

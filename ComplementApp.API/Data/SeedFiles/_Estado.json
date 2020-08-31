@@ -40,6 +40,11 @@
     "TipoDocumento": "PlanDePagos"
   },
   {
+    "Nombre": "Rechazada",
+    "Descripcion": "Rechazada",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
     "Nombre": "Autorizada",
     "Descripcion": "Autorizada",
     "TipoDocumento": "OrdenPago"

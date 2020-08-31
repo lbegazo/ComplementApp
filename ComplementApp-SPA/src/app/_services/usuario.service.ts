@@ -52,7 +52,6 @@ export class UsuarioService {
           this.ActualizarListaUsuarios();
         },
         (error) => {
-          //console.log(error);
           this.errorHandler(error);
         }
       );
