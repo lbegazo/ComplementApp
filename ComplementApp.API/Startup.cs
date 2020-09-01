@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Net;
 using System.Text;
 using AutoMapper;
@@ -110,6 +111,14 @@ namespace ComplementApp.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var espanolCulture = "es-CO";
+            var cultureInfo = new CultureInfo(espanolCulture);
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+            cultureInfo.NumberFormat.CurrencyDecimalSeparator = ".";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             /*The order is extremely important*/
             if (env.IsDevelopment())
             {
@@ -145,7 +154,18 @@ namespace ComplementApp.API
             app.UseAuthorization();
 
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+            
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = context =>
+                {
+                    if (context.File.Name == "index.html")
+                    {
+                        context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
+                        context.Context.Response.Headers.Add("Expires", "-1");
+                    }
+                }
+            });
 
             app.UseEndpoints(endpoints =>
             {

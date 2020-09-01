@@ -19,7 +19,6 @@ import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
 import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
-import { FacturaEditComponent } from './facturaCompromiso/factura-edit/factura-edit.component';
 import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-main.component';
 import { PreventUnsavedChangesFactura } from './_guards/prevent-unsaved-changes-factura.guard';
 import { CausacionyLiquidacionComponent } from './CausacionyLiquidacion/CausacionyLiquidacion.component';

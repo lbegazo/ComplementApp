@@ -53,7 +53,7 @@ export class PopupBuscarFacturaComponent implements OnInit {
       //#endregion Radicar factura
     } else {
       //#region Modificar factura
-      this.listaEstadoId = '5,9'; // ESTADO: Por Obligar y rechazada
+      this.listaEstadoId = '5,13'; // ESTADO: Por Obligar y rechazada
 
       //#endregion Modificar factura
     }

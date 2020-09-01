@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace ComplementApp.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PlanPagoController : ControllerBase
