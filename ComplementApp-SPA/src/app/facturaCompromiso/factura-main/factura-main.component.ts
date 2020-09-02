@@ -142,7 +142,7 @@ export class FacturaMainComponent implements OnInit {
 
     this.bsModalRef = this.modalService.show(
       PopupBuscarFacturaComponent,
-      Object.assign({ initialState }, { class: 'gray modal-md' })
+      Object.assign({ initialState }, { class: 'gray modal-lg' })
     );
 
     this.bsModalRef.content.closeBtnName = 'Aceptar';
@@ -178,27 +178,17 @@ export class FacturaMainComponent implements OnInit {
   }
 
   onLimpiarFactura() {
-    this.planesPagoSeleccionado = [];
     this.esRadicarFactura = true;
+    this.planesPagoSeleccionado = [];
     this.listaPlanPago = [];
     this.planPagoIdSeleccionado = 0;
     this.tercero = null;
     this.search = '';
-    //this.facturaHeaderForm.reset();
   }
 
-  // ObtenerListaPlanPago() {
-  //   this.facturaService
-  //     .ObtenerListaPlanPago(this.tercero.terceroId, 4)
-  //     .subscribe(
-  //       (documentos: PlanPago[]) => {
-  //         this.listaPlanPago = documentos;
-  //       },
-  //       (error) => {
-  //         this.alertify.error(error);
-  //       }
-  //     );
-  // }
+  receiveMessage($event) {
+    this.onLimpiarFactura();
+  }
 
   unsubscribe() {
     this.subscriptions.forEach((subscription: Subscription) => {
@@ -207,7 +197,4 @@ export class FacturaMainComponent implements OnInit {
     this.subscriptions = [];
   }
 
-  get rbtRadicarFacturaCtrl() {
-    return this.facturaHeaderForm.get('rbtRadicarFacturaCtrl');
-  }
 }

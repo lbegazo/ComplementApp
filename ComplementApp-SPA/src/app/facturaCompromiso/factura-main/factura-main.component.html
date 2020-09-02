@@ -22,6 +22,7 @@
                         name="rbtRadicarFacturaCtrl"
                         formControlName="rbtRadicarFacturaCtrl"
                         (change)="onRadicarFactura($event)"
+                        [checked]="this.esRadicarFactura"
                       />
                       <label class="custom-control-label" for="male"
                         >Radicar Factura</label
@@ -39,6 +40,7 @@
                         name="rbtRadicarFacturaCtrl"
                         formControlName="rbtRadicarFacturaCtrl"
                         (change)="onModificarFactura($event)"
+                        [checked]="!this.esRadicarFactura"
                       />
                       <label class="custom-control-label" for="female"
                         >Modificar Factura</label
@@ -50,7 +52,7 @@
 
               <!--TERCERO-->
               <div class="form-row mt-3">
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
                   <label for="inputNumeroTercero" class="col-form-label-md"
                     >Número de identificación</label
                   >
@@ -74,7 +76,7 @@
                     {{ errorMessage }}
                   </div>
                 </div>
-                <div class="form-group col-md-7">
+                <div class="form-group col-md-6">
                   <label for="inputTercero" class="col-form-label-md"
                     >Nombre del tercero</label
                   >
@@ -87,29 +89,34 @@
                     id="inputTercero"
                     value="{{ tercero?.nombre }}"
                     readonly
-                    style="height: 20px"
                   />
                 </div>
 
-                <div class="form-group col-md-3 parent">
-                  &nbsp;
-                  <button
-                    type="submit"
-                    class="btn btn-primary child"
-                    (click)="onBuscarFactura()"
-                    style="width: 80px"
-                    [disabled]="this.terceroId == 0"
-                  >
-                    Buscar</button
-                  >&nbsp;
-                  <button
-                    type="submit"
-                    class="btn btn-success child"
-                    (click)="onLimpiarFactura()"
-                    style="width: 80px"
-                  >
-                    Limpiar
-                  </button>
+                <div class="form-group col-md-3">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px;" >
+                        &nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                          style="width: 80px"
+                          [disabled]="planPagoIdSeleccionado > 0"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarFactura()"
+                          style="width: 80px"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </td>
@@ -126,6 +133,7 @@
       <app-factura-edit
         [planPagoId]="planPagoIdSeleccionado"
         [esRadicarFactura]="esRadicarFactura"
+        (isSavedEvent)="receiveMessage($event)"
       ></app-factura-edit>
     </div>
   </div>

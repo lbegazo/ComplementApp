@@ -4,9 +4,10 @@
       <div class="col-md-12 withoutPadding">
         <table class="table" id="tablaContenedor">
           <tr>
-            <td class="bordealo" style="padding: 10px">
+            <td style="padding: 10px">
               <!--DATOS DE LA FACTURA -->
 
+              <!--Grilla Plan Pago-->
               <div class="container">
                 <div class="row">
                   <div class="col-2 inner center">
@@ -62,200 +63,246 @@
                 </div>
               </div>
 
-              <!--PROVEEDOR-->
-              <div class="form-row mt-3">
-                <div class="form-group col-md-4">
-                  <label for="inputNumeroContratista" class="col-form-label-md"
-                    >Num. radicado contratista</label
-                  >
+              <!--Formulario controles Plan Pago-->
+              <div class="container">
+                <div class="row">
+                  <!--Formulario Plan Pago-->
+                  <div class="col-6">
+                    <!--PROVEEDOR-->
+                    <div class="form-row mt-3">
+                      <div class="form-group col-6">
+                        <label
+                          for="inputNumeroContratista"
+                          class="col-form-label-md"
+                          >Num. radicado contratista</label
+                        >
 
-                  <input
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('numeroContratistaCtrl').errors &&
-                        facturaForm.get('numeroContratistaCtrl').touched
-                    }"
-                    type="text"
-                    class="form-control border border-bottom-0"
-                    style="height: 20px"
-                    maxlength="50"
-                    formControlName="numeroContratistaCtrl"
-                    placeholder="Ingrese número de contratista"
-                    id="inputNumeroContratista"
-                  />
-                  <div class="invalid-feedback left">
-                    Número de contratista requerido
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('numeroContratistaCtrl').errors &&
+                              facturaForm.get('numeroContratistaCtrl').touched
+                          }"
+                          type="text"
+                          class="form-control border border-bottom-0 addPadding"
+                          maxlength="50"
+                          formControlName="numeroContratistaCtrl"
+                          placeholder="Ingrese número de contratista"
+                          id="inputNumeroContratista"
+                        />
+                        <div class="invalid-feedback left">
+                          Número de contratista requerido
+                        </div>
+                      </div>
+                      <div class="form-group col-6">
+                        <label
+                          for="inputFechaContratista"
+                          class="col-form-label-md"
+                          >Fecha radicado contratista</label
+                        >
+
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('fechaContratistaCtrl').errors &&
+                              facturaForm.get('fechaContratistaCtrl').touched
+                          }"
+                          class="form-control border border-bottom-0 addPadding"
+                          placeholder="Fecha de contratista"
+                          formControlName="fechaContratistaCtrl"
+                          type="text"
+                          bsDatepicker
+                          [bsConfig]="bsConfig"
+                          id="inputFechaContratista"
+                        />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            facturaForm.get('fechaContratistaCtrl').touched &&
+                            facturaForm
+                              .get('fechaContratistaCtrl')
+                              .hasError('required')
+                          "
+                        >
+                          La fecha es requerida
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--SUPERVISOR-->
+                    <div class="form-row">
+                      <div class="form-group col-6">
+                        <label
+                          for="inputNumeroSupervisor"
+                          class="col-form-label-md"
+                          >Num. radicado supervisor</label
+                        >
+
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('numeroSupervisorCtrl').errors &&
+                              facturaForm.get('numeroSupervisorCtrl').touched
+                          }"
+                          type="text"
+                          class="form-control border border-bottom-0 addPadding"
+                          maxlength="50"
+                          formControlName="numeroSupervisorCtrl"
+                          placeholder="Ingrese número de supervisor"
+                          id="inputNumeroSupervisor"
+                        />
+                        <div class="invalid-feedback left">
+                          Número de supervisor requerido
+                        </div>
+                      </div>
+                      <div class="form-group col-6">
+                        <label
+                          for="inputFechaSupervisor"
+                          class="col-form-label-md"
+                          >Fecha radicado supervisor</label
+                        >
+
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('fechaSupervisorCtrl').errors &&
+                              facturaForm.get('fechaSupervisorCtrl').touched
+                          }"
+                          class="form-control border border-bottom-0 addPadding"
+                          placeholder="Fecha de supervisor"
+                          formControlName="fechaSupervisorCtrl"
+                          type="text"
+                          bsDatepicker
+                          [bsConfig]="bsConfig"
+                          id="inputFechaSupervisor"
+                        />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            facturaForm.get('fechaSupervisorCtrl').touched &&
+                            facturaForm
+                              .get('fechaSupervisorCtrl')
+                              .hasError('required')
+                          "
+                        >
+                          La fecha es requerida
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--FACTURA-->
+                    <div class="form-row">
+                      <div class="form-group col-6">
+                        <label for="inputFacturas" class="col-form-label-md"
+                          >Facturas</label
+                        >
+
+                        <input
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('numeroFacturaCtrl').errors &&
+                              facturaForm.get('numeroFacturaCtrl').touched
+                          }"
+                          type="text"
+                          class="form-control border border-bottom-0 addPadding"
+                          maxlength="50"
+                          formControlName="numeroFacturaCtrl"
+                          placeholder="Ingrese número de factura"
+                          id="inputFacturas"
+                        />
+                        <div class="invalid-feedback left">
+                          Factura requerida
+                        </div>
+                      </div>
+                      <div class="form-group col-6">
+                        <label
+                          for="inputValorFacturado"
+                          class="col-form-label-md"
+                          >Valor facturado</label
+                        >
+
+                        <input
+                          type="text"
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('valorFacturaCtrl').errors &&
+                              facturaForm.get('valorFacturaCtrl').touched
+                          }"
+                          style="text-align: right"
+                          class="form-control border border-bottom-0 addPadding"
+                          formControlName="valorFacturaCtrl"
+                          appTwoDigitDecimaNumber
+                          placeholder="Ingrese valor de la factura"
+                          id="inputValorFacturado"
+                        />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            facturaForm.get('valorFacturaCtrl').touched &&
+                            facturaForm
+                              .get('valorFacturaCtrl')
+                              .hasError('required')
+                          "
+                        >
+                          Valor de factura requerido
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--OBSERVACIONES-->
+                    <div class="form-row">
+                      <div class="form-group col-12">
+                        <label
+                          for="inputObservaciones"
+                          class="col-form-label-md"
+                          >Observaciones</label
+                        >
+                        <textarea
+                          [ngClass]="{
+                            'is-invalid':
+                              facturaForm.get('observacionesCtrl').errors &&
+                              facturaForm.get('observacionesCtrl').touched
+                          }"
+                          name="textarea"
+                          class="form-control addPadding"
+                          formControlName="observacionesCtrl"
+                          style="width: 100%; background-color: white"
+                          id="inputObservaciones"
+                          rows="2"
+                          maxlength="200"
+                          placeholder="Ingrese las observaciones aquí"
+                        ></textarea>
+                        <div class="invalid-feedback left">
+                          Registre en el campo observaciones
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="inputFechaContratista" class="col-form-label-md"
-                    >Fecha radicado contratista</label
-                  >
 
-                  <input
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('fechaContratistaCtrl').errors &&
-                        facturaForm.get('fechaContratistaCtrl').touched
-                    }"
-                    class="form-control border border-bottom-0"
-                    style="height: 20px"
-                    placeholder="Fecha de contratista"
-                    formControlName="fechaContratistaCtrl"
-                    type="text"
-                    bsDatepicker
-                    [bsConfig]="bsConfig"
-                    id="inputFechaContratista"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    *ngIf="
-                      facturaForm.get('fechaContratistaCtrl').touched &&
-                      facturaForm
-                        .get('fechaContratistaCtrl')
-                        .hasError('required')
-                    "
-                  >
-                    La fecha es requerida
-                  </div>
-                </div>
-              </div>
-
-              <!--SUPERVISOR-->
-              <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label for="inputNumeroSupervisor" class="col-form-label-md"
-                    >Num. radicado supervisor</label
-                  >
-
-                  <input
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('numeroSupervisorCtrl').errors &&
-                        facturaForm.get('numeroSupervisorCtrl').touched
-                    }"
-                    type="text"
-                    class="form-control border border-bottom-0"
-                    style="height: 20px"
-                    maxlength="50"
-                    formControlName="numeroSupervisorCtrl"
-                    placeholder="Ingrese número de supervisor"
-                    id="inputNumeroSupervisor"
-                  />
-                  <div class="invalid-feedback left">
-                    Número de supervisor requerido
-                  </div>
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="inputFechaSupervisor" class="col-form-label-md"
-                    >Fecha radicado supervisor</label
-                  >
-
-                  <input
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('fechaSupervisorCtrl').errors &&
-                        facturaForm.get('fechaSupervisorCtrl').touched
-                    }"
-                    class="form-control border border-bottom-0"
-                    style="height: 20px"
-                    placeholder="Fecha de supervisor"
-                    formControlName="fechaSupervisorCtrl"
-                    type="text"
-                    bsDatepicker
-                    [bsConfig]="bsConfig"
-                    id="inputFechaSupervisor"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    *ngIf="
-                      facturaForm.get('fechaSupervisorCtrl').touched &&
-                      facturaForm
-                        .get('fechaSupervisorCtrl')
-                        .hasError('required')
-                    "
-                  >
-                    La fecha es requerida
-                  </div>
-                </div>
-              </div>
-
-              <!--FACTURA-->
-              <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label for="inputFacturas" class="col-form-label-md"
-                    >Facturas</label
-                  >
-
-                  <input
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('numeroFacturaCtrl').errors &&
-                        facturaForm.get('numeroFacturaCtrl').touched
-                    }"
-                    type="text"
-                    class="form-control border border-bottom-0"
-                    style="height: 20px"
-                    maxlength="50"
-                    formControlName="numeroFacturaCtrl"
-                    placeholder="Ingrese número de factura"
-                    id="inputFacturas"
-                  />
-                  <div class="invalid-feedback left">Factura requerida</div>
-                </div>
-                <div class="form-group col-md-4">
-                  <label for="inputValorFacturado" class="col-form-label-md"
-                    >Valor facturado</label
-                  >
-
-                  <input
-                    type="text"
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('valorFacturaCtrl').errors &&
-                        facturaForm.get('valorFacturaCtrl').touched
-                    }"
-                    style="text-align: right; height: 20px"
-                    class="form-control border border-bottom-0"
-                    formControlName="valorFacturaCtrl"
-                    appTwoDigitDecimaNumber
-                    placeholder="Ingrese valor de la factura"
-                    id="inputValorFacturado"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    *ngIf="
-                      facturaForm.get('valorFacturaCtrl').touched &&
-                      facturaForm.get('valorFacturaCtrl').hasError('required')
-                    "
-                  >
-                    Valor de factura requerido
-                  </div>
-                </div>
-              </div>
-
-              <!--OBSERVACIONES-->
-              <div class="form-row">
-                <div class="form-group col-md-8">
-                  <label for="inputObservaciones" class="col-form-label-md"
-                    >Observaciones</label
-                  >
-
-                  <input
-                    [ngClass]="{
-                      'is-invalid':
-                        facturaForm.get('observacionesCtrl').errors &&
-                        facturaForm.get('observacionesCtrl').touched
-                    }"
-                    type="textArea"
-                    class="form-control border border-bottom-0"
-                    maxlength="200"
-                    formControlName="observacionesCtrl"
-                    placeholder="Ingrese las observaciones aquí"
-                    id="inputObservaciones"
-                  />
-                  <div class="invalid-feedback left">
-                    Registre en el campo observaciones
+                  <!--Detalle Plan Pago-->
+                  <div class="col-6" style="padding: 15px">
+                    <textarea
+                      readonly
+                      name="textarea"
+                      class="form-control addPadding"
+                      formControlName="detalleCtrl"
+                      style="width: 100%; height: 100%; background-color: white"
+                      id="inputDetalle"
+                      rows="10"
+                      value="{{
+                        this.detallePlanPago.detalle4 +
+                          ' - FECHA DE REGISTRO: ' +
+                          (detallePlanPago.fecha | date) +
+                          ' - OBJETO: ' +
+                          detallePlanPago.detalle4 +
+                          ' - VALOR COMPROMISO: $' +
+                          (detallePlanPago.valorTotal | number) +
+                          ' - SALDO ACTUAL COMPROMISO: $' +
+                          (detallePlanPago.saldoActual | number) +
+                          ' - RESPONSABLE: ' +
+                          detallePlanPago.detalle5
+                      }}"
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -283,6 +330,6 @@
     </div>
   </div>
 </div>
-<!-- <p>Form value: {{ facturaForm.value | json }}</p> 
- <p>Form status: {{ facturaForm.status | json }}</p>
-<p>Form final: {{ planPagoSeleccionado | json }}</p>  -->
+<!-- <p>Form value: {{ facturaForm.value | json }}</p>
+<p>Form status: {{ facturaForm.status | json }}</p>
+<p>planPagoSeleccionado: {{ planPagoSeleccionado | json }}</p> -->

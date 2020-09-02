@@ -47,41 +47,37 @@
               >
                 <ng-container [formGroupName]="i">
                   <div class="col-2 inner left">
-                    <p>
-                      <small>
-                        <input
-                          type="radio"
-                          [value]="item?.planPagoId"
-                          (change)="onCheckChange($event)"                          
-                          name="inlineDefaultRadiosExample"
-                        />
-                        {{ item?.cdp }}
-                      </small>
+                    <p class="medium">
+                      <input
+                        type="radio"
+                        [value]="item?.planPagoId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                      {{ item?.cdp }}
                     </p>
                   </div>
                   <div class="col-2 inner center">
-                    <p>
-                      <small>{{ item?.crp }}</small>
-                    </p>
+                    <p class="medium">{{ item?.crp }}</p>
                   </div>
                   <div class="col-2 inner center">
-                    <p>
-                      <small>{{ item?.mesPagoDescripcion }}</small>
+                    <p class="medium">
+                      {{ item?.mesPagoDescripcion }}
                     </p>
                   </div>
                   <div class="col-2 inner right">
-                    <p>
-                      <small>{{ item?.valorAPagar | number: "1.2-2" }}</small>
+                    <p class="medium">
+                      {{ item?.valorAPagar | number: "1.2-2" }}
                     </p>
                   </div>
                   <div class="col-2 inner center">
-                    <p>
-                      <small>{{ item?.viaticosDescripcion }}</small>
+                    <p class="medium">
+                      {{ item?.viaticosDescripcion }}
                     </p>
                   </div>
                   <div class="col-2 inner center">
-                    <p>
-                      <small>{{ item?.numeroPago }}</small>
+                    <p class="medium">
+                      {{ item?.numeroPago }}
                     </p>
                   </div>
                 </ng-container>

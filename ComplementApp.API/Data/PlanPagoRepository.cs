@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ComplementApp.API.Dtos;
 
 namespace ComplementApp.API.Data
 {
@@ -41,30 +42,33 @@ namespace ComplementApp.API.Data
         public async Task<PlanPago> ObtenerPlanPago(int planPagoId)
         {
             return await _context.PlanPago.FirstOrDefaultAsync(u => u.PlanPagoId == planPagoId);
+        }
 
-            // var documento = await (from c in _context.PlanPago
-            //                        where c.PlanPagoId == planPagoId)
-            //                        .FirstOrDefaultAsync();
-            //    select new PlanPago()
-            //    {
-            //        PlanPagoId = c.PlanPagoId,
-            //        Cdp = c.Cdp,
-            //        Crp = c.Crp,
-            //        AnioPago = c.AnioPago,
-            //        MesPago = c.MesPago,
-            //        ValorAPagar = c.ValorAPagar,
-            //        Viaticos = c.Viaticos,
-            //        TerceroId = c.TerceroId,
+        public async Task<DetallePlanPago> ObtenerDetallePlanPago(int planPagoId)
+        {
+            return await (from pp in _context.PlanPago
+                          join c in _context.CDP on pp.Cdp equals c.Cdp
+                          where pp.PlanPagoId == planPagoId
+                          where c.Instancia == (int)TipoDocumento.Cdp
+                          select new DetallePlanPago()
+                          {
+                              PlanPagoId = pp.PlanPagoId,
+                              Detalle4 = c.Detalle4,
+                              Detalle5 = c.Detalle5,
+                              Detalle6 = c.Detalle6,
+                              ValorTotal = c.ValorTotal,
+                              SaldoActual = c.SaldoActual,
+                              Fecha = c.Fecha
+                          })                          
+                    .FirstOrDefaultAsync();
 
-            //        NumeroPago = c.NumeroPago,
-            //        NumeroRadicadoProveedor = c.NumeroRadicadoProveedor,
-            //        FechaRadicadoProveedor = c.FechaRadicadoProveedor,
-            //        NumeroFactura = c.NumeroFactura,
-            //        ValorFacturado = c.ValorFacturado,
-            //        Observaciones = c.Observaciones
-
-            //    }).FirstOrDefaultAsync();
-            //return documento;
+                    /*
+                          select c.Detalle6 + " - FECHA DE REGISTRO: " + c.Fecha.ToString("dd/MM/yyyy") +
+                                  " - OBJETO: " + c.Detalle4 + 
+                                  " - VALOR COMPROMISO: $" + c.ValorTotal.ToString("0.00") +
+                                  " - SALDO ACTUAL COMPROMISO: $" +c.SaldoActual.ToString("0.00") +
+                                  " - RESPONSABLE: " + c.Detalle5 )
+                         */
         }
     }
 }

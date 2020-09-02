@@ -79,13 +79,17 @@ table {
   background-color: gainsboro;
 }
 
-input[type="text"],
-textarea {
+input[type="text"] {
   background-color: white;
+  height: 25px;
 }
 
 #inputNumeroTercero {
   background-color: white;
+}
+
+.form-inline .form-group {
+  vertical-align:bottom;
 }
 
 /* #header {

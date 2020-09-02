@@ -79,5 +79,7 @@ namespace ComplementApp.API.Dtos
         public int TerceroId { get; set; }
 
         public bool esRadicarFactura { get; set; }
+
+        public string DetallePlanPago { get; set; }
     }
 }

@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 
 export interface PlanPago {
   planPagoId: number;

@@ -3,8 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, of as observableOf } from 'rxjs';
 import { PlanPago } from '../_models/planPago';
-import { FiltroFactura } from '../_models/filtroFactura';
-import { catchError } from 'rxjs/operators';
+import { DetallePlanPago } from '../_models/detallePlanPago';
 
 @Injectable({
   providedIn: 'root',
@@ -55,15 +54,23 @@ export class FacturaService {
     return this.http.get<PlanPago>(this.baseUrl + path, { params });
   }
 
+  ObtenerDetallePlanPago(planPagoId: number): Observable<DetallePlanPago> {
+    const path = 'ObtenerDetallePlanPago';
+
+    let params = new HttpParams();
+
+    if (planPagoId > 0) {
+      params = params.append('planPagoId', planPagoId.toString());
+    }
+
+    return this.http.get<DetallePlanPago>(this.baseUrl + path, { params });
+  }
+
   ActualizarPlanPago(
     planPagoId: number,
     factura: PlanPago
   ): Observable<boolean> {
-    this.http
-      .put(this.baseUrl, factura)
-      .subscribe(() => {
-        console.log('satisfactions!!!');
-      });
+    this.http.put(this.baseUrl, factura).subscribe(() => {});
     return observableOf(true);
   }
 }

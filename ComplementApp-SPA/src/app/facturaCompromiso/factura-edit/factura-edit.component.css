@@ -1,86 +1,88 @@
 table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  .bordealo {
-    border: 1px solid #ccc;
-  }
-  
-  .addPadding {
-    padding: 10px;
-    background-color: transparent;
-  } 
-  
-  .withoutPadding {
-    padding: 0px;
-    padding-left: 0px;
-  }
+  border-collapse: collapse;
+  width: 100%;
+}
 
+.bordealo {
+  border: 1px solid #ccc;
+}
 
-  table td {
-    padding: 0px;
-    vertical-align: top;
-  }
-  
-  .inner {    
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    padding: 10px 10px;
-  }
-  
-  .inner-end {
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    padding: 5px 5px;
-  }
-  
-  
-  .aplicaBackground {
-    background-color: lavender;
-  }
-  
-  
-  .center {
-    text-align: center;
-  }
-  
-  .right {
-    text-align: right;
-  }
-  
-  .left {
-    text-align: left;
-  }
+.addPadding {
+  padding: 5px;
+  background-color: transparent;
+}
 
-  #tablaContenedor {
-    background-color: gainsboro;
-  }
-  
-  input[type="text"],input[type="textArea"]
-   {
-    background-color: white;
-  }
+.withoutPadding {
+  padding: 0px;
+  padding-left: 0px;
+}
 
-  .inner-data
-  {
-   background-color: white;
-   height: 30px;
-   padding: 5px;
- }
-  
-  #inputNumeroTercero {
-    background-color: white;
-  }
+table td {
+  padding: 0px;
+  vertical-align: top;
+}
 
-  .medium {
-    margin: 0px;
-    font-size: 14px;
-  }
+.inner {
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  padding: 10px 10px;
+}
 
+.inner-end {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+.aplicaBackground {
+  background-color: lavender;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+#tablaContenedor {
+  background-color: gainsboro;
+}
+
+input[type="text"],
+input[type="textArea"] {
+  background-color: white;
+  height: 25px;
+}
+
+textarea {
+  background-color: white;
   
-  
-  
+}
+
+.inner-data {
+  background-color: white;
+  height: 30px;
+  padding: 5px;
+}
+
+#inputNumeroTercero {
+  background-color: white;
+}
+
+.medium {
+  margin: 0px;
+  font-size: 14px;
+}
+
+.addHeight {
+  height: 20px;
+}
