@@ -67,7 +67,14 @@
               <div class="container">
                 <div class="row">
                   <!--Formulario Plan Pago-->
-                  <div class="col-6">
+                  <div
+                    class="col-6"
+                    style="
+                      padding-left: 0px;
+                      padding-right: 8px;
+                      padding-top: 5px;
+                    "
+                  >
                     <!--PROVEEDOR-->
                     <div class="form-row mt-3">
                       <div class="form-group col-6">
@@ -280,23 +287,30 @@
                   </div>
 
                   <!--Detalle Plan Pago-->
-                  <div class="col-6" style="padding: 15px">
-                    <label
-                          for="inputDetalle"
-                          class="col-form-label-md"
-                          >Detalle de registro presupuestal</label
-                        >
+                  <div
+                    class="col-6"
+                    style="
+                      padding-left: 8px;
+                      padding-right: 0px;
+                      padding-top: 23px;
+                      padding-bottom: 20px;
+                    "
+                  >
+                    <label for="inputDetalle" class="col-form-label-md"
+                      >Detalle de registro presupuestal</label
+                    >
                     <textarea
                       readonly
                       name="textarea"
                       class="form-control addPadding"
                       formControlName="detalleCtrl"
-                      style="width: 90%; height: 90%; background-color: white"
+                      style="width: 100%; height: 93%; background-color: white"
                       id="inputDetalle"
                       rows="10"
                       value="{{
-                        
                         this.detallePlanPago?.detalle6 +
+                          '- TIPO DE CONTRATO: ' +
+                          detallePlanPago?.detalle7 +
                           ' - FECHA DE REGISTRO: ' +
                           (detallePlanPago?.fecha | date) +
                           ' - OBJETO: ' +

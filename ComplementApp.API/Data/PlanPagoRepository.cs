@@ -56,6 +56,7 @@ namespace ComplementApp.API.Data
                               Detalle4 = c.Detalle4,
                               Detalle5 = c.Detalle5,
                               Detalle6 = c.Detalle6,
+                              Detalle7 = c.Detalle7,
                               ValorTotal = c.ValorTotal,
                               SaldoActual = c.SaldoActual,
                               Fecha = c.Fecha

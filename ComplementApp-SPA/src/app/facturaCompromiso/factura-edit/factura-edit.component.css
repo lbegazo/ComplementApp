@@ -26,7 +26,7 @@ table td {
   border-right: 1px solid #ccc;
   border-left: 1px solid #ccc;
   border-top: 1px solid #ccc;
-  padding: 10px 10px;
+  padding: 5px 5px;
 }
 
 .inner-end {
@@ -34,6 +34,11 @@ table td {
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-left: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+.inner-data {
+  background-color: white;
   padding: 5px 5px;
 }
 
@@ -69,11 +74,7 @@ textarea {
   white-space: normal;
 }
 
-.inner-data {
-  background-color: white;
-  height: 30px;
-  padding: 5px;
-}
+
 
 #inputNumeroTercero {
   background-color: white;

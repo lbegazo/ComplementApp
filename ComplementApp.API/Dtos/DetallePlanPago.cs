@@ -8,6 +8,7 @@ namespace ComplementApp.API.Dtos
         public string Detalle4 { get; set; }
         public string Detalle5 { get; set; }
         public string Detalle6 { get; set; }
+        public string Detalle7 { get; set; }
         public decimal ValorTotal { get; set; }
         public decimal SaldoActual { get; set; }
         public DateTime Fecha { get; set; }
