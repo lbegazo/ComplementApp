@@ -65,7 +65,8 @@ input[type="textArea"] {
 
 textarea {
   background-color: white;
-  
+  text-align: justify;
+  white-space: normal;
 }
 
 .inner-data {

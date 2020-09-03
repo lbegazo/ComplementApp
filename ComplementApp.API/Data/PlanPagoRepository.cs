@@ -47,9 +47,9 @@ namespace ComplementApp.API.Data
         public async Task<DetallePlanPago> ObtenerDetallePlanPago(int planPagoId)
         {
             return await (from pp in _context.PlanPago
-                          join c in _context.CDP on pp.Cdp equals c.Cdp
+                          join c in _context.CDP on pp.Crp equals c.Crp
                           where pp.PlanPagoId == planPagoId
-                          where c.Instancia == (int)TipoDocumento.Cdp
+                          where c.Instancia == (int)TipoDocumento.Compromiso
                           select new DetallePlanPago()
                           {
                               PlanPagoId = pp.PlanPagoId,

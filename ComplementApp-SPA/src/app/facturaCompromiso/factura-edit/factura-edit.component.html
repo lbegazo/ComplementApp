@@ -281,26 +281,32 @@
 
                   <!--Detalle Plan Pago-->
                   <div class="col-6" style="padding: 15px">
+                    <label
+                          for="inputDetalle"
+                          class="col-form-label-md"
+                          >Detalle de registro presupuestal</label
+                        >
                     <textarea
                       readonly
                       name="textarea"
                       class="form-control addPadding"
                       formControlName="detalleCtrl"
-                      style="width: 100%; height: 100%; background-color: white"
+                      style="width: 90%; height: 90%; background-color: white"
                       id="inputDetalle"
                       rows="10"
                       value="{{
-                        this.detallePlanPago.detalle4 +
+                        
+                        this.detallePlanPago?.detalle6 +
                           ' - FECHA DE REGISTRO: ' +
-                          (detallePlanPago.fecha | date) +
+                          (detallePlanPago?.fecha | date) +
                           ' - OBJETO: ' +
-                          detallePlanPago.detalle4 +
+                          detallePlanPago?.detalle4 +
                           ' - VALOR COMPROMISO: $' +
-                          (detallePlanPago.valorTotal | number) +
+                          (detallePlanPago?.valorTotal | number) +
                           ' - SALDO ACTUAL COMPROMISO: $' +
-                          (detallePlanPago.saldoActual | number) +
+                          (detallePlanPago?.saldoActual | number) +
                           ' - RESPONSABLE: ' +
-                          detallePlanPago.detalle5
+                          detallePlanPago?.detalle5
                       }}"
                     ></textarea>
                   </div>
