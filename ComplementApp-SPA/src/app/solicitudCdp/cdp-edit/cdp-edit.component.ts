@@ -47,7 +47,7 @@ export class CdpEditComponent implements OnInit {
 
   listaTipoDetalle: TipoDetalle[];
   idTipoDetalle: number;
-  tipoDetalleSelected: TipoDetalle;
+  tipoDetalleSelected: TipoDetalle = { tipoDetalleCDPId: 0, nombre: '' };
 
   constructor(
     private alertify: AlertifyService,
@@ -74,7 +74,7 @@ export class CdpEditComponent implements OnInit {
 
     if (!this.esSolicitudInicial) {
       //#region No Solicitud Inicial
-      
+
       this.cdpService.ObtenerDetalleDeCDP(this.cdp?.cdp).subscribe(
         (documento: DetalleCDP[]) => {
           this.detalleCdp = documento;
@@ -190,8 +190,12 @@ export class CdpEditComponent implements OnInit {
   }
 
   onSelectTipoDetalle() {
-    this.tipoDetalleSelected = this.tipoDetalleControl.value as TipoDetalle;
-    this.idTipoDetalle = +this.tipoDetalleSelected.tipoDetalleCDPId;
+    if (!this.esSolicitudInicial) {
+      this.tipoDetalleSelected = this.tipoDetalleControl.value as TipoDetalle;
+      this.idTipoDetalle = +this.tipoDetalleSelected.tipoDetalleCDPId;
+    } else {
+      this.tipoDetalleSelected = { tipoDetalleCDPId: 0, nombre: '' };
+    }
   }
 
   EliminarRubroPresupuestal(index: number) {
@@ -218,7 +222,6 @@ export class CdpEditComponent implements OnInit {
             itemDetalle.valorSolicitud = item.value.rubroControl;
           }
         }
-
         //this.cdpForm.controls.tipoDetalleControl.disable();
       }
     );

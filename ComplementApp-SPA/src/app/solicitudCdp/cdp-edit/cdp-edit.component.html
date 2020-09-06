@@ -1,5 +1,5 @@
 <form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="cdpForm">
-  <div class="container-fluid">
+  <div class="container-fluid" style="color:black">
     <div class="row">
       <div
         class="col-12"
@@ -368,7 +368,8 @@
                                   {{ cdp?.detalle4 }}
                                 </p>
                               </td>
-                              <td *ngIf="esSolicitudInicial">
+                              <!--Solicitud Inicial-->
+                              <td *ngIf="esSolicitudInicial" style="vertical-align: bottom;">
                                 <input
                                   [ngClass]="{
                                     'is-invalid':
@@ -376,11 +377,10 @@
                                       cdpForm.get('objetoBienControl').touched
                                   }"
                                   type="textArea"
-                                  class="form-control medium"
+                                  class="form-control medium addPaddingLeft"
                                   maxlength="200"
                                   formControlName="objetoBienControl"
                                   placeholder="Ingrese el objeto del bien aquí"
-                                  value="{{ cdp?.detalle4 }}"
                                   [readonly]="cambiosConfirmados"
                                   style="height: 30px"
                                 />
@@ -751,10 +751,10 @@
                         >
                           <ng-container [formGroupName]="i">
                             <div
-                              class="col-1 borderBottonRight verticalCenter small"
+                              class="col-1 borderBottonRight parent"
                             >
                               <button
-                                class="btn btn-primary btn-sm"
+                                class="btn btn-primary btn-sm child"
                                 (click)="EliminarRubroPresupuestal(i)"
                               >
                                 Eliminar
@@ -979,9 +979,9 @@
 
                 <div class="row" *ngIf="cambiosConfirmados">
                   <div class="col-12 left">
-                    <span class="fontSmaller">
+                    <p class="fontSmaller" style="height: 20px; margin: 0px;" >
                       {{ this.tipoDetalleSelected?.nombre }}
-                    </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1012,7 +1012,7 @@
                       id="observacionesControl"
                       placeholder="Ingrese las observaciones aquí"
                       [readonly]="cambiosConfirmados"
-                      style="height: 30px"
+                      style="height: 25px"
                     />
                     <div class="invalid-feedback left">
                       REGISTRE EN EL CAMPO OBSERVACIONES LA JUSTIFICACION DE LA
@@ -1080,10 +1080,9 @@
                       style="margin: 0 auto; width: 100%"
                       class="fontSmaller"
                     >
-                      El presente documentos es firmado de conformidad con lo
-                      establecido en el Decreto Legislativo 491 del 29 de marzo
-                      de 2020, concordante con las Resoluciones de la ANE nro.
-                      240 y 249 de 2020.
+                      El presente documento es firmado de conformidad con los
+                      parámetros establecidos en las Resoluciones de la ANE nro.
+                      240 y 249 de 2020
                     </span>
                   </div>
                 </div>
