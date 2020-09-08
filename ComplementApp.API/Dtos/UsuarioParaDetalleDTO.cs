@@ -26,5 +26,7 @@ namespace ComplementApp.API.Dtos
         public string AreaNombre { get; set; }
 
         public bool EsAdministrador {get; set;}
+
+        public Perfil Perfil { get; set; }
     }
 }

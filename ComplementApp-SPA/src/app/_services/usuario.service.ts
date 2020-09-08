@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient,  HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject, throwError, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Usuario } from '../_models/usuario';
 import { catchError } from 'rxjs/Operators';
 import { PaginatedResult } from '../_models/pagination';
+import { Transaccion } from '../_models/transaccion';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsuarioService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl + 'usuario/';
   usuarioChanged = new Subject<Usuario[]>();
   usuarios: Usuario[];
 
@@ -36,16 +37,16 @@ export class UsuarioService {
   // }
 
   ObtenerUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.baseUrl + 'usuario');
+    return this.http.get<Usuario[]>(this.baseUrl);
   }
 
   ObtenerUsuario(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(this.baseUrl + 'usuario/' + id);
+    return this.http.get<Usuario>(this.baseUrl + id);
   }
 
   ActualizarUsuario(id: number, user: Usuario): Observable<boolean> {
     this.http
-      .put(this.baseUrl + 'usuario/' + id, user)
+      .put(this.baseUrl + id, user)
       .pipe(catchError(this.errorHandler))
       .subscribe(
         () => {
@@ -59,7 +60,7 @@ export class UsuarioService {
   }
 
   EliminarUsuario(id: number) {
-    return this.http.delete(this.baseUrl + 'usuario/' + id).pipe(
+    return this.http.delete(this.baseUrl + id).pipe(
       map((response: any) => {
         this.ActualizarListaUsuarios();
       })
@@ -67,7 +68,7 @@ export class UsuarioService {
   }
 
   RegistrarUsuario(user: Usuario) {
-    return this.http.post(this.baseUrl + 'usuario/', user).pipe(
+    return this.http.post(this.baseUrl, user).pipe(
       map((response: any) => {
         this.ActualizarListaUsuarios();
       })

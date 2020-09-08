@@ -1,0 +1,44 @@
+[
+  {
+    "Codigo": "usuario",
+    "Nombre": "Usuario",
+    "Descripcion": "Usuario",
+    "Icono": "supervisor_account",
+    "Ruta": "usuarios"
+  },
+  {
+    "Codigo": "archivo",
+    "Nombre": "Actualizar BD",
+    "Descripcion": "Actualizar BD",
+    "Icono": "attach_file",
+    "Ruta": "archivo"
+  },
+  {
+    "Codigo": "cdp",
+    "Nombre": "Solicitud o Modificación de CDP",
+    "Descripcion": "Solicitud o Modificación de CDP",
+    "Icono": "assignment",
+    "Ruta": "cdp"
+  },
+  {
+    "Codigo": "factura",
+    "Nombre": "Facturas",
+    "Descripcion": "Facturas",
+    "Icono": "assignment",
+    "Ruta": "factura"
+  },  
+  {
+    "Codigo": "Causacion",
+    "Nombre": "Causación",
+    "Descripcion": "Causación",
+    "Icono": "assessment",
+    "Ruta": "causacion"
+  },
+  {
+    "Codigo": "consulta",
+    "Nombre": "Consultas",
+    "Descripcion": "Consultas",
+    "Icono": "assessment",
+    "Ruta": "consulta"
+  }
+]

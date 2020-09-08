@@ -56,6 +56,14 @@ namespace ComplementApp.API.Data
 
         public DbSet<Value> Values { get; set; }
 
+        public DbSet<Perfil> Perfil { get; set; }
+
+        public DbSet<Transaccion> Transaccion { get; set; }
+
+        public DbSet<PerfilTransaccion> PerfilTransaccion { get; set; }
+
+        public DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

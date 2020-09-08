@@ -48,6 +48,13 @@ namespace ComplementApp.API.Helpers
             CreateMap<PlanPagoDto, PlanPago>();
 
             #endregion PlanPago
+
+
+            #region Transaccion
+
+            CreateMap<Transaccion, TransaccionDto>();
+
+            #endregion
         }
     }
 }

@@ -23,7 +23,7 @@ export class NumberCommaDirective implements OnInit, OnDestroy {
           parts[0] = this.decimal.transform(parts[0].replace(/,/g, ''));
           const part2 = parts[1];
           const result = parts.join('.');
-          console.log(part2);
+          //console.log(part2);
           //if (part2 && part2.length < 3)
           {
             return result;
@@ -31,7 +31,7 @@ export class NumberCommaDirective implements OnInit, OnDestroy {
         })
       )
       .subscribe((v) => {
-        console.log(v);
+        //console.log(v);
         control.setValue(v, { emitEvent: false });
       });
   }

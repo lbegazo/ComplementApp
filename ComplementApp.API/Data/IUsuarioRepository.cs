@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
@@ -15,5 +16,7 @@ namespace ComplementApp.API.Data
         Task<bool> UserExists(string username);
 
         Task<bool> EliminarUsuario(int id);
+
+        Task<ICollection<Transaccion>> ObtenerListaTransaccionXUsuario(int usuarioId);
     }
 }

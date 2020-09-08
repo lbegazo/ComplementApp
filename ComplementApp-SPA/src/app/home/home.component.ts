@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { UsuarioService } from '../_services/usuario.service';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { Transaccion } from '../_models/transaccion';
 
 @Component({
   selector: 'app-home',

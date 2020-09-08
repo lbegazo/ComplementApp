@@ -1,0 +1,22 @@
+[
+  {
+    "Codigo": "1",
+    "Nombre": "Administrador",
+    "Descripcion": "Administrador"
+  },
+  {
+    "Codigo": "2",
+    "Nombre": "Supervisor Contractual",
+    "Descripcion": "Supervisor Contractual"
+  },
+  {
+    "Codigo": "3",
+    "Nombre": "Coordinador Financiero",
+    "Descripcion": "Coordinador Financiero"
+  },
+  {
+    "Codigo": "4",
+    "Nombre": "Registrador Presupuesto",
+    "Descripcion": "Registrador Presupuesto"
+  }
+]

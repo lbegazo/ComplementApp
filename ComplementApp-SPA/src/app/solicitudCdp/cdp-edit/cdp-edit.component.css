@@ -76,6 +76,9 @@ table td {
   padding: 15px;
 }
 
+.addPaddingSmall {
+  padding: 5px;
+}
 .fontSmaller {
   font-size: 10px;
 }

@@ -1,5 +1,5 @@
 <form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="cdpForm">
-  <div class="container-fluid" style="color:black">
+  <div class="container-fluid" style="color: black">
     <div class="row">
       <div
         class="col-12"
@@ -369,21 +369,30 @@
                                 </p>
                               </td>
                               <!--Solicitud Inicial-->
-                              <td *ngIf="esSolicitudInicial" style="vertical-align: bottom;">
-                                <input
+                              <td
+                                *ngIf="esSolicitudInicial"
+                                style="vertical-align: bottom; padding: 5px;"
+                              >
+                                <textarea
                                   [ngClass]="{
                                     'is-invalid':
                                       cdpForm.get('objetoBienControl').errors &&
                                       cdpForm.get('objetoBienControl').touched
                                   }"
-                                  type="textArea"
-                                  class="form-control medium addPaddingLeft"
-                                  maxlength="200"
+                                  name="textarea"
+                                  class="form-control col-form-label-sm "
                                   formControlName="objetoBienControl"
+                                  style="
+                                    width: 100%;
+                                    height: 30px;
+                                    color: black;
+                                    overflow: hidden;
+                                  "
+                                  rows="2"
+                                  maxlength="300"
                                   placeholder="Ingrese el objeto del bien aquí"
                                   [readonly]="cambiosConfirmados"
-                                  style="height: 30px"
-                                />
+                                ></textarea>
                                 <div class="invalid-feedback">
                                   REGISTRE EL OBJETO DEL BIEN O SERVICIO A
                                   CONTRATAR
@@ -750,9 +759,7 @@
                           *ngFor="let item of detalleCdp; let i = index"
                         >
                           <ng-container [formGroupName]="i">
-                            <div
-                              class="col-1 borderBottonRight parent"
-                            >
+                            <div class="col-1 borderBottonRight parent">
                               <button
                                 class="btn btn-primary btn-sm child"
                                 (click)="EliminarRubroPresupuestal(i)"
@@ -943,7 +950,7 @@
                   </div>
                 </div>
                 <div class="row" *ngIf="!cambiosConfirmados">
-                  <div class="col-12">
+                  <div class="col-12" style="padding: 10px;">
                     <select
                       style="height: 30px"
                       formControlName="tipoDetalleControl"
@@ -979,7 +986,7 @@
 
                 <div class="row" *ngIf="cambiosConfirmados">
                   <div class="col-12 left">
-                    <p class="fontSmaller" style="height: 20px; margin: 0px;" >
+                    <p class="fontSmaller" style="height: 20px; margin: 0px">
                       {{ this.tipoDetalleSelected?.nombre }}
                     </p>
                   </div>
@@ -997,23 +1004,28 @@
                     <small><strong>VI. OBSERVACIONES</strong></small>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-12">
-                    <input
+                <div class="row" style="height: 50px;vertical-align: middle;">
+                  <div class="col-12" style="height: 50px;padding: 5px;">
+                    <textarea
                       [ngClass]="{
                         'is-invalid':
                           cdpForm.get('observacionesControl').errors &&
                           cdpForm.get('observacionesControl').touched
                       }"
-                      type="textArea"
-                      class="form-control small"
-                      maxlength="200"
+                      name="textarea"
+                      class="form-control col-form-label-sm addPaddingLeft"
                       formControlName="observacionesControl"
-                      id="observacionesControl"
+                      style="
+                        width: 100%;
+                        height: 50px;
+                        color: black;
+                        overflow: hidden;
+                      "
+                      rows="2"
+                      maxlength="300"
                       placeholder="Ingrese las observaciones aquí"
                       [readonly]="cambiosConfirmados"
-                      style="height: 25px"
-                    />
+                    ></textarea>
                     <div class="invalid-feedback left">
                       REGISTRE EN EL CAMPO OBSERVACIONES LA JUSTIFICACION DE LA
                       SOLICITUD

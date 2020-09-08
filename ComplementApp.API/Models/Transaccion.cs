@@ -10,15 +10,25 @@ namespace ComplementApp.API.Models
         public int TransaccionId { get; set; }
 
         [Required]
-        [Column(TypeName = "VARCHAR(10)")]
+        [Column(TypeName = "VARCHAR(50)")]
         public string Codigo { get; set; }
 
         [Required]
         [Column(TypeName = "VARCHAR(100)")]
         public string Nombre { get; set; }
 
+        [Required]
         [Column(TypeName = "VARCHAR(250)")]
-        public string  Descripcion { get; set; }
+        public string Descripcion { get; set; }
+
+        [Column(TypeName = "VARCHAR(50)")]
+        public string  Icono { get; set; }
+
+        [Column(TypeName = "VARCHAR(50)")]
+        public string  Ruta { get; set; }
+
+        [Required]
+        public int? PadreTransaccionId { get; set; }
 
         public bool Estado { get; set; }
 

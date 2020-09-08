@@ -48,6 +48,15 @@ namespace ComplementApp.API.Controllers
             return Ok(userForDetailed);
         }
 
+        [Route("[action]/{idUsuarioLogueado}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaTransaccionXUsuario(int idUsuarioLogueado)
+        {
+            var transacciones = await _repo.ObtenerListaTransaccionXUsuario(idUsuarioLogueado);
+            var listaDto = _mapper.Map<IEnumerable<TransaccionDto>>(transacciones);
+            return Ok(listaDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> RegistrarUsuario(UsuarioParaRegistrarDto userForRegisterDto)
         {

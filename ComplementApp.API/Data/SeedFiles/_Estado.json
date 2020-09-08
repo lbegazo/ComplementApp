@@ -63,5 +63,15 @@
     "Nombre": "Bloqueada",
     "Descripcion": "Bloqueada",
     "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Activo",
+    "Descripcion": "Activo",
+    "TipoDocumento": "EstadoGeneral"
+  },
+  {
+    "Nombre": "Inactivo",
+    "Descripcion": "Inactivo",
+    "TipoDocumento": "EstadoGeneral"
   }
 ]

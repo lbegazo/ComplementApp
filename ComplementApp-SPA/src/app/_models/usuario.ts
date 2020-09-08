@@ -1,3 +1,5 @@
+import { Perfil } from './perfil';
+
 export interface Usuario {
   usuarioId: number;
   username: string;
@@ -11,4 +13,5 @@ export interface Usuario {
   cargoNombre: string;
   areaNombre: string;
   esAdministrador: boolean;
+  Perfil?: Perfil;
 }

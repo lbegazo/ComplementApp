@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using ComplementApp.API.Helpers;
 using System.Text;
+using System.Collections.Generic;
 
 namespace ComplementApp.API.Data
 {
@@ -71,6 +72,18 @@ namespace ComplementApp.API.Data
             return false;
         }
 
+        public async Task<ICollection<Transaccion>> ObtenerListaTransaccionXUsuario(int usuarioId)
+        {
+            var transaciones = await (from up in _context.UsuarioPerfil
+                                      join p in _context.Perfil on up.PerfilId equals p.PerfilId
+                                      join pt in _context.PerfilTransaccion on p.PerfilId equals pt.PerfilId
+                                      join t in _context.Transaccion on pt.TransaccionId equals t.TransaccionId
+                                      where up.UsuarioId == usuarioId
+                                      select t)
+                                      .Distinct()
+                                      .ToListAsync();
+            return transaciones;
+        }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())

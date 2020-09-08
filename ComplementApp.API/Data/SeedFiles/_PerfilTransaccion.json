@@ -1,0 +1,38 @@
+[
+    {
+        "Perfil": "Administrador",
+        "Transaccion": "usuario"
+    },
+    {
+        "Perfil": "Administrador",
+        "Transaccion": "cdp"
+    },
+    {
+        "Perfil": "Administrador",
+        "Transaccion": "factura"
+    },
+    {
+        "Perfil": "Administrador",
+        "Transaccion": "archivo"
+    },    
+    {
+        "Perfil": "Administrador",
+        "Transaccion": "causacion"
+    },
+    {
+        "Perfil": "Administrador",
+        "Transaccion": "consulta"
+    },
+    {
+        "Perfil": "Supervisor Contractual",
+        "Transaccion": "cdp"
+    },
+    {
+        "Perfil": "Coordinador Financiero",
+        "Transaccion": "consulta"
+    },
+    {
+        "Perfil": "Registrador Presupuesto",
+        "Transaccion": "factura"
+    }
+]

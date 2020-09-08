@@ -22,6 +22,11 @@ namespace ComplementApp.API.Data
             SeedActividadGeneral(context);
             SeedUsoPresupuestal(context);
 
+            SeedPerfil(context);
+            SeedTransaccion(context);
+            SeedPerfilTransaccion(context);
+            SeedUsuarioPerfil(context);
+
             SeedUsuario(context);
             SeedDependencia(context);
             SeedActividadEspecifica(context);
@@ -278,6 +283,136 @@ namespace ComplementApp.API.Data
             }
         }
 
+        //La tabla perfil puede tener nueva información
+        private static void SeedPerfil(DataContext context)
+        {
+            Perfil nuevo = null;
+            List<Perfil> lista = new List<Perfil>();
+
+            var data = File.ReadAllText("Data/SeedFiles/_Perfil.json");
+            var items = JsonConvert.DeserializeObject<List<Perfil>>(data);
+            foreach (var item in items)
+            {
+                var perfil = obtenerPerfil(context, item.Nombre);
+                if (perfil == null)
+                {
+                    nuevo = new Perfil();
+                    nuevo.Codigo = item.Codigo;
+                    nuevo.Nombre = item.Nombre;
+                    nuevo.Descripcion = item.Descripcion;
+                    nuevo.Estado = true;
+                    lista.Add(nuevo);
+                }
+            }
+            context.Perfil.AddRange(lista);
+            context.SaveChanges();
+
+        }
+
+        //La tabla transaccion puede tener nueva información
+        private static void SeedTransaccion(DataContext context)
+        {
+            Transaccion tran = null;
+            Transaccion tranPapa = null;
+
+            var data = File.ReadAllText("Data/SeedFiles/_Transaccion.json");
+            var items = JsonConvert.DeserializeObject<List<TransaccionDto>>(data);
+            foreach (var item in items)
+            {
+                var tranBD = obtenerTransaccion(context, item.Codigo);
+                if (tranBD == null)
+                {
+                    tran = new Transaccion();
+                    tran.Codigo = item.Codigo;
+                    tran.Nombre = item.Nombre;
+                    tran.Descripcion = item.Descripcion;
+                    tran.Icono = item.Icono;
+                    tran.Ruta = item.Ruta;
+                    tran.Estado = true;
+                    if (string.IsNullOrEmpty(item.PadreMenu))
+                    {
+                        tran.PadreTransaccionId = 0;
+                    }
+                    else
+                    {
+                        tranPapa = obtenerTransaccion(context, item.PadreMenu);
+                        tran.PadreTransaccionId = tranPapa.TransaccionId;
+                    }
+                    context.Transaccion.Add(tran);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        //La tabla perfil puede tener nueva información
+        private static void SeedPerfilTransaccion(DataContext context)
+        {
+            PerfilTransaccion nuevo = null;
+            List<PerfilTransaccion> lista = new List<PerfilTransaccion>();
+
+            var data = File.ReadAllText("Data/SeedFiles/_PerfilTransaccion.json");
+            var items = JsonConvert.DeserializeObject<List<PerfilTransaccionDto>>(data);
+            foreach (var item in items)
+            {
+                var perfil = obtenerPerfil(context, item.Perfil);
+                var transaccion = obtenerTransaccion(context, item.Transaccion);
+
+                if (perfil != null && transaccion != null)
+                {
+                    nuevo = new PerfilTransaccion();
+                    nuevo.PerfilId = perfil.PerfilId;
+                    nuevo.TransaccionId = transaccion.TransaccionId;
+
+                    var perfilTransaccionBD = context.PerfilTransaccion
+                                                .Where(p => p.PerfilId == nuevo.PerfilId 
+                                                        && p.TransaccionId == nuevo.TransaccionId)
+                                                .FirstOrDefault();
+
+                    if (perfilTransaccionBD == null)
+                    {
+                        lista.Add(nuevo);
+                    }
+                }
+            }
+            context.PerfilTransaccion.AddRange(lista);
+            context.SaveChanges();
+        }
+
+
+        private static void SeedUsuarioPerfil(DataContext context)
+        {
+            UsuarioPerfil nuevo = null;
+            List<UsuarioPerfil> lista = new List<UsuarioPerfil>();
+
+            var data = File.ReadAllText("Data/SeedFiles/_UsuarioPerfil.json");
+            var items = JsonConvert.DeserializeObject<List<UsuarioPerfilDto>>(data);
+            foreach (var item in items)
+            {
+                var usuario = obtenerUsuario(context, item.Usuario.ToLower());
+                var perfil = obtenerPerfil(context, item.Perfil.ToLower());
+
+                if (perfil != null && usuario != null)
+                {
+                    nuevo = new UsuarioPerfil();
+                    nuevo.PerfilId = perfil.PerfilId;
+                    nuevo.UsuarioId = usuario.UsuarioId;
+
+                    var usuarioPerfilBD = context.UsuarioPerfil
+                                            .Where(p => p.PerfilId == nuevo.PerfilId 
+                                                    && p.UsuarioId == nuevo.UsuarioId)
+                                            .FirstOrDefault();
+
+                    if (usuarioPerfilBD == null)
+                    {
+                        lista.Add(nuevo);
+                    }                
+                }
+            }
+            context.UsuarioPerfil.AddRange(lista);
+            context.SaveChanges();
+        }
+
+
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -299,12 +434,29 @@ namespace ComplementApp.API.Data
 
         private static Area obtenerArea(DataContext context, string nombre)
         {
-            return context.Area.Where(x => x.Nombre == nombre).FirstOrDefault();
+            return context.Area.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
         }
 
         private static Estado obtenerEstado(DataContext context, string nombre)
         {
-            return context.Estado.Where(x => x.Nombre == nombre).FirstOrDefault();
+            return context.Estado.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
         }
+
+
+        private static Perfil obtenerPerfil(DataContext context, string nombre)
+        {
+            return context.Perfil.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
+        }
+
+        private static Transaccion obtenerTransaccion(DataContext context, string codigo)
+        {
+            return context.Transaccion.Where(x => x.Codigo.ToLower() == codigo.ToLower()).FirstOrDefault();
+        }
+
+        private static Usuario obtenerUsuario(DataContext context, string username)
+        {
+            return context.Usuario.Where(x => x.Username.ToLower() == username.ToLower()).FirstOrDefault();
+        }
+
     }
 }
