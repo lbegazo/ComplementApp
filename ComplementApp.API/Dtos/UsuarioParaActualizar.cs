@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Dtos
 {
@@ -19,7 +21,7 @@ namespace ComplementApp.API.Dtos
         public int AreaId { get; set; }
 
         [Required]
-        public bool EsAdministrador { get; set; }
+        public ICollection<Perfil> Perfiles { get; set; }
 
     }
 }

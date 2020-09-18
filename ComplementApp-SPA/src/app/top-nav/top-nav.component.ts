@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Input } from '@angular/core';
 import { NavService } from '../_services/nav.service';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class TopNavComponent implements OnInit {
   @ViewChild('loginForm', { static: true }) loginForm: NgForm;
+  @Input() numeroItems = 0;
 
   model: any = {};
   constructor(
@@ -23,12 +24,14 @@ export class TopNavComponent implements OnInit {
     public navService: NavService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.numeroItems);
+  }
 
   login() {
     this.authService.login(this.model).subscribe(
       (next) => {
-        this.alertify.success('Login correctoo!!!');
+        this.alertify.success('Login correcto!!!');
       },
       (error) => {
         this.alertify.error(error);
@@ -43,13 +46,11 @@ export class TopNavComponent implements OnInit {
     return this.authService.loggedIn();
   }
 
-  esAdministrador() {
-    return this.authService.esAdministrador();
-  }
-
   logout() {
     this.model = {};
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('transacciones');
+    localStorage.clear();
     this.alertify.message('Su sesión ha sido cerrada');
     this.router.navigate(['/home']);
   }

@@ -50,7 +50,4 @@ export class UsuarioDetailComponent implements OnInit {
     );
   }
 
-  get esAdministrador() {
-    return this.authService.esAdministrador();
-  }
 }

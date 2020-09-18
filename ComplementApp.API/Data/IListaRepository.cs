@@ -15,5 +15,11 @@ namespace ComplementApp.API.Data
          Task<IEnumerable<TipoDetalleCDP>> ObtenerListaTipoDetalleModificacion();
 
          Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion);
+
+         Task<IEnumerable<Perfil>> ObtenerListaPerfiles();
+
+         Task<IEnumerable<ParametroGeneral>> ObtenerParametrosGenerales();
+
+         Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId);
     }
 }

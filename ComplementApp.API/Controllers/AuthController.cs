@@ -67,14 +67,14 @@ namespace ComplementApp.API.Controllers
 
 
             /**************************Create the token************************************/
-            var role = userFromRepo.EsAdministrador ? 1 : 0;
+            //var role = userFromRepo.EsAdministrador ? 1 : 0;
 
             //The token contains 3 claims: userId and username, Administrator
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.UsuarioId.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username),
-                new Claim(ClaimTypes.Role, role.ToString()),
+                //new Claim(ClaimTypes.Role, role.ToString()),
                 new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos)
             };
 

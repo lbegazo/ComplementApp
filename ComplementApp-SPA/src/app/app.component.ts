@@ -49,6 +49,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       (lista: Transaccion[]) => {
         this.transacciones = lista;
         this.llenarNavItem();
+        this.guardarListaTransacciones();
       }
     );
   }
@@ -95,6 +96,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  guardarListaTransacciones() {
+    localStorage.setItem('Transacciones', JSON.stringify(this.transacciones));
   }
 
   @HostListener('window:beforeunload', ['$event'])

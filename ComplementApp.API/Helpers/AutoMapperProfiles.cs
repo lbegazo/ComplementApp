@@ -44,15 +44,22 @@ namespace ComplementApp.API.Helpers
 
             CreateMap<PlanPago, PlanPagoDto>()
                 .ForMember(u => u.ViaticosDescripcion, opt => opt.MapFrom(u => u.Viaticos ? "SI" : "NO"))
-                .ForMember(u => u.MesPagoDescripcion, opt => opt.MapFrom(u => u.MesPago > 0 && u.MesPago < 13 ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(u.MesPago).ToUpper() : string.Empty));
+                .ForMember(u => u.MesPagoDescripcion, opt => opt.MapFrom(u => u.MesPago > 0 && u.MesPago < 13 ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(u.MesPago).ToUpper() : string.Empty))
+                .ForMember( u => u.IdentificacionTercero, opt => opt.MapFrom(u => u.Tercero.NumeroIdentificacion))
+                .ForMember( u => u.NombreTercero, opt => opt.MapFrom(u => u.Tercero.Nombre));
             CreateMap<PlanPagoDto, PlanPago>();
 
             #endregion PlanPago
 
-
             #region Transaccion
 
             CreateMap<Transaccion, TransaccionDto>();
+
+            #endregion
+        
+            #region Parametro Liquidación Tercero
+
+            CreateMap<ParametroLiquidacionTerceroDto, ParametroLiquidacionTercero>();
 
             #endregion
         }

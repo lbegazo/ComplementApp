@@ -1,239 +1,266 @@
-<form
-  #editForm="ngForm"
-  id="editForm"
-  [formGroup]="registerForm"
-  (ngSubmit)="onRegister()"
->
-  <h2 class="text-center text-primary">Registro de usuario</h2>
-  <hr />
-  <div class="form-group">
+<div class="container-fluid">
+  <div class="row">
     <div class="col-12">
-      <div *ngIf="editForm.dirty" class="alert alert-info">
-        <strong>Información:</strong> Has realizado cambios en el formulario.
-        Cualquier cambio no guardado se perderá!!!
-      </div>
-    </div>
-  </div>
+      <form
+        #editForm="ngForm"
+        id="editForm"
+        [formGroup]="registerForm"
+        (ngSubmit)="onRegister()"
+      >
+        <h2 class="text-center text-primary">Registro de usuario</h2>
+        <hr />
+        <div class="form-group">
+          <div class="col-12">
+            <div *ngIf="editForm.dirty" class="alert alert-info">
+              <strong>Información:</strong> Has realizado cambios en el
+              formulario. Cualquier cambio no guardado se perderá!!!
+            </div>
+          </div>
+        </div>
 
-  <div class="form-group" *ngIf="!editMode">
-    <input
-      [ngClass]="{
-        'is-invalid':
-          registerForm.get('username').errors &&
-          registerForm.get('username').touched
-      }"
-      type="text"
-      class="form-control"
-      placeholder="Usuario"
-      formControlName="username"
-      id="username"
-    />
-    <div class="invalid-feedback">Por favor ingresa tu usuario</div>
-  </div>
+        <div class="form-group" *ngIf="!editMode">
+          <input
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('username').errors &&
+                registerForm.get('username').touched
+            }"
+            type="text"
+            class="form-control"
+            placeholder="Usuario"
+            formControlName="username"
+            id="username"
+          />
+          <div class="invalid-feedback">Por favor ingresa tu usuario</div>
+        </div>
 
-  <div class="form-group">
-    <input
-      [ngClass]="{
-        'is-invalid':
-          registerForm.get('nombres').errors &&
-          registerForm.get('nombres').touched
-      }"
-      type="text"
-      class="form-control"
-      placeholder="Nombres"
-      formControlName="nombres"      
-      #inputNombres
-      (input)="inputNombres.value = $event.target.value.toUpperCase()"
-    />
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('nombres').touched &&
-        registerForm.get('nombres').hasError('required')
-      "
-    >
-      Los nombres son requeridos
-    </div>
-  </div>
+        <div class="form-group">
+          <input
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('nombres').errors &&
+                registerForm.get('nombres').touched
+            }"
+            type="text"
+            class="form-control"
+            placeholder="Nombres"
+            formControlName="nombres"
+            #inputNombres
+            (input)="inputNombres.value = $event.target.value.toUpperCase()"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('nombres').touched &&
+              registerForm.get('nombres').hasError('required')
+            "
+          >
+            Los nombres son requeridos
+          </div>
+        </div>
 
-  <div class="form-group">
-    <input
-      [ngClass]="{
-        'is-invalid':
-          registerForm.get('apellidos').errors &&
-          registerForm.get('apellidos').touched
-      }"
-      type="text"
-      class="form-control"
-      placeholder="Apellidos"
-      formControlName="apellidos"
-      #inputApellidos
-      (input)="inputApellidos.value = $event.target.value.toUpperCase()"
-    />
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('apellidos').touched &&
-        registerForm.get('apellidos').hasError('required')
-      "
-    >
-      Los apellidos son requeridos
-    </div>
-  </div>
+        <div class="form-group">
+          <input
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('apellidos').errors &&
+                registerForm.get('apellidos').touched
+            }"
+            type="text"
+            class="form-control"
+            placeholder="Apellidos"
+            formControlName="apellidos"
+            #inputApellidos
+            (input)="inputApellidos.value = $event.target.value.toUpperCase()"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('apellidos').touched &&
+              registerForm.get('apellidos').hasError('required')
+            "
+          >
+            Los apellidos son requeridos
+          </div>
+        </div>
 
-  <div class="form-group" *ngIf="!editMode">
-    <input
-      type="password"
-      [ngClass]="{
-        'is-invalid':
-          registerForm.get('password').errors &&
-          registerForm.get('password').touched
-      }"
-      class="form-control"
-      placeholder="Password"
-      formControlName="password"
-    />
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('password').touched &&
-        registerForm.get('password').hasError('required')
-      "
-    >
-      El password es requerido
-    </div>
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('password').hasError('minlength') &&
-        registerForm.get('password').touched
-      "
-    >
-      El password debe tener como mínimo 4 caracteres
-    </div>
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('password').hasError('maxlength') &&
-        registerForm.get('password').touched
-      "
-    >
-      El password no puede exceder de 8 caracteres
-    </div>
-  </div>
+        <div class="form-group" *ngIf="!editMode">
+          <input
+            type="password"
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('password').errors &&
+                registerForm.get('password').touched
+            }"
+            class="form-control"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('password').touched &&
+              registerForm.get('password').hasError('required')
+            "
+          >
+            El password es requerido
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('password').hasError('minlength') &&
+              registerForm.get('password').touched
+            "
+          >
+            El password debe tener como mínimo 4 caracteres
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('password').hasError('maxlength') &&
+              registerForm.get('password').touched
+            "
+          >
+            El password no puede exceder de 8 caracteres
+          </div>
+        </div>
 
-  <div class="form-group" *ngIf="!editMode">
-    <input
-      type="password"
-      [ngClass]="{
-        'is-invalid':
-          (registerForm.get('confirmPassword').errors &&
-            registerForm.get('confirmPassword').touched) ||
-          (registerForm.get('confirmPassword').touched &&
-            registerForm.hasError('mismatch'))
-      }"
-      class="form-control"
-      placeholder="Password"
-      formControlName="confirmPassword"
-    />
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('confirmPassword').hasError('required') &&
-        registerForm.get('confirmPassword').touched
-      "
-    >
-      Password es requerido
-    </div>
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.hasError('mismatch') &&
-        registerForm.get('confirmPassword').touched
-      "
-    >
-      Los passwords deben coincidir
-    </div>
-  </div>
+        <div class="form-group" *ngIf="!editMode">
+          <input
+            type="password"
+            [ngClass]="{
+              'is-invalid':
+                (registerForm.get('confirmPassword').errors &&
+                  registerForm.get('confirmPassword').touched) ||
+                (registerForm.get('confirmPassword').touched &&
+                  registerForm.hasError('mismatch'))
+            }"
+            class="form-control"
+            placeholder="Password"
+            formControlName="confirmPassword"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('confirmPassword').hasError('required') &&
+              registerForm.get('confirmPassword').touched
+            "
+          >
+            Password es requerido
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.hasError('mismatch') &&
+              registerForm.get('confirmPassword').touched
+            "
+          >
+            Los passwords deben coincidir
+          </div>
+        </div>
 
-  <div class="form-group">
-    <select
-      formControlName="areaControl"
-      (change)="onSelectArea()"
-      class="form-control"
-      [ngClass]="{
-        'is-invalid':
-          registerForm.get('areaControl').touched &&
-          registerForm.get('areaControl').hasError('required')
-      }"
-    >
-      <option [value]="null" disabled>Selecciona el area</option>
-      <option *ngFor="let prf of areas" [value]="prf.areaId">
-        {{ prf.nombre }}
-      </option>
-    </select>
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('areaControl').touched &&
-        registerForm.get('areaControl').hasError('required')
-      "
-    >
-      El area es requerida
+        <div class="form-group">
+          <select
+            formControlName="areaControl"
+            (change)="onSelectArea()"
+            class="form-control  list"
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('areaControl').touched &&
+                registerForm.get('areaControl').hasError('required')
+            }"
+            style="padding: 0px;"
+          >
+            <option [value]="null" disabled>Selecciona el area</option>
+            <option *ngFor="let prf of areas" [value]="prf.areaId">
+              {{ prf.nombre }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('areaControl').touched &&
+              registerForm.get('areaControl').hasError('required')
+            "
+          >
+            El area es requerida
+          </div>
+        </div>
+
+        <div class="form-group">
+          <select
+            formControlName="cargoControl"
+            (change)="onSelectCargo()"
+            class="form-control list"
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('cargoControl').touched &&
+                registerForm.get('cargoControl').hasError('required')
+            }"
+            style="padding: 0px;"
+          >
+            <option [value]="null" disabled>Selecciona el cargo</option>
+            <option *ngFor="let prf of cargos" [value]="prf.cargoId">
+              {{ prf.nombre }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('cargoControl').touched &&
+              registerForm.get('cargoControl').hasError('required')
+            "
+          >
+            El cargo es requerido
+          </div>
+        </div>
+
+        <div class="row" style="padding-left: 15px; padding-right: 15px">
+          <div class="col-1 inner ">
+            <label class="col-form-label-md">Sel.</label>
+          </div>
+          <div class="col-11 inner ">
+            <label class="col-form-label-md">Perfil</label>
+          </div>
+        </div>
+        <div *ngIf="perfiles">
+          <div
+            formArrayName="perfilesControles"
+            class="row"
+            style="padding-left: 15px; padding-right: 15px"
+            *ngFor="let item of perfiles; let i = index"
+          >
+            <ng-container [formGroupName]="i">
+              <div class="col-1 inner center aplicaBackground">
+                <label class="col-form-label-md">
+                  <input
+                    type="checkbox"
+                    [value]="item?.perfilId"
+                    (change)="onCheckChange($event)"
+                  />
+                </label>
+              </div>
+              <div class="col-11 inner left aplicaBackground">
+                <label class="col-form-label-md">{{ item?.nombre }}</label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="form-group text-left mt-3">
+          <button
+            class="btn btn-primary mr-3"
+            type="submit"
+            [disabled]="!registerForm.dirty"
+            id="btnGuardar"
+          >
+            Registrar
+          </button>
+          <button class="btn btn-default" type="button" (click)="onCancel()">
+            Cancelar
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-
-  <div class="form-group">
-    <select
-      formControlName="cargoControl"
-      (change)="onSelectCargo()"
-      class="form-control"
-      [ngClass]="{
-        'is-invalid':
-          registerForm.get('cargoControl').touched &&
-          registerForm.get('cargoControl').hasError('required')
-      }"
-    >
-      <option [value]="null" disabled>Selecciona el cargo</option>
-      <option *ngFor="let prf of cargos" [value]="prf.cargoId">
-        {{ prf.nombre }}
-      </option>
-    </select>
-    <div
-      class="invalid-feedback"
-      *ngIf="
-        registerForm.get('cargoControl').touched &&
-        registerForm.get('cargoControl').hasError('required')
-      "
-    >
-      El cargo es requerido
-    </div>
-  </div>
-
-  <div class="form-check">
-    <input
-      type="checkbox"
-      class="form-check-input"
-      formControlName="EsAdministradorControl"
-      [value]="user?.esAdministrador"
-      id="chkEsAdministrador"
-    />
-    <label class="form-check-label" for="chkEsAdministrador"
-      >Es Administrador
-    </label>
-  </div>
-
-  <div class="form-group text-center">
-    <button
-      class="btn btn-success mr-2"
-      type="submit"
-      [disabled]="!registerForm.dirty"
-      id="btnGuardar"
-    >
-      Registrar
-    </button>
-    <button class="btn btn-default" type="button" (click)="onCancel()">
-      Cancelar
-    </button>
-  </div>
-</form>
+</div>

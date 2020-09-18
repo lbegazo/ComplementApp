@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col-12 addPadding">
       <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title pull-left">{{ title }}</h4>
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
           <button
             type="button"
             class="close pull-right"
@@ -13,30 +13,30 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding-top: 0px">
           <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
             <div class="row">
-              <div class="col-2 inner aplicaBackground">
-                <label class="col-form-label-sm"><strong>Cdp</strong></label>
-              </div>
-              <div class="col-2 inner aplicaBackground">
-                <label class="col-form-label-sm"><strong>Crp</strong></label>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label"><strong>Cdp</strong></label>
               </div>
               <div class="col-2 inner aplicaBackground center">
-                <label class="col-form-label-sm"><strong>Mes</strong></label>
+                <label class="col-form-label"><strong>Crp</strong></label>
               </div>
               <div class="col-2 inner aplicaBackground center">
-                <label class="col-form-label-sm"
+                <label class="col-form-label"><strong>Mes</strong></label>
+              </div>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label"
                   ><strong>Valor a pagar</strong></label
                 >
               </div>
               <div class="col-2 inner aplicaBackground center">
-                <label class="col-form-label-sm"
-                  ><strong>Viaticos</strong></label
-                >
+                <label class="col-form-label"><strong>Viáticos</strong></label>
               </div>
               <div class="col-2 inner aplicaBackground center">
-                <p class="medium"><strong>Número pago</strong></p>
+                <label class="col-form-label"
+                  ><strong>Número pago</strong></label
+                >
               </div>
             </div>
             <div *ngIf="listaPlanPago">
@@ -83,19 +83,34 @@
                 </ng-container>
               </div>
             </div>
-
-            <div class="row addPaddingTop">
-              <div class="col-12 right withoutPadding">
-                <button
-                  type="button"
-                  class="btn btn-default"
-                  (click)="onAceptar()"
-                >
-                  {{ closeBtnName }}
-                </button>
-              </div>
-            </div>
           </form>
+          <div style="height: 10px"></div>
+          <div class="d-flex justify-content-center">
+            <pagination
+              [boundaryLinks]="true"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage"
+              [(ngModel)]="pagination.currentPage"
+              (pageChanged)="pageChanged($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+              [ngModelOptions]="{ standalone: true }"
+            ></pagination>
+          </div>
+
+          <div class="row">
+            <div class="col-12 right withoutPadding">
+              <button
+                type="button"
+                class="btn btn-default"
+                (click)="onAceptar()"
+              >
+                {{ closeBtnName }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

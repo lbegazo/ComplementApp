@@ -64,6 +64,8 @@ namespace ComplementApp.API.Dtos
 
         public string IdentificacionTercero { get; set; }
 
+        public string NombreTercero { get; set; }
+
         public int RubroPresupuestalId { get; set; }
 
         public string IdentificacionRubroPresupuestal { get; set; }

@@ -12,6 +12,5 @@ export interface Usuario {
   fechaUltimoAcceso: Date;
   cargoNombre: string;
   areaNombre: string;
-  esAdministrador: boolean;
-  Perfil?: Perfil;
+  perfiles?: Perfil[];
 }

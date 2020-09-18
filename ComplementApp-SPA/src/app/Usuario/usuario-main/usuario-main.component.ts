@@ -1,20 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
+import { ListaService } from 'src/app/_services/lista.service';
 
 @Component({
   selector: 'app-usuario-main',
   templateUrl: './usuario-main.component.html',
-  styleUrls: ['./usuario-main.component.css']
+  styleUrls: ['./usuario-main.component.css'],
 })
 export class UsuarioMainComponent implements OnInit {
+  readonly codigoTransaccion = 'USUARIO';
+  nombreTransaccion: string;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private listaService: ListaService
+  ) {}
 
   ngOnInit() {
+    this.obtenerNombreTransaccion();
   }
 
-  esAdministrador(){
-    return this.authService.esAdministrador();
+  private obtenerNombreTransaccion() {
+    this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
+      this.codigoTransaccion
+    );
   }
-
 }

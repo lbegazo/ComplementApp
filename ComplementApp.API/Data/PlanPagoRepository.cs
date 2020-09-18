@@ -4,6 +4,8 @@ using ComplementApp.API.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Dtos;
+using Microsoft.Data.SqlClient;
+using ComplementApp.API.Helpers;
 
 namespace ComplementApp.API.Data
 {
@@ -15,12 +17,13 @@ namespace ComplementApp.API.Data
             _context = context;
         }
 
-        public async Task<IEnumerable<PlanPago>> ObtenerListaPlanPago(int terceroId, List<int> listaEstadoId)
+        public async Task<PagedList<PlanPago>> ObtenerListaPlanPago(int? terceroId, List<int> listaEstadoId, UserParams userParams)
         {
-            var lista = await (from c in _context.PlanPago
+            var lista =      (from c in _context.PlanPago
                                join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
-                               where c.TerceroId == terceroId
-                               where listaEstadoId.Contains(c.EstadoPlanPagoId.Value)
+                               join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                               where (c.TerceroId == terceroId ||  terceroId == null)
+                               where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))                               
                                select new PlanPago()
                                {
                                    PlanPagoId = c.PlanPagoId,
@@ -32,11 +35,20 @@ namespace ComplementApp.API.Data
                                    Viaticos = c.Viaticos,
                                    NumeroPago = c.NumeroPago,
                                    EstadoPlanPagoId = c.EstadoPlanPagoId,
-                                   TerceroId = c.TerceroId
+                                   NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
+                                   FechaRadicadoSupervisor = c.FechaRadicadoSupervisor,
+                                   ValorFacturado = c.ValorFacturado,
+                                   TerceroId = c.TerceroId,
+                                   Tercero = new Tercero()
+                                   {
+                                       TerceroId = c.TerceroId,
+                                       NumeroIdentificacion = t.NumeroIdentificacion,
+                                       Nombre = t.Nombre
+                                   }
                                })
-                               .Distinct()
-                               .ToListAsync();
-            return lista;
+                               .OrderBy(c => c.PlanPagoId);
+            
+            return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);;
         }
 
         public async Task<PlanPago> ObtenerPlanPago(int planPagoId)
@@ -44,32 +56,65 @@ namespace ComplementApp.API.Data
             return await _context.PlanPago.FirstOrDefaultAsync(u => u.PlanPagoId == planPagoId);
         }
 
-        public async Task<DetallePlanPago> ObtenerDetallePlanPago(int planPagoId)
+        public async Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId)
         {
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
+                          join t in _context.Tercero on pp.TerceroId equals t.TerceroId
+                          join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
+                          join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
-                          select new DetallePlanPago()
+                          select new DetallePlanPagoDto()
                           {
                               PlanPagoId = pp.PlanPagoId,
+                              TerceroId = pp.TerceroId,
                               Detalle4 = c.Detalle4,
                               Detalle5 = c.Detalle5,
                               Detalle6 = c.Detalle6,
                               Detalle7 = c.Detalle7,
                               ValorTotal = c.ValorTotal,
                               SaldoActual = c.SaldoActual,
-                              Fecha = c.Fecha
-                          })                          
+                              Fecha = c.Fecha,
+                              Operacion = c.Operacion,
+
+                              ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
+                              Crp = pp.Crp,
+                              NumeroPago = pp.NumeroPago,
+                              ValorFacturado = pp.ValorFacturado.HasValue ? pp.ValorFacturado.Value : 0,
+                              NumeroRadicadoSupervisor = pp.NumeroRadicadoSupervisor,
+                              FechaRadicadoSupervisor = pp.FechaRadicadoSupervisor,
+                              NumeroFactura = pp.NumeroFactura,
+                              Observaciones = pp.Observaciones,
+
+                              IdentificacionRubroPresupuestal = r.Identificacion,
+                              IdentificacionUsoPresupuestal = u.Identificacion,
+                              IdentificacionTercero = t.NumeroIdentificacion,
+                              NombreTercero = t.Nombre
+
+                          })
                     .FirstOrDefaultAsync();
 
-                    /*
-                          select c.Detalle6 + " - FECHA DE REGISTRO: " + c.Fecha.ToString("dd/MM/yyyy") +
-                                  " - OBJETO: " + c.Detalle4 + 
-                                  " - VALOR COMPROMISO: $" + c.ValorTotal.ToString("0.00") +
-                                  " - SALDO ACTUAL COMPROMISO: $" +c.SaldoActual.ToString("0.00") +
-                                  " - RESPONSABLE: " + c.Detalle5 )
-                         */
+
         }
+
+        public async Task<PlanPago> ObtenerPlanPagoDetallado(int planPagoId)
+        {
+            PlanPago planPago = new PlanPago();
+            var parameter = new SqlParameter("planPagoId", planPagoId);
+
+            var lista = await _context.PlanPago
+                                        .FromSqlRaw("EXECUTE dbo.USP_PlanPago_ObtenerDetallado @planPagoId", parameter)
+                                        .ToListAsync();
+
+            if (lista != null)
+            {
+                planPago = lista[0];
+            }
+
+            return planPago;
+        }
+    
+    
     }
 }

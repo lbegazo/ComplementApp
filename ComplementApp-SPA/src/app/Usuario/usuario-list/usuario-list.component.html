@@ -1,15 +1,31 @@
 <div class="row">
-  <div class="col-xs-12">
-      <button class="btn btn-success"
-              (click)="addUsuario()">Nuevo usuario</button>
+  <div class="col-12">
+    <button class="btn btn-success" (click)="addUsuario()">
+      Nuevo usuario
+    </button>
   </div>
 </div>
-<hr>
-<div class="row">
-  <div class="col-xs-12">
-      <app-usuario-item 
-          *ngFor="let usuario of usuarios; let i=index" 
-          [usuario]="usuario"
-          [index]="i"></app-usuario-item>
+<div class="row mt-3">
+  <div class="col-12">
+    <app-usuario-item
+      *ngFor="let usuario of usuarios; let i = index"
+      [usuario]="usuario"
+      [index]="i"
+    ></app-usuario-item>
   </div>
+</div>
+
+<div class="d-flex justify-content-center mt-3">
+  <pagination
+    [boundaryLinks]="true"
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage"
+    (pageChanged)="pageChanged($event)"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;"
+    [ngModelOptions]="{ standalone: true }"
+  ></pagination>
 </div>

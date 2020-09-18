@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    // [ServiceFilter(typeof(LogUserActivity))]
+    [ServiceFilter(typeof(LogActividadUsuario))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

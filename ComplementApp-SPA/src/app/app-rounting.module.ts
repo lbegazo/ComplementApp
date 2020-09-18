@@ -12,6 +12,7 @@ import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-m
 import { CausacionyLiquidacionComponent } from './CausacionyLiquidacion/CausacionyLiquidacion.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
+import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -56,6 +57,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: CausacionyLiquidacionComponent,
+    resolve: { planPagoResolver: PlanPagoResolver },
   },
   {
     path: 'cdp',

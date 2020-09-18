@@ -68,7 +68,6 @@ namespace ComplementApp.API.Data
             }
         }
 
-        //public async Task<bool> InsertaDetalleCDP(IList<DetalleCDP> lista)
         public bool InsertaDetalleCDP(IList<DetalleCDPDto> lista)
         {
             try
@@ -114,6 +113,23 @@ namespace ComplementApp.API.Data
 
                 if (_context.DetalleCDP.Any())
                     return _context.DetalleCDP.BatchDelete() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
+        }
+
+        private bool EliminarParametroLiquidacionTercero()
+        {
+            try
+            {
+                if (!_context.ParametroLiquidacionTercero.Any())
+                    return true;
+
+                if (_context.ParametroLiquidacionTercero.Any())
+                    return _context.ParametroLiquidacionTercero.BatchDelete() > 0;
             }
             catch (Exception ex)
             {
@@ -413,6 +429,66 @@ namespace ComplementApp.API.Data
 
                 listaCDP.Add(cdp);
             }
+
+            return listaCDP;
+        }
+
+        private List<ParametroLiquidacionTercero> obtenerListaParametroLiquidacionTercero(IList<ParametroLiquidacionTerceroDto> lista)
+        {
+            List<ParametroLiquidacionTercero> listaCDP = new List<ParametroLiquidacionTercero>();
+            ParametroLiquidacionTercero nuevoItem = null;
+
+            var listaTercero = _context.Tercero.ToList();
+
+            foreach (var item in lista)
+            {
+                nuevoItem = new ParametroLiquidacionTercero();
+                nuevoItem.Afc = item.Afc;
+                nuevoItem.AportePension = item.AportePension;
+                nuevoItem.AporteSalud = item.AporteSalud;
+                nuevoItem.BaseAporteSalud = item.BaseAporteSalud;
+                nuevoItem.ConvenioFontic = item.ConvenioFontic;
+                nuevoItem.Credito = item.Credito;
+                nuevoItem.Debito = item.Debito;
+                nuevoItem.Dependiente = item.Dependiente;
+
+                // if (item.FechaFinalDescuentoInteresVivienda != DateTime.MinValue)
+                //     nuevoItem.FechaFinalDescuentoInteresVivienda = item.FechaFinalDescuentoInteresVivienda;
+
+                // if (item.FechaInicioDescuentoInteresVivienda != DateTime.MinValue)
+                //     nuevoItem.FechaInicioDescuentoInteresVivienda = item.FechaInicioDescuentoInteresVivienda;
+
+                nuevoItem.FondoSolidaridad = item.FondoSolidaridad;
+                nuevoItem.HonorarioSinIva = item.HonorarioSinIva;
+                nuevoItem.InteresVivienda = item.InteresVivienda;
+                nuevoItem.MedicinaPrepagada = item.MedicinaPrepagada;
+                nuevoItem.ModalidadContrato = item.ModalidadContrato;
+                nuevoItem.NumeroCuenta = item.NumeroCuenta;
+                nuevoItem.PensionVoluntaria = item.PensionVoluntaria;
+                nuevoItem.RiesgoLaboral = item.RiesgoLaboral;
+                nuevoItem.TarifaIva = item.TarifaIva;
+                nuevoItem.TipoCuenta = item.TipoCuenta;
+                nuevoItem.TipoCuentaPorPagar = item.TipoCuentaPorPagar;
+                nuevoItem.TipoDocumentoSoporte = item.TipoDocumentoSoporte;
+                nuevoItem.TipoIva = item.TipoIva;
+                nuevoItem.TipoPago = item.TipoPago;
+
+                //Tercero
+                if (item.TipoIdentificacion > 0 &&
+                    !string.IsNullOrEmpty(item.IdentificacionTercero))
+                {
+                    var tercero = listaTercero
+                                        .Where(c => c.TipoIdentificacion == item.TipoIdentificacion)
+                                        .Where(c => c.NumeroIdentificacion == item.IdentificacionTercero)
+                                        .FirstOrDefault();
+                    if (tercero != null)
+                        nuevoItem.TerceroId = tercero.TerceroId;
+                }
+
+                listaCDP.Add(nuevoItem);
+
+            }
+
 
             return listaCDP;
         }

@@ -41,8 +41,6 @@ namespace ComplementApp.API.Models
 
         public Area Area { get; set; }
 
-        public bool EsAdministrador { get; set; }
-
         public ICollection<UsuarioPerfil> UsuarioPerfiles { get; set; }
 
     }

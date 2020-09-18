@@ -1,13 +1,25 @@
 <form [formGroup]="facturaHeaderForm">
-  <div class="container mt-3">
+  <div class="container-fluid mt-2">
     <div class="row">
+      <div class="col-12">
+        <h2 class="text-center text-primary" style="margin: 0px">
+          {{ nombreTransaccion }}
+        </h2>
+        <hr style="margin: 5px" />
+      </div>
+    </div>
+    <div class="row mt-2">
       <div class="col-md-12">
-        <table class="table" id="tablaContenedor">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
           <tr>
-            <td style="padding: 10px">
+            <td style="padding:0px 10px">
               <!--RADIO BUTTONS -->
 
-              <div class="container">
+              <div class="container-fluid mt-2">
                 <div class="row">
                   <div class="col-12 withoutPadding">
                     <h4>Seleccione una opción:</h4>
@@ -51,7 +63,7 @@
               </div>
 
               <!--TERCERO-->
-              <div class="form-row mt-3">
+              <div class="form-row mt-2">
                 <div class="form-group col-md-3">
                   <label for="inputNumeroTercero" class="col-form-label-md"
                     >Número de identificación</label
@@ -95,7 +107,7 @@
                 <div class="form-group col-md-3">
                   <table>
                     <tr style="vertical-align: bottom">
-                      <td style="padding-top: 15px;" >
+                      <td style="padding-top: 15px">
                         &nbsp;
                         <button
                           type="submit"
@@ -127,7 +139,7 @@
   </div>
 </form>
 
-<div class="container mt-1">
+<div class="container-fluid mt-1">
   <div class="row">
     <div class="col-12" *ngIf="planPagoIdSeleccionado > 0">
       <app-factura-edit

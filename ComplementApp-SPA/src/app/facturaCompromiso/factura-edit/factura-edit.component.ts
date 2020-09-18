@@ -8,7 +8,7 @@ import {
 import { PlanPago } from 'src/app/_models/planPago';
 import { HttpClient } from '@angular/common/http';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { FacturaService } from 'src/app/_services/factura.service';
+import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
@@ -26,20 +26,21 @@ export class FacturaEditComponent implements OnInit {
   planPagoSeleccionado: PlanPago;
   facturaForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
-  detallePlanPago: DetallePlanPago = {
-    planPagoId: 0,
-    detalle4: '',
-    detalle5: '',
-    detalle6: '',
-    detalle7: '',
-    fecha: null,
-    valorTotal: 0,
-    saldoActual: 0,
-  };
+  detallePlanPago: DetallePlanPago;
+  // detallePlanPago: DetallePlanPago = {
+  //   planPagoId: 0,
+  //   detalle4: '',
+  //   detalle5: '',
+  //   detalle6: '',
+  //   detalle7: '',
+  //   fecha: null,
+  //   valorTotal: 0,
+  //   saldoActual: 0,
+  // };
 
   constructor(
     private alertify: AlertifyService,
-    private facturaService: FacturaService,
+    private facturaService: PlanPagoService,
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute

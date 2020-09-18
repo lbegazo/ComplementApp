@@ -64,6 +64,15 @@ namespace ComplementApp.API.Data
 
         public DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
 
+        public DbSet<ParametroGeneral> ParametroGeneral { get; set; }
+
+        public DbSet<TipoBaseDeduccion> TipoBaseDeduccion { get; set; }
+        public DbSet<Deduccion> Deduccion { get; set; }
+
+        public DbSet<TerceroDeduccion> TerceroDeducciones { get; set; }
+
+        public DbSet<ParametroLiquidacionTercero> ParametroLiquidacionTercero { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -88,6 +97,17 @@ namespace ComplementApp.API.Data
                 .HasOne(bc => bc.Transaccion)
                 .WithMany(c => c.PerfilTransacciones)
                 .HasForeignKey(bc => bc.TransaccionId);
+
+            modelBuilder.Entity<TerceroDeduccion>()
+          .HasKey(bc => new { bc.TerceroId, bc.DeduccionId });
+            modelBuilder.Entity<TerceroDeduccion>()
+                .HasOne(bc => bc.Tercero)
+                .WithMany(b => b.DeduccionesXTercero)
+                .HasForeignKey(bc => bc.TerceroId);
+            modelBuilder.Entity<TerceroDeduccion>()
+                .HasOne(bc => bc.Deduccion)
+                .WithMany(c => c.DeduccionesXTercero)
+                .HasForeignKey(bc => bc.DeduccionId);
 
             modelBuilder.Entity<RubroPresupuestal>()
                 .Property(b => b.PadreRubroId)

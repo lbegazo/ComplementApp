@@ -6,5 +6,7 @@ namespace ComplementApp.API.Data
     public interface IUnitOfWork
     {
         Task<bool> CompleteAsync();
+
+        bool Complete();
     }
 }

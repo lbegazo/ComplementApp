@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using AutoMapper;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 using Newtonsoft.Json;
@@ -31,8 +34,182 @@ namespace ComplementApp.API.Data
             SeedDependencia(context);
             SeedActividadEspecifica(context);
 
+            SeedTipoBaseDeduccion(context);
+            SeedParametroGeneral(context);
+            SeedDeduccion(context);
+            SeedTerceroDeducciones(context);
+            SeedParametroLiquidacionTercero(context);
 
         }
+
+        private static void SeedTerceroDeducciones(DataContext context)
+        {
+            if (!context.TerceroDeducciones.Any())
+            {
+                TerceroDeduccion nuevoItem = null;
+                List<TerceroDeduccion> lista = new List<TerceroDeduccion>();
+
+                var data = File.ReadAllText("Data/SeedFiles/_TerceroDeduccion.json");
+                var items = JsonConvert.DeserializeObject<List<TerceroDeduccionDto>>(data);
+                foreach (var item in items)
+                {
+                    var terceroBD = obtenerTercero(context, item.TipoIdentificacion, item.IdentificacionTercero);
+                    var deduccionBD = obtenerDeduccion(context, item.Codigo);
+
+                    if (terceroBD != null && deduccionBD != null)
+                    {
+                        var terceroDeduccion = obtenerTerceroDeduccion(context, terceroBD.TerceroId, deduccionBD.DeduccionId);
+
+                        if (terceroDeduccion == null)
+                        {
+                            nuevoItem = new TerceroDeduccion();
+                            nuevoItem.TerceroId = terceroBD.TerceroId;
+                            nuevoItem.DeduccionId = deduccionBD.DeduccionId;
+                            lista.Add(nuevoItem);
+                        }
+                    }
+                }
+                context.TerceroDeducciones.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedParametroLiquidacionTercero(DataContext context)
+        {
+            if (!context.ParametroLiquidacionTercero.Any())
+            {
+                ParametroLiquidacionTercero nuevoItem = null;
+                List<ParametroLiquidacionTercero> lista = new List<ParametroLiquidacionTercero>();
+                DateTime fecha;
+
+                var data = File.ReadAllText("Data/SeedFiles/_ParametroLiquidacionTercero.json");
+                var items = JsonConvert.DeserializeObject<List<ParametroLiquidacionTerceroDto>>(data);
+                foreach (var item in items)
+                {
+                    var terceroBD = obtenerTercero(context, item.TipoIdentificacion, item.IdentificacionTercero);
+                    if (terceroBD != null)
+                    {
+                        nuevoItem = new ParametroLiquidacionTercero();
+                        nuevoItem.TerceroId = terceroBD.TerceroId;
+                        nuevoItem.Afc = item.Afc;
+                        nuevoItem.AportePension = item.AportePension;
+                        nuevoItem.AporteSalud = item.AporteSalud;
+                        nuevoItem.BaseAporteSalud = item.BaseAporteSalud;
+                        nuevoItem.ConvenioFontic = item.ConvenioFontic;
+                        nuevoItem.Credito = item.Credito;
+                        nuevoItem.Debito = item.Debito;
+                        nuevoItem.Dependiente = item.Dependiente;
+
+                        if (!string.IsNullOrEmpty(item.FechaFinalDescuentoInteresVivienda))
+                        {
+                            if (DateTime.TryParse(item.FechaFinalDescuentoInteresVivienda, out fecha))
+                                nuevoItem.FechaFinalDescuentoInteresVivienda = fecha;
+
+                            // if (DateTime.TryParseExact(item.FechaFinalDescuentoInteresVivienda, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fecha))
+                            //     nuevoItem.FechaFinalDescuentoInteresVivienda = fecha;
+                        }
+
+                        if (!string.IsNullOrEmpty(item.FechaInicioDescuentoInteresVivienda))
+                            if (DateTime.TryParse(item.FechaInicioDescuentoInteresVivienda, out fecha))
+                                nuevoItem.FechaInicioDescuentoInteresVivienda = fecha;
+
+                        nuevoItem.FondoSolidaridad = item.FondoSolidaridad;
+                        nuevoItem.HonorarioSinIva = item.HonorarioSinIva;
+                        nuevoItem.InteresVivienda = item.InteresVivienda;
+                        nuevoItem.MedicinaPrepagada = item.MedicinaPrepagada;
+                        nuevoItem.ModalidadContrato = item.ModalidadContrato;
+                        nuevoItem.NumeroCuenta = item.NumeroCuenta;
+                        nuevoItem.PensionVoluntaria = item.PensionVoluntaria;
+                        nuevoItem.RiesgoLaboral = item.RiesgoLaboral;
+                        nuevoItem.TarifaIva = item.TarifaIva;
+                        nuevoItem.TipoCuenta = item.TipoCuenta;
+                        nuevoItem.TipoCuentaPorPagar = item.TipoCuentaPorPagar;
+                        nuevoItem.TipoDocumentoSoporte = item.TipoDocumentoSoporte;
+                        nuevoItem.TipoIva = item.TipoIva;
+                        nuevoItem.TipoPago = item.TipoPago;
+                        lista.Add(nuevoItem);
+                    }
+                }
+                context.ParametroLiquidacionTercero.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedDeduccion(DataContext context)
+        {
+            Deduccion nuevoItem = null;
+            List<Deduccion> lista = new List<Deduccion>();
+
+            var data = File.ReadAllText("Data/SeedFiles/_Deduccion.json");
+            var items = JsonConvert.DeserializeObject<List<DeduccionDto>>(data);
+            foreach (var item in items)
+            {
+                var itemBD = obtenerDeduccion(context, item.Codigo);
+                if (itemBD == null)
+                {
+                    nuevoItem = new Deduccion();
+                    nuevoItem.Codigo = item.Codigo;
+                    nuevoItem.Nombre = item.Nombre;
+                    nuevoItem.Tarifa = item.Tarifa;
+                    nuevoItem.Gmf = item.Gmf == "0" ? false : true;
+                    nuevoItem.estado = item.Estado == "0" ? false : true;
+                    var tipoBase = obtenerTipoBaseDeduccion(context, item.TipoBase);
+
+                    if (tipoBase != null)
+                        nuevoItem.TipoBaseDeduccionId = tipoBase.TipoBaseDeduccionId;
+
+                    lista.Add(nuevoItem);
+                }
+            }
+            context.Deduccion.AddRange(lista);
+            context.SaveChanges();
+        }
+
+        private static void SeedParametroGeneral(DataContext context)
+        {
+            ParametroGeneral nuevoItem = null;
+            List<ParametroGeneral> lista = new List<ParametroGeneral>();
+
+            var data = File.ReadAllText("Data/SeedFiles/_ParametroGeneral.json");
+            var items = JsonConvert.DeserializeObject<List<ParametroGeneral>>(data);
+            foreach (var item in items)
+            {
+                var itemBD = obtenerParametroGeneral(context, item.Nombre);
+                if (itemBD == null)
+                {
+                    nuevoItem = new ParametroGeneral();
+                    nuevoItem.Nombre = item.Nombre;
+                    nuevoItem.Descripcion = item.Descripcion;
+                    nuevoItem.Valor = item.Valor;
+                    lista.Add(nuevoItem);
+                }
+            }
+            context.ParametroGeneral.AddRange(lista);
+            context.SaveChanges();
+        }
+
+
+        private static void SeedTipoBaseDeduccion(DataContext context)
+        {
+            TipoBaseDeduccion nuevoItem = null;
+            //if (!context.TipoBaseDeduccion.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoBaseDeduccion.json");
+                var lista = JsonConvert.DeserializeObject<List<TipoBaseDeduccion>>(data);
+                foreach (var item in lista)
+                {
+                    var itemBD = obtenerTipoBaseDeduccion(context, item.Nombre);
+                    if (itemBD == null)
+                    {
+                        nuevoItem = new TipoBaseDeduccion();
+                        nuevoItem.Nombre = item.Nombre;
+                        context.TipoBaseDeduccion.Add(nuevoItem);
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
+
         private static void SeedUsuario(DataContext context)
         {
             if (!context.Usuario.Any())
@@ -364,7 +541,7 @@ namespace ComplementApp.API.Data
                     nuevo.TransaccionId = transaccion.TransaccionId;
 
                     var perfilTransaccionBD = context.PerfilTransaccion
-                                                .Where(p => p.PerfilId == nuevo.PerfilId 
+                                                .Where(p => p.PerfilId == nuevo.PerfilId
                                                         && p.TransaccionId == nuevo.TransaccionId)
                                                 .FirstOrDefault();
 
@@ -398,14 +575,14 @@ namespace ComplementApp.API.Data
                     nuevo.UsuarioId = usuario.UsuarioId;
 
                     var usuarioPerfilBD = context.UsuarioPerfil
-                                            .Where(p => p.PerfilId == nuevo.PerfilId 
+                                            .Where(p => p.PerfilId == nuevo.PerfilId
                                                     && p.UsuarioId == nuevo.UsuarioId)
                                             .FirstOrDefault();
 
                     if (usuarioPerfilBD == null)
                     {
                         lista.Add(nuevo);
-                    }                
+                    }
                 }
             }
             context.UsuarioPerfil.AddRange(lista);
@@ -458,5 +635,29 @@ namespace ComplementApp.API.Data
             return context.Usuario.Where(x => x.Username.ToLower() == username.ToLower()).FirstOrDefault();
         }
 
+        private static ParametroGeneral obtenerParametroGeneral(DataContext context, string nombre)
+        {
+            return context.ParametroGeneral.Where(x => x.Nombre == nombre).FirstOrDefault();
+        }
+
+        private static Deduccion obtenerDeduccion(DataContext context, string codigo)
+        {
+            return context.Deduccion.Where(x => x.Codigo == codigo).FirstOrDefault();
+        }
+
+        private static TipoBaseDeduccion obtenerTipoBaseDeduccion(DataContext context, string nombre)
+        {
+            return context.TipoBaseDeduccion.Where(x => x.Nombre == nombre).FirstOrDefault();
+        }
+
+        private static Tercero obtenerTercero(DataContext context, int tipoIdentificacion, string identificacion)
+        {
+            return context.Tercero.Where(x => x.TipoIdentificacion == tipoIdentificacion && x.NumeroIdentificacion == identificacion).FirstOrDefault();
+        }
+
+        private static TerceroDeduccion obtenerTerceroDeduccion(DataContext context, int terceroId, int deduccionId)
+        {
+            return context.TerceroDeducciones.Where(x => x.TerceroId == terceroId && x.DeduccionId == deduccionId).FirstOrDefault();
+        }
     }
 }

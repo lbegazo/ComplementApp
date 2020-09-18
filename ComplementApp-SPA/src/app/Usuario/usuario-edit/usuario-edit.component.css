@@ -1,0 +1,101 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.bordealo {
+  border: 1px solid #ccc;
+}
+
+.addPadding {
+  padding: 10px;
+  background-color: transparent;
+} 
+
+.addPaddingTop {
+  padding-top: 10px;
+  background-color: transparent;
+} 
+
+.withoutPadding {
+  padding: 0px;
+  padding-left: 0px;
+}
+
+.withoutBorder {
+  border: none;
+}
+
+.withoutBorderBotton {
+  border-bottom: none;
+}
+
+.withBorderBotton {
+  border-bottom: 1px solid #ccc;
+}
+
+.inner {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+table td {
+  padding: 0px;
+  vertical-align: top;
+}
+
+.inner {
+  border-right: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+.inner-end {
+  padding: 5px 5px;
+}
+
+
+.gfg {
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+#firma {
+  display: flex;
+  justify-content: center;
+}
+
+.test {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="text"],
+input[type="textArea"] {
+  background-color: white;
+  height: 25px;
+}
+
+.aplicaBackground {
+  background-color: white;
+}
+
+select.list option.option2
+{
+    background-color:white;
+}
+

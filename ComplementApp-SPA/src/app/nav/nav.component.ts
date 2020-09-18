@@ -40,9 +40,6 @@ export class NavComponent implements OnInit {
     return this.authService.loggedIn();
   }
 
-  esAdministrador() {
-    return this.authService.esAdministrador();
-  }
 
   logout() {
     this.model = {};

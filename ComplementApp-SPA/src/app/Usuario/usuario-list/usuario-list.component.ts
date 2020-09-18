@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/_services/usuario.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Subscription } from 'rxjs';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 
 @Component({
   selector: 'app-usuario-list',
@@ -13,6 +14,12 @@ import { Subscription } from 'rxjs';
 export class UsuarioListComponent implements OnInit, OnDestroy {
   usuarios: Usuario[];
   subscription: Subscription;
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+  };
 
   constructor(
     private usuarioService: UsuarioService,
@@ -28,14 +35,7 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.usuarioService.ObtenerUsuarios().subscribe(
-      (users: Usuario[]) => {
-        this.usuarios = users;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+    this.cargarUsuarios();
   }
 
   addUsuario() {
@@ -44,5 +44,27 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios() {
+    this.usuarioService
+      .ObtenerUsuarios(
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage
+      )
+      .subscribe(
+        (documentos: PaginatedResult<Usuario[]>) => {
+          this.usuarios = documentos.result;
+          this.pagination = documentos.pagination;
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
   }
 }

@@ -17,6 +17,9 @@ namespace ComplementApp.API.Data
             return await _context.SaveChangesAsync() > 0;
         }
 
-      
+        public bool Complete()
+        {
+            return  _context.SaveChanges() > 0;
+        }
     }
 }

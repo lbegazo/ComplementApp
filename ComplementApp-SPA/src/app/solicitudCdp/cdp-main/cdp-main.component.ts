@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ListaService } from 'src/app/_services/lista.service';
 
 @Component({
   selector: 'app-cdp-main',
@@ -6,10 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cdp-main.component.css']
 })
 export class CdpMainComponent implements OnInit {
+  readonly codigoTransaccion = 'CDP';
+  nombreTransaccion: string;
 
-  constructor() { }
+  constructor(private listaService: ListaService) { }
 
   ngOnInit() {
+    this.obtenerNombreTransaccion();
   }
 
+  private obtenerNombreTransaccion() {
+    this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
+      this.codigoTransaccion
+    );
+  }
 }

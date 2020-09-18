@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,5 +19,7 @@ namespace ComplementApp.API.Models
         [Required]
         [Column(TypeName = "VARCHAR(250)")]
         public string Nombre { get; set; }
+        
+        public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
     }
 }

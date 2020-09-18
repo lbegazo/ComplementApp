@@ -7,9 +7,7 @@ using System.Linq;
 
 namespace ComplementApp.API.Data
 {
-    
-
-    public class ListaRepository: IListaRepository
+    public class ListaRepository : IListaRepository
     {
         private readonly DataContext _context;
         public ListaRepository(DataContext context)
@@ -42,6 +40,24 @@ namespace ComplementApp.API.Data
             return await _context.Tercero
                             .Where(t => t.NumeroIdentificacion.Contains(numeroIdentificacion))
                             .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Perfil>> ObtenerListaPerfiles()
+        {
+            return await _context.Perfil
+                        .Where(x => x.Estado == true)
+                        .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ParametroGeneral>> ObtenerParametrosGenerales()
+        {
+            return await _context.ParametroGeneral.ToListAsync();
+        }
+
+        public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
+        {
+            return await _context.ParametroLiquidacionTercero
+                        .Where(x => x.TerceroId == terceroId).FirstOrDefaultAsync();
         }
     }
 }

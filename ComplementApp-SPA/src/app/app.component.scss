@@ -50,3 +50,9 @@
   padding: 8px;
   align-self: flex-end;
 }
+
+input[type="text"],
+input[type="textArea"] {
+  background-color: white;
+  height: 25px;
+}

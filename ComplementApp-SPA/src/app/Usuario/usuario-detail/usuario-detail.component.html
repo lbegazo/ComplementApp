@@ -1,13 +1,15 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-xs-12">
-      <div class="card">
-        <h1>Vista general de la cuenta</h1>
-        <div class="card-body">
+    <div class="col-12">
+      <div class="card" style="padding: 25px;">
+        <h1>CUENTA DE USUARIO</h1>
+        <div class="card-header" style="padding: 0px;">
           <div>
             <strong>Nombre de usuario:</strong>
             <p>{{ usuario?.username }}</p>
           </div>
+        </div>
+        <div class="card-body" style="padding: 0px;">
           <div>
             <strong>Usuario:</strong>
             <p>{{ usuario?.nombres }} {{ usuario?.apellidos }}</p>
@@ -29,16 +31,11 @@
             <p>{{ usuario?.fechaCreacion | date: "mediumDate" }}</p>
           </div>
           <div>
-            <strong>Tipo de usuario:</strong>
-            <div *ngIf="usuario.esAdministrador">
-              Administrador
-            </div>
-            <div *ngIf="!usuario.esAdministrador">
-              Usuario estándar
-            </div>
+            <strong>Perfiles del usuario</strong>
+            <p style="margin: 2px;" *ngFor="let item of usuario?.perfiles">{{ item?.nombre }}</p>
           </div>
         </div>
-        <div class="card-footer justificar" *ngIf="esAdministrador">
+        <div class="justificar mt-3">
           <div>
             <button class="btn btn-primary" (click)="onModificarUsuario()">
               Modificar

@@ -1,16 +1,25 @@
-<div class="container mt-3">
+<div class="container-fluid mt-2">
   <div class="row no-gutters">
     <div class="col-12">
-      <h2 class="text-center text-primary">MANTENIMIENTO DE USUARIOS</h2>
-      <hr />
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
     </div>
   </div>
+</div>
+<div class="container-fluid mt-2">
   <div class="row gutters">
-    <div class="col-md-5" *ngIf="esAdministrador()">
-      <app-usuario-list></app-usuario-list>
-    </div>
-    <div class="col-md-7">
-      <router-outlet></router-outlet>
+    <div
+      style="width: 90%; margin-left: auto; margin-right: auto"
+      class="d-flex justify-content-between tablaContenedor"
+    >
+      <div class="col-md-4" style="padding: 10px;">
+        <app-usuario-list></app-usuario-list>
+      </div>
+      <div class="col-md-8 ml-3" style="padding: 10px;">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </div>

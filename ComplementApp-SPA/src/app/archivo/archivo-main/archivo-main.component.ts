@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from 'src/environments/environment';
+import { ListaService } from 'src/app/_services/lista.service';
 
 @Component({
   selector: 'app-archivo-main',
@@ -9,6 +10,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./archivo-main.component.css'],
 })
 export class ArchivoMainComponent implements OnInit {
+  readonly codigoTransaccion = 'ARCHIVO';
+  nombreTransaccion: string;
+
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   hasAnotherDropZoneOver: boolean;
@@ -16,9 +20,13 @@ export class ArchivoMainComponent implements OnInit {
   baseUrl = environment.apiUrl;
   path: string;
 
-  constructor(private alertify: AlertifyService) {}
+  constructor(
+    private alertify: AlertifyService,
+    private listaService: ListaService
+  ) {}
 
   ngOnInit() {
+    this.obtenerNombreTransaccion();
     this.initializeUploader();
   }
 
@@ -35,10 +43,9 @@ export class ArchivoMainComponent implements OnInit {
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 5 * 1024 * 1024,
-      queueLimit: 1
+      queueLimit: 1,
     });
 
-   
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
@@ -50,5 +57,11 @@ export class ArchivoMainComponent implements OnInit {
         this.alertify.error('No se pudo actualizar la base de datos');
       }
     };
+  }
+
+  private obtenerNombreTransaccion() {
+    this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
+      this.codigoTransaccion
+    );
   }
 }

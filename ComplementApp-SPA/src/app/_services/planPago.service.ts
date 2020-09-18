@@ -4,11 +4,14 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, of as observableOf } from 'rxjs';
 import { PlanPago } from '../_models/planPago';
 import { DetallePlanPago } from '../_models/detallePlanPago';
+import { PaginatedResult } from '../_models/pagination';
+import { map } from 'rxjs/operators';
+import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FacturaService {
+export class PlanPagoService {
   baseUrl = environment.apiUrl + 'planpago/';
 
   constructor(private http: HttpClient) {}
@@ -27,19 +30,45 @@ export class FacturaService {
   // }
 
   ObtenerListaPlanPago(
-    terceroId: number,
-    listaEstadoId: string
-  ): Observable<PlanPago[]> {
+    listaEstadoId: string,
+    terceroId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<PlanPago[]>> {
     const path = 'ObtenerListaPlanPago';
+    const paginatedResult: PaginatedResult<PlanPago[]> = new PaginatedResult<
+      PlanPago[]
+    >();
 
     let params = new HttpParams();
-
-    if (terceroId > 0 && listaEstadoId.length > 0) {
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
       params = params.append('terceroId', terceroId.toString());
-      params = params.append('listaEstadoId', listaEstadoId);
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
     }
 
-    return this.http.get<PlanPago[]>(this.baseUrl + path, { params });
+    return this.http
+      .get<PlanPago[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
   }
 
   ObtenerPlanPago(planPagoId: number): Observable<PlanPago> {
@@ -64,6 +93,23 @@ export class FacturaService {
     }
 
     return this.http.get<DetallePlanPago>(this.baseUrl + path, { params });
+  }
+
+  ObtenerFormatoCausacionyLiquidacionPago(
+    planPagoId: number
+  ): Observable<FormatoCausacionyLiquidacionPago> {
+    const path = 'ObtenerFormatoCausacionyLiquidacionPago';
+
+    let params = new HttpParams();
+
+    if (planPagoId > 0) {
+      params = params.append('planPagoId', planPagoId.toString());
+    }
+
+    return this.http.get<FormatoCausacionyLiquidacionPago>(
+      this.baseUrl + path,
+      { params }
+    );
   }
 
   ActualizarPlanPago(

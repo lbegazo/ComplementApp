@@ -174,7 +174,7 @@
                     class="borderTopBottonRight"
                   >
                     <span class="fontSmaller">
-                      {{ this.usuario?.areaNombre }}
+                      {{ this.usuario?.cargoNombre }}
                     </span>
                   </td>
                   <td
@@ -188,7 +188,7 @@
                     class="borderTopBotton"
                   >
                     <span class="fontSmaller">
-                      {{ this.usuario?.cargoNombre }}
+                      {{ this.usuario?.areaNombre }}
                     </span>
                   </td>
                 </tr>
@@ -371,7 +371,7 @@
                               <!--Solicitud Inicial-->
                               <td
                                 *ngIf="esSolicitudInicial"
-                                style="vertical-align: bottom; padding: 5px;"
+                                style="vertical-align: bottom; padding: 5px"
                               >
                                 <textarea
                                   [ngClass]="{
@@ -380,7 +380,7 @@
                                       cdpForm.get('objetoBienControl').touched
                                   }"
                                   name="textarea"
-                                  class="form-control col-form-label-sm "
+                                  class="form-control col-form-label-sm"
                                   formControlName="objetoBienControl"
                                   style="
                                     width: 100%;
@@ -389,7 +389,7 @@
                                     overflow: hidden;
                                   "
                                   rows="2"
-                                  maxlength="300"
+                                  maxlength="230"
                                   placeholder="Ingrese el objeto del bien aquí"
                                   [readonly]="cambiosConfirmados"
                                 ></textarea>
@@ -775,7 +775,7 @@
                             <div
                               class="col-3 borderBottonRight left addPaddingLeft"
                             >
-                              <small>{{ item?.planDeCompras }}</small>
+                              <small>{{ item?.rubroNombre }}</small>
                             </div>
                             <div
                               class="col-2 borderBottonRight right addPaddingRight"
@@ -898,7 +898,7 @@
                             <div
                               class="col-4 borderBottonRight left addPaddingLeft"
                             >
-                              <small>{{ item?.planDeCompras }}</small>
+                              <small>{{ item?.rubroNombre }}</small>
                             </div>
                             <div
                               class="col-2 borderBottonRight right addPaddingRight"
@@ -950,7 +950,7 @@
                   </div>
                 </div>
                 <div class="row" *ngIf="!cambiosConfirmados">
-                  <div class="col-12" style="padding: 10px;">
+                  <div class="col-12" style="padding: 10px">
                     <select
                       style="height: 30px"
                       formControlName="tipoDetalleControl"
@@ -1004,8 +1004,8 @@
                     <small><strong>VI. OBSERVACIONES</strong></small>
                   </div>
                 </div>
-                <div class="row" style="height: 50px;vertical-align: middle;">
-                  <div class="col-12" style="height: 50px;padding: 5px;">
+                <div class="row" style="height: 50px; vertical-align: middle">
+                  <div class="col-12" style="height: 50px; padding: 5px">
                     <textarea
                       [ngClass]="{
                         'is-invalid':

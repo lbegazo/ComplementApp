@@ -8,11 +8,15 @@
 
 .justificar {
   display: flex;
-  justify-content: center;
+  justify-content: left;
 }
 
 .divider {
   width: 10px;
   height: auto;
   display: inline-block;
+}
+
+.left {
+  text-align: left;
 }

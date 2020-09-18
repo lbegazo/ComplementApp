@@ -5,7 +5,7 @@ import { Observable, Subject, throwError, of as observableOf } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Usuario } from '../_models/usuario';
 import { catchError } from 'rxjs/Operators';
-import { PaginatedResult } from '../_models/pagination';
+import { PaginatedResult, Pagination } from '../_models/pagination';
 import { Transaccion } from '../_models/transaccion';
 
 @Injectable({
@@ -15,6 +15,13 @@ export class UsuarioService {
   baseUrl = environment.apiUrl + 'usuario/';
   usuarioChanged = new Subject<Usuario[]>();
   usuarios: Usuario[];
+
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -36,8 +43,37 @@ export class UsuarioService {
   //   );
   // }
 
-  ObtenerUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.baseUrl);
+  ObtenerUsuarios(page?, pagesize?): Observable<PaginatedResult<Usuario[]>> {
+    const paginatedResult: PaginatedResult<Usuario[]> = new PaginatedResult<
+      Usuario[]
+    >();
+
+    let params = new HttpParams();
+
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Usuario[]>(this.baseUrl, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
   }
 
   ObtenerUsuario(id: number): Observable<Usuario> {
@@ -76,8 +112,11 @@ export class UsuarioService {
   }
 
   private ActualizarListaUsuarios() {
-    this.ObtenerUsuarios().subscribe((users: Usuario[]) => {
-      this.usuarios = users;
+    this.ObtenerUsuarios(
+      this.pagination.currentPage,
+      this.pagination.itemsPerPage
+    ).subscribe((response: PaginatedResult<Usuario[]>) => {
+      this.usuarios = response.result;
       this.usuarioChanged.next(this.usuarios);
     });
   }

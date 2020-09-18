@@ -38,7 +38,19 @@ namespace ComplementApp.API.Data
         {
             return await _context.Usuario
                         .Include(x => x.Area)
-                        .Include(c => c.Cargo).FirstOrDefaultAsync(u => u.UsuarioId == id);
+                        .Include(c => c.Cargo)
+                        .FirstOrDefaultAsync(u => u.UsuarioId == id);
+        }
+
+        public async Task<ICollection<Perfil>> ObtenerPerfilesxUsuario(int usuarioId)
+        {
+            List<Perfil> lista = new List<Perfil>();
+            var perfiles =  await (    from up in _context.UsuarioPerfil
+                                            join p in _context.Perfil on up.PerfilId equals p.PerfilId
+                                            where up.UsuarioId == usuarioId
+                                            select p).ToListAsync();
+
+            return perfiles;
         }
 
         public async Task<bool> EliminarUsuario(int id)
@@ -60,7 +72,8 @@ namespace ComplementApp.API.Data
             //                     .OrderBy(x => x.Nombres)
             //                     .ToListAsync();
 
-            var users = _context.Usuario;
+            var users = _context.Usuario.OrderBy(x => x.Nombres);
+            
             return await PagedList<Usuario>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -83,6 +96,36 @@ namespace ComplementApp.API.Data
                                       .Distinct()
                                       .ToListAsync();
             return transaciones;
+        }
+
+        public bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles)
+        {
+
+            UsuarioPerfil nuevoItem = null;
+            List<UsuarioPerfil> lista = new List<UsuarioPerfil>();
+
+            #region Eliminar relaciones
+
+            var listaExistente = _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId);
+            _context.UsuarioPerfil.RemoveRange(listaExistente);
+            _unitOfWork.Complete();
+
+            #endregion
+
+            #region Setear datos
+
+            foreach (var item in listaPerfiles)
+            {
+                nuevoItem = new UsuarioPerfil();
+                nuevoItem.UsuarioId = usuarioId;
+                nuevoItem.PerfilId = item.PerfilId;
+                lista.Add(nuevoItem);
+            }
+
+            #endregion Setear datos
+
+            _context.BulkInsert(lista);
+            return true;
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {

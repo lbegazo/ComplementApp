@@ -14,7 +14,7 @@ namespace ComplementApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ListaController: ControllerBase
+    public class ListaController : ControllerBase
     {
         private readonly IListaRepository _repo;
 
@@ -22,13 +22,13 @@ namespace ComplementApp.API.Controllers
         {
             _repo = repo;
         }
-        
+
         //[AllowAnonymous]
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerAreas()
         {
-        var datos = await _repo.ObtenerAreas();
+            var datos = await _repo.ObtenerAreas();
             return Ok(datos);
         }
 
@@ -45,7 +45,7 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerListaTipoOperacion()
         {
-        var datos = await _repo.ObtenerListaTipoOperacion();
+            var datos = await _repo.ObtenerListaTipoOperacion();
             return Ok(datos);
         }
 
@@ -65,5 +65,28 @@ namespace ComplementApp.API.Controllers
             return Ok(datos);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaPerfiles()
+        {
+            var datos = await _repo.ObtenerListaPerfiles();
+            return Ok(datos);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerParametrosGenerales()
+        {
+            var datos = await _repo.ObtenerParametrosGenerales();
+            return Ok(datos);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerParametroLiquidacionXTercero([FromQuery(Name = "terceroId")] int terceroId)
+        {
+            var datos = await _repo.ObtenerParametroLiquidacionXTercero(terceroId);
+            return Ok(datos);
+        }
     }
 }

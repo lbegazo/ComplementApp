@@ -8,10 +8,12 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
-import { FacturaService } from 'src/app/_services/factura.service';
+import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { PlanPago } from 'src/app/_models/planPago';
 import { Tercero } from 'src/app/_models/tercero';
 import { FiltroFactura } from 'src/app/_models/filtroFactura';
+import { EstadoPlanPago } from 'src/app/_models/enum';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 
 @Component({
   selector: 'app-popup-buscar-factura',
@@ -25,16 +27,24 @@ export class PopupBuscarFacturaComponent implements OnInit {
   closeBtnName: string;
   list: any[] = [];
   listaPlanPago: PlanPago[];
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+  };
   arrayControls = new FormArray([]);
   popupForm = new FormGroup({});
   arrayRubro: number[] = [];
   listaEstadoId = '';
 
-  estadoPlanPagoPorPagar = 4;
+  estadoPlanPagoPorPagar = EstadoPlanPago.PorPagar.value;
+  estadoPlanPagoPorObligar = EstadoPlanPago.PorObligar.value;
+  estadoPlanPagoRechazada = EstadoPlanPago.Rechazada.value;
 
   constructor(
     public bsModalRef: BsModalRef,
-    private facturaService: FacturaService,
+    private facturaService: PlanPagoService,
     private alertify: AlertifyService,
     private fb: FormBuilder
   ) {}
@@ -44,25 +54,28 @@ export class PopupBuscarFacturaComponent implements OnInit {
   }
 
   cargarPlanesPago() {
-
     if (this.radicarFactura) {
       //#region Radicar factura
 
-      this.listaEstadoId = '4'; // Por pagar
+      this.listaEstadoId = this.estadoPlanPagoPorPagar.toString(); // Por pagar
 
       //#endregion Radicar factura
     } else {
       //#region Modificar factura
-      this.listaEstadoId = '5,13'; // ESTADO: Por Obligar y rechazada
+      this.listaEstadoId =
+        this.estadoPlanPagoPorObligar.toString() +
+        ',' +
+        this.estadoPlanPagoRechazada.toString(); // ESTADO: Por Obligar y rechazada
 
       //#endregion Modificar factura
     }
 
     this.facturaService
-      .ObtenerListaPlanPago(this.terId, this.listaEstadoId)
+      .ObtenerListaPlanPago(this.listaEstadoId, this.terId)
       .subscribe(
-        (documentos: PlanPago[]) => {
-          this.listaPlanPago = documentos;
+        (documentos: PaginatedResult<PlanPago[]>) => {
+          this.listaPlanPago = documentos.result;
+          this.pagination = documentos.pagination;
 
           if (this.listaPlanPago && this.listaPlanPago.length > 0) {
             for (const detalle of this.listaPlanPago) {
@@ -86,6 +99,44 @@ export class PopupBuscarFacturaComponent implements OnInit {
     this.popupForm = this.fb.group({
       planPagoControles: this.arrayControls,
     });
+  }
+
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.cargarListaPlanPago();
+  }
+
+  cargarListaPlanPago() {
+    this.facturaService
+      .ObtenerListaPlanPago(
+        this.listaEstadoId,
+        this.terId,
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage
+      )
+      .subscribe(
+        (documentos: PaginatedResult<PlanPago[]>) => {
+          this.listaPlanPago = documentos.result;
+          this.pagination = documentos.pagination;
+
+          if (this.listaPlanPago && this.listaPlanPago.length > 0) {
+            for (const detalle of this.listaPlanPago) {
+              this.arrayControls.push(
+                new FormGroup({
+                  rubroControl: new FormControl('', [Validators.required]),
+                })
+              );
+            }
+          } else {
+            this.alertify.warning(
+              'No existen Radicados de Facturas en estado por “Obligar” para el tercero registrado'
+            );
+          }
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
   }
 
   onCheckChange(event) {

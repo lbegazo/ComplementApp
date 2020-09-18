@@ -63,7 +63,4 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  esAdministrador() {
-    return this.decodedToken.role === '0' ? false : true;
-  }
 }

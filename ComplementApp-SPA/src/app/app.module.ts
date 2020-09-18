@@ -14,6 +14,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import localeEsCo from '@angular/common/locales/es-CO';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 // Angular Material
 import { MatIconModule } from '@angular/material/icon';
@@ -71,6 +72,8 @@ import { MenuListItemComponent } from './menu-list-item/menu-list-item.component
 import { NavService } from './_services/nav.service';
 import { AppRoutingModule } from './app-rounting.module';
 import { TopNavComponent } from './top-nav/top-nav.component';
+import { FormatoCausacionLiquidacionComponent } from './CausacionyLiquidacion/formato-causacion-liquidacion/formato-causacion-liquidacion.component';
+import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -115,6 +118,7 @@ export function tokenGetter() {
     CausacionyLiquidacionComponent,
     MenuListItemComponent,
     TopNavComponent,
+    FormatoCausacionLiquidacionComponent,
   ],
   imports: [
     BrowserModule,
@@ -130,6 +134,7 @@ export function tokenGetter() {
     BsDatepickerModule.forRoot(),
     TimeagoModule.forRoot(),
     TypeaheadModule.forRoot(),
+    PaginationModule.forRoot(),
     //RouterModule.forRoot(appRoutes),
 
     MatIconModule,
@@ -157,6 +162,7 @@ export function tokenGetter() {
     MemberEditResolver,
     CdpDetalleResolver,
     UsuarioDetalleResolver,
+    PlanPagoResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

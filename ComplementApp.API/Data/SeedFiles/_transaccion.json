@@ -1,36 +1,36 @@
 [
   {
-    "Codigo": "usuario",
-    "Nombre": "Usuario",
-    "Descripcion": "Usuario",
+    "Codigo": "USUARIO",
+    "Nombre": "Usuarios",
+    "Descripcion": "Mantenimiento de Usuarios",
     "Icono": "supervisor_account",
     "Ruta": "usuarios"
   },
   {
-    "Codigo": "archivo",
+    "Codigo": "ARCHIVO",
     "Nombre": "Actualizar BD",
     "Descripcion": "Actualizar BD",
     "Icono": "attach_file",
     "Ruta": "archivo"
   },
   {
-    "Codigo": "cdp",
-    "Nombre": "Solicitud o Modificación de CDP",
-    "Descripcion": "Solicitud o Modificación de CDP",
+    "Codigo": "CDP",
+    "Nombre": "Registro de Solicitudes de CDP",
+    "Descripcion": "Registro de Solicitudes de CDP",
     "Icono": "assignment",
     "Ruta": "cdp"
   },
   {
-    "Codigo": "factura",
-    "Nombre": "Facturas",
-    "Descripcion": "Facturas",
+    "Codigo": "FACTURA",
+    "Nombre": "Registro de Radicados de Pago",
+    "Descripcion": "Registro de Radicados de Pago",
     "Icono": "assignment",
     "Ruta": "factura"
   },  
   {
-    "Codigo": "Causacion",
-    "Nombre": "Causación",
-    "Descripcion": "Causación",
+    "Codigo": "CAUSACION",
+    "Nombre": "Liquidación de Radicados de Pago",
+    "Descripcion": "Liquidación de Radicados de Pago",
     "Icono": "assessment",
     "Ruta": "causacion"
   },

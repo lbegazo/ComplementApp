@@ -1,14 +1,18 @@
 <form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="facturaForm">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-12 withoutPadding">
-        <table class="table" id="tablaContenedor">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
           <tr>
             <td style="padding: 10px">
               <!--DATOS DE LA FACTURA -->
 
               <!--Grilla Plan Pago-->
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
                   <div class="col-2 inner center">
                     <p class="medium">Cdp</p>
@@ -64,7 +68,7 @@
               </div>
 
               <!--Formulario controles Plan Pago-->
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
                   <!--Formulario Plan Pago-->
                   <div
@@ -333,20 +337,30 @@
     </div>
   </div>
 </form>
-<div class="container">
+<div class="container-fluid">
   <div class="row mt-1">
     <div class="col-12 withoutPadding left">
-      <button
-        class="btn btn-primary"
-        (click)="onGuardar()"
-        style="margin-right: 10px"
-        [disabled]="!facturaForm.valid"
-      >
-        Guardar
-      </button>
-      <button class="btn btn-default" type="button" (click)="onCancelar()">
-        Cancelar
-      </button>
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              class="btn btn-primary"
+              (click)="onGuardar()"
+              style="margin-right: 10px"
+              [disabled]="!facturaForm.valid"
+            >
+              Guardar
+            </button>
+            <button
+              class="btn btn-default"
+              type="button"
+              (click)="onCancelar()"
+            >
+              Cancelar
+            </button>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

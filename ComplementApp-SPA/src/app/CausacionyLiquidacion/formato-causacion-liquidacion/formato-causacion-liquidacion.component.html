@@ -1,0 +1,828 @@
+<form #formatoNgForm="ngForm" id="formatoNgForm" [formGroup]="formatoForm">
+  <div class="container-fluid" style="color: black">
+    <div class="row">
+      <div
+        class="col-12"
+        id="content"
+        #content
+        class="addPadding"
+        style="width: 100%"
+      >
+        <div class="container-fluid">
+          <!--Formato de causacion y liquidación de pago-->
+          <div class="row">
+            <div class="col-12" style="padding: 0px">
+              <table style="width: 90%; margin-left: auto; margin-right: auto">
+                <tr>
+                  <td class="withoutPadding">
+                    <table>
+                      <!--Formato de Causacion-->
+                      <tr>
+                        <th class="center">
+                          <span>
+                            FORMATO DE CAUSACION Y LIQUIDACION DE PAGOS A
+                            CONTRATISTA Y PROVEEDORES
+                          </span>
+                        </th>
+                      </tr>
+                      <!--Num Documento-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr class="aplicaBackground">
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM. DOCUMENTO
+                              </td>
+                              <td
+                                style="width: 40%"
+                                class="center fontSmaller stronger"
+                              >
+                                NOMBRE DEL CONTRATISTA/PROVEEDOR
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                CONTRATO
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                VIATICOS
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                CRP
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                CANT PAGOS
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM. PAGOS
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ detallePlanPago?.identificacionTercero }}
+                              </td>
+                              <td style="width: 40%" class="center fontSmaller">
+                                {{ detallePlanPago?.nombreTercero }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ detallePlanPago?.numeroFactura }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ detallePlanPago?.viaticosDescripcion }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ detallePlanPago?.crp }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ detallePlanPago?.numeroPago }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ detallePlanPago?.numeroPago }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Valor Contrato-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr class="aplicaBackground">
+                              <td style="width: 10%" class="center fontSmaller">
+                                <span class="stronger">VALOR CONTRATO</span>
+                              </td>
+                              <td
+                                style="width: 17.5%"
+                                class="center fontSmaller"
+                              >
+                                <span class="stronger"
+                                  >VALOR ADICION/REDUCC</span
+                                >
+                              </td>
+                              <td
+                                style="width: 17.5%"
+                                class="center fontSmaller"
+                              >
+                                <span class="stronger">VALOR CANCELAD</span>
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">TOTAL A CANCELAR</span>
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                <span class="stronger">SALDO ACTUAL</span>
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">RUBRO PRESUPUESTAL</span>
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">USO PRESUPUESTAL</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{
+                                  detallePlanPago?.valorTotal | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 17.5%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  detallePlanPago?.operacion | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 17.5%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  detallePlanPago?.valorTotal -
+                                    detallePlanPago?.saldoActual
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  detallePlanPago?.valorFacturado
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{
+                                  detallePlanPago?.saldoActual -
+                                    detallePlanPago?.valorFacturado
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  detallePlanPago?.identificacionRubroPresupuestal
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  detallePlanPago?.identificacionUsoPresupuestal
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Nombre del supervisor-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 50%"
+                                class="center fontSmaller stronger"
+                              >
+                                NOMBRE SUPERVISOR CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                NÚMERO RADICADO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                FECHA RADICADO
+                              </td>
+                              <td
+                                style="width: 20%"
+                                class="center fontSmaller stronger"
+                              >
+                                NÚMERO FACTURA
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="width: 50%" class="center fontSmaller">
+                                {{ detallePlanPago?.detalle5 }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ detallePlanPago?.numeroRadicadoSupervisor }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  detallePlanPago?.fechaRadicadoSupervisor
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                              <td style="width: 20%" class="center fontSmaller">
+                                {{ detallePlanPago?.numeroFactura }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Texto Comprobante-->
+                      <tr>
+                        <td class="aplicaBackground">
+                          <p class="fontSmaller stronger center">
+                            TEXTO COMPROBANTE CONTABLE
+                          </p>
+                        </td>
+                      </tr>
+                      <!--Párrafo-->
+                      <tr>
+                        <td class="center fontSmaller">
+                          <p class="withoutMarginBottom">
+                            {{
+                              this.detallePlanPago?.detalle6 +
+                                "_" +
+                                detallePlanPago?.detalle7 +
+                                "_" +
+                                detallePlanPago?.identificacionTercero +
+                                "_" +
+                                detallePlanPago?.nombreTercero +
+                                "_PAGO: " +
+                                detallePlanPago?.numeroPago.toString() +
+                                " DE: " +
+                                detallePlanPago?.numeroPago.toString() +
+                                " OBJETO: " +
+                                detallePlanPago?.detalle4 +
+                                "_FACTURA(S): " +
+                                detallePlanPago?.numeroFactura +
+                                "_" +
+                                "OBSERVACIONES: " +
+                                detallePlanPago?.observaciones +
+                                "_AUTORIZA: " +
+                                detallePlanPago?.detalle5 +
+                                "_RADICADO: " +
+                                detallePlanPago?.numeroRadicadoSupervisor +
+                                "_DEL_" +
+                                (detallePlanPago?.fechaRadicadoSupervisor
+                                  | date: "dd/MM/yyyy")
+                            }}
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!--Detalles de Liquidación-->
+                      <tr>
+                        <td class="center">
+                          <span class="stronger">
+                            DETALLES DE LIQUIDACION DE PAGO CONTRATISTA /
+                            PROVEEDORES
+                          </span>
+                        </td>
+                      </tr>
+                      <!--Honorarios-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller stronger"
+                              >
+                                HONORARIOS
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller stronger"
+                              >
+                                HONORARIOS UVT
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR IVA
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR TOTAL
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller stronger"
+                              >
+                                TOTAL RETENCIONES
+                              </td>
+                              <td
+                                style="width: 22%"
+                                class="center fontSmaller stronger"
+                              >
+                                TOTAL A GIRAR
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  formatoCausacionyLiquidacionPago.honorario
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  formatoCausacionyLiquidacionPago.honorarioUvt
+                                  | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  formatoCausacionyLiquidacionPago.valorIva
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  formatoCausacionyLiquidacionPago.valorTotal
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 15.6%"
+                                class="center fontSmaller"
+                              >
+                                {{
+                                  formatoCausacionyLiquidacionPago.totalRetenciones
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 22%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.totalAGirar
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Base Salud-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                BASE SALUD
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                APORTE SALUD
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                APORTE PENSION
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                RIESGO LABORAL
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                FONDO SOLIDARIDAD
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                IMPUESTO COVID
+                              </td>
+                              <td
+                                style="width: 22%"
+                                class="center fontSmaller stronger"
+                              >
+                                SUB TOTAL 1
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.baseSalud
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.aporteSalud
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.aportePension
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.riesgoLaboral
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.fondoSolidaridad
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                {{
+                                  formatoCausacionyLiquidacionPago.impuestoCovid
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 22%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.subTotal1
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Pensión Voluntaria-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                PENSION VOLUNTARIA
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                AFC
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                SUB TOTAL 2
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                MEDICINA PREPAGADA
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                DEPENDIENTES
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                INTERESES VIVIENDA
+                              </td>
+                              <td
+                                style="width: 22%"
+                                class="center fontSmaller stronger"
+                              >
+                                TOTAL DEDUCCIONES
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.pensionVoluntaria
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.afc
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.subTotal2
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.medicinaPrepagada
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.dependientes
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                              {{
+                                formatoCausacionyLiquidacionPago.interesVivienda
+                                  | number: "1.2-2"
+                              }}
+                              </td>
+                              <td style="width: 22%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.totalDeducciones
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Sub Total-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                SUB TOTAL 3
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                RENTA EXENTA
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                LIMITE RENTA EXENTA
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                TOTAL RENTA EXENTA
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                DIFERENCIAL RENTA
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                BASE GRAVABLE RENTA
+                              </td>
+                              <td
+                                style="width: 22%"
+                                class="center fontSmaller stronger"
+                              >
+                                TOTAL DEDUCCIONES
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.subTotal3
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.rentaExenta
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.limiteRentaExenta
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.totalRentaExenta
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.diferencialRenta
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                              {{
+                                formatoCausacionyLiquidacionPago.baseGravableRenta
+                                  | number: "1.2-2"
+                              }}
+                              </td>
+                              <td style="width: 22%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.baseGravableRenta
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Retenciones-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%">
+                              <td class="center">
+                                <span class="stronger">
+                                  RETENCIONES / DEDUCCIONES APLICADAS
+                                </span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Código-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                CODIGO
+                              </td>
+                              <td
+                                style="width: 55%"
+                                class="center fontSmaller stronger"
+                              >
+                                NOMBRE_DEDUCCION
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                TARIFA
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                BASE
+                              </td>
+                              <td
+                                style="width: 12%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!--Pie de Pagina-->
+          <div class="row mt-3">
+            <div class="col-12" style="padding: 0px">
+              <div
+                style="width: 90%; margin-left: auto; margin-right: auto"
+                class="d-flex justify-content-between"
+              >
+                <!--Pago Anterior-->
+                <div style="width: 30%">
+                  <table
+                    style="width: 100%; margin-left: auto; margin-right: auto"
+                  >
+                    <tr>
+                      <td
+                        style="width: 13.75%"
+                        class="center fontSmaller stronger"
+                      >
+                        MES PAGO SALUD ANTERIOR :
+                      </td>
+                      <td
+                        style="width: 13.75%"
+                        class="center fontSmaller stronger"
+                      ></td>
+                    </tr>
+                  </table>
+                </div>
+                <!--Espacio-->
+                <div style="width: 5%"></div>
+                <!--Pago Actual-->
+                <div style="width: 30%">
+                  <table style="padding: 0px; margin: 0px">
+                    <tr class="aplicaBackground">
+                      <td
+                        style="width: 13.75%"
+                        class="center fontSmaller stronger"
+                      >
+                        MES DE PAGO ACTUAL
+                      </td>
+                      <td
+                        style="width: 13.75%; background-color: white"
+                        class="center fontSmaller stronger"
+                      ></td>
+                    </tr>
+                  </table>
+                </div>
+                <!--Espacio-->
+                <div style="width: 5%"></div>
+                <!--Estado Liquidación-->
+                <div style="width: 30%">
+                  <table>
+                    <tr class="aplicaBackground">
+                      <td
+                        style="width: 17.5%"
+                        class="center fontSmaller stronger"
+                      >
+                        ESTADO DE LIQUIDACION
+                      </td>
+                      <td
+                        style="width: 17.5%; background-color: white"
+                        class="center fontSmaller stronger"
+                      ></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Botones-->
+          <div class="row mt-3">
+            <div class="col-12" style="padding: 0px">
+              <div
+                style="width: 90%; margin-left: auto; margin-right: auto"
+                class="right"
+              >
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  (click)="onCancelar()"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

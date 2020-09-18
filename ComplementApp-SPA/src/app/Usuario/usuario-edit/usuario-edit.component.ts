@@ -11,6 +11,7 @@ import {
   Validators,
   FormControl,
   NgForm,
+  FormArray,
 } from '@angular/forms';
 import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -19,6 +20,7 @@ import { UsuarioService } from 'src/app/_services/usuario.service';
 import { Area } from 'src/app/_models/area';
 import { Cargo } from 'src/app/_models/cargo';
 import { ListaService } from 'src/app/_services/lista.service';
+import { Perfil } from 'src/app/_models/perfil';
 
 @Component({
   selector: 'app-usuario-edit',
@@ -40,15 +42,18 @@ export class UsuarioEditComponent implements OnInit {
     areaId: 0,
     areaNombre: '',
     cargoNombre: '',
-    esAdministrador: false,
     fechaCreacion: new Date(),
     fechaUltimoAcceso: new Date(),
+    perfiles: [],
   };
-  registerForm: FormGroup;
+  registerForm = new FormGroup({});
+  arrayPerfiles = new FormArray([]);
   areas: Area[];
   cargos: Cargo[];
+  perfiles: Perfil[];
   areaSelected = 0;
   cargoSelected = 0;
+  arrayRubro: number[] = [];
 
   constructor(
     private listaService: ListaService,
@@ -70,6 +75,8 @@ export class UsuarioEditComponent implements OnInit {
   private initForm() {
     this.cargarCargos();
     this.cargarAreas();
+    this.cargarPerfiles();
+
     this.createRegisterForm();
 
     if (this.editMode) {
@@ -83,9 +90,6 @@ export class UsuarioEditComponent implements OnInit {
           this.registerForm.get('apellidos').setValue(this.user.apellidos);
           this.registerForm.get('areaControl').setValue(this.user.areaId);
           this.registerForm.get('cargoControl').setValue(this.user.cargoId);
-          this.registerForm
-            .get('EsAdministradorControl')
-            .setValue(this.user.esAdministrador);
 
           this.areaSelected = this.user.areaId;
           this.cargoSelected = this.user.cargoId;
@@ -101,7 +105,7 @@ export class UsuarioEditComponent implements OnInit {
         apellidos: ['', Validators.required],
         areaControl: [null, Validators.required],
         cargoControl: [null, Validators.required],
-        EsAdministradorControl: [false],
+        perfilesControles: this.arrayPerfiles,
         password: [
           '',
           [
@@ -137,11 +141,6 @@ export class UsuarioEditComponent implements OnInit {
         this.user.apellidos = this.user.apellidos.toUpperCase().trim();
         this.user.areaId = this.areaSelected;
         this.user.cargoId = this.cargoSelected;
-        this.user.esAdministrador = this.registerForm.get(
-          'EsAdministradorControl'
-        ).value
-          ? true
-          : false;
         this.usuarioService.RegistrarUsuario(this.user).subscribe(
           () => {
             this.alertify.success('El usuario se registró satisfactoriamente');
@@ -159,12 +158,7 @@ export class UsuarioEditComponent implements OnInit {
         this.user.apellidos = this.user.apellidos.toUpperCase().trim();
         this.user.areaId = this.areaSelected;
         this.user.cargoId = this.cargoSelected;
-        this.user.esAdministrador = this.registerForm.get(
-          'EsAdministradorControl'
-        ).value
-          ? true
-          : false;
-        // console.log(this.user);
+
         this.usuarioService
           .ActualizarUsuario(this.idUsuario, this.user)
           .subscribe(
@@ -241,5 +235,63 @@ export class UsuarioEditComponent implements OnInit {
         this.alertify.error(error);
       }
     );
+  }
+
+  cargarPerfiles() {
+    this.listaService.ObtenerListaPerfiles().subscribe(
+      (result: Perfil[]) => {
+        this.perfiles = result;
+      },
+      (error) => {
+        this.alertify.error(error);
+      },
+      () => {
+        if (this.perfiles) {
+          for (const detalle of this.perfiles) {
+            this.arrayPerfiles.push(
+              new FormGroup({
+                perfilControl: new FormControl('', [Validators.required]),
+              })
+            );
+          }
+        }
+      }
+    );
+  }
+
+  onCheckChange(event) {
+    /* Selected */
+    if (event.target.checked) {
+      // Add a new control in the arrayForm
+      this.arrayRubro?.push(+event.target.value);
+    } else {
+      /* unselected */
+      let index = 0;
+      let i = 0;
+      this.arrayRubro.forEach((val: number) => {
+        if (val === event.target.value) {
+          index = i;
+        }
+        i++;
+      });
+
+      if (index !== -1) {
+        this.arrayRubro.splice(index, 1);
+      }
+
+      // console.log(event.target.value + ' ' + index);
+      // if (index !== -1) {
+      //   this.arrayRubro.splice(index, 1);
+      // }
+      // let i: number = 0;
+      // this.rubrosControles.controls.forEach((ctrl: FormControl) => {
+      //   if (ctrl.value === event.target.value) {
+      //     // Remove the unselected element from the arrayForm
+      //     this.arrayRubro.removeAt(i);
+      //     return;
+      //   }
+      //   i++;
+      // });
+    }
   }
 }

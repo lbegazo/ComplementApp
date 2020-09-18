@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Dtos
@@ -25,8 +26,6 @@ namespace ComplementApp.API.Dtos
         
         public string AreaNombre { get; set; }
 
-        public bool EsAdministrador {get; set;}
-
-        public Perfil Perfil { get; set; }
+        public ICollection<Perfil> Perfiles { get; set; }
     }
 }

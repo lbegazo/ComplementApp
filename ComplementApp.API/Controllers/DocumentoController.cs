@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,9 +17,11 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Helpers;
 
 namespace ComplementApp.API.Controllers
 {
+    [ServiceFilter(typeof(LogActividadUsuario))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -32,7 +35,6 @@ namespace ComplementApp.API.Controllers
 
         const int numeroColumnasCabecera = 26;
         const int numeroColumnasDetalle = 25;
-
         const int numeroColumnasPlanPago = 29;
 
         const string nombreHojaCabecera = "BD";
@@ -87,21 +89,11 @@ namespace ComplementApp.API.Controllers
 
                 #region Insertar lista en la base de datos
 
-                var taskCabecera = _repo.InsertaCabeceraCDP(listaDocumento);
-                var taskDetalle = _repo.InsertaDetalleCDP(listaDetalle);
-                var taskPlanPago = _repo.InsertaPlanDePago(listaPlanPago);
+                var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento);
+                var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
+                var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
 
                 #endregion Insertar lista en la base de datos
-
-                // taskCabecera.Wait();
-                // taskDetalle.Wait();
-
-                // bool EsCabeceraValida = taskCabecera.Result;
-                // bool EsDetalleCorrecto = taskCabecera.Result;
-
-                bool EsCabeceraCorrecto = taskCabecera;
-                bool EsDetalleCorrecto = taskCabecera;
-                bool EsPlanPagoCorrecto = taskPlanPago;
 
                 if (!EsCabeceraCorrecto)
                     throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
@@ -112,8 +104,6 @@ namespace ComplementApp.API.Controllers
                 if (!EsPlanPagoCorrecto)
                     throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
 
-                //Thread.Sleep(3);
-
             }
             else
             {
@@ -122,6 +112,8 @@ namespace ComplementApp.API.Controllers
 
             return Ok();
         }
+
+
 
         private static DataTable ObtenerDetalleDeExcel(IFormFile file)
         {
@@ -278,6 +270,7 @@ namespace ComplementApp.API.Controllers
             }
             return dtCabecera1;
         }
+
 
         /// <summary>
         /// Consumir Servicio Rest del Banco de la República
@@ -630,7 +623,7 @@ namespace ComplementApp.API.Controllers
             return listaDocumento;
         }
 
-        private bool EliminarInformacionCDP()
+         private bool EliminarInformacionCDP()
         {
             var resultado = false;
             resultado = this._repo.EliminarCabeceraCDP();
@@ -740,7 +733,6 @@ namespace ComplementApp.API.Controllers
             }
             return dtCabecera1;
         }
-
 
 
     }

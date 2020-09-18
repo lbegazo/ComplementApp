@@ -18,5 +18,9 @@ namespace ComplementApp.API.Data
         Task<bool> EliminarUsuario(int id);
 
         Task<ICollection<Transaccion>> ObtenerListaTransaccionXUsuario(int usuarioId);
+
+        Task<ICollection<Perfil>> ObtenerPerfilesxUsuario(int usuarioId);
+
+        bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles);
     }
 }

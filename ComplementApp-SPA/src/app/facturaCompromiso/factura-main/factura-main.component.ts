@@ -22,7 +22,7 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { environment } from 'src/environments/environment';
 import { Tercero } from 'src/app/_models/tercero';
 import { PopupBuscarFacturaComponent } from '../popup-buscar-factura/popup-buscar-factura.component';
-import { FacturaService } from 'src/app/_services/factura.service';
+import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { PlanPago } from 'src/app/_models/planPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import {
@@ -32,6 +32,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ListaService } from 'src/app/_services/lista.service';
 
 @Component({
   selector: 'app-factura-main',
@@ -39,6 +40,9 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./factura-main.component.css'],
 })
 export class FacturaMainComponent implements OnInit {
+  readonly codigoTransaccion = 'FACTURA';
+  nombreTransaccion: string;
+
   search: string;
   suggestions$: Observable<Tercero[]>;
   errorMessage: string;
@@ -72,10 +76,12 @@ export class FacturaMainComponent implements OnInit {
     private renderer: Renderer2,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private listaService: ListaService
   ) {}
 
   ngOnInit(): void {
+    this.obtenerNombreTransaccion();
     this.createForm();
 
     this.suggestions$ = new Observable((observer: Observer<string>) => {
@@ -197,4 +203,9 @@ export class FacturaMainComponent implements OnInit {
     this.subscriptions = [];
   }
 
+  private obtenerNombreTransaccion() {
+    this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
+      this.codigoTransaccion
+    );
+  }
 }

@@ -40,11 +40,19 @@ namespace ComplementApp.API.Controllers
             return Ok(usersForList);
         }
 
-        [HttpGet("{id}", Name = "ObtenerUsuario")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerUsuario(int id)
         {
             var user = await _repo.ObtenerUsuario(id);
+            var perfiles = await _repo.ObtenerPerfilesxUsuario(id);
             var userForDetailed = _mapper.Map<UsuarioParaDetalleDto>(user);
+
+            userForDetailed.Perfiles = new List<Perfil>();
+            foreach (var item in perfiles)
+            {
+                userForDetailed.Perfiles.Add(item);
+            }
+
             return Ok(userForDetailed);
         }
 
@@ -62,9 +70,6 @@ namespace ComplementApp.API.Controllers
         {
             var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
-
-            if (!usuarioLogueado.EsAdministrador)
-                return Unauthorized();
 
             userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
 
@@ -88,11 +93,10 @@ namespace ComplementApp.API.Controllers
             // if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             //     return Unauthorized();
 
-            var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+            _repo.RegistrarPerfilesAUsuario(id, userForUpdateDto.Perfiles);
 
-            if (!usuarioLogueado.EsAdministrador)
-                return Unauthorized();
+            // var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            // var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
 
             var userFromRepo = await _repo.ObtenerUsuario(id);
 
@@ -101,7 +105,7 @@ namespace ComplementApp.API.Controllers
             await _unitOfWork.CompleteAsync();
             return NoContent();
 
-            //throw new Exception($"Actualizando el usuario {id} el proceso falló");
+            throw new Exception($"Actualizando el usuario {id} el proceso falló");
         }
 
         [HttpDelete("{id}")]
@@ -110,8 +114,8 @@ namespace ComplementApp.API.Controllers
             var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
 
-            if (!usuarioLogueado.EsAdministrador)
-                return Unauthorized();
+            // if (!usuarioLogueado.EsAdministrador)
+            //     return Unauthorized();
 
             if (idUsuarioLogueado == id)
             {
