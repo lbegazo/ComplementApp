@@ -19,36 +19,36 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<PlanPago>> ObtenerListaPlanPago(int? terceroId, List<int> listaEstadoId, UserParams userParams)
         {
-            var lista =      (from c in _context.PlanPago
-                               join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
-                               join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                               where (c.TerceroId == terceroId ||  terceroId == null)
-                               where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))                               
-                               select new PlanPago()
-                               {
-                                   PlanPagoId = c.PlanPagoId,
-                                   Cdp = c.Cdp,
-                                   Crp = c.Crp,
-                                   AnioPago = c.AnioPago,
-                                   MesPago = c.MesPago,
-                                   ValorAPagar = c.ValorAPagar,
-                                   Viaticos = c.Viaticos,
-                                   NumeroPago = c.NumeroPago,
-                                   EstadoPlanPagoId = c.EstadoPlanPagoId,
-                                   NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
-                                   FechaRadicadoSupervisor = c.FechaRadicadoSupervisor,
-                                   ValorFacturado = c.ValorFacturado,
-                                   TerceroId = c.TerceroId,
-                                   Tercero = new Tercero()
-                                   {
-                                       TerceroId = c.TerceroId,
-                                       NumeroIdentificacion = t.NumeroIdentificacion,
-                                       Nombre = t.Nombre
-                                   }
-                               })
+            var lista = (from c in _context.PlanPago
+                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where (c.TerceroId == terceroId || terceroId == null)
+                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         select new PlanPago()
+                         {
+                             PlanPagoId = c.PlanPagoId,
+                             Cdp = c.Cdp,
+                             Crp = c.Crp,
+                             AnioPago = c.AnioPago,
+                             MesPago = c.MesPago,
+                             ValorAPagar = c.ValorAPagar,
+                             Viaticos = c.Viaticos,
+                             NumeroPago = c.NumeroPago,
+                             EstadoPlanPagoId = c.EstadoPlanPagoId,
+                             NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
+                             FechaRadicadoSupervisor = c.FechaRadicadoSupervisor,
+                             ValorFacturado = c.ValorFacturado,
+                             TerceroId = c.TerceroId,
+                             Tercero = new Tercero()
+                             {
+                                 TerceroId = c.TerceroId,
+                                 NumeroIdentificacion = t.NumeroIdentificacion,
+                                 Nombre = t.Nombre
+                             }
+                         })
                                .OrderBy(c => c.PlanPagoId);
-            
-            return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);;
+
+            return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
         }
 
         public async Task<PlanPago> ObtenerPlanPago(int planPagoId)
@@ -114,7 +114,16 @@ namespace ComplementApp.API.Data
 
             return planPago;
         }
-    
-    
+
+        public async Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId)
+        {
+            var query = (from d in _context.Deduccion
+                         join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
+                         where (td.TerceroId == terceroId)
+                         where (d.estado == true)
+                         select d);
+
+            return await query.ToListAsync();
+        }
     }
 }

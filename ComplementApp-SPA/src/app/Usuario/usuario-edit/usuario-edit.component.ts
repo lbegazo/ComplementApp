@@ -47,7 +47,7 @@ export class UsuarioEditComponent implements OnInit {
     perfiles: [],
   };
   registerForm = new FormGroup({});
-  arrayPerfiles = new FormArray([]);
+
   areas: Area[];
   cargos: Cargo[];
   perfiles: Perfil[];
@@ -65,6 +65,11 @@ export class UsuarioEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    //Cargar datos de controles
+    this.cargarListas();
+
+    this.createEmptyForm();
+
     this.route.params.subscribe((params: Params) => {
       this.idUsuario = +params['id'];
       this.editMode = params['id'] != null;
@@ -73,40 +78,21 @@ export class UsuarioEditComponent implements OnInit {
   }
 
   private initForm() {
-    this.cargarCargos();
-    this.cargarAreas();
-    this.cargarPerfiles();
-
-    this.createRegisterForm();
-
     if (this.editMode) {
-      this.usuarioService
-        .ObtenerUsuario(this.idUsuario)
-        .subscribe((usuario: Usuario) => {
-          this.user = usuario;
-
-          this.registerForm.get('username').setValue(this.user.username);
-          this.registerForm.get('nombres').setValue(this.user.nombres);
-          this.registerForm.get('apellidos').setValue(this.user.apellidos);
-          this.registerForm.get('areaControl').setValue(this.user.areaId);
-          this.registerForm.get('cargoControl').setValue(this.user.cargoId);
-
-          this.areaSelected = this.user.areaId;
-          this.cargoSelected = this.user.cargoId;
-        });
+      this.obtenerUsuario();
     }
   }
 
-  createRegisterForm() {
+  createEmptyForm() {
     this.registerForm = this.fb.group(
       {
-        username: ['', Validators.required],
-        nombres: ['', Validators.required],
-        apellidos: ['', Validators.required],
-        areaControl: [null, Validators.required],
-        cargoControl: [null, Validators.required],
-        perfilesControles: this.arrayPerfiles,
-        password: [
+        usernameCtrl: ['', Validators.required],
+        nombreCtrl: ['', Validators.required],
+        apellidoCtrl: ['', Validators.required],
+        areaControl: ['', Validators.required],
+        cargoControl: ['', Validators.required],
+        perfilesControles: this.createPerfilesControles(),
+        passwordCtrl: [
           '',
           [
             Validators.required,
@@ -114,7 +100,80 @@ export class UsuarioEditComponent implements OnInit {
             Validators.maxLength(8),
           ],
         ],
-        confirmPassword: ['', Validators.required],
+        confirmPasswordCtrl: ['', Validators.required],
+      },
+      { validators: this.passwordMatchValidator }
+    );
+  }
+
+  obtenerUsuario() {
+    this.usuarioService.ObtenerUsuario(this.idUsuario).subscribe(
+      (usuario: Usuario) => {
+        this.user = usuario;
+      },
+      (error) => {
+        this.alertify.error(
+          'Ocurrió un error al cargar información del usuario'
+        );
+      },
+      () => {
+        this.cargarInformacionUsuario();
+      }
+    );
+  }
+
+  private cargarListas() {
+    this.cargarCargos();
+    this.cargarAreas();
+    this.cargarPerfiles();
+  }
+
+  cargarInformacionUsuario() {
+    const userNameC = this.user.username;
+    const nombresC = this.user.nombres;
+    const apellidosC = this.user.apellidos;
+    const areaIdC = this.user.areaId;
+    const cargoIdC = this.user.cargoId;
+
+    this.areaSelected = this.user.areaId;
+    this.cargoSelected = this.user.cargoId;
+
+    // this.registerForm.get('username').setValue(this.user.username);
+    // this.registerForm.get('nombres').setValue(this.user.nombres);
+    // this.registerForm.get('apellidos').setValue(this.user.apellidos);
+    // this.registerForm.get('areaControl').setValue(this.user.areaId);
+    // this.registerForm.get('cargoControl').setValue(this.user.cargoId);
+
+    if (this.perfiles) {
+      for (const perfil of this.perfiles) {
+        perfil.checked = false;
+        if (this.user.perfiles && this.user.perfiles.length > 0) {
+          for (const item of this.user.perfiles) {
+            if (perfil.perfilId === item.perfilId) {
+              perfil.checked = true;
+            }
+          }
+        }
+      }
+    }
+
+    this.registerForm = this.fb.group(
+      {
+        usernameCtrl: [userNameC, Validators.required],
+        nombreCtrl: [nombresC, Validators.required],
+        apellidoCtrl: [apellidosC, Validators.required],
+        areaControl: [areaIdC, Validators.required],
+        cargoControl: [cargoIdC, Validators.required],
+        perfilesControles: this.createPerfilesControles(),
+        passwordCtrl: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(4),
+            Validators.maxLength(8),
+          ],
+        ],
+        confirmPasswordCtrl: ['', Validators.required],
       },
       { validators: this.passwordMatchValidator }
     );
@@ -128,7 +187,7 @@ export class UsuarioEditComponent implements OnInit {
   }
 
   passwordMatchValidator(g: FormGroup) {
-    return g.get('password').value === g.get('confirmPassword').value
+    return g.get('passwordCtrl').value === g.get('confirmPasswordCtrl').value
       ? null
       : { mismatch: true };
   }
@@ -136,11 +195,14 @@ export class UsuarioEditComponent implements OnInit {
   onRegister() {
     if (this.registerForm.valid) {
       if (!this.editMode) {
-        this.user = Object.assign({}, this.registerForm.value);
-        this.user.nombres = this.user.nombres.toUpperCase().trim();
-        this.user.apellidos = this.user.apellidos.toUpperCase().trim();
-        this.user.areaId = this.areaSelected;
-        this.user.cargoId = this.cargoSelected;
+        const formValues = Object.assign({}, this.registerForm.value);
+        this.user.username = formValues.usernameCtrl.trim();
+        this.user.nombres = formValues.nombreCtrl.toUpperCase().trim();
+        this.user.apellidos = formValues.apellidoCtrl.toUpperCase().trim();
+        this.user.password = formValues.passwordCtrl;
+        this.user.areaId = formValues.areaControl;
+        this.user.cargoId = formValues.cargoControl;
+        this.setearPerfilesAUsuario(formValues);
         this.usuarioService.RegistrarUsuario(this.user).subscribe(
           () => {
             this.alertify.success('El usuario se registró satisfactoriamente');
@@ -153,11 +215,12 @@ export class UsuarioEditComponent implements OnInit {
           }
         );
       } else {
-        this.user = Object.assign({}, this.registerForm.value);
-        this.user.nombres = this.user.nombres.toUpperCase().trim();
-        this.user.apellidos = this.user.apellidos.toUpperCase().trim();
-        this.user.areaId = this.areaSelected;
-        this.user.cargoId = this.cargoSelected;
+        const formValues = Object.assign({}, this.registerForm.value);
+        this.user.nombres = formValues.nombreCtrl.toUpperCase().trim();
+        this.user.apellidos = formValues.apellidoCtrl.toUpperCase().trim();
+        this.user.areaId = formValues.areaControl;
+        this.user.cargoId = formValues.cargoControl;
+        this.setearPerfilesAUsuario(formValues);
 
         this.usuarioService
           .ActualizarUsuario(this.idUsuario, this.user)
@@ -204,15 +267,19 @@ export class UsuarioEditComponent implements OnInit {
   }
 
   get usernameControl() {
-    return this.registerForm.get('username') as FormControl;
+    return this.registerForm.get('usernameCtrl') as FormControl;
   }
 
   get passwordControl() {
-    return this.registerForm.get('password') as FormControl;
+    return this.registerForm.get('passwordCtrl') as FormControl;
   }
 
   get confirmPasswordControl() {
-    return this.registerForm.get('confirmPassword') as FormControl;
+    return this.registerForm.get('confirmPasswordCtrl') as FormControl;
+  }
+
+  get perfilesControl() {
+    return (this.registerForm.get('perfilesControles') as FormArray).controls;
   }
 
   cargarCargos() {
@@ -246,17 +313,19 @@ export class UsuarioEditComponent implements OnInit {
         this.alertify.error(error);
       },
       () => {
-        if (this.perfiles) {
-          for (const detalle of this.perfiles) {
-            this.arrayPerfiles.push(
-              new FormGroup({
-                perfilControl: new FormControl('', [Validators.required]),
-              })
-            );
-          }
-        }
+        this.createEmptyForm();
       }
     );
+  }
+
+  createPerfilesControles() {
+    const arrayPerfiles = new FormArray([]);
+    if (this.perfiles) {
+      for (const perfil of this.perfiles) {
+        arrayPerfiles.push(new FormControl(perfil.checked || false));
+      }
+    }
+    return arrayPerfiles;
   }
 
   onCheckChange(event) {
@@ -278,20 +347,23 @@ export class UsuarioEditComponent implements OnInit {
       if (index !== -1) {
         this.arrayRubro.splice(index, 1);
       }
+    }
+  }
 
-      // console.log(event.target.value + ' ' + index);
-      // if (index !== -1) {
-      //   this.arrayRubro.splice(index, 1);
-      // }
-      // let i: number = 0;
-      // this.rubrosControles.controls.forEach((ctrl: FormControl) => {
-      //   if (ctrl.value === event.target.value) {
-      //     // Remove the unselected element from the arrayForm
-      //     this.arrayRubro.removeAt(i);
-      //     return;
-      //   }
-      //   i++;
-      // });
+  setearPerfilesAUsuario(formValues: any) {
+    this.user.perfiles = [];
+    if (formValues.perfilesControles) {
+      for (
+        let index = 0;
+        index < formValues.perfilesControles.length;
+        index++
+      ) {
+        const element = formValues.perfilesControles[index];
+        if (element) {
+          const perfil = this.perfiles[index];
+          this.user.perfiles.push(perfil);
+        }
+      }
     }
   }
 }

@@ -62,6 +62,12 @@ namespace ComplementApp.API.Helpers
             CreateMap<ParametroLiquidacionTerceroDto, ParametroLiquidacionTercero>();
 
             #endregion
+
+            #region Deducciones
+
+            CreateMap<Deduccion, DeduccionDto>();
+
+            #endregion
         }
     }
 }

@@ -84,15 +84,32 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "planPagoId")] int planPagoId)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
-            var planPagoBD = await _repo.ObtenerDetallePlanPago(planPagoId);
+            try
+            {
 
-            IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
-            var parametros = parametroGenerales.ToList();
+                var planPagoBD = await _repo.ObtenerDetallePlanPago(planPagoId);
 
-            ParametroLiquidacionTercero parametroLiquidacion = await _repoLista.ObtenerParametroLiquidacionXTercero(planPagoBD.TerceroId);
+                IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
+                var parametros = parametroGenerales.ToList();
 
-            if (parametroGenerales != null && parametroLiquidacion != null)
-                formato = CalcularValoresFormato(planPagoBD, parametroLiquidacion, parametros);
+                ParametroLiquidacionTercero parametroLiquidacion = await _repoLista.ObtenerParametroLiquidacionXTercero(planPagoBD.TerceroId);
+
+                ICollection<Deduccion> listaDeducciones = await _repo.ObtenerDeduccionesXTercero(planPagoBD.TerceroId);
+                var listaDeduccionesDto = _mapper.Map<ICollection<DeduccionDto>>(listaDeducciones);
+
+                ICollection<CriterioCalculoReteFuente> listaCriterioReteFuente = await _repoLista.ObtenerListaCriterioCalculoReteFuente();
+
+                if (parametroGenerales != null && parametroLiquidacion != null && listaCriterioReteFuente != null)
+                {
+                    formato = ObtenerFormatoCausacionCalculado(planPagoBD, parametroLiquidacion,
+                                                                parametros, listaCriterioReteFuente.ToList(),
+                                                                listaDeduccionesDto.ToList());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
             return base.Ok(formato);
         }
@@ -133,26 +150,183 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo actualizar la factura");
         }
 
-        private FormatoCausacionyLiquidacionPagos CalcularValoresFormato(DetallePlanPagoDto planPago, ParametroLiquidacionTercero parametroLiquidacion, List<ParametroGeneral> parametroGenerales)
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacionCalculado(DetallePlanPagoDto planPago,
+                                            ParametroLiquidacionTercero parametroLiquidacion,
+                                            List<ParametroGeneral> parametroGenerales,
+                                            List<CriterioCalculoReteFuente> listaCriterioReteFuente,
+                                            List<DeduccionDto> listaDeducciones)
         {
+            #region variables 
+
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+            FormatoCausacionyLiquidacionPagos formatoIgual30 = new FormatoCausacionyLiquidacionPagos();
+            CriterioCalculoReteFuente criterioReteFuente = null;
+
+            decimal PL17HonorarioSinIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+            int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
+
+            PL17HonorarioSinIva = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
+
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
+            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
+            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            parametroUvt = parametroUvt.Replace(",", "");
+            parametroSMLV = parametroSMLV.Replace(",", "");
+            decimal.TryParse(parametroUvt, out valorUvt);
+
+            #endregion Parametros Generales
+
+            #region Numero de dias laborados
+
+            if (PL17HonorarioSinIva > 0)
+            {
+                C32NumeroDiaLaborados = (int)((planPago.ValorFacturado.Value * 30) / PL17HonorarioSinIva);
+            }
+
+            #endregion Numero de dias laborados
+
+            #region Calcular valores y obtener formato
+
+            if (C32NumeroDiaLaborados < 30)
+            {
+                formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: C32NumeroDiaLaborados);
+                formatoIgual30 = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+
+                baseGravable30 = formatoIgual30.BaseGravableRenta;
+                baseGravableFinal = (baseGravable30 / 30) * C32NumeroDiaLaborados;
+                baseGravable30 = baseGravable30 / valorUvt;
+                baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+
+                formato.BaseGravableRenta = baseGravableFinal;
+                formato.BaseGravableUvt = baseGravableUvtFinal;
+            }
+            else
+            {
+                formatoIgual30 = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+                formato = formatoIgual30;
+                baseGravableFinal = formatoIgual30.BaseGravableRenta;
+                baseGravableUvtFinal = formatoIgual30.BaseGravableUvt;
+            }
+
+            #endregion Calcular valores y obtener formato
+
+            #region Obtener Lista de deducciones
+
+            string deduccionRentaTrabajo = parametroCodigoRenta;
+
+            decimal valorMinimoRango = 0;
+            decimal factorIncremento = 0;
+            decimal tarifaCalculo = 0;
+
+            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtFinal);
+
+            valorMinimoRango = criterioReteFuente.Desde;
+            factorIncremento = criterioReteFuente.Factor;
+            tarifaCalculo = criterioReteFuente.Tarifa;
+
+            if (listaDeducciones != null && listaDeducciones.Count > 0)
+            {
+                foreach (var deduccion in listaDeducciones)
+                {
+                    if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
+                    {
+                        deduccion.Base = baseGravableFinal;
+                        deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
+
+                        //if (deduccion.Base > 0)
+                        {
+                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                        }
+                    }
+
+                    if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
+                        (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    {
+                        deduccion.Base = formato.SubTotal1;
+                        deduccion.Valor = deduccion.Tarifa * formato.SubTotal1;
+                    }
+                }
+            }
+
+            #region Deducción Otras
+
+            var deduccionOtras = listaDeducciones
+                                    .Where(x => x.TipoBaseDeduccionId == (int)TipoBaseDeducciones.OTRAS)
+                                    .FirstOrDefault();
+
+            if (deduccionOtras != null)
+            {
+                var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones);
+                deduccionOtras.Base = valorGmf;
+                deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
+            }
+
+            #endregion Deducción Otras
+
+
+            formato.Deducciones = new List<DeduccionDto>();
+            formato.Deducciones = listaDeducciones;
+
+            #endregion Obtener lista de deducciones          
+
+            return formato;
+        }
+
+        private decimal obtenerSumatoriaValorGMf(List<DeduccionDto> listaDeducciones)
+        {
+            decimal valor = 0;
+
+            valor = listaDeducciones
+                    .Where(x => x.Gmf == true)
+                    .Sum(x => x.Valor);
+
+            return valor;
+        }
+
+
+        private FormatoCausacionyLiquidacionPagos CalcularValoresFormato(DetallePlanPagoDto planPago, ParametroLiquidacionTercero parametroLiquidacion, List<ParametroGeneral> parametroGenerales, int numeroDiasLaborados)
+        {
+            #region variables 
+
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+
             DateTime? fechaInicio = null, fechaFinal = null;
+
             decimal valorUvt = 0, valorSMLV = 0;
             decimal valorDescuentoDependiente = 0.10m;
             decimal valorRentaExenta = 0.25m;
             decimal valorLimiteRentaExenta = 0.4m;
+            decimal valorDiferencialRenta = 0.3m;
 
-            decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0, PLaportePension = 0,
-            PLriesgoLaboral = 0, PLfondoSolidaridad = 0, PL13PensionVoluntaria = 0,
-            PL14Afc = 0, PL16MedicinaPrepagada = 0, PL17HonorarioSinIva = 0, PL17DescuentoDependiente = 0,
-            PL18InteresVivienda = 0;
+            decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0,
+            PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
+            PL13PensionVoluntaria = 0, PL14Afc = 0, PL16MedicinaPrepagada = 0,
+            PL17HonorarioSinIva = 0, PL17DescuentoDependiente = 0,
+            PL18InteresVivienda = 0, PL24PensionVoluntaria = 0;
 
-            decimal C1honorario = 0, C2honorarioUvt = 0, C3valorIva = 0, C8aporteASalud = 0,
-            C9aporteAPension = 0, C10aporteRiesgoLaboral = 0, C7baseAporteSalud = 0, C11fondoSolidaridad,
-            C12subTotal1 = 0, C15subTotal2 = 0, C20subTotal3 = 0, C17DescuentoDependiente = 0,
-            C21RentaExenta = 0, C22LimiteRentaExenta = 0, C23TotalRentaExenta = 0;
+            decimal C1honorario = 0, C2honorarioUvt = 0, C3valorIva = 0,
+            C8aporteASalud = 0, C9aporteAPension = 0, C10aporteRiesgoLaboral = 0,
+            C7baseAporteSalud = 0, C11fondoSolidaridad, C12subTotal1 = 0,
+            C15subTotal2 = 0, C20subTotal3 = 0, C17DescuentoDependiente = 0,
+            C19TotalDeducciones = 0, C21RentaExenta = 0, C22LimiteRentaExenta = 0,
+            C23TotalRentaExenta = 0, C24DiferencialRenta = 0,
+            C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
+
+            int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
 
             decimal cuatroSMLV = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
 
             PLtarifaIva = parametroLiquidacion.TarifaIva;
             PLbaseAporteSalud = parametroLiquidacion.BaseAporteSalud;
@@ -166,6 +340,7 @@ namespace ComplementApp.API.Controllers
             PL17HonorarioSinIva = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
             PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
             PL18InteresVivienda = parametroLiquidacion.InteresVivienda;
+            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria;
 
             if (parametroLiquidacion.FechaInicioDescuentoInteresVivienda.HasValue)
                 fechaInicio = parametroLiquidacion.FechaInicioDescuentoInteresVivienda.Value;
@@ -173,19 +348,36 @@ namespace ComplementApp.API.Controllers
             if (parametroLiquidacion.FechaFinalDescuentoInteresVivienda.HasValue)
                 fechaFinal = parametroLiquidacion.FechaFinalDescuentoInteresVivienda.Value;
 
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
             var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
             var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
 
-            C1honorario = planPago.ValorFacturado.Value / (1 + PLtarifaIva);
+            #endregion Parametros Generales
+
+            #region Honorario 
+
+            if (numeroDiasLaborados < 30)
+            {
+                C1honorario = planPago.ValorFacturado.Value / (1 + PLtarifaIva);
+            }
+            else
+            {
+                C1honorario = PL17HonorarioSinIva;
+            }
+
+            #endregion Honorario 
 
             if (decimal.TryParse(parametroUvt, out valorUvt))
             {
                 if (valorUvt > 0)
                 {
                     C2honorarioUvt = C1honorario / valorUvt;
-                    C2honorarioUvt = Math.Round(C2honorarioUvt, 0, MidpointRounding.AwayFromZero);
+                    C2honorarioUvtFinal = (int)Math.Round(C2honorarioUvt, 0, MidpointRounding.AwayFromZero);
                 }
             }
 
@@ -196,7 +388,11 @@ namespace ComplementApp.API.Controllers
             C10aporteRiesgoLaboral = C7baseAporteSalud * (PLriesgoLaboral);
 
             if (decimal.TryParse(parametroSMLV, out valorSMLV))
+            {
                 cuatroSMLV = 4 * valorSMLV;
+            }
+
+            #region Fondo de solidaridad
 
             if (C7baseAporteSalud > cuatroSMLV)
             {
@@ -207,8 +403,12 @@ namespace ComplementApp.API.Controllers
                 C11fondoSolidaridad = 0;
             }
 
-            C12subTotal1 = planPago.ValorFacturado.Value - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            #endregion Fondo de solidaridad
+
+            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
             C15subTotal2 = C12subTotal1 - PL13PensionVoluntaria - PL14Afc;
+
+            #region Descuento Dependiente
 
             if (PL17HonorarioSinIva * valorDescuentoDependiente > valorUvt * 32)
             {
@@ -216,8 +416,12 @@ namespace ComplementApp.API.Controllers
             }
             else
             {
-                C17DescuentoDependiente = C1honorario * PL17DescuentoDependiente;
+                C17DescuentoDependiente = PL17HonorarioSinIva * PL17DescuentoDependiente;
             }
+
+            #endregion Descuento Dependiente
+
+            #region Interes de vivienda
 
             if (fechaInicio != null && fechaFinal != null)
             {
@@ -227,7 +431,50 @@ namespace ComplementApp.API.Controllers
                 }
             }
 
-            C20subTotal3 = C15subTotal2 - C17DescuentoDependiente - PL16MedicinaPrepagada - PL18InteresVivienda;
+            #endregion Interes de vivienda
+
+            #region Total Deducciones
+
+            decimal CT16MedicinaPrepagadaDeduccion = 0, CT17DescuentoDependienteDeduccion = 0,
+            CT18InteresViviendaDeduccion = 0;
+
+            //Deduccion Medicina Prepagada
+            if (PL16MedicinaPrepagada > valorUvt * 16)
+            {
+                CT16MedicinaPrepagadaDeduccion = valorUvt * 16;
+            }
+            else
+            {
+                CT16MedicinaPrepagadaDeduccion = PL16MedicinaPrepagada;
+            }
+
+            //Deducción Descuento Dependiente
+            if (PL17DescuentoDependiente > valorUvt * 32)
+            {
+                CT17DescuentoDependienteDeduccion = valorUvt * 32;
+            }
+            else
+            {
+                CT17DescuentoDependienteDeduccion = C17DescuentoDependiente;
+            }
+
+            //Deducción Interes Vivienda
+            if (PL18InteresVivienda > valorUvt * 100)
+            {
+                CT18InteresViviendaDeduccion = valorUvt * 100;
+            }
+            else
+            {
+                CT18InteresViviendaDeduccion = PL18InteresVivienda;
+            }
+
+            C19TotalDeducciones = CT16MedicinaPrepagadaDeduccion + CT17DescuentoDependienteDeduccion + CT18InteresViviendaDeduccion;
+
+            #endregion Total Deducciones
+
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+
+            #region Renta exenta
 
             if (C20subTotal3 * valorRentaExenta > 240 * valorUvt)
             {
@@ -241,9 +488,53 @@ namespace ComplementApp.API.Controllers
             C22LimiteRentaExenta = C12subTotal1 * valorLimiteRentaExenta;
             C23TotalRentaExenta = PL14Afc + PL16MedicinaPrepagada + C17DescuentoDependiente + PL18InteresVivienda + C21RentaExenta;
 
+            #endregion Renta exenta
+
+            #region Diferencial Renta 
+
+            decimal CT24DiferenciaRenta = 0;
+
+            if ((PL24PensionVoluntaria + PL14Afc) > (C1honorario * valorDiferencialRenta))
+            {
+                CT24DiferenciaRenta = C1honorario * valorDiferencialRenta;
+            }
+            else
+            {
+                CT24DiferenciaRenta = PL24PensionVoluntaria + PL14Afc;
+            }
+
+            C24DiferencialRenta = CT24DiferenciaRenta + C19TotalDeducciones + C21RentaExenta;
+
+            if (C24DiferencialRenta > C22LimiteRentaExenta)
+            {
+                C24DiferencialRenta = C22LimiteRentaExenta - C24DiferencialRenta;
+            }
+            else
+            {
+                C24DiferencialRenta = 0;
+            }
+
+            #endregion Diferencial Renta 
+
+            #region Base Gravable
+
+            //if (numeroDiasLaborados < 30)
+            {
+                C25BaseGravableRenta = ((C20subTotal3 - C21RentaExenta - C24DiferencialRenta) / 30) * numeroDiasLaborados;
+            }
+            // else
+            // {
+            //     C25BaseGravableRenta = C20subTotal3 - C21RentaExenta - C24DiferencialRenta;
+            // }
+            C26BaseGravableRentaUvt = C25BaseGravableRenta / valorUvt;
+            C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);
+
+            #endregion Base Gravable
+
+            #region Setear valores a formato
 
             formato.Honorario = C1honorario;
-            formato.HonorarioUvt = C2honorarioUvt;
+            formato.HonorarioUvt = C2honorarioUvtFinal;
             formato.ValorIva = C3valorIva;
             formato.ValorTotal = planPago.ValorFacturado.Value;
             formato.BaseSalud = C7baseAporteSalud;
@@ -261,6 +552,13 @@ namespace ComplementApp.API.Controllers
             formato.RentaExenta = C21RentaExenta;
             formato.LimiteRentaExenta = C22LimiteRentaExenta;
             formato.TotalRentaExenta = C23TotalRentaExenta;
+            formato.TotalDeducciones = C19TotalDeducciones;
+            formato.DiferencialRenta = C24DiferencialRenta;
+            formato.BaseGravableRenta = C25BaseGravableRenta;
+            formato.BaseGravableUvt = C26BaseGravableRentaUvtFinal;
+
+            #endregion Setear valores a formato
+
             return formato;
         }
 
@@ -284,6 +582,14 @@ namespace ComplementApp.API.Controllers
                 return true;
             }
             return false;
+        }
+
+        private CriterioCalculoReteFuente obtenerCriterioCalculoRendimiento(List<CriterioCalculoReteFuente> lista, int baseGravableUvtFinal)
+        {
+            var criterio = lista.Where(x => x.Desde <= baseGravableUvtFinal
+                                    && baseGravableUvtFinal <= x.Hasta).FirstOrDefault();
+
+            return criterio;
         }
     }
 }

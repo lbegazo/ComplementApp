@@ -73,6 +73,8 @@ namespace ComplementApp.API.Data
 
         public DbSet<ParametroLiquidacionTercero> ParametroLiquidacionTercero { get; set; }
 
+        public DbSet<CriterioCalculoReteFuente> CriterioCalculoReteFuente { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

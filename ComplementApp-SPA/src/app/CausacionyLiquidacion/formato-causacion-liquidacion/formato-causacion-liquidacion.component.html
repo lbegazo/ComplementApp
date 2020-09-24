@@ -119,7 +119,7 @@
                                 style="width: 17.5%"
                                 class="center fontSmaller"
                               >
-                                <span class="stronger">VALOR CANCELAD</span>
+                                <span class="stronger">VALOR CANCELADO</span>
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 <span class="stronger">TOTAL A CANCELAR</span>
@@ -137,7 +137,7 @@
                             <tr>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.valorTotal | number: "1.2-2"
+                                  detallePlanPago?.valorTotal |  number:"1.0-0"
                                 }}
                               </td>
                               <td
@@ -145,7 +145,7 @@
                                 class="center fontSmaller"
                               >
                                 {{
-                                  detallePlanPago?.operacion | number: "1.2-2"
+                                  detallePlanPago?.operacion |  number:"1.0-0"
                                 }}
                               </td>
                               <td
@@ -155,20 +155,20 @@
                                 {{
                                   detallePlanPago?.valorTotal -
                                     detallePlanPago?.saldoActual
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
                                   detallePlanPago?.valorFacturado
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
                                   detallePlanPago?.saldoActual -
                                     detallePlanPago?.valorFacturado
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
@@ -336,7 +336,7 @@
                               >
                                 {{
                                   formatoCausacionyLiquidacionPago.honorario
-                                    | number: "1.2-2"
+                                    | number: "1.0-0"
                                 }}
                               </td>
                               <td
@@ -345,7 +345,7 @@
                               >
                                 {{
                                   formatoCausacionyLiquidacionPago.honorarioUvt
-                                  | number: "1.2-2"
+                                    | number: "1.0-0"
                                 }}
                               </td>
                               <td
@@ -354,7 +354,7 @@
                               >
                                 {{
                                   formatoCausacionyLiquidacionPago.valorIva
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td
@@ -363,7 +363,7 @@
                               >
                                 {{
                                   formatoCausacionyLiquidacionPago.valorTotal
-                                    | number: "1.2-2"
+                                    | number:"1.0-0"
                                 }}
                               </td>
                               <td
@@ -372,13 +372,13 @@
                               >
                                 {{
                                   formatoCausacionyLiquidacionPago.totalRetenciones
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 22%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.totalAGirar
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                             </tr>
@@ -437,46 +437,43 @@
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.baseSalud
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.aporteSalud
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.aportePension
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.riesgoLaboral
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.fondoSolidaridad
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
-                              <td
-                                style="width: 13%"
-                                class="center fontSmaller stronger"
-                              >
+                              <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.impuestoCovid
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 22%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.subTotal1
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                             </tr>
@@ -535,46 +532,43 @@
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.pensionVoluntaria
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.afc
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.subTotal2
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.medicinaPrepagada
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.dependientes
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
-                              <td
-                                style="width: 13%"
-                                class="center fontSmaller stronger"
-                              >
-                              {{
-                                formatoCausacionyLiquidacionPago.interesVivienda
-                                  | number: "1.2-2"
-                              }}
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.interesVivienda
+                                    |  number:"1.0-0"
+                                }}
                               </td>
                               <td style="width: 22%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.totalDeducciones
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                             </tr>
@@ -626,52 +620,50 @@
                                 style="width: 22%"
                                 class="center fontSmaller stronger"
                               >
-                                TOTAL DEDUCCIONES
+                                BASE GRAVABLE UVT
                               </td>
                             </tr>
                             <tr style="width: 100%">
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.subTotal3
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.rentaExenta
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.limiteRentaExenta
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.totalRentaExenta
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago.diferencialRenta
-                                    | number: "1.2-2"
+                                    |  number:"1.0-0"
                                 }}
                               </td>
-                              <td
-                                style="width: 13%"
-                                class="center fontSmaller stronger"
-                              >
-                              {{
-                                formatoCausacionyLiquidacionPago.baseGravableRenta
-                                  | number: "1.2-2"
-                              }}
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago.baseGravableRenta
+                                    |  number:"1.0-0"
+                                }}
                               </td>
                               <td style="width: 22%" class="center fontSmaller">
                                 {{
-                                  formatoCausacionyLiquidacionPago.baseGravableRenta
+                                  formatoCausacionyLiquidacionPago.baseGravableUvt
+                                    | number: "1.0-0"
                                 }}
                               </td>
                             </tr>
@@ -679,56 +671,133 @@
                         </td>
                       </tr>
                       <!--Retenciones-->
+
+                      <!--DEDUCCIONES-->
                       <tr>
                         <td class="withoutPadding">
-                          <table>
-                            <tr style="width: 100%">
-                              <td class="center">
-                                <span class="stronger">
-                                  RETENCIONES / DEDUCCIONES APLICADAS
-                                </span>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                      <!--Código-->
-                      <tr>
-                        <td class="withoutPadding">
-                          <table>
-                            <tr style="width: 100%" class="aplicaBackground">
-                              <td
-                                style="width: 13%"
-                                class="center fontSmaller stronger"
-                              >
-                                CODIGO
-                              </td>
-                              <td
-                                style="width: 55%"
-                                class="center fontSmaller stronger"
-                              >
-                                NOMBRE_DEDUCCION
-                              </td>
-                              <td
-                                style="width: 10%"
-                                class="center fontSmaller stronger"
-                              >
-                                TARIFA
-                              </td>
-                              <td
-                                style="width: 10%"
-                                class="center fontSmaller stronger"
-                              >
-                                BASE
-                              </td>
-                              <td
-                                style="width: 12%"
-                                class="center fontSmaller stronger"
-                              >
-                                VALOR
-                              </td>
-                            </tr>
-                          </table>
+                          <div class="container-fluid">
+                            <!--Titulo Principal-->
+                            <div class="row borderTop">
+                              <div class="col-12">
+                                <small
+                                  ><strong
+                                    >RETENCIONES / DEDUCCIONES APLICADAS</strong
+                                  ></small
+                                >
+                              </div>
+                            </div>
+                            <div>
+                              <!--Titulo de Columnas-->
+                              <div class="row borderTop">
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>CODIGO</strong></small>
+                                </div>
+                                <div
+                                  style="width: 40%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small
+                                    ><strong>NOMBRE_DEDUCCION</strong></small
+                                  >
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>TARIFA</strong></small>
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>BASE</strong></small>
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>VALOR</strong></small>
+                                </div>
+                              </div>
+                              <!--Rubros Presupuestales-->
+                              <div class="row">
+                                <div class="col-12">
+                                  <div
+                                    *ngIf="
+                                      formatoCausacionyLiquidacionPago.deducciones
+                                    "
+                                  >
+                                    <div
+                                      formArrayName="deduccionControles"
+                                      class="row"
+                                      *ngFor="
+                                        let item of formatoCausacionyLiquidacionPago.deducciones;
+                                        let i = index
+                                      "
+                                    >
+                                      <ng-container [formGroupName]="i">                                        
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight centerAlign small"
+                                        >
+                                          <small>{{
+                                            item?.codigo
+                                          }}</small>
+                                        </div>
+                                        <div
+                                          style="width: 40%"
+                                          class="borderBottonRight left small"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.nombre }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight right"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.tarifa | number: "1.2-8"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight right"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.base |  number:"1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight right"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.valor |  number:"1.0-0"
+                                            }}
+                                          </p>
+                                        </div>                                        
+                                      </ng-container>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     </table>

@@ -10,7 +10,7 @@ namespace ComplementApp.API.Dtos
 
         public decimal Honorario { get; set; }
 
-        public decimal HonorarioUvt { get; set; }
+        public int HonorarioUvt { get; set; }
 
         public decimal ValorIva { get; set; }
 
@@ -45,7 +45,7 @@ namespace ComplementApp.API.Dtos
         public decimal DiferencialRenta { get; set; }
         public decimal BaseGravableRenta { get; set; }
 
-        public decimal BaseGravableUvt { get; set; }
+        public int BaseGravableUvt { get; set; }
 
         public ICollection<DeduccionDto> Deducciones { get; set; }
     }

@@ -21,5 +21,8 @@ namespace ComplementApp.API.Data
          Task<IEnumerable<ParametroGeneral>> ObtenerParametrosGenerales();
 
          Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId);
+
+         Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente();
+
     }
 }

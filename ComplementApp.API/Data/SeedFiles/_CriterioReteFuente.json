@@ -1,0 +1,44 @@
+[
+  {
+    "Tarifa": "0",
+    "Desde": "0",
+    "Hasta": "95",
+    "Factor": "0"
+  },
+  {
+    "Tarifa": "19",
+    "Desde": "95",
+    "Hasta": "150",
+    "Factor": "0"
+  },
+  {
+    "Tarifa": "28",
+    "Desde": "150",
+    "Hasta": "360",
+    "Factor": "10"
+  },
+  {
+    "Tarifa": "33",
+    "Desde": "360",
+    "Hasta": "640",
+    "Factor": "69"
+  },
+  {
+    "Tarifa": "35",
+    "Desde": "640",
+    "Hasta": "945",
+    "Factor": "162"
+  },
+  {
+    "Tarifa": "37",
+    "Desde": "940",
+    "Hasta": "2300",
+    "Factor": "268"
+  },
+  {
+    "Tarifa": "39",
+    "Desde": "2300",
+    "Hasta": "100000",
+    "Factor": "770"
+  }
+]

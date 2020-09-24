@@ -10,7 +10,9 @@ namespace ComplementApp.API.Dtos
 
         public decimal Tarifa { get; set; }
 
-        public string Gmf { get; set; }
+        public bool Gmf { get; set; }
+
+        public string GmfDescripcion { get; set; }
 
         public string Estado { get; set; }
 
@@ -19,6 +21,8 @@ namespace ComplementApp.API.Dtos
         public decimal Base { get; set; }
 
         public decimal Valor { get; set; }
+
+        public int TipoBaseDeduccionId { get; set; } 
 
     }
 }

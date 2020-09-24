@@ -7,13 +7,17 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { NgForm, FormGroup } from '@angular/forms';
+import {
+  NgForm,
+  FormGroup,
+  FormArray,
+  FormControl,
+  FormBuilder,
+} from '@angular/forms';
 import { PlanPago } from 'src/app/_models/planPago';
 import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
-import { ParametroGeneral } from 'src/app/_models/parametroGeneral';
-import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 
 @Component({
   selector: 'app-formato-causacion-liquidacion',
@@ -23,52 +27,38 @@ import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausaci
 export class FormatoCausacionLiquidacionComponent implements OnInit {
   @ViewChild('content') content: ElementRef;
   @ViewChild('formatoNgForm', { static: true }) formatoNgForm: NgForm;
-  formatoForm = new FormGroup({});
+
   @Input() detallePlanPago: DetallePlanPago;
   @Input() formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   @Output() esCancelado = new EventEmitter<boolean>();
 
-  //#region Variables de valores calculados
+  formatoForm = new FormGroup({});
+  arrayControls = new FormArray([]);
 
-  valorUvtParametro = 0;
-  valorSMLV = 0;
-
-  honorarioCalculado = 0;
-  honorarioUvtCalculado = 0;
-  valorIva = 0;
-
-  //#endregion
-
-  constructor() {}
+  constructor(private alertify: AlertifyService, private fb: FormBuilder) {}
 
   ngOnInit() {
-    //this.obtenerValoresParametrosGenerales();
+    this.createForm();
+  }
+
+  createForm() {
+    if (this.formatoCausacionyLiquidacionPago.deducciones != null) {
+      for (const detalle of this.formatoCausacionyLiquidacionPago.deducciones) {
+        this.arrayControls.push(
+          new FormGroup({
+            deduccionControl: new FormControl('', []),
+          })
+        );
+      }
+    }
+
+    this.formatoForm = this.fb.group({
+      deduccionControles: this.arrayControls,
+    });
   }
 
   onCancelar() {
     this.detallePlanPago = null;
     this.esCancelado.emit(true);
   }
-
-  // private obtenerValoresParametrosGenerales() {
-  //   let varValorUvt = 0;
-  //   let varValorSMLV = 0;
-  //   if (this.parametrosGenerales) {
-  //     varValorUvt = +this.parametrosGenerales.filter(
-  //       (x) => x.nombre.toUpperCase() === 'VALORUVT'
-  //     )[0];
-
-  //     if (varValorUvt) {
-  //       this.valorUvtParametro = +varValorUvt;
-  //     }
-
-  //     varValorSMLV = +this.parametrosGenerales.filter(
-  //       (x) => x.nombre.toUpperCase() === 'SALARIOMINIMO'
-  //     )[0];
-
-  //     if (varValorSMLV) {
-  //       this.valorSMLV = +varValorSMLV;
-  //     }
-  //   }
-  //}
 }

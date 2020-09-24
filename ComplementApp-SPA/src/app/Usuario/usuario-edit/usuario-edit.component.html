@@ -22,13 +22,13 @@
           <input
             [ngClass]="{
               'is-invalid':
-                registerForm.get('username').errors &&
-                registerForm.get('username').touched
+                registerForm.get('usernameCtrl').errors &&
+                registerForm.get('usernameCtrl').touched
             }"
             type="text"
             class="form-control"
             placeholder="Usuario"
-            formControlName="username"
+            formControlName="usernameCtrl"
             id="username"
           />
           <div class="invalid-feedback">Por favor ingresa tu usuario</div>
@@ -38,21 +38,21 @@
           <input
             [ngClass]="{
               'is-invalid':
-                registerForm.get('nombres').errors &&
-                registerForm.get('nombres').touched
+                registerForm.get('nombreCtrl').errors &&
+                registerForm.get('nombreCtrl').touched
             }"
             type="text"
             class="form-control"
             placeholder="Nombres"
-            formControlName="nombres"
+            formControlName="nombreCtrl"
             #inputNombres
             (input)="inputNombres.value = $event.target.value.toUpperCase()"
           />
           <div
             class="invalid-feedback"
             *ngIf="
-              registerForm.get('nombres').touched &&
-              registerForm.get('nombres').hasError('required')
+              registerForm.get('nombreCtrl').touched &&
+              registerForm.get('nombreCtrl').hasError('required')
             "
           >
             Los nombres son requeridos
@@ -63,21 +63,21 @@
           <input
             [ngClass]="{
               'is-invalid':
-                registerForm.get('apellidos').errors &&
-                registerForm.get('apellidos').touched
+                registerForm.get('apellidoCtrl').errors &&
+                registerForm.get('apellidoCtrl').touched
             }"
             type="text"
             class="form-control"
             placeholder="Apellidos"
-            formControlName="apellidos"
+            formControlName="apellidoCtrl"
             #inputApellidos
             (input)="inputApellidos.value = $event.target.value.toUpperCase()"
           />
           <div
             class="invalid-feedback"
             *ngIf="
-              registerForm.get('apellidos').touched &&
-              registerForm.get('apellidos').hasError('required')
+              registerForm.get('apellidoCtrl').touched &&
+              registerForm.get('apellidoCtrl').hasError('required')
             "
           >
             Los apellidos son requeridos
@@ -89,18 +89,18 @@
             type="password"
             [ngClass]="{
               'is-invalid':
-                registerForm.get('password').errors &&
-                registerForm.get('password').touched
+                registerForm.get('passwordCtrl').errors &&
+                registerForm.get('passwordCtrl').touched
             }"
             class="form-control"
             placeholder="Password"
-            formControlName="password"
+            formControlName="passwordCtrl"
           />
           <div
             class="invalid-feedback"
             *ngIf="
-              registerForm.get('password').touched &&
-              registerForm.get('password').hasError('required')
+              registerForm.get('passwordCtrl').touched &&
+              registerForm.get('passwordCtrl').hasError('required')
             "
           >
             El password es requerido
@@ -108,8 +108,8 @@
           <div
             class="invalid-feedback"
             *ngIf="
-              registerForm.get('password').hasError('minlength') &&
-              registerForm.get('password').touched
+              registerForm.get('passwordCtrl').hasError('minlength') &&
+              registerForm.get('passwordCtrl').touched
             "
           >
             El password debe tener como mínimo 4 caracteres
@@ -117,8 +117,8 @@
           <div
             class="invalid-feedback"
             *ngIf="
-              registerForm.get('password').hasError('maxlength') &&
-              registerForm.get('password').touched
+              registerForm.get('passwordCtrl').hasError('maxlength') &&
+              registerForm.get('passwordCtrl').touched
             "
           >
             El password no puede exceder de 8 caracteres
@@ -130,20 +130,20 @@
             type="password"
             [ngClass]="{
               'is-invalid':
-                (registerForm.get('confirmPassword').errors &&
-                  registerForm.get('confirmPassword').touched) ||
-                (registerForm.get('confirmPassword').touched &&
+                (registerForm.get('confirmPasswordCtrl').errors &&
+                  registerForm.get('confirmPasswordCtrl').touched) ||
+                (registerForm.get('confirmPasswordCtrl').touched &&
                   registerForm.hasError('mismatch'))
             }"
             class="form-control"
             placeholder="Password"
-            formControlName="confirmPassword"
+            formControlName="confirmPasswordCtrl"
           />
           <div
             class="invalid-feedback"
             *ngIf="
-              registerForm.get('confirmPassword').hasError('required') &&
-              registerForm.get('confirmPassword').touched
+              registerForm.get('confirmPasswordCtrl').hasError('required') &&
+              registerForm.get('confirmPasswordCtrl').touched
             "
           >
             Password es requerido
@@ -152,7 +152,7 @@
             class="invalid-feedback"
             *ngIf="
               registerForm.hasError('mismatch') &&
-              registerForm.get('confirmPassword').touched
+              registerForm.get('confirmPasswordCtrl').touched
             "
           >
             Los passwords deben coincidir
@@ -163,13 +163,13 @@
           <select
             formControlName="areaControl"
             (change)="onSelectArea()"
-            class="form-control  list"
+            class="form-control list"
             [ngClass]="{
               'is-invalid':
                 registerForm.get('areaControl').touched &&
                 registerForm.get('areaControl').hasError('required')
             }"
-            style="padding: 0px;"
+            style="padding: 0px"
           >
             <option [value]="null" disabled>Selecciona el area</option>
             <option *ngFor="let prf of areas" [value]="prf.areaId">
@@ -197,7 +197,7 @@
                 registerForm.get('cargoControl').touched &&
                 registerForm.get('cargoControl').hasError('required')
             }"
-            style="padding: 0px;"
+            style="padding: 0px"
           >
             <option [value]="null" disabled>Selecciona el cargo</option>
             <option *ngFor="let prf of cargos" [value]="prf.cargoId">
@@ -216,34 +216,29 @@
         </div>
 
         <div class="row" style="padding-left: 15px; padding-right: 15px">
-          <div class="col-1 inner ">
+          <div class="col-1 inner">
             <label class="col-form-label-md">Sel.</label>
           </div>
-          <div class="col-11 inner ">
+          <div class="col-11 inner">
             <label class="col-form-label-md">Perfil</label>
           </div>
         </div>
         <div *ngIf="perfiles">
           <div
-            formArrayName="perfilesControles"
+            
             class="row"
             style="padding-left: 15px; padding-right: 15px"
-            *ngFor="let item of perfiles; let i = index"
-          >
-            <ng-container [formGroupName]="i">
+            *ngFor="let perfilControl of perfilesControl; let i = index"
+          >           
               <div class="col-1 inner center aplicaBackground">
                 <label class="col-form-label-md">
-                  <input
-                    type="checkbox"
-                    [value]="item?.perfilId"
-                    (change)="onCheckChange($event)"
-                  />
+                  <input type="checkbox" [formControl]="perfilControl" value="perfiles[i].PerfilId"/>
                 </label>
               </div>
               <div class="col-11 inner left aplicaBackground">
-                <label class="col-form-label-md">{{ item?.nombre }}</label>
+                <label class="col-form-label-md">{{ this.perfiles[i]?.nombre }}</label>
               </div>
-            </ng-container>
+         
           </div>
         </div>
 
@@ -264,3 +259,6 @@
     </div>
   </div>
 </div>
+<!-- <p>Form value: {{ registerForm.value | json }}</p>
+<p>Form status: {{ registerForm.status | json }}</p>
+<p>Usuario: {{ user | json }}</p> -->

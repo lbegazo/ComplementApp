@@ -15,5 +15,7 @@ namespace ComplementApp.API.Data
         Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId);
 
         Task<PlanPago> ObtenerPlanPagoDetallado(int planPagoId);
+
+        Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId);
     }
 }

@@ -39,7 +39,30 @@ namespace ComplementApp.API.Data
             SeedDeduccion(context);
             SeedTerceroDeducciones(context);
             SeedParametroLiquidacionTercero(context);
+            SeedCriterioCalculoReteFuente(context);
+        }
 
+        private static void SeedCriterioCalculoReteFuente(DataContext context)
+        {
+            if (!context.CriterioCalculoReteFuente.Any())
+            {
+                CriterioCalculoReteFuente nuevoItem = null;
+                List<CriterioCalculoReteFuente> lista = new List<CriterioCalculoReteFuente>();
+
+                var data = File.ReadAllText("Data/SeedFiles/_CriterioReteFuente.json");
+                var items = JsonConvert.DeserializeObject<List<CriterioCalculoReteFuente>>(data);
+                foreach (var item in items)
+                {
+                    nuevoItem = new CriterioCalculoReteFuente();
+                    nuevoItem.Tarifa = item.Tarifa;
+                    nuevoItem.Desde = item.Desde;
+                    nuevoItem.Hasta = item.Hasta;
+                    nuevoItem.Factor = item.Factor;
+                    lista.Add(nuevoItem);
+                }
+                context.CriterioCalculoReteFuente.AddRange(lista);
+                context.SaveChanges();
+            }
         }
 
         private static void SeedTerceroDeducciones(DataContext context)
@@ -151,7 +174,7 @@ namespace ComplementApp.API.Data
                     nuevoItem.Codigo = item.Codigo;
                     nuevoItem.Nombre = item.Nombre;
                     nuevoItem.Tarifa = item.Tarifa;
-                    nuevoItem.Gmf = item.Gmf == "0" ? false : true;
+                    nuevoItem.Gmf = item.GmfDescripcion == "0" ? false : true;
                     nuevoItem.estado = item.Estado == "0" ? false : true;
                     var tipoBase = obtenerTipoBaseDeduccion(context, item.TipoBase);
 
@@ -187,7 +210,6 @@ namespace ComplementApp.API.Data
             context.ParametroGeneral.AddRange(lista);
             context.SaveChanges();
         }
-
 
         private static void SeedTipoBaseDeduccion(DataContext context)
         {

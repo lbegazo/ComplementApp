@@ -100,13 +100,12 @@ namespace ComplementApp.API.Data
 
         public bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles)
         {
-
             UsuarioPerfil nuevoItem = null;
             List<UsuarioPerfil> lista = new List<UsuarioPerfil>();
 
             #region Eliminar relaciones
 
-            var listaExistente = _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId);
+            var listaExistente = _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToList();
             _context.UsuarioPerfil.RemoveRange(listaExistente);
             _unitOfWork.Complete();
 

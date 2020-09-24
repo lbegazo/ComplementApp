@@ -59,5 +59,10 @@ namespace ComplementApp.API.Data
             return await _context.ParametroLiquidacionTercero
                         .Where(x => x.TerceroId == terceroId).FirstOrDefaultAsync();
         }
+
+        public async Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente()
+        {
+            return await _context.CriterioCalculoReteFuente.ToListAsync();
+        }
     }
 }

@@ -79,11 +79,13 @@ namespace ComplementApp.API.Controllers
             var userToCreate = _mapper.Map<Usuario>(userForRegisterDto);
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+
+            _repo.RegistrarPerfilesAUsuario(createdUser.UsuarioId, userForRegisterDto.Perfiles);
+
             //Esta linea es para evitar retornar User, porque contiene el password
             var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
 
             return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.UsuarioId }, userToReturn);
-
         }
 
         [HttpPut("{id}")]

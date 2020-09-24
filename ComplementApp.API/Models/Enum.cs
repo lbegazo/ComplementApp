@@ -22,4 +22,15 @@ namespace ComplementApp.API.Models
 
     }
 
+    public enum TipoBaseDeducciones
+    {
+        AFC = 1,
+        BASEICA,
+        OTRAS,
+        RENTA,
+        VALORIVA,
+        VOLUNTARIO,
+
+    }
+
 }

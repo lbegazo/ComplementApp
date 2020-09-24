@@ -6,5 +6,6 @@ export interface Perfil {
   nombre: string;
   descripcion: string;
   estado: boolean;
+  checked: boolean;
   transacciones?: Transaccion[];
 }

@@ -24,9 +24,7 @@ export class TopNavComponent implements OnInit {
     public navService: NavService
   ) {}
 
-  ngOnInit() {
-    console.log(this.numeroItems);
-  }
+  ngOnInit() {}
 
   login() {
     this.authService.login(this.model).subscribe(

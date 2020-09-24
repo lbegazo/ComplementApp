@@ -26,7 +26,6 @@ namespace DatingApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetValues()
         {
-            //throw new Exception("Testiculos");
             var values= await _dataContext.Values.ToListAsync();
             return Ok(values);
         }

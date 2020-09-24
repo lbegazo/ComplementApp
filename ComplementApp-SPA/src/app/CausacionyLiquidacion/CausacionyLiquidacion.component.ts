@@ -190,6 +190,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
     this.search = '';
     this.terceroId = null;
     this.detallePlanPago = null;
+    this.formatoCausacionyLiquidacionPago = null;
 
     this.onBuscarFactura();
   }
@@ -240,10 +241,19 @@ export class CausacionyLiquidacionComponent implements OnInit {
                 .ObtenerFormatoCausacionyLiquidacionPago(
                   this.planPagoIdSeleccionado
                 )
-                .subscribe((response: FormatoCausacionyLiquidacionPago) => {
-                  this.formatoCausacionyLiquidacionPago = response;
-                  console.log(this.formatoCausacionyLiquidacionPago);
-                });
+                .subscribe(
+                  (response: FormatoCausacionyLiquidacionPago) => {
+                    this.formatoCausacionyLiquidacionPago = response;
+                  },
+                  (error) => {
+                    this.alertify.error(
+                      'Ocurrió un error al realizar el proceso de liquidación: ' +
+                        error.toString()
+                    );
+                    this.mostrarCabecera = true;
+                    this.formatoCausacionyLiquidacionPago = null;
+                  }
+                );
             }
           }
         );
@@ -252,7 +262,6 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
   HabilitarCabecera($event) {
     this.mostrarCabecera = true;
-
     this.onLimpiarFactura();
   }
 

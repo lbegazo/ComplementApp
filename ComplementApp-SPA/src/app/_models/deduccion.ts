@@ -1,8 +1,8 @@
 export interface Deduccion {
   deduccionId: number;
-  Codigo: string;
-  Nombre: string;
-  Tarifa: number;
-  Base: number;
-  Valor: number;
+  codigo: string;
+  nombre: string;
+  tarifa: number;
+  base: number;
+  valor: number;
 }
