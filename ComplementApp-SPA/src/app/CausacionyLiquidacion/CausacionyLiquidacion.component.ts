@@ -6,6 +6,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { environment } from 'src/environments/environment';
+
 import { Tercero } from 'src/app/_models/tercero';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { PlanPago } from 'src/app/_models/planPago';
@@ -18,14 +19,10 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { EstadoPlanPago } from '../_models/enum';
+import { EstadoPlanPago, ModalidadContrato, TipoPago } from '../_models/enum';
 import { DetallePlanPago } from '../_models/detallePlanPago';
-import { Transaccion } from '../_models/transaccion';
 import { ListaService } from '../_services/lista.service';
 import { PaginatedResult, Pagination } from '../_models/pagination';
-import { ParametroGeneral } from '../_models/parametroGeneral';
-import { ParametroLiquidacionTercero } from '../_models/parametroLiquidacionTercero';
-import { FormatoCausacionLiquidacionComponent } from './formato-causacion-liquidacion/formato-causacion-liquidacion.component';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 
 @Component({
@@ -45,10 +42,13 @@ export class CausacionyLiquidacionComponent implements OnInit {
   arrayControls = new FormArray([]);
   estadoPlanPagoPorObligar = EstadoPlanPago.PorObligar.value;
   mostrarCabecera = true;
+  modalidadContrato = 0;
+  tipoPago = 0;
 
   listaPlanPago: PlanPago[] = [];
   planPagoIdSeleccionado = 0;
   detallePlanPago: DetallePlanPago;
+  planPagoSeleccionado: PlanPago;
   tercero: Tercero = {
     terceroId: 0,
     nombre: '',
@@ -211,53 +211,105 @@ export class CausacionyLiquidacionComponent implements OnInit {
     }
   }
 
-  onSeleccionar() {
-    this.obtenerPlanPago();
-  }
+  onLiquidar() {
+    if (
+      this.listaPlanPago &&
+      this.listaPlanPago.length > 0 &&
+      this.planPagoIdSeleccionado > 0
+    ) {
+      this.planPagoSeleccionado = this.listaPlanPago.filter(
+        (x) => x.planPagoId === this.planPagoIdSeleccionado
+      )[0];
 
-  obtenerPlanPago() {
-    if (this.planPagoIdSeleccionado > 0) {
-      this.facturaService
-        .ObtenerDetallePlanPago(this.planPagoIdSeleccionado)
-        .subscribe(
-          (response: DetallePlanPago) => {
-            if (response) {
-              this.detallePlanPago = response;
-              this.terceroId = this.detallePlanPago.terceroId;
-              this.mostrarCabecera = false;
-            }
-          },
-          (error) => {
-            this.alertify.error('Hubo un error al obtener el plan de pago.');
-          },
-          () => {
-            if (!this.detallePlanPago) {
-              this.alertify.error(
-                'No se pudo obtener información del plan de pago.'
+      if (this.planPagoSeleccionado) {
+        this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
+        this.tipoPago = this.planPagoSeleccionado.tipoPago;
+
+        if (
+          this.modalidadContrato ===
+            ModalidadContrato.ProveedorConDescuento.value &&
+          this.tipoPago === TipoPago.Variable.value
+        ) {
+          //#region ProveedorConDescuento
+
+          let resultado: string;
+          let valorIngresado = 0;
+
+          resultado = window.prompt(
+            'Debe ingresar el Valor Base Gravable',
+            '0'
+          );
+
+          if (isNaN(+resultado)) {
+            this.alertify.warning('Debe ingresar un valor númerico');
+          } else {
+            valorIngresado = +resultado;
+
+            if (valorIngresado > this.planPagoSeleccionado.valorFacturado) {
+              this.alertify.warning(
+                'Debe ingresar un valor menor al valor total a cancelar ' +
+                  this.planPagoSeleccionado.valorFacturado
               );
-              this.mostrarCabecera = true;
             } else {
-              this.facturaService
-                .ObtenerFormatoCausacionyLiquidacionPago(
-                  this.planPagoIdSeleccionado
-                )
-                .subscribe(
-                  (response: FormatoCausacionyLiquidacionPago) => {
-                    this.formatoCausacionyLiquidacionPago = response;
-                  },
-                  (error) => {
-                    this.alertify.error(
-                      'Ocurrió un error al realizar el proceso de liquidación: ' +
-                        error.toString()
-                    );
-                    this.mostrarCabecera = true;
-                    this.formatoCausacionyLiquidacionPago = null;
-                  }
-                );
+              this.obtenerDetallePlanPago(valorIngresado);
             }
           }
-        );
+
+          //#endregion ProveedorConDescuento
+        } else {
+          //#region ContratoPrestacionServicio
+
+          this.obtenerDetallePlanPago(0);
+
+          //#endregion ContratoPrestacionServicio
+        }
+      }
     }
+  }
+
+  obtenerDetallePlanPago(valorIngresado: number) {
+    this.facturaService
+      .ObtenerDetallePlanPago(this.planPagoIdSeleccionado)
+      .subscribe(
+        (response: DetallePlanPago) => {
+          if (response) {
+            this.detallePlanPago = response;
+            this.terceroId = this.detallePlanPago.terceroId;
+            this.mostrarCabecera = false;
+          }
+        },
+        (error) => {
+          this.alertify.error('Hubo un error al obtener el plan de pago.');
+        },
+        () => {
+          if (!this.detallePlanPago) {
+            this.alertify.error(
+              'No se pudo obtener información del plan de pago.'
+            );
+            this.mostrarCabecera = true;
+          } else {
+            this.facturaService
+              .ObtenerFormatoCausacionyLiquidacionPago(
+                this.planPagoIdSeleccionado,
+                valorIngresado
+              )
+              .subscribe(
+                (response: FormatoCausacionyLiquidacionPago) => {
+                  this.formatoCausacionyLiquidacionPago = response;
+                  this.formatoCausacionyLiquidacionPago.cantidadPago = this.detallePlanPago.cantidadPago;
+                },
+                (error) => {
+                  this.alertify.error(
+                    'Ocurrió un error al realizar el proceso de liquidación: ' +
+                      error.toString()
+                  );
+                  this.mostrarCabecera = true;
+                  this.formatoCausacionyLiquidacionPago = null;
+                }
+              );
+          }
+        }
+      );
   }
 
   HabilitarCabecera($event) {

@@ -8,6 +8,6 @@ namespace ComplementApp.API.Dtos
         public string Descripcion { get; set; }
         public string Icono { get; set; }
         public string Ruta { get; set; }
-        public string PadreMenu { get; set; }        
+        public string CodigoPadreTransaccion { get; set; }        
     }
 }

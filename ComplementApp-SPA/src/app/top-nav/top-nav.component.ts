@@ -1,11 +1,15 @@
-import { Component, OnInit, ViewChild, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+} from '@angular/core';
 import { NavService } from '../_services/nav.service';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Transaccion } from '../_models/transaccion';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-top-nav',
@@ -14,7 +18,7 @@ import { Subscription } from 'rxjs';
 })
 export class TopNavComponent implements OnInit {
   @ViewChild('loginForm', { static: true }) loginForm: NgForm;
-  @Input() numeroItems = 0;
+  @Input() transacciones: Transaccion[] = [];
 
   model: any = {};
   constructor(
@@ -26,28 +30,12 @@ export class TopNavComponent implements OnInit {
 
   ngOnInit() {}
 
-  login() {
-    this.authService.login(this.model).subscribe(
-      (next) => {
-        this.alertify.success('Login correcto!!!');
-      },
-      (error) => {
-        this.alertify.error(error);
-      },
-      () => {
-        this.router.navigate(['/home']);
-      }
-    );
-  }
-
   loggedIn() {
     return this.authService.loggedIn();
   }
 
   logout() {
     this.model = {};
-    // localStorage.removeItem('token');
-    // localStorage.removeItem('transacciones');
     localStorage.clear();
     this.alertify.message('Su sesión ha sido cerrada');
     this.router.navigate(['/home']);

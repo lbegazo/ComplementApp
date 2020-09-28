@@ -196,7 +196,7 @@ export class FacturaEditComponent implements OnInit {
       //#endregion Read the form
 
       this.facturaService
-        .ActualizarPlanPago(this.planPagoId, this.planPagoSeleccionado)
+        .ActualizarPlanPago(this.planPagoSeleccionado)
         .subscribe(
           () => {
             this.facturaForm.reset(this.planPagoSeleccionado);

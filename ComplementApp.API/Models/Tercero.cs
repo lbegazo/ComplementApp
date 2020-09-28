@@ -21,5 +21,11 @@ namespace ComplementApp.API.Models
         public string Nombre { get; set; }
         
         public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
+
+        [NotMapped]
+        public int ModalidadContrato { get; set; }
+
+        [NotMapped]
+        public int TipoPago { get; set; }
     }
 }

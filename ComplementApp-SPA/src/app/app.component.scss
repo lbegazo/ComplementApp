@@ -1,6 +1,10 @@
 @import './_scss/breakpoints';
 @import './_scss/theme';
 
+// .min-100 {
+//   min-height: 80%;
+// }
+
 .mat-sidenav {
   width: 360px;
 }
@@ -52,7 +56,33 @@
 }
 
 input[type="text"],
-input[type="textArea"] {
+input[type="textArea"],
+input[type="password"] {
   background-color: white;
   height: 25px;
 }
+
+.backgroundBlue {
+  background-color: #3C94DB;
+}
+
+.backgroundBrown {
+  background-color: #AB9353;
+  padding: 0px;
+}
+
+.withoutPadding {
+  padding: 0px;
+}
+
+.withoutBorder {
+  border: none;
+}
+
+.fill { 
+  min-height: 100%;
+  height: 100%;
+}
+
+
+

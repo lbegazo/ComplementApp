@@ -5,5 +5,6 @@ export interface Transaccion {
   descripcion: string;
   icono: string;
   ruta: string;
-  padreMenu: string;
+  padreTransaccionId: number;
+  hijos?: Transaccion[];
 }

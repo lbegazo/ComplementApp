@@ -12,8 +12,10 @@ namespace ComplementApp.API.Data
     public class PlanPagoRepository : IPlanPagoRepository
     {
         private readonly DataContext _context;
-        public PlanPagoRepository(DataContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        public PlanPagoRepository(DataContext context, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _context = context;
         }
 
@@ -22,6 +24,7 @@ namespace ComplementApp.API.Data
             var lista = (from c in _context.PlanPago
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          select new PlanPago()
@@ -43,7 +46,9 @@ namespace ComplementApp.API.Data
                              {
                                  TerceroId = c.TerceroId,
                                  NumeroIdentificacion = t.NumeroIdentificacion,
-                                 Nombre = t.Nombre
+                                 Nombre = t.Nombre,
+                                 ModalidadContrato = p.ModalidadContrato,
+                                 TipoPago = p.TipoPago
                              }
                          })
                                .OrderBy(c => c.PlanPagoId);
@@ -61,6 +66,7 @@ namespace ComplementApp.API.Data
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
+                          join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId
                           join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
                           join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId
                           where pp.PlanPagoId == planPagoId
@@ -77,6 +83,8 @@ namespace ComplementApp.API.Data
                               SaldoActual = c.SaldoActual,
                               Fecha = c.Fecha,
                               Operacion = c.Operacion,
+                              ModalidadContrato = p.ModalidadContrato,
+                              TipoPago = p.TipoPago,
 
                               ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
                               Crp = pp.Crp,
@@ -124,6 +132,19 @@ namespace ComplementApp.API.Data
                          select d);
 
             return await query.ToListAsync();
+        }
+
+        public async Task<bool> RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion)
+        {
+            await _context.DetalleLiquidacion.AddAsync(detalleLiquidacion);
+            bool resultado = await _unitOfWork.CompleteAsync();
+            return resultado;
+        }
+
+        public int ObtenerCantidadMaximaPlanPago(long crp)
+        {
+            var cantidad = _context.PlanPago.Where(pp => pp.Crp == crp).Max(x => x.NumeroPago);
+            return cantidad;
         }
     }
 }

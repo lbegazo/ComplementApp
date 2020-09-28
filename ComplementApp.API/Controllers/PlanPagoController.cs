@@ -75,18 +75,22 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerDetallePlanPago([FromQuery(Name = "planPagoId")] int planPagoId)
         {
             var planPagoBD = await _repo.ObtenerDetallePlanPago(planPagoId);
-            //var planPagoDto = _mapper.Map<PlanPagoDto>(planPagoBD);
+
+            if (planPagoBD != null)
+            {
+                var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp);
+                planPagoBD.CantidadPago = cantidad;
+            }
             return base.Ok(planPagoBD);
         }
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "planPagoId")] int planPagoId)
+        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "planPagoId")] int planPagoId, [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
             try
             {
-
                 var planPagoBD = await _repo.ObtenerDetallePlanPago(planPagoId);
 
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
@@ -101,9 +105,40 @@ namespace ComplementApp.API.Controllers
 
                 if (parametroGenerales != null && parametroLiquidacion != null && listaCriterioReteFuente != null)
                 {
-                    formato = ObtenerFormatoCausacionCalculado(planPagoBD, parametroLiquidacion,
-                                                                parametros, listaCriterioReteFuente.ToList(),
-                                                                listaDeduccionesDto.ToList());
+                    if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
+                    {
+                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoBD, parametroLiquidacion,
+                                                                    parametros, listaCriterioReteFuente.ToList(),
+                                                                    listaDeduccionesDto.ToList());
+                    }
+                    else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
+                    {
+                        if (parametroLiquidacion.TipoPago == (int)TipoPago.Fijo)
+                        {
+                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoBD, parametroLiquidacion,
+                                                                                                    parametros, listaCriterioReteFuente.ToList(),
+                                                                                                    listaDeduccionesDto.ToList());
+                        }
+                        else
+                        {
+                            if (valorBaseGravable < 0)
+                            {
+                                throw new Exception($"No se registró el valor base gravable");
+                            }
+
+                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(planPagoBD, parametroLiquidacion,
+                                                                        parametros, listaCriterioReteFuente.ToList(),
+                                                                        listaDeduccionesDto.ToList(), valorBaseGravable);
+                        }
+
+                    }
+                    else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorSinDescuento)
+                    {
+                        formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoBD, parametroLiquidacion,
+                                                                                  parametros, listaCriterioReteFuente.ToList());
+                    }
+
+                    formato.PlanPagoId = planPagoId;
                 }
             }
             catch (Exception)
@@ -114,11 +149,9 @@ namespace ComplementApp.API.Controllers
             return base.Ok(formato);
         }
 
-
         [HttpPut]
         public async Task<IActionResult> ActualizarPlanPago(PlanPagoDto planPagoDto)
         {
-            //PlanPagoDto planPagoDto = null;
             if (planPagoDto != null)
             {
                 //Obtener todos los campos del plan de pago para una correcta actualización
@@ -150,7 +183,166 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo actualizar la factura");
         }
 
-        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacionCalculado(DetallePlanPagoDto planPago,
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarDetalleLiquidacion(FormatoCausacionyLiquidacionPagos formato)
+        {
+            DetalleLiquidacion detalleLiquidacion = new DetalleLiquidacion();
+            LiquidacionDeduccion liquidacionDeduccion = null;
+            try
+            {
+                if (formato != null)
+                {
+                    var detallePlanPago = await _repo.ObtenerDetallePlanPago(formato.PlanPagoId);
+
+                    //Mapear datos del formato
+                    //_mapper.Map(formato, detalleLiquidacion);
+
+                    #region Mapear datos 
+
+                    MapearFormatoLiquidacionPlanPago(detallePlanPago, detalleLiquidacion);
+
+                    MapearFormatoLiquidacion(formato, detalleLiquidacion);
+
+                    #endregion Mapear datos 
+
+                    //Registrar detalle de liquidación
+                    //var resultado = await _repo.RegistrarDetalleLiquidacion(detalleLiquidacion);
+                    _dataContext.DetalleLiquidacion.Add(detalleLiquidacion);
+
+
+                    //Registrar deducciones a la liquidación
+                    foreach (var deduccion in formato.Deducciones)
+                    {
+                        liquidacionDeduccion = new LiquidacionDeduccion();
+                        liquidacionDeduccion.DetalleLiquidacion = detalleLiquidacion;
+                        liquidacionDeduccion.DeduccionId = deduccion.DeduccionId;
+                        liquidacionDeduccion.Codigo = deduccion.Codigo;
+                        liquidacionDeduccion.Nombre = deduccion.Nombre;
+                        liquidacionDeduccion.Tarifa = deduccion.Tarifa;
+                        liquidacionDeduccion.Base = deduccion.Base;
+                        liquidacionDeduccion.Valor = deduccion.Valor;
+                        _dataContext.LiquidacionDeducciones.Add(liquidacionDeduccion);
+                    }
+
+                    //Actualizar el estado al plan de pago
+                    //if (resultado)
+                    {
+                        var planPagoBD = await _repo.ObtenerPlanPago(formato.PlanPagoId);
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
+                    }
+
+                    await _unitOfWork.CompleteAsync();
+                    return Ok(detalleLiquidacion.DetalleLiquidacionId);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
+        [Route("[action]/{planPagoId}")]
+        [HttpGet]
+        public async Task<IActionResult> RechazarDetalleLiquidacion(int planPagoId)
+        {
+            PlanPago planNuevo = new PlanPago();
+            try
+            {
+                if (planPagoId > 0)
+                {
+                    var planPagoBD = await _repo.ObtenerPlanPago(planPagoId);
+
+                    //Actualizar plan de pago en estado rechazada
+                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
+
+                    await _unitOfWork.CompleteAsync();
+
+                    //Crear nuevo plan de pago en estado por pagar
+                    planNuevo = planPagoBD;
+                    planNuevo.PlanPagoId = 0;
+                    planNuevo.EstadoPlanPagoId = (int)EstadoPlanPago.Rechazada;
+                    _dataContext.PlanPago.Add(planNuevo);
+
+                    await _unitOfWork.CompleteAsync();
+                    return Ok(planNuevo.PlanPagoId);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
+        private void MapearFormatoLiquidacionPlanPago(DetallePlanPagoDto detallePlanPago, DetalleLiquidacion detalleLiquidacion)
+        {
+            detalleLiquidacion.NumeroIdentificacion = detallePlanPago.IdentificacionTercero;
+            detalleLiquidacion.Nombre = detallePlanPago.NombreTercero;
+            detalleLiquidacion.Contrato = detallePlanPago.Detalle6;
+            detalleLiquidacion.Viaticos = detallePlanPago.ViaticosDescripcion;
+            detalleLiquidacion.Crp = detallePlanPago.Crp;
+            detalleLiquidacion.CantidadPago = detallePlanPago.CantidadPago;
+            detalleLiquidacion.NumeroPago = detallePlanPago.NumeroPago;
+
+            detalleLiquidacion.ValorContrato = detallePlanPago.ValorTotal;
+            detalleLiquidacion.ValorAdicionReduccion = detallePlanPago.Operacion;
+            detalleLiquidacion.ValorCancelado = detallePlanPago.SaldoActual;
+            detalleLiquidacion.TotalACancelar = detallePlanPago.ValorFacturado.Value;
+            detalleLiquidacion.SaldoActual = (detallePlanPago.SaldoActual - detallePlanPago.ValorFacturado.Value);
+            detalleLiquidacion.RubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal;
+            detalleLiquidacion.UsoPresupuestal = detallePlanPago.IdentificacionUsoPresupuestal;
+
+            detalleLiquidacion.NombreSupervisor = detallePlanPago.Detalle5;
+            detalleLiquidacion.NumeroRadicado = detallePlanPago.NumeroRadicadoSupervisor;
+            detalleLiquidacion.FechaRadicado = detallePlanPago.FechaRadicadoSupervisor.Value;
+            detalleLiquidacion.NumeroFactura = detallePlanPago.NumeroFactura;
+        }
+
+        private void MapearFormatoLiquidacion(FormatoCausacionyLiquidacionPagos formato, DetalleLiquidacion detalleLiquidacion)
+        {
+            detalleLiquidacion.PlanPagoId = formato.PlanPagoId;
+            detalleLiquidacion.CantidadPago = formato.CantidadPago;
+            detalleLiquidacion.TextoComprobanteContable = formato.TextoComprobanteContable;
+
+            detalleLiquidacion.Honorario = formato.Honorario;
+            detalleLiquidacion.HonorarioUvt = formato.HonorarioUvt;
+            detalleLiquidacion.ValorIva = formato.ValorIva;
+            detalleLiquidacion.ValorTotal = formato.ValorTotal;
+            detalleLiquidacion.TotalRetenciones = formato.TotalRetenciones;
+            detalleLiquidacion.TotalAGirar = formato.TotalAGirar;
+
+            detalleLiquidacion.BaseSalud = formato.BaseSalud;
+            detalleLiquidacion.AporteSalud = formato.AporteSalud;
+            detalleLiquidacion.AportePension = formato.AportePension;
+            detalleLiquidacion.RiesgoLaboral = formato.RiesgoLaboral;
+            detalleLiquidacion.FondoSolidaridad = formato.FondoSolidaridad;
+            detalleLiquidacion.ImpuestoCovid = formato.ImpuestoCovid;
+            detalleLiquidacion.SubTotal1 = formato.SubTotal1;
+
+            detalleLiquidacion.PensionVoluntaria = formato.PensionVoluntaria;
+            detalleLiquidacion.Afc = formato.Afc;
+            detalleLiquidacion.SubTotal2 = formato.SubTotal2;
+            detalleLiquidacion.MedicinaPrepagada = formato.MedicinaPrepagada;
+            detalleLiquidacion.Dependientes = formato.Dependientes;
+            detalleLiquidacion.InteresesVivienda = formato.InteresVivienda;
+            detalleLiquidacion.TotalDeducciones = formato.TotalDeducciones;
+
+            detalleLiquidacion.SubTotal3 = formato.SubTotal3;
+            detalleLiquidacion.RentaExenta = formato.RentaExenta;
+            detalleLiquidacion.LimiteRentaExenta = formato.LimiteRentaExenta;
+            detalleLiquidacion.TotalRentaExenta = formato.TotalRentaExenta;
+            detalleLiquidacion.DiferencialRenta = formato.DiferencialRenta;
+            detalleLiquidacion.BaseGravableRenta = formato.BaseGravableRenta;
+            detalleLiquidacion.BaseGravableUvt = formato.BaseGravableUvt;
+        }
+
+        #region Contrato Prestación de Servicio
+
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ContratoPrestacionServicio(DetallePlanPagoDto planPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
                                             List<CriterioCalculoReteFuente> listaCriterioReteFuente,
@@ -241,7 +433,7 @@ namespace ComplementApp.API.Controllers
                         deduccion.Base = baseGravableFinal;
                         deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
 
-                        //if (deduccion.Base > 0)
+                        if (deduccion.Base > 0)
                         {
                             deduccion.Tarifa = deduccion.Valor / deduccion.Base;
                         }
@@ -271,11 +463,13 @@ namespace ComplementApp.API.Controllers
 
             #endregion Deducción Otras
 
-
             formato.Deducciones = new List<DeduccionDto>();
             formato.Deducciones = listaDeducciones;
 
             #endregion Obtener lista de deducciones          
+
+            formato.TotalRetenciones = obtenerSumatoriaRetenciones(listaDeducciones);
+            formato.TotalAGirar = formato.ValorTotal - formato.TotalRetenciones;
 
             return formato;
         }
@@ -291,6 +485,15 @@ namespace ComplementApp.API.Controllers
             return valor;
         }
 
+        private decimal obtenerSumatoriaRetenciones(List<DeduccionDto> listaDeducciones)
+        {
+            decimal valor = 0;
+
+            valor = listaDeducciones
+                    .Sum(x => x.Valor);
+
+            return valor;
+        }
 
         private FormatoCausacionyLiquidacionPagos CalcularValoresFormato(DetallePlanPagoDto planPago, ParametroLiquidacionTercero parametroLiquidacion, List<ParametroGeneral> parametroGenerales, int numeroDiasLaborados)
         {
@@ -518,14 +721,8 @@ namespace ComplementApp.API.Controllers
 
             #region Base Gravable
 
-            //if (numeroDiasLaborados < 30)
-            {
-                C25BaseGravableRenta = ((C20subTotal3 - C21RentaExenta - C24DiferencialRenta) / 30) * numeroDiasLaborados;
-            }
-            // else
-            // {
-            //     C25BaseGravableRenta = C20subTotal3 - C21RentaExenta - C24DiferencialRenta;
-            // }
+            C25BaseGravableRenta = ((C20subTotal3 - C21RentaExenta - C24DiferencialRenta) / 30) * numeroDiasLaborados;
+
             C26BaseGravableRentaUvt = C25BaseGravableRenta / valorUvt;
             C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);
 
@@ -562,17 +759,368 @@ namespace ComplementApp.API.Controllers
             return formato;
         }
 
-        private string obtenerValorDeParametroGeneral(List<ParametroGeneral> parametroGenerales, string nombre)
+        #endregion Contrato Prestación de Servicio
+
+        #region Proveedores con deducción
+
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(DetallePlanPagoDto planPago,
+                                                    ParametroLiquidacionTercero parametroLiquidacion,
+                                                    List<ParametroGeneral> parametroGenerales,
+                                                    List<CriterioCalculoReteFuente> listaCriterioReteFuente,
+                                                    List<DeduccionDto> listaDeducciones)
         {
-            string valor = string.Empty;
-            var item = parametroGenerales.FirstOrDefault(x => x.Nombre.ToUpper() == nombre.ToUpper());
+            #region variables 
 
-            if (item != null)
-                valor = item.Valor;
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+            CriterioCalculoReteFuente criterioReteFuente = null;
 
-            return valor;
+            decimal PLTarifaIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+
+            //Para Proveedores con deducción siempre es 30
+            int C32NumeroDiaLaborados = 30, baseGravableUvtFinal = 0, honorarioUvt = 0;
+
+            decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0, CSubTotal1 = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
+
+            PLTarifaIva = parametroLiquidacion.TarifaIva;
+
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
+            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
+            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
+            parametroUvt = parametroUvt.Replace(",", "");
+            parametroSMLV = parametroSMLV.Replace(",", "");
+            decimal.TryParse(parametroUvt, out valorUvt);
+
+            #endregion Parametros Generales
+
+            #region Calcular valores y obtener formato
+
+            //formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+
+            formato.ValorIva =
+            formato.SubTotal3 = 0;
+            formato.RentaExenta = 0;
+            formato.LimiteRentaExenta = 0;
+            formato.TotalRentaExenta = 0;
+            formato.DiferencialRenta = 0;
+
+            C31Honorario = planPago.ValorFacturado.Value / (1 + PLTarifaIva);
+            C30ValorIva = planPago.ValorFacturado.Value - C31Honorario;
+
+            C31HonorarioUvt = C31Honorario / valorUvt;
+            honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
+
+            baseGravableFinal = C31Honorario;
+            baseGravable30 = C31Honorario / valorUvt;
+            baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+
+            formato.BaseGravableRenta = baseGravableFinal;
+            formato.BaseGravableUvt = baseGravableUvtFinal;
+            formato.ValorIva = C30ValorIva;
+            formato.Honorario = C31Honorario;
+            formato.HonorarioUvt = honorarioUvt;
+            formato.ValorTotal = planPago.ValorFacturado.Value;
+
+            #endregion Calcular valores y obtener formato
+
+            #region Obtener Lista de deducciones
+
+            string deduccionRentaTrabajo = parametroCodigoRenta;
+            string deduccionIva = parametroCodigoIva;
+
+            decimal valorMinimoRango = 0;
+            decimal factorIncremento = 0;
+            decimal tarifaCalculo = 0;
+
+            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtFinal);
+
+            valorMinimoRango = criterioReteFuente.Desde;
+            factorIncremento = criterioReteFuente.Factor;
+            tarifaCalculo = criterioReteFuente.Tarifa;
+
+            //temp
+            CSubTotal1 = C31Honorario;
+
+            if (listaDeducciones != null && listaDeducciones.Count > 0)
+            {
+                foreach (var deduccion in listaDeducciones)
+                {
+                    if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
+                    {
+                        deduccion.Base = baseGravableFinal;
+                        deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
+
+                        if (deduccion.Base > 0)
+                        {
+                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                        }
+                    }
+                    else if (deduccion.Codigo.Equals(deduccionIva))
+                    {
+                        deduccion.Base = C30ValorIva;
+                        deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                    }
+
+                    else if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
+                            !deduccion.Codigo.Equals(deduccionIva) &&
+                            (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    {
+                        deduccion.Base = CSubTotal1;
+                        deduccion.Valor = deduccion.Tarifa * CSubTotal1;
+                    }
+
+
+                }
+            }
+
+            #region Deducción Otras
+
+            var deduccionOtras = listaDeducciones
+                                    .Where(x => x.TipoBaseDeduccionId == (int)TipoBaseDeducciones.OTRAS)
+                                    .FirstOrDefault();
+
+            if (deduccionOtras != null)
+            {
+                var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones);
+                deduccionOtras.Base = valorGmf;
+                deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
+            }
+
+            #endregion Deducción Otras
+
+            formato.Deducciones = new List<DeduccionDto>();
+            formato.Deducciones = listaDeducciones;
+
+            #endregion Obtener lista de deducciones          
+
+            formato.TotalRetenciones = obtenerSumatoriaRetenciones(listaDeducciones);
+            formato.TotalAGirar = formato.ValorTotal - formato.TotalRetenciones;
+
+            return formato;
         }
 
+
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(DetallePlanPagoDto planPago,
+                                            ParametroLiquidacionTercero parametroLiquidacion,
+                                            List<ParametroGeneral> parametroGenerales,
+                                            List<CriterioCalculoReteFuente> listaCriterioReteFuente,
+                                            List<DeduccionDto> listaDeducciones,
+                                            decimal valorBaseGravable)
+        {
+            #region variables 
+
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+            CriterioCalculoReteFuente criterioReteFuente = null;
+
+            decimal PLTarifaIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+
+            //Para Proveedores con deducción siempre es 30
+            int C32NumeroDiaLaborados = 30, baseGravableUvtFinal = 0, honorarioUvt = 0;
+
+            decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0, CSubTotal1 = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
+
+            PLTarifaIva = parametroLiquidacion.TarifaIva;
+
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
+            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
+            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            parametroUvt = parametroUvt.Replace(",", "");
+            parametroSMLV = parametroSMLV.Replace(",", "");
+            decimal.TryParse(parametroUvt, out valorUvt);
+
+            #endregion Parametros Generales
+
+            #region Calcular valores y obtener formato
+
+            //formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+
+            formato.ValorIva =
+            formato.SubTotal3 = 0;
+            formato.RentaExenta = 0;
+            formato.LimiteRentaExenta = 0;
+            formato.TotalRentaExenta = 0;
+            formato.DiferencialRenta = 0;
+
+            C30ValorIva = valorBaseGravable * PLTarifaIva;
+            C31Honorario = planPago.ValorFacturado.Value - C30ValorIva;
+            C31HonorarioUvt = C31Honorario / valorUvt;
+            honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
+
+            baseGravableFinal = valorBaseGravable;
+            baseGravable30 = valorBaseGravable / valorUvt;
+            baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+
+            formato.BaseGravableRenta = baseGravableFinal;
+            formato.BaseGravableUvt = baseGravableUvtFinal;
+            formato.ValorIva = C30ValorIva;
+            formato.Honorario = C31Honorario;
+            formato.HonorarioUvt = honorarioUvt;
+            formato.ValorTotal = planPago.ValorFacturado.Value;
+
+            #endregion Calcular valores y obtener formato
+
+            #region Obtener Lista de deducciones
+
+            string deduccionRentaTrabajo = parametroCodigoRenta;
+
+            decimal valorMinimoRango = 0;
+            decimal factorIncremento = 0;
+            decimal tarifaCalculo = 0;
+
+            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtFinal);
+
+            valorMinimoRango = criterioReteFuente.Desde;
+            factorIncremento = criterioReteFuente.Factor;
+            tarifaCalculo = criterioReteFuente.Tarifa;
+
+            //temp
+            CSubTotal1 = C31Honorario;
+
+            if (listaDeducciones != null && listaDeducciones.Count > 0)
+            {
+                foreach (var deduccion in listaDeducciones)
+                {
+                    if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
+                    {
+                        deduccion.Base = baseGravableFinal;
+                        deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
+
+                        if (deduccion.Base > 0)
+                        {
+                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                        }
+                    }
+
+                    if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
+                        (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    {
+                        deduccion.Base = CSubTotal1;
+                        deduccion.Valor = deduccion.Tarifa * CSubTotal1;
+                    }
+                }
+            }
+
+            #region Deducción Otras
+
+            var deduccionOtras = listaDeducciones
+                                    .Where(x => x.TipoBaseDeduccionId == (int)TipoBaseDeducciones.OTRAS)
+                                    .FirstOrDefault();
+
+            if (deduccionOtras != null)
+            {
+                var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones);
+                deduccionOtras.Base = valorGmf;
+                deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
+            }
+
+            #endregion Deducción Otras
+
+            formato.Deducciones = new List<DeduccionDto>();
+            formato.Deducciones = listaDeducciones;
+
+            #endregion Obtener lista de deducciones          
+
+            formato.TotalRetenciones = obtenerSumatoriaRetenciones(listaDeducciones);
+            formato.TotalAGirar = formato.ValorTotal - formato.TotalRetenciones;
+
+            return formato;
+        }
+
+        #endregion Proveedores con deducción
+
+        #region Proveeedores sin Deducción
+
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresSinDeduccion(DetallePlanPagoDto planPago,
+                                                          ParametroLiquidacionTercero parametroLiquidacion,
+                                                          List<ParametroGeneral> parametroGenerales,
+                                                          List<CriterioCalculoReteFuente> listaCriterioReteFuente)
+        {
+            #region variables 
+
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+
+            decimal PLTarifaIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+
+            //Para Proveedores con deducción siempre es 30
+            int baseGravableUvtFinal = 0, honorarioUvt = 0;
+
+            decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
+
+            PLTarifaIva = parametroLiquidacion.TarifaIva;
+
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
+            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
+            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            parametroUvt = parametroUvt.Replace(",", "");
+            parametroSMLV = parametroSMLV.Replace(",", "");
+            decimal.TryParse(parametroUvt, out valorUvt);
+
+            #endregion Parametros Generales
+
+            #region Calcular valores y obtener formato
+
+            //formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+
+            formato.ValorIva =
+            formato.SubTotal3 = 0;
+            formato.RentaExenta = 0;
+            formato.LimiteRentaExenta = 0;
+            formato.TotalRentaExenta = 0;
+            formato.DiferencialRenta = 0;
+
+            C31Honorario = planPago.ValorFacturado.Value / (1 + PLTarifaIva);
+            C30ValorIva = planPago.ValorFacturado.Value - C31Honorario;
+
+            C31HonorarioUvt = C31Honorario / valorUvt;
+            honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
+
+            baseGravableFinal = C31Honorario;
+            baseGravable30 = C31Honorario / valorUvt;
+            baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+
+            formato.BaseGravableRenta = baseGravableFinal;
+            formato.BaseGravableUvt = baseGravableUvtFinal;
+            formato.ValorIva = C30ValorIva;
+            formato.Honorario = C31Honorario;
+            formato.HonorarioUvt = honorarioUvt;
+            formato.ValorTotal = planPago.ValorFacturado.Value;
+
+            #endregion Calcular valores y obtener formato
+
+            formato.TotalRetenciones = 0;
+            formato.TotalAGirar = formato.ValorTotal;
+
+            return formato;
+        }
+
+
+        #endregion Proveedores sin deducción
+
+        #region Funciones Generales
 
         private bool FechaActualEntreFechasVigencia(DateTime fechaInicio, DateTime fechaFinal)
         {
@@ -584,6 +1132,17 @@ namespace ComplementApp.API.Controllers
             return false;
         }
 
+        private string obtenerValorDeParametroGeneral(List<ParametroGeneral> parametroGenerales, string nombre)
+        {
+            string valor = string.Empty;
+            var item = parametroGenerales.FirstOrDefault(x => x.Nombre.ToUpper() == nombre.ToUpper());
+
+            if (item != null)
+                valor = item.Valor;
+
+            return valor;
+        }
+
         private CriterioCalculoReteFuente obtenerCriterioCalculoRendimiento(List<CriterioCalculoReteFuente> lista, int baseGravableUvtFinal)
         {
             var criterio = lista.Where(x => x.Desde <= baseGravableUvtFinal
@@ -591,5 +1150,8 @@ namespace ComplementApp.API.Controllers
 
             return criterio;
         }
+
+
+        #endregion Funciones Generales
     }
 }

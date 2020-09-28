@@ -11,6 +11,7 @@ namespace ComplementApp.API.Dtos
         public string ViaticosDescripcion { get; set; }
         public long Crp { get; set; }
         public int NumeroPago { get; set; }
+        public int CantidadPago { get; set; }
         public string Observaciones { get; set; }
 
         public decimal? ValorFacturado { get; set; }
@@ -29,5 +30,8 @@ namespace ComplementApp.API.Dtos
         public decimal Operacion { get; set; }
         public DateTime Fecha { get; set; }
         public int TerceroId { get; set; }
+
+        public int ModalidadContrato { get; set; }
+        public int TipoPago { get; set; }
     }
 }

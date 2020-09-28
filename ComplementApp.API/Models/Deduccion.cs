@@ -25,7 +25,7 @@ namespace ComplementApp.API.Models
 
         public bool estado { get; set; }
 
-         public int TipoBaseDeduccionId { get; set; }
+        public int TipoBaseDeduccionId { get; set; }
 
         public TipoBaseDeduccion TipoBaseDeduccion { get; set; }
 

@@ -96,7 +96,8 @@ export class PlanPagoService {
   }
 
   ObtenerFormatoCausacionyLiquidacionPago(
-    planPagoId: number
+    planPagoId: number,
+    valorBaseGravable: number
   ): Observable<FormatoCausacionyLiquidacionPago> {
     const path = 'ObtenerFormatoCausacionyLiquidacionPago';
 
@@ -105,6 +106,9 @@ export class PlanPagoService {
     if (planPagoId > 0) {
       params = params.append('planPagoId', planPagoId.toString());
     }
+    if (valorBaseGravable > 0) {
+      params = params.append('valorBaseGravable', valorBaseGravable.toString());
+    }
 
     return this.http.get<FormatoCausacionyLiquidacionPago>(
       this.baseUrl + path,
@@ -112,11 +116,20 @@ export class PlanPagoService {
     );
   }
 
-  ActualizarPlanPago(
-    planPagoId: number,
-    factura: PlanPago
-  ): Observable<boolean> {
+  ActualizarPlanPago(factura: PlanPago): Observable<boolean> {
     this.http.put(this.baseUrl, factura).subscribe(() => {});
     return observableOf(true);
+  }
+
+  RegistrarDetalleLiquidacion(
+    formato: FormatoCausacionyLiquidacionPago
+  ): Observable<any> {
+    const path = 'RegistrarDetalleLiquidacion';
+    return this.http.post(this.baseUrl + path, formato);
+  }
+
+  RechazarDetalleLiquidacion(planPagoId: number): Observable<any> {
+    const path = 'RechazarDetalleLiquidacion/';
+    return this.http.get(this.baseUrl + path + planPagoId);
   }
 }

@@ -3,6 +3,7 @@ import { Deduccion } from './deduccion';
 export interface FormatoCausacionyLiquidacionPago {
   planPagoId: number;
   terceroId: number;
+  cantidadPago: number;
   honorario: number;
   honorarioUvt: number;
   valorIva: number;
@@ -30,5 +31,6 @@ export interface FormatoCausacionyLiquidacionPago {
   diferencialRenta: number;
   baseGravableRenta: number;
   baseGravableUvt: number;
+  textoComprobanteContable: string;
   deducciones?: Deduccion[];
 }

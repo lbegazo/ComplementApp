@@ -1,4 +1,3 @@
-
 export interface PlanPago {
   planPagoId: number;
   cdp: number;
@@ -39,4 +38,6 @@ export interface PlanPago {
   estadoOrdenPago: string;
   terceroId: number;
   esRadicarFactura: boolean;
+  modalidadContrato: number;
+  tipoPago: number;
 }

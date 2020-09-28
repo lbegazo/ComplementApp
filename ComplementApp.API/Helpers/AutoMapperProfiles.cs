@@ -46,7 +46,9 @@ namespace ComplementApp.API.Helpers
                 .ForMember(u => u.ViaticosDescripcion, opt => opt.MapFrom(u => u.Viaticos ? "SI" : "NO"))
                 .ForMember(u => u.MesPagoDescripcion, opt => opt.MapFrom(u => u.MesPago > 0 && u.MesPago < 13 ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(u.MesPago).ToUpper() : string.Empty))
                 .ForMember( u => u.IdentificacionTercero, opt => opt.MapFrom(u => u.Tercero.NumeroIdentificacion))
-                .ForMember( u => u.NombreTercero, opt => opt.MapFrom(u => u.Tercero.Nombre));
+                .ForMember( u => u.NombreTercero, opt => opt.MapFrom(u => u.Tercero.Nombre))
+                .ForMember( u => u.ModalidadContrato, opt => opt.MapFrom(u => u.Tercero.ModalidadContrato))
+                .ForMember( u => u.TipoPago, opt => opt.MapFrom(u => u.Tercero.TipoPago));
             CreateMap<PlanPagoDto, PlanPago>();
 
             #endregion PlanPago

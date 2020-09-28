@@ -75,6 +75,10 @@ namespace ComplementApp.API.Data
 
         public DbSet<CriterioCalculoReteFuente> CriterioCalculoReteFuente { get; set; }
 
+        public DbSet<DetalleLiquidacion> DetalleLiquidacion { get; set; }
+
+        public DbSet<LiquidacionDeduccion> LiquidacionDeducciones { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -114,6 +118,7 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<RubroPresupuestal>()
                 .Property(b => b.PadreRubroId)
                 .HasDefaultValue(0);
+
         }
 
     }

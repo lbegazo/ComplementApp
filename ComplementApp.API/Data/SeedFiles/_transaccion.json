@@ -1,44 +1,431 @@
 [
   {
-    "Codigo": "USUARIO",
-    "Nombre": "Usuarios",
-    "Descripcion": "Mantenimiento de Usuarios",
+    "Codigo": "ADMINISTRACION",
+    "Nombre": "Administración del sistema",
+    "Descripcion": "Administración del sistema",
     "Icono": "supervisor_account",
-    "Ruta": "usuarios"
+    "Ruta": ""
   },
   {
-    "Codigo": "ARCHIVO",
-    "Nombre": "Actualizar BD",
-    "Descripcion": "Actualizar BD",
+    "Codigo": "PLAN",
+    "Nombre": "Plan Anual De Adquisiciones (PAA)",
+    "Descripcion": "Plan Anual De Adquisiciones (PAA)",
     "Icono": "attach_file",
-    "Ruta": "archivo"
+    "Ruta": ""
   },
   {
-    "Codigo": "CDP",
-    "Nombre": "Registro de Solicitudes de CDP",
-    "Descripcion": "Registro de Solicitudes de CDP",
-    "Icono": "assignment",
-    "Ruta": "cdp"
+    "Codigo": "SOLICITUDES",
+    "Nombre": "Solicitudes De Gestión Presupuestal",
+    "Descripcion": "Solicitudes De Gestión Presupuestal",
+    "Icono": "chrome_reader_mode",
+    "Ruta": ""
   },
   {
-    "Codigo": "FACTURA",
-    "Nombre": "Registro de Radicados de Pago",
-    "Descripcion": "Registro de Radicados de Pago",
-    "Icono": "assignment",
-    "Ruta": "factura"
-  },  
+    "Codigo": "TRAMITE",
+    "Nombre": "Tramite De Pago A Contratistas Y Proveedor",
+    "Descripcion": "Tramite De Pago A Contratistas Y Proveedor",
+    "Icono": "analytics",
+    "Ruta": ""
+  },
   {
-    "Codigo": "CAUSACION",
-    "Nombre": "Liquidación de Radicados de Pago",
-    "Descripcion": "Liquidación de Radicados de Pago",
+    "Codigo": "CONCILIACION",
+    "Nombre": "Conciliación De Cuentas Bancarias",
+    "Descripcion": "Conciliación De Cuentas Bancarias",
+    "Icono": "account_balance",
+    "Ruta": ""
+  },
+  {
+    "Codigo": "CONSULTAS",
+    "Nombre": "Consultas e Indicadores",
+    "Descripcion": "Consultas E Indicadores",
     "Icono": "assessment",
-    "Ruta": "causacion"
+    "Ruta": ""
   },
   {
-    "Codigo": "consulta",
-    "Nombre": "Consultas",
-    "Descripcion": "Consultas",
+    "Codigo": "GENERADOR",
+    "Nombre": "Generador Cargas Masivas",
+    "Descripcion": "Generador Cargas Masivas",
+    "Icono": "post_add",
+    "Ruta": ""
+  },
+  {
+    "Codigo": "INTEGRACION",
+    "Nombre": "Integracion Siif Nación",
+    "Descripcion": "Integracion Siif Nación",
+    "Icono": "close_fullscreen",
+    "Ruta": ""
+  },
+
+  {
+    "Codigo": "ADMINISTRACION_USUARIO",
+    "Nombre": "Mantenimiento de usuarios",
+    "Descripcion": "Mantenimiento de usuarios",
+    "Icono": "supervisor_account",
+    "Ruta": "ADMINISTRACION_USUARIO",
+    "CodigoPadreTransaccion": "ADMINISTRACION"
+  },
+
+  {
+    "Codigo": "PLAN_CARGAMASIVA",
+    "Nombre": "Carga Masiva de PAA",
+    "Descripcion": "Carga Masiva de PAA",
+    "Icono": "attach_file",
+    "Ruta": "PLAN_CARGAMASIVA",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+  {
+    "Codigo": "PLAN_SOLICITUD",
+    "Nombre": "Solicitud de modificaciones al PAA",
+    "Descripcion": "Solicitud de modificaciones al PAA",
+    "Icono": "attach_file",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+  {
+    "Codigo": "PLAN_APROBAR",
+    "Nombre": "Aprobar Modificación al PAA",
+    "Descripcion": "Aprobar Modificación al PAA",
+    "Icono": "attach_file",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+  {
+    "Codigo": "PLAN_REPORTE",
+    "Nombre": "Reporte de seguimientos PAA",
+    "Descripcion": "Reporte de seguimientos PAA",
+    "Icono": "attach_file",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+  {
+    "Codigo": "PLAN_CARGAMASIVAMODIFICACION",
+    "Nombre": "Carga masiva modificaciones PAA",
+    "Descripcion": "Carga masiva modificaciones PAA",
+    "Icono": "attach_file",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+
+
+
+  {
+    "Codigo": "SOLICITUDES_CERTIFICADO",
+    "Nombre": "Solicitud de Certificado de Disponibilidad Presupuestal",
+    "Descripcion": "Solicitud de Certificado de Disponibilidad Presupuestal",
+    "Icono": "chrome_reader_mode",
+    "Ruta": "SOLICITUDES_CERTIFICADO",
+    "CodigoPadreTransaccion": "SOLICITUDES"
+  },
+  {
+    "Codigo": "SOLICITUDES_REINTEGRO",
+    "Nombre": "Solicitud de Reintegro Presupuestal",
+    "Descripcion": "Solicitud de Reintegro Presupuestal",
+    "Icono": "chrome_reader_mode",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "SOLICITUDES"
+  },
+  {
+    "Codigo": "SOLICITUDES_LEGALIZACION",
+    "Nombre": "Solicitud de Legalización de viáticos",
+    "Descripcion": "Solicitud de Legalización de viáticos",
+    "Icono": "chrome_reader_mode",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "SOLICITUDES"
+  },
+  {
+    "Codigo": "SOLICITUDES_VERIFICACION",
+    "Nombre": "Módulo de verificación automática de registros",
+    "Descripcion": "Módulo de verificación automática de registros",
+    "Icono": "chrome_reader_mode",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "SOLICITUDES"
+  },
+  {
+    "Codigo": "SOLICITUDES_MODIFICACIONPRESUPUESTAL",
+    "Nombre": "Solicitud de modificación presupuestal",
+    "Descripcion": "Solicitud de modificación presupuestal",
+    "Icono": "chrome_reader_mode",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "SOLICITUDES"
+  },
+
+
+
+  {
+    "Codigo": "TRAMITE_REGISTRAR",
+    "Nombre": "Registrar solicitud de pago",
+    "Descripcion": "Registrar solicitud de pago",
+    "Icono": "analytics",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "TRAMITE"
+  },
+  {
+    "Codigo": "TRAMITE_APROBAR",
+    "Nombre": "Aprobar solicitud de pago",
+    "Descripcion": "Aprobar solicitud de pago",
+    "Icono": "analytics",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "TRAMITE"
+  },
+  {
+    "Codigo": "TRAMITE_RADICADO",
+    "Nombre": "Registro de radicado de pago a proveedores",
+    "Descripcion": "Registro de radicado de pago a proveedores",
+    "Icono": "analytics",
+    "Ruta": "TRAMITE_RADICADO",
+    "CodigoPadreTransaccion": "TRAMITE"
+  },
+  {
+    "Codigo": "TRAMITE_LIQUIDACION",
+    "Nombre": "Liquidación de radicados de pago a proveedores",
+    "Descripcion": "Liquidación de radicados de pago a proveedores",
+    "Icono": "analytics",
+    "Ruta": "TRAMITE_LIQUIDACION",
+    "CodigoPadreTransaccion": "TRAMITE"
+  },
+  {
+    "Codigo": "TRAMITE_REPORTE",
+    "Nombre": "Reporte de pago a proveedor",
+    "Descripcion": "Reporte de pago a proveedor",
+    "Icono": "analytics",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "TRAMITE"
+  },
+
+
+
+  {
+    "Codigo": "CONCILIACION_CARGA",
+    "Nombre": "Carga automática de extractos bancarios",
+    "Descripcion": "Carga automática de extractos bancarios",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+  {
+    "Codigo": "CONCILIACION_CAPTURAAUXILIAR",
+    "Nombre": "Captura de Auxiliar contable SIIF",
+    "Descripcion": "Captura de Auxiliar contable SIIF",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+  {
+    "Codigo": "CONCILIACION_CAPTURAAUTOMATICA",
+    "Nombre": "Captura Automática de Extractos SIIF",
+    "Descripcion": "Captura Automática de Extractos SIIF",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+  {
+    "Codigo": "CONCILIACION_CONCILIACION",
+    "Nombre": "Conciliación automática de operaciones",
+    "Descripcion": "Conciliación automática de operaciones",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+  {
+    "Codigo": "CONCILIACION_REGISTROMANUAL",
+    "Nombre": "Registro manual de operaciones",
+    "Descripcion": "Registro manual de operaciones",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+  {
+    "Codigo": "CONCILIACION_APROBACION",
+    "Nombre": "Aprobación de conciliaciones",
+    "Descripcion": "Aprobación de conciliaciones",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+  {
+    "Codigo": "CONCILIACION_REPORTE",
+    "Nombre": "Reporte de conciliación",
+    "Descripcion": "Reporte de conciliación",
+    "Icono": "account_balance",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONCILIACION"
+  },
+
+
+
+  {
+    "Codigo": "CONSULTAS_METAS",
+    "Nombre": "Metas de Ejecución Presupuestal",
+    "Descripcion": "Metas de Ejecución Presupuestal",
     "Icono": "assessment",
-    "Ruta": "consulta"
-  }
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_EJECUCIONPRESUPUESTAL",
+    "Nombre": "Indicadores de Ejecución Presupuestal",
+    "Descripcion": "Indicadores de Ejecución Presupuestal",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_AUSTERIDADGASTO",
+    "Nombre": "Indicadores de Austeridad del Gasto",
+    "Descripcion": "Indicadores de Austeridad del Gasto",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_SEGUIMIENTO",
+    "Nombre": "Seguimiento Plan Anual Adquisiciones",
+    "Descripcion": "Seguimiento Plan Anual Adquisiciones",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_INFORMEPAGO",
+    "Nombre": "Informe de Pago a Proveedores",
+    "Descripcion": "Informe de Pago a Proveedores",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_INFORMESEGUIMIENTO",
+    "Nombre": "Informe de seguimiento inversión (DNP)",
+    "Descripcion": "Informe de seguimiento inversión (DNP)",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_DIASPROMEDIO",
+    "Nombre": "Días promedio de tramites de pago",
+    "Descripcion": "Días promedio de tramites de pago",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
+    "Codigo": "CONSULTAS_INDICADOR",
+    "Nombre": "Indicador de cumplimientos de tareas",
+    "Descripcion": "Indicador de cumplimientos de tareas",
+    "Icono": "assessment",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+
+
+
+  {
+    "Codigo": "GENERADOR_PILA",
+    "Nombre": "Órdenes de Pago PILA",
+    "Descripcion": "Órdenes de Pago PILA",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_CDP",
+    "Nombre": "Certificados de Disponibilidad Presupuestal",
+    "Descripcion": "Certificados de Disponibilidad Presupuestal",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_COMPROMISO",
+    "Nombre": "Compromisos Presupuestales",
+    "Descripcion": "Compromisos Presupuestales",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_CUENTAPORPAGAR",
+    "Nombre": "Cuentas por Pagar Presupuestales",
+    "Descripcion": "Cuentas por Pagar Presupuestales",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_OBLIGACIONES",
+    "Nombre": "Obligaciones Presupuestales",
+    "Descripcion": "Obligaciones Presupuestales",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_DEDUCCIONOBLIGACION",
+    "Nombre": "Deducciones obligación",
+    "Descripcion": "Deducciones obligación",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_DEVENGOCONTABLE",
+    "Nombre": "Afectación del Devengo Contable",
+    "Descripcion": "Afectación del Devengo Contable",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_AJUSTENOMINA",
+    "Nombre": "Ajustes contables pagos de nómina",
+    "Descripcion": "Ajustes contables pagos de nómina",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_AJUSTEIMPUESTO",
+    "Nombre": "Ajustes contables en pago de impuestos",
+    "Descripcion": "Ajustes contables en pago de impuestos",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_PAA",
+    "Nombre": "Modificaciones al PAA",
+    "Descripcion": "Modificaciones al PAA",
+    "Icono": "post_add",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+
+
+  
+  {
+    "Codigo": "INTEGRACION_GESTIONPRESUPUESTAL",
+    "Nombre": "Captura automática de registros de gestión presupuestal",
+    "Descripcion": "Captura automática de registros de gestión presupuestal",
+    "Icono": "close_fullscreen",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "INTEGRACION"
+  },
+  {
+    "Codigo": "INTEGRACION_GESTIONCONTABLE",
+    "Nombre": "Captura automática de registros de gestión contables",
+    "Descripcion": "Captura automática de registros de gestión contables",
+    "Icono": "close_fullscreen",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "INTEGRACION"
+  },
+  {
+    "Codigo": "INTEGRACION_VALIDACIONSOLICITUD",
+    "Nombre": "Validación automática de solicitudes de gestión presupuestal",
+    "Descripcion": "Validación automática de solicitudes de gestión presupuestal",
+    "Icono": "close_fullscreen",
+    "Ruta": "",
+    "CodigoPadreTransaccion": "INTEGRACION"
+  }  
+
 ]

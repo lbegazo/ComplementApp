@@ -22,15 +22,21 @@ namespace ComplementApp.API.Models
         public string Descripcion { get; set; }
 
         [Column(TypeName = "VARCHAR(50)")]
-        public string  Icono { get; set; }
+        public string Icono { get; set; }
 
         [Column(TypeName = "VARCHAR(50)")]
-        public string  Ruta { get; set; }
-
-        [Required]
-        public int? PadreTransaccionId { get; set; }
+        public string Ruta { get; set; }
 
         public bool Estado { get; set; }
+
+        [Required]
+        public int PadreTransaccionId { get; set; }
+
+        //public Transaccion PadreTransaccion { get; set; }
+
+        [NotMapped]
+        public ICollection<Transaccion> Hijos { get; set; }
+
 
         public ICollection<PerfilTransaccion> PerfilTransacciones { get; set; }
     }

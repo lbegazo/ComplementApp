@@ -528,13 +528,13 @@ namespace ComplementApp.API.Data
                     tran.Icono = item.Icono;
                     tran.Ruta = item.Ruta;
                     tran.Estado = true;
-                    if (string.IsNullOrEmpty(item.PadreMenu))
+                    if (string.IsNullOrEmpty(item.CodigoPadreTransaccion))
                     {
                         tran.PadreTransaccionId = 0;
                     }
                     else
                     {
-                        tranPapa = obtenerTransaccion(context, item.PadreMenu);
+                        tranPapa = obtenerTransaccion(context, item.CodigoPadreTransaccion);
                         tran.PadreTransaccionId = tranPapa.TransaccionId;
                     }
                     context.Transaccion.Add(tran);

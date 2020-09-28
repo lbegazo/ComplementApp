@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
-import html2canvas from 'html2canvas';
 
 import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { Cdp } from 'src/app/_models/cdp';
@@ -243,25 +242,17 @@ export class CdpEditComponent implements OnInit {
         newImage = img.src;
 
         img.onload = () => {
-          let pdfWidth = img.width - 20;
-          let pdfHeight = img.height - 10;
-
-          // FileSaver.saveAs(dataUrl, 'my-pdfimage.png'); // Save as Image
+          const pdfWidth = img.width - 20;
+          const pdfHeight = img.height - 10;
 
           let doc;
-
-          // if (pdfWidth > pdfHeight) {
-          //   doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
-          // } else {
-          //   doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
-          // }
           doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
 
           const width = doc.internal.pageSize.getWidth();
           const height = doc.internal.pageSize.getHeight();
 
           doc.addImage(newImage, 'PNG', 0, 0, width, height);
-          filename = 'mypdf_' + '.pdf';
+          filename = 'documento' + '.pdf';
           doc.save(filename);
         };
       })
@@ -269,61 +260,6 @@ export class CdpEditComponent implements OnInit {
         // Error Handling
       });
   }
-
-  // exportarPDF() {
-  //   // parentdiv is the html element which has to be converted to PDF
-  //   const data = document.getElementById('content');
-  //   html2canvas(data).then((canvas) => {
-  //     var pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height]);
-  //     //var pdf = new jsPDF('p', 'mm', 'a4');
-
-  //     var imgData = canvas.toDataURL('image/jpeg', 1.0);
-  //     pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
-  //     pdf.save('converteddoc.pdf');
-  //   });
-  // }
-
-  // exportarPDF() {
-  //   const data = document.getElementById('content');
-  //   html2canvas(data).then((canvas) => {
-  //     // Few necessary setting options
-  //     let imgWidth = 208;
-  //     let pageHeight = 295;
-  //     let imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //     let heightLeft = imgHeight;
-  //     //console.log(imgHeight);
-
-  //     const contentDataURL = canvas.toDataURL('image/png');
-  //     let pdf = new jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
-  //     let position = 0;
-  //     pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
-  //     pdf.save('MYPdf.pdf'); // Generated PDF
-  //   });
-  // }
-
-  // public openPDF(): void {
-  //   let DATA = document.getElementById('content');
-  //   let doc = new jsPDF('p', 'pt', 'a4');
-  //   doc.fromHTML(DATA.innerHTML, 15, 15);
-  //   doc.output('dataurlnewwindow');
-  // }
-
-  // exportarPDF() {
-  //   let DATA = this.content.nativeElement;
-  //   let doc = new jspdf('p', 'pt', 'a4');
-
-  //   let handleElement = {
-  //     '#editor': function (element, renderer) {
-  //       return true;
-  //     },
-  //   };
-  //   doc.fromHTML(DATA.innerHTML, 15, 15, {
-  //     width: 200,
-  //     elementHandlers: handleElement,
-  //   });
-
-  //   doc.save('angular-demo.pdf');
-  // }
 
   cargarInformacionUsuario() {
     this.usuarioService

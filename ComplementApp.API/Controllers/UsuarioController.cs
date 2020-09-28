@@ -61,8 +61,8 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerListaTransaccionXUsuario(int idUsuarioLogueado)
         {
             var transacciones = await _repo.ObtenerListaTransaccionXUsuario(idUsuarioLogueado);
-            var listaDto = _mapper.Map<IEnumerable<TransaccionDto>>(transacciones);
-            return Ok(listaDto);
+            //var listaDto = _mapper.Map<IEnumerable<TransaccionDto>>(transacciones);
+            return Ok(transacciones);
         }
 
         [HttpPost]

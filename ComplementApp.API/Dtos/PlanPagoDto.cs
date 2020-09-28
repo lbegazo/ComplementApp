@@ -25,7 +25,7 @@ namespace ComplementApp.API.Dtos
         public decimal ValorPagado { get; set; }
 
         public bool Viaticos { get; set; }
-        
+
         public string ViaticosDescripcion { get; set; }
 
         public int NumeroPago { get; set; }
@@ -83,5 +83,9 @@ namespace ComplementApp.API.Dtos
         public bool esRadicarFactura { get; set; }
 
         public string DetallePlanPago { get; set; }
+
+        public int ModalidadContrato { get; set; }
+        
+        public int TipoPago { get; set; }
     }
 }

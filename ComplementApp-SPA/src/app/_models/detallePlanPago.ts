@@ -15,6 +15,7 @@ export interface DetallePlanPago {
   viaticosDescripcion: string;
   crp: number;
   numeroPago: number;
+  cantidadPago: number;
   valorFacturado: number;
   identificacionRubroPresupuestal: string;
   identificacionUsoPresupuestal: string;
@@ -22,4 +23,6 @@ export interface DetallePlanPago {
   fechaRadicadoSupervisor: Date;
   numeroFactura: string;
   observaciones: string;
+  modalidadContrato: number;
+  tipoPago: number;
 }

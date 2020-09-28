@@ -1,6 +1,6 @@
 <nav
-  class="navbar navbar-expand-md navbar-dark bg-primary"
-  style="padding-left: 50px; padding-right: 50px"
+  class="navbar navbar-expand-md navbar-dark"
+  style="padding-left: 50px; padding-right: 50px; background-color: #3C94DB;"
 >
   <div class="container-fluid" style="padding: 0px">
     <div
@@ -12,8 +12,8 @@
           color="primary"
           class="mat-elevation-z1"
           style="
-            background-color: #2196f3;
-            width: 300px;
+            background-color: #3C94DB;
+            width: 600px;
             box-shadow: none;
             padding-left: 0px;
           "
@@ -33,10 +33,10 @@
       <div style="width: 20%;" class="d-flex justify-content-center">
         <a [routerLink]="['/']">
           <img
-            src="/assets/img/ane_logo.png"
-            alt="ane"
-            width="120"
-            height="70"
+            src="/assets/img/sigpaa.png"
+            alt="SIGPAA"
+            width="90"
+            height="80"
           />
         </a>
       </div>
@@ -55,52 +55,11 @@
             >
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" (click)="logout()"
-              ><i class="fa fa-sign-out"></i> Logout</a
+              ><i class="fa fa-sign-out"></i> Cerrar sesión</a
             >
           </div>
         </div>
-        <div class="d-flex justify-content-end">
-          <form
-            id="loginForm"
-            #loginForm="ngForm"
-            *ngIf="!loggedIn()"
-            class="form-inline my-2 my-lg-0"
-            (ngSubmit)="login()"
-            style="text-align: right"
-          >
-            <input
-              class="form-control mr-sm-2"
-              type="text"
-              name="username"
-              placeholder="Usuario"
-              [(ngModel)]="model.username"
-              required
-              #username="ngModel"
-              autocomplete="off"
-              readonly
-              onfocus="this.removeAttribute('readonly');"
-            />
-            <input
-              class="form-control mr-sm-2"
-              type="password"
-              name="password"
-              placeholder="Contraseña"
-              [(ngModel)]="model.password"
-              required
-              #password="ngModel"
-              autocomplete="off"
-              readonly
-              onfocus="this.removeAttribute('readonly');"
-            />
-            <button
-              [disabled]="!loginForm.valid"
-              class="btn btn-success my-2 my-sm-0"
-              type="submit"
-            >
-              Login
-            </button>
-          </form>
-        </div>
+        
       </div>
     </div>
   </div>

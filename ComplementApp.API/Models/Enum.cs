@@ -33,4 +33,17 @@ namespace ComplementApp.API.Models
 
     }
 
+    public enum ModalidadContrato
+    {
+        ContratoPrestacionServicio = 1,
+        ProveedorConDescuento,
+        ProveedorSinDescuento
+    }
+
+    public enum TipoPago
+    {
+        Fijo = 0,
+        Variable = 1
+    }
+
 }

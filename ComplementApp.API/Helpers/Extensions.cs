@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -31,6 +33,16 @@ namespace ComplementApp.API.Helpers
                 age--;
 
             return age;
+        }
+
+        public static IEnumerable<T> SelectManyRecursive<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> selector)
+        {
+            var result = source.SelectMany(selector);
+            if (!result.Any())
+            {
+                return result;
+            }
+            return result.Concat(result.SelectManyRecursive(selector));
         }
     }
 }

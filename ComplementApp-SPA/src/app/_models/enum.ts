@@ -25,6 +25,17 @@ export class EstadoPlanPago extends Enum<number> {
   public static readonly Rechazada = new Enum(13);
 }
 
+export class ModalidadContrato extends Enum<number> {
+  public static readonly ContratoPrestacionServicio = new Enum(1);
+  public static readonly ProveedorConDescuento = new Enum(2);
+  public static readonly ProveedorSinDescuento = new Enum(3);
+}
+
+export class TipoPago extends Enum<number> {
+  public static readonly Fijo = new Enum(0);
+  public static readonly Variable = new Enum(1);
+}
+
 /*
 console.log(PrimaryColor.Red);
 // Output: Enum { value: '#FF0000' }

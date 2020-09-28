@@ -13,10 +13,10 @@ import { AuthService } from './_services/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { DOCUMENT } from '@angular/common';
 import { NavService } from './_services/nav.service';
-import { NavItem } from './_models/nav-item';
 import { Transaccion } from './_models/transaccion';
 import { AlertifyService } from './_services/alertify.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -28,14 +28,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appDrawer') appDrawer: ElementRef;
   version = VERSION;
   transacciones: Transaccion[] = [];
-  navItems: NavItem[] = [];
   subscription: Subscription;
+  model: any = {};
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private navService: NavService,
     private authService: AuthService,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -44,11 +45,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.document.documentElement.lang = 'es';
 
     this.transacciones = [];
-    this.navItems = [];
     this.subscription = this.authService.transaccionChanged.subscribe(
       (lista: Transaccion[]) => {
         this.transacciones = lista;
-        this.llenarNavItem();
         this.guardarListaTransacciones();
       }
     );
@@ -58,36 +57,19 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.navService.appDrawer = this.appDrawer;
   }
 
-  obtenerListaTransaccionXUsuario() {}
-
-  llenarNavItem() {
-    this.navItems = [];
-    if (this.transacciones && this.transacciones.length > 0) {
-      for (let x = 0; x < this.transacciones.length; x++) {
-        const element = this.transacciones[x];
-        const newItem: NavItem = {
-          displayName: element.nombre,
-          route: element.ruta,
-          iconName: element.icono,
-        };
-
-        // if (element.hijos && element.hijos.length > 0) {
-        //   newItem.children = [];
-        //   for (let y = 0; y < element.hijos.length; y++) {
-        //     const hijo = element.hijos[y];
-        //     const newItemHijo: NavItem = {
-        //       displayName: hijo.nombre,
-        //       route: hijo.ruta,
-        //       iconName: hijo.icono,
-        //     };
-        //     newItem.children.push(newItemHijo);
-        //   }
-        // }
-        this.navItems.push(newItem);
+  login() {
+    this.authService.login(this.model).subscribe(
+      (next) => {
+        this.alertify.success('Login correcto!!!');
+        this.model = {};
+      },
+      (error) => {
+        this.alertify.error(error);
+      },
+      () => {
+        this.router.navigate(['/home']);
       }
-    } else {
-      this.alertify.warning('El usuario no tiene transacciones configuradas');
-    }
+    );
   }
 
   loggedIn() {
@@ -105,5 +87,53 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:beforeunload', ['$event'])
   clearLocalStorage(event) {
     localStorage.clear();
+    this.model = {};
   }
+
+  //#region No Eliminar
+
+  /*
+  llenarNavItem() {
+    this.navItems = [];
+    if (this.transacciones && this.transacciones.length > 0) {
+      for (const element of this.transacciones) {
+        const newItem: NavItem = {
+          displayName: element.nombre,
+          route: element.ruta,
+          iconName: element.icono,
+        };
+
+        if (element.hijos && element.hijos.length > 0) {
+          newItem.children = [];
+          for (const hijo of element.hijos) {
+            const newItemHijo: NavItem = {
+              displayName: hijo.nombre,
+              route: hijo.ruta,
+              iconName: hijo.icono,
+            };
+
+            if (hijo.hijos && hijo.hijos.length > 0) {
+              newItemHijo.children = [];
+              for (const nieto of hijo.hijos) {
+                const newItemNieto: NavItem = {
+                  displayName: hijo.nombre,
+                  route: hijo.ruta,
+                  iconName: hijo.icono,
+                };
+                newItemHijo.children.push(newItemNieto);
+              }
+            }
+
+            newItem.children.push(newItemHijo);
+          }
+        }
+        this.navItems.push(newItem);
+      }
+    } else {
+      this.alertify.warning('El usuario no tiene transacciones configuradas');
+    }
+  }
+  */
+
+  //#endregion No eliminar
 }

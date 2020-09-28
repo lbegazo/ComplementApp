@@ -21,7 +21,7 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'usuarios',
+    path: 'ADMINISTRACION_USUARIO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: UsuarioMainComponent,
@@ -41,26 +41,26 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'archivo',
+    path: 'PLAN_CARGAMASIVA',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: ArchivoMainComponent,
   },
   {
-    path: 'factura',
+    path: 'TRAMITE_RADICADO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: FacturaMainComponent,
   },
   {
-    path: 'causacion',
+    path: 'TRAMITE_LIQUIDACION',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: CausacionyLiquidacionComponent,
     resolve: { planPagoResolver: PlanPagoResolver },
   },
   {
-    path: 'cdp',
+    path: 'SOLICITUDES_CERTIFICADO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: CdpMainComponent,

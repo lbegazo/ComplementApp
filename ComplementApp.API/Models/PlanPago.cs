@@ -19,13 +19,13 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorInicial { get; set; }
 
-         [Column(TypeName = "decimal(30,8)")]
+        [Column(TypeName = "decimal(30,8)")]
         public decimal? ValorAdicion { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorAPagar { get; set; }
 
-         [Column(TypeName = "decimal(30,8)")]
+        [Column(TypeName = "decimal(30,8)")]
         public decimal? ValorPagado { get; set; }
 
         public bool Viaticos { get; set; }
@@ -37,10 +37,10 @@ namespace ComplementApp.API.Models
 
         public DateTime? FechaRadicadoProveedor { get; set; }
 
-         [Column(TypeName = "VARCHAR(250)")]
+        [Column(TypeName = "VARCHAR(250)")]
         public string NumeroRadicadoSupervisor { get; set; }
 
-        public DateTime? FechaRadicadoSupervisor { get; set; }        
+        public DateTime? FechaRadicadoSupervisor { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]
         public string NumeroFactura { get; set; }
@@ -73,9 +73,11 @@ namespace ComplementApp.API.Models
 
         public RubroPresupuestal RubroPresupuestal { get; set; }
 
-         public int UsoPresupuestalId { get; set; }
+        public int UsoPresupuestalId { get; set; }
 
         public UsoPresupuestal UsoPresupuestal { get; set; }
+
+        
 
     }
 }

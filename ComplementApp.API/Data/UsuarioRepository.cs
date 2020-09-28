@@ -45,10 +45,10 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<Perfil>> ObtenerPerfilesxUsuario(int usuarioId)
         {
             List<Perfil> lista = new List<Perfil>();
-            var perfiles =  await (    from up in _context.UsuarioPerfil
-                                            join p in _context.Perfil on up.PerfilId equals p.PerfilId
-                                            where up.UsuarioId == usuarioId
-                                            select p).ToListAsync();
+            var perfiles = await (from up in _context.UsuarioPerfil
+                                  join p in _context.Perfil on up.PerfilId equals p.PerfilId
+                                  where up.UsuarioId == usuarioId
+                                  select p).ToListAsync();
 
             return perfiles;
         }
@@ -73,7 +73,7 @@ namespace ComplementApp.API.Data
             //                     .ToListAsync();
 
             var users = _context.Usuario.OrderBy(x => x.Nombres);
-            
+
             return await PagedList<Usuario>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -87,16 +87,88 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<Transaccion>> ObtenerListaTransaccionXUsuario(int usuarioId)
         {
-            var transaciones = await (from up in _context.UsuarioPerfil
-                                      join p in _context.Perfil on up.PerfilId equals p.PerfilId
-                                      join pt in _context.PerfilTransaccion on p.PerfilId equals pt.PerfilId
-                                      join t in _context.Transaccion on pt.TransaccionId equals t.TransaccionId
-                                      where up.UsuarioId == usuarioId
-                                      select t)
-                                      .Distinct()
-                                      .ToListAsync();
-            return transaciones;
+            List<Transaccion> listaTransaccion = new List<Transaccion>();
+
+            var transacciones = await (from up in _context.UsuarioPerfil
+                                       join p in _context.Perfil on up.PerfilId equals p.PerfilId
+                                       join pt in _context.PerfilTransaccion on p.PerfilId equals pt.PerfilId
+                                       join t in _context.Transaccion on pt.TransaccionId equals t.TransaccionId
+                                       where up.UsuarioId == usuarioId
+                                             && t.Estado == true
+                                       select t)
+                        .Distinct()
+                        .ToListAsync();
+
+            foreach (var item in transacciones)
+            {
+                var children = GetChildren(transacciones, item.TransaccionId);
+
+                if (children != null && children.ToList().Count > 0)
+                {
+                    item.Hijos = children.ToList();
+                }
+
+                if (item.PadreTransaccionId == 0)
+                {
+                    listaTransaccion.Add(item);
+                }
+            }
+
+            List<Transaccion> lista = EliminarHijosConfundidos(listaTransaccion);
+
+            return lista.ToList();
         }
+
+
+        private List<Transaccion> EliminarHijosConfundidos(List<Transaccion> lista)
+        {
+            List<Transaccion> listaFinal = new List<Transaccion>();
+            List<Transaccion> listaHijo = null;
+            foreach (var item in lista)
+            {
+                if (item.Hijos != null && item.Hijos.Count > 0)
+                {
+                    listaHijo = new List<Transaccion>();
+                    foreach (var hijo in item.Hijos)
+                    {
+                        if (item.TransaccionId == hijo.PadreTransaccionId)
+                        {
+                            listaHijo.Add(hijo);
+                        }
+                    }
+                    item.Hijos = listaHijo;
+                }
+
+                listaFinal.Add(item);
+            }
+            return listaFinal;
+        }
+
+        List<Transaccion> GetChildren(List<Transaccion> foos, int id)
+        {
+            var query = foos.Where(x => x.PadreTransaccionId == id)
+                            .Union(foos.Where(x => x.PadreTransaccionId == id)
+                                .SelectMany(y => GetChildren(foos, y.TransaccionId))
+                            ).ToList();
+
+            var resultado = query.Where(x => x.TransaccionId != x.PadreTransaccionId);
+
+            return query;
+        }
+
+        public List<Transaccion> Recursive(List<Transaccion> comments, int parentId)
+        {
+            List<Transaccion> inner = new List<Transaccion>();
+            foreach (var t in comments.Where(c => c.PadreTransaccionId == parentId).ToList())
+            {
+                inner.Add(t);
+                inner = inner.Union(Recursive(comments, t.TransaccionId)).ToList();
+            }
+
+            return inner;
+        }
+
+
 
         public bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles)
         {
