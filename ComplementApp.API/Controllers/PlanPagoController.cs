@@ -20,12 +20,16 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class PlanPagoController : ControllerBase
     {
+
+        #region Dependency Injection
         private readonly DataContext _dataContext;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPlanPagoRepository _repo;
         private readonly IListaRepository _repoLista;
-
         private readonly IMapper _mapper;
+
+        #endregion Dependency Injection
+
         public PlanPagoController(IUnitOfWork unitOfWork, IPlanPagoRepository repo, IMapper mapper, DataContext dataContext, IListaRepository listaRepository)
         {
             this._repoLista = listaRepository;
@@ -145,7 +149,6 @@ namespace ComplementApp.API.Controllers
             {
                 throw;
             }
-
             return base.Ok(formato);
         }
 
@@ -195,9 +198,6 @@ namespace ComplementApp.API.Controllers
                 {
                     var detallePlanPago = await _repo.ObtenerDetallePlanPago(formato.PlanPagoId);
 
-                    //Mapear datos del formato
-                    //_mapper.Map(formato, detalleLiquidacion);
-
                     #region Mapear datos 
 
                     MapearFormatoLiquidacionPlanPago(detallePlanPago, detalleLiquidacion);
@@ -207,30 +207,29 @@ namespace ComplementApp.API.Controllers
                     #endregion Mapear datos 
 
                     //Registrar detalle de liquidación
-                    //var resultado = await _repo.RegistrarDetalleLiquidacion(detalleLiquidacion);
                     _dataContext.DetalleLiquidacion.Add(detalleLiquidacion);
 
 
                     //Registrar deducciones a la liquidación
-                    foreach (var deduccion in formato.Deducciones)
+                    if (formato.Deducciones != null && formato.Deducciones.Count > 0)
                     {
-                        liquidacionDeduccion = new LiquidacionDeduccion();
-                        liquidacionDeduccion.DetalleLiquidacion = detalleLiquidacion;
-                        liquidacionDeduccion.DeduccionId = deduccion.DeduccionId;
-                        liquidacionDeduccion.Codigo = deduccion.Codigo;
-                        liquidacionDeduccion.Nombre = deduccion.Nombre;
-                        liquidacionDeduccion.Tarifa = deduccion.Tarifa;
-                        liquidacionDeduccion.Base = deduccion.Base;
-                        liquidacionDeduccion.Valor = deduccion.Valor;
-                        _dataContext.LiquidacionDeducciones.Add(liquidacionDeduccion);
+                        foreach (var deduccion in formato.Deducciones)
+                        {
+                            liquidacionDeduccion = new LiquidacionDeduccion();
+                            liquidacionDeduccion.DetalleLiquidacion = detalleLiquidacion;
+                            liquidacionDeduccion.DeduccionId = deduccion.DeduccionId;
+                            liquidacionDeduccion.Codigo = deduccion.Codigo;
+                            liquidacionDeduccion.Nombre = deduccion.Nombre;
+                            liquidacionDeduccion.Tarifa = deduccion.Tarifa;
+                            liquidacionDeduccion.Base = deduccion.Base;
+                            liquidacionDeduccion.Valor = deduccion.Valor;
+                            _dataContext.LiquidacionDeducciones.Add(liquidacionDeduccion);
+                        }
                     }
 
                     //Actualizar el estado al plan de pago
-                    //if (resultado)
-                    {
-                        var planPagoBD = await _repo.ObtenerPlanPago(formato.PlanPagoId);
-                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
-                    }
+                    var planPagoBD = await _repo.ObtenerPlanPago(formato.PlanPagoId);
+                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
 
                     await _unitOfWork.CompleteAsync();
                     return Ok(detalleLiquidacion.DetalleLiquidacionId);
@@ -354,7 +353,7 @@ namespace ComplementApp.API.Controllers
             FormatoCausacionyLiquidacionPagos formatoIgual30 = new FormatoCausacionyLiquidacionPagos();
             CriterioCalculoReteFuente criterioReteFuente = null;
 
-            decimal PL17HonorarioSinIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+            decimal C30ValorIva = 0, PL17HonorarioSinIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt, baseGravableUvtCalculada = 0;
             int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
 
             #endregion variables 
@@ -369,7 +368,9 @@ namespace ComplementApp.API.Controllers
 
             var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
             var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
+            var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
+            var parametroCodigoPensionVoluntaria = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoPensionVoluntaria");
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -389,21 +390,22 @@ namespace ComplementApp.API.Controllers
 
             if (C32NumeroDiaLaborados < 30)
             {
-                formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: C32NumeroDiaLaborados);
-                formatoIgual30 = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+                formato = CalcularValoresFormatoContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: C32NumeroDiaLaborados);
+                formatoIgual30 = CalcularValoresFormatoContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
 
                 baseGravable30 = formatoIgual30.BaseGravableRenta;
                 baseGravableFinal = (baseGravable30 / 30) * C32NumeroDiaLaborados;
-                baseGravable30 = baseGravable30 / valorUvt;
-                baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+                baseGravableUvtCalculada = baseGravable30 / valorUvt;
+                baseGravableUvtFinal = (int)Math.Round(baseGravableUvtCalculada, 0, MidpointRounding.AwayFromZero);
 
                 formato.BaseGravableRenta = baseGravableFinal;
                 formato.BaseGravableUvt = baseGravableUvtFinal;
             }
             else
             {
-                formatoIgual30 = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
+                formatoIgual30 = CalcularValoresFormatoContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
                 formato = formatoIgual30;
+                baseGravableUvtCalculada = formato.BaseGravableUvtCalculada;
                 baseGravableFinal = formatoIgual30.BaseGravableRenta;
                 baseGravableUvtFinal = formatoIgual30.BaseGravableUvt;
             }
@@ -412,13 +414,16 @@ namespace ComplementApp.API.Controllers
 
             #region Obtener Lista de deducciones
 
+            C30ValorIva = formato.ValorIva;
             string deduccionRentaTrabajo = parametroCodigoRenta;
+            string deduccionIva = parametroCodigoIva;
+            string deduccionPensionVoluntaria = parametroCodigoPensionVoluntaria;
 
             decimal valorMinimoRango = 0;
             decimal factorIncremento = 0;
             decimal tarifaCalculo = 0;
 
-            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtFinal);
+            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
             valorMinimoRango = criterioReteFuente.Desde;
             factorIncremento = criterioReteFuente.Factor;
@@ -431,16 +436,26 @@ namespace ComplementApp.API.Controllers
                     if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
 
                         if (deduccion.Base > 0)
                         {
                             deduccion.Tarifa = deduccion.Valor / deduccion.Base;
                         }
                     }
-
-                    if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
-                        (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    else if (deduccion.Codigo.Equals(deduccionIva))
+                    {
+                        deduccion.Base = C30ValorIva;
+                        deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                    }
+                    else if (deduccion.Codigo.Equals(deduccionPensionVoluntaria))
+                    {
+                        deduccion.Base = formato.PensionVoluntaria;
+                        deduccion.Valor = deduccion.Tarifa * deduccion.Base;
+                    }
+                    else if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
+                            !deduccion.Codigo.Equals(deduccionIva) &&
+                            (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = formato.SubTotal1;
                         deduccion.Valor = deduccion.Tarifa * formato.SubTotal1;
@@ -495,7 +510,7 @@ namespace ComplementApp.API.Controllers
             return valor;
         }
 
-        private FormatoCausacionyLiquidacionPagos CalcularValoresFormato(DetallePlanPagoDto planPago, ParametroLiquidacionTercero parametroLiquidacion, List<ParametroGeneral> parametroGenerales, int numeroDiasLaborados)
+        private FormatoCausacionyLiquidacionPagos CalcularValoresFormatoContratoPrestacionServicio(DetallePlanPagoDto planPago, ParametroLiquidacionTercero parametroLiquidacion, List<ParametroGeneral> parametroGenerales, int numeroDiasLaborados)
         {
             #region variables 
 
@@ -753,6 +768,7 @@ namespace ComplementApp.API.Controllers
             formato.DiferencialRenta = C24DiferencialRenta;
             formato.BaseGravableRenta = C25BaseGravableRenta;
             formato.BaseGravableUvt = C26BaseGravableRentaUvtFinal;
+            formato.BaseGravableUvtCalculada = C26BaseGravableRentaUvt;
 
             #endregion Setear valores a formato
 
@@ -774,7 +790,7 @@ namespace ComplementApp.API.Controllers
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
             CriterioCalculoReteFuente criterioReteFuente = null;
 
-            decimal PLTarifaIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+            decimal PLTarifaIva = 0, baseGravableFinal = 0, baseGravableUvtCalculada = 0, valorUvt;
 
             //Para Proveedores con deducción siempre es 30
             int C32NumeroDiaLaborados = 30, baseGravableUvtFinal = 0, honorarioUvt = 0;
@@ -793,7 +809,7 @@ namespace ComplementApp.API.Controllers
 
             var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
             var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
             var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
@@ -802,8 +818,6 @@ namespace ComplementApp.API.Controllers
             #endregion Parametros Generales
 
             #region Calcular valores y obtener formato
-
-            //formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
 
             formato.ValorIva =
             formato.SubTotal3 = 0;
@@ -819,8 +833,8 @@ namespace ComplementApp.API.Controllers
             honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
 
             baseGravableFinal = C31Honorario;
-            baseGravable30 = C31Honorario / valorUvt;
-            baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+            baseGravableUvtCalculada = C31Honorario / valorUvt;
+            baseGravableUvtFinal = (int)Math.Round(baseGravableUvtCalculada, 0, MidpointRounding.AwayFromZero);
 
             formato.BaseGravableRenta = baseGravableFinal;
             formato.BaseGravableUvt = baseGravableUvtFinal;
@@ -828,6 +842,7 @@ namespace ComplementApp.API.Controllers
             formato.Honorario = C31Honorario;
             formato.HonorarioUvt = honorarioUvt;
             formato.ValorTotal = planPago.ValorFacturado.Value;
+            formato.BaseGravableUvtCalculada = baseGravableUvtCalculada;
 
             #endregion Calcular valores y obtener formato
 
@@ -840,7 +855,7 @@ namespace ComplementApp.API.Controllers
             decimal factorIncremento = 0;
             decimal tarifaCalculo = 0;
 
-            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtFinal);
+            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
             valorMinimoRango = criterioReteFuente.Desde;
             factorIncremento = criterioReteFuente.Factor;
@@ -856,7 +871,7 @@ namespace ComplementApp.API.Controllers
                     if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
 
                         if (deduccion.Base > 0)
                         {
@@ -920,12 +935,12 @@ namespace ComplementApp.API.Controllers
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
             CriterioCalculoReteFuente criterioReteFuente = null;
 
-            decimal PLTarifaIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt;
+            decimal PLTarifaIva = 0, baseGravableFinal = 0, valorUvt;
 
             //Para Proveedores con deducción siempre es 30
             int C32NumeroDiaLaborados = 30, baseGravableUvtFinal = 0, honorarioUvt = 0;
 
-            decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0, CSubTotal1 = 0;
+            decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0, CSubTotal1 = 0, baseGravableUvtCalculada = 0;
 
             #endregion variables 
 
@@ -939,7 +954,8 @@ namespace ComplementApp.API.Controllers
 
             var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
             var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
+            var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -947,8 +963,6 @@ namespace ComplementApp.API.Controllers
             #endregion Parametros Generales
 
             #region Calcular valores y obtener formato
-
-            //formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
 
             formato.ValorIva =
             formato.SubTotal3 = 0;
@@ -963,8 +977,8 @@ namespace ComplementApp.API.Controllers
             honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
 
             baseGravableFinal = valorBaseGravable;
-            baseGravable30 = valorBaseGravable / valorUvt;
-            baseGravableUvtFinal = (int)Math.Round(baseGravable30, 0, MidpointRounding.AwayFromZero);
+            baseGravableUvtCalculada = valorBaseGravable / valorUvt;
+            baseGravableUvtFinal = (int)Math.Round(baseGravableUvtCalculada, 0, MidpointRounding.AwayFromZero);
 
             formato.BaseGravableRenta = baseGravableFinal;
             formato.BaseGravableUvt = baseGravableUvtFinal;
@@ -978,12 +992,13 @@ namespace ComplementApp.API.Controllers
             #region Obtener Lista de deducciones
 
             string deduccionRentaTrabajo = parametroCodigoRenta;
+            string deduccionIva = parametroCodigoIva;
 
             decimal valorMinimoRango = 0;
             decimal factorIncremento = 0;
             decimal tarifaCalculo = 0;
 
-            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtFinal);
+            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
             valorMinimoRango = criterioReteFuente.Desde;
             factorIncremento = criterioReteFuente.Factor;
@@ -999,16 +1014,21 @@ namespace ComplementApp.API.Controllers
                     if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        deduccion.Valor = ((tarifaCalculo / 100) * (baseGravableUvtFinal - valorMinimoRango + factorIncremento) * valorUvt / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
 
                         if (deduccion.Base > 0)
                         {
                             deduccion.Tarifa = deduccion.Valor / deduccion.Base;
                         }
                     }
-
-                    if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
-                        (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    else if (deduccion.Codigo.Equals(deduccionIva))
+                    {
+                        deduccion.Base = C30ValorIva;
+                        deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                    }
+                    else if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
+                            !deduccion.Codigo.Equals(deduccionIva) &&
+                            (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = CSubTotal1;
                         deduccion.Valor = deduccion.Tarifa * CSubTotal1;
@@ -1074,7 +1094,7 @@ namespace ComplementApp.API.Controllers
 
             var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
             var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta ");
+            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -1082,8 +1102,6 @@ namespace ComplementApp.API.Controllers
             #endregion Parametros Generales
 
             #region Calcular valores y obtener formato
-
-            //formato = CalcularValoresFormato(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30);
 
             formato.ValorIva =
             formato.SubTotal3 = 0;
@@ -1143,7 +1161,7 @@ namespace ComplementApp.API.Controllers
             return valor;
         }
 
-        private CriterioCalculoReteFuente obtenerCriterioCalculoRendimiento(List<CriterioCalculoReteFuente> lista, int baseGravableUvtFinal)
+        private CriterioCalculoReteFuente obtenerCriterioCalculoRendimiento(List<CriterioCalculoReteFuente> lista, decimal baseGravableUvtFinal)
         {
             var criterio = lista.Where(x => x.Desde <= baseGravableUvtFinal
                                     && baseGravableUvtFinal <= x.Hasta).FirstOrDefault();

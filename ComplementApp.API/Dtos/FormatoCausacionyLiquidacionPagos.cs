@@ -40,6 +40,7 @@ namespace ComplementApp.API.Dtos
         public decimal DiferencialRenta { get; set; }
         public decimal BaseGravableRenta { get; set; }
         public int BaseGravableUvt { get; set; }
+        public decimal BaseGravableUvtCalculada { get; set; }
 
         public ICollection<DeduccionDto> Deducciones { get; set; }
     }
