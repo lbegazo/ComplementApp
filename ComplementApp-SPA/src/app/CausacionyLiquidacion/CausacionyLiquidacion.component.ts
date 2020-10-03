@@ -242,6 +242,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
           if (isNaN(+resultado)) {
             this.alertify.warning('Debe ingresar un valor númerico');
+          } else if (+resultado === 0) {
+            this.alertify.warning('El valor ingresado debe ser mayor a cero');
           } else {
             valorIngresado = +resultado;
 

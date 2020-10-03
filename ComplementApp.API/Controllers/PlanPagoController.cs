@@ -21,6 +21,16 @@ namespace ComplementApp.API.Controllers
     public class PlanPagoController : ControllerBase
     {
 
+        #region Constantes
+
+        const string codigoRenta = "CodigoRenta";
+        const string codigoIva = "CodigoIva";
+        const string valorUVT = "ValorUVT";
+        const string salarioMinimo = "SalarioMinimo";
+        const string codigoPensionVoluntaria = "CodigoPensionVoluntaria";
+
+        #endregion Constantes
+
         #region Dependency Injection
         private readonly DataContext _dataContext;
         private readonly IUnitOfWork _unitOfWork;
@@ -366,11 +376,13 @@ namespace ComplementApp.API.Controllers
 
             #region Parametros Generales
 
-            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
-            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
-            var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
-            var parametroCodigoPensionVoluntaria = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoPensionVoluntaria");
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
+
+            var parametrosCodigoRenta = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoRenta);
+            var parametrosCodigoIva = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoIva);
+            var parametrosCodigoPensionVoluntaria = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoPensionVoluntaria);
+
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -415,15 +427,12 @@ namespace ComplementApp.API.Controllers
             #region Obtener Lista de deducciones
 
             C30ValorIva = formato.ValorIva;
-            string deduccionRentaTrabajo = parametroCodigoRenta;
-            string deduccionIva = parametroCodigoIva;
-            string deduccionPensionVoluntaria = parametroCodigoPensionVoluntaria;
 
             decimal valorMinimoRango = 0;
             decimal factorIncremento = 0;
             decimal tarifaCalculo = 0;
 
-            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
+            criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
             valorMinimoRango = criterioReteFuente.Desde;
             factorIncremento = criterioReteFuente.Factor;
@@ -433,7 +442,7 @@ namespace ComplementApp.API.Controllers
             {
                 foreach (var deduccion in listaDeducciones)
                 {
-                    if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
+                    if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
                         deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
@@ -443,19 +452,17 @@ namespace ComplementApp.API.Controllers
                             deduccion.Tarifa = deduccion.Valor / deduccion.Base;
                         }
                     }
-                    else if (deduccion.Codigo.Equals(deduccionIva))
+                    else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
                         deduccion.Base = C30ValorIva;
                         deduccion.Valor = deduccion.Tarifa * C30ValorIva;
                     }
-                    else if (deduccion.Codigo.Equals(deduccionPensionVoluntaria))
+                    else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
                     {
                         deduccion.Base = formato.PensionVoluntaria;
                         deduccion.Valor = deduccion.Tarifa * deduccion.Base;
                     }
-                    else if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
-                            !deduccion.Codigo.Equals(deduccionIva) &&
-                            (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = formato.SubTotal1;
                         deduccion.Valor = deduccion.Tarifa * formato.SubTotal1;
@@ -570,8 +577,8 @@ namespace ComplementApp.API.Controllers
 
             #region Parametros Generales
 
-            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
-            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
 
@@ -807,10 +814,12 @@ namespace ComplementApp.API.Controllers
 
             #region Parametros Generales
 
-            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
-            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
-            var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
+
+            var parametrosCodigoRenta = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoRenta);
+            var parametrosCodigoIva = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoIva);
+
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -848,14 +857,11 @@ namespace ComplementApp.API.Controllers
 
             #region Obtener Lista de deducciones
 
-            string deduccionRentaTrabajo = parametroCodigoRenta;
-            string deduccionIva = parametroCodigoIva;
-
             decimal valorMinimoRango = 0;
             decimal factorIncremento = 0;
             decimal tarifaCalculo = 0;
 
-            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
+            criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
             valorMinimoRango = criterioReteFuente.Desde;
             factorIncremento = criterioReteFuente.Factor;
@@ -868,7 +874,7 @@ namespace ComplementApp.API.Controllers
             {
                 foreach (var deduccion in listaDeducciones)
                 {
-                    if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
+                    if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
                         deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
@@ -878,15 +884,12 @@ namespace ComplementApp.API.Controllers
                             deduccion.Tarifa = deduccion.Valor / deduccion.Base;
                         }
                     }
-                    else if (deduccion.Codigo.Equals(deduccionIva))
+                    else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
                         deduccion.Base = C30ValorIva;
                         deduccion.Valor = deduccion.Tarifa * C30ValorIva;
                     }
-
-                    else if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
-                            !deduccion.Codigo.Equals(deduccionIva) &&
-                            (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = CSubTotal1;
                         deduccion.Valor = deduccion.Tarifa * CSubTotal1;
@@ -952,10 +955,12 @@ namespace ComplementApp.API.Controllers
 
             #region Parametros Generales
 
-            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
-            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
-            var parametroCodigoIva = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoIva");
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
+
+            var parametrosCodigoRenta = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoRenta);
+            var parametrosCodigoIva = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoIva);
+
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -991,14 +996,14 @@ namespace ComplementApp.API.Controllers
 
             #region Obtener Lista de deducciones
 
-            string deduccionRentaTrabajo = parametroCodigoRenta;
-            string deduccionIva = parametroCodigoIva;
+            //string deduccionRentaTrabajo = parametroCodigoRenta;
+            //string deduccionIva = parametroCodigoIva;
 
             decimal valorMinimoRango = 0;
             decimal factorIncremento = 0;
             decimal tarifaCalculo = 0;
 
-            criterioReteFuente = obtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
+            criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
             valorMinimoRango = criterioReteFuente.Desde;
             factorIncremento = criterioReteFuente.Factor;
@@ -1011,7 +1016,7 @@ namespace ComplementApp.API.Controllers
             {
                 foreach (var deduccion in listaDeducciones)
                 {
-                    if (deduccion.Codigo.Equals(deduccionRentaTrabajo))
+                    if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
                         deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
@@ -1021,14 +1026,12 @@ namespace ComplementApp.API.Controllers
                             deduccion.Tarifa = deduccion.Valor / deduccion.Base;
                         }
                     }
-                    else if (deduccion.Codigo.Equals(deduccionIva))
+                    else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
                         deduccion.Base = C30ValorIva;
                         deduccion.Valor = deduccion.Tarifa * C30ValorIva;
                     }
-                    else if (!deduccion.Codigo.Equals(deduccionRentaTrabajo) &&
-                            !deduccion.Codigo.Equals(deduccionIva) &&
-                            (deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                    else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = CSubTotal1;
                         deduccion.Valor = deduccion.Tarifa * CSubTotal1;
@@ -1092,9 +1095,9 @@ namespace ComplementApp.API.Controllers
 
             #region Parametros Generales
 
-            var parametroUvt = obtenerValorDeParametroGeneral(parametroGenerales, "ValorUVT");
-            var parametroSMLV = obtenerValorDeParametroGeneral(parametroGenerales, "SalarioMinimo");
-            var parametroCodigoRenta = obtenerValorDeParametroGeneral(parametroGenerales, "CodigoRenta");
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
+
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
             decimal.TryParse(parametroUvt, out valorUvt);
@@ -1150,7 +1153,30 @@ namespace ComplementApp.API.Controllers
             return false;
         }
 
-        private string obtenerValorDeParametroGeneral(List<ParametroGeneral> parametroGenerales, string nombre)
+        private List<ParametroGeneral> obtenerParametrosGeneralesXTipo(List<ParametroGeneral> parametroGenerales, string nombre)
+        {
+            List<ParametroGeneral> parametros = new List<ParametroGeneral>();
+            var items = parametroGenerales.Where(x => x.Nombre.ToUpper() == nombre.ToUpper()).ToList();
+
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    parametros.Add(item);
+                }
+            }
+
+            return parametros;
+        }
+
+        private bool DeduccionEsParametroGeneral(List<ParametroGeneral> parametroGenerales, string codigoDeduccion)
+        {
+            bool resultado = false;
+            resultado = parametroGenerales.Exists(p => p.Valor == codigoDeduccion);
+            return resultado;
+        }
+
+        private string ObtenerValorDeParametroGeneral(List<ParametroGeneral> parametroGenerales, string nombre)
         {
             string valor = string.Empty;
             var item = parametroGenerales.FirstOrDefault(x => x.Nombre.ToUpper() == nombre.ToUpper());
@@ -1161,7 +1187,7 @@ namespace ComplementApp.API.Controllers
             return valor;
         }
 
-        private CriterioCalculoReteFuente obtenerCriterioCalculoRendimiento(List<CriterioCalculoReteFuente> lista, decimal baseGravableUvtFinal)
+        private CriterioCalculoReteFuente ObtenerCriterioCalculoRendimiento(List<CriterioCalculoReteFuente> lista, decimal baseGravableUvtFinal)
         {
             var criterio = lista.Where(x => x.Desde <= baseGravableUvtFinal
                                     && baseGravableUvtFinal <= x.Hasta).FirstOrDefault();

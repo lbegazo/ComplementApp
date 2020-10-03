@@ -24,7 +24,8 @@ namespace ComplementApp.API.Data
             var lista = (from c in _context.PlanPago
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                         from pl in parametroLiquidacion.DefaultIfEmpty()
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          select new PlanPago()
@@ -47,8 +48,8 @@ namespace ComplementApp.API.Data
                                  TerceroId = c.TerceroId,
                                  NumeroIdentificacion = t.NumeroIdentificacion,
                                  Nombre = t.Nombre,
-                                 ModalidadContrato = p.ModalidadContrato,
-                                 TipoPago = p.TipoPago
+                                 ModalidadContrato = pl.ModalidadContrato,
+                                 TipoPago = pl.TipoPago
                              }
                          })
                                .OrderBy(c => c.FechaRadicadoSupervisor);
@@ -68,7 +69,8 @@ namespace ComplementApp.API.Data
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId
                           join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
-                          join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId
+                          join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
+                          from up in UsosPresupuestales.DefaultIfEmpty()
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
                           select new DetallePlanPagoDto()
@@ -96,7 +98,7 @@ namespace ComplementApp.API.Data
                               Observaciones = pp.Observaciones,
 
                               IdentificacionRubroPresupuestal = r.Identificacion,
-                              IdentificacionUsoPresupuestal = u.Identificacion,
+                              IdentificacionUsoPresupuestal = up.Identificacion,
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = t.Nombre
 
