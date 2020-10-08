@@ -13,18 +13,21 @@ import { CausacionyLiquidacionComponent } from './CausacionyLiquidacion/Causacio
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
 import { PlanPagoResolver } from './_resolvers/planPago.resolver';
+import { TransaccionResolver } from './_resolvers/transaccion.resolver';
+import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'ADMINISTRACION_USUARIO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: UsuarioMainComponent,
+    resolve: { transaccion: TransaccionResolver },
     children: [
       { path: '', component: UsuarioStartComponent },
       { path: 'new', component: UsuarioEditComponent },
@@ -45,25 +48,38 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: ArchivoMainComponent,
-  },
+    resolve: { transaccion: TransaccionResolver },
+  },  
   {
     path: 'TRAMITE_RADICADO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: FacturaMainComponent,
+    resolve: { transaccion: TransaccionResolver },
   },
   {
     path: 'TRAMITE_LIQUIDACION',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: CausacionyLiquidacionComponent,
-    resolve: { planPagoResolver: PlanPagoResolver },
+    resolve: {
+      planPagoResolver: PlanPagoResolver,
+      transaccion: TransaccionResolver,
+    },
   },
   {
     path: 'SOLICITUDES_CERTIFICADO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: CdpMainComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'INTEGRACION_GESTIONPRESUPUESTAL',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: CargaArchivoXmlComponent,
+    resolve: { transaccion: TransaccionResolver },
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

@@ -22,5 +22,7 @@ namespace ComplementApp.API.Data
         Task<ICollection<Perfil>> ObtenerPerfilesxUsuario(int usuarioId);
 
         bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles);
+
+        Task<Transaccion> ObtenerTransaccionXCodigo(string codigoTransaccion);
     }
 }

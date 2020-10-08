@@ -119,7 +119,6 @@ namespace ComplementApp.API.Data
             return lista.ToList();
         }
 
-
         private List<Transaccion> EliminarHijosConfundidos(List<Transaccion> lista)
         {
             List<Transaccion> listaFinal = new List<Transaccion>();
@@ -168,8 +167,6 @@ namespace ComplementApp.API.Data
             return inner;
         }
 
-
-
         public bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles)
         {
             UsuarioPerfil nuevoItem = null;
@@ -198,6 +195,12 @@ namespace ComplementApp.API.Data
             _context.BulkInsert(lista);
             return true;
         }
+
+        public async Task<Transaccion> ObtenerTransaccionXCodigo(string codigoTransaccion)
+        {
+            Transaccion inner = await _context.Transaccion.Where(t => t.Codigo == codigoTransaccion).FirstOrDefaultAsync();            
+            return inner;
+        }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -206,5 +209,7 @@ namespace ComplementApp.API.Data
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
+
+
     }
 }

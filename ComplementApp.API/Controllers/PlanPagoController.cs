@@ -28,6 +28,7 @@ namespace ComplementApp.API.Controllers
         const string valorUVT = "ValorUVT";
         const string salarioMinimo = "SalarioMinimo";
         const string codigoPensionVoluntaria = "CodigoPensionVoluntaria";
+        const string codigoAFC = "CodigoAFC";
 
         #endregion Constantes
 
@@ -382,6 +383,7 @@ namespace ComplementApp.API.Controllers
             var parametrosCodigoRenta = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoRenta);
             var parametrosCodigoIva = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoIva);
             var parametrosCodigoPensionVoluntaria = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoPensionVoluntaria);
+            var parametrosCodigoAFC = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoAFC);
 
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
@@ -445,7 +447,8 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        var valorRentaCalculado = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = ObtenerValorRentaRedondeado(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -456,6 +459,11 @@ namespace ComplementApp.API.Controllers
                     {
                         deduccion.Base = C30ValorIva;
                         deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                    }
+                    else if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
+                    {
+                        deduccion.Base = formato.Afc;
+                        deduccion.Valor = deduccion.Tarifa * deduccion.Base;
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
                     {
@@ -609,8 +617,11 @@ namespace ComplementApp.API.Controllers
             C3valorIva = planPago.ValorFacturado.Value - C1honorario;
             C7baseAporteSalud = C1honorario * PLbaseAporteSalud;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
+            C8aporteASalud = ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
+            C9aporteAPension = ObtenerValorRedondeadoAl100XEncima(C9aporteAPension);
             C10aporteRiesgoLaboral = C7baseAporteSalud * (PLriesgoLaboral);
+            C10aporteRiesgoLaboral = ObtenerValorRedondeadoAl100XEncima(C10aporteRiesgoLaboral);
 
             if (decimal.TryParse(parametroSMLV, out valorSMLV))
             {
@@ -622,6 +633,7 @@ namespace ComplementApp.API.Controllers
             if (C7baseAporteSalud > cuatroSMLV)
             {
                 C11fondoSolidaridad = C7baseAporteSalud * (PLfondoSolidaridad);
+                C11fondoSolidaridad = ObtenerValorRedondeadoAl100XEncima(C11fondoSolidaridad);
             }
             else
             {
@@ -771,6 +783,7 @@ namespace ComplementApp.API.Controllers
             formato.RentaExenta = C21RentaExenta;
             formato.LimiteRentaExenta = C22LimiteRentaExenta;
             formato.TotalRentaExenta = C23TotalRentaExenta;
+            formato.InteresVivienda = CT18InteresViviendaDeduccion;
             formato.TotalDeducciones = C19TotalDeducciones;
             formato.DiferencialRenta = C24DiferencialRenta;
             formato.BaseGravableRenta = C25BaseGravableRenta;
@@ -877,7 +890,8 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        var valorRentaCalculado = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = ObtenerValorRentaRedondeado(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -1019,7 +1033,8 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        deduccion.Valor = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        var valorRentaCalculado = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = ObtenerValorRentaRedondeado(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -1195,6 +1210,34 @@ namespace ComplementApp.API.Controllers
             return criterio;
         }
 
+        private decimal ObtenerValorRentaRedondeado(decimal valorRentaCalculado)
+        {
+
+            var modValorRentaCalculado = valorRentaCalculado % 100;
+
+            if (modValorRentaCalculado < 50)
+            {
+                valorRentaCalculado = valorRentaCalculado - modValorRentaCalculado;
+            }
+            else
+            {
+                valorRentaCalculado = valorRentaCalculado + (100 - modValorRentaCalculado);
+            }
+            return valorRentaCalculado;
+        }
+
+        private decimal ObtenerValorRedondeadoAl100XEncima(decimal valor)
+        {
+            decimal valorNuevo = 0;
+            var modValorRentaCalculado = valor % 100;
+
+            if (modValorRentaCalculado > 0)
+            {
+                valorNuevo = valor + (100 - modValorRentaCalculado);
+            }
+
+            return valorNuevo;
+        }
 
         #endregion Funciones Generales
     }

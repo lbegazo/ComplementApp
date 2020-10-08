@@ -33,6 +33,7 @@ import {
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ListaService } from 'src/app/_services/lista.service';
+import { Transaccion } from 'src/app/_models/transaccion';
 
 @Component({
   selector: 'app-factura-main',
@@ -40,8 +41,8 @@ import { ListaService } from 'src/app/_services/lista.service';
   styleUrls: ['./factura-main.component.css'],
 })
 export class FacturaMainComponent implements OnInit {
-  readonly codigoTransaccion = 'FACTURA';
   nombreTransaccion: string;
+  transaccion: Transaccion;
 
   search: string;
   suggestions$: Observable<Tercero[]>;
@@ -81,7 +82,13 @@ export class FacturaMainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.obtenerNombreTransaccion();
+    this.route.data.subscribe((data) => {
+      this.transaccion = data['transaccion'];
+      if (this.transaccion) {
+        this.nombreTransaccion = this.transaccion.nombre;
+      }
+    });
+
     this.createForm();
 
     this.suggestions$ = new Observable((observer: Observer<string>) => {
@@ -201,11 +208,5 @@ export class FacturaMainComponent implements OnInit {
       subscription.unsubscribe();
     });
     this.subscriptions = [];
-  }
-
-  private obtenerNombreTransaccion() {
-    this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
-      this.codigoTransaccion
-    );
   }
 }

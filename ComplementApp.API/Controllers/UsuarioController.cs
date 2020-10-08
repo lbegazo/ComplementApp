@@ -65,6 +65,14 @@ namespace ComplementApp.API.Controllers
             return Ok(transacciones);
         }
 
+        [Route("[action]/{codigoTransaccion}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerTransaccionXCodigo(string codigoTransaccion)
+        {
+            var transacciones = await _repo.ObtenerTransaccionXCodigo(codigoTransaccion);
+            return Ok(transacciones);
+        }
+
         [HttpPost]
         public async Task<IActionResult> RegistrarUsuario(UsuarioParaRegistrarDto userForRegisterDto)
         {

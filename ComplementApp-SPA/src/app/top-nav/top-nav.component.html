@@ -7,7 +7,7 @@
       style="width: 95%; margin-left: auto; margin-right: auto"
       class="d-flex justify-content-between"
     >
-      <div style="width: 30%">
+      <div style="width: 30%" class="d-flex justify-content-start align-self-center">
         <mat-toolbar
           color="primary"
           class="mat-elevation-z1"
@@ -30,7 +30,7 @@
         </mat-toolbar>
       </div>
       <div style="width: 5%"></div>
-      <div style="width: 20%;" class="d-flex justify-content-center">
+      <div style="width: 30%;" class="d-flex justify-content-center align-self-center">
         <a [routerLink]="['/']">
           <img
             src="/assets/img/sigpaa.png"
@@ -41,7 +41,7 @@
         </a>
       </div>
       <div style="width: 5%"></div>
-      <div style="width: 40%;" class="d-flex justify-content-end align-self-center">
+      <div style="width: 30%;" class="d-flex justify-content-end align-self-center">
         <div *ngIf="loggedIn()" class="dropdown" dropdown>
           <a class="dropdown-toggle text-light" dropdownToggle>
             Bienvenido
@@ -58,8 +58,7 @@
               ><i class="fa fa-sign-out"></i> Cerrar sesión</a
             >
           </div>
-        </div>
-        
+        </div>        
       </div>
     </div>
   </div>

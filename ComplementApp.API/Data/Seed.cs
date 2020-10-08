@@ -641,7 +641,6 @@ namespace ComplementApp.API.Data
             return context.Estado.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
         }
 
-
         private static Perfil obtenerPerfil(DataContext context, string nombre)
         {
             return context.Perfil.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();

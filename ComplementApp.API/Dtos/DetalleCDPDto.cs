@@ -58,9 +58,7 @@ namespace ComplementApp.API.Dtos
         public decimal SaldoTotal { get; set; }
 
 
-        public decimal SaldoDisponible { get; set; }
-
-        
+        public decimal SaldoDisponible { get; set; }        
 
         public string Area { get; set; }
 

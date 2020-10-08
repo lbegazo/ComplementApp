@@ -25,24 +25,6 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
-  // ObtenerUsuarios(page?, itemPerPage?): Observable<Usuario[]> {
-  //   const paginatedResult: PaginatedResult<Usuario[]> = new PaginatedResult<
-  //     Usuario[]
-  //   >();
-
-  //   let params = new HttpParams();
-
-  //   if (page != null && itemPerPage != null) {
-  //     params = params.append('pageNumber', page);
-  //     params = params.append('pageSize', itemPerPage);
-  //   }
-
-  //   return this.http.get<Usuario[]>(this.baseUrl + 'usuario', { observe: 'response', params})
-  //   .pipe(
-  //     map(res)
-  //   );
-  // }
-
   ObtenerUsuarios(page?, pagesize?): Observable<PaginatedResult<Usuario[]>> {
     const paginatedResult: PaginatedResult<Usuario[]> = new PaginatedResult<
       Usuario[]
@@ -119,6 +101,30 @@ export class UsuarioService {
       this.usuarios = response.result;
       this.usuarioChanged.next(this.usuarios);
     });
+  }
+
+  ObtenerTransaccionXCodigo(codigo: string): Observable<Transaccion> {
+    return this.http.get<Transaccion>(
+      this.baseUrl + 'ObtenerTransaccionXCodigo/' + codigo
+    );
+  }
+
+  obtenerNombreTransaccionPorCodigo(codigo: string) {
+    let nombreTransaccion = '';
+    let transaccion: Transaccion;
+    this.ObtenerTransaccionXCodigo(codigo).subscribe(
+      (response: Transaccion) => {
+        transaccion = response;
+      },
+      (error) => {},
+      () => {
+        if (!transaccion) {
+          nombreTransaccion = transaccion.nombre;
+        }
+        return nombreTransaccion;
+      }
+    );
+    return nombreTransaccion;
   }
 
   errorHandler(error) {

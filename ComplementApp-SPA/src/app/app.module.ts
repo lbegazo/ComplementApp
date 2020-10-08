@@ -8,7 +8,6 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { JwtModule } from '@auth0/angular-jwt';
-//import { RouterModule } from '@angular/router';
 import { TimeagoModule } from 'ngx-timeago';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -24,7 +23,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { appRoutes } from './routes';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/auth.service';
@@ -74,6 +72,8 @@ import { AppRoutingModule } from './app-rounting.module';
 import { TopNavComponent } from './top-nav/top-nav.component';
 import { FormatoCausacionLiquidacionComponent } from './CausacionyLiquidacion/formato-causacion-liquidacion/formato-causacion-liquidacion.component';
 import { PlanPagoResolver } from './_resolvers/planPago.resolver';
+import { TransaccionResolver } from './_resolvers/transaccion.resolver';
+import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -119,6 +119,7 @@ export function tokenGetter() {
     MenuListItemComponent,
     TopNavComponent,
     FormatoCausacionLiquidacionComponent,
+    CargaArchivoXmlComponent,
   ],
   imports: [
     BrowserModule,
@@ -135,7 +136,6 @@ export function tokenGetter() {
     TimeagoModule.forRoot(),
     TypeaheadModule.forRoot(),
     PaginationModule.forRoot(),
-    //RouterModule.forRoot(appRoutes),
 
     MatIconModule,
     MatListModule,
@@ -163,6 +163,7 @@ export function tokenGetter() {
     CdpDetalleResolver,
     UsuarioDetalleResolver,
     PlanPagoResolver,
+    TransaccionResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

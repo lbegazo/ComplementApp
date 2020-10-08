@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertifyService } from 'src/app/_services/alertify.service';
+import { ActivatedRoute } from '@angular/router';
 import { FileItem, FileUploader, ParsedResponseHeaders } from 'ng2-file-upload';
 import { environment } from 'src/environments/environment';
-import { Transaccion } from 'src/app/_models/transaccion';
-import { ActivatedRoute } from '@angular/router';
+import { Transaccion } from '../_models/transaccion';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
-  selector: 'app-archivo-main',
-  templateUrl: './archivo-main.component.html',
-  styleUrls: ['./archivo-main.component.css'],
+  selector: 'app-carga-archivo-xml',
+  templateUrl: './carga-archivo-xml.component.html',
+  styleUrls: ['./carga-archivo-xml.component.scss'],
 })
-export class ArchivoMainComponent implements OnInit {
+export class CargaArchivoXmlComponent implements OnInit {
   nombreTransaccion: string;
   transaccion: Transaccion;
 
@@ -43,14 +43,13 @@ export class ArchivoMainComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + 'documento/upload',
+      url: this.baseUrl + 'xmldocumento/upload',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
-      allowedFileType: ['xls'],
       removeAfterUpload: true,
       autoUpload: false,
-      maxFileSize: 10 * 1024 * 1024,
-      queueLimit: 1,
+      maxFileSize: 20 * 1024 * 1024,
+      queueLimit: 4,
     });
 
     this.uploader.onErrorItem = (item, response, status, headers) =>
@@ -61,6 +60,7 @@ export class ArchivoMainComponent implements OnInit {
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
+
 
   }
 

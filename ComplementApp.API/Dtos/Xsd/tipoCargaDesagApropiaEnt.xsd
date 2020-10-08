@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:siifapr="http://www.minhacienda.gov.co/mhcp/siifnacion/transferenciaxml/apr" targetNamespace="http://www.minhacienda.gov.co/mhcp/siifnacion/transferenciaxml/apr" version="0.2" id="idTipoCargaDesagApropiaEnt">
+	<xsd:annotation>
+		<xsd:documentation>Documento XML esquema contenedor de la estructura de entrada para carga de Desagregación de Apropiaciones.</xsd:documentation>
+	</xsd:annotation>
+	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xsd:element name="cargaDesagApropiaEnt">
+		<xsd:annotation>
+			<xsd:documentation>Elemento complejo que contiene el detalle de entrada para Carga XML de Desagregación de Apropiaciones.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="encabezado" type="siifapr:tipoEncabezado">
+					<xsd:annotation>
+						<xsd:documentation>Elemento complejo que contiene el detalle del encabezado del archivo XML para manejar la información de seguridad de la carga.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="listaItemAsignacion" type="siifapr:tipoListaItemAsignacion">
+					<xsd:annotation>
+						<xsd:documentation>Elemento complejo lista que ìtems de asignación</xsd:documentation>
+					</xsd:annotation>
+					<xsd:unique name="llaveItemAsignacion">
+						<xsd:selector xpath="itemAsignacion"/>
+						<xsd:field xpath="codPosicionGasto"/>
+						<xsd:field xpath="nomFuenteFinanciacion"/>
+						<xsd:field xpath="nomSituacionFondos"/>
+						<xsd:field xpath="codRecursoPptal"/>
+					</xsd:unique>
+				</xsd:element>
+				<xsd:element name="datosAdministrativos" type="siifapr:tipoDatosAdministrativos">
+					<xsd:annotation>
+						<xsd:documentation>Elemento complejo contenedor de los datos administrativos </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element ref="ds:Signature">
+					<xsd:annotation>
+						<xsd:documentation>Firma del archivo</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="tipoEncabezado">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define la estructura del encabezado del archivo para carga de Registro o Modificación de Funcionarios.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="usuarioSIIF" type="siifapr:tipoCadena20">
+				<xsd:annotation>
+					<xsd:documentation>Nombre del usuario de interoperabilidad en  SIIF Nación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codPerfil" type="siifapr:tipoNumMax3" default="0">
+				<xsd:annotation>
+					<xsd:documentation>Código del perfil del usuario</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codPCI" type="siifapr:tipoCodPCIUnidad">
+				<xsd:annotation>
+					<xsd:documentation>Código de la Posición de Catálogo Institucional de conexión</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="anoFiscal" type="siifapr:tipoAno">
+				<xsd:annotation>
+					<xsd:documentation>Año Fiscal para el que aplica la desagregación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nombreUsuarioExterno" type="siifapr:tipoCadena50">
+				<xsd:annotation>
+					<xsd:documentation>Nombre del Usuario Externo que envío el archivo</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codTipoDocumento" type="siifapr:enumTipoDocumento">
+				<xsd:annotation>
+					<xsd:documentation>Código del tipo de documento de identificación del Usuario Externo</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numDocIdentidad" type="siifapr:tipoNumDocumento">
+				<xsd:annotation>
+					<xsd:documentation>Número de documento del Usuario Externo</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nombreArchivo" type="siifapr:tipoNombreArchivoCargaAPR001">
+				<xsd:annotation>
+					<xsd:documentation>Nombre del archivo enviado, sin extensión</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoDatosAdministrativos">
+		<xsd:annotation>
+			<xsd:documentation>Tipo compuesto que contiene la estructura de los datos administrativos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="fecha" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Fecha de la solicitud</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codTipoDocSoporte" type="siifapr:tipoNumCadena2">
+				<xsd:annotation>
+					<xsd:documentation>Código del tipo de documento soporte</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numDocSoporte" type="siifapr:tipoCadena30">
+				<xsd:annotation>
+					<xsd:documentation>Número del documento soporte</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codExpedidor" type="siifapr:tipoNumCadena2">
+				<xsd:annotation>
+					<xsd:documentation>Código del expedidor</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cargoFuncionario" type="siifapr:tipoCadena50">
+				<xsd:annotation>
+					<xsd:documentation>Cargo del Funcionario</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomFuncionario" type="siifapr:tipoCadena50">
+				<xsd:annotation>
+					<xsd:documentation>Nombre edel Funcionario</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="notas" type="siifapr:tipoCadena1024">
+				<xsd:annotation>
+					<xsd:documentation>Notas de justificación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoListaItemAsignacion">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define la estructura de la lista de ítems de Asignaciones</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="itemAsignacion" type="siifapr:tipoItemAsignacion" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Item contenedor de la información detallada de una Asignación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoListaItemSubUnidad">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define la estructura de la lista de ítems de SubUnidades</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="itemSubUnidad" type="siifapr:tipoItemSubUnidad" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Item contenedor de la información detallada de sub unidad</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoListaItemDepAfecta">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define la estructura de la lista de ítems de Dependencias de asignación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="itemDepAfecta" type="siifapr:tipoItemDepAfecta" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Item contenedor de la información detallada de dependencias de asignaciòn</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoListaItemRubroGasto">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define la estructura de la lista de ítems de rubro de gasto</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="itemRubroGasto" type="siifapr:tipoItemRubroGasto" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Item contenedor de la información detallada de un rubro de gasto.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoItemRubroGasto">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define el detalle de un ítem de rubro de gasto</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codPosicionGasto" type="siifapr:tipoCodPosGastoDesag">
+				<xsd:annotation>
+					<xsd:documentation>Código de la Posición de Gast a nivel desagregado</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valorAsignado" type="siifapr:tipoCantidadMonetariaPositiva">
+				<xsd:annotation>
+					<xsd:documentation>Valor a asiignar por rubro</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="listaItemSubUnidad" type="siifapr:tipoListaItemSubUnidad">
+				<xsd:annotation>
+					<xsd:documentation>Lista de Items de subunidades</xsd:documentation>
+				</xsd:annotation>
+				<xsd:unique name="llaveItemSubUnidad">
+					<xsd:selector xpath="itemSubUnidad"/>
+					<xsd:field xpath="codPCI"/>
+					<xsd:field xpath="valorAsignado"/>
+				</xsd:unique>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoItemAsignacion">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define el detalle de un ítem de información de una asignación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codPosicionGasto" type="siifapr:tipoCodPosGasto">
+				<xsd:annotation>
+					<xsd:documentation>Código de la Posición de Gasto.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codRecursoPptal" type="siifapr:tipoNumCadena2">
+				<xsd:annotation>
+					<xsd:documentation>Código del Recurso Presupuestal.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomFuenteFinanciacion" type="siifapr:enumFuenteFinanciacion">
+				<xsd:annotation>
+					<xsd:documentation>Fuente de Financiación.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomSituacionFondos" type="siifapr:enumSituacionFondos">
+				<xsd:annotation>
+					<xsd:documentation>Situación de Fondos.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valorApropiaDecreto" type="siifapr:tipoCantidadMonetariaPositiva">
+				<xsd:annotation>
+					<xsd:documentation>Valor total de la obligación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="listaItemRubroGasto" type="siifapr:tipoListaItemRubroGasto">
+				<xsd:annotation>
+					<xsd:documentation>Lista de ítems de rubro de gasto</xsd:documentation>
+				</xsd:annotation>
+				<xsd:unique name="llaveItemRubro">
+					<xsd:selector xpath="itemRubroGasto"/>
+					<xsd:field xpath="codPosicionGasto"/>
+					<xsd:field xpath="valorAsignado"/>
+				</xsd:unique>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoItemDepAfecta">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define el detalle de un ítem de información de dependecia de afectación para asignación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codDepAfectacion" type="siifapr:tipoCadena20">
+				<xsd:annotation>
+					<xsd:documentation>Código de la Dependencia de Afectación de gasto.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valorAsignado" type="siifapr:tipoCantidadMonetariaPositiva">
+				<xsd:annotation>
+					<xsd:documentation>Valor asignado</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoItemSubUnidad">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define el detalle de un ítem de subUnidad</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codPCI" type="siifapr:tipoCodPCISubUnidad">
+				<xsd:annotation>
+					<xsd:documentation>Código de la PCI SubUnidad a la que se le hará la asignación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valorAsignado" type="siifapr:tipoCantidadMonetariaPositiva">
+				<xsd:annotation>
+					<xsd:documentation>Valor asignado</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="listaItemDepAfecta" type="siifapr:tipoListaItemDepAfecta">
+				<xsd:annotation>
+					<xsd:documentation>Lista de ítems de dependencias de asignación</xsd:documentation>
+				</xsd:annotation>
+				<xsd:unique name="llaveItemDepdAfecta">
+					<xsd:selector xpath="itemDepAfecta"/>
+					<xsd:field xpath="codDepAfectacion"/>
+					<xsd:field xpath="valorAsignado"/>
+				</xsd:unique>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="enumFuenteFinanciacion">
+		<xsd:annotation>
+			<xsd:documentation>Fuentes de Financiación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="NACION">
+				<xsd:annotation>
+					<xsd:documentation>Nación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="PROPIOS">
+				<xsd:annotation>
+					<xsd:documentation>Propios</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumSituacionFondos">
+		<xsd:annotation>
+			<xsd:documentation>Tipos de Situación de Fondos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="CSF">
+				<xsd:annotation>
+					<xsd:documentation>Con Situación de Fondos</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="SSF">
+				<xsd:annotation>
+					<xsd:documentation>Sin Situación de Fondos</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumTipoDocumento">
+		<xsd:annotation>
+			<xsd:documentation>Tipos de Documento de Identificación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="01">
+				<xsd:annotation>
+					<xsd:documentation>NIT</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="02">
+				<xsd:annotation>
+					<xsd:documentation>Otro</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="03">
+				<xsd:annotation>
+					<xsd:documentation>Cédula de Ciudadanía</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="04">
+				<xsd:annotation>
+					<xsd:documentation>Registro Civil</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="05">
+				<xsd:annotation>
+					<xsd:documentation>Tarjeta de Identidad</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="06">
+				<xsd:annotation>
+					<xsd:documentation>Pasaporte</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="07">
+				<xsd:annotation>
+					<xsd:documentation>Cédula de Extranjería</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumTipoCuentaPagar11">
+		<xsd:annotation>
+			<xsd:documentation>Definición de tipo de cuenta por pagar restringida a 11</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="11"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumTipoDocTercero">
+		<xsd:annotation>
+			<xsd:documentation>Definición de enumeración para Tipos de Documento de Identificación del Tercero</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="01">
+				<xsd:annotation>
+					<xsd:documentation>NIT</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="02">
+				<xsd:annotation>
+					<xsd:documentation>Otro</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="03">
+				<xsd:annotation>
+					<xsd:documentation>Cédula de Ciudadanía</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="04">
+				<xsd:annotation>
+					<xsd:documentation>Registro Civil</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="05">
+				<xsd:annotation>
+					<xsd:documentation>Tarjeta de Identidad</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="06">
+				<xsd:annotation>
+					<xsd:documentation>Pasaporte</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="07">
+				<xsd:annotation>
+					<xsd:documentation>Cédula de Extranjería</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumTipoMedioPago">
+		<xsd:annotation>
+			<xsd:documentation>Tipos de medio de pago</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="AC">
+				<xsd:annotation>
+					<xsd:documentation>Abono en Cuenta</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="CH">
+				<xsd:annotation>
+					<xsd:documentation>Cheque</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="GR">
+				<xsd:annotation>
+					<xsd:documentation>Giro</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TT">
+				<xsd:annotation>
+					<xsd:documentation>Títulos</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoAno">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple para representar valores de años.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{4}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena30">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 30 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena20">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 20 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena50">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 50 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="50"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena100">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 100 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="100"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena250">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 250 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="250"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena1024">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 1024 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="1024"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCantidadMonetariaPositiva">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que contiene las restricciones necesarias para los valores monetarios. El signo de separación de la parte decimal es punto(.) Valores mayores o iguales a cero.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:totalDigits value="20"/>
+			<xsd:maxInclusive value="999999999999999999.99"/>
+			<xsd:fractionDigits value="2"/>
+			<xsd:minExclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodPosGasto">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que contiene las restricciones necesarias para las posiciones de gasto</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-C]+(\-[0-9]{1,8}){1,6}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodPosGastoDesag">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que contiene las restricciones necesarias para las posiciones de gasto desagregadas</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-C]+(\-[0-9]{1,8}){3,6}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodPCI">
+		<xsd:annotation>
+			<xsd:documentation>Código de una unidad o subunidad ejecutora del Presupuesto General de la Nación desde nivel 3 hasta el nivel 5 del clasificador Institucional de SIIF Nación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([0-9]{2})+((\-[0-9]{2}){2,3}|(\-[0-9]{2}){2,3}(\-[0-9A-Za-z]{1,6}){1,2})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodPCIUnidad">
+		<xsd:annotation>
+			<xsd:documentation>Código de una unidad ejecutora del Presupuesto General de la Nación desde nivel 3 hasta el nivel 5 del clasificador Institucional de SIIF Nación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([0-9]{2}-){2}[0-9]{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodPCISubUnidad">
+		<xsd:annotation>
+			<xsd:documentation>Código de una unidad ejecutora del Presupuesto General de la Nación desde nivel 3 hasta el nivel 5 del clasificador Institucional de SIIF Nación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([0-9]{2}-){3}([0-9A-Za-z]{2,6}){1,2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNombreArchivoCargaAPR001">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que define el formato para nombrado del archivo para carga APR001</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(XMAPR001\-([0-9]{6}-))(([0-9]{4})(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1]))(\-[0-9]{2}[0-9])"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumCadena2">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la longitud máxima de 2 caracteres sólo numéricos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="2"/>
+			<xsd:pattern value="[0-9]{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumDocSIIF">
+		<xsd:annotation>
+			<xsd:documentation>Representa un entero largo (BigInt) con restricción de positivo. Se usa para identificaciones de documentos SIIF, que son enteros positivos largos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:long">
+			<xsd:minExclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumDocumento">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que define el formato 20 dígitos máximo y mínimo 6 dígitos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{6,20}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumDocFuncionario">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que define el formato 12 dígitos máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{6,12}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumMax3">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que define el formato 3 dígitos máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{1,3}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

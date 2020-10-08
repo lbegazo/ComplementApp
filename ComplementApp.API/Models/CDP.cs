@@ -41,7 +41,7 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(250)")]
         public string Detalle3 { get; set; }
 
-        [Column(TypeName = "VARCHAR(250)")]
+        [Column(TypeName = "VARCHAR(4000)")]
         public string Detalle4 { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]

@@ -24,6 +24,7 @@ import { DetallePlanPago } from '../_models/detallePlanPago';
 import { ListaService } from '../_services/lista.service';
 import { PaginatedResult, Pagination } from '../_models/pagination';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
+import { Transaccion } from '../_models/transaccion';
 
 @Component({
   selector: 'app-causacionyliquidacion',
@@ -31,8 +32,8 @@ import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLi
   styleUrls: ['./CausacionyLiquidacion.component.css'],
 })
 export class CausacionyLiquidacionComponent implements OnInit {
-  readonly codigoTransaccion = 'CAUSACION';
   nombreTransaccion: string;
+  transaccion: Transaccion;
   search: string;
   suggestions$: Observable<Tercero[]>;
   errorMessage: string;
@@ -72,13 +73,18 @@ export class CausacionyLiquidacionComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private facturaService: PlanPagoService,
-    private listaService: ListaService,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.route.data.subscribe((data) => {
+      this.transaccion = data['transaccion'];
+      if (this.transaccion) {
+        this.nombreTransaccion = this.transaccion.nombre;
+      }
+    });
+
     this.createForm();
-    this.obtenerNombreTransaccion();
     this.onBuscarFactura();
 
     this.suggestions$ = new Observable((observer: Observer<string>) => {
@@ -319,9 +325,9 @@ export class CausacionyLiquidacionComponent implements OnInit {
     this.onLimpiarFactura();
   }
 
-  private obtenerNombreTransaccion() {
-    this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
-      this.codigoTransaccion
-    );
-  }
+  // private obtenerNombreTransaccion() {
+  //   this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
+  //     this.codigoTransaccion
+  //   );
+  // }
 }

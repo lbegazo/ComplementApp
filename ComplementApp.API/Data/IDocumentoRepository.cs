@@ -16,5 +16,7 @@ namespace ComplementApp.API.Data
         bool EliminarCabeceraCDP();
 
         bool EliminarDetalleCDP();
+
+        bool EliminarCabeceraCDPXInstancia(int instancia);
     }
 }

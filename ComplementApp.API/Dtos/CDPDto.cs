@@ -22,6 +22,8 @@ namespace ComplementApp.API.Dtos
 
         public string IdentificacionRubro { get; set; }
 
+        public string NombreRubro { get; set; }
+
         
         public decimal ValorInicial { get; set; }
 
@@ -43,10 +45,11 @@ namespace ComplementApp.API.Dtos
         
         public string Detalle4 { get; set; }
 
-        public int TipoIdentificacion { get; set; }
+        public int TipoIdentificacionTercero { get; set; }
         
-        public string NumeroIdentificacion { get; set; }
+        public string NumeroIdentificacionTercero { get; set; }
 
+        public string NombreTercero { get; set; }
         
         public string Detalle5 { get; set; }
 

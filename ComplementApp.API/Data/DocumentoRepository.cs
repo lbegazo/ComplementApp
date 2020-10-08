@@ -21,19 +21,6 @@ namespace ComplementApp.API.Data
         {
             try
             {
-                #region Por Eliminar
-
-                // CancellationToken cancellation = new CancellationToken(false);
-                // var bulkConfig = new BulkConfig
-                // {
-                //     PreserveInsertOrder = true,
-                //     SetOutputIdentity = true,
-                //     BatchSize = 4000
-                // };
-                //await _context.BulkInsertAsync(lista, bulkConfig, null, cancellation);
-
-                #endregion Por Eliminar
-
                 #region Setear datos
 
                 List<CDP> listaCDP = obtenerListaCdp(lista);
@@ -43,9 +30,9 @@ namespace ComplementApp.API.Data
                 _context.BulkInsert(listaCDP);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -62,9 +49,9 @@ namespace ComplementApp.API.Data
                 _context.BulkInsert(listaPlanPago);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -81,9 +68,9 @@ namespace ComplementApp.API.Data
                 _context.BulkInsert(listaCDP);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("error " + ex.Message);
+                throw;
             }
         }
 
@@ -97,11 +84,26 @@ namespace ComplementApp.API.Data
                 if (_context.CDP.Any())
                     return _context.CDP.BatchDelete() > 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return false;
+        }
+
+        public bool EliminarCabeceraCDPXInstancia(int instancia)
+        {
+            try
+            {
+                if (!_context.CDP.Any(x => x.Instancia == instancia))
+                    return true;
+
+                return _context.CDP.Where(x => x.Instancia == instancia).BatchDelete() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool EliminarDetalleCDP()
@@ -114,9 +116,9 @@ namespace ComplementApp.API.Data
                 if (_context.DetalleCDP.Any())
                     return _context.DetalleCDP.BatchDelete() > 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return false;
         }
@@ -131,20 +133,22 @@ namespace ComplementApp.API.Data
                 if (_context.ParametroLiquidacionTercero.Any())
                     return _context.ParametroLiquidacionTercero.BatchDelete() > 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return false;
         }
 
         private List<CDP> obtenerListaCdp(IList<CDPDto> lista)
         {
+
             List<CDP> listaCDP = new List<CDP>();
             CDP cdp = null;
+            Tercero tercero = null;
 
             var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
-            var listaTerceros = _context.Tercero.ToList();
+            //var listaTerceros = _context.Tercero.ToList();
 
             foreach (var item in lista)
             {
@@ -185,18 +189,34 @@ namespace ComplementApp.API.Data
                     }
                 }
 
-                //Tercero
-                if (!string.IsNullOrEmpty(item.NumeroIdentificacion))
+                #region Tercero
+
+                if (!string.IsNullOrEmpty(item.NumeroIdentificacionTercero))
                 {
-                    var tercero = listaTerceros
-                                .Where(c => c.NumeroIdentificacion == item.NumeroIdentificacion
-                                            && c.TipoIdentificacion == item.TipoIdentificacion).FirstOrDefault();
+                    tercero = _context.Tercero
+                                .Where(c => c.NumeroIdentificacion == item.NumeroIdentificacionTercero
+                                            && c.TipoIdentificacion == item.TipoIdentificacionTercero
+                                            ).FirstOrDefault();
+
+                    if (tercero == null)
+                    {
+                        this.InsertarTercero(item);
+
+                        tercero = _context.Tercero
+                                .Where(c => c.NumeroIdentificacion == item.NumeroIdentificacionTercero
+                                            && c.TipoIdentificacion == item.TipoIdentificacionTercero
+                                            ).FirstOrDefault();
+                    }
+
                     if (tercero != null)
                     {
                         cdp.Tercero = tercero;
                         cdp.TerceroId = tercero.TerceroId;
                     }
                 }
+
+                #endregion Tercero
+
                 listaCDP.Add(cdp);
             }
 
@@ -493,5 +513,14 @@ namespace ComplementApp.API.Data
             return listaCDP;
         }
 
+        private void InsertarTercero(CDPDto documento)
+        {
+            var tercero = new Tercero();
+            tercero.NumeroIdentificacion = documento.NumeroIdentificacionTercero;
+            tercero.TipoIdentificacion = documento.TipoIdentificacionTercero;
+            tercero.Nombre = documento.NombreTercero;
+            _context.Tercero.Add(tercero);
+            _context.SaveChanges();
+        }
     }
 }

@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XMLSpy v2018 rel. 2 sp1 (x64) (http://www.altova.com) by JLIZARAZ (Ministerio de Hacienda y Crédito Público) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:siifpag="http://www.minhacienda.gov.co/mhcp/siifnacion/transferenciaxml/pag" targetNamespace="http://www.minhacienda.gov.co/mhcp/siifnacion/transferenciaxml/pag" version="0.1" id="idTipoConListaPagoTercero">
+	<xsd:annotation>
+		<xsd:documentation>Documento XML esquema contenedor de la estructura de envío de información de pagos realizados a terceros, desde SIIF Nación</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="pagoTercero" type="siifpag:tipoPagoTercero">
+		<xsd:annotation>
+			<xsd:documentation>Elemento complejo que agrupa los elementos de salida de la consulta, con la información de pagos realizados a terceros, registrados en SIIF Nación.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="tipoPagoTercero">
+		<xsd:annotation>
+			<xsd:documentation>Tipo compuesto que contiene el detalle de información de Pagos realizados a Terceros</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="listaFiltroConsulta" type="siifpag:tipoListaFiltroConsulta">
+				<xsd:annotation>
+					<xsd:documentation>Elemento complejo que agrupa el listado de los filtros de consulta.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="listaItemPagoTercero" type="siifpag:tipoListaItemPagoTercero" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Elemento complejo que contiene los ítems de pagos realizados por terceros.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoListaItemPagoTercero">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define una lista de ítems de pagos realizados a terceros</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="itemPagoTercero" type="siifpag:tipoItemPagoTercero" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Elemento complejo que contiene el detalle de un ítem de pago realizado a un tercero</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoListaFiltroConsulta">
+		<xsd:annotation>
+			<xsd:documentation>Tipo complejo que define la lista de filtros de consulta para pagos realizados a terceros</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codEntidad" type="siifpag:tipoCodEntidad">
+				<xsd:annotation>
+					<xsd:documentation>Código de la PCI  o Entidad externa que solicita la ejecución del proceso. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codPCIConsulta" type="siifpag:tipoCadena250">
+				<xsd:annotation>
+					<xsd:documentation>Códigos de las PCI consultadas.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="area" type="siifpag:tipoCadena20" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Area, Dirección o sección dentro de la organización que requiere el archivo XML.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numDocIdentidad" type="siifpag:tipoCadena250">
+				<xsd:annotation>
+					<xsd:documentation>Número de documentos de identidad consultados.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numDiaAtraso" nillable="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Número de días de atraso para realizar la consulta</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="siifpag:tipoNumMaxCantidad9"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="fechaInicio" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Fecha de inicio de la consulta.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="fechaFin" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Fecha final de la consulta.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoItemPagoTercero">
+		<xsd:annotation>
+			<xsd:documentation>Tipo compuesto que contiene la estructura de un ítem de pago realizado a un tercero</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codPCI" type="siifpag:tipoCodPCI">
+				<xsd:annotation>
+					<xsd:documentation>Código de la unidad/subunidad ejecutora.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomPCI" type="siifpag:tipoCadena250">
+				<xsd:annotation>
+					<xsd:documentation>Nombre de la unidad/subnidad ejecutora.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nitPCI" type="siifpag:tipoNit">
+				<xsd:annotation>
+					<xsd:documentation>NIT de la Posición Institucional</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="digVerifica" type="siifpag:tipoNumMax1">
+				<xsd:annotation>
+					<xsd:documentation>Dígito de verificación</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codOrdenPago" type="siifpag:tipoNumDocSIIF">
+				<xsd:annotation>
+					<xsd:documentation>Código que identifica la Órden de Pago en estado Pagada</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valorNeto" type="siifpag:tipoCantidadMonetariaPositiva">
+				<xsd:annotation>
+					<xsd:documentation>Valor neto de la orden de pago.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="fechaPago" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Fecha en la que se realizó el pago de la Orden de Pago. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codTesoreria" type="siifpag:tipoCodPCI">
+				<xsd:annotation>
+					<xsd:documentation>Código de la PCI Tesorería que realizó el pago.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codMedioPago" type="siifpag:enumTipoMedioPago">
+				<xsd:annotation>
+					<xsd:documentation>Código de Identificación del Medio de Pago.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomMedioPago" type="siifpag:tipoCadena20">
+				<xsd:annotation>
+					<xsd:documentation>Nombre del Medio de Pago.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="terceroBeneficiarioPago" type="siifpag:tipoTerceroBasico">
+				<xsd:annotation>
+					<xsd:documentation>Elemento complejo contenedor de la información del Tercero Beneficiario.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="cuentaBancaria" type="siifpag:tipoCuentaBancariaBasica">
+				<xsd:annotation>
+					<xsd:documentation>Elemento complejo contenedor de la información de la Cuenta Bancaria del Beneficiario.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="tipoTerceroBasico">
+		<xsd:annotation>
+			<xsd:documentation>Conjunto de datos que agrupa la información de identificación de un Tercero Básico, obtenida en una consulta </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="nomTercero" type="siifpag:tipoCadena200">
+				<xsd:annotation>
+					<xsd:documentation>Nombre completo del tercero, nombres y apellidos o razón social según corresponda</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codNaturaleza" type="siifpag:tipoNumCadena2">
+				<xsd:annotation>
+					<xsd:documentation>Código que identifica la Naturaleza Jurídica del Tercero. Ej: 01 Persona Jurídica Nacional, 02 Persona Jurídica Extranjera, 03 Persona Natural Nacional, 04 Persona Natural Extranjera, 05 Consorcio, 06 Unión Temporal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomNaturaleza" type="siifpag:tipoCadena50">
+				<xsd:annotation>
+					<xsd:documentation>Nombre de la Naturaleza jurídica del tercero. Ej: Persona Jurídica Nacional, Persona Jurídica Extranjera, Persona Natural Nacional, Persona Natural Extranjera, Consorcio, Unión Temporal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="codTipoDocumento" type="siifpag:tipoNumCadena2">
+				<xsd:annotation>
+					<xsd:documentation>Código del tipo de documento de identificación del tercero. Ej: 01 NIT, 02 Otro, 03 Cédula de Ciudadanía, 04 Registro Civil, 05	Tarjeta de Identidad, 06 Pasaporte, 07	Cédula de Extranjería</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomTipoDocumento" type="siifpag:tipoCadena150">
+				<xsd:annotation>
+					<xsd:documentation>Nombre del tipo de documento de identificación del tercero. Ej: NIT, Otro, Cédula de Ciudadanía, Registro Civil, Tarjeta de Identidad, Pasaporte, Cédula de Extranjería</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numDocIdentidad" type="siifpag:tipoCadena50">
+				<xsd:annotation>
+					<xsd:documentation>Número del documento de identificación del tercero.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="digVerificacion" type="siifpag:tipoNumMax1" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Dígito de Verificación del Tercero. Se envía con datos solamente en el caso que el tipo de documento sea NIT</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="enumTipoCuentaBancaria">
+		<xsd:annotation>
+			<xsd:documentation>Tipos de cuenta bancaria</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="AHR">
+				<xsd:annotation>
+					<xsd:documentation>Cuenta de Ahorros</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="CRR">
+				<xsd:annotation>
+					<xsd:documentation>Cuenta Corriente</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DEL">
+				<xsd:annotation>
+					<xsd:documentation>Depósito Electrónico</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumTipoMedioPago">
+		<xsd:annotation>
+			<xsd:documentation>Tipos de medio de pago</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="AC">
+				<xsd:annotation>
+					<xsd:documentation>Abono en Cuenta</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="CH">
+				<xsd:annotation>
+					<xsd:documentation>Cheque</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="GR">
+				<xsd:annotation>
+					<xsd:documentation>Giro</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="TT">
+				<xsd:annotation>
+					<xsd:documentation>Títulos</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumMax1">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la longitud máxima de 1 caracter, sólo numérico</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{1}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumMaxCantidad9">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la cantidad máxima de 9</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="0"/>
+			<xsd:maxInclusive value="9"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumCadena2">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la longitud máxima de 2 caracteres sólo numéricos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="2"/>
+			<xsd:pattern value="[0-9]{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumMax20">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que define el formato 20 dígitos máximo </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{1,20}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena20">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 20 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena50">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la longitud máxima de 50 caracteres</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena100">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la longitud máxima de 100 caracteres</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena150">
+		<xsd:annotation>
+			<xsd:documentation>Extensión de la definición del tipo básico string de la recomendación W3C XML Schema para la longitud máxima de 150 caracteres</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="150"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena200">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 200 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="200"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCadena250">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple cadena de 250 caracteres máximo</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="250"/>
+			<xsd:whiteSpace value="collapse"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodEntidad">
+		<xsd:annotation>
+			<xsd:documentation>Definición de tipo simple para permitir códigos de Posiciones Institucionales y Entidades Externas</xsd:documentation>
+		</xsd:annotation>
+		<xsd:union memberTypes="siifpag:tipoCodPCI siifpag:tipoNit"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCodPCI">
+		<xsd:annotation>
+			<xsd:documentation>Código de una unidad o subunidad ejecutora del Presupuesto General de la Nación desde nivel 3 hasta el nivel 5 del clasificador Institucional de SIIF Nación</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([0-9]{2})+((\-[0-9]{2}){2,3}|(\-[0-9]{2}){2,3}(\-[0-9A-Za-z]{1,6}){1,2})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoCantidadMonetariaPositiva">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que contiene las restricciones necesarias para los valores monetarios. El signo de separación de la parte decimal es punto(.) Valores mayores o iguales a cero.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:totalDigits value="20"/>
+			<xsd:maxInclusive value="999999999999999999.99"/>
+			<xsd:fractionDigits value="2"/>
+			<xsd:minInclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="tipoCuentaBancariaBasica">
+		<xsd:annotation>
+			<xsd:documentation>Tipo compuesto que contiene la estructura para definición de una Cuenta Bancaria </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="codTipoCuenta" type="siifpag:enumTipoCuentaBancaria" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Código del tipo de cuenta bancaria</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numCuenta" type="siifpag:tipoCadena20" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Número de la cuenta bancaria</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nomEntidad" type="siifpag:tipoCadena50" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Nombre de la Entidad Bancaria</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="tipoNit">
+		<xsd:annotation>
+			<xsd:documentation>Tipo simple que define el formato para Nit: Máx 11 digitos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{8,13}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoNumDocSIIF">
+		<xsd:annotation>
+			<xsd:documentation>Representa un entero largo (BigInt) con restricción de positivo. Se usa para identificaciones de documentos SIIF, que son enteros positivos largos</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:long">
+			<xsd:minExclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
