@@ -36,6 +36,25 @@ namespace ComplementApp.API.Data
             }
         }
 
+        public bool InsertaCabeceraCDPConTercero(IList<CDPDto> lista)
+        {
+            try
+            {
+                #region Setear datos
+
+                List<CDP> listaCDP = obtenerListaCdpConTercero(lista);
+
+                #endregion Setear datos
+
+                _context.BulkInsert(listaCDP);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public bool InsertaPlanDePago(IList<PlanPagoDto> lista)
         {
             try
@@ -141,6 +160,80 @@ namespace ComplementApp.API.Data
         }
 
         private List<CDP> obtenerListaCdp(IList<CDPDto> lista)
+        {
+
+            List<CDP> listaCDP = new List<CDP>();
+            CDP cdp = null;
+            Tercero tercero = null;
+
+            var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
+            var listaTerceros = _context.Tercero.ToList();
+
+            foreach (var item in lista)
+            {
+                cdp = new CDP();
+
+                cdp.Instancia = item.Instancia;
+                cdp.Cdp = item.Cdp;
+                cdp.Crp = item.Crp;
+                cdp.Obligacion = item.Obligacion;
+                cdp.OrdenPago = item.OrdenPago;
+                cdp.Fecha = item.Fecha;
+
+                cdp.ValorInicial = item.ValorInicial;
+                cdp.Operacion = item.Operacion;
+                cdp.ValorTotal = item.ValorTotal;
+                cdp.SaldoActual = item.SaldoActual;
+
+                cdp.Detalle1 = item.Detalle1;
+                cdp.Detalle2 = item.Detalle2;
+                cdp.Detalle3 = item.Detalle3;
+                cdp.Detalle4 = item.Detalle4;
+                cdp.Detalle5 = item.Detalle5;
+                cdp.Detalle6 = item.Detalle6;
+                cdp.Detalle7 = item.Detalle7;
+                cdp.Detalle8 = item.Detalle8;
+                cdp.Detalle9 = item.Detalle9;
+
+                //Rubro Presupuestal
+                if (!string.IsNullOrEmpty(item.IdentificacionRubro))
+                {
+                    var rubro = listaRubrosPresupuestales
+                                    .Where(c => c.Identificacion.ToUpper() == item.IdentificacionRubro.ToUpper())
+                                    .FirstOrDefault();
+                    if (rubro != null)
+                    {
+                        cdp.RubroPresupuestal = rubro;
+                        cdp.RubroPresupuestalId = rubro.RubroPresupuestalId;
+                    }
+                }
+
+                #region Tercero
+
+                if (!string.IsNullOrEmpty(item.NumeroIdentificacionTercero))
+                {
+                    tercero = listaTerceros
+                                .Where(c => c.NumeroIdentificacion == item.NumeroIdentificacionTercero
+                                            && c.TipoIdentificacion == item.TipoIdentificacionTercero
+                                            ).FirstOrDefault();                    
+
+                    if (tercero != null)
+                    {
+                        cdp.Tercero = tercero;
+                        cdp.TerceroId = tercero.TerceroId;
+                    }
+                }
+
+                #endregion Tercero
+
+                listaCDP.Add(cdp);
+            }
+
+            return listaCDP;
+        }
+
+
+        private List<CDP> obtenerListaCdpConTercero(IList<CDPDto> lista)
         {
 
             List<CDP> listaCDP = new List<CDP>();

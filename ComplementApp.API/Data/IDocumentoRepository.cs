@@ -11,9 +11,11 @@ namespace ComplementApp.API.Data
 
         bool InsertaDetalleCDP(IList<DetalleCDPDto> lista);
 
+        bool InsertaCabeceraCDPConTercero(IList<CDPDto> lista);
+
         bool InsertaPlanDePago(IList<PlanPagoDto> lista);
 
-        bool EliminarCabeceraCDP();
+        bool EliminarCabeceraCDP();        
 
         bool EliminarDetalleCDP();
 

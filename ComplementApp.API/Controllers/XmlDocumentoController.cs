@@ -72,7 +72,7 @@ namespace ComplementApp.API.Controllers
 
                         List<CDPDto> listaDetalle = obtenerListaCDP(listaCDP);
 
-                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDetalle);
+                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDPConTercero(listaDetalle);
 
                         if (!EsCabeceraCorrecto)
                             throw new ArgumentException("No se pudo registrar los CDP");
@@ -89,7 +89,7 @@ namespace ComplementApp.API.Controllers
 
                         List<CDPDto> listaDetalle = obtenerListaCompromiso(lista);
 
-                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDetalle);
+                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDPConTercero(listaDetalle);
 
                         if (!EsCabeceraCorrecto)
                             throw new ArgumentException("No se pudo registrar los Compromisos");
@@ -106,7 +106,7 @@ namespace ComplementApp.API.Controllers
 
                         List<CDPDto> listaDetalle = obtenerListaObligacion(lista);
 
-                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDetalle);
+                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDPConTercero(listaDetalle);
 
                         if (!EsCabeceraCorrecto)
                             throw new ArgumentException("No se pudo registrar las obligaciones");
@@ -123,7 +123,7 @@ namespace ComplementApp.API.Controllers
 
                         List<CDPDto> listaDetalle = obtenerListaOrdenPago(lista);
 
-                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDetalle);
+                        var EsCabeceraCorrecto = _repo.InsertaCabeceraCDPConTercero(listaDetalle);
 
                         if (!EsCabeceraCorrecto)
                             throw new ArgumentException("No se pudo registrar las ordenes de pago");
