@@ -106,9 +106,20 @@ namespace ComplementApp.API.Controllers
                     return BadRequest("El archivo no pudo ser enviado al servidor web");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                string mensajeErrorNoManejado = string.Empty;
+
+                if (ex.InnerException != null)
+                    mensajeErrorNoManejado = ex.InnerException.Message.Replace("'", string.Empty);
+                else
+                    mensajeErrorNoManejado = ex.Message.Replace("'", string.Empty); ;
+
+                if (mensajeErrorNoManejado.Length > 4000)
+                    mensajeErrorNoManejado = mensajeErrorNoManejado.Substring(0, 3990) + "...";
+
+                throw new ArgumentException(mensajeErrorNoManejado);
+
             }
 
             return Ok();

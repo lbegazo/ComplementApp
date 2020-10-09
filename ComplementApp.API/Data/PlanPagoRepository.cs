@@ -67,7 +67,8 @@ namespace ComplementApp.API.Data
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
-                          join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId
+                          join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
+                          from pt in ParametroTercero.DefaultIfEmpty()
                           join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
                           join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
                           from up in UsosPresupuestales.DefaultIfEmpty()
@@ -85,8 +86,8 @@ namespace ComplementApp.API.Data
                               SaldoActual = c.SaldoActual,
                               Fecha = c.Fecha,
                               Operacion = c.Operacion,
-                              ModalidadContrato = p.ModalidadContrato,
-                              TipoPago = p.TipoPago,
+                              ModalidadContrato = pt.ModalidadContrato,
+                              TipoPago = pt.TipoPago,
 
                               ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
                               Crp = pp.Crp,

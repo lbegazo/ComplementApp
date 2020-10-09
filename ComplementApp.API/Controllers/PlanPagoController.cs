@@ -447,8 +447,9 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
-                        deduccion.Valor = ObtenerValorRentaRedondeado(valorRentaCalculado);
+                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango)) 
+                                                        + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -890,8 +891,9 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
-                        deduccion.Valor = ObtenerValorRentaRedondeado(valorRentaCalculado);
+                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango)) 
+                                                        + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -1033,8 +1035,9 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
-                        deduccion.Valor = ObtenerValorRentaRedondeado(valorRentaCalculado);
+                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango)) 
+                                                        + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -1234,6 +1237,27 @@ namespace ComplementApp.API.Controllers
             if (modValorRentaCalculado > 0)
             {
                 valorNuevo = valor + (100 - modValorRentaCalculado);
+            }
+            else
+            {
+                valorNuevo = valor;
+            }
+
+            return valorNuevo;
+        }
+
+        private decimal ObtenerValorRedondeadoAl1000XEncima(decimal valor)
+        {
+            decimal valorNuevo = 0;
+            var modValorRentaCalculado = valor % 1000;
+
+            if (modValorRentaCalculado > 0)
+            {
+                valorNuevo = valor + (1000 - modValorRentaCalculado);
+            }
+            else
+            {
+                valorNuevo = valor;
             }
 
             return valorNuevo;
