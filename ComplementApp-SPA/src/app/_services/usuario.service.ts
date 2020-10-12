@@ -63,18 +63,12 @@ export class UsuarioService {
   }
 
   ActualizarUsuario(id: number, user: Usuario): Observable<boolean> {
-    this.http
-      .put(this.baseUrl + id, user)
-      .pipe(catchError(this.errorHandler))
-      .subscribe(
-        () => {
-          this.ActualizarListaUsuarios();
-        },
-        (error) => {
-          this.errorHandler(error);
-        }
-      );
-    return observableOf(true);
+
+    this.http.put(this.baseUrl + id, user).subscribe(() => {
+      this.ActualizarListaUsuarios();
+      return observableOf(true);
+    });
+    return observableOf(false);
   }
 
   EliminarUsuario(id: number) {
@@ -125,34 +119,5 @@ export class UsuarioService {
       }
     );
     return nombreTransaccion;
-  }
-
-  errorHandler(error) {
-    let errorMessage = '';
-
-    if (error.error instanceof ErrorEvent) {
-      //#region Get client-side error
-      errorMessage = error.error.message;
-      //console.log('errorHandler client-side error:' + error);
-
-      //#endregion Get client-side error
-    } else {
-      //#region Get server-side error
-      let message = '';
-      if (typeof error === 'string' || error instanceof String) {
-        message = error as string;
-        errorMessage = `Message: ${message}`;
-      } else {
-        message = error.message;
-        errorMessage = `Error Code: ${error.status}\nMessage: ${message}`;
-      }
-
-      //console.log('errorHandler server-side error:' + errorMessage);
-
-      //#endregion Get server-side error
-    }
-
-    // console.log(errorMessage);
-    return throwError(errorMessage);
   }
 }

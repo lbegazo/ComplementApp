@@ -86,5 +86,7 @@ namespace ComplementApp.API.Models
         public int TerceroId { get; set; }
 
         public Tercero Tercero { get; set; }
+
+        public bool GmfAfc { get; set; }
     }
 }

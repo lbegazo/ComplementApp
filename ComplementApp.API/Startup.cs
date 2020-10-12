@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -120,29 +121,31 @@ namespace ComplementApp.API
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             /*The order is extremely important*/
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler(
-                    builder =>
-                    {
-                        builder.Run(
-                            async context =>
-                            {
-                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            // else
+            // {
+            //     app.UseExceptionHandler(
+            //         builder =>
+            //         {
+            //             builder.Run(
+            //                 async context =>
+            //                 {
+            //                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                                var error = context.Features.Get<IExceptionHandlerFeature>();
-                                if (error != null)
-                                {
-                                    context.Response.AddApplicationError(error.Error.Message);
-                                    await context.Response.WriteAsync(error.Error.Message);
-                                }
-                            });
-                    });
-            }
+            //                     var error = context.Features.Get<IExceptionHandlerFeature>();
+            //                     if (error != null)
+            //                     {
+            //                         context.Response.AddApplicationError(error.Error.Message);
+            //                         await context.Response.WriteAsync(error.Error.Message);
+            //                     }
+            //                 });
+            //         });
+            // }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             // app.UseHttpsRedirection();
 

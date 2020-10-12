@@ -61,7 +61,6 @@ export class ArchivoMainComponent implements OnInit {
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
-
   }
 
   onSuccessItem(
@@ -79,10 +78,15 @@ export class ArchivoMainComponent implements OnInit {
 
   onErrorItem(
     item: FileItem,
-    response: string,
+    response: any,
     status: number,
     headers: ParsedResponseHeaders
   ): any {
-    this.alertify.error('Ocurrió un error al ejecutar el proceso ' + response);
+    if (response) {
+      const resultado = JSON.parse(response);
+      this.alertify.error(
+        'Ocurrió un error al ejecutar el proceso ' + resultado.message
+      );
+    }
   }
 }

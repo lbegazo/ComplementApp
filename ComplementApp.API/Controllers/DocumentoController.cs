@@ -54,74 +54,57 @@ namespace ComplementApp.API.Controllers
         [Route("upload")]
         public IActionResult ActualizarBaseDeDatos()
         {
-            try
+
+            if (Request.Form.Files.Count > 0)
             {
-                if (Request.Form.Files.Count > 0)
-                {
-                    var result = EliminarInformacionCDP();
+                var result = EliminarInformacionCDP();
 
-                    IFormFile file = Request.Form.Files[0];
+                IFormFile file = Request.Form.Files[0];
 
-                    if (file == null || file.Length <= 0)
-                        return BadRequest("El archivo se encuentra vacío");
+                if (file == null || file.Length <= 0)
+                    return BadRequest("El archivo se encuentra vacío");
 
-                    if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                        return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
+                if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
 
-                    #region Obtener información del archivo excel
+                #region Obtener información del archivo excel
 
-                    DataTable dtDetalle = ObtenerDetalleDeExcel(file);
-                    DataTable dtCabecera = ObtenerCabeceraDeExcel(file);
-                    DataTable dtPlanPago = ObtenerPlanPagosDeExcel(file);
+                DataTable dtDetalle = ObtenerDetalleDeExcel(file);
+                DataTable dtCabecera = ObtenerCabeceraDeExcel(file);
+                DataTable dtPlanPago = ObtenerPlanPagosDeExcel(file);
 
-                    #endregion
+                #endregion
 
-                    #region Mapear datos en la lista de Dtos
+                #region Mapear datos en la lista de Dtos
 
-                    List<CDPDto> listaDocumento = obtenerListaDeCDP(dtCabecera);
-                    List<DetalleCDPDto> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
-                    List<PlanPagoDto> listaPlanPago = obtenerListaDePlanPago(dtPlanPago);
+                List<CDPDto> listaDocumento = obtenerListaDeCDP(dtCabecera);
+                List<DetalleCDPDto> listaDetalle = obtenerListaDeDetalleCDP(dtDetalle);
+                List<PlanPagoDto> listaPlanPago = obtenerListaDePlanPago(dtPlanPago);
 
-                    #endregion
+                #endregion
 
-                    #region Insertar lista en la base de datos
+                #region Insertar lista en la base de datos
 
-                    var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento);
-                    var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
-                    var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
+                var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento);
+                var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
+                var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
 
-                    #endregion Insertar lista en la base de datos
+                #endregion Insertar lista en la base de datos
 
-                    if (!EsCabeceraCorrecto)
-                        throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
+                if (!EsCabeceraCorrecto)
+                    throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
 
-                    if (!EsDetalleCorrecto)
-                        throw new ArgumentException("No se pudieron registrar: " + nombreHojaDetalle);
+                if (!EsDetalleCorrecto)
+                    throw new ArgumentException("No se pudieron registrar: " + nombreHojaDetalle);
 
-                    if (!EsPlanPagoCorrecto)
-                        throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
-                }
-                else
-                {
-                    return BadRequest("El archivo no pudo ser enviado al servidor web");
-                }
+                if (!EsPlanPagoCorrecto)
+                    throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
             }
-            catch (Exception ex)
+            else
             {
-                string mensajeErrorNoManejado = string.Empty;
-
-                if (ex.InnerException != null)
-                    mensajeErrorNoManejado = ex.InnerException.Message.Replace("'", string.Empty);
-                else
-                    mensajeErrorNoManejado = ex.Message.Replace("'", string.Empty); ;
-
-                if (mensajeErrorNoManejado.Length > 4000)
-                    mensajeErrorNoManejado = mensajeErrorNoManejado.Substring(0, 3990) + "...";
-
-                throw new ArgumentException(mensajeErrorNoManejado);
-
+                return BadRequest("El archivo no pudo ser enviado al servidor web");
             }
-
+            
             return Ok();
         }
 

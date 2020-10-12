@@ -225,12 +225,20 @@ export class UsuarioEditComponent implements OnInit {
         this.usuarioService
           .ActualizarUsuario(this.idUsuario, this.user)
           .subscribe(
-            () => {
-              this.alertify.success('El usuario se actualizó correctamente');
-              this.editForm.reset(this.user);
+            (response: boolean) => {
+              if (response) {
+                this.alertify.success('El usuario se actualizó correctamente');
+                this.editForm.reset(this.user);
+              }
+              else
+              {
+                //this.editForm.errors.add = false;
+                console.log('corrurio un error');
+              }
             },
 
             (error) => {
+              console.log(error);
               this.alertify.error(error);
             },
             () => {

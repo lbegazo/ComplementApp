@@ -28,7 +28,6 @@ import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -74,6 +73,10 @@ import { FormatoCausacionLiquidacionComponent } from './CausacionyLiquidacion/fo
 import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 import { TransaccionResolver } from './_resolvers/transaccion.resolver';
 import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.component';
+import { ErrorInterceptorProviderNew } from './_interceptors/error.interceptor';
+import { ServerErrorComponent } from './server-error/server-error.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -83,7 +86,7 @@ export function tokenGetter() {
 }
 
 @NgModule({
-  declarations: [
+  declarations: [		
     AppComponent,
     NavComponent,
     HomeComponent,
@@ -120,7 +123,9 @@ export function tokenGetter() {
     TopNavComponent,
     FormatoCausacionLiquidacionComponent,
     CargaArchivoXmlComponent,
-  ],
+      ServerErrorComponent,
+      NotFoundComponent
+   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -155,7 +160,7 @@ export function tokenGetter() {
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-Co' },
-    ErrorInterceptorProvider,
+    ErrorInterceptorProviderNew,
     AuthService,
     MemberDetailResolver,
     MemberListResolver,

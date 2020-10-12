@@ -373,6 +373,9 @@ namespace ComplementApp.API.Controllers
 
             PL17HonorarioSinIva = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
 
+            var tarifaIva = parametroLiquidacion.TarifaIva;
+            var GmfAfc = parametroLiquidacion.GmfAfc;
+
             #endregion Parametros de liquidación de tercero
 
             #region Parametros Generales
@@ -395,7 +398,7 @@ namespace ComplementApp.API.Controllers
 
             if (PL17HonorarioSinIva > 0)
             {
-                C32NumeroDiaLaborados = (int)((planPago.ValorFacturado.Value * 30) / PL17HonorarioSinIva);
+                C32NumeroDiaLaborados = (int)(((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIva);
             }
 
             #endregion Numero de dias laborados
@@ -447,7 +450,7 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango)) 
+                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
                                                         + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
                         deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
 
@@ -487,7 +490,7 @@ namespace ComplementApp.API.Controllers
 
             if (deduccionOtras != null)
             {
-                var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones);
+                var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones, parametrosCodigoAFC, GmfAfc);
                 deduccionOtras.Base = valorGmf;
                 deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
             }
@@ -513,6 +516,32 @@ namespace ComplementApp.API.Controllers
                     .Where(x => x.Gmf == true)
                     .Sum(x => x.Valor);
 
+
+            return valor;
+        }
+
+        private decimal obtenerSumatoriaValorGMf(List<DeduccionDto> listaDeducciones, List<ParametroGeneral> parametrosCodigoAFC, bool GmfAfc)
+        {
+            decimal valor = 0;
+
+            foreach (var deduccion in listaDeducciones)
+            {
+                //Del tipo AFC
+                if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
+                {
+                    if (GmfAfc)
+                    {
+                        valor = valor + deduccion.Valor;
+                    }
+                }
+                else
+                {
+                    if (deduccion.Gmf)
+                    {
+                        valor = valor + deduccion.Valor;
+                    }
+                }
+            }
             return valor;
         }
 
@@ -891,7 +920,7 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango)) 
+                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
                                                         + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
                         deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
 
@@ -1035,7 +1064,7 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango)) 
+                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
                                                         + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
                         deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
 

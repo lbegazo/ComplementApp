@@ -15,6 +15,8 @@ import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.compon
 import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 import { TransaccionResolver } from './_resolvers/transaccion.resolver';
 import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.component';
+import { ServerErrorComponent } from './server-error/server-error.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -39,7 +41,7 @@ export const routes: Routes = [
       {
         path: ':id/edit',
         component: UsuarioEditComponent,
-        canDeactivate: [PreventUnsavedChangesUsuario],
+        // canDeactivate: [PreventUnsavedChangesUsuario],
       },
     ],
   },
@@ -49,7 +51,7 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     component: ArchivoMainComponent,
     resolve: { transaccion: TransaccionResolver },
-  },  
+  },
   {
     path: 'TRAMITE_RADICADO',
     canActivate: [AuthGuard],
@@ -81,6 +83,8 @@ export const routes: Routes = [
     component: CargaArchivoXmlComponent,
     resolve: { transaccion: TransaccionResolver },
   },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: 'server-error', component: ServerErrorComponent },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
 

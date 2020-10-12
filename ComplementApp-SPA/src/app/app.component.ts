@@ -63,9 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alertify.success('Login correcto!!!');
         this.model = {};
       },
-      (error) => {
-        this.alertify.error(error);
-      },
+      () => {},
       () => {
         this.router.navigate(['/home']);
       }
