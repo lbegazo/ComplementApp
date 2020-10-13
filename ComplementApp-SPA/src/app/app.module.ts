@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule, BsLocaleService } from 'ngx-bootstrap/datepicker';
@@ -73,10 +73,12 @@ import { FormatoCausacionLiquidacionComponent } from './CausacionyLiquidacion/fo
 import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 import { TransaccionResolver } from './_resolvers/transaccion.resolver';
 import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.component';
-import { ErrorInterceptorProviderNew } from './_interceptors/error.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { ServerErrorComponent } from './server-error/server-error.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -86,7 +88,7 @@ export function tokenGetter() {
 }
 
 @NgModule({
-  declarations: [		
+  declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
@@ -123,9 +125,10 @@ export function tokenGetter() {
     TopNavComponent,
     FormatoCausacionLiquidacionComponent,
     CargaArchivoXmlComponent,
-      ServerErrorComponent,
-      NotFoundComponent
-   ],
+    ServerErrorComponent,
+    NotFoundComponent,
+    RadicadoPagoComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -149,7 +152,7 @@ export function tokenGetter() {
     MatButtonModule,
     FlexLayoutModule,
     AppRoutingModule,
-
+    NgxSpinnerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
@@ -160,7 +163,8 @@ export function tokenGetter() {
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-Co' },
-    ErrorInterceptorProviderNew,
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     AuthService,
     MemberDetailResolver,
     MemberListResolver,

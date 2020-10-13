@@ -3,7 +3,8 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor,HTTP_INTERCEPTORS
+  HttpInterceptor,
+  HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AlertifyService } from '../_services/alertify.service';
@@ -37,7 +38,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
               break;
             case 401:
-              //this.alertify.error(error.statusText + ' ' + error.status);
+              // this.alertify.error(error.statusText + ' ' + error.status);
               console.log(error);
               this.alertify.error(error.error);
               break;
@@ -65,8 +66,3 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 }
 
-export const ErrorInterceptorProviderNew = {
-  provide: HTTP_INTERCEPTORS,
-  useClass: ErrorInterceptor,
-  multi: true,
-}

@@ -317,6 +317,14 @@
     "Ruta": "",
     "CodigoPadreTransaccion": "CONSULTAS"
   },
+  {
+    "Codigo": "CONSULTAS_RADICADOPAGO",
+    "Nombre": "Consulta Radicado de Pago",
+    "Descripcion": "Consulta Radicado de Pago",
+    "Icono": "assessment",
+    "Ruta": "CONSULTAS_RADICADOPAGO",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
 
 
 

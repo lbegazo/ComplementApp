@@ -27,16 +27,7 @@ export class FacturaEditComponent implements OnInit {
   facturaForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
   detallePlanPago: DetallePlanPago;
-  // detallePlanPago: DetallePlanPago = {
-  //   planPagoId: 0,
-  //   detalle4: '',
-  //   detalle5: '',
-  //   detalle6: '',
-  //   detalle7: '',
-  //   fecha: null,
-  //   valorTotal: 0,
-  //   saldoActual: 0,
-  // };
+
 
   constructor(
     private alertify: AlertifyService,

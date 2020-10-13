@@ -1,36 +1,37 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { noop, Observable, Observer, of, Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-
+import { Component, OnInit } from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
+import { noop, Observable, Observer, of, Subscription } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/Operators';
+import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
+import {
+  EstadoPlanPago,
+  ModalidadContrato,
+  TipoPago,
+} from 'src/app/_models/enum';
+import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { PlanPago } from 'src/app/_models/planPago';
+import { Tercero } from 'src/app/_models/tercero';
+import { Transaccion } from 'src/app/_models/transaccion';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { environment } from 'src/environments/environment';
 
-import { Tercero } from 'src/app/_models/tercero';
-import { PlanPagoService } from 'src/app/_services/planPago.service';
-import { PlanPago } from 'src/app/_models/planPago';
-import { AlertifyService } from 'src/app/_services/alertify.service';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  FormControl,
-} from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { EstadoPlanPago, ModalidadContrato, TipoPago } from '../_models/enum';
-import { DetallePlanPago } from '../_models/detallePlanPago';
-import { ListaService } from '../_services/lista.service';
-import { PaginatedResult, Pagination } from '../_models/pagination';
-import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
-import { Transaccion } from '../_models/transaccion';
-
 @Component({
-  selector: 'app-causacionyliquidacion',
-  templateUrl: './CausacionyLiquidacion.component.html',
-  styleUrls: ['./CausacionyLiquidacion.component.css'],
+  selector: 'app-radicado-pago',
+  templateUrl: './radicado-pago.component.html',
+  styleUrls: ['./radicado-pago.component.scss'],
 })
-export class CausacionyLiquidacionComponent implements OnInit {
+export class RadicadoPagoComponent implements OnInit {
   nombreTransaccion: string;
   transaccion: Transaccion;
   search: string;
@@ -215,64 +216,6 @@ export class CausacionyLiquidacionComponent implements OnInit {
     }
   }
 
-  onLiquidar() {
-    if (
-      this.listaPlanPago &&
-      this.listaPlanPago.length > 0 &&
-      this.planPagoIdSeleccionado > 0
-    ) {
-      this.planPagoSeleccionado = this.listaPlanPago.filter(
-        (x) => x.planPagoId === this.planPagoIdSeleccionado
-      )[0];
-
-      if (this.planPagoSeleccionado) {
-        this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
-        this.tipoPago = this.planPagoSeleccionado.tipoPago;
-
-        if (
-          this.modalidadContrato ===
-            ModalidadContrato.ProveedorConDescuento.value &&
-          this.tipoPago === TipoPago.Variable.value
-        ) {
-          //#region ProveedorConDescuento
-
-          let resultado: string;
-          let valorIngresado = 0;
-
-          resultado = window.prompt(
-            'Debe ingresar el Valor Base Gravable',
-            '0'
-          );
-
-          if (isNaN(+resultado)) {
-            this.alertify.warning('Debe ingresar un valor númerico');
-          } else if (+resultado === 0) {
-            this.alertify.warning('El valor ingresado debe ser mayor a cero');
-          } else {
-            valorIngresado = +resultado;
-
-            if (valorIngresado > this.planPagoSeleccionado.valorFacturado) {
-              this.alertify.warning(
-                'Debe ingresar un valor menor al valor total a cancelar ' +
-                  this.planPagoSeleccionado.valorFacturado
-              );
-            } else {
-              this.obtenerDetallePlanPago(valorIngresado);
-            }
-          }
-
-          //#endregion ProveedorConDescuento
-        } else {
-          //#region ContratoPrestacionServicio
-
-          this.obtenerDetallePlanPago(0);
-
-          //#endregion ContratoPrestacionServicio
-        }
-      }
-    }
-  }
-
   obtenerDetallePlanPago(valorIngresado: number) {
     this.facturaService
       .ObtenerDetallePlanPago(this.planPagoIdSeleccionado)
@@ -323,9 +266,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
     this.onLimpiarFactura();
   }
 
-  // private obtenerNombreTransaccion() {
-  //   this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
-  //     this.codigoTransaccion
-  //   );
-  // }
+  Exportar() {
+    console.log('exportar');
+  }
 }

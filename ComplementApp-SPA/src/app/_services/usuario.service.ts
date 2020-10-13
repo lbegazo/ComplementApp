@@ -14,7 +14,7 @@ import { Transaccion } from '../_models/transaccion';
 export class UsuarioService {
   baseUrl = environment.apiUrl + 'usuario/';
   usuarioChanged = new Subject<Usuario[]>();
-  usuarios: Usuario[];
+  usuarios: Usuario[] = [];
 
   pagination: Pagination = {
     currentPage: 1,
@@ -63,7 +63,6 @@ export class UsuarioService {
   }
 
   ActualizarUsuario(id: number, user: Usuario): Observable<boolean> {
-
     this.http.put(this.baseUrl + id, user).subscribe(() => {
       this.ActualizarListaUsuarios();
       return observableOf(true);
