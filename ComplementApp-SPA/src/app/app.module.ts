@@ -24,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
-import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
@@ -47,7 +46,6 @@ import { UsuarioItemComponent } from './Usuario/usuario-list/usuario-item/usuari
 import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.component';
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
-import { CdpDetailComponent } from './solicitudCdp/cdp-detail/cdp-detail.component';
 import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
 import { CdpListComponent } from './solicitudCdp/cdp-list/cdp-list.component';
 import { CdpComponent } from './solicitudCdp/cdp-list/cdp/cdp.component';
@@ -90,7 +88,6 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent,
     HomeComponent,
     RegisterComponent,
     MemberListComponent,
@@ -108,7 +105,6 @@ export function tokenGetter() {
     UsuarioStartComponent,
     CdpMainComponent,
     CdpListComponent,
-    CdpDetailComponent,
     CdpEditComponent,
     CdpComponent,
     ArchivoMainComponent,
