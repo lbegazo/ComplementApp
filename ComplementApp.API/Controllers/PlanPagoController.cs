@@ -13,13 +13,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
-{
+{   
     [ServiceFilter(typeof(LogActividadUsuario))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PlanPagoController : ControllerBase
     {
+        #region Variable
+
+        int usuarioId = 0;
+
+        #endregion 
 
         #region Constantes
 
@@ -122,9 +127,18 @@ namespace ComplementApp.API.Controllers
                 {
                     if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                     {
-                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoBD, parametroLiquidacion,
-                                                                    parametros, listaCriterioReteFuente.ToList(),
-                                                                    listaDeduccionesDto.ToList());
+                        if (!planPagoBD.Viaticos)
+                        {
+                            formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoBD, parametroLiquidacion,
+                                                                        parametros, listaCriterioReteFuente.ToList(),
+                                                                        listaDeduccionesDto.ToList());
+                        }
+                        else
+                        {
+                            //Contratistas con viaticos liquida de otra manera
+                            formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoBD, parametroLiquidacion,
+                                                                                  parametros, listaCriterioReteFuente.ToList());
+                        }
                     }
                     else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
                     {
@@ -166,6 +180,7 @@ namespace ComplementApp.API.Controllers
         [HttpPut]
         public async Task<IActionResult> ActualizarPlanPago(PlanPagoDto planPagoDto)
         {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (planPagoDto != null)
             {
                 //Obtener todos los campos del plan de pago para una correcta actualización
@@ -177,11 +192,15 @@ namespace ComplementApp.API.Controllers
                 {
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
                     planPagoBD.FechaFactura = System.DateTime.Now;
+                    planPagoBD.FechaRegistro = System.DateTime.Now;
+                    planPagoBD.UsuarioIdRegistro = usuarioId;
                 }
                 else
                 {
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
                     planPagoBD.FechaFactura = System.DateTime.Now;
+                    planPagoBD.FechaModificacion = System.DateTime.Now;
+                    planPagoBD.UsuarioIdModificacion = usuarioId;
                 }
 
                 //Para apagar manualmente la columna que no deseo modificar
@@ -201,6 +220,7 @@ namespace ComplementApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarDetalleLiquidacion(FormatoCausacionyLiquidacionPagos formato)
         {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             DetalleLiquidacion detalleLiquidacion = new DetalleLiquidacion();
             LiquidacionDeduccion liquidacionDeduccion = null;
             try
@@ -215,11 +235,13 @@ namespace ComplementApp.API.Controllers
 
                     MapearFormatoLiquidacion(formato, detalleLiquidacion);
 
+                    detalleLiquidacion.UsuarioIdRegistro = usuarioId;
+                    detalleLiquidacion.FechaModificacion = System.DateTime.Now;
+
                     #endregion Mapear datos 
 
                     //Registrar detalle de liquidación
                     _dataContext.DetalleLiquidacion.Add(detalleLiquidacion);
-
 
                     //Registrar deducciones a la liquidación
                     if (formato.Deducciones != null && formato.Deducciones.Count > 0)
@@ -241,6 +263,8 @@ namespace ComplementApp.API.Controllers
                     //Actualizar el estado al plan de pago
                     var planPagoBD = await _repo.ObtenerPlanPago(formato.PlanPagoId);
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
+                    planPagoBD.UsuarioIdModificacion = usuarioId;
+                    planPagoBD.FechaModificacion = System.DateTime.Now;
 
                     await _unitOfWork.CompleteAsync();
                     return Ok(detalleLiquidacion.DetalleLiquidacionId);
@@ -288,6 +312,26 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
+        [Route("[action]/{planPagoId}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerDetalleFormatoCausacionyLiquidacionPago(int planPagoId)
+        {
+            try
+            {
+                if (planPagoId > 0)
+                {
+                    var formato = await _repo.ObtenerDetalleFormatoCausacionyLiquidacionPago(planPagoId);
+                    return Ok(formato);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener el formato de liquidación");
+        }
+
         private void MapearFormatoLiquidacionPlanPago(DetallePlanPagoDto detallePlanPago, DetalleLiquidacion detalleLiquidacion)
         {
             detalleLiquidacion.NumeroIdentificacion = detallePlanPago.IdentificacionTercero;
@@ -303,8 +347,8 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.ValorCancelado = detallePlanPago.SaldoActual;
             detalleLiquidacion.TotalACancelar = detallePlanPago.ValorFacturado.Value;
             detalleLiquidacion.SaldoActual = (detallePlanPago.SaldoActual - detallePlanPago.ValorFacturado.Value);
-            detalleLiquidacion.RubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal;
-            detalleLiquidacion.UsoPresupuestal = detallePlanPago.IdentificacionUsoPresupuestal;
+            detalleLiquidacion.RubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal.ToString();
+            detalleLiquidacion.UsoPresupuestal = detallePlanPago.IdentificacionUsoPresupuestal!=null? detallePlanPago.IdentificacionUsoPresupuestal : string.Empty;
 
             detalleLiquidacion.NombreSupervisor = detallePlanPago.Detalle5;
             detalleLiquidacion.NumeroRadicado = detallePlanPago.NumeroRadicadoSupervisor;
@@ -348,6 +392,8 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.DiferencialRenta = formato.DiferencialRenta;
             detalleLiquidacion.BaseGravableRenta = formato.BaseGravableRenta;
             detalleLiquidacion.BaseGravableUvt = formato.BaseGravableUvt;
+
+            detalleLiquidacion.ModalidadContrato = formato.ModalidadContrato;
         }
 
         #region Contrato Prestación de Servicio
@@ -366,6 +412,8 @@ namespace ComplementApp.API.Controllers
 
             decimal C30ValorIva = 0, PL17HonorarioSinIva = 0, baseGravable30 = 0, baseGravableFinal = 0, valorUvt, baseGravableUvtCalculada = 0;
             int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
+
+            decimal valor = 0;
 
             #endregion variables 
 
@@ -398,7 +446,8 @@ namespace ComplementApp.API.Controllers
 
             if (PL17HonorarioSinIva > 0)
             {
-                C32NumeroDiaLaborados = (int)(((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIva);
+                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIva);
+                C32NumeroDiaLaborados = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
             }
 
             #endregion Numero de dias laborados
@@ -462,22 +511,27 @@ namespace ComplementApp.API.Controllers
                     else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
                         deduccion.Base = C30ValorIva;
-                        deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                        valor = deduccion.Tarifa * C30ValorIva;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
                     {
                         deduccion.Base = formato.Afc;
-                        deduccion.Valor = deduccion.Tarifa * deduccion.Base;
+                        valor = deduccion.Tarifa * deduccion.Base;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
                     {
                         deduccion.Base = formato.PensionVoluntaria;
-                        deduccion.Valor = deduccion.Tarifa * deduccion.Base;
+                        valor = deduccion.Tarifa * deduccion.Base;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                     else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = formato.SubTotal1;
-                        deduccion.Valor = deduccion.Tarifa * formato.SubTotal1;
+                        valor = deduccion.Tarifa * formato.SubTotal1;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                 }
             }
@@ -492,7 +546,10 @@ namespace ComplementApp.API.Controllers
             {
                 var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones, parametrosCodigoAFC, GmfAfc);
                 deduccionOtras.Base = valorGmf;
-                deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
+                valor = deduccionOtras.Tarifa * valorGmf;
+                valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                deduccionOtras.Valor = valor;
+
             }
 
             #endregion Deducción Otras
@@ -838,12 +895,13 @@ namespace ComplementApp.API.Controllers
             #region variables 
 
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
-            CriterioCalculoReteFuente criterioReteFuente = null;
+         
 
             decimal PLTarifaIva = 0, baseGravableFinal = 0, baseGravableUvtCalculada = 0, valorUvt;
+            decimal valor = 0;
 
             //Para Proveedores con deducción siempre es 30
-            int C32NumeroDiaLaborados = 30, baseGravableUvtFinal = 0, honorarioUvt = 0;
+            int baseGravableUvtFinal = 0, honorarioUvt = 0;
 
             decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0, CSubTotal1 = 0;
 
@@ -900,16 +958,6 @@ namespace ComplementApp.API.Controllers
 
             #region Obtener Lista de deducciones
 
-            decimal valorMinimoRango = 0;
-            decimal factorIncremento = 0;
-            decimal tarifaCalculo = 0;
-
-            criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
-
-            valorMinimoRango = criterioReteFuente.Desde;
-            factorIncremento = criterioReteFuente.Factor;
-            tarifaCalculo = criterioReteFuente.Tarifa;
-
             //temp
             CSubTotal1 = C31Honorario;
 
@@ -920,27 +968,23 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                        + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
-                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
+                        valor = deduccion.Tarifa * baseGravableFinal;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(deduccion.Valor);
 
-                        if (deduccion.Base > 0)
-                        {
-                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
-                        }
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
                         deduccion.Base = C30ValorIva;
-                        deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                        valor = deduccion.Tarifa * C30ValorIva;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                     else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = CSubTotal1;
-                        deduccion.Valor = deduccion.Tarifa * CSubTotal1;
+                        valor = deduccion.Tarifa * CSubTotal1;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
-
-
                 }
             }
 
@@ -954,7 +998,8 @@ namespace ComplementApp.API.Controllers
             {
                 var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones);
                 deduccionOtras.Base = valorGmf;
-                deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
+                valor = deduccionOtras.Tarifa * valorGmf;
+                deduccionOtras.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
             }
 
             #endregion Deducción Otras
@@ -981,12 +1026,12 @@ namespace ComplementApp.API.Controllers
             #region variables 
 
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
-            CriterioCalculoReteFuente criterioReteFuente = null;
 
             decimal PLTarifaIva = 0, baseGravableFinal = 0, valorUvt;
+            decimal valor = 0;
 
             //Para Proveedores con deducción siempre es 30
-            int C32NumeroDiaLaborados = 30, baseGravableUvtFinal = 0, honorarioUvt = 0;
+            int baseGravableUvtFinal = 0, honorarioUvt = 0;
 
             decimal C30ValorIva = 0, C31Honorario = 0, C31HonorarioUvt = 0, CSubTotal1 = 0, baseGravableUvtCalculada = 0;
 
@@ -1039,20 +1084,7 @@ namespace ComplementApp.API.Controllers
 
             #endregion Calcular valores y obtener formato
 
-            #region Obtener Lista de deducciones
-
-            //string deduccionRentaTrabajo = parametroCodigoRenta;
-            //string deduccionIva = parametroCodigoIva;
-
-            decimal valorMinimoRango = 0;
-            decimal factorIncremento = 0;
-            decimal tarifaCalculo = 0;
-
-            criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
-
-            valorMinimoRango = criterioReteFuente.Desde;
-            factorIncremento = criterioReteFuente.Factor;
-            tarifaCalculo = criterioReteFuente.Tarifa;
+            #region Obtener Lista de deducciones            
 
             //temp
             CSubTotal1 = C31Honorario;
@@ -1064,24 +1096,21 @@ namespace ComplementApp.API.Controllers
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                        + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
-                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
-
-                        if (deduccion.Base > 0)
-                        {
-                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
-                        }
+                        valor = deduccion.Tarifa * baseGravableFinal;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(deduccion.Valor);
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
                         deduccion.Base = C30ValorIva;
-                        deduccion.Valor = deduccion.Tarifa * C30ValorIva;
+                        valor = deduccion.Tarifa * C30ValorIva;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                     else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
                         deduccion.Base = CSubTotal1;
-                        deduccion.Valor = deduccion.Tarifa * CSubTotal1;
+                        valor = deduccion.Tarifa * CSubTotal1;
+                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                 }
             }
@@ -1096,7 +1125,8 @@ namespace ComplementApp.API.Controllers
             {
                 var valorGmf = obtenerSumatoriaValorGMf(listaDeducciones);
                 deduccionOtras.Base = valorGmf;
-                deduccionOtras.Valor = deduccionOtras.Tarifa * valorGmf;
+                valor = deduccionOtras.Tarifa * valorGmf;
+                deduccionOtras.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
             }
 
             #endregion Deducción Otras
@@ -1291,6 +1321,8 @@ namespace ComplementApp.API.Controllers
 
             return valorNuevo;
         }
+
+
 
         #endregion Funciones Generales
     }

@@ -9,6 +9,7 @@ export interface DetallePlanPago {
   saldoActual: number;
   fecha: Date;
   operacion: number;
+  viaticos: boolean;
 
   identificacionTercero: string;
   nombreTercero: string;

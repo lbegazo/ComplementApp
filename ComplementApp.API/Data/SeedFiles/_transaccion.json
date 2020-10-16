@@ -325,7 +325,14 @@
     "Ruta": "CONSULTAS_RADICADOPAGO",
     "CodigoPadreTransaccion": "CONSULTAS"
   },
-
+  {
+    "Codigo": "CONSULTAS_LIQUIDACION",
+    "Nombre": "Consulta de Formato de  Liquidación",
+    "Descripcion": "Consulta de Formato de  Liquidación",
+    "Icono": "assessment",
+    "Ruta": "CONSULTAS_LIQUIDACION",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
 
 
   {

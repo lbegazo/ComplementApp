@@ -21,5 +21,7 @@ namespace ComplementApp.API.Data
         int ObtenerCantidadMaximaPlanPago(long crp);
 
         Task<bool> RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion);
+
+        Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long planPagoId);
     }
 }

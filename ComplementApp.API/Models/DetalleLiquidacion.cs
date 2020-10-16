@@ -174,6 +174,16 @@ namespace ComplementApp.API.Models
 
         public PlanPago PlanPago { get; set; }
 
+        public int ModalidadContrato { get; set; }
+
+        public int UsuarioIdRegistro { get; set; }  
+
+        public DateTime? FechaRegistro { get; set; }   
+
+        public int UsuarioIdModificacion { get; set; }  
+
+        public DateTime? FechaModificacion { get; set; }        
+
         public ICollection<LiquidacionDeduccion> Deducciones { get; set; }
 
     }

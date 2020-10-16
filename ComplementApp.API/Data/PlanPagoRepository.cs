@@ -67,11 +67,20 @@ namespace ComplementApp.API.Data
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
+                          join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
+
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
-                          join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
+
                           join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
                           from up in UsosPresupuestales.DefaultIfEmpty()
+
+                          join dc in _context.DetalleCDP on pp.Cdp equals dc.Cdp into DetalleCDP
+                          from dcdp in DetalleCDP.DefaultIfEmpty()
+
+                          join u in _context.Usuario on dcdp.UsuarioId equals u.UsuarioId into Usuario
+                          from us in Usuario.DefaultIfEmpty()
+
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
                           select new DetallePlanPagoDto()
@@ -79,7 +88,7 @@ namespace ComplementApp.API.Data
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
                               Detalle4 = c.Detalle4,
-                              Detalle5 = c.Detalle5,
+                              Detalle5 = us.Nombres + ' ' + us.Apellidos,
                               Detalle6 = c.Detalle6,
                               Detalle7 = c.Detalle7,
                               ValorTotal = c.ValorTotal,
@@ -89,6 +98,7 @@ namespace ComplementApp.API.Data
                               ModalidadContrato = pt.ModalidadContrato,
                               TipoPago = pt.TipoPago,
 
+                              Viaticos = pp.Viaticos,
                               ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
                               Crp = pp.Crp,
                               NumeroPago = pp.NumeroPago,
@@ -148,6 +158,106 @@ namespace ComplementApp.API.Data
         {
             var cantidad = _context.PlanPago.Where(pp => pp.Crp == crp).Max(x => x.NumeroPago);
             return cantidad;
+        }
+
+        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long planPagoId)
+        {
+            DeduccionDto deduccionDto = null;
+
+            var detalleLiquidacion = await (from dl in _context.DetalleLiquidacion
+                                            join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
+                                            where dl.PlanPagoId == planPagoId
+                                            select new FormatoCausacionyLiquidacionPagos()
+                                            {
+                                                //Plan de pago
+                                                DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                                PlanPagoId = dl.PlanPagoId,
+                                                TerceroId = pp.TerceroId,
+                                                ModalidadContrato = dl.ModalidadContrato,
+                                                IdentificacionTercero = dl.NumeroIdentificacion,
+                                                NombreTercero = dl.Nombre,
+                                                Contrato = dl.Contrato,
+                                                Viaticos = pp.Viaticos,
+                                                ViaticosDescripcion = dl.Viaticos,
+                                                Crp = dl.Crp.ToString(),
+                                                CantidadPago = dl.CantidadPago,
+                                                NumeroPago = dl.NumeroPago,
+
+                                                ValorContrato = dl.ValorContrato,
+                                                ValorAdicionReduccion = dl.ValorAdicionReduccion,
+                                                ValorCancelado = dl.ValorCancelado,
+                                                TotalACancelar = dl.TotalACancelar,
+                                                SaldoActual = dl.SaldoActual,
+                                                IdentificacionRubroPresupuestal = dl.RubroPresupuestal,
+                                                IdentificacionUsoPresupuestal = dl.UsoPresupuestal,
+
+                                                NombreSupervisor = dl.NombreSupervisor,
+                                                NumeroRadicadoSupervisor = dl.NumeroRadicado,
+                                                FechaRadicadoSupervisor = dl.FechaRadicado,
+                                                NumeroFactura = dl.NumeroFactura,
+
+                                                TextoComprobanteContable = dl.TextoComprobanteContable,
+
+                                                //Formato de Liquidación
+                                                Honorario = dl.Honorario,
+                                                HonorarioUvt = (int)dl.HonorarioUvt,
+                                                ValorIva = dl.ValorIva,
+                                                ValorTotal = dl.ValorTotal,
+                                                TotalRetenciones = dl.TotalRetenciones,
+                                                TotalAGirar = dl.TotalAGirar,
+
+                                                BaseSalud = dl.BaseSalud,
+                                                AporteSalud = (int)dl.AporteSalud,
+                                                AportePension = dl.AportePension,
+                                                RiesgoLaboral = dl.RiesgoLaboral,
+                                                FondoSolidaridad = dl.FondoSolidaridad,
+                                                ImpuestoCovid = dl.ImpuestoCovid,
+                                                SubTotal1 = dl.SubTotal1,
+
+                                                PensionVoluntaria = dl.PensionVoluntaria,
+                                                Afc = (int)dl.Afc,
+                                                SubTotal2 = dl.SubTotal2,
+                                                MedicinaPrepagada = dl.MedicinaPrepagada,
+                                                Dependientes = dl.Dependientes,
+                                                InteresVivienda = dl.InteresesVivienda,
+                                                TotalDeducciones = dl.TotalDeducciones,
+
+                                                SubTotal3 = dl.SubTotal3,
+                                                RentaExenta = (int)dl.RentaExenta,
+                                                LimiteRentaExenta = dl.LimiteRentaExenta,
+                                                TotalRentaExenta = dl.TotalRentaExenta,
+                                                DiferencialRenta = dl.DiferencialRenta,
+                                                BaseGravableRenta = dl.BaseGravableRenta,
+                                                BaseGravableUvt = (int)dl.BaseGravableUvt,
+                                            }).FirstOrDefaultAsync();
+
+            if (detalleLiquidacion != null)
+            {
+                #region Setear datos
+
+                //Deducciones
+                var deduccionesLiquidacion = await _context.LiquidacionDeducciones
+                                                .Where(x => x.DetalleLiquidacionId == detalleLiquidacion.DetalleLiquidacionId)
+                                                .ToListAsync();
+                if (deduccionesLiquidacion != null && deduccionesLiquidacion.Count > 0)
+                {
+                    detalleLiquidacion.Deducciones = new List<DeduccionDto>();
+                    foreach (var deduccion in deduccionesLiquidacion)
+                    {
+                        deduccionDto = new DeduccionDto();
+                        deduccionDto.Codigo = deduccion.Codigo;
+                        deduccionDto.Nombre = deduccion.Nombre;
+                        deduccionDto.Base = deduccion.Base;
+                        deduccionDto.Tarifa = deduccion.Tarifa;
+                        deduccionDto.Valor = deduccion.Valor;
+                        detalleLiquidacion.Deducciones.Add(deduccionDto);
+                    }
+                }
+
+                #endregion Setear datos
+            }
+
+            return detalleLiquidacion;
         }
     }
 }

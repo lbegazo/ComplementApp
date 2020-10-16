@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
-import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
 import {
   EstadoPlanPago,
   ModalidadContrato,
@@ -25,13 +24,14 @@ import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { environment } from 'src/environments/environment';
+import { FormatoLiquidacionComponent } from './formato-causacion-liquidacion/formato-liquidacion.component';
 
 @Component({
-  selector: 'app-radicado-pago',
-  templateUrl: './radicado-pago.component.html',
-  styleUrls: ['./radicado-pago.component.scss'],
+  selector: 'app-liquidacion-pago',
+  templateUrl: './liquidacion-pago.component.html',
+  styleUrls: ['./liquidacion-pago.component.scss'],
 })
-export class RadicadoPagoComponent implements OnInit {
+export class LiquidacionPagoComponent implements OnInit {
   nombreTransaccion: string;
   transaccion: Transaccion;
   search: string;
@@ -40,14 +40,12 @@ export class RadicadoPagoComponent implements OnInit {
   subscriptions: Subscription[] = [];
   listaEstadoId: string;
   arrayControls = new FormArray([]);
-  estadoPlanPagoPorObligar = EstadoPlanPago.PorObligar.value;
   mostrarCabecera = true;
   modalidadContrato = 0;
   tipoPago = 0;
 
   listaPlanPago: PlanPago[] = [];
   planPagoIdSeleccionado = 0;
-  detallePlanPago: DetallePlanPago;
   planPagoSeleccionado: PlanPago;
   tercero: Tercero = {
     terceroId: 0,
@@ -121,7 +119,6 @@ export class RadicadoPagoComponent implements OnInit {
     });
   }
 
- 
 
   crearControlesDeArray() {
     if (this.listaPlanPago && this.listaPlanPago.length > 0) {
@@ -148,7 +145,7 @@ export class RadicadoPagoComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.listaEstadoId = this.estadoPlanPagoPorObligar.toString(); // Por obligar
+    this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString(); // Por obligar
 
     this.facturaService
       .ObtenerListaPlanPago(
@@ -188,7 +185,6 @@ export class RadicadoPagoComponent implements OnInit {
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
-    this.detallePlanPago = null;
     this.formatoCausacionyLiquidacionPago = null;
 
     this.onBuscarFactura();
@@ -210,47 +206,40 @@ export class RadicadoPagoComponent implements OnInit {
     }
   }
 
-  obtenerDetallePlanPago(valorIngresado: number) {
+  onLiquidar() {
+    if (
+      this.listaPlanPago &&
+      this.listaPlanPago.length > 0 &&
+      this.planPagoIdSeleccionado > 0
+    ) {
+      this.planPagoSeleccionado = this.listaPlanPago.filter(
+        (x) => x.planPagoId === this.planPagoIdSeleccionado
+      )[0];
+
+      if (this.planPagoSeleccionado) {
+        this.ObtenerDetalleFormatoCausacionyLiquidacionPago();
+      }
+    }
+  }
+
+  ObtenerDetalleFormatoCausacionyLiquidacionPago() {
     this.facturaService
-      .ObtenerDetallePlanPago(this.planPagoIdSeleccionado)
+      .ObtenerDetalleFormatoCausacionyLiquidacionPago(
+        this.planPagoIdSeleccionado
+      )
       .subscribe(
-        (response: DetallePlanPago) => {
+        (response: FormatoCausacionyLiquidacionPago) => {
           if (response) {
-            this.detallePlanPago = response;
-            this.terceroId = this.detallePlanPago.terceroId;
+            this.formatoCausacionyLiquidacionPago = response;
+            this.terceroId = this.formatoCausacionyLiquidacionPago.terceroId;
             this.mostrarCabecera = false;
+            console.log(this.formatoCausacionyLiquidacionPago);
           }
         },
         (error) => {
-          this.alertify.error('Hubo un error al obtener el plan de pago.');
-        },
-        () => {
-          if (!this.detallePlanPago) {
-            this.alertify.error(
-              'No se pudo obtener información del plan de pago.'
-            );
-            this.mostrarCabecera = true;
-          } else {
-            this.facturaService
-              .ObtenerFormatoCausacionyLiquidacionPago(
-                this.planPagoIdSeleccionado,
-                valorIngresado
-              )
-              .subscribe(
-                (response: FormatoCausacionyLiquidacionPago) => {
-                  this.formatoCausacionyLiquidacionPago = response;
-                  this.formatoCausacionyLiquidacionPago.cantidadPago = this.detallePlanPago.cantidadPago;
-                },
-                (error) => {
-                  this.alertify.error(
-                    'Ocurrió un error al realizar el proceso de liquidación: ' +
-                      error.toString()
-                  );
-                  this.mostrarCabecera = true;
-                  this.formatoCausacionyLiquidacionPago = null;
-                }
-              );
-          }
+          this.alertify.error(
+            'Hubo un error al obtener el formato de liquidación.'
+          );
         }
       );
   }
@@ -258,9 +247,5 @@ export class RadicadoPagoComponent implements OnInit {
   HabilitarCabecera($event) {
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
-  }
-
-  Exportar() {
-    console.log('exportar');
   }
 }

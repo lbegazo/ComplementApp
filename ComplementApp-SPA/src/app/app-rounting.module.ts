@@ -18,6 +18,7 @@ import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.
 import { ServerErrorComponent } from './server-error/server-error.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
+import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -76,7 +77,15 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     component: RadicadoPagoComponent,
     resolve: {
-      planPagoResolver: PlanPagoResolver,
+      transaccion: TransaccionResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_LIQUIDACION',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: LiquidacionPagoComponent,
+    resolve: {
       transaccion: TransaccionResolver,
     },
   },

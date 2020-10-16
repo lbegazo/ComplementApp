@@ -3,7 +3,29 @@ import { Deduccion } from './deduccion';
 export interface FormatoCausacionyLiquidacionPago {
   planPagoId: number;
   terceroId: number;
+
+  identificacionTercero: string;
+  nombreTercero: string;
+  contrato: string;
+  viaticos: boolean;
+  viaticosDescripcion: string;
+  crp: string;
   cantidadPago: number;
+  numeroPago: number;
+  modalidadContrato: number;
+  valorContrato: number;
+  valorAdicionReduccion: number;
+  valorCancelado: number;
+  totalACancelar: number;
+  saldoActual: number;
+  identificacionRubroPresupuestal: string;
+  identificacionUsoPresupuestal: string;
+  nombreSupervisor: string;
+  numeroRadicadoSupervisor: string;
+  fechaRadicadoSupervisor: Date;
+  numeroFactura: string;
+  textoComprobanteContable: string;
+
   honorario: number;
   honorarioUvt: number;
   valorIva: number;
@@ -31,6 +53,6 @@ export interface FormatoCausacionyLiquidacionPago {
   diferencialRenta: number;
   baseGravableRenta: number;
   baseGravableUvt: number;
-  textoComprobanteContable: string;
+
   deducciones?: Deduccion[];
 }

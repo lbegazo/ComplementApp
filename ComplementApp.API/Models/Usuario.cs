@@ -41,6 +41,9 @@ namespace ComplementApp.API.Models
 
         public Area Area { get; set; }
 
+        [Column(TypeName = "VARCHAR(100)")]
+        public string Email {get; set;}
+
         public ICollection<UsuarioPerfil> UsuarioPerfiles { get; set; }
 
     }

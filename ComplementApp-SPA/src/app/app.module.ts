@@ -77,6 +77,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
+import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
+import { FormatoLiquidacionComponent } from './reporte/liquidacion-pago/formato-causacion-liquidacion/formato-liquidacion.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -124,6 +126,8 @@ export function tokenGetter() {
     ServerErrorComponent,
     NotFoundComponent,
     RadicadoPagoComponent,
+    LiquidacionPagoComponent,
+    FormatoLiquidacionComponent
   ],
   imports: [
     BrowserModule,

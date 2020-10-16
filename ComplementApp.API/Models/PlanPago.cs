@@ -73,7 +73,15 @@ namespace ComplementApp.API.Models
 
         public RubroPresupuestal RubroPresupuestal { get; set; }
 
-        public int? UsoPresupuestalId { get; set; }        
+        public int? UsoPresupuestalId { get; set; } 
+
+        public int UsuarioIdRegistro { get; set; }  
+
+        public DateTime? FechaRegistro { get; set; }   
+
+        public int UsuarioIdModificacion { get; set; }  
+
+        public DateTime? FechaModificacion { get; set; }          
 
     }
 }

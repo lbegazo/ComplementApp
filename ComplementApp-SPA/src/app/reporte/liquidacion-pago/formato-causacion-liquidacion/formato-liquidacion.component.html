@@ -75,25 +75,35 @@
                             </tr>
                             <tr>
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ detallePlanPago?.identificacionTercero }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.identificacionTercero
+                                }}
                               </td>
                               <td style="width: 40%" class="center fontSmaller">
-                                {{ detallePlanPago?.nombreTercero }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.nombreTercero
+                                }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ detallePlanPago?.detalle6 }}
+                                {{ formatoCausacionyLiquidacionPago?.contrato }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ detallePlanPago?.viaticosDescripcion }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.viaticosDescripcion
+                                }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ detallePlanPago?.crp }}
+                                {{ formatoCausacionyLiquidacionPago?.crp }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ detallePlanPago?.cantidadPago }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.cantidadPago
+                                }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ detallePlanPago?.numeroPago }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.numeroPago
+                                }}
                               </td>
                             </tr>
                           </table>
@@ -137,7 +147,8 @@
                             <tr>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.valorTotal | number: "1.0-0"
+                                  formatoCausacionyLiquidacionPago?.valorContrato
+                                    | number: "1.0-0"
                                 }}
                               </td>
                               <td
@@ -145,7 +156,8 @@
                                 class="center fontSmaller"
                               >
                                 {{
-                                  detallePlanPago?.operacion | number: "1.0-0"
+                                  formatoCausacionyLiquidacionPago?.valorAdicionReduccion
+                                    | number: "1.0-0"
                                 }}
                               </td>
                               <td
@@ -153,32 +165,30 @@
                                 class="center fontSmaller"
                               >
                                 {{
-                                  detallePlanPago?.valorTotal -
-                                    detallePlanPago?.saldoActual
+                                  formatoCausacionyLiquidacionPago?.valorCancelado
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.valorFacturado
+                                  formatoCausacionyLiquidacionPago?.totalACancelar
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.saldoActual -
-                                    detallePlanPago?.valorFacturado
+                                  formatoCausacionyLiquidacionPago?.saldoActual
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.identificacionRubroPresupuestal
+                                  formatoCausacionyLiquidacionPago?.identificacionRubroPresupuestal
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.identificacionUsoPresupuestal
+                                  formatoCausacionyLiquidacionPago?.identificacionUsoPresupuestal
                                 }}
                               </td>
                             </tr>
@@ -217,19 +227,25 @@
                             </tr>
                             <tr>
                               <td style="width: 50%" class="center fontSmaller">
-                                {{ detallePlanPago?.detalle5 }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{ detallePlanPago?.numeroRadicadoSupervisor }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.nombreSupervisor
+                                }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
-                                  detallePlanPago?.fechaRadicadoSupervisor
+                                  formatoCausacionyLiquidacionPago?.numeroRadicadoSupervisor
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago?.fechaRadicadoSupervisor
                                     | date: "dd/MM/yyyy"
                                 }}
                               </td>
                               <td style="width: 20%" class="center fontSmaller">
-                                {{ detallePlanPago?.numeroFactura }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.numeroFactura
+                                }}
                               </td>
                             </tr>
                           </table>
@@ -251,31 +267,8 @@
                             #textoComprobanteContableElement
                           >
                             {{
-                              this.detallePlanPago?.detalle6 +
-                                "_" +
-                                detallePlanPago?.detalle7 +
-                                "_" +
-                                detallePlanPago?.identificacionTercero +
-                                "_" +
-                                detallePlanPago?.nombreTercero +
-                                "_PAGO: " +
-                                detallePlanPago?.numeroPago.toString() +
-                                " DE: " +
-                                detallePlanPago?.cantidadPago.toString() +
-                                " OBJETO: " +
-                                detallePlanPago?.detalle4 +
-                                "_FACTURA(S): " +
-                                detallePlanPago?.numeroFactura +
-                                "_" +
-                                "OBSERVACIONES: " +
-                                detallePlanPago?.observaciones +
-                                "_AUTORIZA: " +
-                                detallePlanPago?.detalle5 +
-                                "_RADICADO: " +
-                                detallePlanPago?.numeroRadicadoSupervisor +
-                                "_DEL_" +
-                                (detallePlanPago?.fechaRadicadoSupervisor
-                                  | date: "dd/MM/yyyy")
+                              this.formatoCausacionyLiquidacionPago
+                                ?.textoComprobanteContable
                             }}
                           </p>
                         </td>
@@ -391,8 +384,8 @@
                       <!--Base Salud-->
                       <tr
                         *ngIf="
-                          detallePlanPago.modalidadContrato === 1 &&
-                          !detallePlanPago.viaticos
+                          formatoCausacionyLiquidacionPago.modalidadContrato ===
+                            1 && !formatoCausacionyLiquidacionPago.viaticos
                         "
                       >
                         <td class="withoutPadding">
@@ -491,9 +484,11 @@
                       <!--Pensión Voluntaria-->
                       <tr
                         *ngIf="
-                          detallePlanPago.modalidadContrato === 1 &&
-                          !detallePlanPago.viaticos
+                          formatoCausacionyLiquidacionPago.modalidadContrato ===
+                          1
                         "
+                        &&
+                        !formatoCausacionyLiquidacionPago.viaticos
                       >
                         <td class="withoutPadding">
                           <table>
@@ -688,8 +683,8 @@
                       <!--DEDUCCIONES-->
                       <tr
                         *ngIf="
-                          detallePlanPago.modalidadContrato !== 3 &&
-                          !detallePlanPago.viaticos
+                          formatoCausacionyLiquidacionPago.modalidadContrato !==
+                            3 && !formatoCausacionyLiquidacionPago.viaticos
                         "
                       >
                         <td class="withoutPadding">
@@ -821,8 +816,8 @@
           <div
             class="row mt-3"
             *ngIf="
-              detallePlanPago.modalidadContrato === 1 &&
-              !detallePlanPago.viaticos
+              formatoCausacionyLiquidacionPago.modalidadContrato === 1 &&
+              !formatoCausacionyLiquidacionPago.viaticos
             "
           >
             <div class="col-12" style="padding: 0px">
@@ -902,25 +897,8 @@
         >
           <button
             type="submit"
-            class="btn btn-success mr-2"
-            (click)="registrarLiquidacion()"
-            [disabled]="liquidacionRegistrada || liquidacionRechazada"
-          >
-            Guardar
-          </button>
-          <button
-            type="submit"
-            class="btn btn-danger mr-2"
-            (click)="rechazarLiquidacion()"
-            [disabled]="liquidacionRegistrada || liquidacionRechazada"
-          >
-            Rechazar
-          </button>
-          <button
-            type="submit"
             class="btn btn-primary mr-2"
             (click)="exportarPDF()"
-            [disabled]="!liquidacionRegistrada"
           >
             Exportar PDF
           </button>

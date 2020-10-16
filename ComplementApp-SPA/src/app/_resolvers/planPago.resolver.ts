@@ -3,16 +3,12 @@ import {
   Resolve,
   Router,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
 } from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/Operators';
-import { Usuario } from '../_models/usuario';
-import { UsuarioService } from '../_services/usuario.service';
 import { PlanPago } from '../_models/planPago';
-import { PaginatedResult } from '../_models/pagination';
 import { PlanPagoService } from '../_services/planPago.service';
 import { EstadoPlanPago } from '../_models/enum';
 

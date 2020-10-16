@@ -71,6 +71,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   registrarLiquidacion() {
     let detalleLiquidacionId = 0;
     this.formatoCausacionyLiquidacionPago.textoComprobanteContable = this.textoComprobanteContable;
+    this.formatoCausacionyLiquidacionPago.modalidadContrato = this.detallePlanPago.modalidadContrato;
 
     this.planPagoService
       .RegistrarDetalleLiquidacion(this.formatoCausacionyLiquidacionPago)

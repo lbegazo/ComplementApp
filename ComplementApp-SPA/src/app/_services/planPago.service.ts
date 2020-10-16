@@ -116,6 +116,15 @@ export class PlanPagoService {
     );
   }
 
+  ObtenerDetalleFormatoCausacionyLiquidacionPago(
+    planPagoId: number
+  ): Observable<FormatoCausacionyLiquidacionPago> {
+    const path = 'ObtenerDetalleFormatoCausacionyLiquidacionPago/';
+    return this.http.get<FormatoCausacionyLiquidacionPago>(
+      this.baseUrl + path + planPagoId
+    );
+  }
+
   ActualizarPlanPago(factura: PlanPago): Observable<boolean> {
     this.http.put(this.baseUrl, factura).subscribe(() => {});
     return observableOf(true);
