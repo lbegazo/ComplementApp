@@ -2,6 +2,7 @@ import { Deduccion } from './deduccion';
 
 export interface FormatoCausacionyLiquidacionPago {
   planPagoId: number;
+  detalleLiquidacionId: number;
   terceroId: number;
 
   identificacionTercero: string;
@@ -25,6 +26,7 @@ export interface FormatoCausacionyLiquidacionPago {
   fechaRadicadoSupervisor: Date;
   numeroFactura: string;
   textoComprobanteContable: string;
+  viaticosPagados: number;
 
   honorario: number;
   honorarioUvt: number;

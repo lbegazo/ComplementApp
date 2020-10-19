@@ -191,10 +191,16 @@
                           <table>
                             <tr style="width: 100%" class="aplicaBackground">
                               <td
-                                style="width: 50%"
+                                style="width: 35%"
                                 class="center fontSmaller stronger"
                               >
                                 NOMBRE SUPERVISOR CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                               VIATICOS PAGADOS
                               </td>
                               <td
                                 style="width: 15%"
@@ -216,8 +222,11 @@
                               </td>
                             </tr>
                             <tr>
-                              <td style="width: 50%" class="center fontSmaller">
+                              <td style="width: 35%" class="center fontSmaller">
                                 {{ detallePlanPago?.detalle5 }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoCausacionyLiquidacionPago?.viaticosPagados | number: "1.0-0" }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ detallePlanPago?.numeroRadicadoSupervisor }}

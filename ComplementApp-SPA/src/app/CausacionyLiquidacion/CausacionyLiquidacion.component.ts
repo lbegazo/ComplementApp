@@ -323,9 +323,5 @@ export class CausacionyLiquidacionComponent implements OnInit {
     this.onLimpiarFactura();
   }
 
-  // private obtenerNombreTransaccion() {
-  //   this.nombreTransaccion = this.listaService.obtenerNombreTransaccionPorCodigo(
-  //     this.codigoTransaccion
-  //   );
-  // }
+
 }

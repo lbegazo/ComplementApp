@@ -6,6 +6,8 @@ using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Middleware;
+using ComplementApp.API.Services;
+using ComplementApp.API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -51,6 +53,9 @@ namespace ComplementApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             /*The order is not important*/
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddScoped<IMailService, MailService>();
+            services.AddScoped<IProcesoLiquidacionPlanPago, ProcesoLiquidacionPlanPago>();
 
             services.AddDbContext<DataContext>();
 
@@ -58,19 +63,6 @@ namespace ComplementApp.API
             //     services.AddDbContext<DataContext>();
             // else
             //     services.AddDbContext<DataContext, SqliteDataContext>();
-
-
-            // services.AddDbContext<DataContext>(options =>
-            // {
-            //     options.UseSqlServer(Configuration["DefaultConnection"],
-            //     sqlServerOptionsAction: sqlOptions =>
-            //     {
-            //         sqlOptions.EnableRetryOnFailure(
-            //         maxRetryCount: 3,
-            //         maxRetryDelay: TimeSpan.FromSeconds(30),
-            //         errorNumbersToAdd: null);
-            //     });
-            // });
 
             //Avoid use System.Text.Json package     
             services.AddControllers()
@@ -107,8 +99,6 @@ namespace ComplementApp.API
             services.AddScoped<LogActividadUsuario>();
         }
 
-
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -121,30 +111,7 @@ namespace ComplementApp.API
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             /*The order is extremely important*/
-            // if (env.IsDevelopment())
-            // {
-            //     app.UseDeveloperExceptionPage();
-            // }
-            // else
-            // {
-            //     app.UseExceptionHandler(
-            //         builder =>
-            //         {
-            //             builder.Run(
-            //                 async context =>
-            //                 {
-            //                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-            //                     var error = context.Features.Get<IExceptionHandlerFeature>();
-            //                     if (error != null)
-            //                     {
-            //                         context.Response.AddApplicationError(error.Error.Message);
-            //                         await context.Response.WriteAsync(error.Error.Message);
-            //                     }
-            //                 });
-            //         });
-            // }
-
+   
             app.UseMiddleware<ExceptionMiddleware>();
 
             // app.UseHttpsRedirection();

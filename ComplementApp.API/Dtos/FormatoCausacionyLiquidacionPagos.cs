@@ -31,6 +31,7 @@ namespace ComplementApp.API.Dtos
         public DateTime FechaRadicadoSupervisor { get; set; }
         public string NumeroFactura { get; set; }
         public string TextoComprobanteContable { get; set; }
+        public decimal ViaticosPagados { get; set; }
 
         #endregion Plan de Pago
 

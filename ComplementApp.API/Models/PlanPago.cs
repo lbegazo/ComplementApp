@@ -81,7 +81,7 @@ namespace ComplementApp.API.Models
 
         public int UsuarioIdModificacion { get; set; }  
 
-        public DateTime? FechaModificacion { get; set; }          
+        public DateTime? FechaModificacion { get; set; }
 
     }
 }

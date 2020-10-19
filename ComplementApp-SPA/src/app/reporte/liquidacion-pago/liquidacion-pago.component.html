@@ -72,7 +72,7 @@
                           class="btn btn-primary"
                           (click)="onBuscarFactura()"
                           style="width: 80px"
-                          [disabled]="planPagoIdSeleccionado > 0"
+                          [disabled]="detalleLiquidacionIdSeleccionado > 0"
                         >
                           Buscar</button
                         >&nbsp;
@@ -122,7 +122,7 @@
                     <div style="width: 2%" class="inner left aplicaBackground">
                       <input
                         type="radio"
-                        [value]="item?.planPagoId"
+                        [value]="item?.detalleLiquidacionId"
                         (change)="onCheckChange($event)"
                         name="inlineDefaultRadiosExample"
                       />
@@ -160,7 +160,7 @@
                       class="inner right aplicaBackground"
                     >
                       <p class="medium">
-                        {{ item?.valorFacturado | number: "1.2-2" }}
+                        {{ item?.valorTotal | number: "1.2-2" }}
                       </p>
                     </div>
                   </ng-container>
@@ -204,7 +204,7 @@
                     type="button"
                     class="btn btn-primary"
                     (click)="onLiquidar()"
-                    [disabled]="planPagoIdSeleccionado === 0"
+                    [disabled]="detalleLiquidacionIdSeleccionado === 0"
                   >
                     Ver liquidación
                   </button>

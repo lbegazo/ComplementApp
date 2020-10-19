@@ -10,7 +10,7 @@ namespace ComplementApp.API.Data
     {
         Task<PagedList<PlanPago>> ObtenerListaPlanPago(int? terceroId, List<int> listaEstadoId, UserParams userParams);
 
-        Task<PlanPago> ObtenerPlanPago(int planPagoId);
+        Task<PlanPago> ObtenerPlanPagoBase(int planPagoId);
 
         Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId);
 
@@ -22,6 +22,12 @@ namespace ComplementApp.API.Data
 
         Task<bool> RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion);
 
-        Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long planPagoId);
+        Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long detalleLiquidacionId);
+
+        Task<DetalleLiquidacion> ObtenerDetalleLiquidacionBase(int detalleLiquidacion);
+
+        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionAnterior(long terceroId);
+
+        Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, UserParams userParams);
     }
 }

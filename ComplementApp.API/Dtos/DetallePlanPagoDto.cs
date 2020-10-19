@@ -33,5 +33,10 @@ namespace ComplementApp.API.Dtos
 
         public int ModalidadContrato { get; set; }
         public int TipoPago { get; set; }
+
+        public string NumeroRadicadoProveedor { get; set; }
+
+        public DateTime FechaRadicadoProveedor { get; set; }
+        public string Email { get; set; }
     }
 }

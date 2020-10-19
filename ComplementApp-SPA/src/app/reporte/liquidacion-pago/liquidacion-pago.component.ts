@@ -44,9 +44,9 @@ export class LiquidacionPagoComponent implements OnInit {
   modalidadContrato = 0;
   tipoPago = 0;
 
-  listaPlanPago: PlanPago[] = [];
-  planPagoIdSeleccionado = 0;
-  planPagoSeleccionado: PlanPago;
+  listaPlanPago: FormatoCausacionyLiquidacionPago[] = [];
+  detalleLiquidacionIdSeleccionado = 0;
+  planPagoSeleccionado: FormatoCausacionyLiquidacionPago;
   tercero: Tercero = {
     terceroId: 0,
     nombre: '',
@@ -119,7 +119,6 @@ export class LiquidacionPagoComponent implements OnInit {
     });
   }
 
-
   crearControlesDeArray() {
     if (this.listaPlanPago && this.listaPlanPago.length > 0) {
       for (const detalle of this.listaPlanPago) {
@@ -145,17 +144,17 @@ export class LiquidacionPagoComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString(); // Por obligar
+    this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
 
     this.facturaService
-      .ObtenerListaPlanPago(
+      .ObtenerListaDetalleLiquidacion(
         this.listaEstadoId,
         this.terceroId,
         this.pagination.currentPage,
         this.pagination.itemsPerPage
       )
       .subscribe(
-        (documentos: PaginatedResult<PlanPago[]>) => {
+        (documentos: PaginatedResult<FormatoCausacionyLiquidacionPago[]>) => {
           this.listaPlanPago = documentos.result;
           this.pagination = documentos.pagination;
 
@@ -181,7 +180,7 @@ export class LiquidacionPagoComponent implements OnInit {
 
   onLimpiarFactura() {
     this.listaPlanPago = [];
-    this.planPagoIdSeleccionado = 0;
+    this.detalleLiquidacionIdSeleccionado = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
@@ -199,10 +198,10 @@ export class LiquidacionPagoComponent implements OnInit {
 
   onCheckChange(event) {
     /* Selected */
-    this.planPagoIdSeleccionado = 0;
+    this.detalleLiquidacionIdSeleccionado = 0;
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.planPagoIdSeleccionado = +event.target.value;
+      this.detalleLiquidacionIdSeleccionado = +event.target.value;
     }
   }
 
@@ -210,10 +209,10 @@ export class LiquidacionPagoComponent implements OnInit {
     if (
       this.listaPlanPago &&
       this.listaPlanPago.length > 0 &&
-      this.planPagoIdSeleccionado > 0
+      this.detalleLiquidacionIdSeleccionado > 0
     ) {
       this.planPagoSeleccionado = this.listaPlanPago.filter(
-        (x) => x.planPagoId === this.planPagoIdSeleccionado
+        (x) => x.detalleLiquidacionId === this.detalleLiquidacionIdSeleccionado
       )[0];
 
       if (this.planPagoSeleccionado) {
@@ -225,7 +224,7 @@ export class LiquidacionPagoComponent implements OnInit {
   ObtenerDetalleFormatoCausacionyLiquidacionPago() {
     this.facturaService
       .ObtenerDetalleFormatoCausacionyLiquidacionPago(
-        this.planPagoIdSeleccionado
+        this.detalleLiquidacionIdSeleccionado
       )
       .subscribe(
         (response: FormatoCausacionyLiquidacionPago) => {

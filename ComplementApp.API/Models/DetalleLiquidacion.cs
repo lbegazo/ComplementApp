@@ -162,9 +162,7 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal BaseGravableUvt { get; set; }
 
-
         public int MesPagoAnterior { get; set; }
-
 
         public int MesPagoActual { get; set; }
 
@@ -185,6 +183,11 @@ namespace ComplementApp.API.Models
         public DateTime? FechaModificacion { get; set; }        
 
         public ICollection<LiquidacionDeduccion> Deducciones { get; set; }
+
+        public bool? BaseImpuestos { get; set; }
+
+        [Column(TypeName = "decimal(30,8)")]
+        public decimal ViaticosPagados { get; set; }
 
     }
 }

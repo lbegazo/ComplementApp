@@ -57,7 +57,32 @@ namespace ComplementApp.API.Data
             return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
         }
 
-        public async Task<PlanPago> ObtenerPlanPago(int planPagoId)
+        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, UserParams userParams)
+        {
+            var lista = (from dl in _context.DetalleLiquidacion
+                         join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
+                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                         from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where (c.TerceroId == terceroId || terceroId == null)
+                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         select new FormatoCausacionyLiquidacionPagos()
+                         {
+                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                             PlanPagoId = dl.PlanPagoId,
+                             IdentificacionTercero = dl.NumeroIdentificacion,
+                             NombreTercero = dl.Nombre,
+                             NumeroRadicadoSupervisor = dl.NumeroRadicado,
+                             FechaRadicadoSupervisor = dl.FechaRadicado,
+                             ValorTotal = c.ValorFacturado.Value
+                         })
+                               .OrderBy(c => c.FechaRadicadoSupervisor);
+
+            return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
+        }
+
+        public async Task<PlanPago> ObtenerPlanPagoBase(int planPagoId)
         {
             return await _context.PlanPago.FirstOrDefaultAsync(u => u.PlanPagoId == planPagoId);
         }
@@ -107,12 +132,14 @@ namespace ComplementApp.API.Data
                               FechaRadicadoSupervisor = pp.FechaRadicadoSupervisor,
                               NumeroFactura = pp.NumeroFactura,
                               Observaciones = pp.Observaciones,
+                              NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
+                              FechaRadicadoProveedor = pp.FechaRadicadoProveedor.Value,
 
                               IdentificacionRubroPresupuestal = r.Identificacion,
                               IdentificacionUsoPresupuestal = up.Identificacion,
                               IdentificacionTercero = t.NumeroIdentificacion,
-                              NombreTercero = t.Nombre
-
+                              NombreTercero = t.Nombre,
+                              Email = us.Email,
                           })
                     .FirstOrDefaultAsync();
 
@@ -160,13 +187,13 @@ namespace ComplementApp.API.Data
             return cantidad;
         }
 
-        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long planPagoId)
+        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long detalleLiquidacionId)
         {
             DeduccionDto deduccionDto = null;
 
             var detalleLiquidacion = await (from dl in _context.DetalleLiquidacion
                                             join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
-                                            where dl.PlanPagoId == planPagoId
+                                            where dl.DetalleLiquidacionId == detalleLiquidacionId
                                             select new FormatoCausacionyLiquidacionPagos()
                                             {
                                                 //Plan de pago
@@ -229,6 +256,7 @@ namespace ComplementApp.API.Data
                                                 DiferencialRenta = dl.DiferencialRenta,
                                                 BaseGravableRenta = dl.BaseGravableRenta,
                                                 BaseGravableUvt = (int)dl.BaseGravableUvt,
+                                                ViaticosPagados = dl.ViaticosPagados,
                                             }).FirstOrDefaultAsync();
 
             if (detalleLiquidacion != null)
@@ -259,5 +287,24 @@ namespace ComplementApp.API.Data
 
             return detalleLiquidacion;
         }
+
+        public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionBase(int detalleLiquidacion)
+        {
+            return await _context.DetalleLiquidacion.FirstOrDefaultAsync(u => u.DetalleLiquidacionId == detalleLiquidacion);
+        }
+
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionAnterior(long terceroId)
+        {
+            int mesAnterior = System.DateTime.Now.AddMonths(-1).Month;
+            var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
+                                                    where pp.TerceroId == terceroId
+                                                    where dl.FechaRegistro.Value.Month == mesAnterior
+                                                    select dl)
+                                            .ToListAsync();
+
+            return detalleLiquidacionAnterior;
+        }
+
     }
 }

@@ -100,37 +100,43 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   }
 
   rechazarLiquidacion() {
+    let mensaje = '';
     let planPagoId = 0;
     this.alertify.confirm2(
       'Formato de Causación y Liquidación',
       '¿Esta seguro que desea rechazar el plan de pago?',
       () => {
-        this.planPagoService
-          .RechazarDetalleLiquidacion(
-            this.formatoCausacionyLiquidacionPago.planPagoId
-          )
-          .subscribe(
-            (response: any) => {
-              if (!isNaN(response)) {
-                planPagoId = +response;
-                this.alertify.success(
-                  'El formato de causación y liquidación se rechazó correctamente'
-                );
-                this.liquidacionRechazada = true;
-              } else {
-                this.alertify.error(
-                  'No se pudo rechazar el formato de causación y liquidación '
-                );
-              }
-            },
+        mensaje = window.prompt('Motivo de rechazo: ', '');
+        if (mensaje.length === 0) {
+          this.alertify.warning('Debe ingresar el motivo de rechazo');
+        } else {
+          this.planPagoService
+            .RechazarDetalleLiquidacion(
+              this.formatoCausacionyLiquidacionPago.planPagoId, mensaje
+            )
+            .subscribe(
+              (response: any) => {
+                if (!isNaN(response)) {
+                  planPagoId = +response;
+                  this.alertify.success(
+                    'El formato de causación y liquidación se rechazó correctamente'
+                  );
+                  this.liquidacionRechazada = true;
+                } else {
+                  this.alertify.error(
+                    'No se pudo rechazar el formato de causación y liquidación '
+                  );
+                }
+              },
 
-            (error) => {
-              this.alertify.error(
-                'Hubó un error al rechazar la liquidación ' + error
-              );
-            },
-            () => {}
-          );
+              (error) => {
+                this.alertify.error(
+                  'Hubó un error al rechazar la liquidación ' + error
+                );
+              },
+              () => {}
+            );
+        }
       }
     );
   }

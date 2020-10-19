@@ -16,19 +16,6 @@ export class PlanPagoService {
 
   constructor(private http: HttpClient) {}
 
-  //Se comenta el codigo, se precisa investigar mas para saber como enviar un dto a una web api
-  // ObtenerListaPlanPago(filtroFactura: FiltroFactura): Observable<PlanPago[]> {
-  //   const path = 'planpago/ObtenerListaPlanPago';
-
-  //   let params = new HttpParams();
-
-  //   if (filtroFactura) {
-  //     params = params.append('filtro', JSON.stringify(filtroFactura));
-  //   }
-
-  //   return this.http.get<PlanPago[]>(this.baseUrl + path, { params });
-  // }
-
   ObtenerListaPlanPago(
     listaEstadoId: string,
     terceroId?: number,
@@ -54,6 +41,48 @@ export class PlanPagoService {
 
     return this.http
       .get<PlanPago[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  ObtenerListaDetalleLiquidacion(
+    listaEstadoId: string,
+    terceroId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
+    const path = 'ObtenerListaDetalleLiquidacion';
+    const paginatedResult: PaginatedResult<FormatoCausacionyLiquidacionPago[]> = new PaginatedResult<
+    FormatoCausacionyLiquidacionPago[]
+    >();
+
+    let params = new HttpParams();
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<FormatoCausacionyLiquidacionPago[]>(this.baseUrl + path, {
         observe: 'response',
         params,
       })
@@ -117,11 +146,11 @@ export class PlanPagoService {
   }
 
   ObtenerDetalleFormatoCausacionyLiquidacionPago(
-    planPagoId: number
+    detalleLiquidacionId: number
   ): Observable<FormatoCausacionyLiquidacionPago> {
     const path = 'ObtenerDetalleFormatoCausacionyLiquidacionPago/';
     return this.http.get<FormatoCausacionyLiquidacionPago>(
-      this.baseUrl + path + planPagoId
+      this.baseUrl + path + detalleLiquidacionId
     );
   }
 
@@ -137,8 +166,11 @@ export class PlanPagoService {
     return this.http.post(this.baseUrl + path, formato);
   }
 
-  RechazarDetalleLiquidacion(planPagoId: number): Observable<any> {
+  RechazarDetalleLiquidacion(
+    planPagoId: number,
+    mensajeRechazo: string
+  ): Observable<any> {
     const path = 'RechazarDetalleLiquidacion/';
-    return this.http.get(this.baseUrl + path + planPagoId);
+    return this.http.get(this.baseUrl + path + planPagoId + '/' + mensajeRechazo);
   }
 }
