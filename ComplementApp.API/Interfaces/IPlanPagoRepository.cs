@@ -4,7 +4,7 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 using ComplementApp.API.Helpers;
 
-namespace ComplementApp.API.Data
+namespace ComplementApp.API.Interfaces
 {
     public interface IPlanPagoRepository
     {
@@ -20,7 +20,7 @@ namespace ComplementApp.API.Data
 
         int ObtenerCantidadMaximaPlanPago(long crp);
 
-        Task<bool> RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion);
+        
 
         Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long detalleLiquidacionId);
 
@@ -29,5 +29,10 @@ namespace ComplementApp.API.Data
         Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionAnterior(long terceroId);
 
         Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, UserParams userParams);
-    }
+
+        Task RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion);
+
+         Task RegistrarPlanPago(PlanPago plan);
+
+         void ActualizarPlanPago(PlanPago plan);    }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,9 @@ namespace ComplementApp.API.Controllers
         private readonly ICDPRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUsuarioRepository _usuarioRepo;
+
+        public IUsuarioRepository UsuarioRepo => _usuarioRepo;
+
         public CDPController(ICDPRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper)
         {
             _usuarioRepo = usuarioRepo;

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
         public UsersController(IDatingRepository repo, IMapper mapper)

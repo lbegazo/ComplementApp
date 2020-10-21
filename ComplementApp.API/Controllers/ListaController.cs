@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using ComplementApp.API.Data;
-using ComplementApp.API.Dtos;
-using ComplementApp.API.Helpers;
-using ComplementApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
+using ComplementApp.API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers

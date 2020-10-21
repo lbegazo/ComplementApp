@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Data
 {

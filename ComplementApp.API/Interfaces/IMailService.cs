@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 
-namespace ComplementApp.API.Services
+namespace ComplementApp.API.Interfaces
 {
     public interface IMailService
     {

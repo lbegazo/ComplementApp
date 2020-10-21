@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 
-namespace ComplementApp.API.Data
+namespace ComplementApp.API.Interfaces
 {
     public interface IAuthRepository
     {

@@ -1,22 +1,18 @@
-using System;
 using System.Globalization;
-using System.Net;
 using System.Text;
 using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Middleware;
 using ComplementApp.API.Services;
 using ComplementApp.API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ComplementApp.API
@@ -56,6 +52,7 @@ namespace ComplementApp.API
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IProcesoLiquidacionPlanPago, ProcesoLiquidacionPlanPago>();
+            services.AddScoped<IProcesoDocumentoExcel, ProcesoDocumentoExcel>();
 
             services.AddDbContext<DataContext>();
 

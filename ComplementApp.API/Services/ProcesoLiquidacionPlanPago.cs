@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Services

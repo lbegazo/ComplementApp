@@ -18,6 +18,7 @@ using Cdp = ComplementApp.API.Dtos.Serializacion.CDP;
 using Obligacion = ComplementApp.API.Dtos.Serializacion.Obligacion;
 using OrdenPago = ComplementApp.API.Dtos.Serializacion.OrdenPago;
 using ComplementApp.API.Models;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Controllers
 {

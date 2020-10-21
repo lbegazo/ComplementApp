@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using ComplementApp.API.Dtos;
 
-namespace ComplementApp.API.Data
+namespace ComplementApp.API.Interfaces
 {
     public interface ICDPRepository
     {

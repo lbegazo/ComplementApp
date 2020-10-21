@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -8,8 +7,8 @@ using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
-using ComplementApp.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -194,6 +193,8 @@ namespace ComplementApp.API.Controllers
             LiquidacionDeduccion liquidacionDeduccion = null;
             DetalleLiquidacion detalleLiquidacionAnterior = null;
 
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
             try
             {
                 if (formato != null)
@@ -214,6 +215,7 @@ namespace ComplementApp.API.Controllers
 
                     //Registrar detalle de liquidación
                     _dataContext.DetalleLiquidacion.Add(detalleLiquidacion);
+                    await _dataContext.SaveChangesAsync();
 
                     //Registrar deducciones a la liquidación
                     if (formato.Deducciones != null && formato.Deducciones.Count > 0)
@@ -231,14 +233,16 @@ namespace ComplementApp.API.Controllers
                             _dataContext.LiquidacionDeducciones.Add(liquidacionDeduccion);
                         }
                     }
+                    await _dataContext.SaveChangesAsync();
 
                     //Actualizar el estado al plan de pago
                     var planPagoBD = await _repo.ObtenerPlanPagoBase(formato.PlanPagoId);
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
                     planPagoBD.UsuarioIdModificacion = usuarioId;
                     planPagoBD.FechaModificacion = System.DateTime.Now;
+                    await _dataContext.SaveChangesAsync();
 
-                    //Actualizar lista de detalles de liquidación anteriores
+                    //Actualizar lista de liquidaciones anteriores(Viaticos pagados)
                     var listaDetalleLiquidacionAnterior = await _repo.ObtenerListaDetalleLiquidacionAnterior(detallePlanPago.TerceroId);
 
                     if (listaDetalleLiquidacionAnterior != null && listaDetalleLiquidacionAnterior.Count > 0)
@@ -257,8 +261,10 @@ namespace ComplementApp.API.Controllers
                             }
                         }
                     }
+                    await _dataContext.SaveChangesAsync();
 
-                    await _unitOfWork.CompleteAsync();
+                    await transaction.CommitAsync();
+
                     return Ok(detalleLiquidacion.DetalleLiquidacionId);
                 }
             }
@@ -277,22 +283,20 @@ namespace ComplementApp.API.Controllers
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             PlanPago planNuevo = new PlanPago();
 
-            // await using var context = _dataContext;
-            // await using var transaction = await context.Database.BeginTransactionAsync();
-
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
             try
             {
                 if (planPagoId > 0)
                 {
                     var planPagoBD = await _repo.ObtenerPlanPagoBase(planPagoId);
-                    var planPagoDto = await _repo.ObtenerDetallePlanPago(planPagoId);
 
                     //Actualizar plan de pago existente a estado Por Pagar
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
                     planPagoBD.FechaModificacion = System.DateTime.Now;
                     planPagoBD.UsuarioIdModificacion = usuarioId;
-
                     await _dataContext.SaveChangesAsync();
+                    //_unitOfWork.PlanPagoRepository.ActualizarPlanPago(planPagoBD);
+                    //await _unitOfWork.CompleteAsync();
 
                     //Crear nuevo plan de pago en estado rechazado
                     planNuevo = planPagoBD;
@@ -301,19 +305,25 @@ namespace ComplementApp.API.Controllers
                     planNuevo.MotivoRechazo = mensajeRechazo;
                     planNuevo.UsuarioIdRegistro = usuarioId;
                     planNuevo.FechaRegistro = System.DateTime.Now;
-                    _dataContext.PlanPago.Add(planNuevo);
+                    await _dataContext.PlanPago.AddAsync(planNuevo);
+                    await _dataContext.SaveChangesAsync();
+                    //await _unitOfWork.PlanPagoRepository.RegistrarPlanPago(planNuevo);                    
 
                     //Enviar email
+                    var planPagoDto = await _repo.ObtenerDetallePlanPago(planPagoId);
                     await EnviarEmail(planPagoDto, mensajeRechazo);
 
-                    await _dataContext.SaveChangesAsync();
-                    //await transaction.CommitAsync();
+                    await transaction.CommitAsync();
+
+                    //await _unitOfWork.CompleteAsync();
 
                     return Ok(planNuevo.PlanPagoId);
                 }
             }
             catch (Exception)
             {
+                //await _unitOfWork.Rollback();
+                //await _unitOfWork.RollbackAsync();
                 throw;
             }
 

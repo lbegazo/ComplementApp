@@ -6,16 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Dtos;
 using Microsoft.Data.SqlClient;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Interfaces;
+using AutoMapper;
 
 namespace ComplementApp.API.Data
 {
     public class PlanPagoRepository : IPlanPagoRepository
     {
         private readonly DataContext _context;
-        private readonly IUnitOfWork _unitOfWork;
-        public PlanPagoRepository(DataContext context, IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public PlanPagoRepository(DataContext context, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _context = context;
         }
 
@@ -100,8 +102,8 @@ namespace ComplementApp.API.Data
                           join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
                           from up in UsosPresupuestales.DefaultIfEmpty()
 
-                        //   join dc in _context.DetalleCDP on pp.Cdp equals dc.Cdp into DetalleCDP
-                        //   from dcdp in DetalleCDP.DefaultIfEmpty()
+                              //   join dc in _context.DetalleCDP on pp.Cdp equals dc.Cdp into DetalleCDP
+                              //   from dcdp in DetalleCDP.DefaultIfEmpty()
 
                           join u in _context.Usuario on pp.UsuarioIdRegistro equals u.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
@@ -172,13 +174,6 @@ namespace ComplementApp.API.Data
                          select d);
 
             return await query.ToListAsync();
-        }
-
-        public async Task<bool> RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion)
-        {
-            await _context.DetalleLiquidacion.AddAsync(detalleLiquidacion);
-            bool resultado = await _unitOfWork.CompleteAsync();
-            return resultado;
         }
 
         public int ObtenerCantidadMaximaPlanPago(long crp)
@@ -304,6 +299,25 @@ namespace ComplementApp.API.Data
                                             .ToListAsync();
 
             return detalleLiquidacionAnterior;
+        }
+
+        public async Task RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion)
+        {
+            await _context.DetalleLiquidacion.AddAsync(detalleLiquidacion);
+            //bool resultado = await _unitOfWork.CompleteAsync();
+            //return resultado;
+        }
+
+        public async Task RegistrarPlanPago(PlanPago plan)
+        {
+            await _context.PlanPago.AddAsync(plan);
+            //bool resultado = await _unitOfWork.CompleteAsync();
+            //return resultado;
+        }
+
+        public void ActualizarPlanPago(PlanPago plan)
+        {
+            _context.PlanPago.Update(plan);
         }
 
     }

@@ -43,7 +43,7 @@ export class UsuarioDetailComponent implements OnInit {
             this.alertify.error(error);
           },
           () => {
-            this.router.navigate(['/usuarios']);
+            this.router.navigate(['../'], { relativeTo: this.route });
           }
         );
       }

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 

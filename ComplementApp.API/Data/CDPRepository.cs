@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Data
 {

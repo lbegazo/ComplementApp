@@ -211,7 +211,7 @@ export class UsuarioEditComponent implements OnInit {
             this.alertify.error(error);
           },
           () => {
-            this.router.navigate(['/usuarios']);
+            this.router.navigate(['/ADMINISTRACION_USUARIO']);
           }
         );
       } else {
@@ -225,24 +225,14 @@ export class UsuarioEditComponent implements OnInit {
         this.usuarioService
           .ActualizarUsuario(this.idUsuario, this.user)
           .subscribe(
-            (response: boolean) => {
-              if (response) {
-                this.alertify.success('El usuario se actualizó correctamente');
-                this.editForm.reset(this.user);
-              }
-              else
-              {
-                //this.editForm.errors.add = false;
-                console.log('corrurio un error');
-              }
-            },
-
+            (response: boolean) => {},
             (error) => {
               console.log(error);
               this.alertify.error(error);
             },
             () => {
-              this.router.navigate(['/usuarios']);
+              this.alertify.success('El usuario se actualizó correctamente');
+              this.router.navigate(['../../'], { relativeTo: this.route });
             }
           );
       }

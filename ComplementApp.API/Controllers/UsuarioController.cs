@@ -6,6 +6,7 @@ using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,13 @@ namespace ComplementApp.API.Controllers
         private readonly IUsuarioRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public UsuarioController(IUnitOfWork unitOfWork, IUsuarioRepository repo, IMapper mapper)
+        private readonly DataContext _dataContext;
+        public UsuarioController(IUnitOfWork unitOfWork, IUsuarioRepository repo, IMapper mapper, DataContext dataContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _repo = repo;
+            _dataContext = dataContext;
         }
 
         [HttpGet]
@@ -43,7 +46,7 @@ namespace ComplementApp.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerUsuario(int id)
         {
-            var user = await _repo.ObtenerUsuario(id);
+            var user = await _repo.ObtenerUsuarioBase(id);
             var perfiles = await _repo.ObtenerPerfilesxUsuario(id);
             var userForDetailed = _mapper.Map<UsuarioParaDetalleDto>(user);
 
@@ -61,7 +64,6 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerListaTransaccionXUsuario(int idUsuarioLogueado)
         {
             var transacciones = await _repo.ObtenerListaTransaccionXUsuario(idUsuarioLogueado);
-            //var listaDto = _mapper.Map<IEnumerable<TransaccionDto>>(transacciones);
             return Ok(transacciones);
         }
 
@@ -76,68 +78,92 @@ namespace ComplementApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarUsuario(UsuarioParaRegistrarDto userForRegisterDto)
         {
-            var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+            // var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            try
+            {
+                userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
 
-            userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
+                if (await _repo.UserExists(userForRegisterDto.UserName))
+                    return BadRequest("El usuario ya existe");
 
-            if (await _repo.UserExists(userForRegisterDto.UserName))
-                return BadRequest("El usuario ya existe");
+                var userToCreate = _mapper.Map<Usuario>(userForRegisterDto);
 
-            var userToCreate = _mapper.Map<Usuario>(userForRegisterDto);
+                var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+                await _dataContext.SaveChangesAsync();
 
-            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
+                _repo.RegistrarPerfilesAUsuario(createdUser.UsuarioId, userForRegisterDto.Perfiles);
+                await _dataContext.SaveChangesAsync();
 
-            _repo.RegistrarPerfilesAUsuario(createdUser.UsuarioId, userForRegisterDto.Perfiles);
+                await transaction.CommitAsync();
 
-            //Esta linea es para evitar retornar User, porque contiene el password
-            var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
+                //Esta linea es para evitar retornar User, porque contiene el password
+                var userToReturn = _mapper.Map<UsuarioParaDetalleDto>(createdUser);
 
-            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.UsuarioId }, userToReturn);
+                return CreatedAtRoute("GetUser", new { Controller = "Users", id = createdUser.UsuarioId }, userToReturn);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarUsuario(int id, UsuarioParaActualizar userForUpdateDto)
         {
-            // Para que el usuario actualice sus propios datos
-            // if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            //     return Unauthorized();
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
-            _repo.RegistrarPerfilesAUsuario(id, userForUpdateDto.Perfiles);
+            try
+            {
+                _repo.EliminarPerfilesUsuario(id);
+                await _dataContext.SaveChangesAsync();
 
-            // var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            // var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+                _repo.RegistrarPerfilesAUsuario(id, userForUpdateDto.Perfiles);
+                await _dataContext.SaveChangesAsync();
 
-            var userFromRepo = await _repo.ObtenerUsuario(id);
+                var userFromRepo = await _repo.ObtenerUsuarioBase(id);
+                _mapper.Map(userForUpdateDto, userFromRepo);
+                await _dataContext.SaveChangesAsync();
 
-            _mapper.Map(userForUpdateDto, userFromRepo);
+                await transaction.CommitAsync();
 
-            await _unitOfWork.CompleteAsync();
-            return NoContent();
-
-            throw new Exception($"Actualizando el usuario {id} el proceso falló");
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> EliminarUsuario(int id)
         {
             var idUsuarioLogueado = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var usuarioLogueado = await _repo.ObtenerUsuario(idUsuarioLogueado);
+            var usuarioLogueado = await _repo.ObtenerUsuarioBase(idUsuarioLogueado);
 
-            // if (!usuarioLogueado.EsAdministrador)
-            //     return Unauthorized();
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             if (idUsuarioLogueado == id)
             {
                 return BadRequest("No se puede eliminar el usuario desde la misma cuenta de usuario");
             }
 
-            if (await _repo.EliminarUsuario(id))
+            try
             {
+                _repo.EliminarPerfilesUsuario(id);
+                _dataContext.SaveChanges();
+
+                await _repo.EliminarUsuario(id);
+                await _dataContext.SaveChangesAsync();
+                
+                await transaction.CommitAsync();
+                
                 return NoContent();
             }
-
-            throw new Exception($"No se pudo eliminar el usuario: {id}");
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

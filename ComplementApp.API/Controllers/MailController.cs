@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
-using ComplementApp.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers

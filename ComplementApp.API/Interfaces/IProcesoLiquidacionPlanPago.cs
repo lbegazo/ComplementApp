@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
 
-namespace ComplementApp.API.Services
+namespace ComplementApp.API.Interfaces
 {
     public interface IProcesoLiquidacionPlanPago
     {

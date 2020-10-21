@@ -41,14 +41,14 @@
       style="margin-bottom: 40px;"
       *ngIf="uploader?.queue?.length"
     >
-      <h3>Upload queue</h3>
-      <p>Queue length: {{ uploader?.queue?.length }}</p>
+      <h3>Archivo</h3>
+      <p>Cantidad de archivos: {{ uploader?.queue?.length }}</p>
 
       <table class="table">
         <thead>
           <tr>
-            <th width="50%">Name</th>
-            <th>Size</th>
+            <th width="50%">Nombre</th>
+            <th>Tamaño</th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +65,7 @@
 
       <div>
         <div>
-          Queue progress:
+          Progreso:
           <div class="progress mb-4">
             <div
               class="progress-bar"

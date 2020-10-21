@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 
-namespace ComplementApp.API.Data
+namespace ComplementApp.API.Interfaces
 {
     public interface IUsuarioRepository
     {
@@ -11,7 +11,7 @@ namespace ComplementApp.API.Data
         
         Task<PagedList<Usuario>> ObtenerUsuarios(UserParams userParams);
 
-        Task<Usuario> ObtenerUsuario(int id);       
+        Task<Usuario> ObtenerUsuarioBase(int id);       
 
         Task<bool> UserExists(string username);
 
@@ -24,5 +24,7 @@ namespace ComplementApp.API.Data
         bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles);
 
         Task<Transaccion> ObtenerTransaccionXCodigo(string codigoTransaccion);
+
+        bool EliminarPerfilesUsuario(int usuarioId);
     }
 }

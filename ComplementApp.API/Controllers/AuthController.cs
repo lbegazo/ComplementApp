@@ -11,6 +11,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Controllers
 {

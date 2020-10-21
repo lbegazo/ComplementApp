@@ -1,3 +1,4 @@
+using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using ComplementApp.API.Settings;
 using MailKit.Net.Smtp;

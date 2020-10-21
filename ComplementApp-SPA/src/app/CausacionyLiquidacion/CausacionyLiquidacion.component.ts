@@ -70,6 +70,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
+    private router: Router,
     private facturaService: PlanPagoService,
     private fb: FormBuilder
   ) {}
@@ -310,6 +311,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
                     this.alertify.error(
                       'El tercero no tiene parametros de liquidación definidos'
                     );
+                    this.mostrarCabecera = true;
+                    this.formatoCausacionyLiquidacionPago = null;
                   }
                 },
                 (error) => {

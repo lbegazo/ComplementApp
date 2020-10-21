@@ -7,14 +7,15 @@ using System;
 using ComplementApp.API.Helpers;
 using System.Text;
 using System.Collections.Generic;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Data
 {
-    public class UsuarioRepository : BaseRepository, IUsuarioRepository
+    public class UsuarioRepository : IUsuarioRepository
     {
         private readonly DataContext _context;
         private readonly IUnitOfWork _unitOfWork;
-        public UsuarioRepository(DataContext context, IUnitOfWork unitOfWork) : base(context)
+        public UsuarioRepository(DataContext context, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             this._context = context;
@@ -34,7 +35,7 @@ namespace ComplementApp.API.Data
             return user;
         }
 
-        public async Task<Usuario> ObtenerUsuario(int id)
+        public async Task<Usuario> ObtenerUsuarioBase(int id)
         {
             return await _context.Usuario
                         .Include(x => x.Area)
@@ -58,7 +59,6 @@ namespace ComplementApp.API.Data
             try
             {
                 return await _context.Usuario.Where(x => x.UsuarioId == id).BatchDeleteAsync() > 0;
-
             }
             catch (Exception ex)
             {
@@ -68,10 +68,6 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<Usuario>> ObtenerUsuarios(UserParams userParams)
         {
-            // return await _context.Usuario
-            //                     .OrderBy(x => x.Nombres)
-            //                     .ToListAsync();
-
             var users = _context.Usuario.OrderBy(x => x.Nombres);
 
             return await PagedList<Usuario>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
@@ -172,14 +168,6 @@ namespace ComplementApp.API.Data
             UsuarioPerfil nuevoItem = null;
             List<UsuarioPerfil> lista = new List<UsuarioPerfil>();
 
-            #region Eliminar relaciones
-
-            var listaExistente = _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToList();
-            _context.UsuarioPerfil.RemoveRange(listaExistente);
-            _unitOfWork.Complete();
-
-            #endregion
-
             #region Setear datos
 
             foreach (var item in listaPerfiles)
@@ -198,9 +186,19 @@ namespace ComplementApp.API.Data
 
         public async Task<Transaccion> ObtenerTransaccionXCodigo(string codigoTransaccion)
         {
-            Transaccion inner = await _context.Transaccion.Where(t => t.Codigo == codigoTransaccion).FirstOrDefaultAsync();            
+            Transaccion inner = await _context.Transaccion.Where(t => t.Codigo == codigoTransaccion).FirstOrDefaultAsync();
             return inner;
         }
+       
+       public bool EliminarPerfilesUsuario(int usuarioId)
+        {
+            var listaExistente = _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToList();
+            _context.UsuarioPerfil.RemoveRange(listaExistente);
+            //_unitOfWork.Complete();
+            return true;
+
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -210,6 +208,6 @@ namespace ComplementApp.API.Data
             }
         }
 
-
+        
     }
 }
