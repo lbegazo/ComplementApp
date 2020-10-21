@@ -85,9 +85,9 @@ namespace ComplementApp.API.Controllers
 
                 #region Insertar lista en la base de datos
 
-                var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento);
+                var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento, listaDetalle);
                 var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
-                var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
+                var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);               
 
                 #endregion Insertar lista en la base de datos
 

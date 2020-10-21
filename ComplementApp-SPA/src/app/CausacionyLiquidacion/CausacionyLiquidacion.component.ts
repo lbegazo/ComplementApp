@@ -301,8 +301,16 @@ export class CausacionyLiquidacionComponent implements OnInit {
               )
               .subscribe(
                 (response: FormatoCausacionyLiquidacionPago) => {
-                  this.formatoCausacionyLiquidacionPago = response;
-                  this.formatoCausacionyLiquidacionPago.cantidadPago = this.detallePlanPago.cantidadPago;
+                  if (response !== null && this.detallePlanPago) {
+                    this.formatoCausacionyLiquidacionPago = response;
+                    this.formatoCausacionyLiquidacionPago.cantidadPago = this.detallePlanPago.cantidadPago;
+                  }
+                  else
+                  {
+                    this.alertify.error(
+                      'El tercero no tiene parametros de liquidación definidos'
+                    );
+                  }
                 },
                 (error) => {
                   this.alertify.error(
@@ -322,6 +330,4 @@ export class CausacionyLiquidacionComponent implements OnInit {
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }
-
-
 }

@@ -100,10 +100,10 @@ namespace ComplementApp.API.Data
                           join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
                           from up in UsosPresupuestales.DefaultIfEmpty()
 
-                          join dc in _context.DetalleCDP on pp.Cdp equals dc.Cdp into DetalleCDP
-                          from dcdp in DetalleCDP.DefaultIfEmpty()
+                        //   join dc in _context.DetalleCDP on pp.Cdp equals dc.Cdp into DetalleCDP
+                        //   from dcdp in DetalleCDP.DefaultIfEmpty()
 
-                          join u in _context.Usuario on dcdp.UsuarioId equals u.UsuarioId into Usuario
+                          join u in _context.Usuario on pp.UsuarioIdRegistro equals u.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
                           where pp.PlanPagoId == planPagoId
@@ -113,7 +113,7 @@ namespace ComplementApp.API.Data
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
                               Detalle4 = c.Detalle4,
-                              Detalle5 = us.Nombres + ' ' + us.Apellidos,
+                              Detalle5 = c.Detalle5,
                               Detalle6 = c.Detalle6,
                               Detalle7 = c.Detalle7,
                               ValorTotal = c.ValorTotal,

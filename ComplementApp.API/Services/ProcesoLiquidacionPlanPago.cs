@@ -424,7 +424,7 @@ namespace ComplementApp.API.Services
                 }
             }
 
-            C3valorIva = C1honorario * (PLtarifaIva);
+            C3valorIva = C1honorario * PLtarifaIva;
             C7baseAporteSalud = C1honorario * PLbaseAporteSalud;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);

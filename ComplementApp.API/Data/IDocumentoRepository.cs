@@ -7,7 +7,7 @@ namespace ComplementApp.API.Data
 {
     public interface IDocumentoRepository
     {
-        bool InsertaCabeceraCDP(IList<CDPDto> lista);
+        bool InsertaCabeceraCDP(IList<CDPDto> listaCdp, IList<DetalleCDPDto> listaDetalle);
 
         bool InsertaDetalleCDP(IList<DetalleCDPDto> lista);
 

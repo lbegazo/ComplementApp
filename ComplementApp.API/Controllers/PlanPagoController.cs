@@ -79,7 +79,7 @@ namespace ComplementApp.API.Controllers
             return base.Ok(listaDto);
         }
 
-        
+
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
@@ -274,7 +274,12 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> RechazarDetalleLiquidacion(int planPagoId, string mensajeRechazo)
         {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             PlanPago planNuevo = new PlanPago();
+
+            // await using var context = _dataContext;
+            // await using var transaction = await context.Database.BeginTransactionAsync();
+
             try
             {
                 if (planPagoId > 0)
@@ -284,19 +289,26 @@ namespace ComplementApp.API.Controllers
 
                     //Actualizar plan de pago existente a estado Por Pagar
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
+                    planPagoBD.FechaModificacion = System.DateTime.Now;
+                    planPagoBD.UsuarioIdModificacion = usuarioId;
 
-                    await _unitOfWork.CompleteAsync();
+                    await _dataContext.SaveChangesAsync();
 
-                    //Crear nuevo plan de pago en estado por pagar
+                    //Crear nuevo plan de pago en estado rechazado
                     planNuevo = planPagoBD;
                     planNuevo.PlanPagoId = 0;
                     planNuevo.EstadoPlanPagoId = (int)EstadoPlanPago.Rechazada;
+                    planNuevo.MotivoRechazo = mensajeRechazo;
+                    planNuevo.UsuarioIdRegistro = usuarioId;
+                    planNuevo.FechaRegistro = System.DateTime.Now;
                     _dataContext.PlanPago.Add(planNuevo);
 
                     //Enviar email
                     await EnviarEmail(planPagoDto, mensajeRechazo);
 
-                    await _unitOfWork.CompleteAsync();
+                    await _dataContext.SaveChangesAsync();
+                    //await transaction.CommitAsync();
+
                     return Ok(planNuevo.PlanPagoId);
                 }
             }
@@ -364,7 +376,7 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.RubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal.ToString();
             detalleLiquidacion.UsoPresupuestal = detallePlanPago.IdentificacionUsoPresupuestal != null ? detallePlanPago.IdentificacionUsoPresupuestal : string.Empty;
 
-            detalleLiquidacion.NombreSupervisor = detallePlanPago.Detalle5;            
+            detalleLiquidacion.NombreSupervisor = detallePlanPago.Detalle5;
             detalleLiquidacion.NumeroRadicado = detallePlanPago.NumeroRadicadoSupervisor;
             detalleLiquidacion.FechaRadicado = detallePlanPago.FechaRadicadoSupervisor.Value;
             detalleLiquidacion.NumeroFactura = detallePlanPago.NumeroFactura;

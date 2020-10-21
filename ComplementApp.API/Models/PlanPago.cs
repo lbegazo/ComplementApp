@@ -83,5 +83,8 @@ namespace ComplementApp.API.Models
 
         public DateTime? FechaModificacion { get; set; }
 
+         [Column(TypeName = "VARCHAR(250)")]
+        public string MotivoRechazo { get; set; }
+
     }
 }
