@@ -43,15 +43,16 @@ namespace ComplementApp.API.Controllers
         private readonly IPlanPagoRepository _repo;
         private readonly IMapper _mapper;
         private readonly IProcesoLiquidacionPlanPago _procesoLiquidacion;
-
         private readonly IMailService mailService;
+        private readonly IGeneralInterface _generalInterface;
 
         #endregion Dependency Injection
 
         public PlanPagoController(IUnitOfWork unitOfWork, IPlanPagoRepository repo,
                                     IMapper mapper, DataContext dataContext,
                                     IMailService mailService,
-                                    IProcesoLiquidacionPlanPago procesoLiquidacion)
+                                    IProcesoLiquidacionPlanPago procesoLiquidacion,
+                                    IGeneralInterface generalInterface)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -59,6 +60,7 @@ namespace ComplementApp.API.Controllers
             this.mailService = mailService;
             _dataContext = dataContext;
             this._procesoLiquidacion = procesoLiquidacion;
+            this._generalInterface = generalInterface;
         }
 
         [Route("[action]")]
@@ -159,15 +161,15 @@ namespace ComplementApp.API.Controllers
                 if (planPagoDto.esRadicarFactura)
                 {
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
-                    planPagoBD.FechaFactura = System.DateTime.Now;
-                    planPagoBD.FechaRegistro = System.DateTime.Now;
+                    planPagoBD.FechaFactura = _generalInterface.ObtenerFechaHoraActual();
+                    planPagoBD.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     planPagoBD.UsuarioIdRegistro = usuarioId;
                 }
                 else
                 {
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
-                    planPagoBD.FechaFactura = System.DateTime.Now;
-                    planPagoBD.FechaModificacion = System.DateTime.Now;
+                    planPagoBD.FechaFactura = _generalInterface.ObtenerFechaHoraActual();
+                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                     planPagoBD.UsuarioIdModificacion = usuarioId;
                 }
 
@@ -208,7 +210,7 @@ namespace ComplementApp.API.Controllers
                     MapearFormatoLiquidacion(formato, detalleLiquidacion);
 
                     detalleLiquidacion.UsuarioIdRegistro = usuarioId;
-                    detalleLiquidacion.FechaRegistro = System.DateTime.Now;
+                    detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     detalleLiquidacion.BaseImpuestos = false;
 
                     #endregion Mapear datos 
@@ -239,7 +241,7 @@ namespace ComplementApp.API.Controllers
                     var planPagoBD = await _repo.ObtenerPlanPagoBase(formato.PlanPagoId);
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
                     planPagoBD.UsuarioIdModificacion = usuarioId;
-                    planPagoBD.FechaModificacion = System.DateTime.Now;
+                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                     await _dataContext.SaveChangesAsync();
 
                     //Actualizar lista de liquidaciones anteriores(Viaticos pagados)
@@ -255,7 +257,7 @@ namespace ComplementApp.API.Controllers
                                 if (detalleLiquidacionAnterior != null)
                                 {
                                     detalleLiquidacionAnterior.BaseImpuestos = true;
-                                    detalleLiquidacionAnterior.FechaModificacion = System.DateTime.Now;
+                                    detalleLiquidacionAnterior.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                                     detalleLiquidacionAnterior.UsuarioIdModificacion = usuarioId;
                                 }
                             }
@@ -292,7 +294,7 @@ namespace ComplementApp.API.Controllers
 
                     //Actualizar plan de pago existente a estado Por Pagar
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
-                    planPagoBD.FechaModificacion = System.DateTime.Now;
+                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                     planPagoBD.UsuarioIdModificacion = usuarioId;
                     await _dataContext.SaveChangesAsync();
                     //_unitOfWork.PlanPagoRepository.ActualizarPlanPago(planPagoBD);
@@ -304,7 +306,7 @@ namespace ComplementApp.API.Controllers
                     planNuevo.EstadoPlanPagoId = (int)EstadoPlanPago.Rechazada;
                     planNuevo.MotivoRechazo = mensajeRechazo;
                     planNuevo.UsuarioIdRegistro = usuarioId;
-                    planNuevo.FechaRegistro = System.DateTime.Now;
+                    planNuevo.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     await _dataContext.PlanPago.AddAsync(planNuevo);
                     await _dataContext.SaveChangesAsync();
                     //await _unitOfWork.PlanPagoRepository.RegistrarPlanPago(planNuevo);                    
@@ -355,17 +357,31 @@ namespace ComplementApp.API.Controllers
 
         private async Task EnviarEmail(DetallePlanPagoDto planPagoDto, string mensaje)
         {
-            MailRequest request = new MailRequest();
-            request.ToEmail = planPagoDto.Email;
-            request.Subject = "Radicado de Pago " + planPagoDto.NumeroRadicadoProveedor + " Rechazado";
-            request.Body = "El radicado Nro: " + planPagoDto.NumeroRadicadoProveedor
-                            + " de Fecha " + planPagoDto.FechaRadicadoProveedor
-                            + " del tercero identificado " + planPagoDto.IdentificacionTercero
-                            + "-" + planPagoDto.NombreTercero + " fue rechazado, motivo: "
-                            + mensaje + ". \n"
-                            + " La línea del plan de pago del compromiso queda en estado"
-                            + " disponible para ser tramitado nuevamente";
-            await mailService.SendEmailAsync(request);
+            try
+            {
+                if (!string.IsNullOrEmpty(planPagoDto.Email))
+                {
+                    MailRequest request = new MailRequest();
+                    request.ToEmail = planPagoDto.Email;
+                    request.Subject = "Radicado de Pago " + planPagoDto.NumeroRadicadoProveedor + " Rechazado";
+                    request.Body = "El radicado Nro: " + planPagoDto.NumeroRadicadoProveedor
+                                    + " de Fecha " + planPagoDto.FechaRadicadoProveedor.ToString("dd/MM/yyyy")
+                                    + " del tercero identificado " + planPagoDto.IdentificacionTercero
+                                    + "-" + planPagoDto.NombreTercero + " fue rechazado, motivo: "
+                                    + mensaje + "." + "<br>"
+                                    + " La línea del plan de pago del compromiso queda en estado"
+                                    + " disponible para ser tramitado nuevamente";
+                    await mailService.SendEmailAsync(request);
+                }
+                else 
+                {
+                    throw new Exception("El usuario " + planPagoDto.Usuario + " no tiene registrado el email");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private void MapearFormatoLiquidacionPlanPago(DetallePlanPagoDto detallePlanPago, DetalleLiquidacion detalleLiquidacion)

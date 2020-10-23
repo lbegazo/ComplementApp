@@ -10,7 +10,6 @@ namespace ComplementApp.API.Dtos
         public UsuarioParaRegistrarDto()
         {
             FechaCreacion = DateTime.Now;
-            //FechaUltimoAcceso = DateTime.Now;
         }
 
         [Required]

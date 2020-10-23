@@ -25,13 +25,17 @@ namespace ComplementApp.API.Services
         private readonly IPlanPagoRepository _repo;
         private readonly IListaRepository _repoLista;
         private readonly IMapper _mapper;
+        private readonly IGeneralInterface _generalInterface;
 
         public ProcesoLiquidacionPlanPago(IPlanPagoRepository repo,
-                                            IListaRepository listaRepository, IMapper mapper)
+                                            IListaRepository listaRepository, 
+                                            IMapper mapper,
+                                            IGeneralInterface generalInterface)
         {
             this._repo = repo;
             this._repoLista = listaRepository;
             this._mapper = mapper;
+            this._generalInterface = generalInterface;
         }
         public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId,
                                                                                                         decimal valorBaseGravable)
@@ -832,8 +836,8 @@ namespace ComplementApp.API.Services
                     }
                     else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
                     {
-                        deduccion.Base = CSubTotal1;
-                        valor = deduccion.Tarifa * CSubTotal1;
+                        deduccion.Base = baseGravableFinal;
+                        valor = deduccion.Tarifa * baseGravableFinal;
                         deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                     }
                 }
@@ -946,7 +950,7 @@ namespace ComplementApp.API.Services
 
         private bool FechaActualEntreFechasVigencia(DateTime fechaInicio, DateTime fechaFinal)
         {
-            DateTime fechaActual = DateTime.Now;
+            DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
             if (fechaInicio < fechaActual && fechaActual < fechaFinal)
             {
                 return true;

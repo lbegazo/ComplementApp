@@ -53,6 +53,7 @@ namespace ComplementApp.API
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IProcesoLiquidacionPlanPago, ProcesoLiquidacionPlanPago>();
             services.AddScoped<IProcesoDocumentoExcel, ProcesoDocumentoExcel>();
+            services.AddScoped<IGeneralInterface, GeneralService>();
 
             services.AddDbContext<DataContext>();
 

@@ -9,15 +9,16 @@ namespace ComplementApp.API.Data
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
+         private readonly IGeneralInterface _generalInterface;
 
-        public UnitOfWork(DataContext context, IMapper mapper)
+        public UnitOfWork(DataContext context, IMapper mapper, IGeneralInterface generalInterface)
         {
             _context = context;
             _mapper = mapper;
-
+            this._generalInterface = generalInterface;
         }
 
-        public IPlanPagoRepository PlanPagoRepository => new PlanPagoRepository(_context, _mapper);
+        public IPlanPagoRepository PlanPagoRepository => new PlanPagoRepository(_context, _mapper, _generalInterface);
 
         public async Task<bool> CompleteAsync()
         {

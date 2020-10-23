@@ -15,10 +15,13 @@ namespace ComplementApp.API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        public PlanPagoRepository(DataContext context, IMapper mapper)
+        private readonly IGeneralInterface _generalInterface;
+
+        public PlanPagoRepository(DataContext context, IMapper mapper, IGeneralInterface generalInterface)
         {
             _mapper = mapper;
             _context = context;
+            this._generalInterface = generalInterface;
         }
 
         public async Task<PagedList<PlanPago>> ObtenerListaPlanPago(int? terceroId, List<int> listaEstadoId, UserParams userParams)
@@ -141,6 +144,8 @@ namespace ComplementApp.API.Data
                               IdentificacionUsoPresupuestal = up.Identificacion,
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = t.Nombre,
+
+                              Usuario = us.Nombres + ' ' + us.Apellidos,
                               Email = us.Email,
                           })
                     .FirstOrDefaultAsync();
@@ -290,7 +295,7 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionAnterior(long terceroId)
         {
-            int mesAnterior = System.DateTime.Now.AddMonths(-1).Month;
+            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
                                                     join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
                                                     where pp.TerceroId == terceroId

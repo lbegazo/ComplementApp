@@ -9,6 +9,11 @@ namespace ComplementApp.API.Helpers
 {
     public class LogActividadUsuario : IAsyncActionFilter
     {
+        private readonly IGeneralInterface _generalInterface;
+        public LogActividadUsuario(IGeneralInterface generalInterface)
+        {
+            this._generalInterface = generalInterface;
+        }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var resultContext = await next();
@@ -16,7 +21,7 @@ namespace ComplementApp.API.Helpers
             var unitOfWork = resultContext.HttpContext.RequestServices.GetService<IUnitOfWork>();
             var repo = resultContext.HttpContext.RequestServices.GetService<IUsuarioRepository>();
             var user = await repo.ObtenerUsuarioBase(userId);
-            user.FechaUltimoAcceso = DateTime.Now;
+            user.FechaUltimoAcceso = _generalInterface.ObtenerFechaHoraActual();
             await unitOfWork.CompleteAsync();
         }
     }
