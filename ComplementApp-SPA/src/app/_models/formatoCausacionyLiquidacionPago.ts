@@ -55,6 +55,10 @@ export interface FormatoCausacionyLiquidacionPago {
   diferencialRenta: number;
   baseGravableRenta: number;
   baseGravableUvt: number;
+  numeroMesSaludAnterior: number;
+  numeroMesSaludActual: number;
+  mesSaludAnterior: string;
+  mesSaludActual: string;
 
   deducciones?: Deduccion[];
 }

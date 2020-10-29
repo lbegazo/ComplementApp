@@ -189,5 +189,13 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal ViaticosPagados { get; set; }
 
+        public int MesSaludAnterior { get; set; }
+
+        public int MesSaludActual { get; set; }
+
+        public int TerceroId { get; set; }
+
+        public bool Procesado { get; set; }
+
     }
 }

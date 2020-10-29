@@ -497,9 +497,9 @@
                         *ngIf="
                           formatoCausacionyLiquidacionPago.modalidadContrato ===
                           1
-                        "
+                        
                         &&
-                        !formatoCausacionyLiquidacionPago.viaticos
+                        !formatoCausacionyLiquidacionPago.viaticos"
                       >
                         <td class="withoutPadding">
                           <table>
@@ -851,7 +851,9 @@
                       <td
                         style="width: 13.75%"
                         class="center fontSmaller stronger"
-                      ></td>
+                      >
+                      {{formatoCausacionyLiquidacionPago.mesSaludAnterior }}
+                    </td>
                     </tr>
                   </table>
                 </div>
@@ -870,28 +872,14 @@
                       <td
                         style="width: 13.75%; background-color: white"
                         class="center fontSmaller stronger"
-                      ></td>
+                      >{{formatoCausacionyLiquidacionPago.mesSaludActual}}
+                    </td>
                     </tr>
                   </table>
                 </div>
                 <!--Espacio-->
-                <div style="width: 5%"></div>
                 <!--Estado Liquidación-->
-                <div style="width: 30%">
-                  <table>
-                    <tr class="aplicaBackground">
-                      <td
-                        style="width: 17.5%"
-                        class="center fontSmaller stronger"
-                      >
-                        ESTADO DE LIQUIDACION
-                      </td>
-                      <td
-                        style="width: 17.5%; background-color: white"
-                        class="center fontSmaller stronger"
-                      ></td>
-                    </tr>
-                  </table>
+                <div style="width: 35%">
                 </div>
               </div>
             </div>

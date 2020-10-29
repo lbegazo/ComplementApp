@@ -119,6 +119,10 @@ namespace ComplementApp.API.Data
                 .Property(b => b.PadreRubroId)
                 .HasDefaultValue(0);
 
+
+            modelBuilder.Entity<DetalleLiquidacion>()
+                .Property(b => b.Procesado)
+                .HasDefaultValue(0);
         }
 
     }

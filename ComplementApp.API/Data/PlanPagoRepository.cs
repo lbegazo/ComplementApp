@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using AutoMapper;
+using System.Globalization;
 
 namespace ComplementApp.API.Data
 {
@@ -199,7 +200,7 @@ namespace ComplementApp.API.Data
                                                 //Plan de pago
                                                 DetalleLiquidacionId = dl.DetalleLiquidacionId,
                                                 PlanPagoId = dl.PlanPagoId,
-                                                TerceroId = pp.TerceroId,
+                                                TerceroId = dl.TerceroId,
                                                 ModalidadContrato = dl.ModalidadContrato,
                                                 IdentificacionTercero = dl.NumeroIdentificacion,
                                                 NombreTercero = dl.Nombre,
@@ -257,6 +258,10 @@ namespace ComplementApp.API.Data
                                                 BaseGravableRenta = dl.BaseGravableRenta,
                                                 BaseGravableUvt = (int)dl.BaseGravableUvt,
                                                 ViaticosPagados = dl.ViaticosPagados,
+                                                NumeroMesSaludActual = dl.MesSaludActual,
+                                                NumeroMesSaludAnterior = dl.MesSaludAnterior,
+                                                MesSaludAnterior = (dl.MesSaludAnterior>0 && dl.MesSaludAnterior<13) ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dl.MesSaludAnterior).ToUpper(): string.Empty,
+                                                MesSaludActual = (dl.MesSaludActual>0 && dl.MesSaludActual<13) ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dl.MesSaludActual).ToUpper(): string.Empty
                                             }).FirstOrDefaultAsync();
 
             if (detalleLiquidacion != null)
@@ -293,13 +298,14 @@ namespace ComplementApp.API.Data
             return await _context.DetalleLiquidacion.FirstOrDefaultAsync(u => u.DetalleLiquidacionId == detalleLiquidacion);
         }
 
-        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionAnterior(long terceroId)
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId)
         {
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
-                                                    join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
-                                                    where pp.TerceroId == terceroId
+
+                                                    where dl.TerceroId == terceroId
                                                     where dl.FechaRegistro.Value.Month == mesAnterior
+                                                    where dl.Viaticos == "SI"
                                                     select dl)
                                             .ToListAsync();
 
@@ -325,5 +331,22 @@ namespace ComplementApp.API.Data
             _context.PlanPago.Update(plan);
         }
 
+        public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId)
+        {
+            DetalleLiquidacion liquidacion = null;
+            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               where dl.TerceroId == terceroId
+                               where dl.FechaRegistro.Value.Month == mesAnterior
+                               where dl.Viaticos == "NO"
+                               select dl).ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            { 
+               liquidacion = lista.OrderBy(x => x.DetalleLiquidacionId).Last();
+            }
+
+            return liquidacion;
+        }
     }
 }

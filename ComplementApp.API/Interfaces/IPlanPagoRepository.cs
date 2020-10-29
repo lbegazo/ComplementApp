@@ -20,19 +20,22 @@ namespace ComplementApp.API.Interfaces
 
         int ObtenerCantidadMaximaPlanPago(long crp);
 
-        
+
 
         Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long detalleLiquidacionId);
 
         Task<DetalleLiquidacion> ObtenerDetalleLiquidacionBase(int detalleLiquidacion);
 
-        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionAnterior(long terceroId);
+        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId);
 
         Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, UserParams userParams);
 
         Task RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion);
 
-         Task RegistrarPlanPago(PlanPago plan);
+        Task RegistrarPlanPago(PlanPago plan);
 
-         void ActualizarPlanPago(PlanPago plan);    }
+        void ActualizarPlanPago(PlanPago plan);
+
+        Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId);
+    }
 }

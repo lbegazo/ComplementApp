@@ -130,7 +130,7 @@ export class LiquidacionPagoComponent implements OnInit {
       }
     } else {
       this.alertify.warning(
-        'No existen Facturas en estado por “Obligar” para el tercero registrado'
+        'No existen Facturas en estado por “ConLiquidacionDeducciones” para el tercero registrado'
       );
     }
   }
@@ -232,7 +232,6 @@ export class LiquidacionPagoComponent implements OnInit {
             this.formatoCausacionyLiquidacionPago = response;
             this.terceroId = this.formatoCausacionyLiquidacionPago.terceroId;
             this.mostrarCabecera = false;
-            console.log(this.formatoCausacionyLiquidacionPago);
           }
         },
         (error) => {

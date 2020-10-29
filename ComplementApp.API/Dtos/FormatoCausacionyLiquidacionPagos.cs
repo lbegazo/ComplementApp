@@ -32,6 +32,10 @@ namespace ComplementApp.API.Dtos
         public string NumeroFactura { get; set; }
         public string TextoComprobanteContable { get; set; }
         public decimal ViaticosPagados { get; set; }
+        public int NumeroMesSaludAnterior { get; set; }
+        public int NumeroMesSaludActual { get; set; }
+        public string MesSaludAnterior { get; set; }
+        public string MesSaludActual { get; set; }
 
         #endregion Plan de Pago
 

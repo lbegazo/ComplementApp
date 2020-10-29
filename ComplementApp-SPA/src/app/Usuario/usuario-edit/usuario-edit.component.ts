@@ -227,7 +227,6 @@ export class UsuarioEditComponent implements OnInit {
           .subscribe(
             (response: boolean) => {},
             (error) => {
-              console.log(error);
               this.alertify.error(error);
             },
             () => {

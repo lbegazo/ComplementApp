@@ -260,7 +260,4 @@ export class RadicadoPagoComponent implements OnInit {
     this.onLimpiarFactura();
   }
 
-  Exportar() {
-    console.log('exportar');
-  }
 }

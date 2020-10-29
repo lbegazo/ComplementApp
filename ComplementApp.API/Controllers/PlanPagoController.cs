@@ -245,7 +245,7 @@ namespace ComplementApp.API.Controllers
                     await _dataContext.SaveChangesAsync();
 
                     //Actualizar lista de liquidaciones anteriores(Viaticos pagados)
-                    var listaDetalleLiquidacionAnterior = await _repo.ObtenerListaDetalleLiquidacionAnterior(detallePlanPago.TerceroId);
+                    var listaDetalleLiquidacionAnterior = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(detallePlanPago.TerceroId);
 
                     if (listaDetalleLiquidacionAnterior != null && listaDetalleLiquidacionAnterior.Count > 0)
                     {
@@ -387,6 +387,7 @@ namespace ComplementApp.API.Controllers
         private void MapearFormatoLiquidacionPlanPago(DetallePlanPagoDto detallePlanPago, DetalleLiquidacion detalleLiquidacion)
         {
             detalleLiquidacion.NumeroIdentificacion = detallePlanPago.IdentificacionTercero;
+            detalleLiquidacion.TerceroId = detallePlanPago.TerceroId;
             detalleLiquidacion.Nombre = detallePlanPago.NombreTercero;
             detalleLiquidacion.Contrato = detallePlanPago.Detalle6;
             detalleLiquidacion.Viaticos = detallePlanPago.ViaticosDescripcion;
@@ -447,6 +448,8 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.BaseGravableUvt = formato.BaseGravableUvt;
 
             detalleLiquidacion.ModalidadContrato = formato.ModalidadContrato;
+            detalleLiquidacion.MesSaludAnterior = formato.NumeroMesSaludAnterior;
+            detalleLiquidacion.MesSaludActual = formato.NumeroMesSaludActual;
         }
 
         #endregion Funciones Generales

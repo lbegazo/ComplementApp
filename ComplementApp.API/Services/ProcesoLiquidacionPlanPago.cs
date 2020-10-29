@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -28,7 +29,7 @@ namespace ComplementApp.API.Services
         private readonly IGeneralInterface _generalInterface;
 
         public ProcesoLiquidacionPlanPago(IPlanPagoRepository repo,
-                                            IListaRepository listaRepository, 
+                                            IListaRepository listaRepository,
                                             IMapper mapper,
                                             IGeneralInterface generalInterface)
         {
@@ -395,16 +396,26 @@ namespace ComplementApp.API.Services
 
             #endregion Parametros Generales
 
-            #region Viaticos
+            #region Viaticos y Aporte Salud Anterior
 
-            var listaDetalleLiquidacion = await _repo.ObtenerListaDetalleLiquidacionAnterior(planPago.TerceroId);
+            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId);
 
-            if (listaDetalleLiquidacion != null && listaDetalleLiquidacion.Count > 0)
+            if (listaDetalleLiquidacionViaticos != null && listaDetalleLiquidacionViaticos.Count > 0)
             {
-                viaticosPagados = ObtenerValorViaticosAnteriores(listaDetalleLiquidacion.ToList());
+                viaticosPagados = ObtenerValorViaticosAnteriores(listaDetalleLiquidacionViaticos.ToList());
             }
 
-            #endregion Viáticos
+            var detalleLiquidacionAnterior = await _repo.ObtenerDetalleLiquidacionAnterior(planPago.TerceroId);
+
+            if (detalleLiquidacionAnterior != null)
+            {
+                formato.NumeroMesSaludAnterior = detalleLiquidacionAnterior.MesSaludAnterior;
+                formato.MesSaludAnterior = (detalleLiquidacionAnterior.MesSaludAnterior > 0 && detalleLiquidacionAnterior.MesSaludAnterior < 13) ?
+                                            CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(detalleLiquidacionAnterior.MesSaludAnterior).ToUpper() :
+                                            string.Empty;
+            }
+
+            #endregion Viáticos y Aporte Salud Anterior
 
             #region Honorario 
 

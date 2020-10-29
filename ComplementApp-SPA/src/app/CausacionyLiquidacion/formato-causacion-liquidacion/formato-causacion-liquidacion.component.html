@@ -200,7 +200,7 @@
                                 style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
-                               VIATICOS PAGADOS
+                                VIATICOS PAGADOS
                               </td>
                               <td
                                 style="width: 15%"
@@ -226,7 +226,10 @@
                                 {{ detallePlanPago?.detalle5 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
-                                {{ formatoCausacionyLiquidacionPago?.viaticosPagados | number: "1.0-0" }}
+                                {{
+                                  formatoCausacionyLiquidacionPago?.viaticosPagados
+                                    | number: "1.0-0"
+                                }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ detallePlanPago?.numeroRadicadoSupervisor }}
@@ -846,56 +849,98 @@
                   >
                     <tr>
                       <td
-                        style="width: 13.75%"
-                        class="center fontSmaller stronger"
+                        style="width: 50%"
+                        class="center fontSmaller stronger aplicaBackground"
                       >
                         MES PAGO SALUD ANTERIOR :
                       </td>
                       <td
-                        style="width: 13.75%"
+                        style="width: 50%"
                         class="center fontSmaller stronger"
-                      ></td>
+                      >
+                        {{ formatoCausacionyLiquidacionPago.mesSaludAnterior }}
+                      </td>
                     </tr>
                   </table>
                 </div>
                 <!--Espacio-->
                 <div style="width: 5%"></div>
                 <!--Pago Actual-->
-                <div style="width: 30%">
+                <div style="width: 30%" *ngIf="!liquidacionRegistrada">
                   <table style="padding: 0px; margin: 0px">
-                    <tr class="aplicaBackground">
+                    <tr>
                       <td
-                        style="width: 13.75%"
-                        class="center fontSmaller stronger"
+                        style="width: 50%"
+                        class="center fontSmaller stronger aplicaBackground"
                       >
                         MES DE PAGO ACTUAL
                       </td>
                       <td
-                        style="width: 13.75%; background-color: white"
+                        style="width: 50%; background-color: white"
+                        class="center fontSmaller"
+                      >
+                        <select
+                          placeholder="Mes"
+                          formControlName="tOperacionControl"
+                          class="form-control"
+                          style="
+                            width: 100px;
+                            height: 22px;
+                            padding: 0px;
+                            display: inline-block;
+                          "
+                          (change)="onSeleccionarMesActual()"
+                          [ngClass]="{
+                            'is-invalid':
+                              formatoForm.get('tOperacionControl').touched &&
+                              formatoForm
+                                .get('tOperacionControl')
+                                .hasError('required')
+                          }"
+                        >
+                          <option disabled value="">Mes</option>
+                          <option
+                            *ngFor="let item of listaMeses"
+                            [ngValue]="item"
+                          >
+                            {{ item.nombre }}
+                          </option>
+                        </select>
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            formatoForm.get('tOperacionControl').touched &&
+                            formatoForm
+                              .get('tOperacionControl')
+                              .hasError('required')
+                          "
+                        >
+                          SELECCIONE EL MES DE APORTE SALUD
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div style="width: 30%" *ngIf="liquidacionRegistrada">
+                  <table style="padding: 0px; margin: 0px">
+                    <tr>
+                      <td
+                        style="width: 50%"
+                        class="center fontSmaller stronger aplicaBackground"
+                      >
+                        MES DE PAGO ACTUAL
+                      </td>
+                      <td
+                        style="width: 50%; background-color: white"
                         class="center fontSmaller stronger"
-                      ></td>
+                      >
+                        {{ mesSaludActual }}
+                      </td>
                     </tr>
                   </table>
                 </div>
                 <!--Espacio-->
-                <div style="width: 5%"></div>
-                <!--Estado Liquidación-->
-                <div style="width: 30%">
-                  <table>
-                    <tr class="aplicaBackground">
-                      <td
-                        style="width: 17.5%"
-                        class="center fontSmaller stronger"
-                      >
-                        ESTADO DE LIQUIDACION
-                      </td>
-                      <td
-                        style="width: 17.5%; background-color: white"
-                        class="center fontSmaller stronger"
-                      ></td>
-                    </tr>
-                  </table>
-                </div>
+                <div style="width: 35%"></div>
               </div>
             </div>
           </div>
@@ -913,7 +958,11 @@
             type="submit"
             class="btn btn-success mr-2"
             (click)="registrarLiquidacion()"
-            [disabled]="liquidacionRegistrada || liquidacionRechazada"
+            [disabled]="
+              liquidacionRegistrada ||
+              liquidacionRechazada ||
+              !formatoForm.valid
+            "
           >
             Guardar
           </button>
@@ -941,3 +990,8 @@
     </div>
   </div>
 </form>
+
+<!-- <p>Form value: {{ detallePlanPago | json }}</p>
+<p>Form value: {{ formatoForm.value | json }}</p>
+<p>Form status: {{ formatoForm.status | json }}</p> -->
+

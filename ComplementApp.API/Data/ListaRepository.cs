@@ -64,5 +64,6 @@ namespace ComplementApp.API.Data
         {
             return await _context.CriterioCalculoReteFuente.ToListAsync();
         }
+        
     }
 }

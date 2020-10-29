@@ -13,6 +13,7 @@ import {
   FormArray,
   FormControl,
   FormBuilder,
+  Validators,
 } from '@angular/forms';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
@@ -21,6 +22,8 @@ import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
+import { ListaService } from 'src/app/_services/lista.service';
+import { TipoOperacion } from 'src/app/_models/tipoOperacion';
 
 @Component({
   selector: 'app-formato-causacion-liquidacion',
@@ -38,6 +41,8 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   @Output() esCancelado = new EventEmitter<boolean>();
   liquidacionRegistrada = false;
   liquidacionRechazada = false;
+  listaMeses: TipoOperacion[] = [];
+  mesSaludActual = '';
 
   formatoForm = new FormGroup({});
   arrayControls = new FormArray([]);
@@ -49,6 +54,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarMesesAnio();
     this.createForm();
   }
 
@@ -65,38 +71,49 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
 
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
+      tOperacionControl: ['', Validators.required],
     });
+
+    if (
+      this.detallePlanPago.modalidadContrato !== 1 ||
+      (this.detallePlanPago.modalidadContrato === 1 &&
+        this.detallePlanPago.viaticos)
+    ) {
+      this.tOperacionControl.disable();
+    }
   }
 
   registrarLiquidacion() {
-    let detalleLiquidacionId = 0;
-    this.formatoCausacionyLiquidacionPago.textoComprobanteContable = this.textoComprobanteContable;
-    this.formatoCausacionyLiquidacionPago.modalidadContrato = this.detallePlanPago.modalidadContrato;
+    if (this.formatoForm.valid) {
+      let detalleLiquidacionId = 0;
+      this.formatoCausacionyLiquidacionPago.textoComprobanteContable = this.textoComprobanteContable;
+      this.formatoCausacionyLiquidacionPago.modalidadContrato = this.detallePlanPago.modalidadContrato;
 
-    this.planPagoService
-      .RegistrarDetalleLiquidacion(this.formatoCausacionyLiquidacionPago)
-      .subscribe(
-        (response: any) => {
-          if (!isNaN(response)) {
-            detalleLiquidacionId = +response;
-            this.alertify.success(
-              'El formato de causación y liquidación se registro correctamente'
-            );
-            this.liquidacionRegistrada = true;
-          } else {
+      this.planPagoService
+        .RegistrarDetalleLiquidacion(this.formatoCausacionyLiquidacionPago)
+        .subscribe(
+          (response: any) => {
+            if (!isNaN(response)) {
+              detalleLiquidacionId = +response;
+              this.alertify.success(
+                'El formato de causación y liquidación se registro correctamente'
+              );
+              this.liquidacionRegistrada = true;
+            } else {
+              this.alertify.error(
+                'No se pudo registrar el formato de causación y liquidación '
+              );
+            }
+          },
+
+          (error) => {
             this.alertify.error(
-              'No se pudo registrar el formato de causación y liquidación '
+              'Hubó un error al registrar la liquidación ' + error
             );
-          }
-        },
-
-        (error) => {
-          this.alertify.error(
-            'Hubó un error al registrar la liquidación ' + error
-          );
-        },
-        () => {}
-      );
+          },
+          () => {}
+        );
+    }
   }
 
   rechazarLiquidacion() {
@@ -112,7 +129,8 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
         } else {
           this.planPagoService
             .RechazarDetalleLiquidacion(
-              this.formatoCausacionyLiquidacionPago.planPagoId, mensaje
+              this.formatoCausacionyLiquidacionPago.planPagoId,
+              mensaje
             )
             .subscribe(
               (response: any) => {
@@ -184,5 +202,69 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
 
   get textoComprobanteContable() {
     return this.textoComprobanteContableEl.nativeElement.innerHTML;
+  }
+
+  onSeleccionarMesActual() {
+    if (this.tOperacionControl) {
+      this.formatoCausacionyLiquidacionPago.numeroMesSaludActual = (this
+        .tOperacionControl.value as TipoOperacion).tipoOperacionId;
+      this.mesSaludActual = (this.tOperacionControl
+        .value as TipoOperacion).nombre.toUpperCase();
+    }
+  }
+
+  get tOperacionControl() {
+    return this.formatoForm.get('tOperacionControl');
+  }
+
+  cargarMesesAnio() {
+    let mes: TipoOperacion = { tipoOperacionId: 0, codigo: '', nombre: '' };
+
+    for (let index = 1; index <= 12; index++) {
+      mes = { tipoOperacionId: 0, codigo: '', nombre: '' };
+      mes.tipoOperacionId = index;
+
+      switch (index) {
+        case 1:
+          mes.nombre = 'Enero';
+          break;
+        case 2:
+          mes.nombre = 'Febrero';
+          break;
+        case 3:
+          mes.nombre = 'Marzo';
+          break;
+        case 4:
+          mes.nombre = 'Abril';
+          break;
+        case 5:
+          mes.nombre = 'Mayo';
+          break;
+        case 6:
+          mes.nombre = 'Junio';
+          break;
+        case 7:
+          mes.nombre = 'Julio';
+          break;
+        case 8:
+          mes.nombre = 'Agosto';
+          break;
+        case 9:
+          mes.nombre = 'Septiembre';
+          break;
+        case 10:
+          mes.nombre = 'Octubre';
+          break;
+        case 11:
+          mes.nombre = 'Noviembre';
+          break;
+        case 12:
+          mes.nombre = 'Diciembre';
+          break;
+        default:
+          break;
+      }
+      this.listaMeses.push(mes);
+    }
   }
 }
