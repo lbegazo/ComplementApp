@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of as observableOf } from 'rxjs';
 import { PlanPago } from '../_models/planPago';
 import { DetallePlanPago } from '../_models/detallePlanPago';
@@ -58,48 +58,6 @@ export class PlanPagoService {
       );
   }
 
-  ObtenerListaDetalleLiquidacion(
-    listaEstadoId: string,
-    terceroId?: number,
-    page?,
-    pagesize?
-  ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
-    const path = 'ObtenerListaDetalleLiquidacion';
-    const paginatedResult: PaginatedResult<FormatoCausacionyLiquidacionPago[]> = new PaginatedResult<
-    FormatoCausacionyLiquidacionPago[]
-    >();
-
-    let params = new HttpParams();
-    params = params.append('listaEstadoId', listaEstadoId);
-    if (terceroId > 0) {
-      params = params.append('terceroId', terceroId.toString());
-    }
-    if (page != null) {
-      params = params.append('pageNumber', page);
-    }
-    if (pagesize != null) {
-      params = params.append('pageSize', pagesize);
-    }
-
-    return this.http
-      .get<FormatoCausacionyLiquidacionPago[]>(this.baseUrl + path, {
-        observe: 'response',
-        params,
-      })
-      .pipe(
-        map((response) => {
-          paginatedResult.result = response.body;
-
-          if (response.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(
-              response.headers.get('Pagination')
-            );
-          }
-          return paginatedResult;
-        })
-      );
-  }
-
   ObtenerPlanPago(planPagoId: number): Observable<PlanPago> {
     const path = 'ObtenerPlanPago';
 
@@ -124,53 +82,8 @@ export class PlanPagoService {
     return this.http.get<DetallePlanPago>(this.baseUrl + path, { params });
   }
 
-  ObtenerFormatoCausacionyLiquidacionPago(
-    planPagoId: number,
-    valorBaseGravable: number
-  ): Observable<FormatoCausacionyLiquidacionPago> {
-    const path = 'ObtenerFormatoCausacionyLiquidacionPago';
-
-    let params = new HttpParams();
-
-    if (planPagoId > 0) {
-      params = params.append('planPagoId', planPagoId.toString());
-    }
-    if (valorBaseGravable > 0) {
-      params = params.append('valorBaseGravable', valorBaseGravable.toString());
-    }
-
-    return this.http.get<FormatoCausacionyLiquidacionPago>(
-      this.baseUrl + path,
-      { params }
-    );
-  }
-
-  ObtenerDetalleFormatoCausacionyLiquidacionPago(
-    detalleLiquidacionId: number
-  ): Observable<FormatoCausacionyLiquidacionPago> {
-    const path = 'ObtenerDetalleFormatoCausacionyLiquidacionPago/';
-    return this.http.get<FormatoCausacionyLiquidacionPago>(
-      this.baseUrl + path + detalleLiquidacionId
-    );
-  }
-
   ActualizarPlanPago(factura: PlanPago): Observable<boolean> {
     this.http.put(this.baseUrl, factura).subscribe(() => {});
     return observableOf(true);
-  }
-
-  RegistrarDetalleLiquidacion(
-    formato: FormatoCausacionyLiquidacionPago
-  ): Observable<any> {
-    const path = 'RegistrarDetalleLiquidacion';
-    return this.http.post(this.baseUrl + path, formato);
-  }
-
-  RechazarDetalleLiquidacion(
-    planPagoId: number,
-    mensajeRechazo: string
-  ): Observable<any> {
-    const path = 'RechazarDetalleLiquidacion/';
-    return this.http.get(this.baseUrl + path + planPagoId + '/' + mensajeRechazo);
   }
 }

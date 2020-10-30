@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using AutoMapper;
 using ComplementApp.API.Data;
+using ComplementApp.API.Extensions;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Middleware;
@@ -20,65 +21,27 @@ namespace ComplementApp.API
     public class Startup
     {
         private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            _config = configuration;
             _env = env;
         }
-
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureDevelopmentServices(IServiceCollection services)
-        {
-            services.AddDbContext<DataContext>(x => x.UseSqlite
-                (Configuration.GetConnectionString("DefaultConnection")));
-
-            ConfigureServices(services);
-        }
-
-        public void ConfigureProductionServices(IServiceCollection services)
-        {
-            services.AddDbContext<DataContext>(x => x.UseSqlServer
-                (Configuration.GetConnectionString("DefaultConnection")));
-
-            ConfigureServices(services);
-        }
-
+       
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             /*The order is not important*/
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddScoped<IMailService, MailService>();
-            services.AddScoped<IProcesoLiquidacionPlanPago, ProcesoLiquidacionPlanPago>();
-            services.AddScoped<IProcesoDocumentoExcel, ProcesoDocumentoExcel>();
-            services.AddScoped<IGeneralInterface, GeneralService>();
 
-            services.AddDbContext<DataContext>();
-
-            // if (_env.IsProduction())
-            //     services.AddDbContext<DataContext>();
-            // else
-            //     services.AddDbContext<DataContext, SqliteDataContext>();
-
-            //Avoid use System.Text.Json package     
+            //Avoid use System.Text.Json package  
+            services.AddApplicationServices(_config);
             services.AddControllers()
             .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
                                      Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
             services.AddCors();
-
-            //Dependency injection
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IDatingRepository, DatingRepository>();
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<IDocumentoRepository, DocumentoRepository>();
-            services.AddScoped<ICDPRepository, CDPRepository>();
-            services.AddScoped<IListaRepository, ListaRepository>();
-            services.AddScoped<IPlanPagoRepository, PlanPagoRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>
@@ -87,7 +50,7 @@ namespace ComplementApp.API
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                            Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
 
@@ -109,7 +72,7 @@ namespace ComplementApp.API
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             /*The order is extremely important*/
-   
+
             app.UseMiddleware<ExceptionMiddleware>();
 
             // app.UseHttpsRedirection();
@@ -122,7 +85,7 @@ namespace ComplementApp.API
             app.UseAuthorization();
 
             app.UseDefaultFiles();
-            
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = context =>

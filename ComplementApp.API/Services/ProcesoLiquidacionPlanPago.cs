@@ -23,16 +23,18 @@ namespace ComplementApp.API.Services
 
         #endregion Constantes
 
-        private readonly IPlanPagoRepository _repo;
+        private readonly IDetalleLiquidacionRepository _repo;
+        private readonly IPlanPagoRepository _planPagoRepository;
         private readonly IListaRepository _repoLista;
         private readonly IMapper _mapper;
         private readonly IGeneralInterface _generalInterface;
 
-        public ProcesoLiquidacionPlanPago(IPlanPagoRepository repo,
+        public ProcesoLiquidacionPlanPago(IPlanPagoRepository planPagoRepository,  IDetalleLiquidacionRepository repo,
                                             IListaRepository listaRepository,
                                             IMapper mapper,
                                             IGeneralInterface generalInterface)
         {
+            this._planPagoRepository = planPagoRepository;
             this._repo = repo;
             this._repoLista = listaRepository;
             this._mapper = mapper;
@@ -44,14 +46,14 @@ namespace ComplementApp.API.Services
             FormatoCausacionyLiquidacionPagos formato = null;
             try
             {
-                var planPagoDto = await _repo.ObtenerDetallePlanPago(planPagoId);
+                var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
 
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
                 var parametros = parametroGenerales.ToList();
 
                 ParametroLiquidacionTercero parametroLiquidacion = await _repoLista.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
 
-                ICollection<Deduccion> listaDeducciones = await _repo.ObtenerDeduccionesXTercero(planPagoDto.TerceroId);
+                ICollection<Deduccion> listaDeducciones = await _planPagoRepository.ObtenerDeduccionesXTercero(planPagoDto.TerceroId);
                 var listaDeduccionesDto = _mapper.Map<ICollection<DeduccionDto>>(listaDeducciones);
 
                 ICollection<CriterioCalculoReteFuente> listaCriterioReteFuente = await _repoLista.ObtenerListaCriterioCalculoReteFuente();

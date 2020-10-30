@@ -23,6 +23,7 @@ import { PlanPago } from 'src/app/_models/planPago';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { environment } from 'src/environments/environment';
 
@@ -72,7 +73,8 @@ export class RadicadoPagoComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private facturaService: PlanPagoService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private liquidacionService: DetalleLiquidacionService
   ) {}
 
   ngOnInit(): void {
@@ -120,8 +122,6 @@ export class RadicadoPagoComponent implements OnInit {
       planPagoControles: this.arrayControls,
     });
   }
-
- 
 
   crearControlesDeArray() {
     if (this.listaPlanPago && this.listaPlanPago.length > 0) {
@@ -231,7 +231,7 @@ export class RadicadoPagoComponent implements OnInit {
             );
             this.mostrarCabecera = true;
           } else {
-            this.facturaService
+            this.liquidacionService
               .ObtenerFormatoCausacionyLiquidacionPago(
                 this.planPagoIdSeleccionado,
                 valorIngresado
@@ -259,5 +259,4 @@ export class RadicadoPagoComponent implements OnInit {
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }
-
 }

@@ -22,6 +22,7 @@ import { PlanPago } from 'src/app/_models/planPago';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { environment } from 'src/environments/environment';
 import { FormatoLiquidacionComponent } from './formato-causacion-liquidacion/formato-liquidacion.component';
@@ -69,8 +70,8 @@ export class LiquidacionPagoComponent implements OnInit {
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
-    private facturaService: PlanPagoService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private liquidacionService: DetalleLiquidacionService
   ) {}
 
   ngOnInit(): void {
@@ -146,7 +147,7 @@ export class LiquidacionPagoComponent implements OnInit {
   onBuscarFactura() {
     this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
 
-    this.facturaService
+    this.liquidacionService
       .ObtenerListaDetalleLiquidacion(
         this.listaEstadoId,
         this.terceroId,
@@ -222,7 +223,7 @@ export class LiquidacionPagoComponent implements OnInit {
   }
 
   ObtenerDetalleFormatoCausacionyLiquidacionPago() {
-    this.facturaService
+    this.liquidacionService
       .ObtenerDetalleFormatoCausacionyLiquidacionPago(
         this.detalleLiquidacionIdSeleccionado
       )

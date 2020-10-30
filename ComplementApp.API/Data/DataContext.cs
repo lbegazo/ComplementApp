@@ -1,3 +1,4 @@
+using System;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,11 +15,32 @@ namespace ComplementApp.API.Data
             Configuration = configuration;
         }
 
+        // protected override void OnConfiguring(DbContextOptionsBuilder options)
+        // {
+        //     // connect to sql server database
+        //     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+        // }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            // connect to sql server database
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            string connStr;
+
+            // Depending on if in development or production, use either Heroku-provided
+            // connection string, or development connection string from env var.
+            if (env == "Development")
+            {
+                // Use connection string from file.
+                connStr = Configuration.GetConnectionString("DevelopmentConnection");
+            }
+            else
+            {
+                connStr = Configuration.GetConnectionString("DefaultConnection");
+            }
+            options.UseSqlServer(connStr);
         }
+
 
         public DbSet<Tercero> Tercero { get; set; }
 

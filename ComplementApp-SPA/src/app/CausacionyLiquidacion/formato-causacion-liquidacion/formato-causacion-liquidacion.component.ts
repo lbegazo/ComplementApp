@@ -24,6 +24,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { ListaService } from 'src/app/_services/lista.service';
 import { TipoOperacion } from 'src/app/_models/tipoOperacion';
+import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 
 @Component({
   selector: 'app-formato-causacion-liquidacion',
@@ -48,9 +49,9 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   arrayControls = new FormArray([]);
 
   constructor(
-    private planPagoService: PlanPagoService,
     private alertify: AlertifyService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private liquidacionService: DetalleLiquidacionService,
   ) {}
 
   ngOnInit() {
@@ -89,7 +90,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
       this.formatoCausacionyLiquidacionPago.textoComprobanteContable = this.textoComprobanteContable;
       this.formatoCausacionyLiquidacionPago.modalidadContrato = this.detallePlanPago.modalidadContrato;
 
-      this.planPagoService
+      this.liquidacionService
         .RegistrarDetalleLiquidacion(this.formatoCausacionyLiquidacionPago)
         .subscribe(
           (response: any) => {
@@ -127,7 +128,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
         if (mensaje.length === 0) {
           this.alertify.warning('Debe ingresar el motivo de rechazo');
         } else {
-          this.planPagoService
+          this.liquidacionService
             .RechazarDetalleLiquidacion(
               this.formatoCausacionyLiquidacionPago.planPagoId,
               mensaje

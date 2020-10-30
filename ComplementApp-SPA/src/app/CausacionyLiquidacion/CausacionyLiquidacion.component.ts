@@ -24,6 +24,7 @@ import { ListaService } from '../_services/lista.service';
 import { PaginatedResult, Pagination } from '../_models/pagination';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { Transaccion } from '../_models/transaccion';
+import { DetalleLiquidacionService } from '../_services/detalleLiquidacion.service';
 
 @Component({
   selector: 'app-causacionyliquidacion',
@@ -70,8 +71,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
-    private router: Router,
     private facturaService: PlanPagoService,
+    private liquidacionService: DetalleLiquidacionService,
     private fb: FormBuilder
   ) {}
 
@@ -295,7 +296,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
             );
             this.mostrarCabecera = true;
           } else {
-            this.facturaService
+            this.liquidacionService
               .ObtenerFormatoCausacionyLiquidacionPago(
                 this.planPagoIdSeleccionado,
                 valorIngresado
