@@ -27,7 +27,7 @@ namespace ComplementApp.API
             _config = configuration;
             _env = env;
         }
-       
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -86,17 +86,22 @@ namespace ComplementApp.API
 
             app.UseDefaultFiles();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = context =>
-                {
-                    if (context.File.Name == "index.html")
-                    {
-                        context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
-                        context.Context.Response.Headers.Add("Expires", "-1");
-                    }
-                }
-            });
+            // app.UseStaticFiles(new StaticFileOptions
+            // {
+            //     OnPrepareResponse = context =>
+            //     {
+            //         if (context.File.Name == "index.html")
+            //         {
+            //             context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            //             httpContext.Response.Headers.Append( "Pragma", "no-cache" );
+            //             context.Context.Response.Headers.Add("Expires", "0");
+            //         }
+            //     }
+            // });
+
+            app.UseStaticFiles();
+
+            app.UseMiddleware<NoCacheMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -7,11 +7,12 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ComplementApp.API.Data
 {
-    public class DetalleLiquidacionRepository: IDetalleLiquidacionRepository
+    public class DetalleLiquidacionRepository : IDetalleLiquidacionRepository
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -23,7 +24,6 @@ namespace ComplementApp.API.Data
             _context = context;
             this._generalInterface = generalInterface;
         }
-
 
         public async Task RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion)
         {
@@ -135,8 +135,9 @@ namespace ComplementApp.API.Data
             return detalleLiquidacion;
         }
 
-        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, UserParams userParams)
+        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, bool? procesado, UserParams userParams)
         {
+
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
@@ -145,6 +146,7 @@ namespace ComplementApp.API.Data
                          from pl in parametroLiquidacion.DefaultIfEmpty()
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
                          {
                              DetalleLiquidacionId = dl.DetalleLiquidacionId,
@@ -155,7 +157,7 @@ namespace ComplementApp.API.Data
                              FechaRadicadoSupervisor = dl.FechaRadicado,
                              ValorTotal = c.ValorFacturado.Value
                          })
-                               .OrderBy(c => c.FechaRadicadoSupervisor);
+                        .OrderBy(c => c.FechaRadicadoSupervisor);
 
             return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
         }
@@ -179,7 +181,6 @@ namespace ComplementApp.API.Data
             return detalleLiquidacionAnterior;
         }
 
-
         public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId)
         {
             DetalleLiquidacion liquidacion = null;
@@ -198,7 +199,88 @@ namespace ComplementApp.API.Data
             return liquidacion;
         }
 
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId)
+        {
+            List<DetalleLiquidacionParaArchivo> listaFinal = null;
 
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               join t in _context.Tercero on dl.TerceroId equals t.TerceroId
+                               join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
+                               from pl in parametroLiquidacion.DefaultIfEmpty()
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               where (dl.Procesado == false)
+                               select new DetalleLiquidacionParaArchivo()
+                               {
+                                   PCI = "23-09-00",
+                                   Fecha = System.DateTime.Now.ToString("dd/MM/yyyy"),
+                                   TipoIdentificacion = t.TipoIdentificacion,
+                                   NumeroIdentificacion = t.NumeroIdentificacion,
+                                   Crp = dl.Crp,
+                                   TipoCuentaPagar = pl.TipoCuentaPorPagar.Value,
+                                   TotalACancelar = dl.TotalACancelar,
+                                   ValorIva = dl.ValorIva,
+                                   TextoComprobanteContable = dl.TextoComprobanteContable,
+                                   TipoDocumentoSoporte = pl.TipoDocumentoSoporte,
+                                   NumeroFactura = dl.NumeroFactura,
+                                   ConstanteNumero = "16",
+                                   NombreSupervisor = dl.NombreSupervisor,
+                                   ConstanteCargo = "CargoSupervisor",
+                                   FechaRegistro = dl.FechaRegistro.Value
+                               })
+                    .ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                listaFinal = lista.OrderBy(x => x.FechaRegistro).ToList();
+            }
+
+            return listaFinal;
+        }
+
+        public async Task<List<int>> ObtenerListaDetalleLiquidacionTotal(int? terceroId, List<int> listaEstadoId, bool? procesado)
+        {
+            var lista = (from dl in _context.DetalleLiquidacion
+                         join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
+                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                         from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where (c.TerceroId == terceroId || terceroId == null)
+                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         where (dl.Procesado == procesado || procesado == null)
+                         select dl.DetalleLiquidacionId);
+
+            return await lista.ToListAsync();
+        }
+
+        public bool RegistrarArchivoDetalleLiquidacion(ArchivoDetalleLiquidacion archivo)
+        {
+            _context.ArchivoDetalleLiquidacion.Add(archivo);
+            return true;
+        }
+
+        public bool RegistrarDetalleArchivoLiquidacion(List<DetalleArchivoLiquidacion> listaDetalle)
+        {
+            _context.BulkInsert(listaDetalle);
+            return true;
+        }
+
+        public int ObtenerUltimoConsecutivoArchivoLiquidacion()
+        {
+            var fechaActual = _generalInterface.ObtenerFechaHoraActual();
+            var listaArchivo = _context.ArchivoDetalleLiquidacion
+                            .Where(x => x.FechaGeneracion.Date == fechaActual.Date).ToList();
+
+            if (listaArchivo == null || (listaArchivo != null && listaArchivo.Count == 0))
+            {
+                return 0;
+            }
+            else
+            {
+                var archivo = listaArchivo.OrderBy(x => x.Consecutivo).Last();
+                return archivo.Consecutivo;
+            }
+        }
 
     }
 }

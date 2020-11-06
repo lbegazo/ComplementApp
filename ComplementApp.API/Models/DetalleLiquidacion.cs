@@ -197,5 +197,6 @@ namespace ComplementApp.API.Models
 
         public bool Procesado { get; set; }
 
+        public ICollection<DetalleArchivoLiquidacion> DetalleArchivo { get; set; }
     }
 }

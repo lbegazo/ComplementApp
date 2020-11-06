@@ -32,7 +32,7 @@ namespace ComplementApp.API.Data
             if (env == "Development")
             {
                 // Use connection string from file.
-                connStr = Configuration.GetConnectionString("DevelopmentConnection");
+                connStr = Configuration.GetConnectionString("DefaultConnection");
             }
             else
             {
@@ -101,6 +101,10 @@ namespace ComplementApp.API.Data
 
         public DbSet<LiquidacionDeduccion> LiquidacionDeducciones { get; set; }
 
+        public DbSet<ArchivoDetalleLiquidacion> ArchivoDetalleLiquidacion { get; set; }
+
+        public DbSet<DetalleArchivoLiquidacion> DetalleArchivoLiquidacion { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -141,10 +145,21 @@ namespace ComplementApp.API.Data
                 .Property(b => b.PadreRubroId)
                 .HasDefaultValue(0);
 
-
             modelBuilder.Entity<DetalleLiquidacion>()
                 .Property(b => b.Procesado)
                 .HasDefaultValue(0);
+
+            modelBuilder.Entity<DetalleArchivoLiquidacion>()
+          .HasKey(bc => new { bc.ArchivoDetalleLiquidacionId, bc.DetalleLiquidacionId });
+            modelBuilder.Entity<DetalleArchivoLiquidacion>()
+                .HasOne(bc => bc.ArchivoDetalleLiquidacion)
+                .WithMany(b => b.DetalleArchivo)
+                .HasForeignKey(bc => bc.ArchivoDetalleLiquidacionId);
+            modelBuilder.Entity<DetalleArchivoLiquidacion>()
+                .HasOne(bc => bc.DetalleLiquidacion)
+                .WithMany(c => c.DetalleArchivo)
+                .HasForeignKey(bc => bc.DetalleLiquidacionId);
+
         }
 
     }

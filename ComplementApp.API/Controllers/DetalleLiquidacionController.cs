@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Data;
@@ -10,6 +12,7 @@ using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
@@ -28,6 +31,8 @@ namespace ComplementApp.API.Controllers
 
         #region Dependency Injection
         private readonly DataContext _dataContext;
+
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDetalleLiquidacionRepository _repo;
 
@@ -44,7 +49,8 @@ namespace ComplementApp.API.Controllers
                                     IMapper mapper, DataContext dataContext,
                                     IMailService mailService,
                                     IProcesoLiquidacionPlanPago procesoLiquidacion,
-                                    IGeneralInterface generalInterface)
+                                    IGeneralInterface generalInterface,
+                                    IWebHostEnvironment environment)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -54,18 +60,51 @@ namespace ComplementApp.API.Controllers
             _dataContext = dataContext;
             this._procesoLiquidacion = procesoLiquidacion;
             this._generalInterface = generalInterface;
+            _hostingEnvironment = environment;
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaDetalleLiquidacionTotal([FromQuery(Name = "terceroId")] int? terceroId,
+                                                              [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                              [FromQuery(Name = "procesado")] int? procesado)
+        {
+            List<int> lista = null;
+            try
+            {
+                List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+                bool? esProcesado = null;
+
+                if (procesado.HasValue)
+                {
+                    esProcesado = (procesado.Value == 1) ? (true) : (false);
+                }
+
+                lista = await _repo.ObtenerListaDetalleLiquidacionTotal(terceroId, listIds, esProcesado);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return base.Ok(lista);
+        }
 
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
                                                               [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                              [FromQuery(Name = "procesado")] int? procesado,
                                                               [FromQuery] UserParams userParams)
         {
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+            bool? esProcesado = null;
 
-            var pagedList = await _repo.ObtenerListaDetalleLiquidacion(terceroId, listIds, userParams);
+            if (procesado.HasValue)
+            {
+                esProcesado = (procesado.Value == 1) ? (true) : (false);
+            }
+
+            var pagedList = await _repo.ObtenerListaDetalleLiquidacion(terceroId, listIds, esProcesado, userParams);
             var listaDto = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
 
             Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
@@ -257,6 +296,116 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
+        [HttpGet]
+        [Route("DescargarMaestroDetalleLiquidacionParaArchivo")]
+        public async Task<IActionResult> DescargarMaestroDetalleLiquidacionParaArchivo([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
+        {
+            string cadena = string.Empty;
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(listaLiquidacionId))
+                {
+                    List<int> listIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
+                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listIds);
+
+                    if (listaLiquidacion != null && listaLiquidacion.Count > 0)
+                    {
+                        //Obtener información para el archivo
+                        cadena = ObtenerInformacionMaestroDetalleLiquidacion(listaLiquidacion.ToList());
+
+                        //Registrar archivo y sus detalles
+                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listIds);
+                        _dataContext.SaveChanges();
+
+                        RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listIds);
+                        _dataContext.SaveChanges();
+
+                        //Encoding.UTF8: Respeta las tildes en las palabras
+                        byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                        MemoryStream stream = new MemoryStream(byteArray);
+
+                        if (stream == null)
+                            return NotFound();
+
+                        await transaction.CommitAsync();
+                        Response.AddFileName(archivo.Nombre);
+                        return File(stream, "application/octet-stream", archivo.Nombre);
+                    }
+                    else
+                    {
+                        throw new Exception("No se pudo obtener las liquidaciones seleccionadas");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Debe seleccionar al menos una liquidación");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("DescargarDetalleLiquidacionParaArchivo")]
+        public async Task<IActionResult> DescargarDetalleLiquidacionParaArchivo([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
+        {        
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);    
+            string cadena = string.Empty;
+            string nombreArchivo = string.Empty;
+            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
+            int consecutivo = 0;
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                if (!string.IsNullOrEmpty(listaLiquidacionId))
+                {
+                    List<int> listIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
+                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listIds);
+
+                    //Actualizar el estado de las liquidaciones procesadas
+                    await ActualizarEstadoDetalleLiquidacion(usuarioId, listIds);
+                    await _dataContext.SaveChangesAsync();
+
+                    //Obtener información para el archivo
+                    cadena = ObtenerInformacionDetalleLiquidacion(listaLiquidacion.ToList());
+
+                    //Obtener nombre del archivo etalle
+                    consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                    nombreArchivo = "SIGPAA-Detalle" + "-" + fecha.Year.ToString() +
+                                    fecha.Month.ToString().PadLeft(2, '0') + fecha.Date.Day.ToString().PadLeft(2, '0') +
+                                    "-" + consecutivo.ToString().PadLeft(4, '0');
+
+                    //Encoding.UTF8: Respeta las tildes en las palabras
+                    byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                    MemoryStream stream = new MemoryStream(byteArray);
+
+                    if (stream == null)
+                        return NotFound();
+
+                    await transaction.CommitAsync();
+
+                    Response.AddFileName(nombreArchivo);
+                    return File(stream, "application/octet-stream", nombreArchivo);
+                }
+                else
+                {
+                    return BadRequest("Debe seleccionar al menos un detalle de liquidación");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         #region Funciones Generales
 
         private async Task EnviarEmail(DetallePlanPagoDto planPagoDto, string mensaje)
@@ -356,10 +505,141 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.MesSaludActual = formato.NumeroMesSaludActual;
         }
 
+        private string ObtenerInformacionMaestroDetalleLiquidacion(List<DetalleLiquidacionParaArchivo> lista)
+        {
+            int consecutivo = 1;
+            StringBuilder sbBody = new StringBuilder();
+
+            foreach (var item in lista)
+            {
+                sbBody.Append(item.PCI);
+                sbBody.Append("|");
+                sbBody.Append(consecutivo);
+                sbBody.Append("|");
+                sbBody.Append(item.Fecha);
+                sbBody.Append("|");
+                sbBody.Append("0" + item.TipoIdentificacion);
+                sbBody.Append("|");
+                sbBody.Append(item.NumeroIdentificacion);
+                sbBody.Append("|");
+                sbBody.Append(item.Crp);
+                sbBody.Append("|");
+                sbBody.Append(item.TipoCuentaPagar);
+                sbBody.Append("|");
+                sbBody.Append(item.TotalACancelar);
+                sbBody.Append("|");
+                sbBody.Append("0");
+                sbBody.Append("|");
+                sbBody.Append(string.Empty);
+                sbBody.Append("|");
+                sbBody.Append(item.ValorIva);
+                sbBody.Append("|");
+                sbBody.Append(item.TextoComprobanteContable);
+                sbBody.Append("|");
+                sbBody.Append(item.TipoDocumentoSoporte);
+                sbBody.Append("|");
+                sbBody.Append(item.NumeroFactura);
+                sbBody.Append("|");
+                sbBody.Append(item.Fecha);
+                sbBody.Append("|");
+                sbBody.Append(item.ConstanteNumero);
+                sbBody.Append("|");
+                sbBody.Append(item.NombreSupervisor);
+                sbBody.Append("|");
+                sbBody.Append(item.ConstanteCargo);
+                sbBody.Append("|||");
+                sbBody.Append(Environment.NewLine);
+                consecutivo++;
+            }
+
+            return sbBody.ToString();
+        }
+
+        private string ObtenerInformacionDetalleLiquidacion(List<DetalleLiquidacionParaArchivo> lista)
+        {
+            int consecutivo = 1;
+            StringBuilder sbBody = new StringBuilder();
+
+            foreach (var item in lista)
+            {
+                sbBody.Append(consecutivo);
+                sbBody.Append("|");
+                sbBody.Append(item.TipoDocumentoSoporte);
+                sbBody.Append(Environment.NewLine);
+                consecutivo++;
+            }
+
+            return sbBody.ToString();
+        }
+
+        private async Task<bool> ActualizarEstadoDetalleLiquidacion(int usuarioId, List<int> listIds)
+        {
+            foreach (var id in listIds)
+            {
+                if (id > 0)
+                {
+                    var liquidacion = await _repo.ObtenerDetalleLiquidacionBase(id);
+
+                    if (liquidacion != null)
+                    {
+                        liquidacion.Procesado = true;
+                        liquidacion.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        liquidacion.UsuarioIdModificacion = usuarioId;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, List<int> listIds)
+        {
+            ArchivoDetalleLiquidacion archivo = new ArchivoDetalleLiquidacion();
+            string nombreArchivo = string.Empty;
+            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
+
+            try
+            {
+                int consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
+                nombreArchivo = "SIGPAA" + "-" + fecha.Year.ToString() +
+                                fecha.Month.ToString().PadLeft(2, '0') + fecha.Date.Day.ToString().PadLeft(2, '0') +
+                                "-" + consecutivo.ToString().PadLeft(4, '0');
+
+                archivo.FechaGeneracion = fecha;
+                archivo.FechaRegistro = fecha;
+                archivo.UsuarioIdRegistro = usuarioId;
+                archivo.Nombre = nombreArchivo;
+                archivo.CantidadRegistro = listIds.Count;
+                archivo.Consecutivo = consecutivo;
+                _repo.RegistrarArchivoDetalleLiquidacion(archivo);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return archivo;
+        }
+
+        private void RegistrarDetalleArchivoLiquidacion(int archivoId, List<int> listIds)
+        {
+            DetalleArchivoLiquidacion detalle = null;
+            List<DetalleArchivoLiquidacion> lista = new List<DetalleArchivoLiquidacion>();
+
+            foreach (var item in listIds)
+            {
+                if (item > 0)
+                {
+                    detalle = new DetalleArchivoLiquidacion();
+                    detalle.DetalleLiquidacionId = item;
+                    detalle.ArchivoDetalleLiquidacionId = archivoId;
+                    lista.Add(detalle);
+                }
+            }
+            _repo.RegistrarDetalleArchivoLiquidacion(lista);
+        }
+
+
         #endregion Funciones Generales
 
-
     }
-
-
 }

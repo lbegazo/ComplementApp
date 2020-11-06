@@ -19,6 +19,7 @@ import { ServerErrorComponent } from './server-error/server-error.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
+import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -55,6 +56,20 @@ export const routes: Routes = [
     resolve: { transaccion: TransaccionResolver },
   },
   {
+    path: 'SOLICITUDES_CERTIFICADO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: CdpMainComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'GENERADOR_CUENTAPORPAGAR',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: CuentaPorPagarComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
     path: 'TRAMITE_RADICADO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
@@ -88,13 +103,6 @@ export const routes: Routes = [
     resolve: {
       transaccion: TransaccionResolver,
     },
-  },
-  {
-    path: 'SOLICITUDES_CERTIFICADO',
-    canActivate: [AuthGuard],
-    runGuardsAndResolvers: 'always',
-    component: CdpMainComponent,
-    resolve: { transaccion: TransaccionResolver },
   },
   {
     path: 'INTEGRACION_GESTIONPRESUPUESTAL',

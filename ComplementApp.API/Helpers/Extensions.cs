@@ -25,6 +25,12 @@ namespace ComplementApp.API.Helpers
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
 
+        public static void AddFileName(this HttpResponse response, string fileName)
+        {
+            response.Headers.Add("FileName", fileName);
+            response.Headers.Add("Access-Control-Expose-Headers", "FileName");
+        }
+
         public static int CalculateAge(this DateTime myBirthDay)
         {
             int age = DateTime.Today.Year - myBirthDay.Year;

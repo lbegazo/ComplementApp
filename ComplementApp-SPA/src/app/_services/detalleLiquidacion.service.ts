@@ -1,4 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpParams,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
@@ -17,6 +22,7 @@ export class DetalleLiquidacionService {
   ObtenerListaDetalleLiquidacion(
     listaEstadoId: string,
     terceroId?: number,
+    procesado?: number,
     page?,
     pagesize?
   ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
@@ -29,6 +35,9 @@ export class DetalleLiquidacionService {
     params = params.append('listaEstadoId', listaEstadoId);
     if (terceroId > 0) {
       params = params.append('terceroId', terceroId.toString());
+    }
+    if (procesado != null) {
+      params = params.append('procesado', procesado.toString());
     }
     if (page != null) {
       params = params.append('pageNumber', page);
@@ -54,6 +63,27 @@ export class DetalleLiquidacionService {
           return paginatedResult;
         })
       );
+  }
+
+  ObtenerListaDetalleLiquidacionTotal(
+    listaEstadoId: string,
+    terceroId?: number,
+    procesado?: number
+  ): Observable<number[]> {
+    const path = 'ObtenerListaDetalleLiquidacionTotal';
+
+    let params = new HttpParams();
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (procesado != null) {
+      params = params.append('procesado', procesado.toString());
+    }
+
+    return this.http.get<number[]>(this.baseUrl + path, {
+      params,
+    });
   }
 
   RegistrarDetalleLiquidacion(
@@ -100,6 +130,42 @@ export class DetalleLiquidacionService {
     const path = 'ObtenerDetalleFormatoCausacionyLiquidacionPago/';
     return this.http.get<FormatoCausacionyLiquidacionPago>(
       this.baseUrl + path + detalleLiquidacionId
+    );
+  }
+
+  public DescargarMaestroDetalleLiquidacionParaArchivo(
+    listaLiquidacionId: string
+  ): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${
+          this.baseUrl + 'DescargarMaestroDetalleLiquidacionParaArchivo'
+        }?listaLiquidacionId=${listaLiquidacionId}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
+  }
+
+  public DescargarDetalleLiquidacionParaArchivo(
+    listaLiquidacionId: string
+  ): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${
+          this.baseUrl + 'DescargarDetalleLiquidacionParaArchivo'
+        }?listaLiquidacionId=${listaLiquidacionId}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
     );
   }
 }

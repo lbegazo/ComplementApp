@@ -264,28 +264,28 @@
                           >
                             {{
                               this.detallePlanPago?.detalle6 +
-                                "_" +
+                                "-" +
                                 detallePlanPago?.detalle7 +
-                                "_" +
+                                "-" +
                                 detallePlanPago?.identificacionTercero +
-                                "_" +
+                                "-" +
                                 detallePlanPago?.nombreTercero +
-                                "_PAGO: " +
+                                "-PAGO: " +
                                 detallePlanPago?.numeroPago.toString() +
                                 " DE: " +
                                 detallePlanPago?.cantidadPago.toString() +
                                 " OBJETO: " +
                                 detallePlanPago?.detalle4 +
-                                "_FACTURA(S): " +
+                                "-FACTURA(S): " +
                                 detallePlanPago?.numeroFactura +
-                                "_" +
+                                "-" +
                                 "OBSERVACIONES: " +
                                 detallePlanPago?.observaciones +
-                                "_AUTORIZA: " +
+                                "-AUTORIZA: " +
                                 detallePlanPago?.detalle5 +
-                                "_RADICADO: " +
+                                "-RADICADO: " +
                                 detallePlanPago?.numeroRadicadoSupervisor +
-                                "_DEL_" +
+                                "-DEL-" +
                                 (detallePlanPago?.fechaRadicadoSupervisor
                                   | date: "dd/MM/yyyy")
                             }}

@@ -47,8 +47,6 @@ import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.com
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
 import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
-import { CdpListComponent } from './solicitudCdp/cdp-list/cdp-list.component';
-import { CdpComponent } from './solicitudCdp/cdp-list/cdp/cdp.component';
 import { CdpDetalleResolver } from './_resolvers/cdp-detalle.resolver';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
 import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
@@ -79,6 +77,7 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
 import { FormatoLiquidacionComponent } from './reporte/liquidacion-pago/formato-causacion-liquidacion/formato-liquidacion.component';
+import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -106,9 +105,7 @@ export function tokenGetter() {
     UsuarioItemComponent,
     UsuarioStartComponent,
     CdpMainComponent,
-    CdpListComponent,
     CdpEditComponent,
-    CdpComponent,
     ArchivoMainComponent,
     CdpHeaderComponent,
     ItemComponent,
@@ -127,7 +124,8 @@ export function tokenGetter() {
     NotFoundComponent,
     RadicadoPagoComponent,
     LiquidacionPagoComponent,
-    FormatoLiquidacionComponent
+    FormatoLiquidacionComponent,
+    CuentaPorPagarComponent,
   ],
   imports: [
     BrowserModule,
