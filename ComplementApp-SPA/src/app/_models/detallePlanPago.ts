@@ -26,4 +26,5 @@ export interface DetallePlanPago {
   observaciones: string;
   modalidadContrato: number;
   tipoPago: number;
+  fechaRadicadoSupervisorFormato: string;
 }

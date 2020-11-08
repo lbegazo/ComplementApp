@@ -264,30 +264,24 @@
                           >
                             {{
                               this.detallePlanPago?.detalle6 +
-                                "-" +
+                                " " +
                                 detallePlanPago?.detalle7 +
-                                "-" +
-                                detallePlanPago?.identificacionTercero +
-                                "-" +
-                                detallePlanPago?.nombreTercero +
-                                "-PAGO: " +
-                                detallePlanPago?.numeroPago.toString() +
-                                " DE: " +
-                                detallePlanPago?.cantidadPago.toString() +
-                                " OBJETO: " +
+                                " - OBJETO: " +
                                 detallePlanPago?.detalle4 +
-                                "-FACTURA(S): " +
-                                detallePlanPago?.numeroFactura +
-                                "-" +
-                                "OBSERVACIONES: " +
+                                " " +
+                                detallePlanPago?.identificacionTercero +
+                                " " +
+                                detallePlanPago?.nombreTercero +
+                                " " +
                                 detallePlanPago?.observaciones +
-                                "-AUTORIZA: " +
+                                " DOC SOP " +
+                                detallePlanPago?.numeroFactura +
+                                " AUT: " +
                                 detallePlanPago?.detalle5 +
-                                "-RADICADO: " +
+                                " " +
                                 detallePlanPago?.numeroRadicadoSupervisor +
-                                "-DEL-" +
-                                (detallePlanPago?.fechaRadicadoSupervisor
-                                  | date: "dd/MM/yyyy")
+                                " " +
+                                detallePlanPago?.fechaRadicadoSupervisorFormato
                             }}
                           </p>
                         </td>
@@ -994,4 +988,3 @@
 <!-- <p>Form value: {{ detallePlanPago | json }}</p>
 <p>Form value: {{ formatoForm.value | json }}</p>
 <p>Form status: {{ formatoForm.status | json }}</p> -->
-

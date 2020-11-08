@@ -127,9 +127,6 @@ namespace ComplementApp.API.Data
                         {
                             if (DateTime.TryParse(item.FechaFinalDescuentoInteresVivienda, out fecha))
                                 nuevoItem.FechaFinalDescuentoInteresVivienda = fecha;
-
-                            // if (DateTime.TryParseExact(item.FechaFinalDescuentoInteresVivienda, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fecha))
-                            //     nuevoItem.FechaFinalDescuentoInteresVivienda = fecha;
                         }
 
                         if (!string.IsNullOrEmpty(item.FechaInicioDescuentoInteresVivienda))

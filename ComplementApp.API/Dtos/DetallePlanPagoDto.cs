@@ -40,5 +40,7 @@ namespace ComplementApp.API.Dtos
         public string Email { get; set; }
 
         public string Usuario { get; set; }
+
+        public string FechaRadicadoSupervisorFormato { get; set; }
     }
 }

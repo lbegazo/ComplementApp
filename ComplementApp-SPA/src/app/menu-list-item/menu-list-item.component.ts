@@ -41,7 +41,6 @@ export class MenuListItemComponent implements OnInit {
   ngOnInit() {
     this.navService.currentUrl.subscribe((url: string) => {
       if (this.item.ruta && url) {
-        // console.log(`Checking '/${this.item.route}' against '${url}'`);
         this.expanded = url.indexOf(`/${this.item.ruta}`) === 0;
         this.ariaExpanded = this.expanded;
       }
@@ -49,7 +48,6 @@ export class MenuListItemComponent implements OnInit {
   }
 
   onItemSelected(item: Transaccion) {
-    console.log(item);
     if (!item.hijos || !item.hijos.length) {
       this.router.navigate([item.ruta]);
       this.navService.closeNav();

@@ -82,9 +82,6 @@ namespace ComplementApp.API.Data
                           join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
                           from up in UsosPresupuestales.DefaultIfEmpty()
 
-                              //   join dc in _context.DetalleCDP on pp.Cdp equals dc.Cdp into DetalleCDP
-                              //   from dcdp in DetalleCDP.DefaultIfEmpty()
-
                           join u in _context.Usuario on pp.UsuarioIdRegistro equals u.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
@@ -94,10 +91,10 @@ namespace ComplementApp.API.Data
                           {
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
-                              Detalle4 = c.Detalle4,
+                              Detalle4 = CortarTexto(c.Detalle4, 50),
                               Detalle5 = c.Detalle5,
                               Detalle6 = c.Detalle6,
-                              Detalle7 = c.Detalle7,
+                              Detalle7 = ResumirDetalle7(c.Detalle7),
                               ValorTotal = c.ValorTotal,
                               SaldoActual = c.SaldoActual,
                               Fecha = c.Fecha,
@@ -112,6 +109,7 @@ namespace ComplementApp.API.Data
                               ValorFacturado = pp.ValorFacturado.HasValue ? pp.ValorFacturado.Value : 0,
                               NumeroRadicadoSupervisor = pp.NumeroRadicadoSupervisor,
                               FechaRadicadoSupervisor = pp.FechaRadicadoSupervisor,
+                              FechaRadicadoSupervisorFormato = pp.FechaRadicadoSupervisor.HasValue? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd"): string.Empty,
                               NumeroFactura = pp.NumeroFactura,
                               Observaciones = pp.Observaciones,
                               NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
@@ -120,7 +118,7 @@ namespace ComplementApp.API.Data
                               IdentificacionRubroPresupuestal = r.Identificacion,
                               IdentificacionUsoPresupuestal = up.Identificacion,
                               IdentificacionTercero = t.NumeroIdentificacion,
-                              NombreTercero = t.Nombre,
+                              NombreTercero = CortarTexto(t.Nombre, 30),
 
                               Usuario = us.Nombres + ' ' + us.Apellidos,
                               Email = us.Email,
@@ -176,5 +174,61 @@ namespace ComplementApp.API.Data
             _context.PlanPago.Update(plan);
         }
 
+        private static string ResumirDetalle7(string texto)
+        {
+            string resultado = string.Empty;
+            switch (texto)
+            {
+                 case "'CONTRATO DE PRESTACION DE SERVICIOS - PROFESIONALES":
+                    resultado = "CPSP";
+                    break;
+                case "CONTRATO DE PRESTACION DE SERVICIOS":
+                    resultado = "CPS";
+                    break;
+                case "CONTRATO DE COMPRA VENTA Y SUMINISTROS":
+                    resultado = "CCVS";
+                    break;
+                case "CONTRATO DE CONSULTORIA":
+                    resultado = "CC";
+                    break;
+                case "CONTRATO DE OBRA":
+                    resultado = "CO";
+                    break;
+                case "ACTO ADMINISTRATIVO":
+                    resultado = "AA";
+                    break;
+                case "CONTRATO DE ARRENDAMIENTO":
+                    resultado = "CA";
+                    break;
+                case "CONTRATO INTERADMINISTRATIVO":
+                    resultado = "CIA";
+                    break;
+                case "ORDEN DE COMPRA":
+                    resultado = "OC";
+                    break;
+                case "FACTURA":
+                    resultado = "FACT";
+                    break;
+                case "CONVENIO":
+                    resultado = "CONV";
+                    break;
+                case "RESOLUCION":
+                    resultado = "RES";
+                    break;
+                case "RECIBOS OFICIALES DE PAGO":
+                    resultado = "ROP";
+                    break;
+                default: break;
+            }
+
+            return resultado;
+        }
+
+        private static string CortarTexto(string texto, int longitud)
+        {
+            string resultado = string.Empty;
+            resultado = texto.Length > longitud ? (texto.Substring(0, longitud)) : (texto);
+            return resultado;
+        }
     }
 }

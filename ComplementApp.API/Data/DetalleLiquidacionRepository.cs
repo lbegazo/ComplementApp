@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -212,13 +213,13 @@ namespace ComplementApp.API.Data
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    PCI = "23-09-00",
-                                   Fecha = System.DateTime.Now.ToString("dd/MM/yyyy"),
+                                   Fecha = System.DateTime.Now.ToString("yyyy-MM-dd"),
                                    TipoIdentificacion = t.TipoIdentificacion,
                                    NumeroIdentificacion = t.NumeroIdentificacion,
                                    Crp = dl.Crp,
                                    TipoCuentaPagar = pl.TipoCuentaPorPagar.Value,
-                                   TotalACancelar = dl.TotalACancelar,
-                                   ValorIva = dl.ValorIva,
+                                   TotalACancelar = decimal.Round(dl.TotalACancelar, 2, MidpointRounding.AwayFromZero),
+                                   ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
                                    TextoComprobanteContable = dl.TextoComprobanteContable,
                                    TipoDocumentoSoporte = pl.TipoDocumentoSoporte,
                                    NumeroFactura = dl.NumeroFactura,

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -353,8 +354,8 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         [Route("DescargarDetalleLiquidacionParaArchivo")]
         public async Task<IActionResult> DescargarDetalleLiquidacionParaArchivo([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
-        {        
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);    
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             string cadena = string.Empty;
             string nombreArchivo = string.Empty;
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
@@ -378,9 +379,9 @@ namespace ComplementApp.API.Controllers
 
                     //Obtener nombre del archivo etalle
                     consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
-                    nombreArchivo = "SIGPAA-Detalle" + "-" + fecha.Year.ToString() +
+                    nombreArchivo = "SIGPAA Detalle" + " " + fecha.Year.ToString() +
                                     fecha.Month.ToString().PadLeft(2, '0') + fecha.Date.Day.ToString().PadLeft(2, '0') +
-                                    "-" + consecutivo.ToString().PadLeft(4, '0');
+                                    " " + consecutivo.ToString().PadLeft(4, '0');
 
                     //Encoding.UTF8: Respeta las tildes en las palabras
                     byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
@@ -405,7 +406,6 @@ namespace ComplementApp.API.Controllers
             }
         }
 
-
         #region Funciones Generales
 
         private async Task EnviarEmail(DetallePlanPagoDto planPagoDto, string mensaje)
@@ -418,7 +418,7 @@ namespace ComplementApp.API.Controllers
                     request.ToEmail = planPagoDto.Email;
                     request.Subject = "Radicado de Pago " + planPagoDto.NumeroRadicadoProveedor + " Rechazado";
                     request.Body = "El radicado Nro: " + planPagoDto.NumeroRadicadoProveedor
-                                    + " de Fecha " + planPagoDto.FechaRadicadoProveedor.ToString("dd/MM/yyyy")
+                                    + " de Fecha " + planPagoDto.FechaRadicadoProveedor.ToString("dd-MM-yyyy")
                                     + " del tercero identificado " + planPagoDto.IdentificacionTercero
                                     + "-" + planPagoDto.NombreTercero + " fue rechazado, motivo: "
                                     + mensaje + "." + "<br>"
@@ -466,7 +466,7 @@ namespace ComplementApp.API.Controllers
         {
             detalleLiquidacion.PlanPagoId = formato.PlanPagoId;
             detalleLiquidacion.CantidadPago = formato.CantidadPago;
-            detalleLiquidacion.TextoComprobanteContable = formato.TextoComprobanteContable;
+            detalleLiquidacion.TextoComprobanteContable = EliminarCaracteresEspeciales(formato.TextoComprobanteContable);
 
             detalleLiquidacion.ViaticosPagados = formato.ViaticosPagados;
             detalleLiquidacion.Honorario = formato.Honorario;
@@ -526,13 +526,11 @@ namespace ComplementApp.API.Controllers
                 sbBody.Append("|");
                 sbBody.Append(item.TipoCuentaPagar);
                 sbBody.Append("|");
-                sbBody.Append(item.TotalACancelar);
+                sbBody.Append(item.TotalACancelar.ToString().Replace(".", ","));
                 sbBody.Append("|");
                 sbBody.Append("0");
                 sbBody.Append("|");
-                sbBody.Append(string.Empty);
-                sbBody.Append("|");
-                sbBody.Append(item.ValorIva);
+                sbBody.Append(item.ValorIva.ToString().Replace(".", ","));
                 sbBody.Append("|");
                 sbBody.Append(item.TextoComprobanteContable);
                 sbBody.Append("|");
@@ -600,9 +598,9 @@ namespace ComplementApp.API.Controllers
             try
             {
                 int consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
-                nombreArchivo = "SIGPAA" + "-" + fecha.Year.ToString() +
+                nombreArchivo = "SIGPAA" + " " + fecha.Year.ToString() +
                                 fecha.Month.ToString().PadLeft(2, '0') + fecha.Date.Day.ToString().PadLeft(2, '0') +
-                                "-" + consecutivo.ToString().PadLeft(4, '0');
+                                " " + consecutivo.ToString().PadLeft(4, '0');
 
                 archivo.FechaGeneracion = fecha;
                 archivo.FechaRegistro = fecha;
@@ -636,6 +634,24 @@ namespace ComplementApp.API.Controllers
                 }
             }
             _repo.RegistrarDetalleArchivoLiquidacion(lista);
+        }
+
+        private string EliminarCaracteresEspeciales(string texto)
+        {
+            var normalizedString = texto.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+            stringBuilder.Replace("ñ", "n");
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
 
