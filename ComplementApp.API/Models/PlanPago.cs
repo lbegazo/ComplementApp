@@ -52,15 +52,7 @@ namespace ComplementApp.API.Models
         public string Observaciones { get; set; }
 
         public DateTime? FechaFactura { get; set; }
-
-        public long? Obligacion { get; set; }
-
-        public long? OrdenPago { get; set; }
-
-        public DateTime? FechaOrdenPago { get; set; }
-
-        public int? DiasAlPago { get; set; }
-
+        
         public int? EstadoPlanPagoId { get; set; }
 
         public int? EstadoOrdenPagoId { get; set; }

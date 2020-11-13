@@ -3,18 +3,17 @@ import {
   Resolve,
   Router,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
 } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/Operators';
-import { UsuarioService } from '../_services/usuario.service';
 import { Transaccion } from '../_models/transaccion';
+import { TransaccionService } from '../_services/transaccion.service';
 
 @Injectable()
 export class TransaccionResolver implements Resolve<Transaccion> {
   constructor(
-    private userService: UsuarioService,
+    private userService: TransaccionService,
     private router: Router,
     private alertify: AlertifyService
   ) {}

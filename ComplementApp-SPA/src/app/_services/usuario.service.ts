@@ -95,28 +95,5 @@ export class UsuarioService {
       this.usuarioChanged.next(this.usuarios);
     });
   }
-
-  ObtenerTransaccionXCodigo(codigo: string): Observable<Transaccion> {
-    return this.http.get<Transaccion>(
-      this.baseUrl + 'ObtenerTransaccionXCodigo/' + codigo
-    );
-  }
-
-  obtenerNombreTransaccionPorCodigo(codigo: string) {
-    let nombreTransaccion = '';
-    let transaccion: Transaccion;
-    this.ObtenerTransaccionXCodigo(codigo).subscribe(
-      (response: Transaccion) => {
-        transaccion = response;
-      },
-      (error) => {},
-      () => {
-        if (!transaccion) {
-          nombreTransaccion = transaccion.nombre;
-        }
-        return nombreTransaccion;
-      }
-    );
-    return nombreTransaccion;
-  }
+  
 }

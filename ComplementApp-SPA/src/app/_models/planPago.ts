@@ -20,11 +20,6 @@ export interface PlanPago {
   valorFacturado: number;
   observaciones: string;
   fechaFactura: Date;
-  obligacion: number;
-  fechaObligacion: Date;
-  ordenPago: number;
-  fechaOrdenPago: Date;
-  diasAlPago: number;
   estadoPlanPagoId: number;
   estadoPlanPago: string;
   tipoIdentificacionTercero: string;

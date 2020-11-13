@@ -197,6 +197,14 @@ namespace ComplementApp.API.Models
 
         public bool Procesado { get; set; }
 
+        public long? Obligacion { get; set; }
+
+        public long? OrdenPago { get; set; }
+
+        public DateTime? FechaOrdenPago { get; set; }
+
+        public int? DiasAlPago { get; set; }
+
         public ICollection<DetalleArchivoLiquidacion> DetalleArchivo { get; set; }
     }
 }

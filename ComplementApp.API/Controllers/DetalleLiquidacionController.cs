@@ -116,7 +116,8 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "planPagoId")] int planPagoId, [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable)
+        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago(   [FromQuery(Name = "planPagoId")] int planPagoId, 
+                                                                                    [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
             try
@@ -310,7 +311,9 @@ namespace ComplementApp.API.Controllers
                 if (!string.IsNullOrEmpty(listaLiquidacionId))
                 {
                     List<int> listIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
-                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listIds);
+                    List<int> listDistinct = listIds.Distinct().ToList();
+
+                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listDistinct);
 
                     if (listaLiquidacion != null && listaLiquidacion.Count > 0)
                     {
@@ -318,10 +321,10 @@ namespace ComplementApp.API.Controllers
                         cadena = ObtenerInformacionMaestroDetalleLiquidacion(listaLiquidacion.ToList());
 
                         //Registrar archivo y sus detalles
-                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listIds);
+                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listDistinct);
                         _dataContext.SaveChanges();
 
-                        RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listIds);
+                        RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
                         _dataContext.SaveChanges();
 
                         //Encoding.UTF8: Respeta las tildes en las palabras
@@ -368,10 +371,12 @@ namespace ComplementApp.API.Controllers
                 if (!string.IsNullOrEmpty(listaLiquidacionId))
                 {
                     List<int> listIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
-                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listIds);
+                    List<int> listDistinct = listIds.Distinct().ToList();
+
+                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listDistinct);
 
                     //Actualizar el estado de las liquidaciones procesadas
-                    await ActualizarEstadoDetalleLiquidacion(usuarioId, listIds);
+                    await ActualizarEstadoDetalleLiquidacion(usuarioId, listDistinct);
                     await _dataContext.SaveChangesAsync();
 
                     //Obtener información para el archivo

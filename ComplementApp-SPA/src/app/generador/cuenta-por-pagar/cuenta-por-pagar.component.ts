@@ -57,7 +57,6 @@ export class CuentaPorPagarComponent implements OnInit {
     totalPages: 0,
   };
   liquidacionesSeleccionadas: number[] = [];
-  totalEnPagina = 0;
   seleccionaTodas = false;
 
   constructor(
@@ -115,23 +114,6 @@ export class CuentaPorPagarComponent implements OnInit {
     });
   }
 
-  crearControlesDeArray() {
-    if (this.listaPlanPago && this.listaPlanPago.length > 0) {
-      this.totalEnPagina = this.listaPlanPago.length;
-      for (const detalle of this.listaPlanPago) {
-        this.arrayControls.push(
-          new FormGroup({
-            rubroControl: new FormControl('', [Validators.required]),
-          })
-        );
-      }
-    } else {
-      this.alertify.warning(
-        'No existen Facturas en estado por “ConLiquidacionDeducciones”'
-      );
-    }
-  }
-
   // Selected value event
   typeaheadOnSelect(e: TypeaheadMatch): void {
     this.tercero = e.item as Tercero;
@@ -171,6 +153,55 @@ export class CuentaPorPagarComponent implements OnInit {
       );
   }
 
+  crearControlesDeArray() {
+    if (this.listaPlanPago && this.listaPlanPago.length > 0) {
+      if (this.seleccionaTodas) {
+        this.listaPlanPago.forEach((item) => {
+          item.esSeleccionada = this.seleccionaTodas;
+        });
+
+        this.listaPlanPago.forEach((val: FormatoCausacionyLiquidacionPago) => {
+          if (
+            this.liquidacionesSeleccionadas?.indexOf(
+              val.detalleLiquidacionId
+            ) === -1
+          ) {
+            this.liquidacionesSeleccionadas.push(val.detalleLiquidacionId);
+          }
+        });
+      } else {
+        if (
+          this.liquidacionesSeleccionadas &&
+          this.liquidacionesSeleccionadas.length > 0
+        ) {
+          this.listaPlanPago.forEach(
+            (val: FormatoCausacionyLiquidacionPago) => {
+              if (
+                this.liquidacionesSeleccionadas?.indexOf(
+                  val.detalleLiquidacionId
+                ) > -1
+              ) {
+                val.esSeleccionada = true;
+              }
+            }
+          );
+        }
+      }
+
+      for (const detalle of this.listaPlanPago) {
+        this.arrayControls.push(
+          new FormGroup({
+            rubroControl: new FormControl('', [Validators.required]),
+          })
+        );
+      }
+    } else {
+      this.alertify.warning(
+        'No existen Facturas en estado por “ConLiquidacionDeducciones”'
+      );
+    }
+  }
+
   pageChanged(event: any): void {
     this.pagination.currentPage = event.page;
     this.onBuscarFactura();
@@ -182,6 +213,7 @@ export class CuentaPorPagarComponent implements OnInit {
     this.search = '';
     this.terceroId = null;
     this.liquidacionesSeleccionadas = [];
+    this.seleccionaTodas = false;
     this.onBuscarFactura();
   }
 
@@ -194,15 +226,21 @@ export class CuentaPorPagarComponent implements OnInit {
 
   onCheckChange(event) {
     /* Selected */
+    let valor = 0;
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.liquidacionesSeleccionadas?.push(+event.target.value);
+      valor = +event.target.value;
+
+      if (this.liquidacionesSeleccionadas?.indexOf(valor) === -1) {
+        this.liquidacionesSeleccionadas?.push(+valor);
+      }
     } else {
       /* unselected */
+      valor = +event.target.value;
       let index = 0;
       let i = 0;
       this.liquidacionesSeleccionadas.forEach((val: number) => {
-        if (val === event.target.value) {
+        if (val === valor) {
           index = i;
         }
         i++;
@@ -213,10 +251,14 @@ export class CuentaPorPagarComponent implements OnInit {
       }
     }
 
-    if (this.listaPlanPago.length === this.liquidacionesSeleccionadas.length) {
-      this.seleccionaTodas = true;
-    } else {
-      this.seleccionaTodas = false;
+    if (this.pagination) {
+      if (
+        this.pagination.totalItems === this.liquidacionesSeleccionadas.length
+      ) {
+        this.seleccionaTodas = true;
+      } else {
+        this.seleccionaTodas = false;
+      }
     }
   }
 
@@ -265,10 +307,12 @@ export class CuentaPorPagarComponent implements OnInit {
               this.liquidacionesSeleccionadas &&
               this.liquidacionesSeleccionadas.length > 0
             ) {
+              const lista = this.liquidacionesSeleccionadas.filter(
+                (v, i) => this.liquidacionesSeleccionadas.indexOf(v) === i
+              );
+
               this.liquidacionService
-                .DescargarMaestroDetalleLiquidacionParaArchivo(
-                  this.liquidacionesSeleccionadas.join()
-                )
+                .DescargarMaestroDetalleLiquidacionParaArchivo(lista.join())
                 .subscribe(
                   (response) => {
                     switch (response.type) {
@@ -301,9 +345,7 @@ export class CuentaPorPagarComponent implements OnInit {
                   },
                   () => {
                     this.liquidacionService
-                      .DescargarDetalleLiquidacionParaArchivo(
-                        this.liquidacionesSeleccionadas.join()
-                      )
+                      .DescargarDetalleLiquidacionParaArchivo(lista.join())
                       .subscribe(
                         (response) => {
                           switch (response.type) {
@@ -355,10 +397,12 @@ export class CuentaPorPagarComponent implements OnInit {
         this.liquidacionesSeleccionadas &&
         this.liquidacionesSeleccionadas.length > 0
       ) {
+        const lista = this.liquidacionesSeleccionadas.filter(
+          (v, i) => this.liquidacionesSeleccionadas.indexOf(v) === i
+        );
+
         this.liquidacionService
-          .DescargarMaestroDetalleLiquidacionParaArchivo(
-            this.liquidacionesSeleccionadas.join()
-          )
+          .DescargarMaestroDetalleLiquidacionParaArchivo(lista.join())
           .subscribe(
             (response) => {
               switch (response.type) {
@@ -391,9 +435,7 @@ export class CuentaPorPagarComponent implements OnInit {
             },
             () => {
               this.liquidacionService
-                .DescargarDetalleLiquidacionParaArchivo(
-                  this.liquidacionesSeleccionadas.join()
-                )
+                .DescargarDetalleLiquidacionParaArchivo(lista.join())
                 .subscribe(
                   (response) => {
                     switch (response.type) {
@@ -433,5 +475,5 @@ export class CuentaPorPagarComponent implements OnInit {
       }
     }
     //#endregion Seleccionar items
-  }  
+  }
 }

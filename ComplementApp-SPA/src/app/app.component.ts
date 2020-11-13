@@ -82,11 +82,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     localStorage.setItem('Transacciones', JSON.stringify(this.transacciones));
   }
 
-  @HostListener('window:beforeunload', ['$event'])
-  clearLocalStorage(event) {
-    localStorage.clear();
-    this.model = {};
-  }
+  // @HostListener('window:beforeunload', ['$event'])
+  // clearLocalStorage(event) {
+  //   localStorage.clear();
+  //   this.model = {};
+  // }
 
   //#region No Eliminar
 

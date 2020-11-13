@@ -489,15 +489,7 @@ namespace ComplementApp.API.Data
                 if (!string.IsNullOrEmpty(item.Observaciones))
                     cdp.Observaciones = item.Observaciones;
                 if (item.FechaFactura != DateTime.MinValue)
-                    cdp.FechaFactura = item.FechaFactura;
-                if (item.Obligacion > 0)
-                    cdp.Obligacion = item.Obligacion;
-                if (item.OrdenPago > 0)
-                    cdp.OrdenPago = item.OrdenPago;
-                if (item.FechaOrdenPago != DateTime.MinValue)
-                    cdp.FechaOrdenPago = item.FechaOrdenPago;
-                if (item.DiasAlPago > 0)
-                    cdp.DiasAlPago = item.DiasAlPago;
+                    cdp.FechaFactura = item.FechaFactura;                
 
                 //Tercero
                 if (item.TipoIdentificacionTercero > 0 &&

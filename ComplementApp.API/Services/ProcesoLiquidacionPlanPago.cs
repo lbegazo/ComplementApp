@@ -29,7 +29,7 @@ namespace ComplementApp.API.Services
         private readonly IMapper _mapper;
         private readonly IGeneralInterface _generalInterface;
 
-        public ProcesoLiquidacionPlanPago(IPlanPagoRepository planPagoRepository,  IDetalleLiquidacionRepository repo,
+        public ProcesoLiquidacionPlanPago(IPlanPagoRepository planPagoRepository, IDetalleLiquidacionRepository repo,
                                             IListaRepository listaRepository,
                                             IMapper mapper,
                                             IGeneralInterface generalInterface)
@@ -217,7 +217,7 @@ namespace ComplementApp.API.Services
                         deduccion.Base = baseGravableFinal;
                         var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
                                                         + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
-                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(valorRentaCalculado);
+                        deduccion.Valor = ObtenerValorRedondeadoCPS(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
                         {
@@ -711,7 +711,7 @@ namespace ComplementApp.API.Services
                         deduccion.Base = baseGravableFinal;
                         valor = deduccion.Tarifa * baseGravableFinal;
                         deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(deduccion.Valor);
+                        //deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(deduccion.Valor);
 
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
@@ -839,7 +839,6 @@ namespace ComplementApp.API.Services
                         deduccion.Base = baseGravableFinal;
                         valor = deduccion.Tarifa * baseGravableFinal;
                         deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                        deduccion.Valor = ObtenerValorRedondeadoAl1000XEncima(deduccion.Valor);
                     }
                     else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
                     {
@@ -1027,6 +1026,25 @@ namespace ComplementApp.API.Services
                 valorRentaCalculado = valorRentaCalculado + (100 - modValorRentaCalculado);
             }
             return valorRentaCalculado;
+        }
+
+        private decimal ObtenerValorRedondeadoCPS(decimal valor)
+        {
+            decimal resultado = 0;
+            if (valor <= 100)
+            {
+                resultado = valor + (100-valor);
+            }
+            else if (valor > 100 && valor < 10000)
+            {
+                resultado = ObtenerValorRedondeadoAl100XEncima(valor);
+            }
+            else if (valor > 10000)
+            {
+                resultado = ObtenerValorRedondeadoAl1000XEncima(valor);
+            }
+
+            return resultado;
         }
 
         private decimal ObtenerValorRedondeadoAl100XEncima(decimal valor)

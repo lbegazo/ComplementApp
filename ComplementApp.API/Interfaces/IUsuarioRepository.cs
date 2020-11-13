@@ -16,15 +16,5 @@ namespace ComplementApp.API.Interfaces
         Task<bool> UserExists(string username);
 
         Task<bool> EliminarUsuario(int id);
-
-        Task<ICollection<Transaccion>> ObtenerListaTransaccionXUsuario(int usuarioId);
-
-        Task<ICollection<Perfil>> ObtenerPerfilesxUsuario(int usuarioId);
-
-        bool RegistrarPerfilesAUsuario(int usuarioId, ICollection<Perfil> listaPerfiles);
-
-        Task<Transaccion> ObtenerTransaccionXCodigo(string codigoTransaccion);
-
-        bool EliminarPerfilesUsuario(int usuarioId);
     }
 }

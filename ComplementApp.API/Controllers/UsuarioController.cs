@@ -20,15 +20,19 @@ namespace ComplementApp.API.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioRepository _repo;
+        private readonly ITransaccionRepository _transaccionRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly DataContext _dataContext;
-        public UsuarioController(IUnitOfWork unitOfWork, IUsuarioRepository repo, IMapper mapper, DataContext dataContext)
+        public UsuarioController(IUnitOfWork unitOfWork, IUsuarioRepository repo, 
+                                ITransaccionRepository transaccionRepository,
+                                IMapper mapper, DataContext dataContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _repo = repo;
             _dataContext = dataContext;
+            _transaccionRepository = transaccionRepository;
         }
 
         [HttpGet]
@@ -47,7 +51,7 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerUsuario(int id)
         {
             var user = await _repo.ObtenerUsuarioBase(id);
-            var perfiles = await _repo.ObtenerPerfilesxUsuario(id);
+            var perfiles = await _transaccionRepository.ObtenerPerfilesxUsuario(id);
             var userForDetailed = _mapper.Map<UsuarioParaDetalleDto>(user);
 
             userForDetailed.Perfiles = new List<Perfil>();
@@ -63,7 +67,7 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerListaTransaccionXUsuario(int idUsuarioLogueado)
         {
-            var transacciones = await _repo.ObtenerListaTransaccionXUsuario(idUsuarioLogueado);
+            var transacciones = await _transaccionRepository.ObtenerListaTransaccionXUsuario(idUsuarioLogueado);
             return Ok(transacciones);
         }
 
@@ -71,7 +75,7 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerTransaccionXCodigo(string codigoTransaccion)
         {
-            var transacciones = await _repo.ObtenerTransaccionXCodigo(codigoTransaccion);
+            var transacciones = await _transaccionRepository.ObtenerTransaccionXCodigo(codigoTransaccion);
             return Ok(transacciones);
         }
 
@@ -92,7 +96,7 @@ namespace ComplementApp.API.Controllers
                 var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
                 await _dataContext.SaveChangesAsync();
 
-                _repo.RegistrarPerfilesAUsuario(createdUser.UsuarioId, userForRegisterDto.Perfiles);
+                _transaccionRepository.RegistrarPerfilesAUsuario(createdUser.UsuarioId, userForRegisterDto.Perfiles);
                 await _dataContext.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -115,10 +119,10 @@ namespace ComplementApp.API.Controllers
 
             try
             {
-                _repo.EliminarPerfilesUsuario(id);
+                _transaccionRepository.EliminarPerfilesUsuario(id);
                 await _dataContext.SaveChangesAsync();
 
-                _repo.RegistrarPerfilesAUsuario(id, userForUpdateDto.Perfiles);
+                _transaccionRepository.RegistrarPerfilesAUsuario(id, userForUpdateDto.Perfiles);
                 await _dataContext.SaveChangesAsync();
 
                 var userFromRepo = await _repo.ObtenerUsuarioBase(id);
@@ -150,14 +154,14 @@ namespace ComplementApp.API.Controllers
 
             try
             {
-                _repo.EliminarPerfilesUsuario(id);
+                _transaccionRepository.EliminarPerfilesUsuario(id);
                 _dataContext.SaveChanges();
 
                 await _repo.EliminarUsuario(id);
                 await _dataContext.SaveChangesAsync();
-                
+
                 await transaction.CommitAsync();
-                
+
                 return NoContent();
             }
             catch (Exception)
