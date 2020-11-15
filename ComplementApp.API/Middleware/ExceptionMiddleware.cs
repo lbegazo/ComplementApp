@@ -32,9 +32,18 @@ namespace ComplementApp.API.Middleware
                 string mensajeErrorNoManejado = string.Empty;
 
                 if (ex.InnerException != null)
+                {
                     mensajeErrorNoManejado = ex.InnerException.Message.Replace("'", string.Empty);
+
+                    if (ex.InnerException.InnerException != null)
+                    {
+                        mensajeErrorNoManejado = mensajeErrorNoManejado + ex.InnerException.InnerException.Message.Replace("'", string.Empty);
+                    }
+                }
                 else
+                {
                     mensajeErrorNoManejado = ex.Message.Replace("'", string.Empty);
+                }
 
                 _logger.LogError(ex, ex.Message);
                 context.Response.ContentType = "application/json";
