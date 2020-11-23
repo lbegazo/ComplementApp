@@ -1,4 +1,4 @@
-export interface TipoDetalle {
+export class TipoDetalleCDP {
   tipoDetalleCDPId: number;
   nombre: string;
 }

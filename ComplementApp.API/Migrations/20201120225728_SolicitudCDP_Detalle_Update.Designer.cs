@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201120225728_SolicitudCDP_Detalle_Update")]
+    partial class SolicitudCDP_Detalle_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1055,7 +1057,7 @@ namespace ComplementApp.API.Migrations
 
                     b.Property<string>("ActividadProyectoInversion")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<bool>("AplicaContrato")
                         .HasColumnType("bit");
@@ -1064,9 +1066,9 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("EstadoCDP")
-                        .HasColumnType("VARCHAR(150)");
+                        .HasColumnType("VARCHAR(100)");
 
-                    b.Property<int>("EstadoSolicitudCDPId")
+                    b.Property<int>("EstadoSolicitudCDP")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("FechaModificacion")
@@ -1080,22 +1082,22 @@ namespace ComplementApp.API.Migrations
 
                     b.Property<string>("NombreBienServicio")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<int>("NumeroActividad")
                         .HasColumnType("int");
 
                     b.Property<string>("ObjetoBienServicioContratado")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("ProyectoInversion")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<int?>("TipoDetalleCDPId")
                         .HasColumnType("int");
@@ -1113,8 +1115,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("SolicitudCDPId");
-
-                    b.HasIndex("EstadoSolicitudCDPId");
 
                     b.HasIndex("TipoDetalleCDPId");
 
@@ -1571,12 +1571,6 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.SolicitudCDP", b =>
                 {
-                    b.HasOne("ComplementApp.API.Models.Estado", "EstadoSolicitudCDP")
-                        .WithMany()
-                        .HasForeignKey("EstadoSolicitudCDPId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ComplementApp.API.Models.TipoDetalleCDP", "TipoDetalleCDP")
                         .WithMany()
                         .HasForeignKey("TipoDetalleCDPId");

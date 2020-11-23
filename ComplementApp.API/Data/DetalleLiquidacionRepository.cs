@@ -136,7 +136,10 @@ namespace ComplementApp.API.Data
             return detalleLiquidacion;
         }
 
-        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId, List<int> listaEstadoId, bool? procesado, UserParams userParams)
+        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(
+                    int? terceroId,
+                    List<int> listaEstadoId,
+                    bool? procesado, UserParams userParams)
         {
 
             var lista = (from dl in _context.DetalleLiquidacion
@@ -157,10 +160,14 @@ namespace ComplementApp.API.Data
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
                              FechaRadicadoSupervisor = dl.FechaRadicado,
                              ValorTotal = c.ValorFacturado.Value
-                         })
-                        .OrderBy(c => c.FechaRadicadoSupervisor);
+                         });
 
-            return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
+            if (lista != null)
+            {
+                lista.OrderBy(c => c.FechaRadicadoSupervisor);
+            }
+
+            return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionBase(int detalleLiquidacion)

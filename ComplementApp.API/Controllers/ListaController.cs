@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
@@ -79,6 +83,36 @@ namespace ComplementApp.API.Controllers
         {
             var datos = await _repo.ObtenerParametroLiquidacionXTercero(terceroId);
             return Ok(datos);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaUsuarioxFiltro([FromQuery(Name = "nombres")] string nombres)
+        {
+            var datos = await _repo.ObtenerListaUsuarioxFiltro(nombres);
+            return Ok(datos);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaEstadoSolicitudCDP([FromQuery(Name = "tipoDocumento")] string tipoDocumento)
+        {
+            var lista = await _repo.ObtenerListaEstado(tipoDocumento);
+            return Ok(lista);
+
+            /*
+            var lista = new List<ListaValorDTO>();
+            ListaValorDTO valor = null;
+            var values = Enum.GetValues(typeof(EstadoSolicitudCDP));
+
+            foreach (var item in values)
+            {
+                valor = new ListaValorDTO();
+                valor.Nombre = ((EstadoSolicitudCDP)item).ToString();
+                valor.Id = (int)(EstadoSolicitudCDP)item;
+                lista.Add(valor);
+            }
+            */
         }
     }
 }

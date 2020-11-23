@@ -1,0 +1,292 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--FILTROS-->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-1" style="margin: 0px">
+                  <label for="inputNumero" class="col-form-label-md"
+                    >Número</label
+                  >
+                  <input
+                    placeholder="Num. Sol."
+                    type="number"
+                    class="form-control border addPadding right"
+                    style="height: 25px "
+                    maxlength="3"
+                    formControlName="numeroCtrl"
+                    id="inputNumero"
+                    min="1"
+
+                    onkeypress="return event.charCode >= 48"
+                  />
+                </div>
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="selectOperacion" class="col-form-label-md"
+                    >Tipo</label
+                  >
+                  <select
+                    placeholder="Tipo de operación"
+                    formControlName="tOperacionCtrl"
+                    class="form-control withoutPadding"
+                    style="height: 23px"
+                    (change)="onSelectTipoOperacion()"
+                    id="selectOperacion"
+                  >
+                    <option disabled value="">Tipo operación</option>
+                    <option *ngFor="let item of listaTO" [ngValue]="item">
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group col-md-4" style="margin: 0px">
+                  <label for="inputUsuario" class="col-form-label-md"
+                    >Usuario</label
+                  >
+                  <input
+                    [(ngModel)]="search"
+                    typeaheadOptionField="nombreCompleto"
+                    [typeahead]="suggestions$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    placeholder="Nombre del usuario"
+                    formControlName="usuarioCtrl"
+                    class="form-control border addPadding"
+                    style="height: 25px; background-color: white"
+                    id="inputUsuario"
+                  />
+                  <div
+                    class="alert alert-danger"
+                    role="alert"
+                    *ngIf="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
+                </div>
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputFecha" class="col-form-label-md"
+                    >Fecha</label
+                  >
+                  <input
+                    class="form-control border addPadding"
+                    placeholder="Fecha"
+                    formControlName="fechaCtrl"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    id="inputFecha"
+                    style="height: 25px"
+                  />
+                </div>
+                <div class="form-group col-md-1" style="margin: 0px">
+                  <label for="selectEstado" class="col-form-label-md"
+                    >Estado</label
+                  >
+                  <select
+                    placeholder="Estado"
+                    formControlName="estadoCtrl"
+                    class="form-control withoutPadding"
+                    style="height: 23px"
+                    (change)="onSelectEstado()"
+                    id="selectEstado"
+                  >
+                    <option disabled value="">Estado</option>
+                    <option *ngFor="let item of listaEstado" [ngValue]="item">
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        &nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                          style="width: 80px"
+                          [disabled]="solicitudCDPIdSeleccionado > 0"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarFactura()"
+                          style="width: 80px"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 2%"></div>
+                <div style="width: 5%" class="inner center">
+                  <label class="col-form-label-md">Num.</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Tipo</label>
+                </div>
+                <div style="width: 28%" class="inner center">
+                  <label class="col-form-label-md">Nombre Solicitante</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Fecha</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Estado</label>
+                </div>
+                <div style="width: 35%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Objeto del bien o servicio</label
+                  >
+                </div>
+              </div>
+              <div *ngIf="listaPlanPago">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaPlanPago; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div style="width: 2%" class="inner left aplicaBackground">
+                      <input
+                        type="radio"
+                        [value]="item?.solicitudCDPId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                    </div>
+                    <div
+                      style="width: 5%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.solicitudCDPId }}</p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.tipoOperacion.nombre }}</p>
+                    </div>
+                    <div
+                      style="width: 28%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.usuario.nombreCompleto }}</p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.fechaRegistro | date: "dd/MM/yyyy" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.estadoSolicitudCDP.nombre }}
+                      </p>
+                    </div>
+                    <div style="width: 35%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.objetoBienServicioContratado }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onLiquidar()"
+                    [disabled]="solicitudCDPIdSeleccionado === 0"
+                  >
+                    Ver detalle
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="container-fluid mt-2">
+  <div class="row no-gutters center">
+    <div class="col-12" *ngIf="solicitudCDPSeleccionado">
+      <app-formato-cdp
+        [solicitudCDPSeleccionado]="solicitudCDPSeleccionado"
+        (esCancelado)="HabilitarCabecera($event)"        
+      >
+      </app-formato-cdp>
+    </div>
+  </div>
+</div>

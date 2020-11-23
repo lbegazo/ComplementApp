@@ -1,5 +1,15 @@
 namespace ComplementApp.API.Models
 {
+    public enum EstadoPlanPago
+    {
+        PorPagar = 4,
+        PorObligar = 5,
+        ConLiquidacionDeducciones = 6,
+        Obligado = 7,
+        Pagado = 8,
+        Rechazada = 13,
+    }
+
     public enum TipoDocumento
     {
         ApropiacionDecreto = 1,
@@ -11,15 +21,20 @@ namespace ComplementApp.API.Models
         UsoPresupuestal = 7
     }
 
-    public enum EstadoPlanPago
+    public enum PerfilUsuario
     {
-        PorPagar = 4,
-        PorObligar = 5,
-        ConLiquidacionDeducciones = 6,
-        Obligado = 7,
-        Pagado = 8,
-        Rechazada = 9,
+        SupervisorContractual = 1,
+        Administrador = 2,
+        CoordinadorFinanciero = 3,
+        RegistradorPresupuesto = 4,
+        RegistradorContable = 5
+    }
 
+    public enum EstadoSolicitudCDP
+    {
+        Generado = 16,
+        Aprobado = 17,
+        Rechazado = 18
     }
 
     public enum TipoBaseDeducciones
@@ -44,6 +59,14 @@ namespace ComplementApp.API.Models
     {
         Fijo = 0,
         Variable = 1
+    }
+
+    public enum TipoOperacionEnum
+    {
+        ANULACION = 1,
+        REDUCCION,
+        ADICION,
+        SOLICITUD_INICIAL,
     }
 
 }

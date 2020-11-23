@@ -11,19 +11,24 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/Operators';
 import { Usuario } from '../_models/usuario';
 import { UsuarioService } from '../_services/usuario.service';
+import { AuthService } from '../_services/auth.service';
 
 @Injectable()
 export class UsuarioDetalleResolver implements Resolve<Usuario> {
   constructor(
     private userService: UsuarioService,
     private router: Router,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private authService: AuthService
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<Usuario> {
-      return this.userService.ObtenerUsuario(+route.params['id']).pipe(
+    const usuarioId = +this.authService.decodedToken.nameid;
+    return this.userService.ObtenerUsuario(usuarioId).pipe(
       catchError((error) => {
-        this.alertify.error('Ocurrió un problema al cargar el usuario');
+        this.alertify.error(
+          'Ocurrió un problema al cargar el usuario logueado'
+        );
         this.router.navigate(['/usuarios']);
         return of(null);
       })

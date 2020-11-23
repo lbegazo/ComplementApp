@@ -1,4 +1,5 @@
 using System;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +55,8 @@ namespace ComplementApp.API.Data
 
         public DbSet<TipoOperacion> TipoOperacion { get; set; }
 
+        public DbSet<Estado> EstadoSolicitudCDP { get; set; }
+
         public DbSet<Cargo> Cargo { get; set; }
 
         public DbSet<Area> Area { get; set; }
@@ -104,6 +107,10 @@ namespace ComplementApp.API.Data
         public DbSet<ArchivoDetalleLiquidacion> ArchivoDetalleLiquidacion { get; set; }
 
         public DbSet<DetalleArchivoLiquidacion> DetalleArchivoLiquidacion { get; set; }
+
+        public DbSet<SolicitudCDP> SolicitudCDP { get; set; }
+
+        public DbSet<DetalleSolicitudCDP> DetalleSolicitudCDP { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -159,7 +166,6 @@ namespace ComplementApp.API.Data
                 .HasOne(bc => bc.DetalleLiquidacion)
                 .WithMany(c => c.DetalleArchivo)
                 .HasForeignKey(bc => bc.DetalleLiquidacionId);
-
         }
 
     }

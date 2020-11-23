@@ -10,6 +10,7 @@ export interface DetalleCDP {
   planDeCompras: string;
   responsable: string;
   dependencia: string;
+  rubroPresupuestalId: number;
   identificacionRubro: string;
   rubroNombre: string;
   valorAct: number;

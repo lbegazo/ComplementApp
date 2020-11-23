@@ -18,9 +18,14 @@ import {
   NgForm,
 } from '@angular/forms';
 import { ListaService } from 'src/app/_services/lista.service';
-import { TipoDetalle } from 'src/app/_models/tipoDetalle';
 import { CdpService } from 'src/app/_services/cdp.service';
 import { ValidarValorIngresado } from 'src/app/helpers/validarValorIngresado';
+import { SolicitudCDP } from 'src/app/_models/solicitudCDP';
+import { DetalleSolicitudCDP } from 'src/app/_models/detalleSolicitudCDP';
+import { TipoDetalleCDP } from 'src/app/_models/tipoDetalleCDP';
+import { RubroPresupuestal } from 'src/app/_models/rubroPresupuestal';
+import { EstadoSolicitudCDP } from 'src/app/_models/enum';
+import { Estado } from 'src/app/_models/estado';
 
 @Component({
   selector: 'app-cdp-edit',
@@ -44,9 +49,9 @@ export class CdpEditComponent implements OnInit {
   contratacion = 'HANS RONALD NIÑO GARCIA';
   detalleCdp: DetalleCDP[];
 
-  listaTipoDetalle: TipoDetalle[];
+  listaTipoDetalle: TipoDetalleCDP[];
   idTipoDetalle: number;
-  tipoDetalleSelected: TipoDetalle = { tipoDetalleCDPId: 0, nombre: '' };
+  tipoDetalleSeleccionado: TipoDetalleCDP = { tipoDetalleCDPId: 0, nombre: '' };
 
   constructor(
     private alertify: AlertifyService,
@@ -179,7 +184,7 @@ export class CdpEditComponent implements OnInit {
 
   cargarTipoDetalle() {
     this.listaService.ObtenerListaTipoDetalle().subscribe(
-      (lista: TipoDetalle[]) => {
+      (lista: TipoDetalleCDP[]) => {
         this.listaTipoDetalle = lista;
       },
       (error) => {
@@ -190,10 +195,11 @@ export class CdpEditComponent implements OnInit {
 
   onSelectTipoDetalle() {
     if (!this.esSolicitudInicial) {
-      this.tipoDetalleSelected = this.tipoDetalleControl.value as TipoDetalle;
-      this.idTipoDetalle = +this.tipoDetalleSelected.tipoDetalleCDPId;
+      this.tipoDetalleSeleccionado = this.tipoDetalleControl
+        .value as TipoDetalleCDP;
+      this.idTipoDetalle = +this.tipoDetalleSeleccionado.tipoDetalleCDPId;
     } else {
-      this.tipoDetalleSelected = { tipoDetalleCDPId: 0, nombre: '' };
+      this.tipoDetalleSeleccionado = { tipoDetalleCDPId: 0, nombre: '' };
     }
   }
 
@@ -213,17 +219,120 @@ export class CdpEditComponent implements OnInit {
       () => {
         this.cambiosConfirmados = true;
 
-        const arrayControl = this.cdpForm.get('rubrosControles') as FormArray;
-        if (arrayControl) {
-          for (let index = 0; index < arrayControl.length; index++) {
-            const item = arrayControl.at(index);
+        const arrayControles = this.cdpForm.get('rubrosControles') as FormArray;
+        if (arrayControles && arrayControles.length > 0) {
+          for (let index = 0; index < arrayControles.length; index++) {
+            const item = arrayControles.at(index);
             const itemDetalle = this.detalleCdp[index];
             itemDetalle.valorSolicitud = item.value.rubroControl;
           }
         }
-        //this.cdpForm.controls.tipoDetalleControl.disable();
+
+        this.guardarSolicitudCDP();
       }
     );
+  }
+
+  guardarSolicitudCDP() {
+    const solicitudCDP: SolicitudCDP = new SolicitudCDP();
+    const listaDetalleSolicitudCDP: DetalleSolicitudCDP[] = [];
+
+    if (this.cdpForm.valid) {
+      let solicitudCDPId = 0;
+
+      //#region Setear datos
+      solicitudCDP.tipoOperacion = new TipoOperacion();
+      solicitudCDP.tipoOperacion.tipoOperacionId = this.tipoOperacion.tipoOperacionId;
+      solicitudCDP.tipoOperacion.codigo = this.tipoOperacion.codigo;
+      solicitudCDP.tipoOperacion.nombre = this.tipoOperacion.nombre;
+
+      solicitudCDP.estadoSolicitudCDP = new Estado();
+      solicitudCDP.estadoSolicitudCDP.estadoId =
+        EstadoSolicitudCDP.Generado.value;
+      solicitudCDP.estadoSolicitudCDP.nombre = 'test';
+      solicitudCDP.estadoSolicitudCDP.tipoDocumento = 'test';
+      solicitudCDP.estadoSolicitudCDP.descripcion = 'test';
+
+      solicitudCDP.usuarioId = this.usuario.usuarioId;
+      solicitudCDP.numeroActividad = this.itemCdp.idArchivo;
+
+      solicitudCDP.aplicaContrato =
+        this.itemCdp.aplicaContrato === 'SI' ? true : false;
+
+      solicitudCDP.nombreBienServicio = this.itemCdp.planDeCompras;
+      solicitudCDP.proyectoInversion = this.itemCdp.proyecto;
+      solicitudCDP.actividadProyectoInversion = this.itemCdp.actividadBpin;
+
+      if (!this.esSolicitudInicial) {
+        solicitudCDP.cdp = this.cdp.cdp;
+        solicitudCDP.estadoCDP = this.cdp.detalle1;
+        solicitudCDP.objetoBienServicioContratado = this.cdp.detalle4;
+        solicitudCDP.tipoDetalleCDP = new TipoDetalleCDP();
+        solicitudCDP.tipoDetalleCDP = this.tipoDetalleSeleccionado;
+      } else {
+        solicitudCDP.objetoBienServicioContratado = this.cdpForm.get(
+          'objetoBienControl'
+        ).value;
+      }
+
+      solicitudCDP.observaciones = this.cdpForm.get(
+        'observacionesControl'
+      ).value;
+
+      this.detalleCdp.forEach((element) => {
+        const item: DetalleSolicitudCDP = new DetalleSolicitudCDP();
+
+        item.rubroPresupuestal = new RubroPresupuestal();
+        item.rubroPresupuestal.rubroPresupuestalId =
+          element.rubroPresupuestalId;
+        item.rubroPresupuestal.nombre = 'test';
+        item.rubroPresupuestal.identificacion = 'test';
+        item.rubroPresupuestal.padreRubroId = 1;
+        item.saldoActividad = element.saldoAct;
+
+        if (!this.esSolicitudInicial) {
+          item.valorCDP = element.valorCDP;
+          item.saldoCDP = element.saldoCDP;
+        } else {
+          item.valorActividad = element.saldoAct;
+        }
+
+        listaDetalleSolicitudCDP.push(item);
+      });
+
+      const arrayControl = this.cdpForm.get('rubrosControles') as FormArray;
+      if (arrayControl && arrayControl.length > 0) {
+        for (let index = 0; index < arrayControl.length; index++) {
+          const item = arrayControl.at(index);
+          const itemDetalle = listaDetalleSolicitudCDP[index];
+          itemDetalle.valorSolicitud = item.value.rubroControl;
+        }
+      }
+
+      solicitudCDP.detalleSolicitudCDPs = listaDetalleSolicitudCDP;
+
+      //#endregion Setear datos
+
+      this.cdpService.RegistrarSolicitudCDP(solicitudCDP).subscribe(
+        (response: any) => {
+          if (!isNaN(response)) {
+            solicitudCDPId = +response;
+            this.alertify.success(
+              'La Solicitud de CDP se registró correctamente'
+            );
+          } else {
+            this.alertify.error('No se pudo registrar la Solicitud de CDP');
+          }
+        },
+
+        (error) => {
+          this.alertify.error(
+            'Hubó un error al registrar la liquidación ' + error
+          );
+        },
+        () => {}
+      );
+    }
   }
 
   exportarPDF() {

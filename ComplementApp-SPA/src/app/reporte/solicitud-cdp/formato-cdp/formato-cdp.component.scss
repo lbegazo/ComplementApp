@@ -1,0 +1,154 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  table td {
+    padding: 0px;
+  }
+  
+  .borderRight {
+    border-right: 1px solid black;
+  }
+  
+  .borderBotton {
+    border-bottom: 1px solid black;
+  }
+  
+  .borderBottonRight {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+  }
+  
+  .borderTopBottonRight {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+  }
+  
+  .borderTopBotton {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+  }
+  
+  .borderTop {
+    border-top: 1px solid black;
+  }
+  
+  .borderComplete {
+    border: 1px solid black;
+  }
+  
+  .addHeight {
+    height: 20px;
+  }
+  
+  .addHeight30 {
+    height: 30px;
+  }
+  
+  .addHeight50 {
+    height: 50px;
+  }
+  
+  .aplicaBackground {
+    background-color: lightgrey;
+  }
+  
+  .right {
+    text-align: right;
+  }
+  
+  .left {
+    text-align: left;
+  }
+  
+  .addPaddingLeft {
+    padding-left: 5px;
+  }
+  
+  .addPaddingRight {
+    padding-right: 5px;
+  }
+  
+  
+  .addPadding {
+    padding: 15px;
+  }
+  
+  .addPaddingSmall {
+    padding: 5px;
+  }
+  .fontSmaller {
+    font-size: 10px;
+  }
+  
+  .fontVerySmaller {
+    font-size: 9px;
+  }
+  
+  .small {
+    font-size: smaller;
+  }
+  
+  .withoutPadding {
+    padding: 0px;
+  }
+  
+  .stronger{
+    font-weight:bold;
+  }
+  
+  .center {
+    margin: auto;
+    text-align:center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .centerAlign{
+    text-align:center;
+  }
+  
+  .verticalCenter {
+    vertical-align: middle
+  } 
+  
+  #firma {
+    display: flex;
+    justify-content: center; 
+  }
+  
+  .medium {
+    font-size: 13px;
+  }
+  
+  .parent {
+    position: relative;
+  }
+  .child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /*************************************************************/
+  
+  
+  .withoutBorder {
+    border: none;
+  }
+  
+  .withoutBorderBotton {
+    border-bottom: none;
+  }
+  
+  .addBorderSpace {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+  }
+  
+  
+  
+  

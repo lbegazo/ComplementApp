@@ -73,5 +73,20 @@
     "Nombre": "Inactivo",
     "Descripcion": "Inactivo",
     "TipoDocumento": "EstadoGeneral"
+  },
+  {
+    "Nombre": "Generado",
+    "Descripcion": "Generado",
+    "TipoDocumento": "EstadoSolicitudCDP"
+  },
+  {
+    "Nombre": "Aprobado",
+    "Descripcion": "Aprobado",
+    "TipoDocumento": "EstadoSolicitudCDP"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "EstadoSolicitudCDP"
   }
 ]

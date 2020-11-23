@@ -44,6 +44,7 @@ export class UsuarioEditComponent implements OnInit {
     cargoNombre: '',
     fechaCreacion: new Date(),
     fechaUltimoAcceso: new Date(),
+    nombreCompleto: '',
     perfiles: [],
   };
   registerForm = new FormGroup({});

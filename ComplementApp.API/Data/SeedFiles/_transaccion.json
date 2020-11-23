@@ -333,6 +333,15 @@
     "Ruta": "CONSULTAS_LIQUIDACION",
     "CodigoPadreTransaccion": "CONSULTAS"
   },
+  {
+    "Codigo": "CONSULTAS_SOLICITUDCDP",
+    "Nombre": "Consulta de Solicitud de CDP",
+    "Descripcion": "Consulta de Solicitud de CDP",
+    "Icono": "assessment",
+    "Ruta": "CONSULTAS_SOLICITUDCDP",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+
 
 
   {

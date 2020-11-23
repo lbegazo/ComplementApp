@@ -360,7 +360,7 @@ namespace ComplementApp.API.Data
             var items = JsonConvert.DeserializeObject<List<Estado>>(data);
             foreach (var item in items)
             {
-                var estado = obtenerEstado(context, item.Nombre);
+                var estado = obtenerEstado(context, item.Nombre, item.TipoDocumento);
                 if (estado == null)
                 {
                     nuevoEstado = new Estado();
@@ -633,9 +633,10 @@ namespace ComplementApp.API.Data
             return context.Area.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
         }
 
-        private static Estado obtenerEstado(DataContext context, string nombre)
+        private static Estado obtenerEstado(DataContext context, string nombre, string tipoDocumento)
         {
-            return context.Estado.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
+            return context.Estado.Where(x => x.Nombre.ToLower() == nombre.ToLower() 
+                                        && x.TipoDocumento.ToLower() == tipoDocumento).FirstOrDefault();
         }
 
         private static Perfil obtenerPerfil(DataContext context, string nombre)

@@ -5,10 +5,11 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { TipoOperacion } from '../_models/tipoOperacion';
-import { TipoDetalle } from '../_models/tipoDetalle';
+import { TipoDetalleCDP } from '../_models/tipoDetalleCDP';
 import { Perfil } from '../_models/perfil';
 import { ParametroGeneral } from '../_models/parametroGeneral';
 import { ParametroLiquidacionTercero } from '../_models/parametroLiquidacionTercero';
+import { Estado } from '../_models/estado';
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +35,20 @@ export class ListaService {
     );
   }
 
-  ObtenerListaTipoDetalle(): Observable<TipoDetalle[]> {
-    return this.http.get<TipoDetalle[]>(
+  ObtenerListaEstadoSolicitudCDP(tipoDocumento: string): Observable<Estado[]> {
+    let params = new HttpParams();
+    if (tipoDocumento !== '') {
+      params = params.append('tipoDocumento', tipoDocumento);
+    }
+
+    return this.http.get<Estado[]>(
+      this.baseUrl + 'lista/ObtenerListaEstadoSolicitudCDP',
+      { params }
+    );
+  }
+
+  ObtenerListaTipoDetalle(): Observable<TipoDetalleCDP[]> {
+    return this.http.get<TipoDetalleCDP[]>(
       this.baseUrl + 'lista/ObtenerListaTipoDetalleModificacion'
     );
   }

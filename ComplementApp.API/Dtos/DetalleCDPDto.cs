@@ -27,6 +27,8 @@ namespace ComplementApp.API.Dtos
 
         public string Dependencia { get; set; }
 
+        public int RubroPresupuestalId { get; set; }
+
         public string IdentificacionRubro { get; set; }
 
         public string RubroNombre { get; set; }

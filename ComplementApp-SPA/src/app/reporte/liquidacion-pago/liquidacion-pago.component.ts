@@ -151,7 +151,7 @@ export class LiquidacionPagoComponent implements OnInit {
       .ObtenerListaDetalleLiquidacion(
         this.listaEstadoId,
         this.terceroId,
-        0,
+        null,
         this.pagination.currentPage,
         this.pagination.itemsPerPage
       )

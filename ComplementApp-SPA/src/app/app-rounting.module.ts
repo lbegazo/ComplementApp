@@ -20,6 +20,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
 import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
+import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -102,6 +103,16 @@ export const routes: Routes = [
     component: LiquidacionPagoComponent,
     resolve: {
       transaccion: TransaccionResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_SOLICITUDCDP',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: SolicitudCdpComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
     },
   },
   {

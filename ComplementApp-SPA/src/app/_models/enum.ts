@@ -36,6 +36,20 @@ export class TipoPago extends Enum<number> {
   public static readonly Variable = new Enum(1);
 }
 
+export class EstadoSolicitudCDP extends Enum<number> {
+  public static readonly Generado = new Enum(16);
+  public static readonly Aprobado = new Enum(17);
+  public static readonly Rechazado = new Enum(18);
+}
+
+export class PerfilUsuario extends Enum<number> {
+  public static readonly SupervisorContractual = new Enum(1);
+  public static readonly Administrador = new Enum(2);
+  public static readonly CoordinadorFinanciero = new Enum(3);
+  public static readonly RegistradorPresupuesto = new Enum(4);
+  public static readonly RegistradorContable = new Enum(5);
+}
+
 /*
 console.log(PrimaryColor.Red);
 // Output: Enum { value: '#FF0000' }

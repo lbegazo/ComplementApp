@@ -1,28 +1,33 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Interfaces
 {
     public interface IListaRepository
-    {         
+    {
         Task<IEnumerable<Cargo>> ObtenerCargos();
 
         Task<IEnumerable<Area>> ObtenerAreas();
 
         Task<IEnumerable<TipoOperacion>> ObtenerListaTipoOperacion();
 
-         Task<IEnumerable<TipoDetalleCDP>> ObtenerListaTipoDetalleModificacion();
+        Task<IEnumerable<TipoDetalleCDP>> ObtenerListaTipoDetalleModificacion();
 
-         Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion);
+        Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion);
 
-         Task<IEnumerable<Perfil>> ObtenerListaPerfiles();
+        Task<IEnumerable<Perfil>> ObtenerListaPerfiles();
 
-         Task<IEnumerable<ParametroGeneral>> ObtenerParametrosGenerales();
+        Task<IEnumerable<ParametroGeneral>> ObtenerParametrosGenerales();
 
-         Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId);
+        Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId);
 
-         Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente();
+        Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente();
+
+        Task<IEnumerable<UsuarioParaDetalleDto>> ObtenerListaUsuarioxFiltro(string nombres);
+
+        Task<ICollection<Estado>> ObtenerListaEstado(string tipoDocumento);
 
     }
 }

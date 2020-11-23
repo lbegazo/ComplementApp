@@ -1,7 +1,6 @@
 import { Deduccion } from './deduccion';
 
 export interface FormatoCausacionyLiquidacionPago {
-  
   planPagoId: number;
   detalleLiquidacionId: number;
   terceroId: number;

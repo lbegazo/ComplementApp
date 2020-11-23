@@ -55,7 +55,7 @@ import { ItemComponent } from './solicitudCdp/cdp-edit/item/item.component';
 import { TwoDigitDecimaNumberDirective } from './_directives/two-digit-decima-number.directive';
 import { PopupCdpComponent } from './solicitudCdp/popup-cdp/popup-cdp.component';
 import { NumberCommaDirective } from './_directives/number-comma.directive';
-import { registerLocaleData } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import { PreventUnsavedChangesFactura } from './_guards/prevent-unsaved-changes-factura.guard';
 import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-main.component';
 import { FacturaEditComponent } from './facturaCompromiso/factura-edit/factura-edit.component';
@@ -78,6 +78,8 @@ import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.com
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
 import { FormatoLiquidacionComponent } from './reporte/liquidacion-pago/formato-causacion-liquidacion/formato-liquidacion.component';
 import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
+import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
+import { FormatoCdpComponent } from './reporte/solicitud-cdp/formato-cdp/formato-cdp.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -126,6 +128,8 @@ export function tokenGetter() {
     LiquidacionPagoComponent,
     FormatoLiquidacionComponent,
     CuentaPorPagarComponent,
+    SolicitudCdpComponent,
+    FormatoCdpComponent
   ],
   imports: [
     BrowserModule,
@@ -175,6 +179,7 @@ export function tokenGetter() {
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,
     NavService,
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })

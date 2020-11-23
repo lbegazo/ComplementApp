@@ -95,5 +95,4 @@ export class UsuarioService {
       this.usuarioChanged.next(this.usuarios);
     });
   }
-  
 }

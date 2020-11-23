@@ -33,7 +33,7 @@ export class CdpHeaderComponent implements OnInit {
   tipoOperacionSelecionado: TipoOperacion;
   cdp: Cdp;
 
-  //Solicitud Inicial
+  // Solicitud Inicial
   rubroPresupuestalSinCdp: DetalleCDP[];
   rubroPresupuestalSinCdpSeleccionado: DetalleCDP[] = [];
   arrRubroPresupuestalSeleccionado: number[];
@@ -214,7 +214,8 @@ export class CdpHeaderComponent implements OnInit {
   onSelectTipoOperacion() {
     this.tipoOperacionSelecionado = this.tOperacionControl
       .value as TipoOperacion;
-    this.idTipoOperacionSelecionado = +this.tipoOperacionSelecionado.tipoOperacionId;
+    this.idTipoOperacionSelecionado = +this.tipoOperacionSelecionado
+      .tipoOperacionId;
 
     if (this.idTipoOperacionSelecionado === 4) {
       // Solicitud Inicial

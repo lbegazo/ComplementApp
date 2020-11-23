@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201122125910_SolicitudCDP_update")]
+    partial class SolicitudCDP_update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1055,7 +1057,7 @@ namespace ComplementApp.API.Migrations
 
                     b.Property<string>("ActividadProyectoInversion")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<bool>("AplicaContrato")
                         .HasColumnType("bit");
@@ -1064,7 +1066,7 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("EstadoCDP")
-                        .HasColumnType("VARCHAR(150)");
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<int>("EstadoSolicitudCDPId")
                         .HasColumnType("int");
@@ -1080,22 +1082,22 @@ namespace ComplementApp.API.Migrations
 
                     b.Property<string>("NombreBienServicio")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<int>("NumeroActividad")
                         .HasColumnType("int");
 
                     b.Property<string>("ObjetoBienServicioContratado")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("ProyectoInversion")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<int?>("TipoDetalleCDPId")
                         .HasColumnType("int");
