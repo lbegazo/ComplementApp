@@ -32,6 +32,7 @@ export class PopupBuscarFacturaComponent implements OnInit {
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
+    maxSize: 10
   };
   arrayControls = new FormArray([]);
   popupForm = new FormGroup({});

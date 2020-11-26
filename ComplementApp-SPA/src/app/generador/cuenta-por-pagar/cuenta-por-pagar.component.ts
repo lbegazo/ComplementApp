@@ -55,6 +55,7 @@ export class CuentaPorPagarComponent implements OnInit {
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
+    maxSize: 10,
   };
   liquidacionesSeleccionadas: number[] = [];
   seleccionaTodas = false;

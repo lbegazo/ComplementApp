@@ -64,6 +64,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
+    maxSize: 10,
   };
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
 
@@ -306,9 +307,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
                   if (response !== null && this.detallePlanPago) {
                     this.formatoCausacionyLiquidacionPago = response;
                     this.formatoCausacionyLiquidacionPago.cantidadPago = this.detallePlanPago.cantidadPago;
-                  }
-                  else
-                  {
+                  } else {
                     this.alertify.error(
                       'El tercero no tiene parametros de liquidación definidos'
                     );

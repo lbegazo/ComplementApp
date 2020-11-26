@@ -8,6 +8,8 @@ namespace ComplementApp.API.Models
         Obligado = 7,
         Pagado = 8,
         Rechazada = 13,
+
+        ConOrdenPago = 19,
     }
 
     public enum TipoDocumento

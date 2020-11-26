@@ -23,6 +23,7 @@ export class EstadoPlanPago extends Enum<number> {
   public static readonly Obligado = new Enum(7);
   public static readonly Pagado = new Enum(8);
   public static readonly Rechazada = new Enum(13);
+  public static readonly ConOrdenPago = new Enum(19);
 }
 
 export class ModalidadContrato extends Enum<number> {

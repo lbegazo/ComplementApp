@@ -63,6 +63,7 @@ export class LiquidacionPagoComponent implements OnInit {
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
+    maxSize: 10,
   };
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
 
