@@ -1,0 +1,245 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <div class="form-row mt-3">
+                <!--MES-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="selectMes" class="col-form-label-md"
+                    >Mes de radicado</label
+                  >
+                  <select
+                    placeholder="Mes"
+                    formControlName="mesCtrl"
+                    class="form-control withoutPadding"
+                    style="height: 33px"
+                    (change)="onSelectMes()"
+                    id="selectMes"
+                    [(ngModel)]="mesSeleccionado"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('mesCtrl').touched &&
+                        facturaHeaderForm.get('mesCtrl').hasError('required')
+                    }"
+                  >
+                    <option disabled [ngValue]="null">Mes</option>
+                    <option *ngFor="let item of listaMeses" [ngValue]="item">
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('mesCtrl').touched &&
+                      facturaHeaderForm.get('mesCtrl').hasError('required')
+                    "
+                  >
+                    Debe seleccionar el mes
+                  </div>
+                </div>
+                <!--TERCERO-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputNumeroTercero" class="col-form-label-md"
+                    >Número de identificación</label
+                  >
+                  <input
+                    [(ngModel)]="search"
+                    typeaheadOptionField="numeroIdentificacion"
+                    [typeahead]="suggestions$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    placeholder="Ingrese el número tercero"
+                    formControlName="terceroCtrl"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    style="height: 30px"
+                    id="inputNumeroTercero"
+                  />
+                  <div
+                    class="alert alert-danger"
+                    role="alert"
+                    *ngIf="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
+                </div>
+                <div class="form-group col-md-5" style="margin: 0px">
+                  <label for="inputTercero" class="col-form-label-md"
+                    >Nombre del tercero</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control border addPaddingLeft"
+                    style="height: 30px"
+                    maxlength="50"
+                    formControlName="terceroDescripcionCtrl"
+                    id="inputTercero"
+                    value="{{ tercero?.nombre }}"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-3" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        &nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                          style="width: 80px"
+                          [disabled]="!facturaHeaderForm.valid"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarFactura(facturaHeaderForm)"
+                          style="width: 80px"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 5%" class="inner center">
+                  <label class="col-form-label-md">Número</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Fecha Radicado</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Estado</label>
+                </div>
+                <div style="width: 5%" class="inner center">
+                  <label class="col-form-label-md">CRP</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">NIT</label>
+                </div>
+                <div style="width: 30%" class="inner center">
+                  <label class="col-form-label-md">Tercero</label>
+                </div>
+                <div style="width: 15%" class="inner center">
+                  <label class="col-form-label-md">Radicado Prov.</label>
+                </div>
+                <div style="width: 15%" class="inner center">
+                  <label class="col-form-label-md">Radicado Sup.</label>
+                </div>
+              </div>
+              <div *ngIf="listaPlanPago">
+                <div
+                  class="form-row"
+                  *ngFor="let item of listaPlanPago; let i = index"
+                >
+                  <div style="width: 5%" class="inner center aplicaBackground">
+                    <p class="medium">{{ item?.consecutivo }}</p>
+                  </div>
+                  <div style="width: 10%" class="inner center aplicaBackground">
+                    <p class="medium">
+                      {{ item?.fechaRadicadoSupervisor | date: "dd/MM/yyyy" }}
+                    </p>
+                  </div>
+                  <div style="width: 10%" class="inner center aplicaBackground">
+                    <p class="medium">{{ item?.estado }}</p>
+                  </div>
+                  <div style="width: 5%" class="inner center aplicaBackground">
+                    <p class="medium">{{ item?.crp }}</p>
+                  </div>
+                  <div style="width: 10%" class="inner center aplicaBackground">
+                    <p class="medium">{{ item?.nit }}</p>
+                  </div>
+                  <div style="width: 30%" class="inner center aplicaBackground">
+                    <p class="medium">{{ item?.nombreTercero }}</p>
+                  </div>
+                  <div style="width: 15%" class="inner center aplicaBackground">
+                    <p class="medium">
+                      {{ item?.numeroRadicadoProveedor }}
+                    </p>
+                  </div>
+                  <div style="width: 15%" class="inner center aplicaBackground">
+                    <p class="medium">
+                      {{ item?.numeroRadicadoSupervisor }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="exportarExcel()"
+                    [disabled]="listaPlanPago && listaPlanPago.length === 0"
+                  >
+                    Descargar
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>

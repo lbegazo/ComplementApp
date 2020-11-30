@@ -55,6 +55,8 @@ export class UsuarioEditComponent implements OnInit {
   areaSelected = 0;
   cargoSelected = 0;
   arrayRubro: number[] = [];
+  areaSeleccionada: Area;
+  cargoSeleccionado: Cargo;
 
   constructor(
     private listaService: ListaService,
@@ -66,10 +68,10 @@ export class UsuarioEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.createEmptyForm();
+
     //Cargar datos de controles
     this.cargarListas();
-
-    this.createEmptyForm();
 
     this.route.params.subscribe((params: Params) => {
       this.idUsuario = +params['id'];
@@ -138,12 +140,14 @@ export class UsuarioEditComponent implements OnInit {
 
     this.areaSelected = this.user.areaId;
     this.cargoSelected = this.user.cargoId;
+    this.areaSeleccionada = this.areas.filter(
+      (x) => x.areaId === this.areaSelected
+    )[0];
 
-    // this.registerForm.get('username').setValue(this.user.username);
-    // this.registerForm.get('nombres').setValue(this.user.nombres);
-    // this.registerForm.get('apellidos').setValue(this.user.apellidos);
-    // this.registerForm.get('areaControl').setValue(this.user.areaId);
-    // this.registerForm.get('cargoControl').setValue(this.user.cargoId);
+    this.cargoSeleccionado = this.cargos.filter(
+      (x) => x.cargoId === this.cargoSelected
+    )[0];
+
 
     if (this.perfiles) {
       for (const perfil of this.perfiles) {
@@ -201,8 +205,8 @@ export class UsuarioEditComponent implements OnInit {
         this.user.nombres = formValues.nombreCtrl.toUpperCase().trim();
         this.user.apellidos = formValues.apellidoCtrl.toUpperCase().trim();
         this.user.password = formValues.passwordCtrl;
-        this.user.areaId = formValues.areaControl;
-        this.user.cargoId = formValues.cargoControl;
+        this.user.areaId = this.areaSelected;
+        this.user.cargoId = this.cargoSelected;
         this.setearPerfilesAUsuario(formValues);
         this.usuarioService.RegistrarUsuario(this.user).subscribe(
           () => {
@@ -219,8 +223,8 @@ export class UsuarioEditComponent implements OnInit {
         const formValues = Object.assign({}, this.registerForm.value);
         this.user.nombres = formValues.nombreCtrl.toUpperCase().trim();
         this.user.apellidos = formValues.apellidoCtrl.toUpperCase().trim();
-        this.user.areaId = formValues.areaControl;
-        this.user.cargoId = formValues.cargoControl;
+        this.user.areaId = this.areaSelected;
+        this.user.cargoId = this.areaSelected;
         this.setearPerfilesAUsuario(formValues);
 
         this.usuarioService
@@ -240,12 +244,12 @@ export class UsuarioEditComponent implements OnInit {
   }
 
   onCancel() {
-    this.alertify.error('Cancelado');
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onSelectArea() {
-    this.areaSelected = this.areaControl.value;
+    this.areaSeleccionada = this.areaControl.value as Area;
+    this.areaSelected = this.areaSeleccionada.areaId;
   }
 
   get guardarControl() {
@@ -257,7 +261,8 @@ export class UsuarioEditComponent implements OnInit {
   }
 
   onSelectCargo() {
-    this.cargoSelected = this.cargoControl.value;
+    this.cargoSeleccionado = this.cargoControl.value as Cargo;
+    this.cargoSelected = this.cargoSeleccionado.cargoId;
   }
 
   get cargoControl() {

@@ -37,7 +37,8 @@ namespace ComplementApp.API.Controllers
 
         #endregion Dependency Injection
 
-        public CDPController(ICDPRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper, DataContext dataContext, IGeneralInterface generalInterface)
+        public CDPController(ICDPRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper, 
+                            DataContext dataContext, IGeneralInterface generalInterface)
         {
             _usuarioRepo = usuarioRepo;
             _mapper = mapper;

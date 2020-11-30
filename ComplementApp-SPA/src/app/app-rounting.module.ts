@@ -21,6 +21,8 @@ import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.com
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
 import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
 import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
+import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
+import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -40,7 +42,7 @@ export const routes: Routes = [
       {
         path: ':id',
         component: UsuarioDetailComponent,
-        resolve: { usuario: UsuarioDetalleResolver },
+        resolve: { usuario: UsuarioDetalleParametroResolver },
       },
       {
         path: ':id/edit',
@@ -113,6 +115,15 @@ export const routes: Routes = [
     resolve: {
       transaccion: TransaccionResolver,
       usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_RADICADOPAGOMENSUAL',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: RadicadoPagoMensualComponent,
+    resolve: {
+      transaccion: TransaccionResolver
     },
   },
   {

@@ -24,5 +24,9 @@ namespace ComplementApp.API.Interfaces
 
         void ActualizarPlanPago(PlanPago plan);
 
+        Task<ICollection<RadicadoDto>> ObtenerListaRadicado(int mes, int? terceroId, List<int> listaEstadoId);
+
+        Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams);
+
     }
 }

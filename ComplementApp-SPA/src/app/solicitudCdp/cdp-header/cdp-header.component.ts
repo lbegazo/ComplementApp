@@ -24,7 +24,7 @@ import { Subscription, combineLatest } from 'rxjs';
   styleUrls: ['./cdp-header.component.css'],
 })
 export class CdpHeaderComponent implements OnInit {
-  @ViewChild('editForm', { static: true }) editForm: NgForm;
+  //@ViewChild('editForm', { static: true }) editForm: NgForm;
   @ViewChild('cdpChildForm', { static: true }) cdpChildForm: NgForm;
   today: number = Date.now();
   registerForm: FormGroup;
@@ -53,18 +53,19 @@ export class CdpHeaderComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cargarTipoOperacion();
     this.createRegisterForm();
+    this.cargarTipoOperacion();
+    this.registerForm.reset();
   }
 
-  onLimpiarCDP() {
+  onLimpiarCDP(form: FormGroup) {
     this.tipoOperacionSelecionado = null;
     this.idTipoOperacionSelecionado = null;
     this.cdp = null;
     this.rubroPresupuestalSinCdp = [];
     this.rubroPresupuestalSinCdpSeleccionado = [];
     this.habilitarControles();
-    this.editForm.reset();
+    form.reset();
   }
 
   onBuscarCDP() {
@@ -78,7 +79,7 @@ export class CdpHeaderComponent implements OnInit {
 
           if (this.cdpSeleccionado) {
             this.deshabilitarControles();
-            this.editForm.reset();
+            //this.editForm.reset();
           }
         },
         (error) => {
@@ -128,7 +129,7 @@ export class CdpHeaderComponent implements OnInit {
 
           if (this.rubroPresupuestalSinCdpSeleccionado) {
             this.deshabilitarControles();
-            this.editForm.reset();
+            //this.editForm.reset();
           }
 
           // console.log(this.rubroPresupuestalSinCdpSeleccionado);

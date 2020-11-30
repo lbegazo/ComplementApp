@@ -164,6 +164,7 @@
             formControlName="areaControl"
             (change)="onSelectArea()"
             class="form-control list"
+            [(ngModel)]="areaSeleccionada"
             [ngClass]="{
               'is-invalid':
                 registerForm.get('areaControl').touched &&
@@ -171,8 +172,8 @@
             }"
             style="padding: 0px"
           >
-            <option [value]="null" disabled>Selecciona el area</option>
-            <option *ngFor="let prf of areas" [value]="prf.areaId">
+            <option [ngValue]="null" disabled>Selecciona el area</option>
+            <option *ngFor="let prf of areas" [ngValue]="prf">
               {{ prf.nombre }}
             </option>
           </select>
@@ -192,6 +193,7 @@
             formControlName="cargoControl"
             (change)="onSelectCargo()"
             class="form-control list"
+            [(ngModel)]="cargoSeleccionado"
             [ngClass]="{
               'is-invalid':
                 registerForm.get('cargoControl').touched &&
@@ -199,8 +201,8 @@
             }"
             style="padding: 0px"
           >
-            <option [value]="null" disabled>Selecciona el cargo</option>
-            <option *ngFor="let prf of cargos" [value]="prf.cargoId">
+            <option [ngValue]="null" disabled>Selecciona el cargo</option>
+            <option *ngFor="let prf of cargos" [ngValue]="prf">
               {{ prf.nombre }}
             </option>
           </select>

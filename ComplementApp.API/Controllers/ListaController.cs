@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces;
@@ -99,20 +101,25 @@ namespace ComplementApp.API.Controllers
         {
             var lista = await _repo.ObtenerListaEstado(tipoDocumento);
             return Ok(lista);
+        }
 
-            /*
-            var lista = new List<ListaValorDTO>();
-            ListaValorDTO valor = null;
-            var values = Enum.GetValues(typeof(EstadoSolicitudCDP));
+        [Route("[action]")]
+        [HttpGet]
+        public IActionResult ObtenerListaMeses()
+        {
+            var months = Enumerable.Range(1, 12).Select(i => new { Id = i, Nombre = UppercaseFirst(DateTimeFormatInfo.CurrentInfo.GetMonthName(i)) });
+            return Ok(months);
+        }
 
-            foreach (var item in values)
+        static string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
             {
-                valor = new ListaValorDTO();
-                valor.Nombre = ((EstadoSolicitudCDP)item).ToString();
-                valor.Id = (int)(EstadoSolicitudCDP)item;
-                lista.Add(valor);
+                return string.Empty;
             }
-            */
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
         }
     }
 }

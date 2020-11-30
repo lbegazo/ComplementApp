@@ -1,6 +1,4 @@
 <form
-  #editForm="ngForm"
-  id="editForm"
   [formGroup]="registerForm"
   
 >
@@ -30,7 +28,7 @@
                             .hasError('required')
                       }"
                     >
-                      <option disabled value=""
+                      <option disabled [ngValue]="null"
                         >Tipo operación</option
                       >
                       <option *ngFor="let item of listaTO" [ngValue]="item">
@@ -102,7 +100,7 @@
                         <button
                           type="submit"
                           class="btn btn-success"
-                          (click)="onLimpiarCDP()"
+                          (click)="onLimpiarCDP(registerForm)"
                           [disabled]="!habilitaBotonLimpiar"
                           style="width: 100px;"
                         >

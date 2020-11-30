@@ -18,9 +18,9 @@
           id="tablaContenedor"
           style="width: 90%; margin-left: auto; margin-right: auto"
         >
+          <!--FILTROS-->
           <tr>
             <td style="padding: 0px 10px">
-              <!--FILTROS-->
               <div class="form-row mt-3">
                 <div class="form-group col-md-1" style="margin: 0px">
                   <label for="inputNumero" class="col-form-label-md"
@@ -30,12 +30,11 @@
                     placeholder="Num. Sol."
                     type="number"
                     class="form-control border addPadding right"
-                    style="height: 25px "
+                    style="height: 25px"
                     maxlength="3"
                     formControlName="numeroCtrl"
                     id="inputNumero"
                     min="1"
-
                     onkeypress="return event.charCode >= 48"
                   />
                 </div>
@@ -51,13 +50,13 @@
                     (change)="onSelectTipoOperacion()"
                     id="selectOperacion"
                   >
-                    <option disabled value="">Tipo operación</option>
+                    <option disabled  [ngValue]="null">Tipo operación</option>
                     <option *ngFor="let item of listaTO" [ngValue]="item">
                       {{ item.nombre }}
                     </option>
                   </select>
                 </div>
-                <div class="form-group col-md-4" style="margin: 0px">
+                <div class="form-group col-md-3" style="margin: 0px">
                   <label for="inputUsuario" class="col-form-label-md"
                     >Usuario</label
                   >
@@ -106,16 +105,16 @@
                     class="form-control withoutPadding"
                     style="height: 23px"
                     (change)="onSelectEstado()"
-                    id="selectEstado"
+                    id="selectEstado"                    
                   >
-                    <option disabled value="">Estado</option>
+                    <option disabled [ngValue]="null">Estado</option>
                     <option *ngFor="let item of listaEstado" [ngValue]="item">
                       {{ item.nombre }}
                     </option>
                   </select>
                 </div>
 
-                <div class="form-group col-md-2" style="margin: 0px">
+                <div class="form-group col-md-3" style="margin: 0px">
                   <table>
                     <tr style="vertical-align: bottom">
                       <td style="padding-top: 15px">
@@ -132,7 +131,7 @@
                         <button
                           type="submit"
                           class="btn btn-success"
-                          (click)="onLimpiarFactura()"
+                          (click)="onLimpiarFactura(facturaHeaderForm)"
                           style="width: 80px"
                         >
                           Limpiar
@@ -285,7 +284,7 @@
     <div class="col-12" *ngIf="solicitudCDPSeleccionado">
       <app-formato-cdp
         [solicitudCDPSeleccionado]="solicitudCDPSeleccionado"
-        (esCancelado)="HabilitarCabecera($event)"        
+        (esCancelado)="HabilitarCabecera($event)"
       >
       </app-formato-cdp>
     </div>

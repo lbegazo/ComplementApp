@@ -5,6 +5,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  NgForm,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -69,7 +70,7 @@ export class SolicitudCdpComponent implements OnInit {
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
-    maxSize: 10
+    maxSize: 10,
   };
   solicitudCDPSeleccionado: SolicitudCDP;
 
@@ -84,6 +85,8 @@ export class SolicitudCdpComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.createForm();
+
     this.cargarTipoOperacion();
     this.cargarListaEstado();
 
@@ -99,7 +102,6 @@ export class SolicitudCdpComponent implements OnInit {
       }
     });
 
-    this.createForm();
     this.onBuscarFactura();
 
     this.suggestions$ = new Observable((observer: Observer<string>) => {
@@ -127,6 +129,8 @@ export class SolicitudCdpComponent implements OnInit {
         return of([]);
       })
     );
+
+    this.facturaHeaderForm.reset();
   }
 
   createForm() {
@@ -187,8 +191,7 @@ export class SolicitudCdpComponent implements OnInit {
   }
 
   onSelectTipoOperacion() {
-    this.tipoOperacionSelecionado = this.tOperacionControl
-      .value as TipoOperacion;
+    this.tipoOperacionSelecionado = this.tOperacionCtrl.value as TipoOperacion;
     this.idTipoOperacionSelecionado = +this.tipoOperacionSelecionado
       .tipoOperacionId;
   }
@@ -257,7 +260,7 @@ export class SolicitudCdpComponent implements OnInit {
     this.onBuscarFactura();
   }
 
-  onLimpiarFactura() {
+  onLimpiarFactura(form: FormGroup) {
     this.listaPlanPago = [];
     this.solicitudCDPIdSeleccionado = 0;
     this.usuarioSeleccionado = null;
@@ -268,7 +271,7 @@ export class SolicitudCdpComponent implements OnInit {
     this.idEstadoSelecionado = 0;
     this.EstadoSelecionado = null;
     this.tipoOperacionSelecionado = null;
-    this.facturaHeaderForm.reset();
+    form.reset();
 
     this.onBuscarFactura();
   }
@@ -325,7 +328,7 @@ export class SolicitudCdpComponent implements OnInit {
 
   HabilitarCabecera($event) {
     this.mostrarCabecera = true;
-    this.onLimpiarFactura();
+    this.onLimpiarFactura(this.facturaHeaderForm);
   }
 
   private setSupervisorContractual() {
@@ -350,7 +353,7 @@ export class SolicitudCdpComponent implements OnInit {
     return this.facturaHeaderForm.get('fechaCtrl');
   }
 
-  get tOperacionControl() {
+  get tOperacionCtrl() {
     return this.facturaHeaderForm.get('tOperacionCtrl');
   }
 

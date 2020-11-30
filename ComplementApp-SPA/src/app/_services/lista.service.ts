@@ -10,6 +10,7 @@ import { Perfil } from '../_models/perfil';
 import { ParametroGeneral } from '../_models/parametroGeneral';
 import { ParametroLiquidacionTercero } from '../_models/parametroLiquidacionTercero';
 import { Estado } from '../_models/estado';
+import { ValorSeleccion } from '../_dto/valorSeleccion';
 
 @Injectable({
   providedIn: 'root',
@@ -102,4 +103,8 @@ export class ListaService {
   }
 
   //#endregion
+
+  ObtenerListaMeses(): Observable<ValorSeleccion[]> {
+    return this.http.get<ValorSeleccion[]>(this.baseUrl + 'lista/ObtenerListaMeses');
+  }
 }

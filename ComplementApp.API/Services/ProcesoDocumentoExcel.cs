@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using ComplementApp.API.Data;
 using ComplementApp.API.Interfaces;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Services
 {
@@ -38,7 +39,8 @@ namespace ComplementApp.API.Services
             _configuration = configuration;
             _dataContext = dataContext;
         }
-        public  DataTable ObtenerDetalleDeExcel(IFormFile file)
+
+        public DataTable ObtenerDetalleDeExcel(IFormFile file)
         {
             DataTable dtDetalle = new DataTable();
             bool hasHeader = true;
@@ -91,7 +93,7 @@ namespace ComplementApp.API.Services
             return dtDetalle;
         }
 
-        public  DataTable ObtenerCabeceraDeExcel(IFormFile file)
+        public DataTable ObtenerCabeceraDeExcel(IFormFile file)
         {
             DataTable dtCabecera1 = new DataTable();
             bool hasHeader = true;
@@ -145,7 +147,7 @@ namespace ComplementApp.API.Services
             return dtCabecera1;
         }
 
-        public  DataTable ObtenerPlanPagosDeExcel(IFormFile file)
+        public DataTable ObtenerPlanPagosDeExcel(IFormFile file)
         {
             DataTable dtCabecera1 = new DataTable();
             bool hasHeader = true;
@@ -199,7 +201,6 @@ namespace ComplementApp.API.Services
             }
             return dtCabecera1;
         }
-
 
         /// <summary>
         /// Consumir Servicio Rest del Banco de la República
@@ -563,6 +564,6 @@ namespace ComplementApp.API.Services
             return resultado;
         }
 
-
+        
     }
 }

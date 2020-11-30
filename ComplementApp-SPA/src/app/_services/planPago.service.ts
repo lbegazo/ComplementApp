@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of as observableOf } from 'rxjs';
 import { PlanPago } from '../_models/planPago';
 import { DetallePlanPago } from '../_models/detallePlanPago';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
+import { RadicadoDto } from '../_dto/radicadoDto';
 
 @Injectable({
   providedIn: 'root',
@@ -85,5 +86,69 @@ export class PlanPagoService {
   ActualizarPlanPago(factura: PlanPago): Observable<boolean> {
     this.http.put(this.baseUrl, factura).subscribe(() => {});
     return observableOf(true);
+  }
+
+  ObtenerListaRadicadoPaginado(
+    mes: number,
+    listaEstadoId: string,
+    terceroId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<RadicadoDto[]>> {
+    const path = 'ObtenerListaRadicadoPaginado';
+    const paginatedResult: PaginatedResult<RadicadoDto[]> = new PaginatedResult<
+    RadicadoDto[]
+    >();
+
+    let params = new HttpParams();
+    params = params.append('mes', mes.toString());
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<RadicadoDto[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  public DescargarListaRadicado(
+    mes: number,
+    listaEstadoId: string,
+    terceroId?: number
+  ): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${
+          this.baseUrl + 'DescargarListaRadicado'
+        }?mes=${mes}&listaEstadoId=${listaEstadoId}&terceroId=${terceroId}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
   }
 }

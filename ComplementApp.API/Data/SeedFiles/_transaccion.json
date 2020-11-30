@@ -341,6 +341,14 @@
     "Ruta": "CONSULTAS_SOLICITUDCDP",
     "CodigoPadreTransaccion": "CONSULTAS"
   },
+  {
+    "Codigo": "CONSULTAS_RADICADOPAGOMENSUAL",
+    "Nombre": "Consulta/Lista de radicados mensuales",
+    "Descripcion": "Consulta/Lista de radicados mensuales",
+    "Icono": "assessment",
+    "Ruta": "CONSULTAS_RADICADOPAGOMENSUAL",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
 
 
 

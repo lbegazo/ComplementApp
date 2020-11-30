@@ -80,6 +80,8 @@ import { FormatoLiquidacionComponent } from './reporte/liquidacion-pago/formato-
 import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
 import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
 import { FormatoCdpComponent } from './reporte/solicitud-cdp/formato-cdp/formato-cdp.component';
+import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
+import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -129,7 +131,8 @@ export function tokenGetter() {
     FormatoLiquidacionComponent,
     CuentaPorPagarComponent,
     SolicitudCdpComponent,
-    FormatoCdpComponent
+    FormatoCdpComponent,
+    RadicadoPagoMensualComponent,
   ],
   imports: [
     BrowserModule,
@@ -175,6 +178,7 @@ export function tokenGetter() {
     UsuarioDetalleResolver,
     PlanPagoResolver,
     TransaccionResolver,
+    UsuarioDetalleParametroResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,
