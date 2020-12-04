@@ -145,11 +145,12 @@ namespace ComplementApp.API.Data
             return planPago;
         }
 
-        public async Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId)
+        public async Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId)
         {
             var query = (from d in _context.Deduccion
                          join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
                          where (td.TerceroId == terceroId)
+                         where (td.ActividadEconomicaId == actividadEconomicaId || actividadEconomicaId == null)
                          where (d.estado == true)
                          select d);
 

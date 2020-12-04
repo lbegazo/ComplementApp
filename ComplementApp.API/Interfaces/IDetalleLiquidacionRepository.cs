@@ -31,5 +31,7 @@ namespace ComplementApp.API.Interfaces
         bool RegistrarDetalleArchivoLiquidacion(List<DetalleArchivoLiquidacion> listaDetalle);
 
         int ObtenerUltimoConsecutivoArchivoLiquidacion();
+
+        Task<ICollection<ActividadEconomica>> ObtenerListaActividadesEconomicaXTercero(int terceroId);
     }
 }

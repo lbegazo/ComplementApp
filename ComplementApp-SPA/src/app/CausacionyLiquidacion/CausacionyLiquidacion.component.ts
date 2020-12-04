@@ -1,6 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { noop, Observable, Observer, of, Subscription } from 'rxjs';
+import {
+  noop,
+  Observable,
+  Observer,
+  of,
+  Subscription,
+  combineLatest,
+} from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
@@ -25,6 +32,9 @@ import { PaginatedResult, Pagination } from '../_models/pagination';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { Transaccion } from '../_models/transaccion';
 import { DetalleLiquidacionService } from '../_services/detalleLiquidacion.service';
+import { ValorSeleccion } from '../_dto/valorSeleccion';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { PopupDatosAdicionalesComponent } from './popup-datos-adicionales/popup-datos-adicionales.component';
 
 @Component({
   selector: 'app-causacionyliquidacion',
@@ -56,6 +66,10 @@ export class CausacionyLiquidacionComponent implements OnInit {
     tipoIdentificacion: '',
   };
 
+  listaActividadEconomica: ValorSeleccion[];
+  mostrarActividadEconomica = false;
+  mostrarValorIngresado = false;
+
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;
   baseUrl = environment.apiUrl + 'lista/ObtenerListaTercero';
@@ -67,6 +81,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
     maxSize: 10,
   };
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
+  bsModalRef: BsModalRef;
+  actividadEconomicaId = 0;
 
   constructor(
     private http: HttpClient,
@@ -74,7 +90,9 @@ export class CausacionyLiquidacionComponent implements OnInit {
     private route: ActivatedRoute,
     private facturaService: PlanPagoService,
     private liquidacionService: DetalleLiquidacionService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: BsModalService,
+    private changeDetection: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -229,51 +247,126 @@ export class CausacionyLiquidacionComponent implements OnInit {
       )[0];
 
       if (this.planPagoSeleccionado) {
-        this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
-        this.tipoPago = this.planPagoSeleccionado.tipoPago;
+        this.cargarListaActividadEconomicaXTercero();
+      }
+    }
+  }
 
-        if (
-          this.modalidadContrato ===
-            ModalidadContrato.ProveedorConDescuento.value &&
-          this.tipoPago === TipoPago.Variable.value
-        ) {
-          //#region ProveedorConDescuento
-
-          let resultado: string;
-          let valorIngresado = 0;
-
-          resultado = window.prompt(
-            'Debe ingresar el Valor Base Gravable',
-            '0'
-          );
-
-          if (isNaN(+resultado)) {
-            this.alertify.warning('Debe ingresar un valor númerico');
-          } else if (+resultado === 0) {
-            this.alertify.warning('El valor ingresado debe ser mayor a cero');
+  cargarListaActividadEconomicaXTercero() {
+    this.liquidacionService
+      .ObtenerListaActividadesEconomicaXTercero(
+        this.planPagoSeleccionado.terceroId
+      )
+      .subscribe(
+        (lista: ValorSeleccion[]) => {
+          this.listaActividadEconomica = lista;
+        },
+        (error) => {
+          this.alertify.error(error);
+        },
+        () => {
+          // Si la lista de actividades económicas es mayor a 1
+          // entonces no se obliga a escoger actividad económica
+          // o
+          // Modalidad de contrato: ProveedorConDescuento o TipoPago: Variable
+          if (this.esAbrirPopup) {
+            this.abrirPopup();
           } else {
-            valorIngresado = +resultado;
+            this.obtenerDetallePlanPago(0);
+          }
+        }
+      );
+  }
 
-            if (valorIngresado > this.planPagoSeleccionado.valorFacturado) {
+  get esAbrirPopup() {
+    const resultado = false;
+    this.mostrarValorIngresado = false;
+    this.mostrarActividadEconomica = false;
+
+    if (this.planPagoSeleccionado) {
+      this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
+      this.tipoPago = this.planPagoSeleccionado.tipoPago;
+      this.terceroId = this.planPagoSeleccionado.terceroId;
+
+      if (
+        this.modalidadContrato ===
+          ModalidadContrato.ProveedorConDescuento.value &&
+        this.tipoPago === TipoPago.Variable.value
+      ) {
+        this.mostrarValorIngresado = true;
+      }
+
+      if (
+        this.listaActividadEconomica &&
+        this.listaActividadEconomica.length > 1
+      ) {
+        this.mostrarActividadEconomica = true;
+      }
+
+      if (this.mostrarValorIngresado || this.mostrarActividadEconomica) {
+        return true;
+      }
+
+      return resultado;
+    }
+  }
+
+  abrirPopup() {
+    let valor = 0;
+    const initialState = {
+      title: 'Datos adicionales',
+      terId: this.terceroId,
+      mostrarActividad: this.mostrarActividadEconomica,
+      mostrarValor: this.mostrarValorIngresado,
+      valorFacturado: this.planPagoSeleccionado.valorFacturado,
+      listaActividades: this.listaActividadEconomica,
+    };
+
+    this.bsModalRef = this.modalService.show(
+      PopupDatosAdicionalesComponent,
+      Object.assign(
+        {
+          animated: true,
+          keyboard: true,
+          backdrop: true,
+          ignoreBackdropClick: false,
+        },
+        { initialState },
+        { class: 'gray modal-md' }
+      )
+    );
+
+    const combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+      this.changeDetection.markForCheck()
+    );
+
+    this.subscriptions.push(
+      this.modalService.onHidden.subscribe((reason: string) => {
+        if (this.bsModalRef.content != null) {
+          const resultado = this.bsModalRef.content;
+
+          if (this.mostrarActividadEconomica) {
+            this.actividadEconomicaId = +resultado[0];
+          }
+
+          if (this.mostrarValorIngresado) {
+            valor = +resultado[1];
+            console.log(valor);
+            if (isNaN(valor) || valor <= 0) {
               this.alertify.warning(
-                'Debe ingresar un valor menor al valor total a cancelar ' +
-                  this.planPagoSeleccionado.valorFacturado
+                'Debe ingresar un valor para la liquidación'
               );
-            } else {
-              this.obtenerDetallePlanPago(valorIngresado);
+              return;
             }
           }
 
-          //#endregion ProveedorConDescuento
-        } else {
-          //#region ContratoPrestacionServicio
-
-          this.obtenerDetallePlanPago(0);
-
-          //#endregion ContratoPrestacionServicio
+          this.obtenerDetallePlanPago(valor);
         }
-      }
-    }
+
+        this.unsubscribe();
+      })
+    );
+    this.subscriptions.push(combine);
   }
 
   obtenerDetallePlanPago(valorIngresado: number) {
@@ -300,7 +393,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
             this.liquidacionService
               .ObtenerFormatoCausacionyLiquidacionPago(
                 this.planPagoIdSeleccionado,
-                valorIngresado
+                valorIngresado,
+                this.actividadEconomicaId
               )
               .subscribe(
                 (response: FormatoCausacionyLiquidacionPago) => {

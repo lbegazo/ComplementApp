@@ -112,6 +112,9 @@ namespace ComplementApp.API.Data
 
         public DbSet<DetalleSolicitudCDP> DetalleSolicitudCDP { get; set; }
 
+        public DbSet<ActividadEconomica> ActividadEconomica { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -137,17 +140,7 @@ namespace ComplementApp.API.Data
                 .WithMany(c => c.PerfilTransacciones)
                 .HasForeignKey(bc => bc.TransaccionId);
 
-            modelBuilder.Entity<TerceroDeduccion>()
-          .HasKey(bc => new { bc.TerceroId, bc.DeduccionId });
-            modelBuilder.Entity<TerceroDeduccion>()
-                .HasOne(bc => bc.Tercero)
-                .WithMany(b => b.DeduccionesXTercero)
-                .HasForeignKey(bc => bc.TerceroId);
-            modelBuilder.Entity<TerceroDeduccion>()
-                .HasOne(bc => bc.Deduccion)
-                .WithMany(c => c.DeduccionesXTercero)
-                .HasForeignKey(bc => bc.DeduccionId);
-
+              
             modelBuilder.Entity<RubroPresupuestal>()
                 .Property(b => b.PadreRubroId)
                 .HasDefaultValue(0);

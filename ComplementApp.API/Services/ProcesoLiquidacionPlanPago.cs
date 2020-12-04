@@ -41,7 +41,8 @@ namespace ComplementApp.API.Services
             this._generalInterface = generalInterface;
         }
         public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId,
-                                                                                                        decimal valorBaseGravable)
+                                                                                                    decimal valorBaseGravable,
+                                                                                                    int? actividadEconomicaId)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
             try
@@ -53,7 +54,7 @@ namespace ComplementApp.API.Services
 
                 ParametroLiquidacionTercero parametroLiquidacion = await _repoLista.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
 
-                ICollection<Deduccion> listaDeducciones = await _planPagoRepository.ObtenerDeduccionesXTercero(planPagoDto.TerceroId);
+                ICollection<Deduccion> listaDeducciones = await _planPagoRepository.ObtenerDeduccionesXTercero(planPagoDto.TerceroId, actividadEconomicaId);
                 var listaDeduccionesDto = _mapper.Map<ICollection<DeduccionDto>>(listaDeducciones);
 
                 ICollection<CriterioCalculoReteFuente> listaCriterioReteFuente = await _repoLista.ObtenerListaCriterioCalculoReteFuente();
@@ -1033,7 +1034,7 @@ namespace ComplementApp.API.Services
             decimal resultado = 0;
             if (valor <= 100)
             {
-                resultado = valor + (100-valor);
+                resultado = valor + (100 - valor);
             }
             else if (valor > 100 && valor < 10000)
             {

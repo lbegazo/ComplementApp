@@ -164,7 +164,6 @@ export class PopupBuscarFacturaComponent implements OnInit {
   }
 
   onAceptar() {
-    // console.log('Popup ' + this.arrayRubro);
     this.bsModalRef.hide();
     this.bsModalRef.content = this.arrayRubro;
   }

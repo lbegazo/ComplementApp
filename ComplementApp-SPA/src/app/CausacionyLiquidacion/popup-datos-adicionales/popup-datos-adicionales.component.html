@@ -1,0 +1,96 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <form [formGroup]="popupForm">
+            <div class="form-group mt-2" *ngIf="mostrarActividad">
+              <label for="selectActividad">
+                <strong>Actividad Económica</strong></label
+              >
+              <select
+                id="selectActividad"
+                placeholder="Actividad Económica"
+                formControlName="actividadEconomicaCtrl"
+                class="form-control"
+                style="width: 200px"
+                (change)="onSelectActividadEconomica()"
+                [ngClass]="{
+                  'is-invalid':
+                    popupForm.get('actividadEconomicaCtrl').touched &&
+                    popupForm.get('actividadEconomicaCtrl').hasError('required')
+                }"
+              >
+                <option disabled [ngValue]="null">Actividad Económica</option>
+                <option *ngFor="let item of listaActividades" [ngValue]="item">
+                  {{ item.codigo }}
+                </option>
+              </select>
+
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  popupForm.get('actividadEconomicaCtrl').touched &&
+                  popupForm.get('actividadEconomicaCtrl').hasError('required')
+                "
+              >
+                Debe seleccionar la actividad económica
+              </div>
+            </div>
+            <div class="form-group" *ngIf="mostrarValor">
+              <label for="inputValor"
+                ><strong>Valor base gravable renta</strong></label
+              >
+              <input
+                type="text"
+                class="form-control border border-bottom-0 addPadding"
+                style="height: 30px; text-align: right"
+                maxlength="20"
+                appTwoDigitDecimaNumber
+                formControlName="valorCtrl"
+                placeholder="Ingrese valor"
+                id="inputValor"
+                [ngClass]="{
+                  'is-invalid':
+                    popupForm.get('valorCtrl').touched &&
+                    popupForm.get('valorCtrl').hasError('required')
+                }"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  popupForm.get('valorCtrl').touched &&
+                  popupForm.get('valorCtrl').hasError('required')
+                "
+              >
+                Debe ingresar el valor base gravable renta
+              </div>
+            </div>
+          </form>
+
+          <div class="form-group right" style="margin: 0px">
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onAceptar()"
+              [disabled]="!popupForm.valid"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .bordealo {
+    border: 1px solid #ccc;
+  }
+  
+  .addPadding {
+    padding: 10px;
+  } 
+
+  .addPaddingTop {
+    padding-top: 10px;
+    background-color: transparent;
+  } 
+  
+  .withoutPadding {
+    padding: 0px;
+    padding-left: 0px;
+  }
+  
+  .withoutBorder {
+    border: none;
+  }
+  
+  .withoutBorderBotton {
+    border-bottom: none;
+  }
+  
+  .withBorderBotton {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  
+  table td {
+    padding: 0px;
+    vertical-align: top;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  firma {
+    display: flex;
+    justify-content: center; 
+  }
+
+  
+  .right {
+    text-align: right;
+  }
+  
+  .left {
+    text-align: left;
+  }
+
+  .medium {
+    font-size: 14px;
+  }
+
+  
+  

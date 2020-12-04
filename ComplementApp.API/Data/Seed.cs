@@ -40,6 +40,29 @@ namespace ComplementApp.API.Data
             SeedTerceroDeducciones(context);
             SeedParametroLiquidacionTercero(context);
             SeedCriterioCalculoReteFuente(context);
+
+            SeedActividadEconomica(context);
+        }
+
+        private static void SeedActividadEconomica(DataContext context)
+        {
+            ActividadEconomica actividad = null;
+            List<ActividadEconomica> lista = new List<ActividadEconomica>();
+
+            if (!context.ActividadEconomica.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_ActividadEconomica.json");
+                var items = JsonConvert.DeserializeObject<List<ActividadEconomica>>(data);
+                foreach (var item in items)
+                {
+                    actividad = new ActividadEconomica();
+                    actividad.Nombre = item.Nombre;
+                    actividad.Codigo = item.Codigo;
+                    lista.Add(actividad);
+                }
+                context.ActividadEconomica.AddRange(lista);
+                context.SaveChanges();
+            }
         }
 
         private static void SeedCriterioCalculoReteFuente(DataContext context)
@@ -628,6 +651,11 @@ namespace ComplementApp.API.Data
             return context.RubroPresupuestal.Where(x => x.Identificacion == Identificacion).FirstOrDefault();
         }
 
+        private static ActividadEconomica obtenerActividadEconomica(DataContext context, string codigo)
+        {
+            return context.ActividadEconomica.Where(x => x.Codigo == codigo).FirstOrDefault();
+        }
+
         private static Area obtenerArea(DataContext context, string nombre)
         {
             return context.Area.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
@@ -635,7 +663,7 @@ namespace ComplementApp.API.Data
 
         private static Estado obtenerEstado(DataContext context, string nombre, string tipoDocumento)
         {
-            return context.Estado.Where(x => x.Nombre.ToLower() == nombre.ToLower() 
+            return context.Estado.Where(x => x.Nombre.ToLower() == nombre.ToLower()
                                         && x.TipoDocumento.ToLower() == tipoDocumento).FirstOrDefault();
         }
 

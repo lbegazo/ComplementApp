@@ -116,14 +116,15 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago(   [FromQuery(Name = "planPagoId")] int planPagoId, 
-                                                                                    [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable)
+        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago(   [FromQuery(Name = "planPagoId")] int planPagoId,                                                                                    
+                                                                                    [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable,
+                                                                                    [FromQuery(Name = "actividadEconomicaId")] int? actividadEconomicaId)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
             try
             {
 
-                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(planPagoId, valorBaseGravable);
+                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(planPagoId, valorBaseGravable, actividadEconomicaId);
             }
             catch (Exception)
             {
@@ -409,6 +410,14 @@ namespace ComplementApp.API.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)
+        {
+            var lista = await _repo.ObtenerListaActividadesEconomicaXTercero(terceroId);
+            return base.Ok(lista);
         }
 
         #region Funciones Generales

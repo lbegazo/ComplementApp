@@ -1,0 +1,1983 @@
+[
+  {
+    "Codigo": "0111",
+    "Nombre": "Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas"
+  },
+  {
+    "Codigo": "0112",
+    "Nombre": "Cultivo de arroz"
+  },
+  {
+    "Codigo": "0113",
+    "Nombre": "Cultivo de hortalizas, raíces y tubérculos"
+  },
+  {
+    "Codigo": "0114",
+    "Nombre": "Cultivo de tabaco"
+  },
+  {
+    "Codigo": "0115",
+    "Nombre": "Cultivo de plantas textiles"
+  },
+  {
+    "Codigo": "0119",
+    "Nombre": "Otros cultivos transitorios n.c.p."
+  },
+  {
+    "Codigo": "0121",
+    "Nombre": "Cultivo de frutas tropicales y subtropicales"
+  },
+  {
+    "Codigo": "0122",
+    "Nombre": "Cultivo de plátano y banano"
+  },
+  {
+    "Codigo": "0123",
+    "Nombre": "Cultivo de café"
+  },
+  {
+    "Codigo": "0124",
+    "Nombre": "Cultivo de caña de azúcar"
+  },
+  {
+    "Codigo": "0125",
+    "Nombre": "Cultivo de flor de corte"
+  },
+  {
+    "Codigo": "0126",
+    "Nombre": "Cultivo de palma para aceite (palma africana) y otros frutos oleaginosos"
+  },
+  {
+    "Codigo": "0127",
+    "Nombre": "Cultivo de plantas con las que se preparan bebidas"
+  },
+  {
+    "Codigo": "0128",
+    "Nombre": "Cultivo de especias y de plantas aromáticas y medicinales"
+  },
+  {
+    "Codigo": "0129",
+    "Nombre": "Otros cultivos permanentes n.c.p."
+  },
+  {
+    "Codigo": "0130",
+    "Nombre": "Propagación de plantas (Nombrees de los viveros, excepto viveros forestales)"
+  },
+  {
+    "Codigo": "0141",
+    "Nombre": "Cría de ganado bovino y bufalino"
+  },
+  {
+    "Codigo": "0142",
+    "Nombre": "Cría de caballos y otros equinos"
+  },
+  {
+    "Codigo": "0143",
+    "Nombre": "Cría de ovejas y cabras"
+  },
+  {
+    "Codigo": "0144",
+    "Nombre": "Cría de ganado porcino"
+  },
+  {
+    "Codigo": "0145",
+    "Nombre": "Cría de aves de corral"
+  },
+  {
+    "Codigo": "0149",
+    "Nombre": "Cría de otros animales n.c.p."
+  },
+  {
+    "Codigo": "0150",
+    "Nombre": "Explotación mixta (agrícola y pecuaria)"
+  },
+  {
+    "Codigo": "0161",
+    "Nombre": "Nombrees de apoyo a la agricultura"
+  },
+  {
+    "Codigo": "0162",
+    "Nombre": "Nombrees de apoyo a la ganadería"
+  },
+  {
+    "Codigo": "0163",
+    "Nombre": "Nombrees posteriores a la cosecha"
+  },
+  {
+    "Codigo": "0164",
+    "Nombre": "Tratamiento de semillas para propagación"
+  },
+  {
+    "Codigo": "0170",
+    "Nombre": "Caza ordinaria y mediante trampas y Nombrees de servicios conexas"
+  },
+  {
+    "Codigo": "0210",
+    "Nombre": "Silvicultura y otras Nombrees forestales"
+  },
+  {
+    "Codigo": "0220",
+    "Nombre": "Extracción de madera"
+  },
+  {
+    "Codigo": "0230",
+    "Nombre": "Recolección de productos forestales diferentes a la madera"
+  },
+  {
+    "Codigo": "0240",
+    "Nombre": "Servicios de apoyo a la silvicultura"
+  },
+  {
+    "Codigo": "0311",
+    "Nombre": "Pesca marítima"
+  },
+  {
+    "Codigo": "0312",
+    "Nombre": "Pesca de agua dulce"
+  },
+  {
+    "Codigo": "0321",
+    "Nombre": "Acuicultura marítima"
+  },
+  {
+    "Codigo": "0322",
+    "Nombre": "Acuicultura de agua dulce"
+  },
+  {
+    "Codigo": "0510",
+    "Nombre": "Extracción de hulla (carbón de piedra)"
+  },
+  {
+    "Codigo": "0520",
+    "Nombre": "Extracción de carbón lignito"
+  },
+  {
+    "Codigo": "0610",
+    "Nombre": "Extracción de petróleo crudo"
+  },
+  {
+    "Codigo": "0620",
+    "Nombre": "Extracción de gas natural"
+  },
+  {
+    "Codigo": "0710",
+    "Nombre": "Extracción de minerales de hierro"
+  },
+  {
+    "Codigo": "0721",
+    "Nombre": "Extracción de minerales de uranio y de torio"
+  },
+  {
+    "Codigo": "0722",
+    "Nombre": "Extracción de oro y otros metales preciosos"
+  },
+  {
+    "Codigo": "0723",
+    "Nombre": "Extracción de minerales de níquel"
+  },
+  {
+    "Codigo": "0729",
+    "Nombre": "Extracción de otros minerales metalíferos no ferrosos n.c.p."
+  },
+  {
+    "Codigo": "0811",
+    "Nombre": "Extracción de piedra, arena, arcillas comunes, yeso y anhidrita"
+  },
+  {
+    "Codigo": "0812",
+    "Nombre": "Extracción de arcillas de uso industrial, caliza, caolín y bentonitas"
+  },
+  {
+    "Codigo": "0820",
+    "Nombre": "Extracción de esmeraldas, piedras preciosas y semipreciosas"
+  },
+  {
+    "Codigo": "0891",
+    "Nombre": "Extracción de minerales para la fabricación de abonos y productos químicos"
+  },
+  {
+    "Codigo": "0892",
+    "Nombre": "Extracción de halita (sal)"
+  },
+  {
+    "Codigo": "0899",
+    "Nombre": "Extracción de otros minerales no metálicos n.c.p."
+  },
+  {
+    "Codigo": "0910",
+    "Nombre": "Nombrees de apoyo para la extracción de petróleo y de gas natural"
+  },
+  {
+    "Codigo": "0990",
+    "Nombre": "Nombrees de apoyo para otras Nombrees de explotación de minas y canteras"
+  },
+  {
+    "Codigo": "1011",
+    "Nombre": "Procesamiento y conservación de carne y productos cárnicos"
+  },
+  {
+    "Codigo": "1012",
+    "Nombre": "Procesamiento y conservación de pescados, crustáceos y moluscos"
+  },
+  {
+    "Codigo": "1020",
+    "Nombre": "Procesamiento y conservación de frutas, legumbres, hortalizas y tubérculos"
+  },
+  {
+    "Codigo": "1030",
+    "Nombre": "Elaboración de aceites y grasas de origen vegetal y animal"
+  },
+  {
+    "Codigo": "1040",
+    "Nombre": "Elaboración de productos lácteos"
+  },
+  {
+    "Codigo": "1051",
+    "Nombre": "Elaboración de productos de molinería"
+  },
+  {
+    "Codigo": "1052",
+    "Nombre": "Elaboración de almidones y productos derivados del almidón"
+  },
+  {
+    "Codigo": "1061",
+    "Nombre": "Trilla de café"
+  },
+  {
+    "Codigo": "1062",
+    "Nombre": "Descafeinado, tostión y molienda del café"
+  },
+  {
+    "Codigo": "1063",
+    "Nombre": "Otros derivados del café"
+  },
+  {
+    "Codigo": "1071",
+    "Nombre": "Elaboración y refinación de azúcar"
+  },
+  {
+    "Codigo": "1072",
+    "Nombre": "Elaboración de panela"
+  },
+  {
+    "Codigo": "1081",
+    "Nombre": "Elaboración de productos de panadería"
+  },
+  {
+    "Codigo": "1082",
+    "Nombre": "Elaboración de cacao, chocolate y productos de confitería"
+  },
+  {
+    "Codigo": "1083",
+    "Nombre": "Elaboración de macarrones, fideos, alcuzcuz y productos farináceos similares"
+  },
+  {
+    "Codigo": "1084",
+    "Nombre": "Elaboración de comidas y platos preparados"
+  },
+  {
+    "Codigo": "1089",
+    "Nombre": "Elaboración de otros productos alimenticios n.c.p."
+  },
+  {
+    "Codigo": "1090",
+    "Nombre": "Elaboración de alimentos preparados para animales"
+  },
+  {
+    "Codigo": "1101",
+    "Nombre": "Destilación, rectificación y mezcla de bebidas alcohólicas"
+  },
+  {
+    "Codigo": "1102",
+    "Nombre": "Elaboración de bebidas fermentadas no destiladas"
+  },
+  {
+    "Codigo": "1103",
+    "Nombre": "Producción de malta, elaboración de cervezas y otras bebidas malteadas"
+  },
+  {
+    "Codigo": "1104",
+    "Nombre": "Elaboración de bebidas no alcohólicas, producción de aguas minerales y de otras aguas embotelladas"
+  },
+  {
+    "Codigo": "1200",
+    "Nombre": "Elaboración de productos de tabaco"
+  },
+  {
+    "Codigo": "1311",
+    "Nombre": "Preparación e hilatura de fibras textiles"
+  },
+  {
+    "Codigo": "1312",
+    "Nombre": "Tejeduría de productos textiles"
+  },
+  {
+    "Codigo": "1313",
+    "Nombre": "Acabado de productos textiles"
+  },
+  {
+    "Codigo": "1391",
+    "Nombre": "Fabricación de tejidos de punto y ganchillo"
+  },
+  {
+    "Codigo": "1392",
+    "Nombre": "Confección de artículos con materiales textiles, excepto prendas de vestir"
+  },
+  {
+    "Codigo": "1393",
+    "Nombre": "Fabricación de tapetes y alfombras para pisos"
+  },
+  {
+    "Codigo": "1394",
+    "Nombre": "Fabricación de cuerdas, cordeles, cables, bramantes y redes"
+  },
+  {
+    "Codigo": "1399",
+    "Nombre": "Fabricación de otros artículos textiles n.c.p."
+  },
+  {
+    "Codigo": "1410",
+    "Nombre": "Confección de prendas de vestir, excepto prendas de piel"
+  },
+  {
+    "Codigo": "1420",
+    "Nombre": "Fabricación de artículos de piel"
+  },
+  {
+    "Codigo": "1430",
+    "Nombre": "Fabricación de artículos de punto y ganchillo"
+  },
+  {
+    "Codigo": "1511",
+    "Nombre": "Curtido y recurtido de cueros; recurtido y teñido de pieles"
+  },
+  {
+    "Codigo": "1512",
+    "Nombre": "Fabricación de artículos de viaje, bolsos de mano y artículos similares elaborados en cuero, y fabricación de artículos de talabartería y guarnicionería"
+  },
+  {
+    "Codigo": "1513",
+    "Nombre": "Fabricación de artículos de viaje, bolsos de mano y artículos similares; artículos de talabartería y guarnicionería elaborados en otros materiales"
+  },
+  {
+    "Codigo": "1521",
+    "Nombre": "Fabricación de calzado de cuero y piel, con cualquier tipo de suela"
+  },
+  {
+    "Codigo": "1522",
+    "Nombre": "Fabricación de otros tipos de calzado, excepto calzado de cuero y piel"
+  },
+  {
+    "Codigo": "1523",
+    "Nombre": "Fabricación de partes del calzado"
+  },
+  {
+    "Codigo": "1610",
+    "Nombre": "Aserrado, acepillado e impregnación de la madera"
+  },
+  {
+    "Codigo": "1620",
+    "Nombre": "Fabricación de hojas de madera para enchapado; fabricación de tableros contrachapados, tableros laminados, tableros de partículas y otros tableros y paneles"
+  },
+  {
+    "Codigo": "1630",
+    "Nombre": "Fabricación de partes y piezas de madera, de carpintería y ebanistería para la construcción"
+  },
+  {
+    "Codigo": "1640",
+    "Nombre": "Fabricación de recipientes de madera"
+  },
+  {
+    "Codigo": "1690",
+    "Nombre": "Fabricación de otros productos de madera; fabricación de artículos de corcho, cestería y espartería"
+  },
+  {
+    "Codigo": "1701",
+    "Nombre": "   Fabricación de pulpas (pastas) celulósicas; papel y cartón"
+  },
+  {
+    "Codigo": "1702",
+    "Nombre": "Fabricación de papel y cartón ondulado (corrugado); fabricación de envases, empaques y de embalajes de papel y cartón."
+  },
+  {
+    "Codigo": "1709",
+    "Nombre": "Fabricación de otros artículos de papel y cartón"
+  },
+  {
+    "Codigo": "1811",
+    "Nombre": "  Nombrees de impresión"
+  },
+  {
+    "Codigo": "1812",
+    "Nombre": "Nombrees de servicios relacionados con la impresión"
+  },
+  {
+    "Codigo": "1820",
+    "Nombre": "Producción de copias a partir de grabaciones originales"
+  },
+  {
+    "Codigo": "1910",
+    "Nombre": "Fabricación de productos de hornos de coque"
+  },
+  {
+    "Codigo": "1921",
+    "Nombre": "Fabricación de productos de la refinación del petróleo"
+  },
+  {
+    "Codigo": "1922",
+    "Nombre": "Nombre de mezcla de combustibles"
+  },
+  {
+    "Codigo": "2011",
+    "Nombre": "Fabricación de sustancias y productos químicos básicos"
+  },
+  {
+    "Codigo": "2012",
+    "Nombre": "Fabricación de abonos y compuestos inorgánicos nitrogenados"
+  },
+  {
+    "Codigo": "2013",
+    "Nombre": "Fabricación de plásticos en formas primarias"
+  },
+  {
+    "Codigo": "2014",
+    "Nombre": "Fabricación de caucho sintético en formas primarias"
+  },
+  {
+    "Codigo": "2021",
+    "Nombre": "Fabricación de plaguicidas y otros productos químicos de uso agropecuario"
+  },
+  {
+    "Codigo": "2022",
+    "Nombre": "Fabricación de pinturas, barnices y revestimientos similares, tintas para impresión y masillas"
+  },
+  {
+    "Codigo": "2023",
+    "Nombre": "Fabricación de jabones y detergentes, preparados para limpiar y pulir; perfumes y preparados de tocador"
+  },
+  {
+    "Codigo": "2029",
+    "Nombre": "Fabricación de otros productos químicos n.c.p."
+  },
+  {
+    "Codigo": "2030",
+    "Nombre": "Fabricación de fibras sintéticas y artificiales"
+  },
+  {
+    "Codigo": "2100",
+    "Nombre": "Fabricación de productos farmacéuticos, sustancias químicas medicinales y productos botánicos de uso farmacéutico"
+  },
+  {
+    "Codigo": "2211",
+    "Nombre": "Fabricación de llantas y neumáticos de caucho"
+  },
+  {
+    "Codigo": "2212",
+    "Nombre": "Reencauche de llantas usadas"
+  },
+  {
+    "Codigo": "2219",
+    "Nombre": "Fabricación de formas básicas de caucho y otros productos de caucho n.c.p."
+  },
+  {
+    "Codigo": "2221",
+    "Nombre": "Fabricación de formas básicas de plástico"
+  },
+  {
+    "Codigo": "2229",
+    "Nombre": "Fabricación de artículos de plástico n.c.p."
+  },
+  {
+    "Codigo": "2310",
+    "Nombre": "Fabricación de vidrio y productos de vidrio"
+  },
+  {
+    "Codigo": "2391",
+    "Nombre": "Fabricación de productos refractarios"
+  },
+  {
+    "Codigo": "2392",
+    "Nombre": "Fabricación de materiales de arcilla para la construcción"
+  },
+  {
+    "Codigo": "2393",
+    "Nombre": "Fabricación de otros productos de cerámica y porcelana"
+  },
+  {
+    "Codigo": "2394",
+    "Nombre": "Fabricación de cemento, cal y yeso"
+  },
+  {
+    "Codigo": "2395",
+    "Nombre": "Fabricación de artículos de hormigón, cemento y yeso"
+  },
+  {
+    "Codigo": "2396",
+    "Nombre": "Corte, tallado y acabado de la piedra"
+  },
+  {
+    "Codigo": "2399",
+    "Nombre": "Fabricación de otros productos minerales no metálicos n.c.p."
+  },
+  {
+    "Codigo": "2410",
+    "Nombre": "Industrias básicas de hierro y de acero"
+  },
+  {
+    "Codigo": "2421",
+    "Nombre": "Industrias básicas de metales preciosos"
+  },
+  {
+    "Codigo": "2429",
+    "Nombre": "Industrias básicas de otros metales no ferrosos"
+  },
+  {
+    "Codigo": "2431",
+    "Nombre": "Fundición de hierro y de acero"
+  },
+  {
+    "Codigo": "2432",
+    "Nombre": "Fundición de metales no ferrosos"
+  },
+  {
+    "Codigo": "2511",
+    "Nombre": "Fabricación de productos metálicos para uso estructural"
+  },
+  {
+    "Codigo": "2512",
+    "Nombre": "Fabricación de tanques, depósitos y recipientes de metal, excepto los utilizados para el envase o transporte de mercancías"
+  },
+  {
+    "Codigo": "2513",
+    "Nombre": "Fabricación de generadores de vapor, excepto calderas de agua caliente para calefacción central"
+  },
+  {
+    "Codigo": "2520",
+    "Nombre": "Fabricación de armas y municiones"
+  },
+  {
+    "Codigo": "2591",
+    "Nombre": "Forja, prensado, estampado y laminado de metal; pulvimetalurgia"
+  },
+  {
+    "Codigo": "2592",
+    "Nombre": "Tratamiento y revestimiento de metales; mecanizado"
+  },
+  {
+    "Codigo": "2593",
+    "Nombre": "Fabricación de artículos de cuchillería, herramientas de mano y artículos de ferretería"
+  },
+  {
+    "Codigo": "2599",
+    "Nombre": "Fabricación de otros productos elaborados de metal n.c.p."
+  },
+  {
+    "Codigo": "2610",
+    "Nombre": "Fabricación de componentes y tableros electrónicos"
+  },
+  {
+    "Codigo": "2620",
+    "Nombre": "Fabricación de computadoras y de equipo periférico"
+  },
+  {
+    "Codigo": "2630",
+    "Nombre": "Fabricación de equipos de comunicación"
+  },
+  {
+    "Codigo": "2640",
+    "Nombre": "Fabricación de aparatos electrónicos de consumo"
+  },
+  {
+    "Codigo": "2651",
+    "Nombre": "Fabricación de equipo de medición, prueba, navegación y control"
+  },
+  {
+    "Codigo": "2652",
+    "Nombre": "Fabricación de relojes"
+  },
+  {
+    "Codigo": "2660",
+    "Nombre": "Fabricación de equipo de irradiación y equipo electrónico de uso médico y terapéutico"
+  },
+  {
+    "Codigo": "2670",
+    "Nombre": "Fabricación de instrumentos ópticos y equipo fotográfico"
+  },
+  {
+    "Codigo": "2680",
+    "Nombre": "Fabricación de medios magnéticos y ópticos para almacenamiento de datos"
+  },
+  {
+    "Codigo": "2711",
+    "Nombre": "Fabricación de motores, generadores y transformadores eléctricos"
+  },
+  {
+    "Codigo": "2712",
+    "Nombre": "Fabricación de aparatos de distribución y control de la energía eléctrica"
+  },
+  {
+    "Codigo": "2720",
+    "Nombre": "Fabricación de pilas, baterías y acumuladores eléctricos"
+  },
+  {
+    "Codigo": "2731",
+    "Nombre": "Fabricación de hilos y cables eléctricos y de fibra óptica"
+  },
+  {
+    "Codigo": "2732",
+    "Nombre": "Fabricación de dispositivos de cableado"
+  },
+  {
+    "Codigo": "2740",
+    "Nombre": "Fabricación de equipos eléctricos de iluminación"
+  },
+  {
+    "Codigo": "2750",
+    "Nombre": "Fabricación de aparatos de uso doméstico"
+  },
+  {
+    "Codigo": "2790",
+    "Nombre": "Fabricación de otros tipos de equipo eléctrico n.c.p."
+  },
+  {
+    "Codigo": "2811",
+    "Nombre": "Fabricación de motores, turbinas, y partes para motores de combustión interna"
+  },
+  {
+    "Codigo": "2812",
+    "Nombre": "Fabricación de equipos de potencia hidráulica y neumática"
+  },
+  {
+    "Codigo": "2813",
+    "Nombre": "Fabricación de otras bombas, compresores, grifos y válvulas"
+  },
+  {
+    "Codigo": "2814",
+    "Nombre": "Fabricación de cojinetes, engranajes, trenes de engranajes y piezas de transmisión"
+  },
+  {
+    "Codigo": "2815",
+    "Nombre": "Fabricación de hornos, hogares y quemadores industriales"
+  },
+  {
+    "Codigo": "2816",
+    "Nombre": "Fabricación de equipo de elevación y manipulación"
+  },
+  {
+    "Codigo": "2817",
+    "Nombre": "Fabricación de maquinaria y equipo de oficina (excepto computadoras y equipo periférico)"
+  },
+  {
+    "Codigo": "2818",
+    "Nombre": "Fabricación de herramientas manuales con motor"
+  },
+  {
+    "Codigo": "2819",
+    "Nombre": "Fabricación de otros tipos de maquinaria y equipo de uso general n.c.p."
+  },
+  {
+    "Codigo": "2821",
+    "Nombre": "Fabricación de maquinaria agropecuaria y forestal"
+  },
+  {
+    "Codigo": "2822",
+    "Nombre": "Fabricación de máquinas formadoras de metal y de máquinas herramienta"
+  },
+  {
+    "Codigo": "2823",
+    "Nombre": "Fabricación de maquinaria para la metalurgia"
+  },
+  {
+    "Codigo": "2824",
+    "Nombre": "Fabricación de maquinaria para explotación de minas y canteras y para obras de construcción"
+  },
+  {
+    "Codigo": "2825",
+    "Nombre": "Fabricación de maquinaria para la elaboración de alimentos, bebidas y tabaco"
+  },
+  {
+    "Codigo": "2826",
+    "Nombre": "Fabricación de maquinaria para la elaboración de productos textiles, prendas de vestir y cueros"
+  },
+  {
+    "Codigo": "2829",
+    "Nombre": "Fabricación de otros tipos de maquinaria y equipo de uso especial n.c.p."
+  },
+  {
+    "Codigo": "2910",
+    "Nombre": "Fabricación de vehículos automotores y sus motores"
+  },
+  {
+    "Codigo": "2920",
+    "Nombre": "Fabricación de carrocerías para vehículos automotores; fabricación de remolques y semirremolques"
+  },
+  {
+    "Codigo": "2930",
+    "Nombre": "Fabricación de partes, piezas (autopartes) y accesorios (lujos) para vehículos automotores"
+  },
+  {
+    "Codigo": "3011",
+    "Nombre": "Construcción de barcos y de estructuras flotantes"
+  },
+  {
+    "Codigo": "3012",
+    "Nombre": "Construcción de embarcaciones de recreo y deporte"
+  },
+  {
+    "Codigo": "3020",
+    "Nombre": "Fabricación de locomotoras y de material rodante para ferrocarriles"
+  },
+  {
+    "Codigo": "3030",
+    "Nombre": "Fabricación de aeronaves, naves espaciales y de maquinaria conexa"
+  },
+  {
+    "Codigo": "3040",
+    "Nombre": "Fabricación de vehículos militares de combate"
+  },
+  {
+    "Codigo": "3091",
+    "Nombre": "Fabricación de motocicletas"
+  },
+  {
+    "Codigo": "3092",
+    "Nombre": "Fabricación de bicicletas y de sillas de ruedas para personas con discapacidad"
+  },
+  {
+    "Codigo": "3099",
+    "Nombre": "Fabricación de otros tipos de equipo de transporte n.c.p."
+  },
+  {
+    "Codigo": "3110",
+    "Nombre": "Fabricación de muebles"
+  },
+  {
+    "Codigo": "3120",
+    "Nombre": "Fabricación de colchones y somieres"
+  },
+  {
+    "Codigo": "3210",
+    "Nombre": "Fabricación de joyas, bisutería y artículos conexos"
+  },
+  {
+    "Codigo": "3220",
+    "Nombre": "Fabricación de instrumentos musicales"
+  },
+  {
+    "Codigo": "3230",
+    "Nombre": "Fabricación de artículos y equipo para la práctica del deporte"
+  },
+  {
+    "Codigo": "3240",
+    "Nombre": "Fabricación de juegos, juguetes y rompecabezas"
+  },
+  {
+    "Codigo": "3250",
+    "Nombre": "Fabricación de instrumentos, aparatos y materiales médicos y odontológicos (incluido mobiliario)"
+  },
+  {
+    "Codigo": "3290",
+    "Nombre": "Otras industrias manufactureras n.c.p."
+  },
+  {
+    "Codigo": "3311",
+    "Nombre": "Mantenimiento y reparación especializado de productos elaborados en metal"
+  },
+  {
+    "Codigo": "3312",
+    "Nombre": "Mantenimiento y reparación especializado de maquinaria y equipo"
+  },
+  {
+    "Codigo": "3313",
+    "Nombre": "Mantenimiento y reparación especializado de equipo electrónico y óptico"
+  },
+  {
+    "Codigo": "3314",
+    "Nombre": "Mantenimiento y reparación especializado de equipo eléctrico"
+  },
+  {
+    "Codigo": "3315",
+    "Nombre": "Mantenimiento y reparación especializado de equipo de transporte, excepto los vehículos automotores, motocicletas y bicicletas"
+  },
+  {
+    "Codigo": "3319",
+    "Nombre": "Mantenimiento y reparación de otros tipos de equipos y sus componentes n.c.p."
+  },
+  {
+    "Codigo": "3320",
+    "Nombre": "Instalación especializada de maquinaria y equipo industrial"
+  },
+  {
+    "Codigo": "3511",
+    "Nombre": "Generación de energía eléctrica"
+  },
+  {
+    "Codigo": "3512",
+    "Nombre": "Transmisión de energía eléctrica"
+  },
+  {
+    "Codigo": "3513",
+    "Nombre": "Distribución de energía eléctrica"
+  },
+  {
+    "Codigo": "3514",
+    "Nombre": "Comercialización de energía eléctrica"
+  },
+  {
+    "Codigo": "3520",
+    "Nombre": "Producción de gas; distribución de combustibles gaseosos por tuberías"
+  },
+  {
+    "Codigo": "3530",
+    "Nombre": "Suministro de vapor y aire acondicionado"
+  },
+  {
+    "Codigo": "3600",
+    "Nombre": "Captación, tratamiento y distribución de agua"
+  },
+  {
+    "Codigo": "3700",
+    "Nombre": "Evacuación y tratamiento de aguas residuales"
+  },
+  {
+    "Codigo": "3811",
+    "Nombre": "Recolección de desechos no peligrosos"
+  },
+  {
+    "Codigo": "3812",
+    "Nombre": "Recolección de desechos peligrosos"
+  },
+  {
+    "Codigo": "3821",
+    "Nombre": "Tratamiento y disposición de desechos no peligrosos"
+  },
+  {
+    "Codigo": "3822",
+    "Nombre": "Tratamiento y disposición de desechos peligrosos"
+  },
+  {
+    "Codigo": "3830",
+    "Nombre": "Recuperación de materiales"
+  },
+  {
+    "Codigo": "3900",
+    "Nombre": "Nombrees de saneamiento ambiental y otros servicios de gestión de desechos"
+  },
+  {
+    "Codigo": "4111",
+    "Nombre": "Construcción de edificios residenciales"
+  },
+  {
+    "Codigo": "4112",
+    "Nombre": "Construcción de edificios no residenciales"
+  },
+  {
+    "Codigo": "4210",
+    "Nombre": "Construcción de carreteras y vías de ferrocarril"
+  },
+  {
+    "Codigo": "4220",
+    "Nombre": "Construcción de proyectos de servicio público"
+  },
+  {
+    "Codigo": "4290",
+    "Nombre": "Construcción de otras obras de ingeniería civil"
+  },
+  {
+    "Codigo": "4311",
+    "Nombre": "Demolición"
+  },
+  {
+    "Codigo": "4312",
+    "Nombre": "Preparación del terreno"
+  },
+  {
+    "Codigo": "4321",
+    "Nombre": "Instalaciones eléctricas"
+  },
+  {
+    "Codigo": "4322",
+    "Nombre": "Instalaciones de fontanería, calefacción y aire acondicionado"
+  },
+  {
+    "Codigo": "4329",
+    "Nombre": "Otras instalaciones especializadas"
+  },
+  {
+    "Codigo": "4330",
+    "Nombre": "Terminación y acabado de edificios y obras de ingeniería civil"
+  },
+  {
+    "Codigo": "4390",
+    "Nombre": "Otras Nombrees especializadas para la construcción de edificios y obras de ingeniería civil"
+  },
+  {
+    "Codigo": "4511",
+    "Nombre": "Comercio de vehículos automotores nuevos"
+  },
+  {
+    "Codigo": "4512",
+    "Nombre": "Comercio de vehículos automotores usados"
+  },
+  {
+    "Codigo": "4520",
+    "Nombre": "Mantenimiento y reparación de vehículos automotores"
+  },
+  {
+    "Codigo": "4530",
+    "Nombre": "Comercio de partes, piezas (autopartes) y accesorios (lujos) para vehículos automotores"
+  },
+  {
+    "Codigo": "4541",
+    "Nombre": "Comercio de motocicletas y de sus partes, piezas y accesorios"
+  },
+  {
+    "Codigo": "4542",
+    "Nombre": "Mantenimiento y reparación de motocicletas y de sus partes y piezas"
+  },
+  {
+    "Codigo": "4610",
+    "Nombre": "Comercio al por mayor a cambio de una retribución o por contrata"
+  },
+  {
+    "Codigo": "4620",
+    "Nombre": "Comercio al por mayor de materias primas agropecuarias; animales vivos"
+  },
+  {
+    "Codigo": "4631",
+    "Nombre": "Comercio al por mayor de productos alimenticios"
+  },
+  {
+    "Codigo": "4632",
+    "Nombre": "Comercio al por mayor de bebidas y tabaco"
+  },
+  {
+    "Codigo": "4641",
+    "Nombre": "Comercio al por mayor de productos textiles, productos confeccionados para uso doméstico"
+  },
+  {
+    "Codigo": "4642",
+    "Nombre": "Comercio al por mayor de prendas de vestir"
+  },
+  {
+    "Codigo": "4643",
+    "Nombre": "Comercio al por mayor de calzado"
+  },
+  {
+    "Codigo": "4644",
+    "Nombre": "Comercio al por mayor de aparatos y equipo de uso doméstico"
+  },
+  {
+    "Codigo": "4645",
+    "Nombre": "Comercio al por mayor de productos farmacéuticos, medicinales, cosméticos y de tocador"
+  },
+  {
+    "Codigo": "4649",
+    "Nombre": "Comercio al por mayor de otros utensilios domésticos n.c.p."
+  },
+  {
+    "Codigo": "4651",
+    "Nombre": "Comercio al por mayor de computadores, equipo periférico y programas de informática"
+  },
+  {
+    "Codigo": "4652",
+    "Nombre": "Comercio al por mayor de equipo, partes y piezas electrónicos y de telecomunicaciones"
+  },
+  {
+    "Codigo": "4653",
+    "Nombre": "Comercio al por mayor de maquinaria y equipo agropecuarios"
+  },
+  {
+    "Codigo": "4659",
+    "Nombre": "Comercio al por mayor de otros tipos de maquinaria y equipo n.c.p."
+  },
+  {
+    "Codigo": "4661",
+    "Nombre": "Comercio al por mayor de combustibles sólidos, líquidos, gaseosos y productos conexos"
+  },
+  {
+    "Codigo": "4662",
+    "Nombre": "Comercio al por mayor de metales y productos metalíferos"
+  },
+  {
+    "Codigo": "4663",
+    "Nombre": "Comercio al por mayor de materiales de construcción, artículos de ferretería, pinturas, productos de vidrio, equipo y materiales de fontanería y calefacción"
+  },
+  {
+    "Codigo": "4664",
+    "Nombre": "Comercio al por mayor de productos químicos básicos, cauchos y plásticos en formas primarias y productos químicos de uso agropecuario"
+  },
+  {
+    "Codigo": "4665",
+    "Nombre": "Comercio al por mayor de desperdicios, desechos y chatarra"
+  },
+  {
+    "Codigo": "4669",
+    "Nombre": "Comercio al por mayor de otros productos n.c.p."
+  },
+  {
+    "Codigo": "4690",
+    "Nombre": "Comercio al por mayor no especializado"
+  },
+  {
+    "Codigo": "4711",
+    "Nombre": "Comercio al por menor en establecimientos no especializados con surtido compuesto principalmente por alimentos, bebidas o tabaco"
+  },
+  {
+    "Codigo": "4719",
+    "Nombre": "Comercio al por menor en establecimientos no especializados, con surtido compuesto principalmente por productos diferentes de alimentos (víveres en general), bebidas",
+    "undefined": "y tabaco"
+  },
+  {
+    "Codigo": "4721",
+    "Nombre": "Comercio al por menor de productos agrícolas para el consumo en establecimientos especializados"
+  },
+  {
+    "Codigo": "4722",
+    "Nombre": "Comercio al por menor de leche, productos lácteos y huevos, en establecimientos especializados"
+  },
+  {
+    "Codigo": "4723",
+    "Nombre": "Comercio al por menor de carnes (incluye aves de corral), productos cárnicos, pescados y productos de mar, en establecimientos especializados"
+  },
+  {
+    "Codigo": "4724",
+    "Nombre": "Comercio al por menor de bebidas y productos del tabaco, en establecimientos especializados"
+  },
+  {
+    "Codigo": "4729",
+    "Nombre": "Comercio al por menor de otros productos alimenticios n.c.p., en establecimientos especializados"
+  },
+  {
+    "Codigo": "4731",
+    "Nombre": "Comercio al por menor de combustible para automotores"
+  },
+  {
+    "Codigo": "4732",
+    "Nombre": "Comercio al por menor de lubricantes (aceites, grasas), aditivos y productos de limpieza para vehículos automotores"
+  },
+  {
+    "Codigo": "4741",
+    "Nombre": "Comercio al por menor de computadores, equipos periféricos, programas de informática y equipos de telecomunicaciones en establecimientos especializados"
+  },
+  {
+    "Codigo": "4742",
+    "Nombre": "Comercio al por menor de equipos y aparatos de sonido y de video, en establecimientos especializados"
+  },
+  {
+    "Codigo": "4751",
+    "Nombre": "Comercio al por menor de productos textiles en establecimientos especializados"
+  },
+  {
+    "Codigo": "4752",
+    "Nombre": "Comercio al por menor de artículos de ferretería, pinturas y productos de vidrio en establecimientos especializados"
+  },
+  {
+    "Codigo": "4753",
+    "Nombre": "Comercio al por menor de tapices, alfombras y cubrimientos para paredes y pisos en establecimientos especializados"
+  },
+  {
+    "Codigo": "4754",
+    "Nombre": "Comercio al por menor de electrodomésticos y gasodomésticos de uso doméstico, muebles y equipos de iluminación"
+  },
+  {
+    "Codigo": "4755",
+    "Nombre": "Comercio al por menor de artículos y utensilios de uso doméstico"
+  },
+  {
+    "Codigo": "4759",
+    "Nombre": "Comercio al por menor de otros artículos domésticos en establecimientos especializados"
+  },
+  {
+    "Codigo": "4761",
+    "Nombre": "Comercio al por menor de libros, periódicos, materiales y artículos de papelería y escritorio, en establecimientos especializados"
+  },
+  {
+    "Codigo": "4762",
+    "Nombre": "Comercio al por menor de artículos deportivos, en establecimientos especializados"
+  },
+  {
+    "Codigo": "4769",
+    "Nombre": "Comercio al por menor de otros artículos culturales y de entretenimiento n.c.p. en establecimientos especializados"
+  },
+  {
+    "Codigo": "4771",
+    "Nombre": "Comercio al por menor de prendas de vestir y sus accesorios (incluye artículos de piel) en establecimientos especializados"
+  },
+  {
+    "Codigo": "4772",
+    "Nombre": "Comercio al por menor de todo tipo de calzado y artículos de cuero y sucedáneos del cuero en establecimientos especializados."
+  },
+  {
+    "Codigo": "4773",
+    "Nombre": "Comercio al por menor de productos farmacéuticos y medicinales, cosméticos y artículos de tocador en establecimientos especializados"
+  },
+  {
+    "Codigo": "4774",
+    "Nombre": "Comercio al por menor de otros productos nuevos en establecimientos especializados"
+  },
+  {
+    "Codigo": "4775",
+    "Nombre": "Comercio al por menor de artículos de segunda mano"
+  },
+  {
+    "Codigo": "4781",
+    "Nombre": "Comercio al por menor de alimentos, bebidas y tabaco, en puestos de venta móviles"
+  },
+  {
+    "Codigo": "4782",
+    "Nombre": "Comercio al por menor de productos textiles, prendas de vestir y calzado, en puestos de venta móviles"
+  },
+  {
+    "Codigo": "4789",
+    "Nombre": "Comercio al por menor de otros productos en puestos de venta móviles"
+  },
+  {
+    "Codigo": "4791",
+    "Nombre": "Comercio al por menor realizado a través de Internet"
+  },
+  {
+    "Codigo": "4792",
+    "Nombre": "Comercio al por menor realizado a través de casas de venta o por correo"
+  },
+  {
+    "Codigo": "4799",
+    "Nombre": "Otros tipos de comercio al por menor no realizado en establecimientos, puestos de venta o mercados."
+  },
+  {
+    "Codigo": "4911",
+    "Nombre": "Transporte férreo de pasajeros"
+  },
+  {
+    "Codigo": "4912",
+    "Nombre": "Transporte férreo de carga"
+  },
+  {
+    "Codigo": "4921",
+    "Nombre": "Transporte de pasajeros"
+  },
+  {
+    "Codigo": "4922",
+    "Nombre": "Transporte mixto"
+  },
+  {
+    "Codigo": "4923",
+    "Nombre": "Transporte de carga por carretera"
+  },
+  {
+    "Codigo": "4930",
+    "Nombre": "Transporte por tuberías"
+  },
+  {
+    "Codigo": "5011",
+    "Nombre": "Transporte de pasajeros marítimo y de cabotaje"
+  },
+  {
+    "Codigo": "5012",
+    "Nombre": "Transporte de carga marítimo y de cabotaje"
+  },
+  {
+    "Codigo": "5021",
+    "Nombre": "Transporte fluvial de pasajeros"
+  },
+  {
+    "Codigo": "5022",
+    "Nombre": "Transporte fluvial de carga"
+  },
+  {
+    "Codigo": "5111",
+    "Nombre": "Transporte aéreo nacional de pasajeros"
+  },
+  {
+    "Codigo": "5112",
+    "Nombre": "Transporte aéreo internacional de pasajeros"
+  },
+  {
+    "Codigo": "5121",
+    "Nombre": "Transporte aéreo nacional de carga"
+  },
+  {
+    "Codigo": "5122",
+    "Nombre": "Transporte aéreo internacional de carga"
+  },
+  {
+    "Codigo": "5210",
+    "Nombre": "Almacenamiento y depósito"
+  },
+  {
+    "Codigo": "5221",
+    "Nombre": "Nombrees de estaciones, vías y servicios complementarios para el transporte terrestre"
+  },
+  {
+    "Codigo": "5222",
+    "Nombre": "Nombrees de puertos y servicios complementarios para el transporte acuático"
+  },
+  {
+    "Codigo": "5223",
+    "Nombre": "Nombrees de aeropuertos, servicios de navegación aérea y demás Nombrees conexas al transporte aéreo"
+  },
+  {
+    "Codigo": "5224",
+    "Nombre": "Manipulación de carga"
+  },
+  {
+    "Codigo": "5229",
+    "Nombre": "Otras Nombrees complementarias al transporte"
+  },
+  {
+    "Codigo": "5310",
+    "Nombre": "Nombrees postales nacionales"
+  },
+  {
+    "Codigo": "5320",
+    "Nombre": "Nombrees de mensajería"
+  },
+  {
+    "Codigo": "5511",
+    "Nombre": "Alojamiento en hoteles"
+  },
+  {
+    "Codigo": "5512",
+    "Nombre": "Alojamiento en apartahoteles"
+  },
+  {
+    "Codigo": "5513",
+    "Nombre": "Alojamiento en centros vacacionales"
+  },
+  {
+    "Codigo": "5514",
+    "Nombre": "Alojamiento rural"
+  },
+  {
+    "Codigo": "5519",
+    "Nombre": "Otros tipos de alojamientos para visitantes"
+  },
+  {
+    "Codigo": "5520",
+    "Nombre": "Nombrees de zonas de camping y parques para vehículos recreacionales"
+  },
+  {
+    "Codigo": "5530",
+    "Nombre": "Servicio por horas"
+  },
+  {
+    "Codigo": "5590",
+    "Nombre": "Otros tipos de alojamiento n.c.p."
+  },
+  {
+    "Codigo": "5611",
+    "Nombre": "Expendio a la mesa de comidas preparadas"
+  },
+  {
+    "Codigo": "5612",
+    "Nombre": "Expendio por autoservicio de comidas preparadas"
+  },
+  {
+    "Codigo": "5613",
+    "Nombre": "Expendio de comidas preparadas en cafeterías"
+  },
+  {
+    "Codigo": "5619",
+    "Nombre": "Otros tipos de expendio de comidas preparadas n.c.p."
+  },
+  {
+    "Codigo": "5621",
+    "Nombre": "Catering para eventos"
+  },
+  {
+    "Codigo": "5629",
+    "Nombre": "Nombrees de otros servicios de comidas"
+  },
+  {
+    "Codigo": "5630",
+    "Nombre": "Expendio de bebidas alcohólicas para el consumo dentro del establecimiento"
+  },
+  {
+    "Codigo": "5811",
+    "Nombre": "Edición de libros"
+  },
+  {
+    "Codigo": "5812",
+    "Nombre": "Edición de directorios y listas de correo"
+  },
+  {
+    "Codigo": "5813",
+    "Nombre": "Edición de periódicos, revistas y otras publicaciones periódicas"
+  },
+  {
+    "Codigo": "5819",
+    "Nombre": "Otros trabajos de edición"
+  },
+  {
+    "Codigo": "5820",
+    "Nombre": "Edición de programas de informática (software)"
+  },
+  {
+    "Codigo": "5911",
+    "Nombre": "Nombrees de producción de películas cinematográficas, videos, programas, anuncios y comerciales de televisión"
+  },
+  {
+    "Codigo": "5912",
+    "Nombre": "Nombrees de posproducción de películas cinematográficas, videos, programas, anuncios y comerciales de televisión"
+  },
+  {
+    "Codigo": "5913",
+    "Nombre": "Nombrees de distribución de películas cinematográficas, videos, programas, anuncios y comerciales de televisión"
+  },
+  {
+    "Codigo": "5914",
+    "Nombre": "Nombrees de exhibición de películas cinematográficas y videos"
+  },
+  {
+    "Codigo": "5920",
+    "Nombre": "Nombrees de grabación de sonido y edición de música"
+  },
+  {
+    "Codigo": "6010",
+    "Nombre": "Nombrees de programación y transmisión en el servicio de radiodifusión sonora"
+  },
+  {
+    "Codigo": "6020",
+    "Nombre": "Nombrees de programación y transmisión de televisión"
+  },
+  {
+    "Codigo": "6110",
+    "Nombre": "Nombrees de telecomunicaciones alámbricas"
+  },
+  {
+    "Codigo": "6120",
+    "Nombre": "Nombrees de telecomunicaciones inalámbricas"
+  },
+  {
+    "Codigo": "6130",
+    "Nombre": "Nombrees de telecomunicación satelital"
+  },
+  {
+    "Codigo": "6190",
+    "Nombre": "Otras Nombrees de telecomunicaciones"
+  },
+  {
+    "Codigo": "6201",
+    "Nombre": "Nombrees de desarrollo de sistemas informáticos (planificación, análisis, diseño, programación, pruebas)"
+  },
+  {
+    "Codigo": "6202",
+    "Nombre": "Nombrees de consultoría informática y Nombrees de administración de instalaciones informáticas"
+  },
+  {
+    "Codigo": "6209",
+    "Nombre": "Otras Nombrees de tecnologías de información y Nombrees de servicios informáticos"
+  },
+  {
+    "Codigo": "6311",
+    "Nombre": "Procesamiento de datos, alojamiento (hosting) y Nombrees relacionadas"
+  },
+  {
+    "Codigo": "6312",
+    "Nombre": "Portales web"
+  },
+  {
+    "Codigo": "6391",
+    "Nombre": "Nombrees de agencias de noticias"
+  },
+  {
+    "Codigo": "6399",
+    "Nombre": "Otras Nombrees de servicio de información n.c.p."
+  },
+  {
+    "Codigo": "6411",
+    "Nombre": "Banco Central"
+  },
+  {
+    "Codigo": "6412",
+    "Nombre": "Bancos comerciales"
+  },
+  {
+    "Codigo": "6421",
+    "Nombre": "Nombrees de las corporaciones financieras"
+  },
+  {
+    "Codigo": "6422",
+    "Nombre": "Nombrees de las compañías de financiamiento"
+  },
+  {
+    "Codigo": "6423",
+    "Nombre": "Banca de segundo piso"
+  },
+  {
+    "Codigo": "6424",
+    "Nombre": "Nombrees de las cooperativas financieras"
+  },
+  {
+    "Codigo": "6431",
+    "Nombre": "Fideicomisos, fondos y entidades financieras similares"
+  },
+  {
+    "Codigo": "6432",
+    "Nombre": "Fondos de cesantías"
+  },
+  {
+    "Codigo": "6491",
+    "Nombre": "Leasing financiero (arrendamiento financiero)"
+  },
+  {
+    "Codigo": "6492",
+    "Nombre": "Nombrees financieras de fondos de empleados y otras formas asociativas del sector solidario"
+  },
+  {
+    "Codigo": "6493",
+    "Nombre": "Nombrees de compra de cartera o factoring"
+  },
+  {
+    "Codigo": "6494",
+    "Nombre": "Otras Nombrees de distribución de fondos"
+  },
+  {
+    "Codigo": "6495",
+    "Nombre": "Instituciones especiales oficiales"
+  },
+  {
+    "Codigo": "6499",
+    "Nombre": "Otras Nombrees de servicio financiero, excepto las de seguros y pensiones n.c.p."
+  },
+  {
+    "Codigo": "6511",
+    "Nombre": "Seguros generales"
+  },
+  {
+    "Codigo": "6512",
+    "Nombre": "Seguros de vida"
+  },
+  {
+    "Codigo": "6513",
+    "Nombre": "Reaseguros"
+  },
+  {
+    "Codigo": "6514",
+    "Nombre": "Capitalización"
+  },
+  {
+    "Codigo": "6521",
+    "Nombre": "Servicios de seguros sociales de salud"
+  },
+  {
+    "Codigo": "6522",
+    "Nombre": "Servicios de seguros sociales de riesgos profesionales"
+  },
+  {
+    "Codigo": "6531",
+    "Nombre": "Régimen de prima media con prestación definida (RPM)"
+  },
+  {
+    "Codigo": "6532",
+    "Nombre": "Régimen de ahorro individual (RAI)"
+  },
+  {
+    "Codigo": "6611",
+    "Nombre": "Administración de mercados financieros"
+  },
+  {
+    "Codigo": "6612",
+    "Nombre": "Corretaje de valores y de contratos de productos básicos"
+  },
+  {
+    "Codigo": "6613",
+    "Nombre": "Otras Nombrees relacionadas con el mercado de valores"
+  },
+  {
+    "Codigo": "6614",
+    "Nombre": "Nombrees de las casas de cambio"
+  },
+  {
+    "Codigo": "6615",
+    "Nombre": "Nombrees de los profesionales de compra y venta de divisas"
+  },
+  {
+    "Codigo": "6619",
+    "Nombre": "Otras Nombrees auxiliares de las Nombrees de servicios financieros n.c.p."
+  },
+  {
+    "Codigo": "6621",
+    "Nombre": "Nombrees de agentes y corredores de seguros"
+  },
+  {
+    "Codigo": "6629",
+    "Nombre": "Evaluación de riesgos y daños, y otras Nombrees de servicios auxiliares"
+  },
+  {
+    "Codigo": "6630",
+    "Nombre": "Nombrees de administración de fondos"
+  },
+  {
+    "Codigo": "6810",
+    "Nombre": "Nombrees inmobiliarias realizadas con bienes propios o arrendados"
+  },
+  {
+    "Codigo": "6820",
+    "Nombre": "Nombrees inmobiliarias realizadas a cambio de una retribución o por contrata"
+  },
+  {
+    "Codigo": "6910",
+    "Nombre": "Nombrees jurídicas"
+  },
+  {
+    "Codigo": "6920",
+    "Nombre": "Nombrees de contabilidad, teneduría de libros, auditoría financiera y asesoría tributaria"
+  },
+  {
+    "Codigo": "7010",
+    "Nombre": "Nombrees de administración empresarial"
+  },
+  {
+    "Codigo": "7020",
+    "Nombre": "Nombrees de consultaría de gestión"
+  },
+  {
+    "Codigo": "7110",
+    "Nombre": "Nombrees de arquitectura e ingeniería y otras Nombrees conexas de consultoría técnica"
+  },
+  {
+    "Codigo": "7120",
+    "Nombre": "Ensayos y análisis técnicos"
+  },
+  {
+    "Codigo": "7210",
+    "Nombre": "Investigaciones y desarrollo experimental en el campo de las ciencias naturales y la ingeniería"
+  },
+  {
+    "Codigo": "7220",
+    "Nombre": "Investigaciones y desarrollo experimental en el campo de las ciencias sociales y las humanidades"
+  },
+  {
+    "Codigo": "7310",
+    "Nombre": "Publicidad"
+  },
+  {
+    "Codigo": "7320",
+    "Nombre": "Estudios de mercado y realización de encuestas de opinión pública"
+  },
+  {
+    "Codigo": "7410",
+    "Nombre": "Nombrees especializadas de diseño"
+  },
+  {
+    "Codigo": "7420",
+    "Nombre": "Nombrees de fotografía"
+  },
+  {
+    "Codigo": "7490",
+    "Nombre": "Otras Nombrees profesionales, científicas y técnicas n.c.p."
+  },
+  {
+    "Codigo": "7500",
+    "Nombre": "Nombrees veterinarias"
+  },
+  {
+    "Codigo": "7710",
+    "Nombre": "Alquiler y arrendamiento de vehículos automotores"
+  },
+  {
+    "Codigo": "7721",
+    "Nombre": "Alquiler y arrendamiento de equipo recreativo y deportivo"
+  },
+  {
+    "Codigo": "7722",
+    "Nombre": "Alquiler de videos y discos"
+  },
+  {
+    "Codigo": "7729",
+    "Nombre": "Alquiler y arrendamiento de otros efectos personales y enseres domésticos n.c.p."
+  },
+  {
+    "Codigo": "7730",
+    "Nombre": "Alquiler y arrendamiento de otros tipos de maquinaria, equipo y bienes tangibles n.c.p."
+  },
+  {
+    "Codigo": "7740",
+    "Nombre": "Arrendamiento de propiedad intelectual y productos similares, excepto obras protegidas por derechos de autor"
+  },
+  {
+    "Codigo": "7810",
+    "Nombre": "Nombrees de agencias de empleo"
+  },
+  {
+    "Codigo": "7820",
+    "Nombre": "Nombrees de agencias de empleo temporal"
+  },
+  {
+    "Codigo": "7830",
+    "Nombre": "Otras Nombrees de suministro de recurso humano"
+  },
+  {
+    "Codigo": "7911",
+    "Nombre": "Nombrees de las agencias de viaje"
+  },
+  {
+    "Codigo": "7912",
+    "Nombre": "Nombrees de operadores turísticos"
+  },
+  {
+    "Codigo": "7990",
+    "Nombre": "Otros servicios de reserva y Nombrees relacionadas"
+  },
+  {
+    "Codigo": "8010",
+    "Nombre": "Nombrees de seguridad privada"
+  },
+  {
+    "Codigo": "8020",
+    "Nombre": "Nombrees de servicios de sistemas de seguridad"
+  },
+  {
+    "Codigo": "8030",
+    "Nombre": "Nombrees de detectives e investigadores privados"
+  },
+  {
+    "Codigo": "8110",
+    "Nombre": "Nombrees combinadas de apoyo a instalaciones"
+  },
+  {
+    "Codigo": "8121",
+    "Nombre": "Limpieza general interior de edificios"
+  },
+  {
+    "Codigo": "8129",
+    "Nombre": "Otras Nombrees de limpieza de edificios e instalaciones industriales"
+  },
+  {
+    "Codigo": "8130",
+    "Nombre": "Nombrees de paisajismo y servicios de mantenimiento conexos"
+  },
+  {
+    "Codigo": "8211",
+    "Nombre": "Nombrees combinadas de servicios administrativos de oficina"
+  },
+  {
+    "Codigo": "8219",
+    "Nombre": "Fotocopiado, preparación de documentos y otras Nombrees especializadas de apoyo a oficina"
+  },
+  {
+    "Codigo": "8220",
+    "Nombre": "Nombrees de centros de llamadas (Call center)"
+  },
+  {
+    "Codigo": "8230",
+    "Nombre": "Organización de convenciones y eventos comerciales"
+  },
+  {
+    "Codigo": "8291",
+    "Nombre": "Nombrees de agencias de cobranza y oficinas de calificación crediticia"
+  },
+  {
+    "Codigo": "8292",
+    "Nombre": "Nombrees de envase y empaque"
+  },
+  {
+    "Codigo": "8299",
+    "Nombre": "Otras Nombrees de servicio de apoyo a las empresas n.c.p."
+  },
+  {
+    "Codigo": "8411",
+    "Nombre": "Nombrees legislativas de la administración pública"
+  },
+  {
+    "Codigo": "8412",
+    "Nombre": "Nombrees ejecutivas de la administración pública"
+  },
+  {
+    "Codigo": "8413",
+    "Nombre": "Regulación de las Nombrees de organismos que prestan servicios de salud, educativos, culturales y otros servicios sociales, excepto servicios de seguridad social"
+  },
+  {
+    "Codigo": "8414",
+    "Nombre": "Nombrees reguladoras y facilitadoras de la Nombre económica"
+  },
+  {
+    "Codigo": "8415",
+    "Nombre": "Nombrees de los otros órganos de control"
+  },
+  {
+    "Codigo": "8421",
+    "Nombre": "Relaciones exteriores"
+  },
+  {
+    "Codigo": "8422",
+    "Nombre": "Nombrees de defensa"
+  },
+  {
+    "Codigo": "8423",
+    "Nombre": "Orden público y Nombrees de seguridad"
+  },
+  {
+    "Codigo": "8424",
+    "Nombre": "Administración de justicia"
+  },
+  {
+    "Codigo": "8430",
+    "Nombre": "Nombrees de planes de seguridad social de afiliación obligatoria"
+  },
+  {
+    "Codigo": "8511",
+    "Nombre": "Educación de la primera infancia"
+  },
+  {
+    "Codigo": "8512",
+    "Nombre": "Educación preescolar"
+  },
+  {
+    "Codigo": "8513",
+    "Nombre": "Educación básica primaria"
+  },
+  {
+    "Codigo": "8521",
+    "Nombre": "Educación básica secundaria"
+  },
+  {
+    "Codigo": "8522",
+    "Nombre": "Educación media académica"
+  },
+  {
+    "Codigo": "8523",
+    "Nombre": "Educación media técnica y de formación laboral"
+  },
+  {
+    "Codigo": "8530",
+    "Nombre": "Establecimientos que combinan diferentes niveles de educación"
+  },
+  {
+    "Codigo": "8541",
+    "Nombre": "Educación técnica profesional"
+  },
+  {
+    "Codigo": "8542",
+    "Nombre": "Educación tecnológica"
+  },
+  {
+    "Codigo": "8543",
+    "Nombre": "Educación de instituciones universitarias o de escuelas tecnológicas"
+  },
+  {
+    "Codigo": "8544",
+    "Nombre": "Educación de universidades"
+  },
+  {
+    "Codigo": "8551",
+    "Nombre": "Formación académica no formal"
+  },
+  {
+    "Codigo": "8552",
+    "Nombre": "Enseñanza deportiva y recreativa"
+  },
+  {
+    "Codigo": "8553",
+    "Nombre": "Enseñanza cultural"
+  },
+  {
+    "Codigo": "8559",
+    "Nombre": "Otros tipos de educación n.c.p."
+  },
+  {
+    "Codigo": "8560",
+    "Nombre": "Nombrees de apoyo a la educación"
+  },
+  {
+    "Codigo": "8610",
+    "Nombre": "Nombrees de hospitales y clínicas, con internación"
+  },
+  {
+    "Codigo": "8621",
+    "Nombre": "Nombrees de la práctica médica, sin internación"
+  },
+  {
+    "Codigo": "8622",
+    "Nombre": "Nombrees de la práctica odontológica"
+  },
+  {
+    "Codigo": "8691",
+    "Nombre": "Nombrees de apoyo diagnóstico"
+  },
+  {
+    "Codigo": "8692",
+    "Nombre": "Nombrees de apoyo terapéutico"
+  },
+  {
+    "Codigo": "8699",
+    "Nombre": "Otras Nombrees de atención de la salud humana"
+  },
+  {
+    "Codigo": "8710",
+    "Nombre": "Nombrees de atención residencial medicalizada de tipo general"
+  },
+  {
+    "Codigo": "8720",
+    "Nombre": "Nombrees de atención residencial, para el cuidado de pacientes con retardo mental, enfermedad mental y consumo de sustancias psicoactivas"
+  },
+  {
+    "Codigo": "8730",
+    "Nombre": "Nombrees de atención en instituciones para el cuidado de personas mayores y/o discapacitadas"
+  },
+  {
+    "Codigo": "8790",
+    "Nombre": "Otras Nombrees de atención en instituciones con alojamiento"
+  },
+  {
+    "Codigo": "8810",
+    "Nombre": "Nombrees de asistencia social sin alojamiento para personas mayores y discapacitadas"
+  },
+  {
+    "Codigo": "8890",
+    "Nombre": "Otras Nombrees de asistencia social sin alojamiento"
+  },
+  {
+    "Codigo": "9001",
+    "Nombre": "Creación literaria"
+  },
+  {
+    "Codigo": "9002",
+    "Nombre": "Creación musical"
+  },
+  {
+    "Codigo": "9003",
+    "Nombre": "Creación teatral"
+  },
+  {
+    "Codigo": "9004",
+    "Nombre": "Creación audiovisual"
+  },
+  {
+    "Codigo": "9005",
+    "Nombre": "Artes plásticas y visuales"
+  },
+  {
+    "Codigo": "9006",
+    "Nombre": "Nombrees teatrales"
+  },
+  {
+    "Codigo": "9007",
+    "Nombre": "Nombrees de espectáculos musicales en vivo"
+  },
+  {
+    "Codigo": "9008",
+    "Nombre": "Otras Nombrees de espectáculos en vivo"
+  },
+  {
+    "Codigo": "9101",
+    "Nombre": "Nombrees de bibliotecas y archivos"
+  },
+  {
+    "Codigo": "9102",
+    "Nombre": "Nombrees y funcionamiento de museos, conservación de edificios y sitios históricos"
+  },
+  {
+    "Codigo": "9103",
+    "Nombre": "Nombrees de jardines botánicos, zoológicos y reservas naturales"
+  },
+  {
+    "Codigo": "9200",
+    "Nombre": "Nombrees de juegos de azar y apuestas"
+  },
+  {
+    "Codigo": "9311",
+    "Nombre": "Gestión de instalaciones deportivas"
+  },
+  {
+    "Codigo": "9312",
+    "Nombre": "Nombrees de clubes deportivos"
+  },
+  {
+    "Codigo": "9319",
+    "Nombre": "Otras Nombrees deportivas"
+  },
+  {
+    "Codigo": "9321",
+    "Nombre": "Nombrees de parques de atracciones y parques temáticos"
+  },
+  {
+    "Codigo": "9329",
+    "Nombre": "Otras Nombrees recreativas y de esparcimiento n.c.p."
+  },
+  {
+    "Codigo": "9411",
+    "Nombre": "Nombrees de asociaciones empresariales y de empleadores"
+  },
+  {
+    "Codigo": "9412",
+    "Nombre": "Nombrees de asociaciones profesionales"
+  },
+  {
+    "Codigo": "9420",
+    "Nombre": "Nombrees de sindicatos de empleados"
+  },
+  {
+    "Codigo": "9491",
+    "Nombre": "Nombrees de asociaciones religiosas"
+  },
+  {
+    "Codigo": "9492",
+    "Nombre": "Nombrees de asociaciones políticas"
+  },
+  {
+    "Codigo": "9499",
+    "Nombre": "Nombrees de otras asociaciones n.c.p."
+  },
+  {
+    "Codigo": "9511",
+    "Nombre": "Mantenimiento y reparación de computadores y de equipo periférico"
+  },
+  {
+    "Codigo": "9512",
+    "Nombre": "Mantenimiento y reparación de equipos de comunicación"
+  },
+  {
+    "Codigo": "9521",
+    "Nombre": "Mantenimiento y reparación de aparatos electrónicos de consumo"
+  },
+  {
+    "Codigo": "9522",
+    "Nombre": "Mantenimiento y reparación de aparatos y equipos domésticos y de jardinería"
+  },
+  {
+    "Codigo": "9523",
+    "Nombre": "Reparación de calzado y artículos de cuero"
+  },
+  {
+    "Codigo": "9524",
+    "Nombre": "Reparación de muebles y accesorios para el hogar"
+  },
+  {
+    "Codigo": "9529",
+    "Nombre": "Mantenimiento y reparación de otros efectos personales y enseres domésticos"
+  },
+  {
+    "Codigo": "9601",
+    "Nombre": "Lavado y limpieza, incluso la limpieza en seco, de productos textiles y de piel"
+  },
+  {
+    "Codigo": "9602",
+    "Nombre": "Peluquería y otros tratamientos de belleza"
+  },
+  {
+    "Codigo": "9603",
+    "Nombre": "Pompas fúnebres y Nombrees relacionadas"
+  },
+  {
+    "Codigo": "9609",
+    "Nombre": "Otras Nombrees de servicios personales n.c.p."
+  },
+  {
+    "Codigo": "9700",
+    "Nombre": "Nombrees de los hogares individuales como empleadores de personal doméstico"
+  },
+  {
+    "Codigo": "9810",
+    "Nombre": "Nombrees no diferenciadas de los hogares individuales como productores de bienes para uso propio"
+  },
+  {
+    "Codigo": "9820",
+    "Nombre": "Nombrees no diferenciadas de los hogares individuales como productores de servicios para uso propio"
+  },
+  {
+    "Codigo": "9900",
+    "Nombre": "Nombrees de organizaciones y entidades extraterritoriales"
+  }
+]

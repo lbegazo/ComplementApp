@@ -235,7 +235,8 @@ export class RadicadoPagoComponent implements OnInit {
             this.liquidacionService
               .ObtenerFormatoCausacionyLiquidacionPago(
                 this.planPagoIdSeleccionado,
-                valorIngresado
+                valorIngresado,
+                0
               )
               .subscribe(
                 (response: FormatoCausacionyLiquidacionPago) => {

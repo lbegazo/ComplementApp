@@ -16,7 +16,7 @@ namespace ComplementApp.API.Interfaces
 
         Task<PlanPago> ObtenerPlanPagoDetallado(int planPagoId);
 
-        Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId);
+        Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId);
 
         int ObtenerCantidadMaximaPlanPago(long crp);
 

@@ -98,7 +98,6 @@ export class PopupCdpComponent implements OnInit {
   }
 
   onAceptar() {
-    // console.log('Popup ' + this.arrayRubro);
     this.bsModalRef.hide();
     this.bsModalRef.content = this.arrayRubro;
   }

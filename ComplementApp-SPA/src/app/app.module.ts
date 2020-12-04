@@ -82,6 +82,7 @@ import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.com
 import { FormatoCdpComponent } from './reporte/solicitud-cdp/formato-cdp/formato-cdp.component';
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
 import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
+import { PopupDatosAdicionalesComponent } from './CausacionyLiquidacion/popup-datos-adicionales/popup-datos-adicionales.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -133,6 +134,7 @@ export function tokenGetter() {
     SolicitudCdpComponent,
     FormatoCdpComponent,
     RadicadoPagoMensualComponent,
+    PopupDatosAdicionalesComponent,
   ],
   imports: [
     BrowserModule,

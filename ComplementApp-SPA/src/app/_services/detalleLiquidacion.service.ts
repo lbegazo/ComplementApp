@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
+import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { PaginatedResult } from '../_models/pagination';
 
@@ -105,7 +106,8 @@ export class DetalleLiquidacionService {
 
   ObtenerFormatoCausacionyLiquidacionPago(
     planPagoId: number,
-    valorBaseGravable: number
+    valorBaseGravable: number,
+    actividadEconomicaId: number
   ): Observable<FormatoCausacionyLiquidacionPago> {
     const path = 'ObtenerFormatoCausacionyLiquidacionPago';
 
@@ -116,6 +118,13 @@ export class DetalleLiquidacionService {
     }
     if (valorBaseGravable > 0) {
       params = params.append('valorBaseGravable', valorBaseGravable.toString());
+    }
+
+    if (actividadEconomicaId > 0) {
+      params = params.append(
+        'actividadEconomicaId',
+        actividadEconomicaId.toString()
+      );
     }
 
     return this.http.get<FormatoCausacionyLiquidacionPago>(
@@ -167,5 +176,18 @@ export class DetalleLiquidacionService {
         }
       )
     );
+  }
+
+  ObtenerListaActividadesEconomicaXTercero(
+    terceroId: number
+  ): Observable<ValorSeleccion[]> {
+    let params = new HttpParams();
+
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+
+    const path = 'ObtenerListaActividadesEconomicaXTercero';
+    return this.http.get<ValorSeleccion[]>(this.baseUrl + path, { params });
   }
 }

@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201201141005_ActividadEconomica_Creation")]
+    partial class ActividadEconomica_Creation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1168,27 +1170,20 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.TerceroDeduccion", b =>
                 {
-                    b.Property<int>("TerceroDeduccionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ActividadEconomicaId")
+                    b.Property<int>("TerceroId")
                         .HasColumnType("int");
 
                     b.Property<int>("DeduccionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TerceroId")
+                    b.Property<int?>("ActividadEconomicaId")
                         .HasColumnType("int");
 
-                    b.HasKey("TerceroDeduccionId");
+                    b.HasKey("TerceroId", "DeduccionId");
 
                     b.HasIndex("ActividadEconomicaId");
 
                     b.HasIndex("DeduccionId");
-
-                    b.HasIndex("TerceroId");
 
                     b.ToTable("TTerceroDeduccion");
                 });

@@ -290,5 +290,16 @@ namespace ComplementApp.API.Data
             }
         }
 
+        public async Task<ICollection<ActividadEconomica>> ObtenerListaActividadesEconomicaXTercero(int terceroId)
+        {
+            var lista = await (from ae in _context.ActividadEconomica
+                                                    join td in _context.TerceroDeducciones on ae.ActividadEconomicaId equals td.ActividadEconomicaId
+                                                    where td.TerceroId == terceroId
+                                                    select ae)
+                                            .Distinct()
+                                            .ToListAsync();
+
+            return lista;
+        }
     }
 }

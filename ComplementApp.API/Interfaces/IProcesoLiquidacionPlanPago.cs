@@ -5,7 +5,7 @@ namespace ComplementApp.API.Interfaces
 {
     public interface IProcesoLiquidacionPlanPago
     {
-        Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId, decimal valorBaseGravable);
-        
+        Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId, decimal valorBaseGravable, int? actividadEconomicaId);
+
     }
 }
