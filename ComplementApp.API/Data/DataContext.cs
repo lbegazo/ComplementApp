@@ -44,76 +44,49 @@ namespace ComplementApp.API.Data
 
 
         public DbSet<Tercero> Tercero { get; set; }
-
         public DbSet<Estado> Estado { get; set; }
-
         public DbSet<ActividadGeneral> ActividadGeneral { get; set; }
-
         public DbSet<ActividadEspecifica> ActividadEspecifica { get; set; }
-
         public DbSet<Dependencia> Dependencia { get; set; }
-
         public DbSet<TipoOperacion> TipoOperacion { get; set; }
-
         public DbSet<Estado> EstadoSolicitudCDP { get; set; }
-
         public DbSet<Cargo> Cargo { get; set; }
-
         public DbSet<Area> Area { get; set; }
-
         public DbSet<RubroPresupuestal> RubroPresupuestal { get; set; }
-
         public DbSet<Usuario> Usuario { get; set; }
-
         public DbSet<CDP> CDP { get; set; }
-
         public DbSet<DetalleCDP> DetalleCDP { get; set; }
-
         public DbSet<TipoDetalleCDP> TipoDetalleModificacion { get; set; }
-
         public DbSet<UsoPresupuestal> UsoPresupuestal { get; set; }
-
         public DbSet<PlanPago> PlanPago { get; set; }
-
         public DbSet<Photo> Photos { get; set; }
-
         public DbSet<User> Users { get; set; }
-
         public DbSet<Value> Values { get; set; }
-
         public DbSet<Perfil> Perfil { get; set; }
-
         public DbSet<Transaccion> Transaccion { get; set; }
-
         public DbSet<PerfilTransaccion> PerfilTransaccion { get; set; }
-
         public DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
-
         public DbSet<ParametroGeneral> ParametroGeneral { get; set; }
-
         public DbSet<TipoBaseDeduccion> TipoBaseDeduccion { get; set; }
         public DbSet<Deduccion> Deduccion { get; set; }
-
         public DbSet<TerceroDeduccion> TerceroDeducciones { get; set; }
-
         public DbSet<ParametroLiquidacionTercero> ParametroLiquidacionTercero { get; set; }
-
         public DbSet<CriterioCalculoReteFuente> CriterioCalculoReteFuente { get; set; }
-
         public DbSet<DetalleLiquidacion> DetalleLiquidacion { get; set; }
-
         public DbSet<LiquidacionDeduccion> LiquidacionDeducciones { get; set; }
-
         public DbSet<ArchivoDetalleLiquidacion> ArchivoDetalleLiquidacion { get; set; }
-
         public DbSet<DetalleArchivoLiquidacion> DetalleArchivoLiquidacion { get; set; }
-
         public DbSet<SolicitudCDP> SolicitudCDP { get; set; }
-
         public DbSet<DetalleSolicitudCDP> DetalleSolicitudCDP { get; set; }
-
         public DbSet<ActividadEconomica> ActividadEconomica { get; set; }
-
+        public DbSet<TipoGasto> TipoGasto { get; set; }
+        public DbSet<SituacionFondo> SituacionFondo { get; set; }
+        public DbSet<FuenteFinanciacion> FuenteFinanciacion { get; set; }
+        public DbSet<RecursoPresupuestal> RecursoPresupuestal { get; set; }
+        public DbSet<AtributoContable> AtributoContable { get; set; }
+        public DbSet<CuentaContable> CuentaContable { get; set; }
+        public DbSet<RelacionContable> RelacionContable { get; set; }
+        public DbSet<ClavePresupuestalContable> ClavePresupuestalContable { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -140,7 +113,7 @@ namespace ComplementApp.API.Data
                 .WithMany(c => c.PerfilTransacciones)
                 .HasForeignKey(bc => bc.TransaccionId);
 
-              
+
             modelBuilder.Entity<RubroPresupuestal>()
                 .Property(b => b.PadreRubroId)
                 .HasDefaultValue(0);

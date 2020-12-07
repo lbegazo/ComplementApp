@@ -11,6 +11,6 @@ namespace ComplementApp.API.Dtos
         public int EstadoSolicitudCDPId { get; set; }
         public UsuarioParaDetalleDto Usuario { get; set; }
         public DateTime FechaRegistro { get; set; }
-        public ListaValorDTO EstadoSolicitudCDP { get; set; }
+        public ValorSeleccion EstadoSolicitudCDP { get; set; }
     }
 }

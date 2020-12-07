@@ -21,6 +21,8 @@ namespace ComplementApp.API.Interfaces
 
         Task<IEnumerable<ParametroGeneral>> ObtenerParametrosGenerales();
 
+        Task<ValorSeleccion> ObtenerParametroGeneralXNombre(string nombre);
+
         Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId);
 
         Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente();
@@ -29,5 +31,6 @@ namespace ComplementApp.API.Interfaces
 
         Task<ICollection<Estado>> ObtenerListaEstado(string tipoDocumento);
 
+        Task<IEnumerable<UsoPresupuestal>> ObtenerListaUsoPresupuestalXRubro(int rubroPresupuestalId);
     }
 }

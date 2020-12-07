@@ -1,0 +1,98 @@
+[
+  {
+    "Codigo": "10",
+    "Nombre": "RECURSOS CORRIENTES"
+  },
+  {
+    "Codigo": "11",
+    "Nombre": "OTROS RECURSOS DEL TESORO"
+  },
+  {
+    "Codigo": "12",
+    "Nombre": "RECURSOS PARA PRESERVAR LA SEGURIDAD DEMOCRÁTICA. DECRETO 1838/02"
+  },
+  {
+    "Codigo": "13",
+    "Nombre": "RECURSOS DEL CREDITO EXTERNO PREVIA AUTORIZACION"
+  },
+  {
+    "Codigo": "14",
+    "Nombre": "PRESTAMOS DESTINACIÓN ESPECIFICA"
+  },
+  {
+    "Codigo": "15",
+    "Nombre": "DONACIONES"
+  },
+  {
+    "Codigo": "16",
+    "Nombre": "FONDOS ESPECIALES"
+  },
+  {
+    "Codigo": "17",
+    "Nombre": "RENTAS PARAFISCALES"
+  },
+  {
+    "Codigo": "18",
+    "Nombre": "PRESTAMOS DE DESTINACIÓN ESPECIFICA AUTORIZADOS"
+  },
+  {
+    "Codigo": "19",
+    "Nombre": "DONACIONES INTERNAS"
+  },
+  {
+    "Codigo": "20",
+    "Nombre": "INGRESOS CORRIENTES"
+  },
+  {
+    "Codigo": "21",
+    "Nombre": "OTROS RECURSOS DE TESORERIA"
+  },
+  {
+    "Codigo": "22",
+    "Nombre": "RECURSOS DEL CREDITO INTERNO PREVIA AUTORIZACION"
+  },
+  {
+    "Codigo": "23",
+    "Nombre": "RECURSOS DEL CREDITO EXTERNO PREVIA AUTORIZACION"
+  },
+  {
+    "Codigo": "24",
+    "Nombre": "PRESTAMOS DESTINACION ESPECIFICA"
+  },
+  {
+    "Codigo": "25",
+    "Nombre": "DONACIONES"
+  },
+  {
+    "Codigo": "26",
+    "Nombre": "FONDOS ESPECIALES"
+  },
+  {
+    "Codigo": "27",
+    "Nombre": "RENTAS PARAFISCALES"
+  },
+  {
+    "Codigo": "51",
+    "Nombre": "FONDO ESPECIAL SUBSIDIO Y REDISTRIBUCIÓN DE INGRESO "
+  },
+  {
+    "Codigo": "52",
+    "Nombre": "FONDO ESPECIAL FAZNI"
+  },
+  {
+    "Codigo": "53",
+    "Nombre": "FONDO ESPECIAL RIESGOS PROFESIONALES"
+  },
+  {
+    "Codigo": "50",
+    "Nombre": "FONDO ESPECIAL DEFENSA NACIONAL"
+  },
+  {
+    "Codigo": "55",
+    "Nombre": "(NO USAR)"
+  },
+  {
+    "Codigo": "54",
+    "Nombre": "FONDO ESPECIAL FOME"
+  }
+]

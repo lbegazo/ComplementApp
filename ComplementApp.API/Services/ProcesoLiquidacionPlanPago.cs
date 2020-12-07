@@ -443,7 +443,7 @@ namespace ComplementApp.API.Services
             }
 
             C3valorIva = C1honorario * PLtarifaIva;
-            C7baseAporteSalud = C1honorario * PLbaseAporteSalud;
+            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -1087,9 +1087,10 @@ namespace ComplementApp.API.Services
             decimal valor = 0;
             foreach (var item in listaDetalleLiquidacion)
             {
-                if (item.BaseImpuestos.HasValue && !item.BaseImpuestos.Value)
+                //Base salud para viaticos no cuenta
+                //if (item.BaseImpuestos.HasValue && !item.BaseImpuestos.Value)
                 {
-                    valor = +item.TotalACancelar;
+                    valor = valor + item.TotalACancelar;
                 }
             }
             return valor;

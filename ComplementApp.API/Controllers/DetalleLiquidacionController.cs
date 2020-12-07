@@ -116,7 +116,7 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago(   [FromQuery(Name = "planPagoId")] int planPagoId,                                                                                    
+        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "planPagoId")] int planPagoId,
                                                                                     [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable,
                                                                                     [FromQuery(Name = "actividadEconomicaId")] int? actividadEconomicaId)
         {

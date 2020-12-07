@@ -42,6 +42,116 @@ namespace ComplementApp.API.Data
             SeedCriterioCalculoReteFuente(context);
 
             SeedActividadEconomica(context);
+            SeedTipoGasto(context);
+            SeedSituacionFondo(context);
+            SeedFuenteFinanciacion(context);
+            SeedRecursoPresupuestal(context);
+            SeedAtributoContable(context);
+        }
+
+        private static void SeedAtributoContable(DataContext context)
+        {
+            AtributoContable valor = null;
+            List<AtributoContable> lista = new List<AtributoContable>();
+
+            if (!context.AtributoContable.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_AtributoContable.json");
+                var items = JsonConvert.DeserializeObject<List<AtributoContable>>(data);
+                foreach (var item in items)
+                {
+                    valor = new AtributoContable();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.AtributoContable.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedRecursoPresupuestal(DataContext context)
+        {
+            RecursoPresupuestal valor = null;
+            List<RecursoPresupuestal> lista = new List<RecursoPresupuestal>();
+
+            if (!context.RecursoPresupuestal.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_RecursoPresupuestal.json");
+                var items = JsonConvert.DeserializeObject<List<RecursoPresupuestal>>(data);
+                foreach (var item in items)
+                {
+                    valor = new RecursoPresupuestal();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.RecursoPresupuestal.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedTipoGasto(DataContext context)
+        {
+            TipoGasto valor = null;
+            List<TipoGasto> lista = new List<TipoGasto>();
+
+            if (!context.TipoGasto.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoGasto.json");
+                var items = JsonConvert.DeserializeObject<List<TipoGasto>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoGasto();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoGasto.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedSituacionFondo(DataContext context)
+        {
+            SituacionFondo valor = null;
+            List<SituacionFondo> lista = new List<SituacionFondo>();
+
+            if (!context.SituacionFondo.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_SituacionFondo.json");
+                var items = JsonConvert.DeserializeObject<List<SituacionFondo>>(data);
+                foreach (var item in items)
+                {
+                    valor = new SituacionFondo();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.SituacionFondo.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedFuenteFinanciacion(DataContext context)
+        {
+            FuenteFinanciacion valor = null;
+            List<FuenteFinanciacion> lista = new List<FuenteFinanciacion>();
+
+            if (!context.FuenteFinanciacion.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_FuenteFinanciacion.json");
+                var items = JsonConvert.DeserializeObject<List<FuenteFinanciacion>>(data);
+                foreach (var item in items)
+                {
+                    valor = new FuenteFinanciacion();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.FuenteFinanciacion.AddRange(lista);
+                context.SaveChanges();
+            }
         }
 
         private static void SeedActividadEconomica(DataContext context)

@@ -205,6 +205,7 @@ namespace ComplementApp.API.Data
                 cdp.Detalle7 = item.Detalle7;
                 cdp.Detalle8 = item.Detalle8;
                 cdp.Detalle9 = item.Detalle9;
+                cdp.Detalle10 = item.Detalle10;
 
                 //Rubro Presupuestal
                 if (!string.IsNullOrEmpty(item.IdentificacionRubro))

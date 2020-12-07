@@ -1,0 +1,538 @@
+[
+  {
+    "Codigo": "1",
+    "Nombre": "Administrativo"
+  },
+  {
+    "Codigo": "2",
+    "Nombre": "Operativo"
+  },
+  {
+    "Codigo": "3",
+    "Nombre": "Otros"
+  },
+  {
+    "Codigo": "62",
+    "Nombre": "Acreedores por suscripción de"
+  },
+  {
+    "Codigo": "75",
+    "Nombre": "Subsidio para compra de tierra"
+  },
+  {
+    "Codigo": "4",
+    "Nombre": "Costos y Gastos por Distribuir - Para Bienes"
+  },
+  {
+    "Codigo": "5",
+    "Nombre": "Costos y Gastos por Distribuir - Para Servicios"
+  },
+  {
+    "Codigo": "6",
+    "Nombre": "Diferidos"
+  },
+  {
+    "Codigo": "7",
+    "Nombre": "Bienes muebles en bodega"
+  },
+  {
+    "Codigo": "8",
+    "Nombre": "Prestaciones sociales provisionadas"
+  },
+  {
+    "Codigo": "10",
+    "Nombre": "Devolución IVA Educación Superior"
+  },
+  {
+    "Codigo": "11",
+    "Nombre": "Cuotas Partes Pensionales"
+  },
+  {
+    "Codigo": "12",
+    "Nombre": "Fondos de reservas de pensiones"
+  },
+  {
+    "Codigo": "113",
+    "Nombre": "Subsidio asistencia social-fun"
+  },
+  {
+    "Codigo": "13",
+    "Nombre": "Impuestos-Gastos de Administración"
+  },
+  {
+    "Codigo": "14",
+    "Nombre": "Impuestos-Gastos de Operación"
+  },
+  {
+    "Codigo": "1",
+    "Nombre": "Cuotas partes de pensiones"
+  },
+  {
+    "Codigo": "2",
+    "Nombre": "Devolución de IVA para Instituciones de Educación Superior"
+  },
+  {
+    "Codigo": "3",
+    "Nombre": "Pago por cuenta de terceros"
+  },
+  {
+    "Codigo": "4",
+    "Nombre": "Mercancías en existencia"
+  },
+  {
+    "Codigo": "5",
+    "Nombre": "Materias primas"
+  },
+  {
+    "Codigo": "6",
+    "Nombre": "Materiales y suministros"
+  },
+  {
+    "Codigo": "7",
+    "Nombre": "PPYE-Bienes muebles en bodega"
+  },
+  {
+    "Codigo": "8",
+    "Nombre": "Activos intangibles- software"
+  },
+  {
+    "Codigo": "9",
+    "Nombre": "Litigios y demandas-Civiles"
+  },
+  {
+    "Codigo": "10",
+    "Nombre": "Litigios y demandas -Penales"
+  },
+  {
+    "Codigo": "11",
+    "Nombre": "Litigios y demandas -Administrativos"
+  },
+  {
+    "Codigo": "12",
+    "Nombre": "Litigios y demandas-Obligaciones fiscales"
+  },
+  {
+    "Codigo": "13",
+    "Nombre": "Litigios y demandas -Laborales"
+  },
+  {
+    "Codigo": "14",
+    "Nombre": "Capital de los Fondos de Reservas de Pensiones"
+  },
+  {
+    "Codigo": "15",
+    "Nombre": "Gastos de administración y operación-Sueldos y salarios"
+  },
+  {
+    "Codigo": "16",
+    "Nombre": "Gastos de administración y operación-Contribuciones imputadas"
+  },
+  {
+    "Codigo": "17",
+    "Nombre": "Gastos de administración y operación-Contribuciones efectivas"
+  },
+  {
+    "Codigo": "18",
+    "Nombre": "Gastos de administración y operación-Aportes sobre la nómina"
+  },
+  {
+    "Codigo": "19",
+    "Nombre": "Gastos de administración y operación-Prestaciones sociales"
+  },
+  {
+    "Codigo": "20",
+    "Nombre": "Gastos de administración y operación-Gastos de personal diversos"
+  },
+  {
+    "Codigo": "21",
+    "Nombre": "Gastos de administración y operación-Generales"
+  },
+  {
+    "Codigo": "22",
+    "Nombre": "Gastos de administración y operación-Impuestos, contribuciones y tasas"
+  },
+  {
+    "Codigo": "23",
+    "Nombre": "Transferencias NO condicionadas"
+  },
+  {
+    "Codigo": "24",
+    "Nombre": "Transferencias condicionadas"
+  },
+  {
+    "Codigo": "25",
+    "Nombre": "Subvenciones NO condicionadas"
+  },
+  {
+    "Codigo": "26",
+    "Nombre": "Subvenciones condicionadas"
+  },
+  {
+    "Codigo": "27",
+    "Nombre": "Gasto público social"
+  },
+  {
+    "Codigo": "28",
+    "Nombre": "Otros gastos-Comisiones"
+  },
+  {
+    "Codigo": "29",
+    "Nombre": "Otros gastos-Financieros"
+  },
+  {
+    "Codigo": "30",
+    "Nombre": "Otros gastos-Gastos diversos"
+  },
+  {
+    "Codigo": "31",
+    "Nombre": "Costos y gastos por distribuir-Impresos y publicaciones"
+  },
+  {
+    "Codigo": "32",
+    "Nombre": "Costos y gastos por distribuir-Medicamentos"
+  },
+  {
+    "Codigo": "33",
+    "Nombre": "Costos y gastos por distribuir-Productos metalúrgicos y de microfundición"
+  },
+  {
+    "Codigo": "34",
+    "Nombre": "Costos y gastos por distribuir-Productos de madera"
+  },
+  {
+    "Codigo": "35",
+    "Nombre": "Costos y gastos por distribuir-Productos alimenticios"
+  },
+  {
+    "Codigo": "36",
+    "Nombre": "Costos y gastos por distribuir-Construcciones"
+  },
+  {
+    "Codigo": "37",
+    "Nombre": "Costos y gastos por distribuir-Prendas de vestir y calzado"
+  },
+  {
+    "Codigo": "38",
+    "Nombre": "Costos y gastos por distribuir-Otros bienes producidos"
+  },
+  {
+    "Codigo": "39",
+    "Nombre": "Costos y gastos por distribuir- Servicios educativos"
+  },
+  {
+    "Codigo": "40",
+    "Nombre": "Costos y gastos por distribuir- Servicios de transporte"
+  },
+  {
+    "Codigo": "41",
+    "Nombre": "Costos y gastos por distribuir- Servicios hoteleros y de promoción turística"
+  },
+  {
+    "Codigo": "42",
+    "Nombre": "Costos y gastos por distribuir- Servicios de salud"
+  },
+  {
+    "Codigo": "43",
+    "Nombre": "Costos y gastos por distribuir-Servicios de documentación e identificación"
+  },
+  {
+    "Codigo": "44",
+    "Nombre": "Costos y gastos por distribuir- Servicios informáticos"
+  },
+  {
+    "Codigo": "45",
+    "Nombre": "Costos y gastos por distribuir- Otros servicios"
+  },
+  {
+    "Codigo": "46",
+    "Nombre": "Activos intangibles- Licencias"
+  },
+  {
+    "Codigo": "47",
+    "Nombre": "Inversiones en controladas - Método de participación patrimonial"
+  },
+  {
+    "Codigo": "48",
+    "Nombre": "PPYE- Semovientes"
+  },
+  {
+    "Codigo": "49",
+    "Nombre": "PPYE-Construcciones en curso"
+  },
+  {
+    "Codigo": "50",
+    "Nombre": "Activos intangibles-Patentes"
+  },
+  {
+    "Codigo": "51",
+    "Nombre": "Préstamos gubernamentales"
+  },
+  {
+    "Codigo": "52",
+    "Nombre": "Beneficios Posempleo Pensiones"
+  },
+  {
+    "Codigo": "53",
+    "Nombre": "Obligaciones Pagadas por Terceros"
+  },
+  {
+    "Codigo": "54",
+    "Nombre": "Inversiones de Administración de Líquidez al Costo"
+  },
+  {
+    "Codigo": "55",
+    "Nombre": "INVERSIONES EN ASOCIADAS CONTABILIZADAS POR EL MÉTODO DE PARTICIPACIÓN PATRIMONIAL"
+  },
+  {
+    "Codigo": "56",
+    "Nombre": "Convergencia temporal"
+  },
+  {
+    "Codigo": "146",
+    "Nombre": "Prestamos de vivienda"
+  },
+  {
+    "Codigo": "57",
+    "Nombre": "Gastos de ventas-Generales"
+  },
+  {
+    "Codigo": "58",
+    "Nombre": "ADMINISTRACION DE LA SEGURIDAD SOCIAL EN SALUD"
+  },
+  {
+    "Codigo": "59",
+    "Nombre": "Activos intangibles - en fase de desarrollo"
+  },
+  {
+    "Codigo": "60",
+    "Nombre": "Provisiones diversas"
+  },
+  {
+    "Codigo": "61",
+    "Nombre": "Provisiones-Garantias"
+  },
+  {
+    "Codigo": "62",
+    "Nombre": "PPYE-Edificaciones"
+  },
+  {
+    "Codigo": "63",
+    "Nombre": "PPYE-Plantas, ductos y túneles"
+  },
+  {
+    "Codigo": "64",
+    "Nombre": "Bienes de uso público e históricos y culturales-Bienes históricos y culturales"
+  },
+  {
+    "Codigo": "65",
+    "Nombre": "Bienes de uso público e históricos y culturales- Bienes de uso público en construcción"
+  },
+  {
+    "Codigo": "66",
+    "Nombre": "Bienes de uso público e históricos y culturales-Bienes de uso público en servicio"
+  },
+  {
+    "Codigo": "67",
+    "Nombre": "PPYE- Bienes de arte y cultura"
+  },
+  {
+    "Codigo": "68",
+    "Nombre": "Gastos de administración y operación-Generales-Reparaciones"
+  },
+  {
+    "Codigo": "69",
+    "Nombre": "Gastos de administración y operación-Generales-Servicios"
+  },
+  {
+    "Codigo": "70",
+    "Nombre": "Impuestos, contribuciones y tasas - Porcentaje y sobretasa ambiental al impuesto predia"
+  },
+  {
+    "Codigo": "71",
+    "Nombre": "Mercancías en existencia - Viveres y rancho"
+  },
+  {
+    "Codigo": "72",
+    "Nombre": "Mercancías en existencia - Otras mercancías en existencia"
+  },
+  {
+    "Codigo": "73",
+    "Nombre": "Mercancías en existencia - Licores, bebidas y alcoholes"
+  },
+  {
+    "Codigo": "74",
+    "Nombre": "Mercancías en existencia - Material didáctico"
+  },
+  {
+    "Codigo": "75",
+    "Nombre": "Mercancías en existencia - Impresos y publicaciones"
+  },
+  {
+    "Codigo": "76",
+    "Nombre": "Mercancías en existencia - Productos químicos"
+  },
+  {
+    "Codigo": "77",
+    "Nombre": "Mercancías en existencia - Medicamentos"
+  },
+  {
+    "Codigo": "78",
+    "Nombre": "Mercancías en existencia - Materiales médico - quirúrgicos"
+  },
+  {
+    "Codigo": "79",
+    "Nombre": "Mercancías en existencia - Productos agropecuarios, de silvicultura, avicultura y pesca"
+  },
+  {
+    "Codigo": "80",
+    "Nombre": "Mercancías en existencia - Semovientes"
+  },
+  {
+    "Codigo": "81",
+    "Nombre": "Mercancías en existencia - Muebles y enseres"
+  },
+  {
+    "Codigo": "82",
+    "Nombre": "Mercancías en existencia - Maquinaria y elementos de ferretería"
+  },
+  {
+    "Codigo": "83",
+    "Nombre": "Mercancías en existencia - Equipos de comunicación y computación"
+  },
+  {
+    "Codigo": "84",
+    "Nombre": "Mercancías en existencia - Equipo de transporte"
+  },
+  {
+    "Codigo": "85",
+    "Nombre": "Mercancías en existencia - Productos artesanales"
+  },
+  {
+    "Codigo": "86",
+    "Nombre": "Mercancías en existencia - Combustibles y otros derivados del petróleo"
+  },
+  {
+    "Codigo": "87",
+    "Nombre": "Materiales y suministros - Materiales para educación"
+  },
+  {
+    "Codigo": "88",
+    "Nombre": "Materiales y suministros - Envases y empaques"
+  },
+  {
+    "Codigo": "89",
+    "Nombre": "Materiales y suministros - Combustibles y lubricantes"
+  },
+  {
+    "Codigo": "90",
+    "Nombre": "Materiales y suministros - Materiales reactivos y de laboratorio"
+  },
+  {
+    "Codigo": "91",
+    "Nombre": "Materiales y suministros - Materiales para la producción de bienes"
+  },
+  {
+    "Codigo": "92",
+    "Nombre": "Materiales y suministros - Materiales odontológicos"
+  },
+  {
+    "Codigo": "93",
+    "Nombre": "Materiales y suministros - Materiales para imagenología"
+  },
+  {
+    "Codigo": "94",
+    "Nombre": "Materiales y suministros - Víveres y rancho"
+  },
+  {
+    "Codigo": "95",
+    "Nombre": "Materiales y suministros - Dotación a trabajadores"
+  },
+  {
+    "Codigo": "96",
+    "Nombre": "Materiales y suministros - Ropa hospitalaria y quirúrgica"
+  },
+  {
+    "Codigo": "97",
+    "Nombre": "Materiales y suministros - Repuestos"
+  },
+  {
+    "Codigo": "101",
+    "Nombre": "PPYE-Terrenos "
+  },
+  {
+    "Codigo": "98",
+    "Nombre": "Inversiones en controladas - M"
+  },
+  {
+    "Codigo": "99",
+    "Nombre": "Inversiones en controladas - Método de participación patrimonial - Sociedades de economía mixta"
+  },
+  {
+    "Codigo": "100",
+    "Nombre": "Inversiones en controladas - Método de participación patrimonial - Sociedades públicas"
+  },
+  {
+    "Codigo": "102",
+    "Nombre": "Contribuciones efectivas-Cotizaciones a entidades administradoras del régimen de prima media"
+  },
+  {
+    "Codigo": "103",
+    "Nombre": "Contribuciones efectivas-Cotizaciones a entidades administradoras del régimen de ahorro individual"
+  },
+  {
+    "Codigo": "104",
+    "Nombre": "Provisiones diversas - Mecanismos alternativos de solución de conflictos"
+  },
+  {
+    "Codigo": "105",
+    "Nombre": "Otros gastos - Impuesto a las ganancias corriente"
+  },
+  {
+    "Codigo": "106",
+    "Nombre": "Inventarios - Prestadores de servicios"
+  },
+  {
+    "Codigo": "107",
+    "Nombre": "Derechos de reembolso y de sustitución de activos deteriorados"
+  },
+  {
+    "Codigo": "195",
+    "Nombre": "Benefios posempleo-Bonos pensi"
+  },
+  {
+    "Codigo": "194",
+    "Nombre": "Otros Intereses de Mora-Financ"
+  },
+  {
+    "Codigo": "108",
+    "Nombre": "Acreedor 1.5 de cotización en  salud"
+  },
+  {
+    "Codigo": "109",
+    "Nombre": "Otros Beneficios Posempleo"
+  },
+  {
+    "Codigo": "110",
+    "Nombre": "Gastos de administración y operación-Generales-Otros gastos generales"
+  },
+  {
+    "Codigo": "111",
+    "Nombre": "Gastos de administración y operación-Generales-Bodegaje"
+  },
+  {
+    "Codigo": "112",
+    "Nombre": "Subvenciones FOME- empleo formal"
+  },
+  {
+    "Codigo": "114",
+    "Nombre": "Gastos de administración y operación-Generales-Materiales y suministros"
+  },
+  {
+    "Codigo": "115",
+    "Nombre": "Gastos de administración y operación-Generales-Elementos de aseo, lavandería y cafetería"
+  },
+  {
+    "Codigo": "113",
+    "Nombre": " Gastos de administración y operación-Generales- Cuotas de administración"
+  }
+]

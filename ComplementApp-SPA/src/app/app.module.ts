@@ -83,6 +83,9 @@ import { FormatoCdpComponent } from './reporte/solicitud-cdp/formato-cdp/formato
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
 import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
 import { PopupDatosAdicionalesComponent } from './CausacionyLiquidacion/popup-datos-adicionales/popup-datos-adicionales.component';
+import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
+import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
+import { ClavePresupuestalContableEditComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/clave-presupuestal-contable-edit.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -135,6 +138,9 @@ export function tokenGetter() {
     FormatoCdpComponent,
     RadicadoPagoMensualComponent,
     PopupDatosAdicionalesComponent,
+    ClavePresupuestalContableComponent,
+    RelacionContableComponent,
+    ClavePresupuestalContableEditComponent,
   ],
   imports: [
     BrowserModule,

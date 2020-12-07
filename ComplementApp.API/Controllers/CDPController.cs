@@ -37,7 +37,7 @@ namespace ComplementApp.API.Controllers
 
         #endregion Dependency Injection
 
-        public CDPController(ICDPRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper, 
+        public CDPController(ICDPRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper,
                             DataContext dataContext, IGeneralInterface generalInterface)
         {
             _usuarioRepo = usuarioRepo;
@@ -234,5 +234,6 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener la solicitud de CDP");
         }
 
+        
     }
 }

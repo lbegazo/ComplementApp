@@ -153,7 +153,7 @@ namespace ComplementApp.API.Data
                                              UsuarioId = u.UsuarioId,
                                              NombreCompleto = u.Nombres + " " + u.Apellidos,
                                          },
-                                         EstadoSolicitudCDP = new ListaValorDTO()
+                                         EstadoSolicitudCDP = new ValorSeleccion()
                                          {
                                              Id = s.EstadoSolicitudCDPId,
                                              Nombre = e.Nombre,
@@ -301,7 +301,6 @@ namespace ComplementApp.API.Data
                                  ;
             return detalles;
         }
-
 
     }
 }

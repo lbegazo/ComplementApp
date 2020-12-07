@@ -23,6 +23,8 @@ import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por
 import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
 import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
+import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
+import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -51,6 +53,22 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: ClavePresupuestalContableComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'ADMINISTRACION_RELACIONCONTABLE',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: RelacionContableComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+
+  
   {
     path: 'PLAN_CARGAMASIVA',
     canActivate: [AuthGuard],
@@ -123,7 +141,7 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     component: RadicadoPagoMensualComponent,
     resolve: {
-      transaccion: TransaccionResolver
+      transaccion: TransaccionResolver,
     },
   },
   {

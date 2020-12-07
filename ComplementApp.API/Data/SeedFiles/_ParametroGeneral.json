@@ -1,17 +1,27 @@
 [
-    {
-        "Nombre": "SalarioMinimo",
-        "Descripcion": "Salario Minimo",
-        "Valor": "877,803"
-    },
-    {
-        "Nombre": "ValorUVT",
-        "Descripcion": "Valor UVT",
-        "Valor": "35,607"
-    },
-    {
-        "Nombre": "CodigoRenta ",
-        "Descripcion": "Codigo Renta ",
-        "Valor": "2-01-04-01-29"
-    }
+  {
+    "Nombre": "SalarioMinimo",
+    "Descripcion": "Salario Minimo",
+    "Valor": "877,803"
+  },
+  {
+    "Nombre": "ValorUVT",
+    "Descripcion": "Valor UVT",
+    "Valor": "35,607"
+  },
+  {
+    "Nombre": "CodigoRenta",
+    "Descripcion": "Codigo Renta",
+    "Valor": "2-01-04-01-29"
+  },  
+  {
+    "Nombre": "Pci-ANE",
+    "Descripcion": "Pci ANE",
+    "Valor": "23-09-00"
+  },
+  {
+    "Nombre": "NotaLegalANE",
+    "Descripcion": "Nota Legal ANE",
+    "Valor": "El presente documento es firmado bajo los parámetros establecidos en en el Decreto 1168 de 2020, prorrogado por el Decreto 1550 de 2020 concordante con las Resoluciones Nro. 283 y 405 de 2020 expedidas por la ANE."
+  }
 ]

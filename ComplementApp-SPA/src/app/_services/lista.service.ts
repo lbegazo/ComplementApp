@@ -11,6 +11,7 @@ import { ParametroGeneral } from '../_models/parametroGeneral';
 import { ParametroLiquidacionTercero } from '../_models/parametroLiquidacionTercero';
 import { Estado } from '../_models/estado';
 import { ValorSeleccion } from '../_dto/valorSeleccion';
+import { UsoPresupuestal } from '../_dto/usoPresupuestal';
 
 @Injectable({
   providedIn: 'root',
@@ -105,6 +106,32 @@ export class ListaService {
   //#endregion
 
   ObtenerListaMeses(): Observable<ValorSeleccion[]> {
-    return this.http.get<ValorSeleccion[]>(this.baseUrl + 'lista/ObtenerListaMeses');
+    return this.http.get<ValorSeleccion[]>(
+      this.baseUrl + 'lista/ObtenerListaMeses'
+    );
+  }
+
+  ObtenerParametroGeneralXNombre(nombre: string): Observable<ValorSeleccion> {
+    let params = new HttpParams();
+
+    if (nombre.length > 0) {
+      params = params.append('nombre', nombre);
+    }
+    return this.http.get<ValorSeleccion>(
+      this.baseUrl + 'lista/ObtenerParametroGeneralXNombre',
+      { params }
+    );
+  }
+
+  ObtenerListaUsoPresupuestalXRubro(rubroPresupuestalId: number): Observable<UsoPresupuestal[]> {
+    let params = new HttpParams();
+
+    if (rubroPresupuestalId > 0) {
+      params = params.append('rubroPresupuestalId', rubroPresupuestalId.toString());
+    }
+    return this.http.get<UsoPresupuestal[]>(
+      this.baseUrl + 'lista/ObtenerListaUsoPresupuestalXRubro',
+      { params }
+    );
   }
 }

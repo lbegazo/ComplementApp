@@ -64,6 +64,22 @@
     "Ruta": "ADMINISTRACION_USUARIO",
     "CodigoPadreTransaccion": "ADMINISTRACION"
   },
+  {
+    "Codigo": "ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE",
+    "Nombre": "Clave Presupuestal Contable",
+    "Descripcion": "Clave Presupuestal Contable",
+    "Icono": "supervisor_account",
+    "Ruta": "ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE",
+    "CodigoPadreTransaccion": "ADMINISTRACION"
+  },
+  {
+    "Codigo": "ADMINISTRACION_RELACIONCONTABLE",
+    "Nombre": "Relación contable",
+    "Descripcion": "Relación contable",
+    "Icono": "supervisor_account",
+    "Ruta": "ADMINISTRACION_RELACIONCONTABLE",
+    "CodigoPadreTransaccion": "ADMINISTRACION"
+  },
 
   {
     "Codigo": "PLAN_CARGAMASIVA",

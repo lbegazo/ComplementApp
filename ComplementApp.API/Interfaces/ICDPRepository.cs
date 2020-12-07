@@ -23,6 +23,7 @@ namespace ComplementApp.API.Interfaces
                                                                     int? usuarioId, DateTime? fechaRegistro,
                                                                     int? estadoSolicitudId, UserParams userParams);
 
+        
 
     }
 }

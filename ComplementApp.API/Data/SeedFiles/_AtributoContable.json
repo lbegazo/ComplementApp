@@ -1,0 +1,222 @@
+[
+  {
+    "Codigo": "01",
+    "Nombre": "ANTICIPO"
+  },
+  {
+    "Codigo": "02",
+    "Nombre": "PAGO ANTICIPADO"
+  },
+  {
+    "Codigo": "03",
+    "Nombre": "ENCARGO FIDUCIARIO"
+  },
+  {
+    "Codigo": "04",
+    "Nombre": "FONDOS ADMINISTRADOS"
+  },
+  {
+    "Codigo": "05",
+    "Nombre": "NINGUNO"
+  },
+  {
+    "Codigo": "06",
+    "Nombre": "FIDEICOMISO"
+  },
+  {
+    "Codigo": "07",
+    "Nombre": "CAJA MENOR"
+  },
+  {
+    "Codigo": "08",
+    "Nombre": "PRESTAMOS"
+  },
+  {
+    "Codigo": "09",
+    "Nombre": "REEMBOLSO CAJA MENOR"
+  },
+  {
+    "Codigo": "10",
+    "Nombre": "ANTICIPO PARA PROYECTOS DE INVERSION"
+  },
+  {
+    "Codigo": "11",
+    "Nombre": "RECURSOS FONPET POR DISTRIBUIR"
+  },
+  {
+    "Codigo": "12",
+    "Nombre": "CUOTAS PARTES DE BONOS PENSIONALES"
+  },
+  {
+    "Codigo": "13",
+    "Nombre": "GTOS PAG POR ANTCPDO - SEGUROS"
+  },
+  {
+    "Codigo": "14",
+    "Nombre": "GTOS PAG POR ANTCPDO - ARRENDAMIENTOS"
+  },
+  {
+    "Codigo": "15",
+    "Nombre": "GTOS PAG POR ANTCPDO - IMPRESOS, SUSCRIPCIONES, AFILIACIONES ..."
+  },
+  {
+    "Codigo": "16",
+    "Nombre": "GTOS PAG POR ANTCPDO - HONORARIOS"
+  },
+  {
+    "Codigo": "17",
+    "Nombre": "GTOS PAG POR ANTCPDO - ADMON Y EMISION TIT VALORES"
+  },
+  {
+    "Codigo": "18",
+    "Nombre": "GTOS PAG POR ANTCPDO - INTERESES"
+  },
+  {
+    "Codigo": "19",
+    "Nombre": "GTOS PAG POR ANTCPDO - COMISIONES"
+  },
+  {
+    "Codigo": "20",
+    "Nombre": "GTOS PAG POR ANTCPDO - MANTENIMIENTO"
+  },
+  {
+    "Codigo": "21",
+    "Nombre": "GTOS PAG POR ANTCPDO - CONTRIBUCIONES EFECTIVAS"
+  },
+  {
+    "Codigo": "22",
+    "Nombre": "GTOS PAG POR ANTCPDO - ESTUDIOS Y PROYECTOS"
+  },
+  {
+    "Codigo": "23",
+    "Nombre": "AVANCES PARA VIATICOS Y GASTOS DE VIAJE"
+  },
+  {
+    "Codigo": "24",
+    "Nombre": "DEPOSITOS ENTREGADOS EN GARANTIA PARA INVERSIONES"
+  },
+  {
+    "Codigo": "25",
+    "Nombre": "DEPOSITOS RECIBIDOS EN ADMINISTRACION"
+  },
+  {
+    "Codigo": "26",
+    "Nombre": "PRESTAMOS CONCEDIDOS AL GOBIERNO GENERAL"
+  },
+  {
+    "Codigo": "27",
+    "Nombre": "PRESTAMOS CONCEDIDOS A LAS EMPRESAS NO FINANCIERAS"
+  },
+  {
+    "Codigo": "28",
+    "Nombre": "DEPOSITOS RECIBIDOS EN GARANTÍA - SERVICIOS"
+  },
+  {
+    "Codigo": "29",
+    "Nombre": "EXCEDENTES FINANCIEROS"
+  },
+  {
+    "Codigo": "30",
+    "Nombre": "GASTOS PAGADOS POR ANTICIPADO-SUELDOS Y SALARIOS"
+  },
+  {
+    "Codigo": "31",
+    "Nombre": "PRESTACIONES CONSOLIDADAS-CESANTÍAS"
+  },
+  {
+    "Codigo": "32",
+    "Nombre": "PRESTACIONES CONSOLIDADAS-VACACIONES"
+  },
+  {
+    "Codigo": "33",
+    "Nombre": "PRESTACIONES CONSOLIDADAS-PRIMA DE VACACIONES"
+  },
+  {
+    "Codigo": "34",
+    "Nombre": "PRESTACIONES CONSOLIDADAS-PRIMA DE SERVICIOS"
+  },
+  {
+    "Codigo": "35",
+    "Nombre": "CRÉDITO A EMPLEADOS"
+  },
+  {
+    "Codigo": "36",
+    "Nombre": "GMF-GRAVAMEN MOVIMIENTOS FINANCIEROS-GTOS ADMINISTRACION"
+  },
+  {
+    "Codigo": "37",
+    "Nombre": "GMF-GRAVAMEN MOVIMIENTOS FINANCIEROS-GTOS OPERACION"
+  },
+  {
+    "Codigo": "38",
+    "Nombre": "ESTAMPILLA PRO UNIVERSIDAD NACIONAL Y UNIVERSIDADES ESTATALES"
+  },
+  {
+    "Codigo": "39",
+    "Nombre": "DEVOLUCI?N AHORRO VOLUNTARIO SENA"
+  },
+  {
+    "Codigo": "40",
+    "Nombre": "BIENES Y SERVICIOS CAUSADOS"
+  },
+  {
+    "Codigo": "41",
+    "Nombre": "EJECUCION REZAGO PRESUPUESTAL SIN FLUJO"
+  },
+  {
+    "Codigo": "42",
+    "Nombre": "CORTO PLAZO"
+  },
+  {
+    "Codigo": "43",
+    "Nombre": "LARGO PLAZO"
+  },
+  {
+    "Codigo": "44",
+    "Nombre": "FINANCIAMIENTO BANCO DE LA REPUBLICA"
+  },
+  {
+    "Codigo": "45",
+    "Nombre": "OTROS BENEFICIOS A LOS EMPLEADOS - CORTO PLAZO"
+  },
+  {
+    "Codigo": "46",
+    "Nombre": "BENEFICIOS A LOS EMPLEADOS - LARGO PLAZO"
+  },
+  {
+    "Codigo": "47",
+    "Nombre": "FONDO DE CONTINGENCIAS DE ENTIDADES ESTATALES"
+  },
+  {
+    "Codigo": "48",
+    "Nombre": "DEPÓSITOS ENTREGADOS EN GARANTÍA"
+  },
+  {
+    "Codigo": "49",
+    "Nombre": "PRÉSTAMOS EDUCATIVOS"
+  },
+  {
+    "Codigo": "50",
+    "Nombre": "PRÉSTAMOS DE CONSUMO"
+  },
+  {
+    "Codigo": "51",
+    "Nombre": "PATRIMONIOS AUTÓNOMOS-CONCESIONARIOS (PAUC)"
+  },
+  {
+    "Codigo": "52",
+    "Nombre": "TRANSFERENCIAS - PAGO A FAVOR DE TERCEROS"
+  },
+  {
+    "Codigo": "53",
+    "Nombre": "NOMINA CAUSADA POR INTEROPERABILIDAD"
+  },
+  {
+    "Codigo": "54",
+    "Nombre": "INCENTIVOS TRIBUTARIOS EMPRESAS PUBLICAS"
+  },
+  {
+    "Codigo": "55",
+    "Nombre": "INCENTIVOS TRIBUTARIOS EMPRESAS PRIVADAS"
+  }
+]

@@ -26,6 +26,7 @@ import { TipoDetalleCDP } from 'src/app/_models/tipoDetalleCDP';
 import { RubroPresupuestal } from 'src/app/_models/rubroPresupuestal';
 import { EstadoSolicitudCDP } from 'src/app/_models/enum';
 import { Estado } from 'src/app/_models/estado';
+import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 
 @Component({
   selector: 'app-cdp-edit',
@@ -52,6 +53,7 @@ export class CdpEditComponent implements OnInit {
   listaTipoDetalle: TipoDetalleCDP[];
   idTipoDetalle: number;
   tipoDetalleSeleccionado: TipoDetalleCDP = { tipoDetalleCDPId: 0, nombre: '' };
+  notaLegal: ValorSeleccion;
 
   constructor(
     private alertify: AlertifyService,
@@ -63,6 +65,8 @@ export class CdpEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarNotaLegal();
+
     this.cargarInformacionUsuario();
 
     if (!this.esSolicitudInicial) {
@@ -382,6 +386,20 @@ export class CdpEditComponent implements OnInit {
         }
       );
   }
+
+  cargarNotaLegal() {
+    this.listaService
+      .ObtenerParametroGeneralXNombre('NotaLegalANE')
+      .subscribe(
+        (data: ValorSeleccion) => {
+          this.notaLegal = data;
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
+  }
+
 
   get esSolicitudInicial() {
     const idTipoOperacion = this.tipoOperacion?.tipoOperacionId;

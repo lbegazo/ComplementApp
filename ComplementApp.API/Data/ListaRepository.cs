@@ -55,6 +55,19 @@ namespace ComplementApp.API.Data
             return await _context.ParametroGeneral.ToListAsync();
         }
 
+        public async Task<ValorSeleccion> ObtenerParametroGeneralXNombre(string nombre)
+        {
+            return await (from pg in _context.ParametroGeneral
+                          where pg.Nombre == nombre
+                          select new ValorSeleccion()
+                          {
+                              Id = pg.ParametroGeneralId,
+                              Nombre = pg.Nombre,
+                              Valor = pg.Valor,
+                          })
+                        .FirstOrDefaultAsync();
+        }
+
         public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
         {
             return await _context.ParametroLiquidacionTercero
@@ -97,5 +110,11 @@ namespace ComplementApp.API.Data
 
         }
 
+        public async Task<IEnumerable<UsoPresupuestal>> ObtenerListaUsoPresupuestalXRubro(int rubroPresupuestalId)
+        {
+            return await _context.UsoPresupuestal
+                        .Where(x => x.RubroPresupuestalId == rubroPresupuestalId)
+                        .ToListAsync();
+        }
     }
 }

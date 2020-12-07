@@ -81,6 +81,14 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<IActionResult> ObtenerParametroGeneralXNombre([FromQuery(Name = "nombre")] string nombre)
+        {
+            var datos = await _repo.ObtenerParametroGeneralXNombre(nombre);
+            return Ok(datos);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<IActionResult> ObtenerParametroLiquidacionXTercero([FromQuery(Name = "terceroId")] int terceroId)
         {
             var datos = await _repo.ObtenerParametroLiquidacionXTercero(terceroId);
@@ -109,6 +117,14 @@ namespace ComplementApp.API.Controllers
         {
             var months = Enumerable.Range(1, 12).Select(i => new { Id = i, Nombre = UppercaseFirst(DateTimeFormatInfo.CurrentInfo.GetMonthName(i)) });
             return Ok(months);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaUsoPresupuestalXRubro([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId)
+        {
+            var lista = await _repo.ObtenerListaUsoPresupuestalXRubro(rubroPresupuestalId);
+            return Ok(lista);
         }
 
         static string UppercaseFirst(string s)

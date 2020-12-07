@@ -8,7 +8,6 @@ using Microsoft.Data.SqlClient;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using AutoMapper;
-using System.Globalization;
 
 namespace ComplementApp.API.Data
 {
@@ -60,7 +59,7 @@ namespace ComplementApp.API.Data
                          })
                                .OrderBy(c => c.FechaRadicadoSupervisor);
 
-            return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
+            return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
 

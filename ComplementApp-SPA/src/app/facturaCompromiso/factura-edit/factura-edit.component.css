@@ -3,10 +3,6 @@ table {
   width: 100%;
 }
 
-.bordealo {
-  border: 1px solid #ccc;
-}
-
 .addPadding {
   padding: 5px;
   background-color: transparent;
@@ -73,8 +69,6 @@ textarea {
   text-align: justify;
   white-space: normal;
 }
-
-
 
 #inputNumeroTercero {
   background-color: white;

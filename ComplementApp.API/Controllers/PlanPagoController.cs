@@ -88,7 +88,6 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerPlanPagoDetallado([FromQuery(Name = "planPagoId")] int planPagoId)
         {
             var planPagoBD = await _repo.ObtenerPlanPagoDetallado(planPagoId);
-            //var planPagoDto = _mapper.Map<PlanPagoDto>(planPagoBD);
             return base.Ok(planPagoBD);
         }
 

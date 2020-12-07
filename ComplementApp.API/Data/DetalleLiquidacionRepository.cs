@@ -181,7 +181,7 @@ namespace ComplementApp.API.Data
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
 
                                                     where dl.TerceroId == terceroId
-                                                    where dl.FechaRegistro.Value.Month == mesAnterior
+                                                    where dl.FechaOrdenPago.Value.Month == mesAnterior
                                                     where dl.Viaticos == "SI"
                                                     select dl)
                                             .ToListAsync();
