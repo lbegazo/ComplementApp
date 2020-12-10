@@ -30,7 +30,7 @@ export class CdpHeaderComponent implements OnInit {
   registerForm: FormGroup;
   listaTO: TipoOperacion[];
   idTipoOperacionSelecionado: number;
-  tipoOperacionSelecionado: TipoOperacion;
+  tipoOperacionSelecionado: TipoOperacion = null;
   cdp: Cdp;
 
   // Solicitud Inicial

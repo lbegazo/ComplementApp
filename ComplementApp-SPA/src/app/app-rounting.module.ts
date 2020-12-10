@@ -25,6 +25,7 @@ import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/ra
 import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
 import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
+import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -52,6 +53,13 @@ export const routes: Routes = [
         // canDeactivate: [PreventUnsavedChangesUsuario],
       },
     ],
+  },
+  {
+    path: 'ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: ParametroLiquidacionTerceroComponent,
+    resolve: { transaccion: TransaccionResolver },
   },
   {
     path: 'ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE',

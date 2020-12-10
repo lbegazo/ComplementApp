@@ -1,0 +1,14 @@
+[
+  {
+    "Codigo": "01",
+    "Nombre": "Contrato Prestación de Servicios Profesionales"
+  },
+  {
+    "Codigo": "02",
+    "Nombre": "Proveedores Con Deducciones"
+  },
+  {
+    "Codigo": "03",
+    "Nombre": "Proveedores Sin Deducciones"
+  }
+]

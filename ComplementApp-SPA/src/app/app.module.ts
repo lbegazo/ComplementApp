@@ -86,6 +86,10 @@ import { PopupDatosAdicionalesComponent } from './CausacionyLiquidacion/popup-da
 import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
 import { ClavePresupuestalContableEditComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/clave-presupuestal-contable-edit.component';
+import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
+import { ParametroLiquidacionEditComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/parametro-liquidacion-edit.component';
+import { FourDigitDecimalNumberDirective } from './_directives/four-digit-decimal-number.directive';
+import { FiveDigitDecimalNumberDirective } from './_directives/five-digit-decimal-number.directive';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -118,6 +122,8 @@ export function tokenGetter() {
     CdpHeaderComponent,
     ItemComponent,
     TwoDigitDecimaNumberDirective,
+    FourDigitDecimalNumberDirective,
+    FiveDigitDecimalNumberDirective,
     PopupCdpComponent,
     NumberCommaDirective,
     FacturaMainComponent,
@@ -141,6 +147,8 @@ export function tokenGetter() {
     ClavePresupuestalContableComponent,
     RelacionContableComponent,
     ClavePresupuestalContableEditComponent,
+    ParametroLiquidacionTerceroComponent,
+    ParametroLiquidacionEditComponent,
   ],
   imports: [
     BrowserModule,

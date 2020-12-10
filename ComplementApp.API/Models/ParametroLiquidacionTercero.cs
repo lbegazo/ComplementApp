@@ -88,5 +88,13 @@ namespace ComplementApp.API.Models
         public Tercero Tercero { get; set; }
 
         public bool GmfAfc { get; set; }
+
+         public int UsuarioIdRegistro { get; set; }  
+
+        public DateTime? FechaRegistro { get; set; }   
+
+        public int UsuarioIdModificacion { get; set; }  
+
+        public DateTime? FechaModificacion { get; set; }    
     }
 }

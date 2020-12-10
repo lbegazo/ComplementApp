@@ -45,7 +45,8 @@ export class ClavePresupuestalContableComponent implements OnInit {
     terceroId: 0,
     nombre: '',
     numeroIdentificacion: '',
-    tipoIdentificacion: '',
+    tipoDocumentoIdentidad: '',
+    tipoDocumentoIdentidadId: 0,
   };
 
   facturaHeaderForm = new FormGroup({});

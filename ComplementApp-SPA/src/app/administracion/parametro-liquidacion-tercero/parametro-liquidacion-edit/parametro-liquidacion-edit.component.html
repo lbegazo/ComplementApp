@@ -1,0 +1,839 @@
+<form #formatoNgForm="ngForm" id="formatoNgForm" [formGroup]="editForm">
+  <div class="container-fluid mt-1" style="color: black">
+    <div class="row mt-2">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td>
+              <tabset style="margin-left: auto; margin-right: auto">
+                <tab heading="PARAMETRO DE LIQUIDACION">
+                  <table>
+                    <!--Tercero-->
+                    <tr>
+                      <td style="padding: 0px 10px">
+                        <div class="form-row mt-4">
+                          <!--tipoDocumentoIdentidad-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label
+                              for="tipoDocumentoIdentidad"
+                              class="col-form-label-md"
+                              >Tipo de identificación</label
+                            >
+                            <p>{{ tercero.tipoDocumentoIdentidad }}</p>
+                          </div>
+                          <!--NumeroDocumentoIdentidad-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label
+                              for="NumeroDocumentoIdentidad"
+                              class="col-form-label-md"
+                              >Número de identificación</label
+                            >
+                            <p>{{ tercero.numeroIdentificacion }}</p>
+                          </div>
+                          <!--NombreTercero-->
+                          <div class="form-group col-md-8" style="margin: 0px">
+                            <label for="NombreTercero" class="col-form-label-md"
+                              >Nombre</label
+                            >
+                            <p>{{ tercero.nombre }}</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="addHeight"></td>
+                    </tr>
+                    <!--Parametros de liquidación de tercero-->
+                    <!--Contractuales-->
+                    <tr>
+                      <td style="padding: 0px 10px">
+                        <div class="panel panel-primary mb-2">
+                          <div class="panel-heading">
+                            <strong>CONTRACTUALES</strong>
+                          </div>
+                          <div class="panel-body mb-2">
+                            <div class="form-row mt-2">
+                              <!--Modalidad de contrato-->
+                              <div
+                                class="form-group col-md-3"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectModalidadContrato"
+                                  class="col-form-label-md"
+                                  >Modalidad de Contrato</label
+                                >
+                                <select
+                                  placeholder="Modalidad Contrato"
+                                  formControlName="modalidadContratoCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onModalidadContrato()"
+                                  id="selectModalidadContrato"
+                                  [(ngModel)]="modalidadContratoSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('modalidadContratoCtrl')
+                                        .touched &&
+                                      editForm
+                                        .get('modalidadContratoCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Modalidad de contrato
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaModalidadContrato"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('modalidadContratoCtrl')
+                                      .touched &&
+                                    editForm
+                                      .get('modalidadContratoCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar la modalidad de contrato
+                                </div>
+                              </div>
+                              <!--Tipo de pago-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectTipoPago"
+                                  class="col-form-label-md"
+                                  >Tipo de Pago</label
+                                >
+                                <select
+                                  placeholder="Tipo Pago"
+                                  formControlName="tipoPagoCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onTipoPago()"
+                                  id="selectTipoPago"
+                                  [(ngModel)]="tipoPagoSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tipoPagoCtrl').touched &&
+                                      editForm
+                                        .get('tipoPagoCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Tipo de Pago
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaTipoPago"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('tipoPagoCtrl').touched &&
+                                    editForm
+                                      .get('tipoPagoCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Tipo de Pago
+                                </div>
+                              </div>
+                              <!--Honorario sin iva-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputHonorarioSinIva"
+                                  class="col-form-label-md"
+                                  >Honor. sin iva</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('honorarioSinIvaCtrl')
+                                        .errors &&
+                                      editForm.get('honorarioSinIvaCtrl')
+                                        .touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Honorario sin Iva"
+                                  formControlName="honorarioSinIvaCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputHonorarioSinIva"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar honorario sin iva
+                                </div>
+                              </div>
+                              <!--Tarifa Iva-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputHonorarioSinIva"
+                                  class="col-form-label-md"
+                                  >Tarifa Iva</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tarifaIvaCtrl').errors &&
+                                      editForm.get('tarifaIvaCtrl').touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Tarifa Iva"
+                                  formControlName="tarifaIvaCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputHonorarioSinIva"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar Tarifa Iva
+                                </div>
+                              </div>
+                              <!--Tipo de Iva-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectTipoIva"
+                                  class="col-form-label-md"
+                                  >Tipo de Iva</label
+                                >
+                                <select
+                                  placeholder="Tipo Pago"
+                                  formControlName="tipoIvaCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onTipoIva()"
+                                  id="selectTipoIva"
+                                  [(ngModel)]="tipoIvaSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tipoIvaCtrl').touched &&
+                                      editForm
+                                        .get('tipoIvaCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Tipo de Iva
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaTipoIva"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('tipoIvaCtrl').touched &&
+                                    editForm
+                                      .get('tipoIvaCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Tipo de Pago
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-row mt-2">
+                              <!--Tipo de Cuenta Por Pagar-->
+                              <div
+                                class="form-group col-md-5"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectTipoCuentaXPagar"
+                                  class="col-form-label-md"
+                                  >Tipo de cuenta por pagar</label
+                                >
+                                <select
+                                  placeholder="Tipo de Cuenta por Pagar"
+                                  formControlName="tipoCuentaXPagarCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onTipoCuentaXPagar()"
+                                  id="selectTipoCuentaXPagar"
+                                  [(ngModel)]="tipoCuentaXPagarSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tipoCuentaXPagarCtrl')
+                                        .touched &&
+                                      editForm
+                                        .get('tipoCuentaXPagarCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Tipo de cuenta por pagar
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaTipoCuentaXPagar"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('tipoCuentaXPagarCtrl')
+                                      .touched &&
+                                    editForm
+                                      .get('tipoCuentaXPagarCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar tipo de cuenta x pagar
+                                </div>
+                              </div>
+                              <!--Tipo de pago-->
+                              <div
+                                class="form-group col-md-4"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectTipoDocumentoSoporte"
+                                  class="col-form-label-md"
+                                  >Tipo de Documento de Soporte</label
+                                >
+                                <select
+                                  placeholder="Tipo Pago"
+                                  formControlName="tipoDocumentoSoporteCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onTipoDocumentoSoporte()"
+                                  id="selectTipoDocumentoSoporte"
+                                  [(ngModel)]="tipoDocumentoSoporteSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tipoDocumentoSoporteCtrl')
+                                        .touched &&
+                                      editForm
+                                        .get('tipoDocumentoSoporteCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Tipo de Pago
+                                  </option>
+                                  <option
+                                    *ngFor="
+                                      let item of listaTipoDocumentoSoporte
+                                    "
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('tipoDocumentoSoporteCtrl')
+                                      .touched &&
+                                    editForm
+                                      .get('tipoDocumentoSoporteCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Tipo de Pago
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="addHeight"></td>
+                    </tr>
+                    <!--Seguridad Social-->
+                    <tr *ngIf="this.idModalidadContratoSelecionado === 1">
+                      <td style="padding: 0px 10px">
+                        <div class="panel panel-primary mb-2">
+                          <div class="panel-heading">
+                            <strong>SEGURIDAD SOCIAL</strong>
+                          </div>
+                          <div class="panel-body mb-2">
+                            <div class="form-row mt-3">
+                              <!--Base Aporte Salud-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputBaseAporteSalud"
+                                  class="col-form-label-md"
+                                  >Base Aporte Salud</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('baseAporteSaludCtrl')
+                                        .errors &&
+                                      editForm.get('baseAporteSaludCtrl')
+                                        .touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Base Aporte Salud"
+                                  formControlName="baseAporteSaludCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputBaseAporteSalud"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar el Base Aporte Salud
+                                </div>
+                              </div>
+                              <!--Aporte Salud-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputAporteSalud"
+                                  class="col-form-label-md"
+                                  >Aporte Salud</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('aporteSaludCtrl').errors &&
+                                      editForm.get('aporteSaludCtrl').touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Aporte Salud"
+                                  formControlName="aporteSaludCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputAporteSalud"
+                                  appFourDigitDecimalNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar el Aporte Salud
+                                </div>
+                              </div>
+                              <!--Aporte Pensión -->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputAportePension"
+                                  class="col-form-label-md"
+                                  >Aporte Pensión</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('aportePensionCtrl')
+                                        .errors &&
+                                      editForm.get('aportePensionCtrl').touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Aporte Pensión"
+                                  formControlName="aportePensionCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputAportePension"
+                                  appFourDigitDecimalNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar el Aporte Pensión
+                                </div>
+                              </div>
+                              <!--Riesgo Laboral-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputRiesgoLaboral"
+                                  class="col-form-label-md"
+                                  >Riesgo Laboral</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('riesgoLaboralCtrl')
+                                        .errors &&
+                                      editForm.get('riesgoLaboralCtrl').touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Riesgo Laboral"
+                                  formControlName="riesgoLaboralCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputRiesgoLaboral"
+                                  appFiveDigitDecimalNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar el Riesgo Laboral
+                                </div>
+                              </div>
+                              <!--Fondo Solidaridad-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputFondoSolidaridad"
+                                  class="col-form-label-md"
+                                  >Fondo Solidaridad</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('fondoSolidaridadCtrl')
+                                        .errors &&
+                                      editForm.get('fondoSolidaridadCtrl')
+                                        .touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="fondo Solidaridad"
+                                  formControlName="fondoSolidaridadCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputFondoSolidaridad"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar el Fondo de Solidaridad
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="addHeight"></td>
+                    </tr>
+                    <!--Descuentos-->
+                    <tr *ngIf="this.idModalidadContratoSelecionado === 1">
+                      <td style="padding: 0px 10px">
+                        <div class="panel panel-primary mb-2">
+                          <div class="panel-heading">
+                            <strong>DESCUENTOS</strong>
+                          </div>
+                          <div class="panel-body mb-2">
+                            <div class="form-row mt-3">
+                              <!--Pensión Voluntaria-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputPensionVoluntaria"
+                                  class="col-form-label-md"
+                                  >Pensión Voluntaria</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('pensionVoluntariaCtrl')
+                                        .errors &&
+                                      editForm.get('pensionVoluntariaCtrl')
+                                        .touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Pensión Voluntaria"
+                                  formControlName="pensionVoluntariaCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputPensionVoluntaria"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar la Pensión Voluntaria
+                                </div>
+                              </div>
+                              <!--Dependientes-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputDependientes"
+                                  class="col-form-label-md"
+                                  >Dependientes</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('dependienteCtrl').errors &&
+                                      editForm.get('dependienteCtrl').touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Dependientes"
+                                  formControlName="dependienteCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputDependientes"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar Dependientes
+                                </div>
+                              </div>
+                              <!--AFC -->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label for="inputAFC" class="col-form-label-md"
+                                  >AFC</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('afcCtrl').errors &&
+                                      editForm.get('afcCtrl').touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="AFC"
+                                  formControlName="afcCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputAFC"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar AFC
+                                </div>
+                              </div>
+                              <!--Medicina Prepagada-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputMedicinaPrepagada"
+                                  class="col-form-label-md"
+                                  >Medicina Prepagada</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('medicinaPrepagadaCtrl')
+                                        .errors &&
+                                      editForm.get('medicinaPrepagadaCtrl')
+                                        .touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Medicina Prepagada"
+                                  formControlName="medicinaPrepagadaCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputMedicinaPrepagada"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar Medicina Prepagada
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-row mt-2">
+                              <!--Intereses Vivienda-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputInteresesVivienda"
+                                  class="col-form-label-md"
+                                  >Intereses Vivienda</label
+                                >
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('interesesViviendaCtrl')
+                                        .errors &&
+                                      editForm.get('interesesViviendaCtrl')
+                                        .touched
+                                  }"
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Interes Vivienda"
+                                  formControlName="interesesViviendaCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputInteresesVivienda"
+                                  appTwoDigitDecimaNumber
+                                />
+                                <div class="invalid-feedback">
+                                  Debe ingresar Intereses Vivienda
+                                </div>
+                              </div>
+                              <!--Fecha de inicio-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputFechaInicio"
+                                  class="col-form-label-md"
+                                  >Fecha inicial interes de vivienda</label
+                                >
+
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('fechaInicioCtrl').errors &&
+                                      editForm.get('fechaInicioCtrl').touched
+                                  }"
+                                  class="form-control border border-bottom-0 addPadding"
+                                  placeholder="Fecha de inicio"
+                                  formControlName="fechaInicioCtrl"
+                                  type="text"
+                                  bsDatepicker
+                                  style="height: 33px"
+                                  [bsConfig]="bsConfig"
+                                  id="inputFechaInicio"
+                                />
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('fechaInicioCtrl').touched &&
+                                    editForm
+                                      .get('fechaInicioCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  La fecha de inicio es requerida
+                                </div>
+                              </div>
+                              <!--Fecha Final-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputFechaFinal"
+                                  class="col-form-label-md"
+                                  >Fecha final interes de vivienda</label
+                                >
+
+                                <input
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('fechaFinalCtrl').errors &&
+                                      editForm.get('fechaFinalCtrl').touched
+                                  }"
+                                  class="form-control border border-bottom-0 addPadding"
+                                  placeholder="Fecha de inicio"
+                                  formControlName="fechaFinalCtrl"
+                                  type="text"
+                                  style="height: 33px"
+                                  bsDatepicker
+                                  [bsConfig]="bsConfig"
+                                  id="inputFechaFinal"
+                                />
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('fechaFinalCtrl').touched &&
+                                    editForm
+                                      .get('fechaFinalCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  La fecha final es requerida
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <!--Botones-->
+                    <tr>
+                      <td
+                        style="
+                          padding-right: 10px;
+                          padding-left: 10px;
+                          padding-bottom: 15px;
+                          padding-top: 0px;
+                        "
+                      >
+                        <div class="form-row mt-3">
+                          <div class="col-12 right">
+                            <div
+                              style="
+                                width: 100%;
+                                margin-left: auto;
+                                margin-right: auto;
+                              "
+                              class="right"
+                            >
+                              <button
+                                type="submit"
+                                class="btn btn-success mr-2"
+                                (click)="onLimpiarForm()"
+                                style="width: 80px"
+                              >
+                                Limpiar
+                              </button>
+                              <button
+                                type="submit"
+                                class="btn btn-primary mr-2"
+                                (click)="onGuardar()"
+                                [disabled]="!editForm.valid"
+                              >
+                                {{ nombreBoton }}
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-default"
+                                (click)="onCancelar()"
+                              >
+                                Volver
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </tab>
+                <tab heading="DEDUCCIONES"> </tab>
+              </tabset>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- <p>Form value: {{ editForm.value | json }}</p>
+<p>Form status: {{ editForm.status | json }}</p>
+<p>
+  parametroLiquidacionSeleccionado:
+  {{ parametroLiquidacionSeleccionado | json }}
+</p> -->

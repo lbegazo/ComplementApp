@@ -52,11 +52,11 @@ export class UsuarioEditComponent implements OnInit {
   areas: Area[];
   cargos: Cargo[];
   perfiles: Perfil[];
-  areaSelected = 0;
-  cargoSelected = 0;
+  areaSelected?: number;
+  cargoSelected?: number;
   arrayRubro: number[] = [];
-  areaSeleccionada: Area;
-  cargoSeleccionado: Cargo;
+  areaSeleccionada: Area = null;
+  cargoSeleccionado: Cargo = null;
 
   constructor(
     private listaService: ListaService,
@@ -92,8 +92,8 @@ export class UsuarioEditComponent implements OnInit {
         usernameCtrl: ['', Validators.required],
         nombreCtrl: ['', Validators.required],
         apellidoCtrl: ['', Validators.required],
-        areaControl: ['', Validators.required],
-        cargoControl: ['', Validators.required],
+        areaControl: [0, Validators.required],
+        cargoControl: [0, Validators.required],
         perfilesControles: this.createPerfilesControles(),
         passwordCtrl: [
           '',
@@ -147,7 +147,6 @@ export class UsuarioEditComponent implements OnInit {
     this.cargoSeleccionado = this.cargos.filter(
       (x) => x.cargoId === this.cargoSelected
     )[0];
-
 
     if (this.perfiles) {
       for (const perfil of this.perfiles) {

@@ -70,6 +70,8 @@ namespace ComplementApp.API.Helpers
             CreateMap<Deduccion, DeduccionDto>();
 
             #endregion
+        
+            
         }
     }
 }

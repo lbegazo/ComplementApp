@@ -123,14 +123,42 @@ export class ListaService {
     );
   }
 
-  ObtenerListaUsoPresupuestalXRubro(rubroPresupuestalId: number): Observable<UsoPresupuestal[]> {
+  ObtenerListaUsoPresupuestalXRubro(
+    rubroPresupuestalId: number
+  ): Observable<UsoPresupuestal[]> {
     let params = new HttpParams();
 
     if (rubroPresupuestalId > 0) {
-      params = params.append('rubroPresupuestalId', rubroPresupuestalId.toString());
+      params = params.append(
+        'rubroPresupuestalId',
+        rubroPresupuestalId.toString()
+      );
     }
     return this.http.get<UsoPresupuestal[]>(
       this.baseUrl + 'lista/ObtenerListaUsoPresupuestalXRubro',
+      { params }
+    );
+  }
+
+  ObtenerListaXTipo(listaId: number): Observable<ValorSeleccion[]> {
+    let params = new HttpParams();
+
+    if (listaId > 0) {
+      params = params.append('listaId', listaId.toString());
+    }
+    return this.http.get<ValorSeleccion[]>(
+      this.baseUrl + 'lista/ObtenerListaXTipo',
+      { params }
+    );
+  }
+
+  ObtenerParametrosGeneralesXTipo(tipo: string): Observable<ValorSeleccion[]> {
+    let params = new HttpParams();
+
+    params = params.append('tipo', tipo);
+
+    return this.http.get<ValorSeleccion[]>(
+      this.baseUrl + 'lista/ObtenerParametrosGeneralesXTipo',
       { params }
     );
   }

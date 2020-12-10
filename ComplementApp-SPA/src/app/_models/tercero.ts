@@ -1,6 +1,7 @@
 export interface Tercero {
   terceroId: number;
-  tipoIdentificacion: string;
+  tipoDocumentoIdentidadId: number;
+  tipoDocumentoIdentidad: string;
   numeroIdentificacion: string;
   nombre: string;
 }

@@ -63,7 +63,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
     terceroId: 0,
     nombre: '',
     numeroIdentificacion: '',
-    tipoIdentificacion: '',
+    tipoDocumentoIdentidad: '',
+    tipoDocumentoIdentidadId: 0,
   };
 
   listaActividadEconomica: ValorSeleccion[];

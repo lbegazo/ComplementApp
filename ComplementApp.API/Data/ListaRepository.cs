@@ -68,6 +68,22 @@ namespace ComplementApp.API.Data
                         .FirstOrDefaultAsync();
         }
 
+        public async Task<ICollection<ValorSeleccion>> ObtenerParametrosGeneralesXTipo(string tipo)
+        {
+            var filtroUpper = tipo.ToUpper();
+
+            return await (from pg in _context.ParametroGeneral
+                          where pg.Tipo.ToUpper() == filtroUpper
+                          select new ValorSeleccion()
+                          {
+                              Id = pg.ParametroGeneralId,
+                              Nombre = pg.Nombre,
+                              Valor = pg.Valor,
+                              TipoDocumento = pg.Tipo
+                          })
+                        .ToListAsync();
+        }
+
         public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
         {
             return await _context.ParametroLiquidacionTercero
@@ -116,5 +132,74 @@ namespace ComplementApp.API.Data
                         .Where(x => x.RubroPresupuestalId == rubroPresupuestalId)
                         .ToListAsync();
         }
+
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaXTipo(TipoLista tipo)
+        {
+            List<ValorSeleccion> lista = new List<ValorSeleccion>();
+
+            switch (tipo)
+            {
+                case TipoLista.ModalidadContrato:
+                    {
+                        lista = await (from m in _context.TipoModalidadContrato
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.TipoModalidadContratoId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.TipoCuentaXPagar:
+                    {
+                        lista = await (from m in _context.TipoCuentaXPagar
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.TipoCuentaXPagarId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.TipoIva:
+                    {
+                        lista = await (from m in _context.TipoIva
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.TipoIvaId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.TipoPago:
+                    {
+                        lista = await (from m in _context.TipoDePago
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.TipoDePagoId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.TipoDocumentoSoporte:
+                    {
+                        lista = await (from m in _context.TipoDocumentoSoporte
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.TipoDocumentoSoporteId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                default: break;
+            }
+
+            return lista;
+        }
+
+
     }
 }

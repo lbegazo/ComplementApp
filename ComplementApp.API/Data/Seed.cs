@@ -47,6 +47,138 @@ namespace ComplementApp.API.Data
             SeedFuenteFinanciacion(context);
             SeedRecursoPresupuestal(context);
             SeedAtributoContable(context);
+
+            SeedModalidadContrato(context);
+            SeedTipoDePago(context);
+            SeedTipoIva(context);
+            SeedTipoCuentaXPagar(context);
+            SeedTipoDocumentoSoporte(context);
+            SeedTipoDocumentoIdentidad(context);
+        }
+
+        private static void SeedTipoDocumentoIdentidad(DataContext context)
+        {
+            TipoDocumentoIdentidad valor = null;
+            List<TipoDocumentoIdentidad> lista = new List<TipoDocumentoIdentidad>();
+
+            if (!context.TipoDocumentoIdentidad.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoDocumentoIdentidad.json");
+                var items = JsonConvert.DeserializeObject<List<TipoDocumentoIdentidad>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoDocumentoIdentidad();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoDocumentoIdentidad.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+        private static void SeedModalidadContrato(DataContext context)
+        {
+            TipoModalidadContrato valor = null;
+            List<TipoModalidadContrato> lista = new List<TipoModalidadContrato>();
+
+            if (!context.TipoModalidadContrato.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_ModalidadContrato.json");
+                var items = JsonConvert.DeserializeObject<List<TipoModalidadContrato>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoModalidadContrato();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoModalidadContrato.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedTipoDePago(DataContext context)
+        {
+            TipoDePago valor = null;
+            List<TipoDePago> lista = new List<TipoDePago>();
+
+            if (!context.TipoDePago.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoDePago.json");
+                var items = JsonConvert.DeserializeObject<List<TipoDePago>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoDePago();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoDePago.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedTipoIva(DataContext context)
+        {
+            TipoIva valor = null;
+            List<TipoIva> lista = new List<TipoIva>();
+
+            if (!context.TipoIva.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoIva.json");
+                var items = JsonConvert.DeserializeObject<List<TipoIva>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoIva();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoIva.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedTipoCuentaXPagar(DataContext context)
+        {
+            TipoCuentaXPagar valor = null;
+            List<TipoCuentaXPagar> lista = new List<TipoCuentaXPagar>();
+
+            if (!context.TipoCuentaXPagar.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoCuentaXPagar.json");
+                var items = JsonConvert.DeserializeObject<List<TipoCuentaXPagar>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoCuentaXPagar();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoCuentaXPagar.AddRange(lista);
+                context.SaveChanges();
+            }
+        }
+
+        private static void SeedTipoDocumentoSoporte(DataContext context)
+        {
+            TipoDocumentoSoporte valor = null;
+            List<TipoDocumentoSoporte> lista = new List<TipoDocumentoSoporte>();
+
+            if (!context.TipoDocumentoSoporte.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoDocumentoSoporte.json");
+                var items = JsonConvert.DeserializeObject<List<TipoDocumentoSoporte>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoDocumentoSoporte();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    lista.Add(valor);
+                }
+                context.TipoDocumentoSoporte.AddRange(lista);
+                context.SaveChanges();
+            }
         }
 
         private static void SeedAtributoContable(DataContext context)
@@ -242,7 +374,7 @@ namespace ComplementApp.API.Data
                 var items = JsonConvert.DeserializeObject<List<ParametroLiquidacionTerceroDto>>(data);
                 foreach (var item in items)
                 {
-                    var terceroBD = obtenerTercero(context, item.TipoIdentificacion, item.IdentificacionTercero);
+                    var terceroBD = obtenerTercero(context, item.TipoDocumentoIdentidadId, item.IdentificacionTercero);
                     if (terceroBD != null)
                     {
                         nuevoItem = new ParametroLiquidacionTercero();
@@ -256,14 +388,14 @@ namespace ComplementApp.API.Data
                         nuevoItem.Debito = item.Debito;
                         nuevoItem.Dependiente = item.Dependiente;
 
-                        if (!string.IsNullOrEmpty(item.FechaFinalDescuentoInteresVivienda))
+                        if (!string.IsNullOrEmpty(item.FechaFinalDescuentoInteresViviendaDes))
                         {
-                            if (DateTime.TryParse(item.FechaFinalDescuentoInteresVivienda, out fecha))
+                            if (DateTime.TryParse(item.FechaFinalDescuentoInteresViviendaDes, out fecha))
                                 nuevoItem.FechaFinalDescuentoInteresVivienda = fecha;
                         }
 
-                        if (!string.IsNullOrEmpty(item.FechaInicioDescuentoInteresVivienda))
-                            if (DateTime.TryParse(item.FechaInicioDescuentoInteresVivienda, out fecha))
+                        if (!string.IsNullOrEmpty(item.FechaInicioDescuentoInteresViviendaDes))
+                            if (DateTime.TryParse(item.FechaInicioDescuentoInteresViviendaDes, out fecha))
                                 nuevoItem.FechaInicioDescuentoInteresVivienda = fecha;
 
                         nuevoItem.FondoSolidaridad = item.FondoSolidaridad;
@@ -334,6 +466,7 @@ namespace ComplementApp.API.Data
                     nuevoItem.Nombre = item.Nombre;
                     nuevoItem.Descripcion = item.Descripcion;
                     nuevoItem.Valor = item.Valor;
+                    nuevoItem.Tipo = item.Tipo;
                     lista.Add(nuevoItem);
                 }
             }

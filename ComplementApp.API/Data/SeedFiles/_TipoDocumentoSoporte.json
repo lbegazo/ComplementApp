@@ -1,0 +1,258 @@
+[
+    {
+        "Codigo": "1",
+        "Nombre": "ACTO ADMINISTRATIVO"
+    },
+    {
+        "Codigo": "2",
+        "Nombre": "RESOLUCION"
+    },
+    {
+        "Codigo": "3",
+        "Nombre": "LEY"
+    },
+    {
+        "Codigo": "4",
+        "Nombre": "DECRETO"
+    },
+    {
+        "Codigo": "5",
+        "Nombre": "DECRETO LEY"
+    },
+    {
+        "Codigo": "6",
+        "Nombre": "OFICIO"
+    },
+    {
+        "Codigo": "7",
+        "Nombre": "OTROS"
+    },
+    {
+        "Codigo": "8",
+        "Nombre": "CONSIGNACION"
+    },
+    {
+        "Codigo": "9",
+        "Nombre": "CONTRATO"
+    },
+    {
+        "Codigo": "10",
+        "Nombre": "CONTRATO INTERADMINISTRATIVO"
+    },
+    {
+        "Codigo": "11",
+        "Nombre": "CUENTA DE COBRO"
+    },
+    {
+        "Codigo": "12",
+        "Nombre": "CUMPLIDO A SATISFACCION"
+    },
+    {
+        "Codigo": "13",
+        "Nombre": "CUMPLIDO DE REQUERIMIENTOS DE NECESIDADES TECNICAS"
+    },
+    {
+        "Codigo": "14",
+        "Nombre": "DECLARACIONES TRIBUTARIAS"
+    },
+    {
+        "Codigo": "15",
+        "Nombre": "DIP"
+    },
+    {
+        "Codigo": "16",
+        "Nombre": "ENTRADA A ALMACEN"
+    },
+    {
+        "Codigo": "17",
+        "Nombre": "FACTURA"
+    },
+    {
+        "Codigo": "18",
+        "Nombre": "LOA - CARTA ACEPTACION"
+    },
+    {
+        "Codigo": "19",
+        "Nombre": "NOMINA"
+    },
+    {
+        "Codigo": "20",
+        "Nombre": "NOTA CREDITO"
+    },
+    {
+        "Codigo": "21",
+        "Nombre": "NOTA DEBITO"
+    },
+    {
+        "Codigo": "22",
+        "Nombre": "OTRAS AUTORIZACIONES ESPECIALES"
+    },
+    {
+        "Codigo": "23",
+        "Nombre": "OTRO DOCUMENTO DE COBRO"
+    },
+    {
+        "Codigo": "24",
+        "Nombre": "PAGARE"
+    },
+    {
+        "Codigo": "25",
+        "Nombre": "POLIZA DE CUMPLIMIENTO"
+    },
+    {
+        "Codigo": "26",
+        "Nombre": "PUBLICACION DIARIO OFICIAL"
+    },
+    {
+        "Codigo": "27",
+        "Nombre": "RECEPCION DE SERVICIOS"
+    },
+    {
+        "Codigo": "28",
+        "Nombre": "RECIBOS OFICIALES DE PAGO"
+    },
+    {
+        "Codigo": "29",
+        "Nombre": "ACTA DE AVANCE DE OBRA "
+    },
+    {
+        "Codigo": "30",
+        "Nombre": "SOLICITUD "
+    },
+    {
+        "Codigo": "31",
+        "Nombre": "ACTA"
+    },
+    {
+        "Codigo": "32",
+        "Nombre": "COMPROBANTE CONTABLE"
+    },
+    {
+        "Codigo": "33",
+        "Nombre": "CONTRATO DE CREDITO"
+    },
+    {
+        "Codigo": "34",
+        "Nombre": "CONTRATO DE PRESTACION DE SERVICIOS  "
+    },
+    {
+        "Codigo": "35",
+        "Nombre": "CONTRATO DE CONSULTORIA"
+    },
+    {
+        "Codigo": "36",
+        "Nombre": "CONTRATO DE PRESTACION DE SERVICIOS - PROFESIONALES"
+    },
+    {
+        "Codigo": "37",
+        "Nombre": "CONTRATO DE ARRENDAMIENTO"
+    },
+    {
+        "Codigo": "38",
+        "Nombre": "CONTRATO DE OBRA"
+    },
+    {
+        "Codigo": "39",
+        "Nombre": "CONTRATO DE FIDUCIA- ENCARGO FIDUCIARIO-ADMINISTRACION DE FONDOS"
+    },
+    {
+        "Codigo": "40",
+        "Nombre": "CONTRATO DE COMPRA VENTA Y SUMINISTROS"
+    },
+    {
+        "Codigo": "41",
+        "Nombre": "Causación de Ingresos"
+    },
+    {
+        "Codigo": "42",
+        "Nombre": "Recaudos Básicos"
+    },
+    {
+        "Codigo": "43",
+        "Nombre": "Obligación Presupuestal"
+    },
+    {
+        "Codigo": "44",
+        "Nombre": "ORDEN DE PAGO"
+    },
+    {
+        "Codigo": "45",
+        "Nombre": "Reembolso Caja Menor"
+    },
+    {
+        "Codigo": "46",
+        "Nombre": "Reintegro de Caja Menor"
+    },
+    {
+        "Codigo": "47",
+        "Nombre": "Acreedor de Ingresos"
+    },
+    {
+        "Codigo": "48",
+        "Nombre": "Acreedor de EPG"
+    },
+    {
+        "Codigo": "49",
+        "Nombre": "Acreedor de PAG"
+    },
+    {
+        "Codigo": "50",
+        "Nombre": "Documento de Recaudo por Clasificar de ING"
+    },
+    {
+        "Codigo": "51",
+        "Nombre": "Documento de Recaudo por Clasificar de Bancos"
+    },
+    {
+        "Codigo": "52",
+        "Nombre": "Documento de Recaudo por Clasificar de Títulos"
+    },
+    {
+        "Codigo": "53",
+        "Nombre": "Compromiso"
+    },
+    {
+        "Codigo": "54",
+        "Nombre": "Acto administrativo"
+    },
+    {
+        "Codigo": "55",
+        "Nombre": "CONTRATO DE APORTE"
+    },
+    {
+        "Codigo": "56",
+        "Nombre": "CONTRATO DE INTERVENTORIA"
+    },
+    {
+        "Codigo": "57",
+        "Nombre": "ACEPTACION DE OFERTAS"
+    },
+    {
+        "Codigo": "58",
+        "Nombre": "ORDEN ADMINISTRATIVA"
+    },
+    {
+        "Codigo": "59",
+        "Nombre": "POLIZAS"
+    },
+    {
+        "Codigo": "60",
+        "Nombre": "CONVENIO"
+    },
+    {
+        "Codigo": "61",
+        "Nombre": "ORDEN DE COMPRA"
+    },
+    {
+        "Codigo": "62",
+        "Nombre": "ORDEN DE SERVICIO"
+    },
+    {
+        "Codigo": "63",
+        "Nombre": "PLANILLA SEGURIDAD SOCIAL"
+    },
+    {
+        "Codigo": "64",
+        "Nombre": "INTEROPERABILIDAD"
+    }
+]

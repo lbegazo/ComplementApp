@@ -3,17 +3,14 @@ import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
 
 import {
-  FormArray,
   FormBuilder,
   FormGroup,
   NgForm,
 } from '@angular/forms';
 import { SolicitudCDP } from 'src/app/_models/solicitudCDP';
-import { TipoOperacion } from 'src/app/_models/tipoOperacion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { AuthService } from 'src/app/_services/auth.service';
-import { CdpService } from 'src/app/_services/cdp.service';
 import { ListaService } from 'src/app/_services/lista.service';
+import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 
 @Component({
   selector: 'app-formato-cdp',
@@ -27,6 +24,7 @@ export class FormatoCdpComponent implements OnInit {
   @Input() solicitudCDPSeleccionado: SolicitudCDP;
   @Output() esCancelado = new EventEmitter<boolean>();
 
+  notaLegal: ValorSeleccion;
   cambiosConfirmados = false;
   cdpForm = new FormGroup({});
 
@@ -35,17 +33,30 @@ export class FormatoCdpComponent implements OnInit {
 
   constructor(
     private alertify: AlertifyService,
-    private authService: AuthService,
     private fb: FormBuilder,
     private listaService: ListaService,
-    private cdpService: CdpService
   ) {}
 
   ngOnInit() {
+    this.cargarNotaLegal();
     this.createCdpForm();
   }
 
   createCdpForm() {}
+
+  cargarNotaLegal() {
+    this.listaService
+      .ObtenerParametroGeneralXNombre('NotaLegalANE')
+      .subscribe(
+        (data: ValorSeleccion) => {
+          this.notaLegal = data;
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
+  }
+
 
 
   exportarPDF() {

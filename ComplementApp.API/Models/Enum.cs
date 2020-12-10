@@ -71,4 +71,18 @@ namespace ComplementApp.API.Models
         SOLICITUD_INICIAL,
     }
 
+    public enum TipoLista
+    {
+        ModalidadContrato = 1,
+        TipoPago = 2,
+        TipoIva = 3,
+        TipoCuentaXPagar = 4,
+        TipoDocumentoSoporte = 5,
+    }
+
+    public enum TipoOperacionTransaccion
+    {
+        Creacion = 1,
+        Modificacion = 2
+    }
 }

@@ -87,7 +87,12 @@ namespace ComplementApp.API.Data
         public DbSet<CuentaContable> CuentaContable { get; set; }
         public DbSet<RelacionContable> RelacionContable { get; set; }
         public DbSet<ClavePresupuestalContable> ClavePresupuestalContable { get; set; }
-
+        public DbSet<TipoCuentaXPagar> TipoCuentaXPagar { get; set; }
+        public DbSet<TipoDePago> TipoDePago { get; set; }
+        public DbSet<TipoDocumentoSoporte> TipoDocumentoSoporte { get; set; }
+        public DbSet<TipoIva> TipoIva { get; set; }
+        public DbSet<TipoModalidadContrato> TipoModalidadContrato { get; set; }
+        public DbSet<TipoDocumentoIdentidad> TipoDocumentoIdentidad { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

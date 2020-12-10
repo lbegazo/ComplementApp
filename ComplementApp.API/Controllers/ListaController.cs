@@ -89,6 +89,15 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<IActionResult> ObtenerParametrosGeneralesXTipo([FromQuery(Name = "tipo")] string tipo)
+        {
+            var datos = await _repo.ObtenerParametrosGeneralesXTipo(tipo);
+            return Ok(datos);
+        }
+
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<IActionResult> ObtenerParametroLiquidacionXTercero([FromQuery(Name = "terceroId")] int terceroId)
         {
             var datos = await _repo.ObtenerParametroLiquidacionXTercero(terceroId);
@@ -124,6 +133,15 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerListaUsoPresupuestalXRubro([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId)
         {
             var lista = await _repo.ObtenerListaUsoPresupuestalXRubro(rubroPresupuestalId);
+            return Ok(lista);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaXTipo([FromQuery(Name = "listaId")] int listaId)
+        {
+            TipoLista tipoLista = (TipoLista)listaId;
+            var lista = await _repo.ObtenerListaXTipo(tipoLista);
             return Ok(lista);
         }
 

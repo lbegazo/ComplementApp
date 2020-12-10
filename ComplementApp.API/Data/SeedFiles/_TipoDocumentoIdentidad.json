@@ -1,0 +1,32 @@
+[
+    {
+      "Codigo": "01",
+      "Nombre": "NIT"
+    },
+    {
+      "Codigo": "02",
+      "Nombre": "Otro"
+    },
+    {
+      "Codigo": "03",
+      "Nombre": "Cédula de Ciudadanía"
+    },
+    {
+      "Codigo": "04",
+      "Nombre": "Registro Civil"
+    },
+    {
+      "Codigo": "05",
+      "Nombre": "Tarjeta de Identidad"
+    },
+    {
+      "Codigo": "06",
+      "Nombre": "Pasaporte"
+    },
+    {
+      "Codigo": "07",
+      "Nombre": "Cédula de Extranjería"
+    }
+    
+  ]
+  

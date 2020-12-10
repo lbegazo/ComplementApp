@@ -43,7 +43,8 @@ export class RadicadoPagoMensualComponent implements OnInit, OnDestroy {
     terceroId: 0,
     nombre: '',
     numeroIdentificacion: '',
-    tipoIdentificacion: '',
+    tipoDocumentoIdentidad: '',
+    tipoDocumentoIdentidadId: 0,
   };
 
   facturaHeaderForm = new FormGroup({});

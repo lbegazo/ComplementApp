@@ -20,5 +20,9 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(500)")]
         public string Valor { get; set; }
 
+        [Column(TypeName = "VARCHAR(250)")]
+        public string Tipo { get; set; }
+
+
     }
 }

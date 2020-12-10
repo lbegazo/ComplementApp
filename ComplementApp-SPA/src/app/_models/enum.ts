@@ -51,6 +51,15 @@ export class PerfilUsuario extends Enum<number> {
   public static readonly RegistradorContable = new Enum(5);
 }
 
+export class TipoLista extends Enum<number> {
+  public static readonly ModalidadContrato = new Enum(1);
+  public static readonly TipoPago = new Enum(2);
+  public static readonly TipoIva = new Enum(3);
+  public static readonly TipoCuentaXPagar = new Enum(4);
+  public static readonly TipoDocumentoSoporte = new Enum(5);
+}
+
+
 /*
 console.log(PrimaryColor.Red);
 // Output: Enum { value: '#FF0000' }

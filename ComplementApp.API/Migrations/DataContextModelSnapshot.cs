@@ -886,6 +886,9 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
+                    b.Property<string>("Tipo")
+                        .HasColumnType("VARCHAR(250)");
+
                     b.Property<string>("Valor")
                         .HasColumnType("VARCHAR(500)");
 
@@ -929,6 +932,12 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaInicioDescuentoInteresVivienda")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModificacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaRegistro")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("FondoSolidaridad")
@@ -977,6 +986,12 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("TipoPago")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioIdModificacion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioIdRegistro")
                         .HasColumnType("int");
 
                     b.HasKey("ParametroLiquidacionTerceroId");
@@ -1403,6 +1418,46 @@ namespace ComplementApp.API.Migrations
                     b.ToTable("TTipoBaseDeduccion");
                 });
 
+            modelBuilder.Entity("ComplementApp.API.Models.TipoCuentaXPagar", b =>
+                {
+                    b.Property<int>("TipoCuentaXPagarId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.HasKey("TipoCuentaXPagarId");
+
+                    b.ToTable("TTipoCuentaXPagar");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.TipoDePago", b =>
+                {
+                    b.Property<int>("TipoDePagoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.HasKey("TipoDePagoId");
+
+                    b.ToTable("TTipoDePago");
+                });
+
             modelBuilder.Entity("ComplementApp.API.Models.TipoDetalleCDP", b =>
                 {
                     b.Property<int>("TipoDetalleCDPId")
@@ -1417,6 +1472,46 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("TipoDetalleCDPId");
 
                     b.ToTable("TTipoDetalleCDP");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.TipoDocumentoIdentidad", b =>
+                {
+                    b.Property<int>("TipoDocumentoIdentidadId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.HasKey("TipoDocumentoIdentidadId");
+
+                    b.ToTable("TTipoDocumentoIdentidad");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.TipoDocumentoSoporte", b =>
+                {
+                    b.Property<int>("TipoDocumentoSoporteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.HasKey("TipoDocumentoSoporteId");
+
+                    b.ToTable("TTipoDocumentoSoporte");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.TipoGasto", b =>
@@ -1437,6 +1532,46 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("TipoGastoId");
 
                     b.ToTable("TTipoGasto");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.TipoIva", b =>
+                {
+                    b.Property<int>("TipoIvaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.HasKey("TipoIvaId");
+
+                    b.ToTable("TTipoIva");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.TipoModalidadContrato", b =>
+                {
+                    b.Property<int>("TipoModalidadContratoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.HasKey("TipoModalidadContratoId");
+
+                    b.ToTable("TTipoModalidadContrato");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.TipoOperacion", b =>

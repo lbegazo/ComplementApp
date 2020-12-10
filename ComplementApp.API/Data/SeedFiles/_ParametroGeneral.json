@@ -13,7 +13,7 @@
     "Nombre": "CodigoRenta",
     "Descripcion": "Codigo Renta",
     "Valor": "2-01-04-01-29"
-  },  
+  },
   {
     "Nombre": "Pci-ANE",
     "Descripcion": "Pci ANE",
@@ -23,5 +23,41 @@
     "Nombre": "NotaLegalANE",
     "Descripcion": "Nota Legal ANE",
     "Valor": "El presente documento es firmado bajo los parámetros establecidos en en el Decreto 1168 de 2020, prorrogado por el Decreto 1550 de 2020 concordante con las Resoluciones Nro. 283 y 405 de 2020 expedidas por la ANE."
+  },
+  {
+    "Nombre": "BaseAporteSalud",
+    "Descripcion": "Base Aporte Salud",
+    "Valor": "0.40000",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "AporteSalud",
+    "Descripcion": "Aporte Salud",
+    "Valor": "0.12500",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "AportePension",
+    "Descripcion": "Aporte Pension",
+    "Valor": "0.16000",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "RiesgoLaboral",
+    "Descripcion": "Riesgo Laboral",
+    "Valor": "0.024360",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "TarifaIva",
+    "Descripcion": "Tarifa Iva",
+    "Valor": "0.19",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "Dependientes",
+    "Descripcion": "Dependientes",
+    "Valor": "0.1",
+    "Tipo": "ParametroLiquidacionTercero"
   }
 ]

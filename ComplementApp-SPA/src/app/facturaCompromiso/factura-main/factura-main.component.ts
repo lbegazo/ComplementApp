@@ -22,17 +22,13 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { environment } from 'src/environments/environment';
 import { Tercero } from 'src/app/_models/tercero';
 import { PopupBuscarFacturaComponent } from '../popup-buscar-factura/popup-buscar-factura.component';
-import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { PlanPago } from 'src/app/_models/planPago';
-import { AlertifyService } from 'src/app/_services/alertify.service';
 import {
   FormGroup,
-  FormControl,
   FormBuilder,
   Validators,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ListaService } from 'src/app/_services/lista.service';
 import { Transaccion } from 'src/app/_models/transaccion';
 
 @Component({
@@ -58,7 +54,8 @@ export class FacturaMainComponent implements OnInit {
     terceroId: 0,
     nombre: '',
     numeroIdentificacion: '',
-    tipoIdentificacion: '',
+    tipoDocumentoIdentidad: '',
+    tipoDocumentoIdentidadId: 0,
   };
 
   facturaHeaderForm = new FormGroup({});
@@ -71,14 +68,12 @@ export class FacturaMainComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private alertify: AlertifyService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
     private renderer: Renderer2,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private listaService: ListaService
   ) {}
 
   ngOnInit(): void {

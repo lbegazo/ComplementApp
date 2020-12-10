@@ -591,11 +591,11 @@ namespace ComplementApp.API.Data
                 nuevoItem.TipoPago = item.TipoPago;
 
                 //Tercero
-                if (item.TipoIdentificacion > 0 &&
+                if (item.TipoDocumentoIdentidadId > 0 &&
                     !string.IsNullOrEmpty(item.IdentificacionTercero))
                 {
                     var tercero = listaTercero
-                                        .Where(c => c.TipoIdentificacion == item.TipoIdentificacion)
+                                        .Where(c => c.TipoIdentificacion == item.TipoDocumentoIdentidadId)
                                         .Where(c => c.NumeroIdentificacion == item.IdentificacionTercero)
                                         .FirstOrDefault();
                     if (tercero != null)

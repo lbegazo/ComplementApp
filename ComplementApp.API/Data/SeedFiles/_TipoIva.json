@@ -1,0 +1,10 @@
+[
+  {
+    "Codigo": "0",
+    "Nombre": "FIJO"
+  },
+  {
+    "Codigo": "1",
+    "Nombre": "VARIABLE"
+  }
+]

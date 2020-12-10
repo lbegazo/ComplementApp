@@ -65,6 +65,14 @@
     "CodigoPadreTransaccion": "ADMINISTRACION"
   },
   {
+    "Codigo": "ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO",
+    "Nombre": "Parametro liquidación de tercero",
+    "Descripcion": "Parametro liquidación de tercero",
+    "Icono": "supervisor_account",
+    "Ruta": "ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO",
+    "CodigoPadreTransaccion": "ADMINISTRACION"
+  },
+  {
     "Codigo": "ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE",
     "Nombre": "Clave Presupuestal Contable",
     "Descripcion": "Clave Presupuestal Contable",
