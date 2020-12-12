@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Dtos;
+using System;
 
 namespace ComplementApp.API.Data
 {
@@ -155,7 +156,7 @@ namespace ComplementApp.API.Data
                         lista = await (from m in _context.TipoCuentaXPagar
                                        select new ValorSeleccion()
                                        {
-                                           Id = m.TipoCuentaXPagarId,
+                                           Id = Int32.Parse(m.Codigo),
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
                                        }).ToListAsync();
@@ -188,7 +189,7 @@ namespace ComplementApp.API.Data
                         lista = await (from m in _context.TipoDocumentoSoporte
                                        select new ValorSeleccion()
                                        {
-                                           Id = m.TipoDocumentoSoporteId,
+                                           Id =  Int32.Parse(m.Codigo),
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
                                        }).ToListAsync();
@@ -200,6 +201,18 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
+        public async Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo)
+        {
+            return await _context.Deduccion
+                            .Where(t => t.Codigo.Contains(codigo))
+                            .ToListAsync();
+        }
 
+        public async Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo)
+        {
+            return await _context.ActividadEconomica
+                            .Where(t => t.Codigo.Contains(codigo))
+                            .ToListAsync();
+        }
     }
 }

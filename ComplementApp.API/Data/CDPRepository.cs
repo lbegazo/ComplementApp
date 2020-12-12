@@ -82,7 +82,8 @@ namespace ComplementApp.API.Data
                                       select new SolicitudCDPDto()
                                       {
                                           SolicitudCDPId = s.SolicitudCDPId,
-                                          FechaSolicitud = s.FechaSolicitud,
+                                          FechaSolicitud = s.FechaRegistro,
+                                          FechaRegistro = s.FechaRegistro,
                                           Cdp = s.Cdp,
                                           EstadoCDP = s.EstadoCDP,
                                           NumeroActividad = s.NumeroActividad,

@@ -1,3 +1,5 @@
+import { TerceroDeduccionDto } from '../_dto/terceroDeduccionDto';
+
 export interface ParametroLiquidacionTercero {
   parametroLiquidacionTerceroId: number;
   modalidadContrato: number;
@@ -25,4 +27,5 @@ export interface ParametroLiquidacionTercero {
   tipoCuenta: string;
   convenioFontic: number;
   terceroId: number;
+  terceroDeducciones?: TerceroDeduccionDto[];
 }

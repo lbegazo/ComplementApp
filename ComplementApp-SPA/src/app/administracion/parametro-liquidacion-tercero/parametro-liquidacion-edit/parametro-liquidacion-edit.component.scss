@@ -91,4 +91,10 @@ select option {
 p {
   background-color: white;
   height: 30px;
+  display: flex;
+  width: 100%;
+  margin: auto;
+  align-items:center;
+  justify-content:left;
 }
+

@@ -8,10 +8,17 @@ namespace ComplementApp.API.Interfaces
 {
     public interface ITerceroRepository
     {
-         Task<PagedList<TerceroDto>> ObtenerTercerosParaParametrizacionLiquidacion(int tipo, int? terceroId, UserParams userParams);
+        Task<PagedList<TerceroDto>> ObtenerTercerosParaParametrizacionLiquidacion(int tipo, int? terceroId, UserParams userParams);
 
-         Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId);
+        Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId);
 
-         Task<ParametroLiquidacionTercero> ObtenerParametrizacionLiquidacionTerceroBase(int parametroLiquidacionTerceroId);
+        Task<ParametroLiquidacionTercero> ObtenerParametrizacionLiquidacionTerceroBase(int parametroLiquidacionTerceroId);
+
+        Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int terceroId);
+
+        Task<PagedList<DeduccionDto>> ObteneListaDeducciones(UserParams userParams);
+
+        Task<bool> EliminarTerceroDeduccionesXTercero(int terceroId);
+
     }
 }

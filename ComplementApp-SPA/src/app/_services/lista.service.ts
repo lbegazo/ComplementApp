@@ -12,6 +12,7 @@ import { ParametroLiquidacionTercero } from '../_models/parametroLiquidacionTerc
 import { Estado } from '../_models/estado';
 import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { UsoPresupuestal } from '../_dto/usoPresupuestal';
+import { Deduccion } from '../_models/deduccion';
 
 @Injectable({
   providedIn: 'root',
@@ -162,4 +163,5 @@ export class ListaService {
       { params }
     );
   }
+
 }

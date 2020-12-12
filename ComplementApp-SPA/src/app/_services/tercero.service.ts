@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
+import { TerceroDeduccionDto } from '../_dto/terceroDeduccionDto';
 import { PaginatedResult, Pagination } from '../_models/pagination';
 import { ParametroLiquidacionTercero } from '../_models/parametroLiquidacionTercero';
 import { Tercero } from '../_models/tercero';
@@ -12,6 +13,7 @@ import { Tercero } from '../_models/tercero';
 })
 export class TerceroService {
   baseUrl = environment.apiUrl + 'tercero/';
+  deducciones: TerceroDeduccionDto[];
 
   constructor(private http: HttpClient) {}
 
@@ -77,5 +79,38 @@ export class TerceroService {
   RegistrarParametroLiquidacionTercero(user: ParametroLiquidacionTercero) {
     const path = 'RegistrarParametroLiquidacionTercero';
     return this.http.post(this.baseUrl + path, user);
+  }
+
+  ObtenerDeduccionesXTercero2(terceroId: number): TerceroDeduccionDto[] {
+    const path = 'ObtenerDeduccionesXTercero';
+    let params = new HttpParams();
+    params = params.append('terceroId', terceroId.toString());
+    this.http
+      .get<TerceroDeduccionDto[]>(this.baseUrl + path, {
+        params,
+      })
+      .subscribe((lista: TerceroDeduccionDto[]) => {
+        this.deducciones = lista;
+      });
+
+    return this.deducciones;
+  }
+
+  ObtenerDeduccionesXTercero(terceroId: number): Observable<TerceroDeduccionDto[]> {
+    const path = 'ObtenerDeduccionesXTercero';
+    let params = new HttpParams();
+    params = params.append('terceroId', terceroId.toString());
+    return this.http.get<TerceroDeduccionDto[]>(this.baseUrl + path, {
+      params,
+    });
+  }
+
+  AddDeducciones(deducion: TerceroDeduccionDto) {
+    this.deducciones.push(deducion);
+  }
+
+  ObteneListaDeducciones(): Observable<TerceroDeduccionDto[]> {
+    const path = 'ObteneListaDeducciones';
+    return this.http.get<TerceroDeduccionDto[]>(this.baseUrl + path);
   }
 }

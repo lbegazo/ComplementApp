@@ -113,5 +113,69 @@ namespace ComplementApp.API.Data
             return await _context.ParametroLiquidacionTercero
                         .FirstOrDefaultAsync(u => u.ParametroLiquidacionTerceroId == parametroLiquidacionTerceroId);
         }
+
+        public async Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int terceroId)
+        {
+            var lista = await (from d in _context.Deduccion
+                               join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
+                               join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
+                               where (td.TerceroId == terceroId)
+                               where (d.estado == true)
+                               select new TerceroDeduccionDto()
+                               {
+                                   TerceroDeduccionId = td.TerceroDeduccionId,
+                                   Codigo = d.Codigo,
+                                   Tercero = new ValorSeleccion()
+                                   {
+                                       Id = td.TerceroId
+                                   },
+                                   Deduccion = new ValorSeleccion()
+                                   {
+                                       Id = d.DeduccionId,
+                                       Codigo = d.Codigo,
+                                       Nombre = d.Nombre
+                                   },
+                                   ActividadEconomica = new ValorSeleccion()
+                                   {
+                                       Id = ae.ActividadEconomicaId,
+                                       Codigo = ae.Codigo,
+                                       Nombre = ae.Nombre
+                                   }
+                               }
+                         )
+                         .Distinct()
+                         .OrderBy(d => d.Codigo)
+                         .ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<PagedList<DeduccionDto>> ObteneListaDeducciones(UserParams userParams)
+        {
+            var lista = (from d in _context.Deduccion
+                             //join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
+                             //join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
+                         where (d.estado == true)
+                         select new DeduccionDto()
+                         {
+                             DeduccionId = d.DeduccionId,
+                             Codigo = d.Codigo,
+                             Nombre = d.Nombre
+                         }
+                         )
+                         .Distinct()
+                         .OrderBy(x => x.Codigo);
+
+            return await PagedList<DeduccionDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+
+        }
+
+        public async Task<bool> EliminarTerceroDeduccionesXTercero(int terceroId)
+        {
+            var listaExistente = await _context.TerceroDeducciones.Where(x => x.TerceroId == terceroId).ToListAsync();
+            _context.TerceroDeducciones.RemoveRange(listaExistente);
+            return true;
+        }
+
     }
 }

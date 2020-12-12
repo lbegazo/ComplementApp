@@ -9,7 +9,7 @@
         >
           <tr>
             <td>
-              <tabset style="margin-left: auto; margin-right: auto">
+              <tabset style="margin-left: auto; margin-right: auto" #staticTabs>
                 <tab heading="PARAMETRO DE LIQUIDACION">
                   <table>
                     <!--Tercero-->
@@ -59,7 +59,7 @@
                             <div class="form-row mt-2">
                               <!--Modalidad de contrato-->
                               <div
-                                class="form-group col-md-3"
+                                class="form-group col-md-4"
                                 style="margin: 0px"
                               >
                                 <label
@@ -224,7 +224,7 @@
                                   >Tipo de Iva</label
                                 >
                                 <select
-                                  placeholder="Tipo Pago"
+                                  placeholder="Tipo Iva"
                                   formControlName="tipoIvaCtrl"
                                   class="form-control withoutPadding"
                                   style="height: 33px"
@@ -708,12 +708,12 @@
                                       editForm.get('fechaInicioCtrl').errors &&
                                       editForm.get('fechaInicioCtrl').touched
                                   }"
-                                  class="form-control border border-bottom-0 addPadding"
+                                  class="form-control"
                                   placeholder="Fecha de inicio"
                                   formControlName="fechaInicioCtrl"
                                   type="text"
                                   bsDatepicker
-                                  style="height: 33px"
+                                  style="height: 33px; text-align: center"
                                   [bsConfig]="bsConfig"
                                   id="inputFechaInicio"
                                 />
@@ -746,11 +746,11 @@
                                       editForm.get('fechaFinalCtrl').errors &&
                                       editForm.get('fechaFinalCtrl').touched
                                   }"
-                                  class="form-control border border-bottom-0 addPadding"
-                                  placeholder="Fecha de inicio"
+                                  class="form-control"
+                                  placeholder="Fecha final"
                                   formControlName="fechaFinalCtrl"
                                   type="text"
-                                  style="height: 33px"
+                                  style="height: 33px; text-align: center"
                                   bsDatepicker
                                   [bsConfig]="bsConfig"
                                   id="inputFechaFinal"
@@ -772,58 +772,257 @@
                         </div>
                       </td>
                     </tr>
-                    <!--Botones-->
+                  </table>
+                </tab>
+                <tab heading="DEDUCCIONES" [disabled]="true">
+                  <table>
+                    <!--Deducción-->
                     <tr>
-                      <td
-                        style="
-                          padding-right: 10px;
-                          padding-left: 10px;
-                          padding-bottom: 15px;
-                          padding-top: 0px;
-                        "
-                      >
-                        <div class="form-row mt-3">
-                          <div class="col-12 right">
-                            <div
-                              style="
-                                width: 100%;
-                                margin-left: auto;
-                                margin-right: auto;
-                              "
-                              class="right"
+                      <td style="padding: 0px 10px">
+                        <div class="form-row mt-4">
+                          <div class="form-group col-md-2">
+                            <label
+                              for="inputActividad"
+                              class="col-form-label-md"
+                              >Código</label
                             >
-                              <button
-                                type="submit"
-                                class="btn btn-success mr-2"
-                                (click)="onLimpiarForm()"
-                                style="width: 80px"
-                              >
-                                Limpiar
-                              </button>
-                              <button
-                                type="submit"
-                                class="btn btn-primary mr-2"
-                                (click)="onGuardar()"
-                                [disabled]="!editForm.valid"
-                              >
-                                {{ nombreBoton }}
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-default"
-                                (click)="onCancelar()"
-                              >
-                                Volver
-                              </button>
+                            <input
+                              [(ngModel)]="searchActividad"
+                              typeaheadOptionField="codigo"
+                              [typeahead]="suggestionsActividad$"
+                              [typeaheadAsync]="true"
+                              (typeaheadOnSelect)="
+                                typeaheadOnSelectActividad($event)
+                              "
+                              placeholder="Actividad Económica"
+                              formControlName="codigoActividadCtrl"
+                              class="form-control border border-bottom-0 addPaddingLeft"
+                              style="height: 20px; background-color: white"
+                              id="inputActividad"
+                            />
+                            <div
+                              class="alert alert-danger"
+                              role="alert"
+                              *ngIf="errorMessage"
+                            >
+                              {{ errorMessage }}
                             </div>
+                          </div>
+                          <div class="form-group col-md-10">
+                            <label
+                              for="inputActividadEconomica"
+                              class="col-form-label-md"
+                              >Actividad económica</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control border addPaddingLeft"
+                              style="height: 20px"
+                              maxlength="50"
+                              formControlName="actividadCtrl"
+                              id="inputActividadEconomica"
+                              value="{{ actividadEconomica?.nombre }}"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-2">
+                            <label for="inputCodigo" class="col-form-label-md"
+                              >Código</label
+                            >
+                            <input
+                              [(ngModel)]="searchDeduccion"
+                              typeaheadOptionField="codigo"
+                              [typeahead]="suggestionsDeduccion$"
+                              [typeaheadAsync]="true"
+                              (typeaheadOnSelect)="
+                                typeaheadOnSelectDeduccion($event)
+                              "
+                              placeholder="Deducción"
+                              formControlName="codigoDeduccionCtrl"
+                              class="form-control border border-bottom-0 addPaddingLeft"
+                              style="height: 20px; background-color: white"
+                              id="inputCodigo"
+                            />
+                            <div
+                              class="alert alert-danger"
+                              role="alert"
+                              *ngIf="errorMessage"
+                            >
+                              {{ errorMessage }}
+                            </div>
+                          </div>
+                          <div class="form-group col-md-8">
+                            <label
+                              for="inputDeduccion"
+                              class="col-form-label-md"
+                              >Deducción</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control border addPaddingLeft"
+                              style="height: 20px"
+                              maxlength="50"
+                              formControlName="deduccionCtrl"
+                              id="inputDeduccion"
+                              value="{{ deduccion?.nombre }}"
+                              readonly
+                            />
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <table>
+                              <tr style="vertical-align: bottom">
+                                <td style="padding: 0px">
+                                  <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    (click)="onAgregarDeduccion()"
+                                    style="width: 90px"
+                                    [disabled]="
+                                      actividadEconomicaId === 0 ||
+                                      deduccionId === 0
+                                    "
+                                  >
+                                    Agregar</button
+                                  >&nbsp;
+                                  <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                    (click)="onEliminarDeduccion()"
+                                    style="width: 90px"
+                                    [disabled]="
+                                      listaTerceroDeducciones.length === 0
+                                    "
+                                  >
+                                    Eliminar</button
+                                  >&nbsp;
+                                  <button
+                                    type="submit"
+                                    class="btn btn-success"
+                                    (click)="onLimpiarDeduccion()"
+                                    style="width: 80px"
+                                  >
+                                    Limpiar
+                                  </button>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                        <!--Grilla de deducciones-->
+                        <div class="form-row mt-2">
+                          <div style="width: 5%" class="inner center">
+                            <label class="col-form-label-md">Código</label>
+                          </div>
+                          <div style="width: 40%" class="inner center">
+                            <label class="col-form-label-md"
+                              >Actividad Económica</label
+                            >
+                          </div>
+                          <div style="width: 15%" class="inner center">
+                            <label class="col-form-label-md">Código</label>
+                          </div>
+                          <div style="width: 40%" class="inner center">
+                            <label class="col-form-label-md">Deducción</label>
+                          </div>
+                        </div>
+                        <div *ngIf="listaTerceroDeducciones">
+                          <div
+                            formArrayName="planPagoControles"
+                            class="form-row"
+                            *ngFor="
+                              let item of listaTerceroDeducciones;
+                              let i = index
+                            "
+                          >
+                            <ng-container [formGroupName]="i">
+                              <div
+                                style="width: 5%"
+                                class="inner center aplicaBackground"
+                              >
+                                <p class="medium">
+                                  {{ item?.actividadEconomica.codigo }}
+                                </p>
+                              </div>
+                              <div
+                                style="width: 40%"
+                                class="inner left aplicaBackground"
+                              >
+                                <p class="medium">
+                                  {{ item?.actividadEconomica.nombre }}
+                                </p>
+                              </div>
+                              <div
+                                style="width: 15%"
+                                class="inner center aplicaBackground"
+                              >
+                                <p class="medium">
+                                  {{ item?.deduccion.codigo }}
+                                </p>
+                              </div>
+                              <div
+                                style="width: 40%"
+                                class="inner left aplicaBackground"
+                              >
+                                <p class="medium">
+                                  {{ item?.deduccion.nombre }}
+                                </p>
+                              </div>
+                            </ng-container>
                           </div>
                         </div>
                       </td>
                     </tr>
                   </table>
                 </tab>
-                <tab heading="DEDUCCIONES"> </tab>
               </tabset>
+            </td>
+          </tr>
+          <!--Botones-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row mt-3">
+                <div class="col-12 right">
+                  <div
+                    style="width: 100%; margin-left: auto; margin-right: auto"
+                    class="right"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-success mr-2"
+                      (click)="onLimpiarForm()"
+                      style="width: 80px"
+                    >
+                      Limpiar
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary mr-2"
+                      (click)="onGuardar()"
+                      [disabled]="!editForm.valid"
+                    >
+                      {{ nombreBoton }}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-default"
+                      (click)="onCancelar()"
+                    >
+                      Volver
+                    </button>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         </table>
@@ -831,9 +1030,11 @@
     </div>
   </div>
 </form>
-<!-- <p>Form value: {{ editForm.value | json }}</p>
-<p>Form status: {{ editForm.status | json }}</p>
-<p>
+<!-- <p>Form status: {{ editForm.status | json }}</p>
+
+<p>Form value: {{ editForm.value | json }}</p> -->
+
+<!-- <p>
   parametroLiquidacionSeleccionado:
   {{ parametroLiquidacionSeleccionado | json }}
 </p> -->

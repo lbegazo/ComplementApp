@@ -70,10 +70,9 @@ namespace ComplementApp.API.Data
                     valor = new TipoDocumentoIdentidad();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoDocumentoIdentidad.AddRange(valor);
+                    context.SaveChanges();
                 }
-                context.TipoDocumentoIdentidad.AddRange(lista);
-                context.SaveChanges();
             }
         }
         private static void SeedModalidadContrato(DataContext context)
@@ -85,15 +84,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_ModalidadContrato.json");
                 var items = JsonConvert.DeserializeObject<List<TipoModalidadContrato>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new TipoModalidadContrato();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoModalidadContrato.AddRange(valor);
+                    context.SaveChanges();
                 }
-                context.TipoModalidadContrato.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -106,15 +105,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_TipoDePago.json");
                 var items = JsonConvert.DeserializeObject<List<TipoDePago>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new TipoDePago();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoDePago.Add(valor);
+                    context.SaveChanges();
                 }
-                context.TipoDePago.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -127,15 +126,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_TipoIva.json");
                 var items = JsonConvert.DeserializeObject<List<TipoIva>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new TipoIva();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoIva.Add(valor);
+                    context.SaveChanges();
                 }
-                context.TipoIva.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -148,15 +147,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_TipoCuentaXPagar.json");
                 var items = JsonConvert.DeserializeObject<List<TipoCuentaXPagar>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new TipoCuentaXPagar();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoCuentaXPagar.Add(valor);
+                    context.SaveChanges();
                 }
-                context.TipoCuentaXPagar.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -169,15 +168,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_TipoDocumentoSoporte.json");
                 var items = JsonConvert.DeserializeObject<List<TipoDocumentoSoporte>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new TipoDocumentoSoporte();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoDocumentoSoporte.Add(valor);
+                    context.SaveChanges();
                 }
-                context.TipoDocumentoSoporte.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -190,15 +189,16 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_AtributoContable.json");
                 var items = JsonConvert.DeserializeObject<List<AtributoContable>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new AtributoContable();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.AtributoContable.Add(valor);
+                    context.SaveChanges();
                 }
-                context.AtributoContable.AddRange(lista);
-                context.SaveChanges();
+
             }
         }
 
@@ -211,15 +211,16 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_RecursoPresupuestal.json");
                 var items = JsonConvert.DeserializeObject<List<RecursoPresupuestal>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new RecursoPresupuestal();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.RecursoPresupuestal.Add(valor);
+                    context.SaveChanges();
                 }
-                context.RecursoPresupuestal.AddRange(lista);
-                context.SaveChanges();
+
             }
         }
 
@@ -232,15 +233,16 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_TipoGasto.json");
                 var items = JsonConvert.DeserializeObject<List<TipoGasto>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new TipoGasto();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.TipoGasto.Add(valor);
+                    context.SaveChanges();
                 }
-                context.TipoGasto.AddRange(lista);
-                context.SaveChanges();
+
             }
         }
 
@@ -253,15 +255,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_SituacionFondo.json");
                 var items = JsonConvert.DeserializeObject<List<SituacionFondo>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new SituacionFondo();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.SituacionFondo.Add(valor);
+                    context.SaveChanges();
                 }
-                context.SituacionFondo.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -274,15 +276,15 @@ namespace ComplementApp.API.Data
             {
                 var data = File.ReadAllText("Data/SeedFiles/_FuenteFinanciacion.json");
                 var items = JsonConvert.DeserializeObject<List<FuenteFinanciacion>>(data);
-                foreach (var item in items)
+                var items2 = items.OrderBy(x => x.Codigo);
+                foreach (var item in items2)
                 {
                     valor = new FuenteFinanciacion();
                     valor.Nombre = item.Nombre;
                     valor.Codigo = item.Codigo;
-                    lista.Add(valor);
+                    context.FuenteFinanciacion.Add(valor);
+                    context.SaveChanges();
                 }
-                context.FuenteFinanciacion.AddRange(lista);
-                context.SaveChanges();
             }
         }
 

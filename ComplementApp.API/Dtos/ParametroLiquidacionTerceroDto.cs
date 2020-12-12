@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ComplementApp.API.Dtos
 {
@@ -37,5 +38,6 @@ namespace ComplementApp.API.Dtos
         public string NumeroCuenta { get; set; }
         public string TipoCuenta { get; set; }
         public int? ConvenioFontic { get; set; }
+        public ICollection<TerceroDeduccionDto> TerceroDeducciones { get; set; }
     }
 }

@@ -1,15 +1,37 @@
 import { formatDate } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
+import { noop, Observable, Observer, of, Subscription } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/Operators';
+import { TerceroDeduccionDto } from 'src/app/_dto/terceroDeduccionDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
+import { ActividadEconomica } from 'src/app/_models/actividadEconomica';
+import { Deduccion } from 'src/app/_models/deduccion';
 import { ModalidadContrato, TipoLista } from 'src/app/_models/enum';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { Tercero } from 'src/app/_models/tercero';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ListaService } from 'src/app/_services/lista.service';
 import { TerceroService } from 'src/app/_services/tercero.service';
+import { environment } from 'src/environments/environment';
 import { ParametroLiquidacionTerceroComponent } from '../parametro-liquidacion-tercero.component';
 
 @Component({
@@ -21,6 +43,35 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   @Input() esCreacion: boolean;
   @Input() tercero: Tercero;
   @Output() esCancelado = new EventEmitter<boolean>();
+  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
+
+  searchDeduccion: string;
+  suggestionsDeduccion$: Observable<Deduccion[]>;
+  errorMessage: string;
+  subscriptions: Subscription[] = [];
+  baseUrlDeduccion = environment.apiUrl + 'lista/ObtenerListaDeducciones';
+  deduccion: Deduccion = {
+    deduccionId: 0,
+    codigo: '',
+    nombre: '',
+    tarifa: 0,
+    base: 0,
+    valor: 0,
+  };
+  deduccionId = 0;
+
+  searchActividad: string;
+  suggestionsActividad$: Observable<ActividadEconomica[]>;
+  baseUrlActividad =
+    environment.apiUrl + 'lista/ObtenerListaActividadesEconomicas';
+  actividadEconomica: ActividadEconomica = {
+    actividadEconomicaId: 0,
+    codigo: '',
+    nombre: '',
+  };
+  actividadEconomicaId = 0;
+
+  arrayControls = new FormArray([]);
 
   parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   listaModalidadContrato: ValorSeleccion[] = [];
@@ -48,7 +99,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   idTipoDocumentoSoporteSelecionado?: number;
   tipoDocumentoSoporteSeleccionado: ValorSeleccion = null;
 
+  listaTerceroDeducciones: TerceroDeduccionDto[] = [];
+  listaParametrosGeneral: ValorSeleccion[] = [];
+
   constructor(
+    private http: HttpClient,
     private listaService: ListaService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
@@ -56,14 +111,21 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cargarParametrosGenerales();
+    //El formulario inicial se carga en este método
+    if (this.esCreacion) {
+      this.cargarParametrosGenerales();
+    } else {
+      this.createEmptyForm();
+    }
 
     this.cargarListas();
 
-    this.createEmptyForm();
+    this.cargarBusquedaDeducciones();
+
+    this.cargarBusquedaActividad();
 
     if (!this.esCreacion) {
-      this.buscarDetalleParametrizacion();
+      this.obtenerParametrizacionTercero();
       this.nombreBoton = 'Guardar';
     } else {
       this.createEmptyForm();
@@ -72,7 +134,83 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     }
   }
 
-  buscarDetalleParametrizacion() {
+  cargarBusquedaDeducciones() {
+    this.suggestionsDeduccion$ = new Observable(
+      (observer: Observer<string>) => {
+        observer.next(this.searchDeduccion);
+      }
+    ).pipe(
+      switchMap((query: string) => {
+        if (query) {
+          return this.http
+            .get<Deduccion[]>(this.baseUrlDeduccion, {
+              params: { codigo: query },
+            })
+            .pipe(
+              map((data: Deduccion[]) => data || []),
+              tap(
+                () => noop,
+                (err) => {
+                  // in case of http error
+                  this.errorMessage =
+                    (err && err.message) ||
+                    'Algo salió mal, consulte a su administrador';
+                }
+              )
+            );
+        }
+
+        return of([]);
+      })
+    );
+  }
+
+  typeaheadOnSelectDeduccion(e: TypeaheadMatch): void {
+    this.deduccion = e.item as Deduccion;
+    if (this.deduccion) {
+      this.deduccionId = this.deduccion.deduccionId;
+    }
+  }
+
+  cargarBusquedaActividad() {
+    this.suggestionsActividad$ = new Observable(
+      (observer: Observer<string>) => {
+        observer.next(this.searchActividad);
+      }
+    ).pipe(
+      switchMap((query: string) => {
+        if (query) {
+          return this.http
+            .get<ActividadEconomica[]>(this.baseUrlActividad, {
+              params: { codigo: query },
+            })
+            .pipe(
+              map((data: ActividadEconomica[]) => data || []),
+              tap(
+                () => noop,
+                (err) => {
+                  // in case of http error
+                  this.errorMessage =
+                    (err && err.message) ||
+                    'Algo salió mal, consulte a su administrador';
+                }
+              )
+            );
+        }
+
+        return of([]);
+      })
+    );
+  }
+
+  typeaheadOnSelectActividad(e: TypeaheadMatch): void {
+    this.actividadEconomica = e.item as ActividadEconomica;
+    if (this.actividadEconomica) {
+      this.actividadEconomicaId = this.actividadEconomica.actividadEconomicaId;
+    }
+  }
+
+  obtenerParametrizacionTercero() {
     if (this.tercero.terceroId > 0) {
       if (!this.esCreacion) {
         this.terceroService
@@ -83,13 +221,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
                 this.parametroLiquidacionSeleccionado = documento;
               } else {
                 this.alertify.error(
-                  'No se pudo obtener información para la parametrización del tercero'
+                  'No se pudo obtener información de la parametrización del tercero'
                 );
               }
             },
-            (error) => {
-              this.alertify.error(error);
-            },
+            () => {},
             () => {
               this.createFullForm();
             }
@@ -100,13 +236,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   createEmptyForm() {
     this.editForm = this.fb.group({
-      modalidadContratoCtrl: [0, Validators.required],
-      tipoPagoCtrl: [0, Validators.required],
+      modalidadContratoCtrl: [null, Validators.required],
+      tipoPagoCtrl: [null, Validators.required],
       honorarioSinIvaCtrl: ['', Validators.required],
       tarifaIvaCtrl: ['', Validators.required],
-      tipoIvaCtrl: [0, Validators.required],
-      tipoCuentaXPagarCtrl: [0, Validators.required],
-      tipoDocumentoSoporteCtrl: [0, Validators.required],
+      tipoIvaCtrl: [null, Validators.required],
+      tipoCuentaXPagarCtrl: [null, Validators.required],
+      tipoDocumentoSoporteCtrl: [null, Validators.required],
 
       baseAporteSaludCtrl: ['', Validators.required],
       aporteSaludCtrl: ['', Validators.required],
@@ -121,6 +257,60 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       interesesViviendaCtrl: ['', Validators.required],
       fechaInicioCtrl: [null, Validators.required],
       fechaFinalCtrl: [null, Validators.required],
+
+      codigoDeduccionCtrl: [''],
+      deduccionCtrl: [''],
+      codigoActividadCtrl: [''],
+      actividadCtrl: [''],
+      planPagoControles: this.arrayControls,
+    });
+  }
+
+  createDefaultForm() {
+    let baseAporteSaludC = 0;
+    let aporteSaludC = 0;
+    let aportePensionC = 0;
+    let riesgoLaboralC = 0;
+    let tarifaIvaC = 0;
+    let dependientesC = 0;
+
+    if (this.listaParametrosGeneral && this.listaParametrosGeneral.length > 0) {
+      baseAporteSaludC = +this.listaParametrosGeneral[0].valor;
+      aporteSaludC = +this.listaParametrosGeneral[1].valor;
+      aportePensionC = +this.listaParametrosGeneral[2].valor;
+      riesgoLaboralC = +this.listaParametrosGeneral[3].valor;
+      tarifaIvaC = +this.listaParametrosGeneral[4].valor;
+      dependientesC = +this.listaParametrosGeneral[5].valor;
+    }
+
+    this.editForm = this.fb.group({
+      modalidadContratoCtrl: [null, Validators.required],
+      tipoPagoCtrl: [null, Validators.required],
+      honorarioSinIvaCtrl: ['', Validators.required],
+      tarifaIvaCtrl: [tarifaIvaC, Validators.required],
+      tipoIvaCtrl: [null, Validators.required],
+      tipoCuentaXPagarCtrl: [null, Validators.required],
+      tipoDocumentoSoporteCtrl: [null, Validators.required],
+
+      baseAporteSaludCtrl: [baseAporteSaludC, Validators.required],
+      aporteSaludCtrl: [aporteSaludC, Validators.required],
+      aportePensionCtrl: [aportePensionC, Validators.required],
+      riesgoLaboralCtrl: [riesgoLaboralC, Validators.required],
+      fondoSolidaridadCtrl: ['', Validators.required],
+
+      pensionVoluntariaCtrl: ['', Validators.required],
+      dependienteCtrl: [dependientesC, Validators.required],
+      afcCtrl: ['', Validators.required],
+      medicinaPrepagadaCtrl: ['', Validators.required],
+      interesesViviendaCtrl: ['', Validators.required],
+      fechaInicioCtrl: [null, Validators.required],
+      fechaFinalCtrl: [null, Validators.required],
+
+      codigoDeduccionCtrl: [''],
+      deduccionCtrl: [''],
+      codigoActividadCtrl: [''],
+      actividadCtrl: [''],
+      planPagoControles: this.arrayControls,
     });
   }
 
@@ -213,6 +403,27 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     fechaFinal = this.parametroLiquidacionSeleccionado
       .fechaFinalDescuentoInteresVivienda;
 
+    //#region Deducciones
+
+    if (
+      this.parametroLiquidacionSeleccionado.terceroDeducciones &&
+      this.parametroLiquidacionSeleccionado.terceroDeducciones.length
+    ) {
+      this.listaTerceroDeducciones.push(
+        ...this.parametroLiquidacionSeleccionado.terceroDeducciones
+      );
+
+      this.listaTerceroDeducciones.forEach((x) => {
+        this.arrayControls.push(
+          new FormGroup({
+            rubroControl: new FormControl(''),
+          })
+        );
+      });
+    }
+
+    //#endregion Deducciones
+
     this.editForm = this.fb.group({
       modalidadContratoCtrl: [
         this.idModalidadContratoSelecionado,
@@ -251,6 +462,12 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
         Validators.required,
       ],
+
+      codigoDeduccionCtrl: [''],
+      deduccionCtrl: [''],
+      codigoActividadCtrl: [''],
+      actividadCtrl: [''],
+      planPagoControles: this.arrayControls,
     });
 
     this.ocultarControlesFormulario();
@@ -305,6 +522,15 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.fechaInicioCtrl.disable();
       this.fechaFinalCtrl.disable();
     }
+
+    if (
+      this.idModalidadContratoSelecionado ===
+      ModalidadContrato.ProveedorSinDescuento.value
+    ) {
+      this.staticTabs.tabs[1].disabled = true;
+    } else {
+      this.staticTabs.tabs[1].disabled = false;
+    }
   }
 
   onTipoPago() {
@@ -330,6 +556,80 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       .tipoDocumentoSoporteSeleccionado.id;
   }
 
+  onAgregarDeduccion() {
+    if (
+      this.deduccion &&
+      this.deduccion.deduccionId > 0 &&
+      this.actividadEconomica &&
+      this.actividadEconomicaId > 0
+    ) {
+      const filtro = this.listaTerceroDeducciones.filter(
+        (x) =>
+          x.deduccion.id === this.deduccion.deduccionId &&
+          x.actividadEconomica.id === this.actividadEconomicaId
+      )[0];
+
+      if (filtro) {
+        this.alertify.error(
+          'Ya existe la combinación deducción-activadad económica'
+        );
+        return;
+      }
+
+      const actividadT = new ValorSeleccion();
+      actividadT.id = this.actividadEconomicaId;
+      actividadT.codigo = this.actividadEconomica.codigo;
+      actividadT.nombre = this.actividadEconomica.nombre;
+
+      const deduccionT = new ValorSeleccion();
+      deduccionT.id = this.deduccion.deduccionId;
+      deduccionT.codigo = this.deduccion.codigo;
+      deduccionT.nombre = this.deduccion.nombre;
+
+      const terceroT = new ValorSeleccion();
+      terceroT.id = this.tercero.terceroId;
+
+      const terceroDeduccion: TerceroDeduccionDto = {
+        deduccion: deduccionT,
+        actividadEconomica: actividadT,
+        tercero: terceroT,
+        tipoIdentificacion: 0,
+        identificacionTercero: '',
+        codigo: '',
+        terceroDeduccionId: 0,
+      };
+
+      this.listaTerceroDeducciones.push(terceroDeduccion);
+
+      this.arrayControls.push(
+        new FormGroup({
+          rubroControl: new FormControl(''),
+        })
+      );
+
+      this.onLimpiarDeduccion();
+    }
+  }
+
+  onEliminarDeduccion() {
+    this.alertify.confirm2(
+      'Deducciones del tercero',
+      '¿Esta seguro que desea eliminar las deducciones?',
+      () => {
+        this.listaTerceroDeducciones = [];
+      }
+    );
+  }
+
+  onLimpiarDeduccion() {
+    this.deduccionId = 0;
+    this.deduccion = null;
+    this.actividadEconomicaId = 0;
+    this.actividadEconomica = null;
+    this.searchActividad = '';
+    this.searchDeduccion = '';
+  }
+
   onLimpiarForm() {
     this.idModalidadContratoSelecionado = 0;
     this.modalidadContratoSeleccionado = null;
@@ -342,10 +642,24 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.idTipoPagoSelecionado = 0;
     this.tipoPagoSeleccionado = null;
 
+    this.onLimpiarDeduccion();
+
     this.editForm.reset();
   }
 
   onGuardar() {
+    if (
+      this.idModalidadContratoSelecionado ===
+        ModalidadContrato.ContratoPrestacionServicio.value ||
+      this.idModalidadContratoSelecionado ===
+        ModalidadContrato.ProveedorConDescuento.value
+    ) {
+      if (this.listaTerceroDeducciones.length === 0) {
+        this.alertify.error('Debe ingresar al menos una deducción');
+        return;
+      }
+    }
+
     if (this.editForm.valid) {
       const formValues = Object.assign({}, this.editForm.value);
 
@@ -432,6 +746,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           tipoCuenta: '',
           convenioFontic: 0,
           terceroId: this.tercero.terceroId,
+
+          terceroDeducciones: this.listaTerceroDeducciones,
         };
         this.terceroService
           .RegistrarParametroLiquidacionTercero(parametroNuevo)
@@ -500,6 +816,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             : +formValues.interesesViviendaCtrl;
         this.parametroLiquidacionSeleccionado.fechaInicioDescuentoInteresVivienda = dateFechaInicio;
         this.parametroLiquidacionSeleccionado.fechaFinalDescuentoInteresVivienda = dateFechaFinal;
+        this.parametroLiquidacionSeleccionado.terceroDeducciones = this.listaTerceroDeducciones;
 
         this.terceroService
           .ActualizarParametroLiquidacionTercero(
@@ -583,6 +900,19 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     return this.editForm.get('fechaFinalCtrl');
   }
 
+  get codigoDeduccionCtrl() {
+    return this.editForm.get('codigoDeduccionCtrl');
+  }
+  get deduccionCtrl() {
+    return this.editForm.get('deduccionCtrl');
+  }
+  get codigoActividadCtrl() {
+    return this.editForm.get('codigoActividadCtrl');
+  }
+  get actividadCtrl() {
+    return this.editForm.get('actividadCtrl');
+  }
+
   dateString2Date(dateString: string) {
     const day = +dateString.substr(0, 2);
     const month = +dateString.substr(3, 2) - 1;
@@ -597,7 +927,21 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   //#region Listas
 
-  cargarParametrosGenerales() {}
+  cargarParametrosGenerales() {
+    this.listaService
+      .ObtenerParametrosGeneralesXTipo('ParametroLiquidacionTercero')
+      .subscribe(
+        (lista: ValorSeleccion[]) => {
+          this.listaParametrosGeneral = lista;
+        },
+        (error) => {
+          this.alertify.error(error);
+        },
+        () => {
+          this.createDefaultForm();
+        }
+      );
+  }
 
   cargarListas() {
     this.cargarListaModalidadContrato(TipoLista.ModalidadContrato.value);

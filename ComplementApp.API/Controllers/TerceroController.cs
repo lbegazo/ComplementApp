@@ -82,8 +82,9 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
-                var lista = await _repo.ObtenerParametrizacionLiquidacionXTercero(terceroId);
-                return Ok(lista);
+                var item = await _repo.ObtenerParametrizacionLiquidacionXTercero(terceroId);
+                item.TerceroDeducciones = await _repo.ObtenerDeduccionesXTercero(terceroId);
+                return Ok(item);
             }
             catch (Exception)
             {
@@ -100,6 +101,8 @@ namespace ComplementApp.API.Controllers
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             ParametroLiquidacionTercero parametro = new ParametroLiquidacionTercero();
+            var listaTerceroDeduccion = new List<TerceroDeduccion>();
+            TerceroDeduccion itemTerceroDeduccion = null;
 
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
@@ -107,18 +110,38 @@ namespace ComplementApp.API.Controllers
             {
                 if (parametroDto != null)
                 {
-                    #region Mapear datos 
+                    #region Mapear datos Parametro Liquidacion Tercero
 
                     parametro = _mapper.Map<ParametroLiquidacionTercero>(parametroDto);
 
                     parametro.UsuarioIdRegistro = usuarioId;
                     parametro.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
 
-                    #endregion Mapear datos 
+                    #endregion Mapear datos Parametro Liquidacion Tercero
 
-                    //Registrar detalle de liquidación
+                    //Registrar Parametro liquidación Tercero
                     _dataContext.ParametroLiquidacionTercero.Add(parametro);
                     await _dataContext.SaveChangesAsync();
+
+                    //Eliminar Tercero deducciones
+                    await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId);
+                    await _dataContext.SaveChangesAsync();
+
+                    //Registrar Tercero deducciones
+                    if (parametroDto.TerceroDeducciones != null && parametroDto.TerceroDeducciones.Count > 0)
+                    {
+                        foreach (var item in parametroDto.TerceroDeducciones)
+                        {
+                            itemTerceroDeduccion = new TerceroDeduccion();
+                            itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
+                            itemTerceroDeduccion.TerceroId = item.Tercero.Id;
+                            itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
+                            listaTerceroDeduccion.Add(itemTerceroDeduccion);
+                        }
+                        _dataContext.TerceroDeducciones.AddRange(listaTerceroDeduccion);
+                        await _dataContext.SaveChangesAsync();
+                    }
+
 
                     await transaction.CommitAsync();
 
@@ -136,14 +159,36 @@ namespace ComplementApp.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarParametroLiquidacionTercero(ParametroLiquidacionTerceroDto parametroDto)
         {
+            var listaTerceroDeduccion = new List<TerceroDeduccion>();
+            TerceroDeduccion itemTerceroDeduccion = null;
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             try
             {
+                //Registrar Parametro liquidación Tercero
                 var parametroBD = await _repo.ObtenerParametrizacionLiquidacionTerceroBase(parametroDto.ParametroLiquidacionTerceroId);
                 _mapper.Map(parametroDto, parametroBD);
                 parametroBD.UsuarioIdModificacion = usuarioId;
                 parametroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+
+                //Eliminar Tercero deducciones
+                await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId);
+                await _dataContext.SaveChangesAsync();
+
+                //Registrar nueva lista de Tercero deducciones
+                if (parametroDto.TerceroDeducciones != null && parametroDto.TerceroDeducciones.Count > 0)
+                {
+                    foreach (var item in parametroDto.TerceroDeducciones)
+                    {
+                        itemTerceroDeduccion = new TerceroDeduccion();
+                        itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
+                        itemTerceroDeduccion.TerceroId = item.Tercero.Id;
+                        itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
+                        listaTerceroDeduccion.Add(itemTerceroDeduccion);
+                    }
+                    _dataContext.TerceroDeducciones.AddRange(listaTerceroDeduccion);
+                    await _dataContext.SaveChangesAsync();
+                }
 
                 await _dataContext.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -155,5 +200,43 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerDeduccionesXTercero([FromQuery(Name = "terceroId")] int terceroId)
+        {
+            try
+            {
+                var lista = await _repo.ObtenerDeduccionesXTercero(terceroId);
+                return Ok(lista);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener las deducciones del tercero");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObteneListaDeducciones([FromQuery] UserParams userParams)
+        {
+            try
+            {
+                var pagedList = await _repo.ObteneListaDeducciones(userParams);
+
+                var listaDto = _mapper.Map<IEnumerable<DeduccionDto>>(pagedList);
+
+                return Ok(listaDto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener las deducciones");
+        }
+
     }
 }

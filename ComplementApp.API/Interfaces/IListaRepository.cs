@@ -36,5 +36,9 @@ namespace ComplementApp.API.Interfaces
         Task<IEnumerable<UsoPresupuestal>> ObtenerListaUsoPresupuestalXRubro(int rubroPresupuestalId);
 
         Task<ICollection<ValorSeleccion>> ObtenerListaXTipo(TipoLista tipo);
+
+        Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo);
+
+        Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo);
     }
 }
