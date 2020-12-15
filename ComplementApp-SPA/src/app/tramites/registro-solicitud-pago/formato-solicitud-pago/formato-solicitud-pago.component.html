@@ -1,0 +1,801 @@
+<form #formatoNgForm="ngForm" id="formatoNgForm" [formGroup]="formatoForm">
+  <div class="container-fluid" style="color: black">
+    <div class="row">
+      <div
+        class="col-12"
+        id="content"
+        #content
+        class="addPadding"
+        style="width: 100%"
+      >
+        <div class="container-fluid">
+          <!--Formato de causacion y liquidación de pago-->
+          <div class="row">
+            <div class="col-12" style="padding: 0px">
+              <table style="width: 100%; margin-left: auto; margin-right: auto">
+                <tr>
+                  <td class="withoutPadding">
+                    <table>
+                      <!--Formato-->
+                      <tr>
+                        <th class="center">
+                          <span>
+                            FORMATO DE SOLICITUD DE PAGO - CONTRATISTA Y
+                            PROVEEDORES
+                          </span>
+                        </th>
+                      </tr>
+                      <!--Num Documento-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr class="aplicaBackground">
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM. DOCUMENTO
+                              </td>
+                              <td
+                                style="width: 40%"
+                                class="center fontSmaller stronger"
+                              >
+                                NOMBRE DEL CONTRATISTA/PROVEEDOR
+                              </td>
+                              <td
+                                style="width: 20%"
+                                class="center fontSmaller stronger"
+                              >
+                                CORREO ELECTRONICO
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                TELEFONO CONTACTO
+                              </td>
+                              <td
+                                style="width: 20%"
+                                class="center fontSmaller stronger"
+                              >
+                                DIRECCION CONTRACTUAL
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.tercero
+                                    .numeroIdentificacion
+                                }}
+                              </td>
+                              <td style="width: 40%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.tercero.nombre }}
+                              </td>
+                              <td style="width: 20%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.tercero.email }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.tercero.telefono }}
+                              </td>
+                              <td style="width: 20%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.tercero.direccion }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--FECHA EXP. DOCUMENTO-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr class="aplicaBackground">
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger"
+                                  >FECHA EXP. DOCUMENTO</span
+                                >
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">REGIMEN TRIBUTARIO</span>
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">DECLARANTE RENTA</span>
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger"
+                                  >FACTURADOR ELECTRONICO</span
+                                >
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">NUMERO CDP</span>
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">NUMERO COMPROMISO</span>
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                <span class="stronger"
+                                  >FECHA REG. COMPROMISO</span
+                                >
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.tercero
+                                    .fechaExpedicionDocumento
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.tercero
+                                    .regimenTributario
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.tercero
+                                    .declaranteRentaDescripcion
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.tercero
+                                    .facturadorElectronicoDescripcion
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.cdp.cdp }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.cdp.crp }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.cdp.fecha
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Nombre del supervisor-->
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 40%"
+                                class="center fontSmaller stronger"
+                              >
+                                NOMBRE SUPERVISOR CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUMERO DE CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                FECHA CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                FECHA INICIO CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                FECHA TERMINACION CONTRATO
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="width: 40%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.cdp.detalle5 }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.contrato.numeroContrato
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.contrato.fechaRegistro
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.contrato.fechaInicio
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.contrato.fechaFinal
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--OBJETO DE COMPROMISO PRESUPUESTAL-->
+                      <tr>
+                        <td class="aplicaBackground">
+                          <p class="fontSmaller stronger center">
+                            OBJETO DE COMPROMISO PRESUPUESTAL
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="center fontSmaller">
+                          <p class="withoutMarginBottom">
+                            {{ formatoSolicitudPago.cdp.detalle4 }}
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!--INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL-->
+                      <tr>
+                        <td class="center">
+                          <span class="stronger">
+                            INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR INICIAL
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR ADICIONES/REDUCCIONES
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR ACTUAL
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                SALDO ACTUAL
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR DE PAGOS A LA FECHA
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM PAGOS A LA FECHA
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM TOTAL PAGOS REAL.
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago.cdp.valorInicial
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago.cdp.operacion
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago.cdp.valorTotal
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago.cdp.saldoActual
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago.valorPagadoFechaActual
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPago.numeroPagoFechaActual }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ formatoSolicitudPago.cantidadMaxima }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--PAGOS REALIZADO-->
+                      <tr
+                        *ngIf="
+                          formatoSolicitudPago.pagosRealizados &&
+                          formatoSolicitudPago.pagosRealizados.length > 0
+                        "
+                      >
+                        <td class="withoutPadding">
+                          <div class="container-fluid">
+                            <!--Titulo Principal-->
+                            <div class="row borderTop">
+                              <div class="col-12">
+                                <small
+                                  ><strong
+                                    >DETALLE DE PAGOS REALIZADOS</strong
+                                  ></small
+                                >
+                              </div>
+                            </div>
+                            <div>
+                              <!--Titulo de Columnas-->
+                              <div class="row borderTop">
+                                <div
+                                  style="width: 10%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>NUM. PAGO</strong></small>
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small
+                                    ><strong>NUM. ORDEN DE PAGO</strong></small
+                                  >
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small
+                                    ><strong>ESTADO ORDEN PAGO</strong></small
+                                  >
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small
+                                    ><strong>FECHA ORDEN PAGO</strong></small
+                                  >
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>VALOR BRUTO</strong></small>
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small
+                                    ><strong>VALOR DEDUCCIONES</strong></small
+                                  >
+                                </div>
+                                <div
+                                  style="width: 15%"
+                                  class="borderBottonRight aplicaBackground"
+                                >
+                                  <small><strong>VALOR NETO</strong></small>
+                                </div>
+                              </div>
+                              <!--Pagos realizados-->
+                              <div class="row">
+                                <div class="col-12">
+                                  <div>
+                                    <div
+                                      formArrayName="deduccionControles"
+                                      class="row"
+                                      *ngFor="
+                                        let item of formatoSolicitudPago.pagosRealizados;
+                                        let i = index
+                                      "
+                                      style="height: 20px"
+                                    >
+                                      <ng-container [formGroupName]="i">
+                                        <div
+                                          style="width: 10%"
+                                          class="borderBottonRight centerAlign small"
+                                        >
+                                          <small>{{ i + 1 }}</small>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight center small"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.ordenPago }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{ item?.detalle1 }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.fecha | date: "dd/MM/yyyy"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.valorInicial
+                                                | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.operacion | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 15%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.valorTotal | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                      </ng-container>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <!--DETALLE SOLICITUD DE PAGO ACTUAL-->
+                      <tr>
+                        <td class="center">
+                          <small
+                            ><strong
+                              >DETALLE DE SOLICITUD DE PAGO ACTUAL</strong
+                            ></small
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM. PAGO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR A PAGAR
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                VIATICOS
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUMERO FACTURA
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR FACTURADO
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                ACTIVIDAD ECONOMICA
+                              </td>
+                              <td
+                                style="width: 12%"
+                                class="center fontSmaller stronger"
+                              >
+                                PERIODO COBRO INICIO
+                              </td>
+                              <td
+                                style="width: 13%"
+                                class="center fontSmaller stronger"
+                              >
+                                PERIODO COBRO FIN
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ planPagoSeleccionada?.numeroPago }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  planPagoSeleccionada?.valorFacturado
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ planPagoSeleccionada?.viaticosDescripcion }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPagoPopup?.numeroFactura }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPagoPopup?.valorFacturado
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPagoPopup?.actividadEconomicaDescripcion
+                                }}
+                              </td>
+                              <td style="width: 12%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPagoPopup?.fechaInicio
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                              <td style="width: 13%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPagoPopup?.fechaFin
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%">
+                              <td
+                                style="width: 25%"
+                                class="center fontSmaller stronger aplicaBackground"
+                              >
+                                OBSERVACIONES
+                              </td>
+                              <td
+                                style="width: 75%"
+                                class="left fontSmaller addPaddingLeft"
+                              >
+                                {{ formatoSolicitudPagoPopup?.observaciones }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr style="width: 100%" class="aplicaBackground">
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUMERO DE PLANILLA
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                MES DE APORTES
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                BASE DE COTIZACION
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR APORTE SALUD
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                VALOR APORTE PENSION
+                              </td>
+                              <td
+                                style="width: 10%"
+                                class="center fontSmaller stronger"
+                              >
+                                RIESGO LABORAL
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                FONDO DE SOLIDARIDAD
+                              </td>
+                            </tr>
+                            <tr style="width: 100%">
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ formatoSolicitudPagoPopup?.numeroPlanilla }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPagoPopup?.mes }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPagoPopup?.baseCotizacion
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago?.aporteSalud
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago?.aportePension
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago?.riesgoLaboral
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago?.fondoSolidaridad
+                                    | number: "1.0-0"
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Botones-->
+    <div class="row">
+      <div class="col-12" style="padding-right: 15px">
+        <div
+          style="width: 100%; margin-left: auto; margin-right: auto"
+          class="right"
+        >
+          <!--Plan Pago-->
+          <button
+            type="submit"
+            class="btn btn-info mr-2"
+            (click)="seleccionarPlanPago()"
+            [disabled]="habilitaDatosRegistrados || solicitudRegistrada"
+          >
+            Plan de Pago
+          </button>
+
+          <!--Seguridad Social-->
+          <button
+            type="submit"
+            class="btn btn-warning mr-2"
+            (click)="registrarSeguridadSocial()"
+            [disabled]="!habilitaPlanDePagoSeleccionado || habilitaArchivosCargados || solicitudRegistrada"
+          >
+            Registrar datos
+          </button>
+
+          <!--Cargar archivos-->
+          <button
+            type="submit"
+            class="btn btn-light mr-2"
+            (click)="cargarArchivos()"
+            [disabled]="!habilitaDatosRegistrados || solicitudRegistrada"
+          >
+            Cargar archivos
+          </button>
+
+          <!--Guardar-->
+          <button
+            type="submit"
+            class="btn btn-success mr-2"
+            (click)="registrarSolicitudPago()"
+            [disabled]="!habilitaArchivosCargados || solicitudRegistrada"
+          >
+            Guardar
+          </button>
+
+          <!--Exportar PDF-->
+          <button
+            type="submit"
+            class="btn btn-primary mr-2"
+            (click)="exportarPDF()"
+            [disabled]="!solicitudRegistrada"
+          >
+            Exportar PDF
+          </button>
+
+          <!--Cancelar-->
+          <button type="button" class="btn btn-default" (click)="onCancelar()">
+            Volver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- <p>Form value: {{ detallePlanPago | json }}</p>
+<p>Form value: {{ formatoForm.value | json }}</p>
+<p>Form status: {{ formatoForm.status | json }}</p> -->

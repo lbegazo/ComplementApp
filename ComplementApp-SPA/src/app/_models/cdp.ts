@@ -1,16 +1,22 @@
 import { DetalleCDP } from './detalleCDP';
 
 export interface Cdp {
-
   id: number;
   cdpId: number;
   cdp: number;
+  crp: number;
+  ordenPago: number;
+
   fecha: Date;
   detalle1: string; // Estado
   detalle4: string; // Objeto del bien
+  detalle5: string; // Supervisor
 
-  crp: number;
+  valorInicial: number;
+  operacion: number;
+  valorTotal: number;
+  saldoActual: number;
+
   numeroIdentificacionTercero: string;
   nombreTercero: string;
-
 }

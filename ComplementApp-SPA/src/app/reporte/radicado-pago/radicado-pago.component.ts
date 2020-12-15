@@ -50,13 +50,14 @@ export class RadicadoPagoComponent implements OnInit {
   planPagoIdSeleccionado = 0;
   detallePlanPago: DetallePlanPago;
   planPagoSeleccionado: PlanPago;
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero;
+  //  = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;

@@ -10,6 +10,8 @@ namespace ComplementApp.API.Interfaces
     {
         Task<PagedList<PlanPago>> ObtenerListaPlanPago(int? terceroId, List<int> listaEstadoId, UserParams userParams);
 
+        Task<PagedList<PlanPago>> ObtenerListaPlanPagoXCompromiso(long crp, List<int> listaEstadoId, UserParams userParams);
+
         Task<PlanPago> ObtenerPlanPagoBase(int planPagoId);
 
         Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId);

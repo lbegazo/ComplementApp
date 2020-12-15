@@ -40,13 +40,14 @@ export class CuentaPorPagarComponent implements OnInit {
   tipoPago = 0;
 
   listaPlanPago: FormatoCausacionyLiquidacionPago[] = [];
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero;
+  //  = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;

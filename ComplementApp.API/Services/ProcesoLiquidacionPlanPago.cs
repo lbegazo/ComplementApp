@@ -453,7 +453,8 @@ namespace ComplementApp.API.Services
 
             if (decimal.TryParse(parametroSMLV, out valorSMLV))
             {
-                cuatroSMLV = 4 * valorSMLV;
+                //Se cambia de forma temporal, debe ser 4
+                cuatroSMLV = 2 * valorSMLV;
             }
 
             #region Fondo de solidaridad

@@ -21,8 +21,6 @@ import domtoimage from 'dom-to-image';
 import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { PlanPagoService } from 'src/app/_services/planPago.service';
-import { ListaService } from 'src/app/_services/lista.service';
 import { TipoOperacion } from 'src/app/_models/tipoOperacion';
 import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 

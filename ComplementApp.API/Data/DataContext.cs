@@ -93,6 +93,8 @@ namespace ComplementApp.API.Data
         public DbSet<TipoIva> TipoIva { get; set; }
         public DbSet<TipoModalidadContrato> TipoModalidadContrato { get; set; }
         public DbSet<TipoDocumentoIdentidad> TipoDocumentoIdentidad { get; set; }
+        public DbSet<Contrato> Contrato { get; set; }
+        public DbSet<FormatoSolicitudPago> FormatoSolicitudPago { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -126,6 +128,14 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<DetalleLiquidacion>()
                 .Property(b => b.Procesado)
                 .HasDefaultValue(0);
+
+            modelBuilder.Entity<Tercero>()
+                .Property(b => b.DeclaranteRenta)
+                .HasDefaultValue(0);
+
+            modelBuilder.Entity<Tercero>()
+            .Property(b => b.FacturadorElectronico)
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<DetalleArchivoLiquidacion>()
           .HasKey(bc => new { bc.ArchivoDetalleLiquidacionId, bc.DetalleLiquidacionId });

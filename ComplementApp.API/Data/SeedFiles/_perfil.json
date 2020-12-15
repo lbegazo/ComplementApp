@@ -18,5 +18,15 @@
     "Codigo": "4",
     "Nombre": "Registrador Presupuesto",
     "Descripcion": "Registrador Presupuesto"
+  },
+  {
+    "Codigo": "5",
+    "Nombre": "Registrador Contable",
+    "Descripcion": "Registrador Contable"
+  },
+  {
+    "Codigo": "6",
+    "Nombre": "Contratista",
+    "Descripcion": "Contratista"
   }
 ]

@@ -52,7 +52,7 @@ export class PopupDatosAdicionalesComponent implements OnInit {
   }
 
   onSelectActividadEconomica() {
-    this.idActividadSelecionado = this.actividadEconomicaCtrl.value.actividadEconomicaId;
+    this.idActividadSelecionado = this.actividadEconomicaCtrl.value.id;
   }
 
   onAceptar() {

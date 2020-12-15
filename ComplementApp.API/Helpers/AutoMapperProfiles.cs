@@ -71,14 +71,11 @@ namespace ComplementApp.API.Helpers
 
             #endregion
         
-            #region Tercero deducciones
+            #region Formato Solicitud Pago
 
-            CreateMap<TerceroDeduccionDto, TerceroDeduccion>()
-            .ForMember(u => u.DeduccionId, opt => opt.MapFrom(u => u.Deduccion.Id))
-            .ForMember(u => u.TerceroId, opt => opt.MapFrom(u => u.Tercero.Id))
-            .ForMember(u => u.ActividadEconomicaId, opt => opt.MapFrom(u => u.ActividadEconomica.Id));
+            CreateMap<FormatoSolicitudPagoParaGuardarDto, FormatoSolicitudPago>();
 
-            #endregion Tercero deducciones
+            #endregion Formato Solicitud Pago
         }
     }
 }

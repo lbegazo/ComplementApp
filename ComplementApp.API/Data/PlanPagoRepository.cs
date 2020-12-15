@@ -62,6 +62,43 @@ namespace ComplementApp.API.Data
             return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
+        public async Task<PagedList<PlanPago>> ObtenerListaPlanPagoXCompromiso(long crp, List<int> listaEstadoId, UserParams userParams)
+        {
+            var lista = (from c in _context.PlanPago
+                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                         from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where (c.Crp == crp)
+                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         select new PlanPago()
+                         {
+                             PlanPagoId = c.PlanPagoId,
+                             Cdp = c.Cdp,
+                             Crp = c.Crp,
+                             AnioPago = c.AnioPago,
+                             MesPago = c.MesPago,
+                             ValorAPagar = c.ValorAPagar,
+                             Viaticos = c.Viaticos,
+                             NumeroPago = c.NumeroPago,
+                             EstadoPlanPagoId = c.EstadoPlanPagoId,
+                             NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
+                             FechaRadicadoSupervisor = c.FechaRadicadoSupervisor,
+                             ValorFacturado = c.ValorFacturado,
+                             TerceroId = c.TerceroId,
+                             Tercero = new Tercero()
+                             {
+                                 TerceroId = c.TerceroId,
+                                 NumeroIdentificacion = t.NumeroIdentificacion,
+                                 Nombre = t.Nombre,
+                                 ModalidadContrato = pl.ModalidadContrato,
+                                 TipoPago = pl.TipoPago
+                             }
+                         })
+                               .OrderBy(c => c.FechaRadicadoSupervisor);
+
+            return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
 
         public async Task<PlanPago> ObtenerPlanPagoBase(int planPagoId)
         {

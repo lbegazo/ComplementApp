@@ -48,13 +48,14 @@ export class LiquidacionPagoComponent implements OnInit {
   listaPlanPago: FormatoCausacionyLiquidacionPago[] = [];
   detalleLiquidacionIdSeleccionado = 0;
   planPagoSeleccionado: FormatoCausacionyLiquidacionPago;
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero;
+  //  = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;
@@ -147,7 +148,14 @@ export class LiquidacionPagoComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
+    this.listaEstadoId =
+      EstadoPlanPago.ConLiquidacionDeducciones.value.toString() +
+      ',' +
+      EstadoPlanPago.Obligado.value.toString() +
+      ',' +
+      EstadoPlanPago.Pagado.value.toString() +
+      ',' +
+      EstadoPlanPago.ConOrdenPago.value.toString();
 
     this.liquidacionService
       .ObtenerListaDetalleLiquidacion(

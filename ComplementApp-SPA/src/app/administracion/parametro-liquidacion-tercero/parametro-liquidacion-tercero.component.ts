@@ -38,13 +38,14 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
   nombreBoton = 'Registrar';
 
   listaTercero: Tercero[] = [];
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero;
+  // = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   terceroSeleccionado: Tercero;
 

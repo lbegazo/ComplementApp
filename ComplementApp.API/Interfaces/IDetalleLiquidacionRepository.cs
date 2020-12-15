@@ -32,6 +32,6 @@ namespace ComplementApp.API.Interfaces
 
         int ObtenerUltimoConsecutivoArchivoLiquidacion();
 
-        Task<ICollection<ActividadEconomica>> ObtenerListaActividadesEconomicaXTercero(int terceroId);
+        Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId);
     }
 }

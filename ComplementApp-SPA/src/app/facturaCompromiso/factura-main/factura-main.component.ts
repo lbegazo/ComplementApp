@@ -50,13 +50,14 @@ export class FacturaMainComponent implements OnInit {
 
   listaPlanPago: PlanPago[] = [];
   planPagoIdSeleccionado = 0;
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero; 
+  // = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   facturaHeaderForm = new FormGroup({});
 

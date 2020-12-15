@@ -10,8 +10,6 @@ import {
 } from '@angular/forms';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { PlanPago } from 'src/app/_models/planPago';
-import { Tercero } from 'src/app/_models/tercero';
-import { FiltroFactura } from 'src/app/_models/filtroFactura';
 import { EstadoPlanPago } from 'src/app/_models/enum';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 

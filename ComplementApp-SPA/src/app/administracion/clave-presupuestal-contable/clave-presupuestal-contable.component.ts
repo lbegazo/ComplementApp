@@ -41,13 +41,14 @@ export class ClavePresupuestalContableComponent implements OnInit {
   listaPlanPago: Cdp[] = [];
   detalleLiquidacionIdSeleccionado = 0;
   planPagoSeleccionado: Cdp;
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero;
+  //  = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;

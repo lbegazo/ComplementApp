@@ -333,6 +333,39 @@ namespace ComplementApp.API.Migrations
                     b.ToTable("TClavePresupuestalContable");
                 });
 
+            modelBuilder.Entity("ComplementApp.API.Models.Contrato", b =>
+                {
+                    b.Property<int>("ContratoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("Crp")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("FechaFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NumeroContrato")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<int>("TipoModalidadContratoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ContratoId");
+
+                    b.HasIndex("TipoModalidadContratoId");
+
+                    b.ToTable("TContrato");
+                });
+
             modelBuilder.Entity("ComplementApp.API.Models.CriterioCalculoReteFuente", b =>
                 {
                     b.Property<int>("CriterioCalculoReteFuenteId")
@@ -810,6 +843,73 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("EstadoId");
 
                     b.ToTable("TEstado");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.FormatoSolicitudPago", b =>
+                {
+                    b.Property<int>("FormatoSolicitudPagoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ActividadEconomicaId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("BaseCotizacion")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<long>("Crp")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("EstadoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaFinal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaModificacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumeroFactura")
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("NumeroPlanilla")
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Observaciones")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<int>("PlanPagoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TerceroId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsuarioIdModificacion")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsuarioIdRegistro")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("valorFacturado")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.HasKey("FormatoSolicitudPagoId");
+
+                    b.HasIndex("ActividadEconomicaId");
+
+                    b.HasIndex("PlanPagoId");
+
+                    b.ToTable("TFormatoSolicitudPago");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.FuenteFinanciacion", b =>
@@ -1359,12 +1459,37 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("DeclaranteRenta")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<bool>("FacturadorElectronico")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime>("FechaExpedicionDocumento")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("NumeroIdentificacion")
                         .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("RegimenTributario")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Telefono")
                         .HasColumnType("VARCHAR(20)");
 
                     b.Property<int>("TipoIdentificacion")
@@ -1864,6 +1989,15 @@ namespace ComplementApp.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ComplementApp.API.Models.Contrato", b =>
+                {
+                    b.HasOne("ComplementApp.API.Models.TipoModalidadContrato", "TipoModalidadContrato")
+                        .WithMany()
+                        .HasForeignKey("TipoModalidadContratoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ComplementApp.API.Models.Deduccion", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.TipoBaseDeduccion", "TipoBaseDeduccion")
@@ -1926,6 +2060,21 @@ namespace ComplementApp.API.Migrations
                     b.HasOne("ComplementApp.API.Models.SolicitudCDP", "SolicitudCDP")
                         .WithMany("DetalleSolicitudCDPs")
                         .HasForeignKey("SolicitudCDPId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.FormatoSolicitudPago", b =>
+                {
+                    b.HasOne("ComplementApp.API.Models.ActividadEconomica", "ActividadEconomica")
+                        .WithMany()
+                        .HasForeignKey("ActividadEconomicaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ComplementApp.API.Models.PlanPago", "PlanPago")
+                        .WithMany()
+                        .HasForeignKey("PlanPagoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

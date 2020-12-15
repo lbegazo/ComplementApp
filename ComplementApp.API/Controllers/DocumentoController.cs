@@ -32,7 +32,7 @@ namespace ComplementApp.API.Controllers
 
         const string nombreHojaPlanPago = "PlanesPago";
 
-       
+
 
         #endregion Propiedades
 
@@ -53,7 +53,7 @@ namespace ComplementApp.API.Controllers
                 using var transaction = _dataContext.Database.BeginTransaction();
 
                 try
-                {  
+                {
                     IFormFile file = Request.Form.Files[0];
 
                     if (file == null || file.Length <= 0)
@@ -78,7 +78,7 @@ namespace ComplementApp.API.Controllers
 
                     #endregion
 
-                    var result = _documento.EliminarInformacionCDP();     
+                    var result = _documento.EliminarInformacionCDP();
 
                     #region Insertar lista en la base de datos
 
@@ -112,6 +112,37 @@ namespace ComplementApp.API.Controllers
             return Ok();
         }
 
-        
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult CargarArchivosParaSolicitudPago()
+        {
+            if (Request.Form.Files.Count > 0)
+            {
+                //using var transaction = _dataContext.Database.BeginTransaction();
+
+                try
+                {
+                    IFormFile file = Request.Form.Files[0];
+
+                    if (file == null || file.Length <= 0)
+                        return BadRequest("El archivo se encuentra vacío");
+
+                    // if (!Path.GetExtension(file.FileName).Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+                    //     return BadRequest("El archivo debe tener la extensión: pdf");
+
+                    //transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                return BadRequest("El archivo no pudo ser enviado al servidor web");
+            }
+            return Ok();
+        }
+
     }
 }

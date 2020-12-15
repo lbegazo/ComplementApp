@@ -59,13 +59,14 @@ export class CausacionyLiquidacionComponent implements OnInit {
   planPagoIdSeleccionado = 0;
   detallePlanPago: DetallePlanPago;
   planPagoSeleccionado: PlanPago;
-  tercero: Tercero = {
-    terceroId: 0,
-    nombre: '',
-    numeroIdentificacion: '',
-    tipoDocumentoIdentidad: '',
-    tipoDocumentoIdentidadId: 0,
-  };
+  tercero: Tercero;
+  //  = {
+  //   terceroId: 0,
+  //   nombre: '',
+  //   numeroIdentificacion: '',
+  //   tipoDocumentoIdentidad: '',
+  //   tipoDocumentoIdentidadId: 0,
+  // };
 
   listaActividadEconomica: ValorSeleccion[];
   mostrarActividadEconomica = false;

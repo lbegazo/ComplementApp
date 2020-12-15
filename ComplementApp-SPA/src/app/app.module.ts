@@ -90,6 +90,11 @@ import { ParametroLiquidacionTerceroComponent } from './administracion/parametro
 import { ParametroLiquidacionEditComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/parametro-liquidacion-edit.component';
 import { FourDigitDecimalNumberDirective } from './_directives/four-digit-decimal-number.directive';
 import { FiveDigitDecimalNumberDirective } from './_directives/five-digit-decimal-number.directive';
+import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
+import { FormatoSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/formato-solicitud-pago.component';
+import { PopupSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-solicitud-pago/popup-solicitud-pago.component';
+import { PopupFacturaComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-factura/popup-factura.component';
+import { PopupCargarArchivosComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-cargar-archivos/popup-cargar-archivos.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -149,6 +154,11 @@ export function tokenGetter() {
     ClavePresupuestalContableEditComponent,
     ParametroLiquidacionTerceroComponent,
     ParametroLiquidacionEditComponent,
+    RegistroSolicitudPagoComponent,
+    FormatoSolicitudPagoComponent,
+    PopupSolicitudPagoComponent,
+    PopupFacturaComponent,
+    PopupCargarArchivosComponent,
   ],
   imports: [
     BrowserModule,

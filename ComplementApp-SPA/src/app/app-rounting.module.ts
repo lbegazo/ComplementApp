@@ -26,6 +26,7 @@ import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-pa
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
 import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
+import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -76,7 +77,6 @@ export const routes: Routes = [
     resolve: { transaccion: TransaccionResolver },
   },
 
-  
   {
     path: 'PLAN_CARGAMASIVA',
     canActivate: [AuthGuard],
@@ -97,6 +97,16 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     component: CuentaPorPagarComponent,
     resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'TRAMITE_REGISTRAR',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: RegistroSolicitudPagoComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
   },
   {
     path: 'TRAMITE_RADICADO',

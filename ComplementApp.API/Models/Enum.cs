@@ -8,7 +8,6 @@ namespace ComplementApp.API.Models
         Obligado = 7,
         Pagado = 8,
         Rechazada = 13,
-
         ConOrdenPago = 19,
     }
 
@@ -29,8 +28,10 @@ namespace ComplementApp.API.Models
         Administrador = 2,
         CoordinadorFinanciero = 3,
         RegistradorPresupuesto = 4,
-        RegistradorContable = 5
+        RegistradorContable = 5,
+        Contratista = 6,
     }
+    
 
     public enum EstadoSolicitudCDP
     {
@@ -84,5 +85,11 @@ namespace ComplementApp.API.Models
     {
         Creacion = 1,
         Modificacion = 2
+    }
+
+     public enum EstadoSolicitudPago
+    {
+        Generado = 24,
+        Aprobado = 25
     }
 }

@@ -88,5 +88,16 @@
     "Nombre": "Rechazado",
     "Descripcion": "Rechazado",
     "TipoDocumento": "EstadoSolicitudCDP"
+  },
+
+  {
+    "Nombre": "Generado",
+    "Descripcion": "Generado",
+    "TipoDocumento": "EstadoSolicitudPago"
+  },
+  {
+    "Nombre": "Aprobado",
+    "Descripcion": "Aprobado",
+    "TipoDocumento": "EstadoSolicitudPago"
   }
 ]

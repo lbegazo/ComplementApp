@@ -73,6 +73,23 @@ namespace ComplementApp.API.Controllers
             return base.Ok(listaDto);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaPlanPagoXCompromiso([FromQuery(Name = "crp")] long crp,
+                                                                [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                                [FromQuery] UserParams userParams)
+        {
+            List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+
+            var pagedList = await _repo.ObtenerListaPlanPagoXCompromiso(crp, listIds, userParams);
+            var listaDto = _mapper.Map<IEnumerable<PlanPagoDto>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
+
 
         [Route("[action]")]
         [HttpGet]
