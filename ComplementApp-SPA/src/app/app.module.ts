@@ -95,6 +95,9 @@ import { FormatoSolicitudPagoComponent } from './tramites/registro-solicitud-pag
 import { PopupSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-solicitud-pago/popup-solicitud-pago.component';
 import { PopupFacturaComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-factura/popup-factura.component';
 import { PopupCargarArchivosComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-cargar-archivos/popup-cargar-archivos.component';
+import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
+import { FormatoSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/formato-solicitud-pago-aprobacion.component';
+import { PopupSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -159,6 +162,9 @@ export function tokenGetter() {
     PopupSolicitudPagoComponent,
     PopupFacturaComponent,
     PopupCargarArchivosComponent,
+    AprobacionSolicitudPagoComponent,
+    FormatoSolicitudPagoAprobacionComponent,
+    PopupSolicitudPagoAprobacionComponent,
   ],
   imports: [
     BrowserModule,

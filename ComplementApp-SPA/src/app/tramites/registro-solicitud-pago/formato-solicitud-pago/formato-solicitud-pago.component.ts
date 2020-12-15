@@ -255,8 +255,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
               'Hubó un error al registrar el Formato de Solicitud de Pago ' +
                 error
             );
-          },
-          () => {}
+          }
         );
     }
   }

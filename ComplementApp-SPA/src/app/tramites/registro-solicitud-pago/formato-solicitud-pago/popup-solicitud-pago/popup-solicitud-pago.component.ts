@@ -63,7 +63,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
       valorFacturaCtrl: ['', Validators.required],
       actividadEconomicaCtrl: [null, Validators.required],
       fechaInicioCtrl: ['', Validators.required],
-      fechaFinCtrl: ['', Validators.required],
+      fechaFinalCtrl: ['', Validators.required],
       observacionesCtrl: ['', Validators.required],
       numeroPlanillaCtrl: ['', Validators.required],
       mesCtrl: ['', Validators.required],
@@ -91,7 +91,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
     this.idActividadEconomicaSelecionada = this.formatoSolicitudPagoEdit.actividadEconomicaId;
 
     fechaInicio = this.formatoSolicitudPagoEdit.fechaInicio;
-    fechaFinal = this.formatoSolicitudPagoEdit.fechaFin;
+    fechaFinal = this.formatoSolicitudPagoEdit.fechaFinal;
 
     this.popupForm = this.fb.group({
       numeroFacturaCtrl: [numeroFacturaC, Validators.required],
@@ -104,7 +104,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
         formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
         Validators.required,
       ],
-      fechaFinCtrl: [
+      fechaFinalCtrl: [
         formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
         Validators.required,
       ],
@@ -135,7 +135,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
       let dateFechaInicio = null;
       let dateFechaFin = null;
       const valueFechaInicio = formValues.fechaInicioCtrl;
-      const valueFechaFin = formValues.fechaFinCtrl;
+      const valueFechaFin = formValues.fechaFinalCtrl;
 
       if (this.isValidDate(valueFechaInicio)) {
         dateFechaInicio = valueFechaInicio;
@@ -167,7 +167,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
         actividadEconomicaDescripcion: this.actividadEconomicaSeleccionada
           .codigo,
         fechaInicio: dateFechaInicio,
-        fechaFin: dateFechaFin,
+        fechaFinal: dateFechaFin,
         observaciones: formValues.observacionesCtrl,
         numeroPlanilla: formValues.numeroPlanillaCtrl,
         mesId: this.idMesSelecionado,

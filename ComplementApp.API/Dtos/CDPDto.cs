@@ -68,6 +68,8 @@ namespace ComplementApp.API.Dtos
 
         public string NombreTercero { get; set; }
 
+        public int FormatoSolicitudPagoId { get; set; }
+
         
     }
 }

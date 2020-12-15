@@ -7,10 +7,28 @@ namespace ComplementApp.API.Dtos
     public class FormatoSolicitudPagoDto
     {
         public int FormatoSolicitudPagoId { get; set; }
+        public int PlanPagoId { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFinal { get; set; }
+        public decimal ValorFacturado { get; set; }
+        public int MesId { get; set; }
+        public int EstadoId { get; set; }
+        public string MesDescripcion { get; set; }
+        public string NumeroPlanilla { get; set; }
+        public string NumeroFactura { get; set; }
+        public string Observaciones { get; set; }
+        public decimal BaseCotizacion { get; set; }
+        public decimal ValorPagadoFechaActual { get; set; }
+        public string ObservacionesModificacion { get; set; }
+        public decimal AporteSalud { get; set; }
+        public decimal AportePension { get; set; }
+        public decimal RiesgoLaboral { get; set; }
+        public decimal FondoSolidaridad { get; set; }
         public CDPDto Cdp { get; set; }
         public TerceroDto Tercero { get; set; }
         public Contrato Contrato { get; set; }
-        public decimal ValorPagadoFechaActual { get; set; }
+         public PlanPagoDto PlanPago { get; set; }
+        public ValorSeleccion ActividadEconomica { get; set; }
         public int NumeroPagoFechaActual { get; set; }
         public int CantidadMaxima { get; set; }
         public ICollection<CDPDto> PagosRealizados { get; set; }

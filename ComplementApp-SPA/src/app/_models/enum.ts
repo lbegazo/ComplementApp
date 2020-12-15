@@ -59,6 +59,12 @@ export class TipoLista extends Enum<number> {
   public static readonly TipoDocumentoSoporte = new Enum(5);
 }
 
+export class EstadoSolicitudPago extends Enum<number> {
+  public static readonly Generado = new Enum(24);
+  public static readonly Aprobado = new Enum(25);
+  public static readonly Rechazado = new Enum(26);
+}
+
 
 /*
 console.log(PrimaryColor.Red);

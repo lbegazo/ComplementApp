@@ -8,7 +8,7 @@ export interface FormatoSolicitudPago {
   actividadEconomicaId: number;
   actividadEconomicaDescripcion: string;
   fechaInicio: Date;
-  fechaFin: Date;
+  fechaFinal: Date;
   observaciones: string;
   numeroPlanilla: string;
   mesId: number;

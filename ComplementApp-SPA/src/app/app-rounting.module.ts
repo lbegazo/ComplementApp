@@ -27,6 +27,7 @@ import { ClavePresupuestalContableComponent } from './administracion/clave-presu
 import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
+import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -103,6 +104,16 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: RegistroSolicitudPagoComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },
+  {
+    path: 'TRAMITE_APROBAR',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: AprobacionSolicitudPagoComponent,
     resolve: {
       transaccion: TransaccionResolver,
       usuarioLogueado: UsuarioDetalleResolver,

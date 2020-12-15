@@ -146,30 +146,30 @@
                 </div>
               </div>
               <div class="form-group col-6">
-                <label for="inputFechaInicio" class="col-form-label-md"
+                <label for="inputFechaFinal" class="col-form-label-md"
                   >Fecha fin</label
                 >
 
                 <input
                   [ngClass]="{
                     'is-invalid':
-                      popupForm.get('fechaFinCtrl').errors &&
-                      popupForm.get('fechaFinCtrl').touched
+                      popupForm.get('fechaFinalCtrl').errors &&
+                      popupForm.get('fechaFinalCtrl').touched
                   }"
                   class="form-control border border-bottom-0 addPadding"
-                  placeholder="Fecha Fin"
-                  formControlName="fechaFinCtrl"
+                  placeholder="Fecha Final"
+                  formControlName="fechaFinalCtrl"
                   type="text"
                   bsDatepicker
                   [bsConfig]="bsConfig"
-                  id="inputFechaInicio"
+                  id="inputFechaFinal"
                   style="height: 33px; text-align: center"
                 />
                 <div
                   class="invalid-feedback"
                   *ngIf="
-                    popupForm.get('fechaFinCtrl').touched &&
-                    popupForm.get('fechaFinCtrl').hasError('required')
+                    popupForm.get('fechaFinalCtrl').touched &&
+                    popupForm.get('fechaFinalCtrl').hasError('required')
                   "
                 >
                   La fecha fin es requerida

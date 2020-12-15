@@ -31,7 +31,7 @@ namespace ComplementApp.API.Models
         RegistradorContable = 5,
         Contratista = 6,
     }
-    
+
 
     public enum EstadoSolicitudCDP
     {
@@ -87,9 +87,11 @@ namespace ComplementApp.API.Models
         Modificacion = 2
     }
 
-     public enum EstadoSolicitudPago
+    public enum EstadoSolicitudPago
     {
         Generado = 24,
-        Aprobado = 25
+        Aprobado = 25,
+        Rechazado = 26,
+
     }
 }

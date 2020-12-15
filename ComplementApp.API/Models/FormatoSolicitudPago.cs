@@ -52,6 +52,9 @@ namespace ComplementApp.API.Models
         [Required]
         public int EstadoId { get; set; }
 
+        [Column(TypeName = "VARCHAR(250)")]
+        public string ObservacionesModificacion { get; set; }
+
         public int? UsuarioIdRegistro { get; set; }
 
         public DateTime? FechaRegistro { get; set; }

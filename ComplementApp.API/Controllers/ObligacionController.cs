@@ -56,6 +56,97 @@ namespace ComplementApp.API.Controllers
         #region Registro de Solicitud de Pago
 
         [Route("[action]")]
+        [HttpPut]
+        public async Task<IActionResult> ActualizarFormatoSolicitudPago(FormatoSolicitudPagoDto formatoDto)
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                if (formatoDto != null)
+                {
+                    //Actualizar solicitud de pago
+                    var formatoBD = await _repo.ObtenerFormatoSolicitudPagoBase(formatoDto.FormatoSolicitudPagoId);
+
+                    formatoBD.UsuarioIdModificacion = usuarioId;
+                    formatoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                    formatoBD.ObservacionesModificacion = formatoDto.ObservacionesModificacion;
+                    formatoBD.EstadoId = formatoDto.EstadoId;
+                    await _dataContext.SaveChangesAsync();
+
+                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                    {
+                        //Actualizar el plan de pago
+                        var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                        planPagoBD.NumeroFactura = formatoDto.NumeroFactura;
+                        planPagoBD.ValorFacturado = formatoDto.ValorFacturado;
+                        planPagoBD.Observaciones = formatoDto.Observaciones;
+                        planPagoBD.NumeroRadicadoProveedor = formatoDto.FormatoSolicitudPagoId.ToString();
+                        planPagoBD.FechaRadicadoProveedor = _generalInterface.ObtenerFechaHoraActual();
+                        planPagoBD.NumeroRadicadoSupervisor = formatoDto.FormatoSolicitudPagoId.ToString();
+                        planPagoBD.FechaRadicadoSupervisor = _generalInterface.ObtenerFechaHoraActual();
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
+                        planPagoBD.UsuarioIdModificacion = usuarioId;
+                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        await _dataContext.SaveChangesAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    return Ok(formatoBD.FormatoSolicitudPagoId);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarFormatoSolicitudPago(FormatoSolicitudPagoParaGuardarDto formatoDto)
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+            FormatoSolicitudPago formato = null;
+
+            try
+            {
+                if (formatoDto != null)
+                {
+                    #region Mapear datos 
+
+                    formato = _mapper.Map<FormatoSolicitudPago>(formatoDto);
+                    formato.ActividadEconomicaId = formatoDto.ActividadEconomicaId;
+                    formato.EstadoId = (int)EstadoSolicitudPago.Generado;
+                    formato.UsuarioIdRegistro = usuarioId;
+                    formato.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+
+                    #endregion Mapear datos 
+
+                    //Registrar detalle de liquidación
+                    _dataContext.FormatoSolicitudPago.Add(formato);
+                    await _dataContext.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return Ok(formato.FormatoSolicitudPagoId);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
+        [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerCompromisosParaSolicitudRegistroPago([FromQuery(Name = "usuarioId")] int usuarioId,
                                                                                     [FromQuery(Name = "perfilId")] int perfilId,
@@ -80,6 +171,121 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener la lista de compromisos");
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerSolicitudesPagoParaAprobar([FromQuery(Name = "usuarioId")] int usuarioId,
+                                                                            [FromQuery(Name = "terceroId")] int? terceroId,
+                                                                            [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                var pagedList = await _repo.ObtenerSolicitudesPagoParaAprobar(usuarioId, terceroId, userParams);
+                var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
+
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                        pagedList.TotalCount, pagedList.TotalPages);
+
+                return Ok(listaDto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de Solicitudes de Pago");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "cdpId")] int cdpId)
+        {
+            FormatoSolicitudPagoDto formato = null;
+
+            try
+            {
+                formato = await _repo.ObtenerFormatoSolicitudPago(cdpId);
+                if (formato != null)
+                {
+                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp);
+
+                    formato.CantidadMaxima = CantidadMaxima;
+                    formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
+
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp);
+                    if (pagosRealizados != null)
+                    {
+                        formato.NumeroPagoFechaActual = pagosRealizados.Count;
+                        formato.PagosRealizados = pagosRealizados;
+                    }
+                }
+                return Ok(formato);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de relaciones contables");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerFormatoSolicitudPagoXId([FromQuery(Name = "formatoSolicitudPagoId")] int formatoSolicitudPagoId)
+        {
+            FormatoSolicitudPagoDto formato = null;
+
+            try
+            {
+                formato = await _repo.ObtenerFormatoSolicitudPagoXId(formatoSolicitudPagoId);
+                if (formato != null)
+                {
+                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp);
+
+                    formato.CantidadMaxima = CantidadMaxima;
+                    formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
+
+                    FormatoCausacionyLiquidacionPagos formatoCausacion = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(formato.PlanPagoId, formato.BaseCotizacion, formato.ActividadEconomica.Id);
+                    formato.AportePension = formatoCausacion.AportePension;
+                    formato.AporteSalud = formatoCausacion.AporteSalud;
+                    formato.RiesgoLaboral = formatoCausacion.RiesgoLaboral;
+                    formato.FondoSolidaridad = formatoCausacion.FondoSolidaridad;
+
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp);
+                    if (pagosRealizados != null)
+                    {
+                        formato.NumeroPagoFechaActual = pagosRealizados.Count;
+                        formato.PagosRealizados = pagosRealizados;
+                    }
+                }
+                return Ok(formato);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de relaciones contables");
+        }
+
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerSeguridadSocialParaSolicitudPago([FromQuery(Name = "planPagoId")] int planPagoId,
+                                                                                            [FromQuery(Name = "valorBaseCotizacion")] decimal valorBaseCotizacion,
+                                                                                            [FromQuery(Name = "actividadEconomicaId")] int? actividadEconomicaId)
+        {
+            FormatoCausacionyLiquidacionPagos formato = null;
+            try
+            {
+
+                formato = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(planPagoId, valorBaseCotizacion, actividadEconomicaId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return base.Ok(formato);
+        }
 
 
         #endregion Registro de Solicitud de Pago
@@ -107,7 +313,6 @@ namespace ComplementApp.API.Controllers
 
             throw new Exception($"No se pudo obtener la lista de compromisos");
         }
-
 
 
         [Route("[action]")]
@@ -180,96 +385,6 @@ namespace ComplementApp.API.Controllers
             }
         }
 
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoSolicitudPago(int cdpId)
-        {
-            FormatoSolicitudPagoDto formato = null;
 
-            try
-            {
-                formato = await _repo.ObtenerFormatoSolicitudPago(cdpId);
-                if (formato != null)
-                {
-                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp);
-
-                    formato.CantidadMaxima = CantidadMaxima;
-                    formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
-
-                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp);
-                    if (pagosRealizados != null)
-                    {
-                        formato.NumeroPagoFechaActual = pagosRealizados.Count;
-                        formato.PagosRealizados = pagosRealizados;
-                    }
-                }
-                return Ok(formato);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            throw new Exception($"No se pudo obtener la lista de relaciones contables");
-        }
-
-        [Route("[action]")]
-        [HttpPost]
-        public async Task<IActionResult> RegistrarFormatoSolicitudPago(FormatoSolicitudPagoParaGuardarDto formatoDto)
-        {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
-            FormatoSolicitudPago formato = null;
-
-            try
-            {
-                if (formatoDto != null)
-                {
-                    #region Mapear datos 
-
-                    formato = _mapper.Map<FormatoSolicitudPago>(formatoDto);
-                    formato.ActividadEconomicaId = formatoDto.ActividadEconomicaId;
-                    formato.EstadoId = (int)EstadoSolicitudPago.Generado;
-                    formato.UsuarioIdRegistro = usuarioId;
-                    formato.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
-
-                    #endregion Mapear datos 
-
-                    //Registrar detalle de liquidación
-                    _dataContext.FormatoSolicitudPago.Add(formato);
-                    await _dataContext.SaveChangesAsync();
-
-                    await transaction.CommitAsync();
-
-                    return Ok(formato.FormatoSolicitudPagoId);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            throw new Exception($"No se pudo registrar el formato de liquidación");
-        }
-
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> ObtenerSeguridadSocialParaSolicitudPago([FromQuery(Name = "planPagoId")] int planPagoId,
-                                                                                            [FromQuery(Name = "valorBaseCotizacion")] decimal valorBaseCotizacion,
-                                                                                            [FromQuery(Name = "actividadEconomicaId")] int? actividadEconomicaId)
-        {
-            FormatoCausacionyLiquidacionPagos formato = null;
-            try
-            {
-
-                formato = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(planPagoId, valorBaseCotizacion, actividadEconomicaId);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return base.Ok(formato);
-        }
     }
 }

@@ -99,5 +99,10 @@
     "Nombre": "Aprobado",
     "Descripcion": "Aprobado",
     "TipoDocumento": "EstadoSolicitudPago"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "EstadoSolicitudPago"
   }
 ]

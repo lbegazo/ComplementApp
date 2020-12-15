@@ -19,4 +19,6 @@ export interface Cdp {
 
   numeroIdentificacionTercero: string;
   nombreTercero: string;
+
+  formatoSolicitudPagoId: number;
 }
