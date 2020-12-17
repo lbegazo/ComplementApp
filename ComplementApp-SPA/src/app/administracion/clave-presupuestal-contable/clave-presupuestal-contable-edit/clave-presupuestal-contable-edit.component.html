@@ -1,3 +1,149 @@
-<p>
-  clave-presupuestal-contable-edit works!
-</p>
+<form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="editForm">
+  <div class="container-fluid mt-1" style="color: black">
+    <div class="row mt-2">
+      <div class="col-md-12 withoutPadding">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <div class="form-row mt-4">
+                <!--Compromiso-->
+                <div class="form-group col-md-1" style="margin: 0px">
+                  <label for="tipoDocumentoIdentidad" class="col-form-label-md"
+                    ><strong>Compromiso</strong></label
+                  >
+                  <p class="paragraph">{{ cdpSeleccionado.crp }}</p>
+                </div>
+                <!--NumeroDocumentoIdentidad-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label
+                    for="NumeroDocumentoIdentidad"
+                    class="col-form-label-md"
+                    ><strong>Número de identificación</strong></label
+                  >
+                  <p class="paragraph">{{ cdpSeleccionado.numeroIdentificacionTercero }}</p>
+                </div>
+                <!--NombreTercero-->
+                <div class="form-group col-md-8" style="margin: 0px">
+                  <label for="NombreTercero" class="col-form-label-md"
+                    ><strong>Nombre</strong></label
+                  >
+                  <p class="paragraph">{{ cdpSeleccionado.nombreTercero }}</p>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 10px">
+              <!--DATOS DE LA FACTURA -->
+
+              <!--Grilla-->
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="inner center" style="width: 17%">
+                    <label class="col-form-label"
+                      ><strong>Identificación</strong></label
+                    >
+                  </div>
+                  <div class="inner center" style="width: 45%">
+                    <label class="col-form-label"
+                      ><strong>Rubro Presupuestal</strong></label
+                    >
+                  </div>
+                
+                  <div class="inner center" style="width: 15%">
+                    <label class="col-form-label"
+                      ><strong>Uso Presupuestal</strong></label
+                    >
+                  </div>
+                  <div class="inner center" style="width: 15%">
+                    <label class="col-form-label"
+                      ><strong>Relación Contable</strong></label
+                    >
+                  </div>
+                  <div class="inner center" style="width: 8%">                    
+                  </div>
+                </div>
+                <div *ngIf="listaClavePresupuestalContable">
+                  <div
+                    formArrayName="planPagoControles"
+                    class="row"
+                    *ngFor="
+                      let item of listaClavePresupuestalContable;
+                      let i = index
+                    "
+                  >
+                    <ng-container [formGroupName]="i">
+                      <div class="inner center aplicaBackground"  style="width: 17%">
+                        <p class="medium">                          
+                          {{ item?.rubroPresupuestal.codigo }}
+                        </p>
+                      </div>
+                      <div class="inner left aplicaBackground" style="width: 45%">
+                        <p class="medium">
+                          {{ item?.rubroPresupuestal.nombre }}
+                        </p>
+                      </div>
+                      
+                      <div class="inner center aplicaBackground" style="width: 15%">
+                        <p class="medium">
+                          {{ item?.usoPresupuestal?.nombre }}
+                        </p>
+                      </div>
+                      <div class="inner center aplicaBackground" style="width: 15%">
+                        <p class="medium">
+                          {{ item?.relacionContable?.codigo }}
+                        </p>
+                      </div>
+                      <div class="inner aplicaBackground control" style="width: 8%">
+                        <button
+                        class="btn btn-success btn-sm child"
+                        (click)="abrirPopup(i)"
+                      >
+                        Registrar
+                      </button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-12 withoutPadding right">
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              class="btn btn-primary"
+              (click)="onGuardar()"
+              style="margin-right: 10px"
+              [disabled]="solicitudRegistrada"
+            >
+              Registrar
+            </button>
+            <button
+              class="btn btn-default"
+              type="button"
+              (click)="onCancelar()"
+            >
+              Cancelar
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <p>Form value: {{ facturaForm.value | json }}</p>
+<p>Form status: {{ facturaForm.status | json }}</p>
+<p>planPagoSeleccionado: {{ planPagoSeleccionado | json }}</p> -->

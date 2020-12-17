@@ -29,8 +29,6 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberListComponent } from './members/member-list/member-list.component';
-import { MessagesComponent } from './messages/messages.component';
-import { ListsComponent } from './lists/lists.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
@@ -98,6 +96,7 @@ import { PopupCargarArchivosComponent } from './tramites/registro-solicitud-pago
 import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
 import { FormatoSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/formato-solicitud-pago-aprobacion.component';
 import { PopupSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
+import { PopupClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/popup-clave-presupuestal-contable/popup-clave-presupuestal-contable.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -112,8 +111,6 @@ export function tokenGetter() {
     HomeComponent,
     RegisterComponent,
     MemberListComponent,
-    MessagesComponent,
-    ListsComponent,
     MemberCardComponent,
     MemberDetailComponent,
     MemberEditComponent,
@@ -153,8 +150,9 @@ export function tokenGetter() {
     RadicadoPagoMensualComponent,
     PopupDatosAdicionalesComponent,
     ClavePresupuestalContableComponent,
-    RelacionContableComponent,
     ClavePresupuestalContableEditComponent,
+    PopupClavePresupuestalContableComponent,
+    RelacionContableComponent,
     ParametroLiquidacionTerceroComponent,
     ParametroLiquidacionEditComponent,
     RegistroSolicitudPagoComponent,
@@ -215,7 +213,7 @@ export function tokenGetter() {
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,
     NavService,
-    DatePipe
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

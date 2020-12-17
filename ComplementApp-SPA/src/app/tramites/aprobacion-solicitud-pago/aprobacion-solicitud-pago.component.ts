@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
-import { ClavePresupuestalContable } from 'src/app/_dto/clavePresupuestalContable';
 import { FormatoSolicitudPagoDto } from 'src/app/_dto/formatoSolicitudPagoDto';
 import { Cdp } from 'src/app/_models/cdp';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
@@ -57,7 +56,6 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
     totalPages: 0,
     maxSize: 10,
   };
-  listaClavePresupuestalContable: ClavePresupuestalContable[];
 
   usuarioLogueado: Usuario;
   perfilId: number;
@@ -182,7 +180,6 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
-    this.listaClavePresupuestalContable = [];
     this.formatoSolicitudPago = null;
 
     this.onBuscarFactura();

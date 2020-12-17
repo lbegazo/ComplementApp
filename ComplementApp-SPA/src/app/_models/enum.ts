@@ -33,8 +33,8 @@ export class ModalidadContrato extends Enum<number> {
 }
 
 export class TipoPago extends Enum<number> {
-  public static readonly Fijo = new Enum(0);
-  public static readonly Variable = new Enum(1);
+  public static readonly Fijo = new Enum(1);
+  public static readonly Variable = new Enum(2);
 }
 
 export class EstadoSolicitudCDP extends Enum<number> {

@@ -353,7 +353,6 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
           if (this.mostrarValorIngresado) {
             valor = +resultado[1];
-            console.log(valor);
             if (isNaN(valor) || valor <= 0) {
               this.alertify.warning(
                 'Debe ingresar un valor para la liquidación'

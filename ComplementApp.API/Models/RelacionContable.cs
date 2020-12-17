@@ -8,13 +8,13 @@ namespace ComplementApp.API.Models
     {
         public int RelacionContableId { get; set; }
 
-        public int RubroPresupuestalId { get; set; }
+        public int? RubroPresupuestalId { get; set; }
 
-        public int CuentaContableId { get; set; }
+        public int? CuentaContableId { get; set; }
 
         public CuentaContable CuentaContable { get; set; }
 
-        public int AtributoContableId { get; set; }
+        public int? AtributoContableId { get; set; }
 
         public AtributoContable AtributoContable { get; set; }
 

@@ -536,6 +536,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onTipoPago() {
     this.tipoPagoSeleccionado = this.tipoPagoCtrl.value as ValorSeleccion;
     this.idTipoPagoSelecionado = +this.tipoPagoSeleccionado.id;
+    console.log(this.idTipoPagoSelecionado);
   }
 
   onTipoCuentaXPagar() {

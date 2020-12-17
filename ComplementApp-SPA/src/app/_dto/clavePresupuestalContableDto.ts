@@ -1,8 +1,7 @@
-import { RubroPresupuestal } from '../_models/rubroPresupuestal';
-import { Tercero } from '../_models/tercero';
 import { ValorSeleccion } from './valorSeleccion';
 
-export interface ClavePresupuestalContable {
+export interface ClavePresupuestalContableDto {
+  clavePresupuestalContableId: number;
   cdpId: number;
   crp: number;
   pci: string;

@@ -31,6 +31,7 @@ namespace ComplementApp.API.Extensions
             services.AddScoped<ITransaccionRepository, TransaccionRepository>();
             services.AddScoped<IObligacionRepository, ObligacionRepository>();
             services.AddScoped<ITerceroRepository, TerceroRepository>();
+            services.AddScoped<IClavePresupuestalContableRepository, ClavePresupuestalContableRepository>();
 
             services.AddDbContext<DataContext>();
             

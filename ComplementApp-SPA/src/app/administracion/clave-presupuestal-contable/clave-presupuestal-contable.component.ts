@@ -11,12 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
-import { ClavePresupuestalContable } from 'src/app/_dto/clavePresupuestalContable';
+import { ClavePresupuestalContableDto } from 'src/app/_dto/clavePresupuestalContableDto';
 import { Cdp } from 'src/app/_models/cdp';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { ClavePresupuestalContableService } from 'src/app/_services/clavePresupuestalContable.service';
 import { ObligacionService } from 'src/app/_services/obligacion.service';
 import { environment } from 'src/environments/environment';
 
@@ -38,17 +39,10 @@ export class ClavePresupuestalContableComponent implements OnInit {
   modalidadContrato = 0;
   tipoPago = 0;
 
-  listaPlanPago: Cdp[] = [];
-  detalleLiquidacionIdSeleccionado = 0;
-  planPagoSeleccionado: Cdp;
+  listaCdp: Cdp[] = [];
+  crp = 0;
+  cdpSeleccionado: Cdp;
   tercero: Tercero;
-  //  = {
-  //   terceroId: 0,
-  //   nombre: '',
-  //   numeroIdentificacion: '',
-  //   tipoDocumentoIdentidad: '',
-  //   tipoDocumentoIdentidadId: 0,
-  // };
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;
@@ -60,14 +54,14 @@ export class ClavePresupuestalContableComponent implements OnInit {
     totalPages: 0,
     maxSize: 10,
   };
-  listaClavePresupuestalContable: ClavePresupuestalContable[];
+  listaClavePresupuestalContable: ClavePresupuestalContableDto[];
 
   constructor(
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private obligacionService: ObligacionService
+    private clavePresupuestalContableService: ClavePresupuestalContableService
   ) {}
 
   ngOnInit(): void {
@@ -117,8 +111,8 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   crearControlesDeArray() {
-    if (this.listaPlanPago && this.listaPlanPago.length > 0) {
-      for (const detalle of this.listaPlanPago) {
+    if (this.listaCdp && this.listaCdp.length > 0) {
+      for (const detalle of this.listaCdp) {
         this.arrayControls.push(
           new FormGroup({
             rubroControl: new FormControl('', [Validators.required]),
@@ -127,12 +121,11 @@ export class ClavePresupuestalContableComponent implements OnInit {
       }
     } else {
       this.alertify.warning(
-        'No existen Facturas en estado por “ConLiquidacionDeducciones” para el tercero registrado'
+        'El tercero ya tiene registrados clave contable'
       );
     }
   }
 
-  // Selected value event
   typeaheadOnSelect(e: TypeaheadMatch): void {
     this.tercero = e.item as Tercero;
     if (this.tercero) {
@@ -141,7 +134,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.obligacionService
+    this.clavePresupuestalContableService
       .ObtenerCompromisosParaClavePresupuestalContable(
         this.terceroId,
         null,
@@ -150,7 +143,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
       )
       .subscribe(
         (documentos: PaginatedResult<Cdp[]>) => {
-          this.listaPlanPago = documentos.result;
+          this.listaCdp = documentos.result;
           this.pagination = documentos.pagination;
 
           this.crearControlesDeArray();
@@ -174,8 +167,8 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   onLimpiarFactura() {
-    this.listaPlanPago = [];
-    this.detalleLiquidacionIdSeleccionado = 0;
+    this.listaCdp = [];
+    this.crp = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
@@ -193,35 +186,29 @@ export class ClavePresupuestalContableComponent implements OnInit {
 
   onCheckChange(event) {
     /* Selected */
-    this.detalleLiquidacionIdSeleccionado = 0;
+    this.crp = 0;
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.detalleLiquidacionIdSeleccionado = +event.target.value;
+      this.crp = +event.target.value;
     }
   }
 
-  onLiquidar() {
-    // if (
-    //   this.listaPlanPago &&
-    //   this.listaPlanPago.length > 0 &&
-    //   this.detalleLiquidacionIdSeleccionado > 0
-    // ) {
-    //   this.planPagoSeleccionado = this.listaPlanPago.filter(
-    //     (x) => x.detalleLiquidacionId === this.detalleLiquidacionIdSeleccionado
-    //   )[0];
-    //   if (this.planPagoSeleccionado) {
-    //     this.ObtenerDetalleFormatoCausacionyLiquidacionPago();
-    //   }
-    // }
+  onRegistrarClavePresupuestal() {
+    if (this.listaCdp && this.listaCdp.length > 0 && this.crp > 0) {
+      this.cdpSeleccionado = this.listaCdp.filter(
+        (x) => x.crp === this.crp
+      )[0];
+      if (this.cdpSeleccionado) {
+        this.ObtenerRubrosParaClavePresupuestalContable();
+      }
+    }
   }
 
   ObtenerRubrosParaClavePresupuestalContable() {
-    this.obligacionService
-      .ObtenerRubrosParaClavePresupuestalContable(
-        this.detalleLiquidacionIdSeleccionado
-      )
+    this.clavePresupuestalContableService
+      .ObtenerRubrosPresupuestalesXCompromiso(this.crp)
       .subscribe(
-        (response: ClavePresupuestalContable[]) => {
+        (response: ClavePresupuestalContableDto[]) => {
           if (response) {
             this.listaClavePresupuestalContable = response;
             if (
@@ -242,7 +229,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   HabilitarCabecera($event) {
-    this.mostrarCabecera = true;
     this.onLimpiarFactura();
+    this.mostrarCabecera = true;
   }
 }
