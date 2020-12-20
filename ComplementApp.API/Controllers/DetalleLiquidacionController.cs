@@ -33,15 +33,17 @@ namespace ComplementApp.API.Controllers
         #region Dependency Injection
         private readonly DataContext _dataContext;
 
-        private IWebHostEnvironment _hostingEnvironment;
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDetalleLiquidacionRepository _repo;
-
         private readonly IPlanPagoRepository _planPagoRepository;
         private readonly IMapper _mapper;
         private readonly IProcesoLiquidacionPlanPago _procesoLiquidacion;
         private readonly IMailService mailService;
         private readonly IGeneralInterface _generalInterface;
+        private readonly IListaRepository _repoLista;
+
+        private readonly ITerceroRepository _terceroRepository;
 
         #endregion Dependency Injection
 
@@ -51,7 +53,8 @@ namespace ComplementApp.API.Controllers
                                     IMailService mailService,
                                     IProcesoLiquidacionPlanPago procesoLiquidacion,
                                     IGeneralInterface generalInterface,
-                                    IWebHostEnvironment environment)
+                                    IListaRepository listaRepository,
+                                    ITerceroRepository terceroRepository)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -61,7 +64,8 @@ namespace ComplementApp.API.Controllers
             _dataContext = dataContext;
             this._procesoLiquidacion = procesoLiquidacion;
             this._generalInterface = generalInterface;
-            _hostingEnvironment = environment;
+            this._terceroRepository = terceroRepository;
+            this._repoLista = listaRepository;
         }
 
         [Route("[action]")]
@@ -245,6 +249,26 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> RegistrarListaDetalleLiquidacion([FromQuery(Name = "listaPlanPagoId")] string listaPlanPagoId,
+                                                                            [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                                            [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
+                                                                            [FromQuery(Name = "terceroId")] int? terceroId
+                                                                            )
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+            bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
+
+            await _procesoLiquidacion.RegistrarListaDetalleLiquidacion(usuarioId, listaPlanPagoId, listIds, esSeleccionarTodo, terceroId);
+
+            return Ok(1);         
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
         [Route("[action]/{planPagoId}/{mensajeRechazo}")]
         [HttpGet]
         public async Task<IActionResult> RechazarDetalleLiquidacion(int planPagoId, string mensajeRechazo)
@@ -416,7 +440,7 @@ namespace ComplementApp.API.Controllers
         [Route("[action]")]
         public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)
         {
-            var lista = await _repo.ObtenerListaActividadesEconomicaXTercero(terceroId);
+            var lista = await _terceroRepository.ObtenerListaActividadesEconomicaXTercero(terceroId);
             return base.Ok(lista);
         }
 

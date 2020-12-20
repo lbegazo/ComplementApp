@@ -71,13 +71,6 @@ namespace ComplementApp.API.Controllers
             return Ok(datos);
         }
 
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> ObtenerParametrosGenerales()
-        {
-            var datos = await _repo.ObtenerParametrosGenerales();
-            return Ok(datos);
-        }
 
         [Route("[action]")]
         [HttpGet]
@@ -95,14 +88,6 @@ namespace ComplementApp.API.Controllers
             return Ok(datos);
         }
 
-
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> ObtenerParametroLiquidacionXTercero([FromQuery(Name = "terceroId")] int terceroId)
-        {
-            var datos = await _repo.ObtenerParametroLiquidacionXTercero(terceroId);
-            return Ok(datos);
-        }
 
         [Route("[action]")]
         [HttpGet]

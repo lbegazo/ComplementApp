@@ -16,9 +16,9 @@ namespace ComplementApp.API.Interfaces
 
         Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId);
 
-        Task<PlanPago> ObtenerPlanPagoDetallado(int planPagoId);
+        Task<ICollection<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaPlanPagoId);
 
-        Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId);
+        Task<PlanPago> ObtenerPlanPagoDetallado(int planPagoId);
 
         int ObtenerCantidadMaximaPlanPago(long crp);
 
@@ -30,5 +30,6 @@ namespace ComplementApp.API.Interfaces
 
         Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams);
 
+        Task<List<PlanPago>> ObtenerListaPlanPagoXIds(List<int> listaPlanPagoId);
     }
 }

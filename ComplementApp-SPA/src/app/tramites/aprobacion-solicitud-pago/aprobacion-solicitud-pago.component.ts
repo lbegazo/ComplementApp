@@ -19,7 +19,7 @@ import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { ObligacionService } from 'src/app/_services/obligacion.service';
+import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-aprobacion-solicitud-pago',
@@ -65,7 +65,7 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private obligacionService: ObligacionService
+    private solicitudPagoService: SolicitudPagoService
   ) {}
 
   ngOnInit(): void {
@@ -142,7 +142,7 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.obligacionService
+    this.solicitudPagoService
       .ObtenerSolicitudesPagoParaAprobar(
         this.usuarioLogueado.usuarioId,
         this.terceroId,
@@ -217,7 +217,7 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
   }
 
   ObtenerFormatoSolicitudPagoXId() {
-    this.obligacionService
+    this.solicitudPagoService
       .ObtenerFormatoSolicitudPagoXId(this.formatoSolicitudPagoId)
       .subscribe(
         (response: FormatoSolicitudPagoDto) => {

@@ -24,6 +24,10 @@ namespace ComplementApp.API.Interfaces
 
         Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId);
 
+        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId);
+
+         ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId);
+
         Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId);
 
         bool RegistrarArchivoDetalleLiquidacion(ArchivoDetalleLiquidacion archivo);
@@ -32,6 +36,12 @@ namespace ComplementApp.API.Interfaces
 
         int ObtenerUltimoConsecutivoArchivoLiquidacion();
 
-        Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId);
+
+
+        #region Liquidación Masiva
+
+        bool RegistrarListaDetalleLiquidacion(IList<DetalleLiquidacion> listaDetalleLiquidacion);
+
+        #endregion Liquidación Masiva
     }
 }

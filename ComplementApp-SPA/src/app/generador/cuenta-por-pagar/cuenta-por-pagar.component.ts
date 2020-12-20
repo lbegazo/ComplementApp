@@ -41,13 +41,6 @@ export class CuentaPorPagarComponent implements OnInit {
 
   listaPlanPago: FormatoCausacionyLiquidacionPago[] = [];
   tercero: Tercero;
-  //  = {
-  //   terceroId: 0,
-  //   nombre: '',
-  //   numeroIdentificacion: '',
-  //   tipoDocumentoIdentidad: '',
-  //   tipoDocumentoIdentidadId: 0,
-  // };
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;
@@ -276,6 +269,7 @@ export class CuentaPorPagarComponent implements OnInit {
         this.liquidacionesSeleccionadas.push(val.detalleLiquidacionId);
       });
     } else {
+      this.seleccionaTodas = false;
       this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
       this.liquidacionesSeleccionadas = [];
     }

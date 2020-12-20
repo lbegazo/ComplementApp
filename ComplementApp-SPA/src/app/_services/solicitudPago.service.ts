@@ -12,8 +12,8 @@ import { PaginatedResult } from '../_models/pagination';
 @Injectable({
   providedIn: 'root',
 })
-export class ObligacionService {
-  baseUrl = environment.apiUrl + 'Obligacion/';
+export class SolicitudPagoService {
+  baseUrl = environment.apiUrl + 'SolicitudPago/';
 
   constructor(private http: HttpClient) {}
 

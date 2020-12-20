@@ -42,5 +42,7 @@ namespace ComplementApp.API.Dtos
         public string Usuario { get; set; }
 
         public string FechaRadicadoSupervisorFormato { get; set; }
+
+        public string  TextoComprobanteContable { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace ComplementApp.API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ObligacionController : ControllerBase
+    public class SolicitudPagoController : ControllerBase
     {
         #region Variable
 
@@ -39,7 +39,7 @@ namespace ComplementApp.API.Controllers
         #endregion Dependency Injection
 
 
-        public ObligacionController(IObligacionRepository repo, IMapper mapper,
+        public SolicitudPagoController(IObligacionRepository repo, IMapper mapper,
                             DataContext dataContext, IGeneralInterface generalInterface,
                             IPlanPagoRepository planPagoRepository, IListaRepository listaRepository,
                             IProcesoLiquidacionSolicitudPago procesoLiquidacion)

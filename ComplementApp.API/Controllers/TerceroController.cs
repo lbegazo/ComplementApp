@@ -238,5 +238,6 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener las deducciones");
         }
 
+        
     }
 }

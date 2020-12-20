@@ -17,6 +17,8 @@ namespace ComplementApp.API.Dtos
         public string NumeroPlanilla { get; set; }
         public string NumeroFactura { get; set; }
         public string Observaciones { get; set; }
+        public decimal ValorBaseGravableRenta { get; set; }
+        public decimal ValorIva { get; set; }
         public decimal BaseCotizacion { get; set; }
         public decimal ValorPagadoFechaActual { get; set; }
         public string ObservacionesModificacion { get; set; }
@@ -27,7 +29,7 @@ namespace ComplementApp.API.Dtos
         public CDPDto Cdp { get; set; }
         public TerceroDto Tercero { get; set; }
         public Contrato Contrato { get; set; }
-         public PlanPagoDto PlanPago { get; set; }
+        public PlanPagoDto PlanPago { get; set; }
         public ValorSeleccion ActividadEconomica { get; set; }
         public int NumeroPagoFechaActual { get; set; }
         public int CantidadMaxima { get; set; }

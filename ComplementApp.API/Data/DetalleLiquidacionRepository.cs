@@ -179,7 +179,6 @@ namespace ComplementApp.API.Data
         {
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
-
                                                     where dl.TerceroId == terceroId
                                                     where dl.FechaOrdenPago.Value.Month == mesAnterior
                                                     where dl.Viaticos == "SI"
@@ -193,6 +192,7 @@ namespace ComplementApp.API.Data
         {
             DetalleLiquidacion liquidacion = null;
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
+
             var lista = await (from dl in _context.DetalleLiquidacion
                                where dl.TerceroId == terceroId
                                where dl.FechaRegistro.Value.Month == mesAnterior
@@ -207,9 +207,69 @@ namespace ComplementApp.API.Data
             return liquidacion;
         }
 
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId)
+        {
+            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
+
+            var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    where listaTerceroId.Contains(dl.TerceroId)
+                                                    where dl.FechaOrdenPago.Value.Month == mesAnterior
+                                                    where dl.Viaticos == "SI"
+                                                    select dl)
+                                            .ToListAsync();
+            return detalleLiquidacionAnterior;
+        }
+
+        public ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId)
+        {
+            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
+            List<DetalleLiquidacion> lista = new List<DetalleLiquidacion>();
+
+            var query1 = (from dl in _context.DetalleLiquidacion
+                          where listaTerceroId.Contains(dl.TerceroId)
+                          where dl.FechaRegistro.Value.Month == mesAnterior
+                          where dl.Viaticos == "NO"
+                          group dl by new { dl.TerceroId, dl.DetalleLiquidacionId }
+                          into grp
+                          select new
+                          {
+                              grp.Key.TerceroId,
+                              grp.Key.DetalleLiquidacionId
+                          }).ToList();
+
+            var query2 = (from x in query1
+                          group x by new { x.TerceroId, x.DetalleLiquidacionId } into grp
+                          select new
+                          {
+                              TerceroId = grp.Key.TerceroId,
+                              DetalleLiquidacionId = (from x in grp
+                                                      orderby x.DetalleLiquidacionId descending
+                                                      select x.DetalleLiquidacionId).FirstOrDefault()
+                          });
+
+            List<int> listaDetalleLiquidacionId = query2.Select(x => x.DetalleLiquidacionId).ToList();
+
+            if (listaDetalleLiquidacionId != null)
+            {
+                lista = (from dl in _context.DetalleLiquidacion
+                         where listaDetalleLiquidacionId.Contains(dl.DetalleLiquidacionId)
+                         select new DetalleLiquidacion()
+                         {
+                             PlanPagoId = dl.PlanPagoId,
+                             TerceroId = dl.TerceroId,
+                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                             MesPagoActual = dl.MesPagoActual,
+                             MesPagoAnterior = dl.MesPagoAnterior
+                         }).ToList();
+            }
+
+            return lista;
+        }
+
+
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId)
         {
-            List<DetalleLiquidacionParaArchivo> listaFinal = null;
+            List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
 
             var lista = await (from dl in _context.DetalleLiquidacion
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
@@ -290,20 +350,23 @@ namespace ComplementApp.API.Data
             }
         }
 
-        public async Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId)
-        {
-            var lista = await (from ae in _context.ActividadEconomica
-                                                    join td in _context.TerceroDeducciones on ae.ActividadEconomicaId equals td.ActividadEconomicaId
-                                                    where td.TerceroId == terceroId
-                                                    select new ValorSeleccion(){
-                                                        Id = ae.ActividadEconomicaId,
-                                                        Codigo = ae.Codigo,
-                                                        Nombre = ae.Nombre
-                                                    })
-                                            .Distinct()
-                                            .ToListAsync();
 
-            return lista;
+
+        #region Liquidación Masiva
+
+        public bool RegistrarListaDetalleLiquidacion(IList<DetalleLiquidacion> listaDetalleLiquidacion)
+        {
+            try
+            {
+                _context.BulkInsertAsync(listaDetalleLiquidacion);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
+
+        #endregion Liquidación Masiva
     }
 }

@@ -35,4 +35,6 @@ export interface PlanPago {
   esRadicarFactura: boolean;
   modalidadContrato: number;
   tipoPago: number;
+
+  esSeleccionada: boolean;
 }

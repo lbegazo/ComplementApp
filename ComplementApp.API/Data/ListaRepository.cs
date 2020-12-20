@@ -85,11 +85,6 @@ namespace ComplementApp.API.Data
                         .ToListAsync();
         }
 
-        public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
-        {
-            return await _context.ParametroLiquidacionTercero
-                        .Where(x => x.TerceroId == terceroId).FirstOrDefaultAsync();
-        }
 
         public async Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente()
         {
@@ -189,7 +184,7 @@ namespace ComplementApp.API.Data
                         lista = await (from m in _context.TipoDocumentoSoporte
                                        select new ValorSeleccion()
                                        {
-                                           Id =  Int32.Parse(m.Codigo),
+                                           Id = Int32.Parse(m.Codigo),
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
                                        }).ToListAsync();

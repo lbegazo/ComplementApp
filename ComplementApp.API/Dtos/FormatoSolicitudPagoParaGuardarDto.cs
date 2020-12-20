@@ -18,5 +18,7 @@ namespace ComplementApp.API.Dtos
         public string NumeroFactura { get; set; }
         public string Observaciones { get; set; }
         public decimal BaseCotizacion { get; set; }
+        public decimal ValorBaseGravableRenta { get; set; }
+        public decimal ValorIva { get; set; }
     }
 }

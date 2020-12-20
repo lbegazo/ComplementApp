@@ -18,7 +18,7 @@ import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { ObligacionService } from 'src/app/_services/obligacion.service';
+import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -64,7 +64,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private obligacionService: ObligacionService
+    private solicitudPagoService: SolicitudPagoService
   ) {}
 
   ngOnInit(): void {
@@ -143,7 +143,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.obligacionService
+    this.solicitudPagoService
       .ObtenerCompromisosParaSolicitudRegistroPago(
         this.usuarioLogueado.usuarioId,
         this.perfilId,
@@ -215,7 +215,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
   }
 
   ObtenerFormatoSolicitudPago() {
-    this.obligacionService.ObtenerFormatoSolicitudPago(this.cdpId).subscribe(
+    this.solicitudPagoService.ObtenerFormatoSolicitudPago(this.cdpId).subscribe(
       (response: FormatoSolicitudPagoDto) => {
         if (response !== null) {
           this.formatoSolicitudPago = response;

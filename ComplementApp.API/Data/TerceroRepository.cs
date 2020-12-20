@@ -177,5 +177,95 @@ namespace ComplementApp.API.Data
             return true;
         }
 
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId)
+        {
+            var lista = await (from ae in _context.ActividadEconomica
+                               join td in _context.TerceroDeducciones on ae.ActividadEconomicaId equals td.ActividadEconomicaId
+                               where td.TerceroId == terceroId
+                               select new ValorSeleccion()
+                               {
+                                   Id = ae.ActividadEconomicaId,
+                                   Codigo = ae.Codigo,
+                                   Nombre = ae.Nombre
+                               })
+                                .Distinct()
+                                .ToListAsync();
+
+            return lista;
+        }
+
+        public List<int> ObtenerTercerosConMasDeUnaActividadEconomica()
+        {
+            List<int> terceros = null;
+            //var query = _context.TerceroDeducciones.GroupBy(x => new { x.TerceroId, x.ActividadEconomicaId.Value });
+
+            var query1 = (from t in _context.TerceroDeducciones
+                          group t by new { t.ActividadEconomicaId, t.TerceroId }
+                         into grp
+                          select new
+                          {
+                              grp.Key.TerceroId,
+                              grp.Key.ActividadEconomicaId
+                          });
+
+            var query2 = (from p in query1
+                          group p by new { p.TerceroId } into g
+                          where g.Count() > 0
+                          select new
+                          {
+                              g.Key.TerceroId,
+                              Count = g.Count()
+                          });
+
+            var query3 = (from p in query2
+                          where p.Count > 1
+                          select new
+                          {
+                              p.TerceroId
+                          });
+
+            terceros = query3.Select(s => s.TerceroId).ToList();
+
+            return terceros;
+        }
+
+
+        public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
+        {
+            return await _context.ParametroLiquidacionTercero
+                        .Where(x => x.TerceroId == terceroId).FirstOrDefaultAsync();
+        }
+
+        public async Task<ICollection<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> listaTerceroId)
+        {
+            return await (from p in _context.ParametroLiquidacionTercero
+                          where listaTerceroId.Contains(p.TerceroId)
+                          select p).ToListAsync();
+        }
+
+        public async Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId)
+        {
+            var query = (from d in _context.Deduccion
+                         join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
+                         where (td.TerceroId == terceroId)
+                         where (td.ActividadEconomicaId == actividadEconomicaId || actividadEconomicaId == null)
+                         where (d.estado == true)
+                         select d);
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<ICollection<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> listaTerceroId)
+        {
+            return await (from td in _context.TerceroDeducciones
+                          join d in _context.Deduccion on td.DeduccionId equals d.DeduccionId
+                          where listaTerceroId.Contains(td.TerceroId)
+                          where (d.estado == true)
+                          select new TerceroDeduccion()
+                          {
+                              TerceroId = td.TerceroId,
+                              Deduccion = d,
+                          }).ToListAsync();
+        }
     }
 }

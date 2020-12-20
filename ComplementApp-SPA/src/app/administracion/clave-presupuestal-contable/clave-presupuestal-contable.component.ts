@@ -18,7 +18,7 @@ import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ClavePresupuestalContableService } from 'src/app/_services/clavePresupuestalContable.service';
-import { ObligacionService } from 'src/app/_services/obligacion.service';
+import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

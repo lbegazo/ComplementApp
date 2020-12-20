@@ -72,9 +72,9 @@
             </div>
             <!--ACTIVIDAD ECONOMICA-->
             <div class="form-row">
-              <div class="form-group col-6">
+              <div class="form-group col-2">
                 <label for="selectActividad">
-                  <strong>Actividad Económica</strong></label
+                  <strong>Código</strong></label
                 >
                 <select
                   id="selectActividad"
@@ -111,7 +111,12 @@
                   Debe seleccionar la actividad económica
                 </div>
               </div>
-              <div class="form-group col-6"></div>
+              <div class="form-group col-10">
+                <label for="selectActividad">
+                  <strong>Actividad Económica</strong></label
+                >
+                <p>{{ actividadEconomicaSeleccionada.nombre }}</p>
+              </div>
             </div>
             <!--RANGO FECHAS-->
             <div class="form-row">
@@ -173,6 +178,67 @@
                   "
                 >
                   La fecha fin es requerida
+                </div>
+              </div>
+            </div>
+             <!--BASE GRAVABLE Y VALOR IVA-->
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="inputValorBaseGravable" class="col-form-label-md"
+                  >Valor Base Gravable Renta</label
+                >
+
+                <input
+                  type="text"
+                  [ngClass]="{
+                    'is-invalid':
+                      popupForm.get('valorBaseGravableRentaCtrl').errors &&
+                      popupForm.get('valorBaseGravableRentaCtrl').touched
+                  }"
+                  style="text-align: right"
+                  class="form-control border border-bottom-0 addPadding"
+                  formControlName="valorBaseGravableRentaCtrl"
+                  appTwoDigitDecimaNumber
+                  placeholder="Ingrese valor Base Gravable Renta"
+                  id="inputValorBaseGravable"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    popupForm.get('valorBaseGravableRentaCtrl').touched &&
+                    popupForm.get('valorBaseGravableRentaCtrl').hasError('required')
+                  "
+                >
+                  Valor Base Gravable Renta requerido
+                </div>
+              </div>
+              <div class="form-group col-6">
+                <label for="inputValorIva" class="col-form-label-md"
+                  >Valor Iva</label
+                >
+
+                <input
+                  type="text"
+                  [ngClass]="{
+                    'is-invalid':
+                      popupForm.get('valorIvaCtrl').errors &&
+                      popupForm.get('valorIvaCtrl').touched
+                  }"
+                  style="text-align: right"
+                  class="form-control border border-bottom-0 addPadding"
+                  formControlName="valorIvaCtrl"
+                  appTwoDigitDecimaNumber
+                  placeholder="Ingrese valor Iva"
+                  id="inputValorIva"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="
+                    popupForm.get('valorIvaCtrl').touched &&
+                    popupForm.get('valorIvaCtrl').hasError('required')
+                  "
+                >
+                  Valor Iva requerido
                 </div>
               </div>
             </div>

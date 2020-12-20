@@ -58,30 +58,6 @@ export class ListaService {
 
   //#endregion CDP
 
-  //#region Liquidación Factura
-
-  ObtenerParametrosGenerales(): Observable<ParametroGeneral[]> {
-    return this.http.get<ParametroGeneral[]>(
-      this.baseUrl + 'lista/ObtenerParametrosGenerales'
-    );
-  }
-
-  ObtenerParametroLiquidacionXTercero(
-    terceroId: number
-  ): Observable<ParametroLiquidacionTercero> {
-    let params = new HttpParams();
-
-    if (terceroId > 0) {
-      params = params.append('terceroId', terceroId.toString());
-    }
-
-    return this.http.get<ParametroLiquidacionTercero>(
-      this.baseUrl + 'lista/ObtenerParametroLiquidacionXTercero',
-      { params }
-    );
-  }
-
-  //#endregion Liquidación Factura
 
   //#region Transaccion
 

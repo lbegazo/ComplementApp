@@ -64,6 +64,8 @@ export class PopupSolicitudPagoComponent implements OnInit {
       actividadEconomicaCtrl: [null, Validators.required],
       fechaInicioCtrl: ['', Validators.required],
       fechaFinalCtrl: ['', Validators.required],
+      valorBaseGravableRentaCtrl: ['', Validators.required],
+      valorIvaCtrl: ['', Validators.required],
       observacionesCtrl: ['', Validators.required],
       numeroPlanillaCtrl: ['', Validators.required],
       mesCtrl: ['', Validators.required],
@@ -80,12 +82,16 @@ export class PopupSolicitudPagoComponent implements OnInit {
     let baseCotizacionC = 0;
     let fechaInicio = null;
     let fechaFinal = null;
+    let valorBaseGravableC = 0;
+    let valorIvaC = 0;
 
     numeroFacturaC = this.formatoSolicitudPagoEdit.numeroFactura;
     valorFacturaC = this.formatoSolicitudPagoEdit.valorFacturado;
     observacionesC = this.formatoSolicitudPagoEdit.observaciones;
     numeroPlanillaC = this.formatoSolicitudPagoEdit.numeroPlanilla;
     baseCotizacionC = this.formatoSolicitudPagoEdit.baseCotizacion;
+    valorBaseGravableC = this.formatoSolicitudPagoEdit.valorBaseGravableRenta;
+    valorIvaC = this.formatoSolicitudPagoEdit.valorIva;
 
     this.idMesSelecionado = this.formatoSolicitudPagoEdit.mesId;
     this.idActividadEconomicaSelecionada = this.formatoSolicitudPagoEdit.actividadEconomicaId;
@@ -108,6 +114,8 @@ export class PopupSolicitudPagoComponent implements OnInit {
         formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
         Validators.required,
       ],
+      valorBaseGravableRentaCtrl: [valorBaseGravableC, Validators.required],
+      valorIvaCtrl: [valorIvaC, Validators.required],
       observacionesCtrl: [observacionesC, Validators.required],
       numeroPlanillaCtrl: [numeroPlanillaC, Validators.required],
       mesCtrl: [this.idMesSelecionado, Validators.required],
@@ -169,6 +177,8 @@ export class PopupSolicitudPagoComponent implements OnInit {
         fechaInicio: dateFechaInicio,
         fechaFinal: dateFechaFin,
         observaciones: formValues.observacionesCtrl,
+        valorBaseGravableRenta: +formValues.valorBaseGravableRentaCtrl,
+        valorIva: +formValues.valorIvaCtrl,
         numeroPlanilla: formValues.numeroPlanillaCtrl,
         mesId: this.idMesSelecionado,
         mes: this.mesSeleccionado.nombre.toUpperCase(),

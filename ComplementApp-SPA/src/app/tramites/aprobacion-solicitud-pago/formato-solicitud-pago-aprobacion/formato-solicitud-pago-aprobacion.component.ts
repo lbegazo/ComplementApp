@@ -29,7 +29,7 @@ import { combineLatest, Subscription } from 'rxjs';
 import { PlanPago } from 'src/app/_models/planPago';
 import { ListaService } from 'src/app/_services/lista.service';
 import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
-import { ObligacionService } from 'src/app/_services/obligacion.service';
+import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PopupSolicitudPagoAprobacionComponent } from './popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
 import { EstadoSolicitudPago } from 'src/app/_models/enum';
@@ -58,7 +58,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   constructor(
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private obligacionService: ObligacionService,
+    private solicitudPagoService: SolicitudPagoService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef
   ) {}
@@ -125,7 +125,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
 
   actualizarSolicitudPago() {
     if (this.formatoForm.valid) {
-      this.obligacionService
+      this.solicitudPagoService
         .ActualizarFormatoSolicitudPago(this.formatoSolicitudPago)
         .subscribe(
           (response: any) => {

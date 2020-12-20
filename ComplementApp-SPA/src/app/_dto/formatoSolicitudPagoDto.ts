@@ -15,6 +15,8 @@ export interface FormatoSolicitudPagoDto {
   numeroPlanilla: string;
   numeroFactura: string;
   observaciones: string;
+  valorBaseGravableRenta: number;
+  valorIva: number;
   baseCotizacion: number;
   observacionesModificacion: string;
   cdp: Cdp;

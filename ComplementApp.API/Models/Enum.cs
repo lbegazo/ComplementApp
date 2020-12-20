@@ -58,7 +58,7 @@ namespace ComplementApp.API.Models
         ProveedorSinDescuento
     }
 
-    public enum D
+    public enum TipoPago
     {
         Fijo = 1,
         Variable = 2

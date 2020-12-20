@@ -17,13 +17,7 @@ import { Tercero } from 'src/app/_models/tercero';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { PlanPago } from 'src/app/_models/planPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  FormControl,
-} from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EstadoPlanPago, ModalidadContrato, TipoPago } from '../_models/enum';
 import { DetallePlanPago } from '../_models/detallePlanPago';
@@ -60,19 +54,12 @@ export class CausacionyLiquidacionComponent implements OnInit {
   detallePlanPago: DetallePlanPago;
   planPagoSeleccionado: PlanPago;
   tercero: Tercero;
-  //  = {
-  //   terceroId: 0,
-  //   nombre: '',
-  //   numeroIdentificacion: '',
-  //   tipoDocumentoIdentidad: '',
-  //   tipoDocumentoIdentidadId: 0,
-  // };
 
   listaActividadEconomica: ValorSeleccion[];
   mostrarActividadEconomica = false;
   mostrarValorIngresado = false;
 
-  facturaHeaderForm = new FormGroup({});
+  liquidacionForm = new FormGroup({});
   terceroId?: number = null;
   baseUrl = environment.apiUrl + 'lista/ObtenerListaTercero';
   pagination: Pagination = {
@@ -85,6 +72,10 @@ export class CausacionyLiquidacionComponent implements OnInit {
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   bsModalRef: BsModalRef;
   actividadEconomicaId = 0;
+
+  listaPlanPagoSeleccionada: number[] = [];
+  seleccionaTodas = false;
+  liquidacionRegistrada = false;
 
   constructor(
     private http: HttpClient,
@@ -136,34 +127,53 @@ export class CausacionyLiquidacionComponent implements OnInit {
   }
 
   createForm() {
-    this.facturaHeaderForm = this.fb.group({
-      terceroCtrl: ['', Validators.required],
+    this.liquidacionForm = this.fb.group({
+      terceroCtrl: [''],
       terceroDescripcionCtrl: [''],
       planPagoControles: this.arrayControls,
     });
   }
 
-  obtenerDatosDeResolver() {
-    this.route.data.subscribe((data) => {
-      this.listaPlanPago = data['planPagoResolver'].result;
-      this.pagination = data['planPagoResolver'].pagination;
-      this.crearControlesDeArray();
-    });
-  }
+  // obtenerDatosDeResolver() {
+  //   this.route.data.subscribe((data) => {
+  //     this.listaPlanPago = data['planPagoResolver'].result;
+  //     this.pagination = data['planPagoResolver'].pagination;
+  //     this.crearControlesDeArray();
+  //   });
+  // }
 
   crearControlesDeArray() {
     if (this.listaPlanPago && this.listaPlanPago.length > 0) {
+      if (this.seleccionaTodas) {
+        this.listaPlanPago.forEach((item) => {
+          item.esSeleccionada = this.seleccionaTodas;
+        });
+
+        this.listaPlanPago.forEach((val: PlanPago) => {
+          if (this.listaPlanPagoSeleccionada?.indexOf(val.planPagoId) === -1) {
+            this.listaPlanPagoSeleccionada.push(val.planPagoId);
+          }
+        });
+      } else {
+        if (
+          this.listaPlanPagoSeleccionada &&
+          this.listaPlanPagoSeleccionada.length > 0
+        ) {
+          this.listaPlanPago.forEach((val: PlanPago) => {
+            if (this.listaPlanPagoSeleccionada?.indexOf(val.planPagoId) > -1) {
+              val.esSeleccionada = true;
+            }
+          });
+        }
+      }
+
       for (const detalle of this.listaPlanPago) {
         this.arrayControls.push(
           new FormGroup({
-            rubroControl: new FormControl('', [Validators.required]),
+            rubroControl: new FormControl(''),
           })
         );
       }
-    } else {
-      this.alertify.warning(
-        'No existen Facturas en estado por “Obligar” para el tercero registrado'
-      );
     }
   }
 
@@ -196,11 +206,17 @@ export class CausacionyLiquidacionComponent implements OnInit {
           this.alertify.error(error);
         },
         () => {
-          this.facturaHeaderForm = this.fb.group({
-            terceroCtrl: ['', Validators.required],
+          this.liquidacionForm = this.fb.group({
+            terceroCtrl: [''],
             terceroDescripcionCtrl: [''],
             planPagoControles: this.arrayControls,
           });
+
+          if (!this.listaPlanPago || this.listaPlanPago.length === 0) {
+            this.alertify.warning(
+              'No existen Facturas en estado por “ConLiquidacionDeducciones”'
+            );
+          }
         }
       );
   }
@@ -212,12 +228,15 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
   onLimpiarFactura() {
     this.listaPlanPago = [];
+    this.listaPlanPagoSeleccionada = [];
     this.planPagoIdSeleccionado = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
     this.detallePlanPago = null;
     this.formatoCausacionyLiquidacionPago = null;
+    this.seleccionaTodas = false;
+    this.liquidacionRegistrada = false;
 
     this.onBuscarFactura();
   }
@@ -231,19 +250,116 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
   onCheckChange(event) {
     /* Selected */
-    this.planPagoIdSeleccionado = 0;
+    let valor = 0;
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.planPagoIdSeleccionado = +event.target.value;
+      valor = +event.target.value;
+
+      if (this.listaPlanPagoSeleccionada?.indexOf(valor) === -1) {
+        this.listaPlanPagoSeleccionada?.push(+valor);
+      }
+    } else {
+      /* unselected */
+      valor = +event.target.value;
+      let index = 0;
+      let i = 0;
+      this.listaPlanPagoSeleccionada.forEach((val: number) => {
+        if (val === valor) {
+          index = i;
+        }
+        i++;
+      });
+
+      if (index !== -1) {
+        this.listaPlanPagoSeleccionada.splice(index, 1);
+      }
+    }
+
+    if (this.pagination) {
+      if (
+        this.pagination.totalItems === this.listaPlanPagoSeleccionada.length
+      ) {
+        this.seleccionaTodas = true;
+      } else {
+        this.seleccionaTodas = false;
+      }
+    }
+  }
+
+  onCheckAllChange(event) {
+    const checked = event.target.checked;
+    if (checked) {
+      this.seleccionaTodas = true;
+      this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
+      this.listaPlanPagoSeleccionada = [];
+
+      this.listaPlanPago.forEach((val: PlanPago) => {
+        this.listaPlanPagoSeleccionada.push(val.planPagoId);
+      });
+    } else {
+      this.seleccionaTodas = false;
+      this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
+      this.listaPlanPagoSeleccionada = [];
     }
   }
 
   onLiquidar() {
+    if (this.liquidacionForm.valid) {
+      let listaPlanPagoId: number[] = [];
+      let esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
+      let listaPlanPagoCadenaId = '';
+
+      if (!this.seleccionaTodas) {
+        if (
+          this.listaPlanPagoSeleccionada &&
+          this.listaPlanPagoSeleccionada.length > 0
+        ) {
+          listaPlanPagoId = this.listaPlanPagoSeleccionada.filter(
+            (v, i) => this.listaPlanPagoSeleccionada.indexOf(v) === i
+          );
+          listaPlanPagoCadenaId = listaPlanPagoId.join();
+        }
+      }
+
+      this.liquidacionService
+        .RegistrarListaDetalleLiquidacion(
+          listaPlanPagoCadenaId,
+          this.listaEstadoId,
+          esSeleccionarTodas,
+          this.terceroId
+        )
+        .subscribe(
+          (response: any) => {
+            if (!isNaN(response)) {
+              this.alertify.success(
+                'Se registraron los formatos de causación y liquidación seleccionados'
+              );
+              this.liquidacionRegistrada = true;
+              this.onLimpiarFactura();
+            } else {
+              this.alertify.error(
+                'No se pudo registrar los formatos de causación y liquidación'
+              );
+            }
+          },
+
+          (error) => {
+            this.alertify.error(
+              'Hubó un error al registrar los formatos de liquidación ' + error
+            );
+          },
+          () => {}
+        );
+    }
+  }
+
+  verLiquidacion() {
     if (
       this.listaPlanPago &&
       this.listaPlanPago.length > 0 &&
-      this.planPagoIdSeleccionado > 0
+      this.listaPlanPagoSeleccionada.length === 1
     ) {
+      this.planPagoIdSeleccionado = this.listaPlanPagoSeleccionada[0];
       this.planPagoSeleccionado = this.listaPlanPago.filter(
         (x) => x.planPagoId === this.planPagoIdSeleccionado
       )[0];

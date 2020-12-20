@@ -94,6 +94,27 @@ export class DetalleLiquidacionService {
     return this.http.post(this.baseUrl + path, formato);
   }
 
+  RegistrarListaDetalleLiquidacion(
+    listaPlanPagoId: string,
+    listaEstadoId: string,
+    seleccionarTodo: number,
+    terceroId?: number 
+  ): Observable<any> {
+    const path = 'RegistrarListaDetalleLiquidacion';
+
+    let params = new HttpParams();
+    if (seleccionarTodo > 0) {
+      params = params.append('seleccionarTodo', seleccionarTodo.toString());
+    }
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    params = params.append('listaPlanPagoId', listaPlanPagoId);
+    params = params.append('listaEstadoId', listaEstadoId);
+
+    return this.http.get(this.baseUrl + path, { params });
+  }
+
   RechazarDetalleLiquidacion(
     planPagoId: number,
     mensajeRechazo: string

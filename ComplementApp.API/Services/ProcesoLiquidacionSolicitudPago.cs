@@ -12,8 +12,8 @@ namespace ComplementApp.API.Services
     public class ProcesoLiquidacionSolicitudPago : IProcesoLiquidacionSolicitudPago
     {
         private readonly IListaRepository _repoLista;
-
         private readonly IPlanPagoRepository _planPagoRepository;
+        private readonly ITerceroRepository _terceroRepository;
 
         #region Constantes
 
@@ -26,10 +26,12 @@ namespace ComplementApp.API.Services
 
         #endregion Constantes
 
-        public ProcesoLiquidacionSolicitudPago(IListaRepository listaRepository, IPlanPagoRepository planPagoRepository)
+        public ProcesoLiquidacionSolicitudPago(IListaRepository listaRepository, IPlanPagoRepository planPagoRepository,
+        ITerceroRepository terceroRepository)
         {
             this._repoLista = listaRepository;
             this._planPagoRepository = planPagoRepository;
+            this._terceroRepository = terceroRepository;
         }
         public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId,
                                                                                                         decimal valorBaseCotizacion,
@@ -43,7 +45,7 @@ namespace ComplementApp.API.Services
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
                 var parametros = parametroGenerales.ToList();
 
-                ParametroLiquidacionTercero parametroLiquidacion = await _repoLista.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
+                ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
 
                 if (parametroGenerales != null && parametroLiquidacion != null)
                 {
