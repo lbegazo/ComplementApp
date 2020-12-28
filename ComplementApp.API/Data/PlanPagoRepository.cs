@@ -297,6 +297,22 @@ namespace ComplementApp.API.Data
             return cantidad;
         }
 
+        public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos)
+        {
+            var query = await (from t in _context.PlanPago
+                                where compromisos.Contains(t.Crp)
+                               group t by new { t.Crp }
+                         into grp
+                               select new DetallePlanPagoDto()
+                               {
+                                   Crp = grp.Key.Crp,
+                                   CantidadPago = grp.Max(x => x.NumeroPago),
+                               }).ToListAsync();
+
+            return query;
+        }
+
+
         public async Task RegistrarPlanPago(PlanPago plan)
         {
             await _context.PlanPago.AddAsync(plan);
@@ -330,7 +346,7 @@ namespace ComplementApp.API.Data
                              Crp = c.Crp.ToString(),
                              NumeroRadicadoProveedor = c.NumeroRadicadoProveedor,
                              NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
-                             ValorAPagar = c.ValorAPagar,
+                             ValorAPagar = c.ValorFacturado.Value,
                              NIT = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
                              Obligacion = li.Obligacion.HasValue ? li.Obligacion.Value.ToString() : string.Empty,

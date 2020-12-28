@@ -22,6 +22,8 @@ namespace ComplementApp.API.Interfaces
 
         int ObtenerCantidadMaximaPlanPago(long crp);
 
+        Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos);
+
         Task RegistrarPlanPago(PlanPago plan);
 
         void ActualizarPlanPago(PlanPago plan);

@@ -32,6 +32,8 @@ namespace ComplementApp.API.Models
 
         public DateTime? FechaModificacion { get; set; }
 
+        public int TipoDocumentoArchivo { get; set; }
+
         public ICollection<DetalleArchivoLiquidacion> DetalleArchivo { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Dtos.Archivo;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 
@@ -26,7 +27,7 @@ namespace ComplementApp.API.Interfaces
 
         Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId);
 
-         ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId);
+        ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId);
 
         Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId);
 
@@ -36,12 +37,33 @@ namespace ComplementApp.API.Interfaces
 
         int ObtenerUltimoConsecutivoArchivoLiquidacion();
 
-
-
         #region Liquidación Masiva
 
         bool RegistrarListaDetalleLiquidacion(IList<DetalleLiquidacion> listaDetalleLiquidacion);
 
         #endregion Liquidación Masiva
+
+        #region Archivo Obligacion Presupuestal
+
+        Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerLiquidacionesParaObligacionArchivo(
+                    int? terceroId,
+                    List<int> listaEstadoId,
+                    bool? procesado,
+                    UserParams userParams);
+
+        Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion(int? terceroId,
+                                                                    List<int> listaEstadoId,
+                                                                    bool? procesado);
+
+        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId);
+
+        Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId);
+
+        Task<ICollection<DeduccionDetalleLiquidacionParaArchivo>> ObtenerDeduccionesLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId);
+
+        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerUsosParaArchivoObligacion(List<int> listaLiquidacionId);
+
+
+        #endregion Archivo Obligacion Presupuestal
     }
 }

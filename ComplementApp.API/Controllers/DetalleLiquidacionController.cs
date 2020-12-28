@@ -12,6 +12,7 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
+using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +33,6 @@ namespace ComplementApp.API.Controllers
 
         #region Dependency Injection
         private readonly DataContext _dataContext;
-
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDetalleLiquidacionRepository _repo;
         private readonly IPlanPagoRepository _planPagoRepository;
@@ -42,9 +41,8 @@ namespace ComplementApp.API.Controllers
         private readonly IMailService mailService;
         private readonly IGeneralInterface _generalInterface;
         private readonly IListaRepository _repoLista;
-
         private readonly ITerceroRepository _terceroRepository;
-
+        private readonly IProcesoCreacionArchivo _procesoCreacionArchivo;
         #endregion Dependency Injection
 
         public DetalleLiquidacionController(IUnitOfWork unitOfWork, IDetalleLiquidacionRepository repo,
@@ -54,7 +52,8 @@ namespace ComplementApp.API.Controllers
                                     IProcesoLiquidacionPlanPago procesoLiquidacion,
                                     IGeneralInterface generalInterface,
                                     IListaRepository listaRepository,
-                                    ITerceroRepository terceroRepository)
+                                    ITerceroRepository terceroRepository,
+                                    IProcesoCreacionArchivo procesoCreacionArchivo)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -66,6 +65,7 @@ namespace ComplementApp.API.Controllers
             this._generalInterface = generalInterface;
             this._terceroRepository = terceroRepository;
             this._repoLista = listaRepository;
+            this._procesoCreacionArchivo = procesoCreacionArchivo;
         }
 
         [Route("[action]")]
@@ -264,7 +264,7 @@ namespace ComplementApp.API.Controllers
 
             await _procesoLiquidacion.RegistrarListaDetalleLiquidacion(usuarioId, listaPlanPagoId, listIds, esSeleccionarTodo, terceroId);
 
-            return Ok(1);         
+            return Ok(1);
 
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
@@ -324,12 +324,15 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpGet]
-        [Route("DescargarMaestroDetalleLiquidacionParaArchivo")]
-        public async Task<IActionResult> DescargarMaestroDetalleLiquidacionParaArchivo([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
+        [Route("DescargarMaestroLiquidacion_ArchivoCuentaPorPagar")]
+        public async Task<IActionResult> DescargarMaestroLiquidacion_ArchivoCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
         {
             string cadena = string.Empty;
+            int consecutivo = 0;
+            string nombreArchivo = string.Empty;
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
 
             try
             {
@@ -343,10 +346,18 @@ namespace ComplementApp.API.Controllers
                     if (listaLiquidacion != null && listaLiquidacion.Count > 0)
                     {
                         //Obtener información para el archivo
-                        cadena = ObtenerInformacionMaestroDetalleLiquidacion(listaLiquidacion.ToList());
+                        cadena = _procesoCreacionArchivo.ObtenerInformacionMaestroLiquidacion_ArchivoCuentaPagar(listaLiquidacion.ToList());
+
+                        //Obtener nombre del archivo detalle
+                        consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
+                        nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                            (int)TipoDocumentoArchivo.CuentaPorPagar,
+                                                            (int)TipoArchivoCuentaPorPagar.Cabecera);
 
                         //Registrar archivo y sus detalles
-                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listDistinct);
+                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listDistinct,
+                                                                                                nombreArchivo, consecutivo,
+                                                                                                (int)TipoDocumentoArchivo.CuentaPorPagar);
                         _dataContext.SaveChanges();
 
                         RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
@@ -380,8 +391,8 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpGet]
-        [Route("DescargarDetalleLiquidacionParaArchivo")]
-        public async Task<IActionResult> DescargarDetalleLiquidacionParaArchivo([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
+        [Route("DescargarDetalleLiquidacion_ArchivoCuentaPorPagar")]
+        public async Task<IActionResult> DescargarDetalleLiquidacion_ArchivoCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             string cadena = string.Empty;
@@ -405,13 +416,13 @@ namespace ComplementApp.API.Controllers
                     await _dataContext.SaveChangesAsync();
 
                     //Obtener información para el archivo
-                    cadena = ObtenerInformacionDetalleLiquidacion(listaLiquidacion.ToList());
+                    cadena = _procesoCreacionArchivo.ObtenerInformacionDetalleLiquidacion_ArchivoCuentaPagar(listaLiquidacion.ToList());
 
-                    //Obtener nombre del archivo etalle
+                    //Obtener nombre del archivo detalle
                     consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
-                    nombreArchivo = "SIGPAA Detalle" + " " + fecha.Year.ToString() +
-                                    fecha.Month.ToString().PadLeft(2, '0') + fecha.Date.Day.ToString().PadLeft(2, '0') +
-                                    " " + consecutivo.ToString().PadLeft(4, '0');
+                    nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                        (int)TipoDocumentoArchivo.CuentaPorPagar,
+                                                        (int)TipoArchivoCuentaPorPagar.Detalle);
 
                     //Encoding.UTF8: Respeta las tildes en las palabras
                     byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
@@ -443,6 +454,283 @@ namespace ComplementApp.API.Controllers
             var lista = await _terceroRepository.ObtenerListaActividadesEconomicaXTercero(terceroId);
             return base.Ok(lista);
         }
+
+        #region Archivo Obligacion Presupuestal
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerLiquidacionesParaArchivoObligacion([FromQuery(Name = "terceroId")] int? terceroId,
+                                                             [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                             [FromQuery(Name = "procesado")] int? procesado,
+                                                             [FromQuery] UserParams userParams)
+        {
+            List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+            bool? esProcesado = null;
+
+            if (procesado.HasValue)
+            {
+                esProcesado = (procesado.Value == 1) ? (true) : (false);
+            }
+
+            var pagedList = await _repo.ObtenerLiquidacionesParaObligacionArchivo(terceroId, listIds, esProcesado, userParams);
+            var listaDto = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
+
+
+
+        [HttpGet]
+        [Route("DescargarArchivoLiquidacionObligacion")]
+        public async Task<IActionResult> DescargarArchivoLiquidacionObligacion([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId,
+                                                                               [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                                               [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
+                                                                               [FromQuery(Name = "terceroId")] int? terceroId,
+                                                                                [FromQuery(Name = "tipoArchivoObligacionId")] int? tipoArchivoObligacionId
+                                                                               )
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            List<int> listaEstadoIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+            bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
+            List<int> LiquidacionIds = new List<int>();
+            string cadena = string.Empty;
+            string nombreArchivo = string.Empty;
+            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
+            int consecutivo = 0;
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                #region Obtener lista de liquidaciones a procesar
+
+                if (esSeleccionarTodo)
+                {
+                    #region esSeleccionarTodo
+
+                    LiquidacionIds = await _repo.ObtenerLiquidacionIdsParaArchivoObligacion(terceroId, listaEstadoIds, false);
+
+                    #endregion esSeleccionarTodo
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(listaLiquidacionId))
+                    {
+                        #region Procesar por lista de ids
+
+                        LiquidacionIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
+
+                        #endregion Procesar por lista de ids
+                    }
+                }
+
+                List<int> listDistinct = LiquidacionIds.Distinct().ToList();
+
+                #endregion Obtener lista de liquidaciones a procesar
+
+                switch (tipoArchivoObligacionId)
+                {
+                    case (int)TipoArchivoObligacion.Cabecera:
+                        {
+                            #region Cabecera
+
+                            var listaLiquidacion = await _repo.ObtenerCabeceraParaArchivoObligacion(listDistinct);
+
+                            //Obtener nombre del archivo detalle
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
+                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                                (int)TipoDocumentoArchivo.Obligacion,
+                                                                (int)TipoArchivoObligacion.Cabecera);
+
+                            if (listaLiquidacion != null && listaLiquidacion.Count > 0)
+                            {
+                                //Obtener información para el archivo
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionCabeceraLiquidacion_ArchivoObligacion(listaLiquidacion.ToList());
+
+                                //Registrar archivo y sus detalles
+                                ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listDistinct,
+                                                                                                        nombreArchivo, consecutivo,
+                                                                                                        (int)TipoDocumentoArchivo.Obligacion);
+                                _dataContext.SaveChanges();
+
+                                RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
+                                _dataContext.SaveChanges();
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                await transaction.CommitAsync();
+                                Response.AddFileName(archivo.Nombre);
+                                return File(stream, "application/octet-stream", archivo.Nombre);
+                            }
+                            else
+                            {
+                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            #endregion Cabecera
+                        };
+                    case (int)TipoArchivoObligacion.Deducciones:
+                        {
+                            #region Deducciones
+
+                            var lista = await _repo.ObtenerDeduccionesLiquidacionParaArchivoObligacion(listDistinct);
+
+                            //Obtener nombre del archivo detalle
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                                (int)TipoDocumentoArchivo.Obligacion,
+                                                                (int)TipoArchivoObligacion.Deducciones);
+
+                            if (lista != null && lista.Count > 0)
+                            {
+                                //Obtener información para el archivo
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(lista.ToList());
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                await transaction.CommitAsync();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            else
+                            {
+                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            #endregion Deducciones
+                        };
+                    case (int)TipoArchivoObligacion.Item:
+                        {
+                            #region Items
+
+                            var lista = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(listDistinct);
+
+                            //Obtener nombre del archivo detalle
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                                (int)TipoDocumentoArchivo.Obligacion,
+                                                                (int)TipoArchivoObligacion.Item);
+
+                            if (lista != null && lista.Count > 0)
+                            {
+                                //Obtener información para el archivo
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionItemsLiquidacion_ArchivoObligacion(lista.ToList());
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                await transaction.CommitAsync();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            else
+                            {
+                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+
+                            #endregion Items
+                        };
+                    case (int)TipoArchivoObligacion.Uso:
+                        {
+                            #region Usos
+
+                            var lista = await _repo.ObtenerUsosParaArchivoObligacion(listDistinct);
+
+                            //Obtener nombre del archivo detalle
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                                (int)TipoDocumentoArchivo.Obligacion,
+                                                                (int)TipoArchivoObligacion.Uso);
+
+                            if (lista != null && lista.Count > 0)
+                            {
+                                //Actualizar el estado de las liquidaciones procesadas
+                                await ActualizarEstadoDetalleLiquidacion(usuarioId, listDistinct);
+                                await _dataContext.SaveChangesAsync();
+
+                                //Obtener información para el archivo
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionUsosLiquidacion_ArchivoObligacion(lista.ToList());
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                await transaction.CommitAsync();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            else
+                            {
+                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                //Response.AddFileName(archivo.Nombre);
+                                //return File(stream, "application/octet-stream", archivo.Nombre);
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+
+                            #endregion Usos
+                        };
+                    default: break;
+                }
+
+                throw new Exception("No se pudo obtener las liquidaciones seleccionadas");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        #endregion Archivo Obligacion Presupuestal
 
         #region Funciones Generales
 
@@ -543,110 +831,41 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.MesSaludActual = formato.NumeroMesSaludActual;
         }
 
-        private string ObtenerInformacionMaestroDetalleLiquidacion(List<DetalleLiquidacionParaArchivo> lista)
-        {
-            int consecutivo = 1;
-            StringBuilder sbBody = new StringBuilder();
-
-            foreach (var item in lista)
-            {
-                sbBody.Append(item.PCI);
-                sbBody.Append("|");
-                sbBody.Append(consecutivo);
-                sbBody.Append("|");
-                sbBody.Append(item.Fecha);
-                sbBody.Append("|");
-                sbBody.Append("0" + item.TipoIdentificacion);
-                sbBody.Append("|");
-                sbBody.Append(item.NumeroIdentificacion);
-                sbBody.Append("|");
-                sbBody.Append(item.Crp);
-                sbBody.Append("|");
-                sbBody.Append(item.TipoCuentaPagar);
-                sbBody.Append("|");
-                sbBody.Append(item.TotalACancelar.ToString().Replace(".", ","));
-                sbBody.Append("|");
-                sbBody.Append("0");
-                sbBody.Append("|");
-                sbBody.Append(item.ValorIva.ToString().Replace(".", ","));
-                sbBody.Append("|");
-                sbBody.Append(item.TextoComprobanteContable);
-                sbBody.Append("|");
-                sbBody.Append(item.TipoDocumentoSoporte);
-                sbBody.Append("|");
-                sbBody.Append(item.NumeroFactura);
-                sbBody.Append("|");
-                sbBody.Append(item.Fecha);
-                sbBody.Append("|");
-                sbBody.Append(item.ConstanteNumero);
-                sbBody.Append("|");
-                sbBody.Append(item.NombreSupervisor);
-                sbBody.Append("|");
-                sbBody.Append(item.ConstanteCargo);
-                sbBody.Append("|||");
-                sbBody.Append(Environment.NewLine);
-                consecutivo++;
-            }
-
-            return sbBody.ToString();
-        }
-
-        private string ObtenerInformacionDetalleLiquidacion(List<DetalleLiquidacionParaArchivo> lista)
-        {
-            int consecutivo = 1;
-            StringBuilder sbBody = new StringBuilder();
-
-            foreach (var item in lista)
-            {
-                sbBody.Append(consecutivo);
-                sbBody.Append("|");
-                sbBody.Append(item.TipoDocumentoSoporte);
-                sbBody.Append(Environment.NewLine);
-                consecutivo++;
-            }
-
-            return sbBody.ToString();
-        }
-
         private async Task<bool> ActualizarEstadoDetalleLiquidacion(int usuarioId, List<int> listIds)
         {
-            foreach (var id in listIds)
-            {
-                if (id > 0)
-                {
-                    var liquidacion = await _repo.ObtenerDetalleLiquidacionBase(id);
 
-                    if (liquidacion != null)
-                    {
-                        liquidacion.Procesado = true;
-                        liquidacion.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-                        liquidacion.UsuarioIdModificacion = usuarioId;
-                    }
-                }
-            }
+            //Actualización del detalle de liquidación
+            var q = from pp in _dataContext.DetalleLiquidacion
+                    where listIds.Contains(pp.DetalleLiquidacionId)
+                    select pp;
+
+            await q.BatchUpdateAsync(new DetalleLiquidacion
+            {
+                Procesado = true,
+                UsuarioIdModificacion = usuarioId,
+                FechaModificacion = _generalInterface.ObtenerFechaHoraActual()
+            });
+
             return true;
         }
 
-        private ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, List<int> listIds)
+        private ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, List<int> listIds,
+                                                                                string nombreArchivo, int consecutivo,
+                                                                                int tipoDocumentoArchivo)
         {
             ArchivoDetalleLiquidacion archivo = new ArchivoDetalleLiquidacion();
-            string nombreArchivo = string.Empty;
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
 
             try
             {
-                int consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
-                nombreArchivo = "SIGPAA" + " " + fecha.Year.ToString() +
-                                fecha.Month.ToString().PadLeft(2, '0') + fecha.Date.Day.ToString().PadLeft(2, '0') +
-                                " " + consecutivo.ToString().PadLeft(4, '0');
-
                 archivo.FechaGeneracion = fecha;
                 archivo.FechaRegistro = fecha;
                 archivo.UsuarioIdRegistro = usuarioId;
                 archivo.Nombre = nombreArchivo;
                 archivo.CantidadRegistro = listIds.Count;
                 archivo.Consecutivo = consecutivo;
-                _repo.RegistrarArchivoDetalleLiquidacion(archivo);
+                archivo.TipoDocumentoArchivo = tipoDocumentoArchivo;
+                _dataContext.ArchivoDetalleLiquidacion.Add(archivo);
             }
             catch (Exception)
             {
@@ -654,6 +873,74 @@ namespace ComplementApp.API.Controllers
             }
 
             return archivo;
+        }
+
+        private string ObtenerNombreArchivo(DateTime fecha, int consecutivo, int tipoDocumentoArchivo, int tipoArchivo)
+        {
+            string nombre = string.Empty;
+            string nombreInicial = "SIGPAA ";
+            string nombreIntermedio = string.Empty;
+            string nombreFinal = fecha.Year.ToString() +
+                                fecha.Month.ToString().PadLeft(2, '0') +
+                                fecha.Date.Day.ToString().PadLeft(2, '0') +
+                                " " + consecutivo.ToString().PadLeft(4, '0');
+
+            switch (tipoDocumentoArchivo)
+            {
+                case (int)TipoDocumentoArchivo.Obligacion:
+                    {
+                        switch (tipoArchivo)
+                        {
+                            case (int)TipoArchivoObligacion.Cabecera:
+                                {
+                                    nombreIntermedio = "Cabecera ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Item:
+                                {
+                                    nombreIntermedio = "Item ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Deducciones:
+                                {
+                                    nombreIntermedio = "Deducciones ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Uso:
+                                {
+                                    nombreIntermedio = "Usos ";
+                                }
+                                break;
+
+                            default: break;
+                        }
+
+                    }
+                    break;
+                case (int)TipoDocumentoArchivo.CuentaPorPagar:
+                    {
+                        switch (tipoArchivo)
+                        {
+                            case (int)TipoArchivoCuentaPorPagar.Cabecera:
+                                {
+                                    nombreIntermedio = "Cabecera ";
+                                }
+                                break;
+                            case (int)TipoArchivoCuentaPorPagar.Detalle:
+                                {
+                                    nombreIntermedio = "Detalle ";
+                                }
+                                break;
+
+                            default: break;
+                        }
+                    }
+                    break;
+                default: break;
+            }
+            nombre = nombreInicial + nombreIntermedio + nombreFinal;
+
+            return nombre;
         }
 
         private void RegistrarDetalleArchivoLiquidacion(int archivoId, List<int> listIds)
@@ -691,7 +978,6 @@ namespace ComplementApp.API.Controllers
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
-
 
         #endregion Funciones Generales
 

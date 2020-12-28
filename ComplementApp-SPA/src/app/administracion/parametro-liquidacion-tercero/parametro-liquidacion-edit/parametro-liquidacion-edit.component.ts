@@ -773,8 +773,12 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.parametroLiquidacionSeleccionado.tipoIva = this.idTipoIvaSelecionado;
         this.parametroLiquidacionSeleccionado.tipoPago = this.idTipoPagoSelecionado;
         this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte = this.idTipoDocumentoSoporteSelecionado;
-        this.parametroLiquidacionSeleccionado.honorarioSinIva = +formValues.honorarioSinIvaCtrl;
-        this.parametroLiquidacionSeleccionado.tarifaIva = +formValues.tarifaIvaCtrl;
+        this.parametroLiquidacionSeleccionado.honorarioSinIva = +this.obtenerValor(
+          formValues.honorarioSinIvaCtrl
+        );
+        this.parametroLiquidacionSeleccionado.tarifaIva = +this.obtenerValor(
+          formValues.tarifaIvaCtrl
+        );
 
         this.parametroLiquidacionSeleccionado.baseAporteSalud =
           formValues.baseAporteSaludCtrl === undefined
@@ -862,7 +866,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   get tipoDocumentoSoporteCtrl() {
     return this.editForm.get('tipoDocumentoSoporteCtrl');
   }
-
   get baseAporteSaludCtrl() {
     return this.editForm.get('baseAporteSaludCtrl');
   }
@@ -878,7 +881,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   get fondoSolidaridadCtrl() {
     return this.editForm.get('fondoSolidaridadCtrl');
   }
-
   get pensionVoluntariaCtrl() {
     return this.editForm.get('pensionVoluntariaCtrl');
   }
@@ -924,6 +926,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   isValidDate(d) {
     return d instanceof Date;
+  }
+
+  obtenerValor(numeroWithComma: string) {
+    return numeroWithComma.replace(',', '');
   }
 
   //#region Listas

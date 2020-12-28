@@ -309,7 +309,7 @@ export class CuentaPorPagarComponent implements OnInit {
               );
 
               this.liquidacionService
-                .DescargarMaestroDetalleLiquidacionParaArchivo(lista.join())
+                .DescargarMaestroLiquidacion_ArchivoCuentaPorPagar(lista.join())
                 .subscribe(
                   (response) => {
                     switch (response.type) {
@@ -342,7 +342,7 @@ export class CuentaPorPagarComponent implements OnInit {
                   },
                   () => {
                     this.liquidacionService
-                      .DescargarDetalleLiquidacionParaArchivo(lista.join())
+                      .DescargarDetalleLiquidacion_ArchivoCuentaPorPagar(lista.join())
                       .subscribe(
                         (response) => {
                           switch (response.type) {
@@ -399,7 +399,7 @@ export class CuentaPorPagarComponent implements OnInit {
         );
 
         this.liquidacionService
-          .DescargarMaestroDetalleLiquidacionParaArchivo(lista.join())
+          .DescargarMaestroLiquidacion_ArchivoCuentaPorPagar(lista.join())
           .subscribe(
             (response) => {
               switch (response.type) {
@@ -432,7 +432,7 @@ export class CuentaPorPagarComponent implements OnInit {
             },
             () => {
               this.liquidacionService
-                .DescargarDetalleLiquidacionParaArchivo(lista.join())
+                .DescargarDetalleLiquidacion_ArchivoCuentaPorPagar(lista.join())
                 .subscribe(
                   (response) => {
                     switch (response.type) {

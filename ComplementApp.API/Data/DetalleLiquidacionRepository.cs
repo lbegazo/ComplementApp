@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Dtos.Archivo;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
@@ -158,13 +159,14 @@ namespace ComplementApp.API.Data
                              IdentificacionTercero = dl.NumeroIdentificacion,
                              NombreTercero = dl.Nombre,
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
-                             FechaRadicadoSupervisor = dl.FechaRadicado,
-                             ValorTotal = c.ValorFacturado.Value
+                             FechaRadicadoSupervisor = dl.FechaRegistro.Value,
+                             ValorTotal = c.ValorFacturado.Value,
+
                          });
 
             if (lista != null)
             {
-                lista.OrderBy(c => c.FechaRadicadoSupervisor);
+                lista.OrderByDescending(c => c.FechaRadicadoSupervisor);
             }
 
             return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
@@ -207,66 +209,7 @@ namespace ComplementApp.API.Data
             return liquidacion;
         }
 
-        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId)
-        {
-            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
-
-            var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
-                                                    where listaTerceroId.Contains(dl.TerceroId)
-                                                    where dl.FechaOrdenPago.Value.Month == mesAnterior
-                                                    where dl.Viaticos == "SI"
-                                                    select dl)
-                                            .ToListAsync();
-            return detalleLiquidacionAnterior;
-        }
-
-        public ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId)
-        {
-            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
-            List<DetalleLiquidacion> lista = new List<DetalleLiquidacion>();
-
-            var query1 = (from dl in _context.DetalleLiquidacion
-                          where listaTerceroId.Contains(dl.TerceroId)
-                          where dl.FechaRegistro.Value.Month == mesAnterior
-                          where dl.Viaticos == "NO"
-                          group dl by new { dl.TerceroId, dl.DetalleLiquidacionId }
-                          into grp
-                          select new
-                          {
-                              grp.Key.TerceroId,
-                              grp.Key.DetalleLiquidacionId
-                          }).ToList();
-
-            var query2 = (from x in query1
-                          group x by new { x.TerceroId, x.DetalleLiquidacionId } into grp
-                          select new
-                          {
-                              TerceroId = grp.Key.TerceroId,
-                              DetalleLiquidacionId = (from x in grp
-                                                      orderby x.DetalleLiquidacionId descending
-                                                      select x.DetalleLiquidacionId).FirstOrDefault()
-                          });
-
-            List<int> listaDetalleLiquidacionId = query2.Select(x => x.DetalleLiquidacionId).ToList();
-
-            if (listaDetalleLiquidacionId != null)
-            {
-                lista = (from dl in _context.DetalleLiquidacion
-                         where listaDetalleLiquidacionId.Contains(dl.DetalleLiquidacionId)
-                         select new DetalleLiquidacion()
-                         {
-                             PlanPagoId = dl.PlanPagoId,
-                             TerceroId = dl.TerceroId,
-                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
-                             MesPagoActual = dl.MesPagoActual,
-                             MesPagoAnterior = dl.MesPagoAnterior
-                         }).ToList();
-            }
-
-            return lista;
-        }
-
-
+        #region Archivo Cuenta Por Pagar
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
@@ -280,7 +223,7 @@ namespace ComplementApp.API.Data
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    PCI = "23-09-00",
-                                   Fecha = System.DateTime.Now.ToString("yyyy-MM-dd"),
+                                   FechaActual = System.DateTime.Now.ToString("yyyy-MM-dd"),
                                    TipoIdentificacion = t.TipoIdentificacion,
                                    NumeroIdentificacion = t.NumeroIdentificacion,
                                    Crp = dl.Crp,
@@ -350,7 +293,190 @@ namespace ComplementApp.API.Data
             }
         }
 
+        #endregion Archivo Cuenta Por Pagar
 
+        #region Archivo Obligacion Presupuestal
+
+        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerLiquidacionesParaObligacionArchivo(
+                    int? terceroId,
+                    List<int> listaEstadoId,
+                    bool? procesado,
+                    UserParams userParams)
+        {
+            int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
+            //int estadoPlanPago_ConLiquidacionDeducciones = (int)EstadoPlanPago.ConLiquidacionDeducciones;
+
+            var lista = (from dl in _context.DetalleLiquidacion
+                         join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
+                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                         from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         where (pl.ModalidadContrato == modalidadContrato)
+                         where (dl.TerceroId == terceroId || terceroId == null)
+                         where (dl.Procesado == procesado || procesado == null)
+                         select new FormatoCausacionyLiquidacionPagos()
+                         {
+                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                             PlanPagoId = dl.PlanPagoId,
+                             IdentificacionTercero = dl.NumeroIdentificacion,
+                             NombreTercero = dl.Nombre,
+                             NumeroRadicadoSupervisor = dl.NumeroRadicado,
+                             FechaRadicadoSupervisor = dl.FechaRadicado,
+                             ValorTotal = c.ValorFacturado.Value
+                         });
+
+            if (lista != null)
+            {
+                lista.OrderBy(c => c.FechaRadicadoSupervisor);
+            }
+
+            return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+
+        public async Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion(int? terceroId,
+                                                                                        List<int> listaEstadoId,
+                                                                                        bool? procesado)
+        {
+            int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
+
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
+                               join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                               join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                               join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                               from pl in parametroLiquidacion.DefaultIfEmpty()
+                               where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                               where (pl.ModalidadContrato == modalidadContrato)
+                               where (dl.TerceroId == terceroId || terceroId == null)
+                               where (dl.Procesado == procesado || procesado == null)
+                               select dl.DetalleLiquidacionId).ToListAsync();
+
+            return lista;
+        }
+
+
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId)
+        {
+            List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
+
+
+            var lista = await (from dl in _context.DetalleLiquidacion
+                                   //join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
+                               join t in _context.Tercero on dl.TerceroId equals t.TerceroId
+                               join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
+                               from pl in parametroLiquidacion.DefaultIfEmpty()
+                               join cp in _context.TipoCuentaXPagar on pl.TipoCuentaPorPagar equals cp.TipoCuentaXPagarId into tipoCuentaPagar
+                               from tcp in tipoCuentaPagar.DefaultIfEmpty()
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+
+                               select new DetalleLiquidacionParaArchivo()
+                               {
+                                   FechaActual = System.DateTime.Now.ToString("yyyy-MM-dd"),
+                                   PCI = "23-09-00",
+                                   Crp = dl.Crp,
+                                   Dip = "NO",
+                                   TipoCuentaPagarCodigo = tcp.Codigo,
+                                   ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
+                                   TipoDocumentoSoporte = pl.TipoDocumentoSoporte,
+                                   NumeroFactura = dl.NumeroFactura,
+                                   ConstanteExpedidor = "11",
+                                   ConstanteCargo = "SUPERVISOR",
+                                   NombreSupervisor = dl.NombreSupervisor,
+                                   TextoComprobanteContable = dl.TextoComprobanteContable,
+                                   ValorTotal = decimal.Round(dl.ValorTotal, 2, MidpointRounding.AwayFromZero),
+                                   FechaRegistro = dl.FechaRegistro.Value
+                               })
+                    .ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                listaFinal = lista.OrderBy(x => x.FechaRegistro).ToList();
+            }
+            return listaFinal;
+        }
+
+        public async Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)
+        {
+            var lista = await (from cpc in _context.ClavePresupuestalContable
+                               join rc in _context.RelacionContable on cpc.RelacionContableId equals rc.RelacionContableId
+                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
+                               join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join dl in _context.DetalleLiquidacion on cpc.Crp equals dl.Crp
+                               join sf in _context.SituacionFondo on cpc.SituacionFondoId equals sf.SituacionFondoId
+                               join ff in _context.FuenteFinanciacion on cpc.FuenteFinanciacionId equals ff.FuenteFinanciacionId
+                               join rpr in _context.RecursoPresupuestal on cpc.RecursoPresupuestalId equals rpr.RecursoPresupuestalId
+                               join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
+                               join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into tipoGasto
+                               from tga in tipoGasto.DefaultIfEmpty()
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               select new ClavePresupuestalContableParaArchivo()
+                               {
+                                   DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                   Dependencia = cpc.Dependencia,
+                                   RubroPresupuestalIdentificacion = rp.Identificacion,
+                                   RecursoPresupuestalCodigo = rpr.Codigo,
+                                   FuenteFinanciacionCodigo = ff.Codigo,
+                                   SituacionFondoCodigo = sf.Codigo,
+                                   ValorTotal = dl.ValorTotal,
+                                   AtributoContableCodigo = ac.Codigo,
+                                   TipoGastoCodigo = tga.Codigo,
+                                   UsoContable = rc.UsoContable.ToString(),
+                                   TipoOperacion = rc.TipoOperacion.ToString(),
+                                   NumeroCuenta = cc.NumeroCuenta
+                               })
+                               .Distinct()
+                    .ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<ICollection<DeduccionDetalleLiquidacionParaArchivo>> ObtenerDeduccionesLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)
+        {
+            var lista = await (from ld in _context.LiquidacionDeducciones
+                               join d in _context.Deduccion on ld.DeduccionId equals d.DeduccionId
+                               where (listaLiquidacionId.Contains(ld.DetalleLiquidacionId))
+                               select new DeduccionDetalleLiquidacionParaArchivo()
+                               {
+                                   DetalleLiquidacionId = ld.DetalleLiquidacionId,
+                                   DeduccionCodigo = d.Codigo,
+                                   TipoIdentificacion = 1,
+                                   NumeroIdentificacion = "800197268",
+                                   Base = ld.Base,
+                                   Tarifa = ld.Tarifa,
+                                   Valor = ld.Tarifa,
+                               })
+                    .ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerUsosParaArchivoObligacion(List<int> listaLiquidacionId)
+        {
+            List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
+
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               select new DetalleLiquidacionParaArchivo()
+                               {
+                                   DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                   UsoPresupuestalCodigo = dl.UsoPresupuestal,
+                                   ValorTotal = dl.ValorTotal,
+                                   FechaRegistro = dl.FechaRegistro.Value,
+                               })
+                    .ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                listaFinal = lista.OrderBy(x => x.FechaRegistro).ToList();
+            }
+            return listaFinal;
+        }
+
+
+        #endregion Archivo Obligacion Presupuestal
 
         #region Liquidación Masiva
 
@@ -365,6 +491,65 @@ namespace ComplementApp.API.Data
             {
                 throw;
             }
+        }
+
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId)
+        {
+            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
+
+            var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    where listaTerceroId.Contains(dl.TerceroId)
+                                                    where dl.FechaOrdenPago.Value.Month == mesAnterior
+                                                    where dl.Viaticos == "SI"
+                                                    select dl)
+                                            .ToListAsync();
+            return detalleLiquidacionAnterior;
+        }
+
+        public ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId)
+        {
+            int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
+            List<DetalleLiquidacion> lista = new List<DetalleLiquidacion>();
+
+            var query1 = (from dl in _context.DetalleLiquidacion
+                          where listaTerceroId.Contains(dl.TerceroId)
+                          where dl.FechaRegistro.Value.Month == mesAnterior
+                          where dl.Viaticos == "NO"
+                          group dl by new { dl.TerceroId, dl.DetalleLiquidacionId }
+                          into grp
+                          select new
+                          {
+                              grp.Key.TerceroId,
+                              grp.Key.DetalleLiquidacionId
+                          }).ToList();
+
+            var query2 = (from x in query1
+                          group x by new { x.TerceroId, x.DetalleLiquidacionId } into grp
+                          select new
+                          {
+                              TerceroId = grp.Key.TerceroId,
+                              DetalleLiquidacionId = (from x in grp
+                                                      orderby x.DetalleLiquidacionId descending
+                                                      select x.DetalleLiquidacionId).FirstOrDefault()
+                          });
+
+            List<int> listaDetalleLiquidacionId = query2.Select(x => x.DetalleLiquidacionId).ToList();
+
+            if (listaDetalleLiquidacionId != null)
+            {
+                lista = (from dl in _context.DetalleLiquidacion
+                         where listaDetalleLiquidacionId.Contains(dl.DetalleLiquidacionId)
+                         select new DetalleLiquidacion()
+                         {
+                             PlanPagoId = dl.PlanPagoId,
+                             TerceroId = dl.TerceroId,
+                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                             MesPagoActual = dl.MesPagoActual,
+                             MesPagoAnterior = dl.MesPagoAnterior
+                         }).ToList();
+            }
+
+            return lista;
         }
 
         #endregion Liquidación Masiva

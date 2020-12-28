@@ -98,7 +98,7 @@ export class DetalleLiquidacionService {
     listaPlanPagoId: string,
     listaEstadoId: string,
     seleccionarTodo: number,
-    terceroId?: number 
+    terceroId?: number
   ): Observable<any> {
     const path = 'RegistrarListaDetalleLiquidacion';
 
@@ -163,14 +163,16 @@ export class DetalleLiquidacionService {
     );
   }
 
-  public DescargarMaestroDetalleLiquidacionParaArchivo(
+  //#region Creación Archivo Cuenta Por Pagar
+
+  public DescargarMaestroLiquidacion_ArchivoCuentaPorPagar(
     listaLiquidacionId: string
   ): Observable<HttpEvent<Blob>> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${
-          this.baseUrl + 'DescargarMaestroDetalleLiquidacionParaArchivo'
+          this.baseUrl + 'DescargarMaestroLiquidacion_ArchivoCuentaPorPagar'
         }?listaLiquidacionId=${listaLiquidacionId}`,
         null,
         {
@@ -181,14 +183,14 @@ export class DetalleLiquidacionService {
     );
   }
 
-  public DescargarDetalleLiquidacionParaArchivo(
+  public DescargarDetalleLiquidacion_ArchivoCuentaPorPagar(
     listaLiquidacionId: string
   ): Observable<HttpEvent<Blob>> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${
-          this.baseUrl + 'DescargarDetalleLiquidacionParaArchivo'
+          this.baseUrl + 'DescargarDetalleLiquidacion_ArchivoCuentaPorPagar'
         }?listaLiquidacionId=${listaLiquidacionId}`,
         null,
         {
@@ -198,6 +200,8 @@ export class DetalleLiquidacionService {
       )
     );
   }
+
+  //#endregion Creación Archivo Cuenta Por Pagar
 
   ObtenerListaActividadesEconomicaXTercero(
     terceroId: number
@@ -211,4 +215,96 @@ export class DetalleLiquidacionService {
     const path = 'ObtenerListaActividadesEconomicaXTercero';
     return this.http.get<ValorSeleccion[]>(this.baseUrl + path, { params });
   }
+
+  //#region Creacio Archivo Obligacion
+
+  ObtenerLiquidacionesParaArchivoObligacion(
+    listaEstadoId: string,
+    terceroId?: number,
+    procesado?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
+    const path = 'ObtenerLiquidacionesParaArchivoObligacion';
+    const paginatedResult: PaginatedResult<
+      FormatoCausacionyLiquidacionPago[]
+    > = new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
+
+    let params = new HttpParams();
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (procesado != null) {
+      params = params.append('procesado', procesado.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<FormatoCausacionyLiquidacionPago[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  public DescargarArchivoLiquidacionObligacion(
+    listaLiquidacionId: string,
+    listaEstadoId: string,
+    seleccionarTodo: number,
+    terceroId: number,
+    tipoArchivoObligacionId: number
+  ): Observable<HttpEvent<Blob>> {
+
+    let params = new HttpParams();
+    params = params.append('listaEstadoId', listaEstadoId);
+    params = params.append(
+      'tipoArchivoObligacionId',
+      tipoArchivoObligacionId.toString()
+    );
+    
+    if (listaLiquidacionId.length > 0) {
+      params = params.append(
+        'listaLiquidacionId',
+        listaLiquidacionId.toString()
+      );
+    }
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (seleccionarTodo != null) {
+      params = params.append('seleccionarTodo', seleccionarTodo.toString());
+    }
+
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarArchivoLiquidacionObligacion'}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+          params,
+        }
+      )
+    );
+  }
+
+  //#region Creacio Archivo Obligacion
 }

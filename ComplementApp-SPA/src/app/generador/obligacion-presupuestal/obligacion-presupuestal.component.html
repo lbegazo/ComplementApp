@@ -9,9 +9,9 @@
   </div>
 </div>
 
-<form [formGroup]="liquidacionForm">
+<form [formGroup]="facturaHeaderForm">
   <div class="container-fluid mt-1">
-    <div class="row mt-2" *ngIf="mostrarCabecera">
+    <div class="row mt-2">
       <div class="col-12">
         <table
           class="table"
@@ -72,7 +72,6 @@
                           class="btn btn-primary"
                           (click)="onBuscarFactura()"
                           style="width: 80px"
-                          [disabled]="planPagoIdSeleccionado > 0"
                         >
                           Buscar</button
                         >&nbsp;
@@ -133,12 +132,14 @@
                 >
                   <ng-container [formGroupName]="i">
                     <div style="width: 2%" class="inner left aplicaBackground">
-                      <input
-                        type="checkbox"
-                        [checked]="item.esSeleccionada"
-                        [value]="item?.planPagoId"
-                        (change)="onCheckChange($event)"
-                      />
+                      <label class="col-form-label-sm">
+                        <input
+                          type="checkbox"
+                          [checked]="item.esSeleccionada"
+                          [value]="item?.detalleLiquidacionId"
+                          (change)="onCheckChange($event)"
+                        />
+                      </label>
                     </div>
                     <div
                       style="width: 10%"
@@ -173,7 +174,7 @@
                       class="inner right aplicaBackground"
                     >
                       <p class="medium">
-                        {{ item?.valorFacturado | number: "1.2-2" }}
+                        {{ item?.valorTotal | number: "1.2-2" }}
                       </p>
                     </div>
                   </ng-container>
@@ -216,22 +217,11 @@
                 <div class="col-12 right">
                   <button
                     type="button"
-                    class="btn btn-primary mr-2"
-                    (click)="onLiquidar()"
-                    [disabled]="
-                      listaPlanPagoSeleccionada.length <= 1 ||
-                      liquidacionRegistrada
-                    "
+                    class="btn btn-primary"
+                    (click)="DescargarArchivoDetalleLiquidacion()"
+                    [disabled]="liquidacionesSeleccionadas.length === 0"
                   >
-                    Liquidación Masiva
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-success"
-                    (click)="verLiquidacion()"
-                    [disabled]="listaPlanPagoSeleccionada.length !== 1"
-                  >
-                    Liquidación Manual
+                    Descargar archivos
                   </button>
                 </div>
               </div>
@@ -243,23 +233,5 @@
   </div>
 </form>
 
-<div class="container-fluid mt-2">
-  <div class="row no-gutters center">
-    <div
-      class="col-12"
-      *ngIf="detallePlanPago && formatoCausacionyLiquidacionPago"
-    >
-      <app-formato-causacion-liquidacion
-        [detallePlanPago]="detallePlanPago"
-        [formatoCausacionyLiquidacionPago]="formatoCausacionyLiquidacionPago"
-        (esCancelado)="HabilitarCabecera($event)"
-      >
-      </app-formato-causacion-liquidacion>
-    </div>
-  </div>
-</div>
-
+<!-- <div class="col-12" *ngIf="planPagoIdSeleccionado > 0"></div> -->
 <!-- <p>detallePlanPago: {{ detallePlanPago | json }}</p> -->
-<!-- 
-<p>planPagoIdSeleccionado: {{ planPagoIdSeleccionado | json }}</p>
-<p>listaPlanPagoSeleccionada: {{ listaPlanPagoSeleccionada | json }}</p> -->

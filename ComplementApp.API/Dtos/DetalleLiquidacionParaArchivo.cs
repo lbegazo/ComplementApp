@@ -4,9 +4,10 @@ namespace ComplementApp.API.Dtos
 {
     public class DetalleLiquidacionParaArchivo
     {
+        public int DetalleLiquidacionId { get; set; }
         public string PCI { get; set; }
 
-        public string Fecha { get; set; }
+        public string FechaActual { get; set; }
 
         public int TipoIdentificacion { get; set; }
 
@@ -24,14 +25,24 @@ namespace ComplementApp.API.Dtos
 
         public int TipoDocumentoSoporte { get; set; }
 
-         public string NumeroFactura { get; set; }
+        public string NumeroFactura { get; set; }
 
-         public string ConstanteNumero { get; set; }
+        public string ConstanteNumero { get; set; }
 
-         public string NombreSupervisor { get; set; }
+        public string NombreSupervisor { get; set; }
 
-         public string ConstanteCargo { get; set; }
+        public string ConstanteCargo { get; set; }
 
-         public DateTime FechaRegistro { get; set; }
+        public DateTime FechaRegistro { get; set; }
+
+        public string Dip { get; set; }
+
+        public string TipoCuentaPagarCodigo { get; set; }
+
+        public string ConstanteExpedidor { get; set; }
+
+        public decimal ValorTotal { get; set; }
+
+        public string UsoPresupuestalCodigo { get; set; }
     }
 }

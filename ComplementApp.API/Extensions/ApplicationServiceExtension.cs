@@ -32,9 +32,10 @@ namespace ComplementApp.API.Extensions
             services.AddScoped<IObligacionRepository, ObligacionRepository>();
             services.AddScoped<ITerceroRepository, TerceroRepository>();
             services.AddScoped<IClavePresupuestalContableRepository, ClavePresupuestalContableRepository>();
+            services.AddScoped<IProcesoCreacionArchivo, ProcesoCreacionArchivo>();
 
             services.AddDbContext<DataContext>();
-            
+
             return services;
         }
     }

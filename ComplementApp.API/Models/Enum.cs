@@ -92,6 +92,25 @@ namespace ComplementApp.API.Models
         Generado = 24,
         Aprobado = 25,
         Rechazado = 26,
+    }
 
+    public enum TipoDocumentoArchivo
+    {
+        CuentaPorPagar = 1,
+        Obligacion = 2,
+    }
+
+    public enum TipoArchivoObligacion
+    {
+        Cabecera = 1,
+        Deducciones = 2,
+        Item = 3,
+        Uso = 4,
+    }
+
+    public enum TipoArchivoCuentaPorPagar
+    {
+        Cabecera = 1,
+        Detalle = 2,
     }
 }

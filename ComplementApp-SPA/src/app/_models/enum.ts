@@ -65,6 +65,12 @@ export class EstadoSolicitudPago extends Enum<number> {
   public static readonly Rechazado = new Enum(26);
 }
 
+export class TipoArchivoObligacion extends Enum<number> {
+  public static readonly Cabecera = new Enum(1);
+  public static readonly Deducciones = new Enum(2);
+  public static readonly Item = new Enum(3);
+  public static readonly Usos = new Enum(4);
+}
 
 /*
 console.log(PrimaryColor.Red);

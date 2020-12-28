@@ -28,6 +28,7 @@ import { RelacionContableComponent } from './administracion/relacion-contable/re
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
 import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
+import { ObligacionPresupuestalComponent } from './generador/obligacion-presupuestal/obligacion-presupuestal.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -97,6 +98,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: CuentaPorPagarComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'GENERADOR_OBLIGACIONES',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: ObligacionPresupuestalComponent,
     resolve: { transaccion: TransaccionResolver },
   },
   {

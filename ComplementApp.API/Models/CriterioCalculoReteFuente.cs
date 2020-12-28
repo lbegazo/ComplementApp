@@ -8,7 +8,9 @@ namespace ComplementApp.API.Models
     {
 
         public int CriterioCalculoReteFuenteId { get; set; }
+        
         [Required]
+        [Column(TypeName = "decimal(30,8)")]
         public decimal Tarifa { get; set; }
 
         [Required]

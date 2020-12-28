@@ -3,24 +3,34 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace ComplementApp.API.Data
 {
 
     public class DataContext : DbContext
     {
+        public static readonly ILoggerFactory _loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+        });
         protected readonly IConfiguration Configuration;
+
+        // public DataContext(IConfiguration configuration)
+        // {
+        //     Configuration = configuration;
+        // }
+
+        public DataContext(IConfiguration configuration, DbContextOptions<DataContext> options) : base(options)
+        {
+            Configuration = configuration;
+        }
 
         public DataContext(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        // protected override void OnConfiguring(DbContextOptionsBuilder options)
-        // {
-        //     // connect to sql server database
-        //     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-        // }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -39,6 +49,8 @@ namespace ComplementApp.API.Data
             {
                 connStr = Configuration.GetConnectionString("DefaultConnection");
             }
+            //options.UseLoggerFactory(_loggerFactory);
+            //options.EnableSensitiveDataLogging();
             options.UseSqlServer(connStr);
         }
 

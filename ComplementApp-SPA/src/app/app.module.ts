@@ -97,6 +97,8 @@ import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitu
 import { FormatoSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/formato-solicitud-pago-aprobacion.component';
 import { PopupSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
 import { PopupClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/popup-clave-presupuestal-contable/popup-clave-presupuestal-contable.component';
+import { ObligacionPresupuestalComponent } from './generador/obligacion-presupuestal/obligacion-presupuestal.component';
+import { DecimalMaskDirective } from './_directives/decimal-mask.directive';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -129,6 +131,7 @@ export function tokenGetter() {
     TwoDigitDecimaNumberDirective,
     FourDigitDecimalNumberDirective,
     FiveDigitDecimalNumberDirective,
+    DecimalMaskDirective,
     PopupCdpComponent,
     NumberCommaDirective,
     FacturaMainComponent,
@@ -163,6 +166,7 @@ export function tokenGetter() {
     AprobacionSolicitudPagoComponent,
     FormatoSolicitudPagoAprobacionComponent,
     PopupSolicitudPagoAprobacionComponent,
+    ObligacionPresupuestalComponent,
   ],
   imports: [
     BrowserModule,

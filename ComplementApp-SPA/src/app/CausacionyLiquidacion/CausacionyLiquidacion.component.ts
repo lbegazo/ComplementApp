@@ -321,35 +321,42 @@ export class CausacionyLiquidacionComponent implements OnInit {
         }
       }
 
-      this.liquidacionService
-        .RegistrarListaDetalleLiquidacion(
-          listaPlanPagoCadenaId,
-          this.listaEstadoId,
-          esSeleccionarTodas,
-          this.terceroId
-        )
-        .subscribe(
-          (response: any) => {
-            if (!isNaN(response)) {
-              this.alertify.success(
-                'Se registraron los formatos de causación y liquidación seleccionados'
-              );
-              this.liquidacionRegistrada = true;
-              this.onLimpiarFactura();
-            } else {
-              this.alertify.error(
-                'No se pudo registrar los formatos de causación y liquidación'
-              );
-            }
-          },
+      this.alertify.confirm2(
+        'Formato de Causación y Liquidación',
+        '¿Esta seguro que desea liquidar los planes de pago seleccionados?',
+        () => {
+          this.liquidacionService
+            .RegistrarListaDetalleLiquidacion(
+              listaPlanPagoCadenaId,
+              this.listaEstadoId,
+              esSeleccionarTodas,
+              this.terceroId
+            )
+            .subscribe(
+              (response: any) => {
+                if (!isNaN(response)) {
+                  this.alertify.success(
+                    'Se registraron los formatos de causación y liquidación seleccionados'
+                  );
+                  this.liquidacionRegistrada = true;
+                  this.onLimpiarFactura();
+                } else {
+                  this.alertify.error(
+                    'No se pudo registrar los formatos de causación y liquidación'
+                  );
+                }
+              },
 
-          (error) => {
-            this.alertify.error(
-              'Hubó un error al registrar los formatos de liquidación ' + error
+              (error) => {
+                this.alertify.error(
+                  'Hubó un error al registrar los formatos de liquidación ' +
+                    error
+                );
+              },
+              () => {}
             );
-          },
-          () => {}
-        );
+        }
+      );
     }
   }
 
