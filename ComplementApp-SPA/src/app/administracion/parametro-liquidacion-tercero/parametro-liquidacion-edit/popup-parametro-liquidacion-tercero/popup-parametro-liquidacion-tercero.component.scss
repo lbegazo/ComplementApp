@@ -1,0 +1,48 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .addPadding {
+    padding: 10px;
+  } 
+
+
+  table td {
+    padding: 0px;
+    vertical-align: top;
+  }
+  
+  .aplicaBackground {
+    background-color: white;
+  }
+  
+ 
+  .center {
+    text-align: center;
+  }
+  
+  .right {
+    text-align: right;
+  }
+  
+  .left {
+    text-align: left;
+  }
+
+  .medium {
+    font-size: 14px;
+  }
+
+  input[type="text"] {
+    background-color: white;
+    height: 30px;
+    padding: 0px;
+  }
+
+  #inputNumeroTercero {
+    background-color: white;
+  }
+
+  
+  

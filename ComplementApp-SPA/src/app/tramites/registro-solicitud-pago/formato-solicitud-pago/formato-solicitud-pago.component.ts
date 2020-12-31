@@ -118,7 +118,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
     //#region Cargar información del popup (OnHidden event)
 
-    const combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
       this.changeDetection.markForCheck()
     );
 
@@ -164,7 +164,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       )
     );
 
-    const combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
       this.changeDetection.markForCheck()
     );
 
@@ -206,7 +206,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       )
     );
 
-    const combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
       this.changeDetection.markForCheck()
     );
 

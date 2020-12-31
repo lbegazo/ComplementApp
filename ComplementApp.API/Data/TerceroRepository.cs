@@ -119,6 +119,10 @@ namespace ComplementApp.API.Data
             var lista = await (from d in _context.Deduccion
                                join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
                                join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
+                               join td1 in _context.Tercero on d.TerceroId equals td1.TerceroId into TerceroDeducciones1
+                               from ter1 in TerceroDeducciones1.DefaultIfEmpty()
+                               join td2 in _context.Tercero on td.TerceroDeDeduccionId equals td2.TerceroId into TerceroDeducciones2
+                               from ter2 in TerceroDeducciones2.DefaultIfEmpty()
                                where (td.TerceroId == terceroId)
                                where (d.estado == true)
                                select new TerceroDeduccionDto()
@@ -140,7 +144,14 @@ namespace ComplementApp.API.Data
                                        Id = ae.ActividadEconomicaId,
                                        Codigo = ae.Codigo,
                                        Nombre = ae.Nombre
-                                   }
+                                   },
+                                   TerceroDeDeduccion = new ValorSeleccion()
+                                   {
+                                       Id = ((ter1.TerceroId > 0) ? (ter1.TerceroId) : (ter2.TerceroId)),
+                                       Codigo = ((ter1.TerceroId > 0) ? (ter1.NumeroIdentificacion) : (ter2.NumeroIdentificacion)),
+                                       Nombre = ((ter1.TerceroId > 0) ? (ter1.Nombre) : (ter2.Nombre)),
+                                       Valor = ((ter1.TerceroId > 0) ? ("SI") : (string.Empty)),
+                                   },
                                }
                          )
                          .Distinct()
@@ -153,8 +164,6 @@ namespace ComplementApp.API.Data
         public async Task<PagedList<DeduccionDto>> ObteneListaDeducciones(UserParams userParams)
         {
             var lista = (from d in _context.Deduccion
-                             //join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
-                             //join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
                          where (d.estado == true)
                          select new DeduccionDto()
                          {

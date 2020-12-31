@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -17,9 +18,17 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
-import { noop, Observable, Observer, of, Subscription } from 'rxjs';
+import {
+  combineLatest,
+  noop,
+  Observable,
+  Observer,
+  of,
+  Subscription,
+} from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
 import { TerceroDeduccionDto } from 'src/app/_dto/terceroDeduccionDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
@@ -33,6 +42,7 @@ import { ListaService } from 'src/app/_services/lista.service';
 import { TerceroService } from 'src/app/_services/tercero.service';
 import { environment } from 'src/environments/environment';
 import { ParametroLiquidacionTerceroComponent } from '../parametro-liquidacion-tercero.component';
+import { PopupParametroLiquidacionTerceroComponent } from './popup-parametro-liquidacion-tercero/popup-parametro-liquidacion-tercero.component';
 
 @Component({
   selector: 'app-parametro-liquidacion-edit',
@@ -50,25 +60,14 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   errorMessage: string;
   subscriptions: Subscription[] = [];
   baseUrlDeduccion = environment.apiUrl + 'lista/ObtenerListaDeducciones';
-  deduccion: Deduccion = {
-    deduccionId: 0,
-    codigo: '',
-    nombre: '',
-    tarifa: 0,
-    base: 0,
-    valor: 0,
-  };
+  deduccion: Deduccion;
   deduccionId = 0;
 
   searchActividad: string;
   suggestionsActividad$: Observable<ActividadEconomica[]>;
   baseUrlActividad =
     environment.apiUrl + 'lista/ObtenerListaActividadesEconomicas';
-  actividadEconomica: ActividadEconomica = {
-    actividadEconomicaId: 0,
-    codigo: '',
-    nombre: '',
-  };
+  actividadEconomica: ActividadEconomica;
   actividadEconomicaId = 0;
 
   arrayControls = new FormArray([]);
@@ -83,6 +82,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   editForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
   nombreBoton = 'Registrar';
+  bsModalRef: BsModalRef;
 
   idModalidadContratoSelecionado?: number;
   modalidadContratoSeleccionado: ValorSeleccion = null;
@@ -107,16 +107,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     private listaService: ListaService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private terceroService: TerceroService
+    private terceroService: TerceroService,
+    private modalService: BsModalService,
+    private changeDetection: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    //El formulario inicial se carga en este método
-    if (this.esCreacion) {
-      this.cargarParametrosGenerales();
-    } else {
-      this.createEmptyForm();
-    }
+    this.createEmptyForm();
 
     this.cargarListas();
 
@@ -124,13 +121,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
     this.cargarBusquedaActividad();
 
-    if (!this.esCreacion) {
+    if (this.esCreacion) {
+      this.cargarParametrosGenerales();
+      this.nombreBoton = 'Registrar';
+      // this.editForm.reset();
+    } else {
       this.obtenerParametrizacionTercero();
       this.nombreBoton = 'Guardar';
-    } else {
-      this.createEmptyForm();
-      this.editForm.reset();
-      this.nombreBoton = 'Registrar';
     }
   }
 
@@ -212,25 +209,21 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   obtenerParametrizacionTercero() {
     if (this.tercero.terceroId > 0) {
-      if (!this.esCreacion) {
-        this.terceroService
-          .ObtenerParametrizacionLiquidacionXTercero(this.tercero.terceroId)
-          .subscribe(
-            (documento: ParametroLiquidacionTercero) => {
-              if (documento) {
-                this.parametroLiquidacionSeleccionado = documento;
-              } else {
-                this.alertify.error(
-                  'No se pudo obtener información de la parametrización del tercero'
-                );
-              }
-            },
-            () => {},
-            () => {
+      this.terceroService
+        .ObtenerParametrizacionLiquidacionXTercero(this.tercero.terceroId)
+        .subscribe((documento: ParametroLiquidacionTercero) => {
+          if (documento) {
+            this.parametroLiquidacionSeleccionado = documento;
+
+            if (this.parametroLiquidacionSeleccionado) {
               this.createFullForm();
             }
-          );
-      }
+          } else {
+            this.alertify.error(
+              'No se pudo obtener información de la parametrización del tercero'
+            );
+          }
+        });
     }
   }
 
@@ -283,6 +276,16 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       dependientesC = +this.listaParametrosGeneral[5].valor;
     }
 
+    this.editForm.patchValue({
+      tarifaIvaCtrl: tarifaIvaC,
+      baseAporteSaludCtrl: baseAporteSaludC,
+      aporteSaludCtrl: aporteSaludC,
+      aportePensionCtrl: aportePensionC,
+      riesgoLaboralCtrl: riesgoLaboralC,
+      dependienteCtrl: dependientesC,
+    });
+
+    /*
     this.editForm = this.fb.group({
       modalidadContratoCtrl: [null, Validators.required],
       tipoPagoCtrl: [null, Validators.required],
@@ -312,6 +315,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       actividadCtrl: [''],
       planPagoControles: this.arrayControls,
     });
+    */
   }
 
   createFullForm() {
@@ -424,51 +428,37 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
     //#endregion Deducciones
 
-    this.editForm = this.fb.group({
-      modalidadContratoCtrl: [
-        this.idModalidadContratoSelecionado,
-        Validators.required,
-      ],
-      tipoPagoCtrl: [this.idTipoPagoSelecionado, Validators.required],
-      honorarioSinIvaCtrl: [honorarioSinIvaC, Validators.required],
-      tarifaIvaCtrl: [tarifaIvaC, Validators.required],
-      tipoIvaCtrl: [this.idTipoIvaSelecionado, Validators.required],
-      tipoCuentaXPagarCtrl: [
-        this.idTipoCuentaXPagarSelecionado,
-        Validators.required,
-      ],
-      tipoDocumentoSoporteCtrl: [
-        this.idTipoDocumentoSoporteSelecionado,
-        Validators.required,
-      ],
+    this.editForm.patchValue({
+      modalidadContratoCtrl: this.modalidadContratoSeleccionado,
+      tipoPagoCtrl: this.tipoPagoSeleccionado,
+      honorarioSinIvaCtrl: honorarioSinIvaC,
+      tarifaIvaCtrl: tarifaIvaC,
+      tipoIvaCtrl: this.tipoIvaSeleccionado,
+      tipoCuentaXPagarCtrl: this.tipoCuentaXPagarSeleccionado,
+      tipoDocumentoSoporteCtrl: this.tipoDocumentoSoporteSeleccionado,
 
-      baseAporteSaludCtrl: [baseAporteSaludC, Validators.required],
-      aporteSaludCtrl: [aporteSaludC, Validators.required],
-      aportePensionCtrl: [aportePensionC, Validators.required],
-      riesgoLaboralCtrl: [riesgoLaboralC, Validators.required],
-      fondoSolidaridadCtrl: [fondoSolidaridadC, Validators.required],
+      baseAporteSaludCtrl: baseAporteSaludC,
+      aporteSaludCtrl: aporteSaludC,
+      aportePensionCtrl: aportePensionC,
+      riesgoLaboralCtrl: riesgoLaboralC,
+      fondoSolidaridadCtrl: fondoSolidaridadC,
 
-      pensionVoluntariaCtrl: [pensionVoluntariaC, Validators.required],
-      dependienteCtrl: [dependienteC, Validators.required],
-      afcCtrl: [afcC, Validators.required],
-      medicinaPrepagadaCtrl: [medicinaPrepagadaC, Validators.required],
-      interesesViviendaCtrl: [interesesViviendaC, Validators.required],
+      pensionVoluntariaCtrl: pensionVoluntariaC,
+      dependienteCtrl: dependienteC,
+      afcCtrl: afcC,
+      medicinaPrepagadaCtrl: medicinaPrepagadaC,
+      interesesViviendaCtrl: interesesViviendaC,
 
-      fechaInicioCtrl: [
-        formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
-        Validators.required,
-      ],
-      fechaFinalCtrl: [
-        formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
-        Validators.required,
-      ],
+      fechaInicioCtrl: formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
+      fechaFinalCtrl: formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
 
-      codigoDeduccionCtrl: [''],
-      deduccionCtrl: [''],
-      codigoActividadCtrl: [''],
-      actividadCtrl: [''],
-      planPagoControles: this.arrayControls,
+      codigoDeduccionCtrl: '',
+      deduccionCtrl: '',
+      codigoActividadCtrl: '',
+      actividadCtrl: '',
+      //planPagoControles: this.arrayControls,
     });
+    this.editForm.setControl('planPagoControles', this.arrayControls);
 
     this.ocultarControlesFormulario();
   }
@@ -536,7 +526,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onTipoPago() {
     this.tipoPagoSeleccionado = this.tipoPagoCtrl.value as ValorSeleccion;
     this.idTipoPagoSelecionado = +this.tipoPagoSeleccionado.id;
-    console.log(this.idTipoPagoSelecionado);
   }
 
   onTipoCuentaXPagar() {
@@ -587,6 +576,19 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       deduccionT.codigo = this.deduccion.codigo;
       deduccionT.nombre = this.deduccion.nombre;
 
+      const terceroDeDeduccionT = new ValorSeleccion();
+      if (this.deduccion.tercero && this.deduccion.tercero.terceroId > 0) {
+        terceroDeDeduccionT.id = this.deduccion.tercero.terceroId;
+        terceroDeDeduccionT.codigo = this.deduccion.tercero.numeroIdentificacion;
+        terceroDeDeduccionT.nombre = this.deduccion.tercero.nombre;
+        terceroDeDeduccionT.valor = 'SI';
+      } else {
+        terceroDeDeduccionT.id = 0;
+        terceroDeDeduccionT.codigo = '';
+        terceroDeDeduccionT.nombre = '';
+        terceroDeDeduccionT.valor = '';
+      }
+
       const terceroT = new ValorSeleccion();
       terceroT.id = this.tercero.terceroId;
 
@@ -594,6 +596,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         deduccion: deduccionT,
         actividadEconomica: actividadT,
         tercero: terceroT,
+        terceroDeDeduccion: terceroDeDeduccionT,
         tipoIdentificacion: 0,
         identificacionTercero: '',
         codigo: '',
@@ -773,12 +776,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.parametroLiquidacionSeleccionado.tipoIva = this.idTipoIvaSelecionado;
         this.parametroLiquidacionSeleccionado.tipoPago = this.idTipoPagoSelecionado;
         this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte = this.idTipoDocumentoSoporteSelecionado;
-        this.parametroLiquidacionSeleccionado.honorarioSinIva = +this.obtenerValor(
-          formValues.honorarioSinIvaCtrl
-        );
-        this.parametroLiquidacionSeleccionado.tarifaIva = +this.obtenerValor(
-          formValues.tarifaIvaCtrl
-        );
+        this.parametroLiquidacionSeleccionado.honorarioSinIva =
+          formValues.honorarioSinIvaCtrl;
+        this.parametroLiquidacionSeleccionado.tarifaIva =
+          formValues.tarifaIvaCtrl;
 
         this.parametroLiquidacionSeleccionado.baseAporteSalud =
           formValues.baseAporteSaludCtrl === undefined
@@ -849,6 +850,61 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onCancelar() {
     this.parametroLiquidacionSeleccionado = null;
     this.esCancelado.emit(true);
+  }
+
+  abrirPopup(index: number) {
+    if (this.listaTerceroDeducciones.length > 0) {
+      const terceroDeduccionSeleccionado = this.listaTerceroDeducciones[index];
+
+      //#region Abrir Popup
+
+      const initialState = {
+        title: 'TERCERO DE LA DEDUCCION',
+      };
+
+      this.bsModalRef = this.modalService.show(
+        PopupParametroLiquidacionTerceroComponent,
+        Object.assign({ initialState }, { class: 'gray modal-lg' })
+      );
+
+      //#endregion Abrir Popup
+
+      //#region Cargar información del popup (OnHidden event)
+
+      const combine = combineLatest([
+        this.modalService.onHidden,
+      ]).subscribe(() => this.changeDetection.markForCheck());
+
+      this.subscriptions.push(
+        this.modalService.onHidden.subscribe((reason: string) => {
+          if (
+            this.bsModalRef.content != null &&
+            this.bsModalRef.content.tercero !== null
+          ) {
+            const terceroSeleccionado = this.bsModalRef.content
+              .tercero as Tercero;
+            terceroDeduccionSeleccionado.terceroDeDeduccion = new ValorSeleccion();
+            terceroDeduccionSeleccionado.terceroDeDeduccion.id =
+              terceroSeleccionado.terceroId;
+            terceroDeduccionSeleccionado.terceroDeDeduccion.nombre =
+              terceroSeleccionado.nombre;
+            terceroDeduccionSeleccionado.terceroDeDeduccion.valor = '';
+          }
+          this.unsubscribe();
+        })
+      );
+
+      this.subscriptions.push(combine);
+
+      //#endregion Cargar información del popup (OnHidden event)
+    }
+  }
+
+  unsubscribe() {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
+    this.subscriptions = [];
   }
 
   get modalidadContratoCtrl() {
@@ -940,12 +996,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       .subscribe(
         (lista: ValorSeleccion[]) => {
           this.listaParametrosGeneral = lista;
+
+          if (this.listaParametrosGeneral) {
+            this.createDefaultForm();
+          }
         },
         (error) => {
           this.alertify.error(error);
-        },
-        () => {
-          this.createDefaultForm();
         }
       );
   }

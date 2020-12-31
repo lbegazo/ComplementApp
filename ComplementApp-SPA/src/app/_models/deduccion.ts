@@ -1,3 +1,5 @@
+import { Tercero } from './tercero';
+
 export interface Deduccion {
   deduccionId: number;
   codigo: string;
@@ -5,4 +7,5 @@ export interface Deduccion {
   tarifa: number;
   base: number;
   valor: number;
+  tercero: Tercero;
 }

@@ -8,4 +8,5 @@ export interface TerceroDeduccionDto {
   tercero: ValorSeleccion;
   deduccion: ValorSeleccion;
   actividadEconomica: ValorSeleccion;
+  terceroDeDeduccion: ValorSeleccion;
 }

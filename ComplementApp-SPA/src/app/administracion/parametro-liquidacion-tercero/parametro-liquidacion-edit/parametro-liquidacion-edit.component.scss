@@ -39,11 +39,12 @@ table {
 }
 
 .inner {
+  height: 70px;
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-left: 1px solid #ccc;
   border-top: 1px solid #ccc;
-  padding: 5px 5px;
+  padding: 4px;
 }
 
 .aplicaBackground {
@@ -88,7 +89,7 @@ select option {
   background-color: white;
 }
 
-p {
+.paragraph {
   background-color: white;
   height: 30px;
   display: flex;
@@ -96,5 +97,15 @@ p {
   margin: auto;
   align-items:center;
   justify-content:left;
+}
+
+.parent {
+  position: relative;
+}
+.child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 

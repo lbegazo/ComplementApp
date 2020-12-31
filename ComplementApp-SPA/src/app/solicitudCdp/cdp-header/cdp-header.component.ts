@@ -115,7 +115,7 @@ export class CdpHeaderComponent implements OnInit {
 
       //#region Cargar información del popup (OnHidden event)
 
-      const _combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+      const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
         this.changeDetection.markForCheck()
       );
 
@@ -138,7 +138,7 @@ export class CdpHeaderComponent implements OnInit {
         })
       );
 
-      this.subscriptions.push(_combine);
+      this.subscriptions.push(combine);
 
       //#endregion Cargar información del popup (OnHidden event)
 

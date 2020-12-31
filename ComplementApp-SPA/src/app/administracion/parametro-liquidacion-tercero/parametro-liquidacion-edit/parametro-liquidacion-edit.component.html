@@ -23,7 +23,9 @@
                               class="col-form-label-md"
                               >Tipo de identificación</label
                             >
-                            <p>{{ tercero.tipoDocumentoIdentidad }}</p>
+                            <p class="paragraph">
+                              {{ tercero.tipoDocumentoIdentidad }}
+                            </p>
                           </div>
                           <!--NumeroDocumentoIdentidad-->
                           <div class="form-group col-md-2" style="margin: 0px">
@@ -32,14 +34,16 @@
                               class="col-form-label-md"
                               >Número de identificación</label
                             >
-                            <p>{{ tercero.numeroIdentificacion }}</p>
+                            <p class="paragraph">
+                              {{ tercero.numeroIdentificacion }}
+                            </p>
                           </div>
                           <!--NombreTercero-->
                           <div class="form-group col-md-8" style="margin: 0px">
                             <label for="NombreTercero" class="col-form-label-md"
                               >Nombre</label
                             >
-                            <p>{{ tercero.nombre }}</p>
+                            <p class="paragraph">{{ tercero.nombre }}</p>
                           </div>
                         </div>
                       </td>
@@ -880,7 +884,6 @@
                                     type="submit"
                                     class="btn btn-primary"
                                     (click)="onAgregarDeduccion()"
-                                    style="width: 90px"
                                     [disabled]="
                                       actividadEconomicaId === 0 ||
                                       deduccionId === 0
@@ -892,7 +895,6 @@
                                     type="submit"
                                     class="btn btn-danger"
                                     (click)="onEliminarDeduccion()"
-                                    style="width: 90px"
                                     [disabled]="
                                       listaTerceroDeducciones.length === 0
                                     "
@@ -903,7 +905,6 @@
                                     type="submit"
                                     class="btn btn-success"
                                     (click)="onLimpiarDeduccion()"
-                                    style="width: 80px"
                                   >
                                     Limpiar
                                   </button>
@@ -914,19 +915,25 @@
                         </div>
                         <!--Grilla de deducciones-->
                         <div class="form-row mt-2">
-                          <div style="width: 5%" class="inner center">
-                            <label class="col-form-label-md">Código</label>
+                          <div style="width: 3%" class="inner center">
+                            <label class="col-form-label-md">Cod.</label>
                           </div>
-                          <div style="width: 40%" class="inner center">
+                          <div style="width: 30%" class="inner center">
                             <label class="col-form-label-md"
                               >Actividad Económica</label
                             >
                           </div>
-                          <div style="width: 15%" class="inner center">
+                          <div style="width: 12%" class="inner center">
                             <label class="col-form-label-md">Código</label>
                           </div>
-                          <div style="width: 40%" class="inner center">
+                          <div style="width: 28%" class="inner center">
                             <label class="col-form-label-md">Deducción</label>
+                          </div>
+                          <div style="width: 23%" class="inner center">
+                            <label class="col-form-label-md">Tercero</label>
+                          </div>
+                          <div style="width: 4%" class="inner center">
+                            <label class="col-form-label-md">Sel.</label>
                           </div>
                         </div>
                         <div *ngIf="listaTerceroDeducciones">
@@ -940,36 +947,56 @@
                           >
                             <ng-container [formGroupName]="i">
                               <div
-                                style="width: 5%"
+                                style="width: 3%"
                                 class="inner center aplicaBackground"
                               >
-                                <p class="medium">
+                                <p style="font-size: 12px">
                                   {{ item?.actividadEconomica.codigo }}
                                 </p>
                               </div>
                               <div
-                                style="width: 40%"
+                                style="width: 30%"
                                 class="inner left aplicaBackground"
                               >
-                                <p class="medium">
+                                <p style="font-size: 12px">
                                   {{ item?.actividadEconomica.nombre }}
                                 </p>
                               </div>
                               <div
-                                style="width: 15%"
+                                style="width: 12%"
                                 class="inner center aplicaBackground"
                               >
-                                <p class="medium">
+                                <p style="font-size: 12px">
                                   {{ item?.deduccion.codigo }}
                                 </p>
                               </div>
                               <div
-                                style="width: 40%"
+                                style="width: 28%"
                                 class="inner left aplicaBackground"
                               >
-                                <p class="medium">
+                                <p style="font-size: 12px">
                                   {{ item?.deduccion.nombre }}
                                 </p>
+                              </div>
+                              <div
+                                style="width: 23%"
+                                class="inner left aplicaBackground"
+                              >
+                                <p style="font-size: 12px">
+                                  {{ item?.terceroDeDeduccion.nombre }}
+                                </p>
+                              </div>
+                              <div
+                                style="width: 4%"
+                                class="inner aplicaBackground parent"
+                              >
+                                <button
+                                  class="btn btn-success btn-sm child"
+                                  (click)="abrirPopup(i)"
+                                  *ngIf="item?.terceroDeDeduccion.valor === ''"
+                                >
+                                  Sel.
+                                </button>
                               </div>
                             </ng-container>
                           </div>
@@ -1030,9 +1057,10 @@
     </div>
   </div>
 </form>
+
 <!-- <p>Form status: {{ editForm.status | json }}</p>
 
-<p>Form value: {{ editForm.value | json }}</p> -->
+<p>Form value: {{ editForm.value | json }}</p>-->
 
 <!-- <p>
   parametroLiquidacionSeleccionado:

@@ -102,7 +102,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
       )
     );
 
-    const combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
       this.changeDetection.markForCheck()
     );
 

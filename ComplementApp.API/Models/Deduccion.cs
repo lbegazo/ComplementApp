@@ -28,7 +28,8 @@ namespace ComplementApp.API.Models
         public int TipoBaseDeduccionId { get; set; }
 
         public TipoBaseDeduccion TipoBaseDeduccion { get; set; }
-
+        public int? TerceroId { get; set; }
+        public Tercero Tercero { get; set; }
         public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace ComplementApp.API.Models
         public Deduccion Deduccion { get; set; }
         public int? ActividadEconomicaId { get; set; }
         public ActividadEconomica ActividadEconomica { get; set; }
+        public int? TerceroDeDeduccionId { get; set; }
     }
 }

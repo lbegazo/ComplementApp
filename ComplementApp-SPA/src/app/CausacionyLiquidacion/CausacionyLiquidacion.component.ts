@@ -306,7 +306,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
   onLiquidar() {
     if (this.liquidacionForm.valid) {
       let listaPlanPagoId: number[] = [];
-      let esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
+      const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
       let listaPlanPagoCadenaId = '';
 
       if (!this.seleccionaTodas) {
@@ -461,7 +461,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
       )
     );
 
-    const combine = combineLatest(this.modalService.onHidden).subscribe(() =>
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
       this.changeDetection.markForCheck()
     );
 

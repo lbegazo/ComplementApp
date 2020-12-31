@@ -388,7 +388,7 @@ namespace ComplementApp.API.Services
             PL14Afc = parametroLiquidacion.Afc / factorCalculo;
             PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada / factorCalculo;
             PL17HonorarioSinIva = (parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0) / factorCalculo;
-            PL17DescuentoDependiente = parametroLiquidacion.Dependiente / factorCalculo;
+            PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
             PL18InteresVivienda = parametroLiquidacion.InteresVivienda / factorCalculo;
             PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria / factorCalculo;
 
@@ -1384,7 +1384,7 @@ namespace ComplementApp.API.Services
             PL14Afc = parametroLiquidacion.Afc / factorCalculo;
             PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada / factorCalculo;
             PL17HonorarioSinIva = (parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0) / factorCalculo;
-            PL17DescuentoDependiente = parametroLiquidacion.Dependiente / factorCalculo;
+            PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
             PL18InteresVivienda = parametroLiquidacion.InteresVivienda / factorCalculo;
             PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria / factorCalculo;
 

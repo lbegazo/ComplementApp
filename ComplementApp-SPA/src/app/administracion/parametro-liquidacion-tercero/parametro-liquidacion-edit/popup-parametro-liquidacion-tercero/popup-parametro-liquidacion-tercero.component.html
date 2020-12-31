@@ -1,0 +1,81 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div
+          class="modal-body"
+          style="padding-top: 0px; background-color: gainsboro"
+        >
+          <form [formGroup]="popupForm">
+            <!--USO PRESUPUESTAL-->
+            <div class="form-row mt-2">
+              <div class="form-group col-12">
+                <!--TERCERO-->
+                <div class="form-row mt-2">
+                  <div class="form-group col-md-3">
+                    <label for="inputNumeroTercero" class="col-form-label-md"
+                      >Número de identificación</label
+                    >
+                    <input
+                      [(ngModel)]="search"
+                      typeaheadOptionField="numeroIdentificacion"
+                      [typeahead]="suggestions$"
+                      [typeaheadAsync]="true"
+                      (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                      placeholder="Ingrese el número tercero"
+                      formControlName="terceroCtrl"
+                      class="form-control border border-bottom-0 addPaddingLeft"
+                      style="height: 20px"
+                      id="inputNumeroTercero"
+                    />
+                    <div
+                      class="alert alert-danger"
+                      role="alert"
+                      *ngIf="errorMessage"
+                    >
+                      {{ errorMessage }}
+                    </div>
+                  </div>
+                  <div class="form-group col-md-9">
+                    <label for="inputTercero" class="col-form-label-md"
+                      >Nombre del tercero</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control border addPaddingLeft"
+                      formControlName="terceroDescripcionCtrl"
+                      id="inputTercero"
+                      value="{{ tercero?.nombre }}"
+                      readonly
+                    />
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="form-group right" style="margin: 0px">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onAceptar()"
+              [disabled]="terceroId === 0"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

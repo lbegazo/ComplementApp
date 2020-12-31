@@ -142,7 +142,6 @@ namespace ComplementApp.API.Controllers
                         await _dataContext.SaveChangesAsync();
                     }
 
-
                     await transaction.CommitAsync();
 
                     return Ok(parametro.ParametroLiquidacionTerceroId);
@@ -184,6 +183,7 @@ namespace ComplementApp.API.Controllers
                         itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
                         itemTerceroDeduccion.TerceroId = item.Tercero.Id;
                         itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
+                        itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
                         listaTerceroDeduccion.Add(itemTerceroDeduccion);
                     }
                     _dataContext.TerceroDeducciones.AddRange(listaTerceroDeduccion);

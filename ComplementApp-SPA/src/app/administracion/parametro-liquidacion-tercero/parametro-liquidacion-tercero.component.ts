@@ -39,14 +39,6 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
 
   listaTercero: Tercero[] = [];
   tercero: Tercero;
-  // = {
-  //   terceroId: 0,
-  //   nombre: '',
-  //   numeroIdentificacion: '',
-  //   tipoDocumentoIdentidad: '',
-  //   tipoDocumentoIdentidadId: 0,
-  // };
-
   terceroSeleccionado: Tercero;
 
   pagination: Pagination = {

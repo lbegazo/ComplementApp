@@ -198,9 +198,22 @@ namespace ComplementApp.API.Data
 
         public async Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo)
         {
-            return await _context.Deduccion
-                            .Where(t => t.Codigo.Contains(codigo))
-                            .ToListAsync();
+            return await (from d in _context.Deduccion
+                          join t in _context.Tercero on d.TerceroId equals t.TerceroId into TerceroDeduccion
+                          from ded in TerceroDeduccion.DefaultIfEmpty()
+                          where d.Codigo.Contains(codigo)
+                          select new Deduccion()
+                          {
+                              DeduccionId = d.DeduccionId,
+                              Codigo = d.Codigo,
+                              Nombre = d.Nombre,
+                              Tercero = new Tercero()
+                              {
+                                  TerceroId = ded.TerceroId,
+                                  NumeroIdentificacion = ded.NumeroIdentificacion,
+                                  Nombre = ded.Nombre,
+                              }
+                          }).ToListAsync();
         }
 
         public async Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo)
