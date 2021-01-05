@@ -11,6 +11,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { TimeagoModule } from 'ngx-timeago';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import localeEsCo from '@angular/common/locales/es-CO';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -53,7 +54,6 @@ import { ItemComponent } from './solicitudCdp/cdp-edit/item/item.component';
 import { TwoDigitDecimaNumberDirective } from './_directives/two-digit-decima-number.directive';
 import { PopupCdpComponent } from './solicitudCdp/popup-cdp/popup-cdp.component';
 import { NumberCommaDirective } from './_directives/number-comma.directive';
-import { DatePipe, registerLocaleData } from '@angular/common';
 import { PreventUnsavedChangesFactura } from './_guards/prevent-unsaved-changes-factura.guard';
 import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-main.component';
 import { FacturaEditComponent } from './facturaCompromiso/factura-edit/factura-edit.component';
@@ -86,8 +86,7 @@ import { ClavePresupuestalContableComponent } from './administracion/clave-presu
 import { ClavePresupuestalContableEditComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/clave-presupuestal-contable-edit.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { ParametroLiquidacionEditComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/parametro-liquidacion-edit.component';
-import { FourDigitDecimalNumberDirective } from './_directives/four-digit-decimal-number.directive';
-import { FiveDigitDecimalNumberDirective } from './_directives/five-digit-decimal-number.directive';
+import { LongDecimalMaskDirective } from './_directives/long-decimal-mask.directive';
 import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
 import { FormatoSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/formato-solicitud-pago.component';
 import { PopupSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-solicitud-pago/popup-solicitud-pago.component';
@@ -130,8 +129,7 @@ export function tokenGetter() {
     CdpHeaderComponent,
     ItemComponent,
     TwoDigitDecimaNumberDirective,
-    FourDigitDecimalNumberDirective,
-    FiveDigitDecimalNumberDirective,
+    LongDecimalMaskDirective,
     DecimalMaskDirective,
     PopupCdpComponent,
     NumberCommaDirective,
@@ -220,6 +218,7 @@ export function tokenGetter() {
     PreventUnsavedChangesFactura,
     NavService,
     DatePipe,
+    CurrencyPipe,
   ],
   bootstrap: [AppComponent],
 })

@@ -169,5 +169,14 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
+    
+        [Route("[action]/{perfilId}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaUsuarioXPerfil(int perfilId)
+        {
+            var lista = await _repo.ObtenerListaUsuarioXPerfil(perfilId);
+            return Ok(lista);
+        }
+
     }
 }

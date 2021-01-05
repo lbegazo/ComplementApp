@@ -89,12 +89,25 @@ namespace ComplementApp.API.Models
 
         public bool GmfAfc { get; set; }
 
-         public int UsuarioIdRegistro { get; set; }  
+        public int UsuarioIdRegistro { get; set; }
 
-        public DateTime? FechaRegistro { get; set; }   
+        public DateTime? FechaRegistro { get; set; }
 
-        public int UsuarioIdModificacion { get; set; }  
+        public int UsuarioIdModificacion { get; set; }
 
-        public DateTime? FechaModificacion { get; set; }    
+        public DateTime? FechaModificacion { get; set; }
+
+        public bool FacturaElectronica { get; set; }
+
+        public int? SupervisorId { get; set; }
+
+        public Usuario Supervisor { get; set; }
+
+        [Column(TypeName = "decimal(30,8)")]
+        public decimal OtrosDescuentos { get; set; }
+
+        public DateTime? FechaInicioOtrosDescuentos { get; set; }
+
+        public DateTime? FechaFinalOtrosDescuentos { get; set; }
     }
 }

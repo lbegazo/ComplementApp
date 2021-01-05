@@ -114,6 +114,7 @@ namespace ComplementApp.API.Controllers
 
                     parametro = _mapper.Map<ParametroLiquidacionTercero>(parametroDto);
 
+                    parametro.FacturaElectronica = parametroDto.facturaElectronicaId == 1 ? true : false;
                     parametro.UsuarioIdRegistro = usuarioId;
                     parametro.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
 
@@ -167,6 +168,8 @@ namespace ComplementApp.API.Controllers
                 //Registrar Parametro liquidación Tercero
                 var parametroBD = await _repo.ObtenerParametrizacionLiquidacionTerceroBase(parametroDto.ParametroLiquidacionTerceroId);
                 _mapper.Map(parametroDto, parametroBD);
+
+                parametroBD.FacturaElectronica = parametroDto.facturaElectronicaId == 1 ? true : false;
                 parametroBD.UsuarioIdModificacion = usuarioId;
                 parametroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
 
@@ -238,6 +241,5 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener las deducciones");
         }
 
-        
     }
 }

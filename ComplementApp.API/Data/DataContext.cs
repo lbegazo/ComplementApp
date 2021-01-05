@@ -17,11 +17,6 @@ namespace ComplementApp.API.Data
         });
         protected readonly IConfiguration Configuration;
 
-        // public DataContext(IConfiguration configuration)
-        // {
-        //     Configuration = configuration;
-        // }
-
         public DataContext(IConfiguration configuration, DbContextOptions<DataContext> options) : base(options)
         {
             Configuration = configuration;
@@ -159,6 +154,10 @@ namespace ComplementApp.API.Data
                 .HasOne(bc => bc.DetalleLiquidacion)
                 .WithMany(c => c.DetalleArchivo)
                 .HasForeignKey(bc => bc.DetalleLiquidacionId);
+
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+                .Property(b => b.FacturaElectronica)
+                .HasDefaultValue(0);
         }
 
     }

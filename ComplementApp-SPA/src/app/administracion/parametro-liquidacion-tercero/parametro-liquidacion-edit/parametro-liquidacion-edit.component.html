@@ -183,7 +183,8 @@
                                   formControlName="honorarioSinIvaCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputHonorarioSinIva"
-                                  appTwoDigitDecimaNumber
+                                  matInput
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar honorario sin iva
@@ -191,7 +192,7 @@
                               </div>
                               <!--Tarifa Iva-->
                               <div
-                                class="form-group col-md-2"
+                                class="form-group col-md-1"
                                 style="margin: 0px"
                               >
                                 <label
@@ -211,7 +212,7 @@
                                   formControlName="tarifaIvaCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputHonorarioSinIva"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar Tarifa Iva
@@ -265,11 +266,61 @@
                                   Debe seleccionar Tipo de Pago
                                 </div>
                               </div>
+                              <!--Factura Electrónica-->
+                              <div
+                                class="form-group col-md-1"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectFacturaElectronica"
+                                  class="col-form-label-md"
+                                  >Fact. Elec.</label
+                                >
+                                <select
+                                  placeholder="Fact. Elec."
+                                  formControlName="facturaElectronicaCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onFacturaElectronica()"
+                                  id="selectFacturaElectronica"
+                                  [(ngModel)]="facturaElectronicaSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('facturaElectronicaCtrl')
+                                        .touched &&
+                                      editForm
+                                        .get('facturaElectronicaCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Fact. Elec.
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaFacturaElectronica"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('facturaElectronicaCtrl')
+                                      .touched &&
+                                    editForm
+                                      .get('facturaElectronicaCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar factura electrónica
+                                </div>
+                              </div>
                             </div>
                             <div class="form-row mt-2">
                               <!--Tipo de Cuenta Por Pagar-->
                               <div
-                                class="form-group col-md-5"
+                                class="form-group col-md-4"
                                 style="margin: 0px"
                               >
                                 <label
@@ -369,6 +420,54 @@
                                   Debe seleccionar Tipo de Pago
                                 </div>
                               </div>
+                              <!--Supervisor-->
+                              <div
+                                class="form-group col-md-4"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectSupervisor"
+                                  class="col-form-label-md"
+                                  >Supervisor</label
+                                >
+                                <select
+                                  placeholder="Supervisor"
+                                  formControlName="supervisorCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px"
+                                  (change)="onSupervisor()"
+                                  id="selectSupervisor"
+                                  [(ngModel)]="supervisorSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('supervisorCtrl').touched &&
+                                      editForm
+                                        .get('supervisorCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Supervisor
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaSupervisor"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('supervisorCtrl').touched &&
+                                    editForm
+                                      .get('supervisorCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Supervisor
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -410,7 +509,7 @@
                                   formControlName="baseAporteSaludCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputBaseAporteSalud"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar el Base Aporte Salud
@@ -438,7 +537,7 @@
                                   formControlName="aporteSaludCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputAporteSalud"
-                                  appFourDigitDecimalNumber
+                                  appLongDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar el Aporte Salud
@@ -467,7 +566,7 @@
                                   formControlName="aportePensionCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputAportePension"
-                                  appFourDigitDecimalNumber
+                                  appLongDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar el Aporte Pensión
@@ -496,7 +595,7 @@
                                   formControlName="riesgoLaboralCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputRiesgoLaboral"
-                                  appFiveDigitDecimalNumber
+                                  appLongDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar el Riesgo Laboral
@@ -526,7 +625,7 @@
                                   formControlName="fondoSolidaridadCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputFondoSolidaridad"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar el Fondo de Solidaridad
@@ -573,7 +672,7 @@
                                   formControlName="pensionVoluntariaCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputPensionVoluntaria"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar la Pensión Voluntaria
@@ -601,7 +700,7 @@
                                   formControlName="dependienteCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputDependientes"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar Dependientes
@@ -627,7 +726,7 @@
                                   formControlName="afcCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputAFC"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar AFC
@@ -657,15 +756,15 @@
                                   formControlName="medicinaPrepagadaCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputMedicinaPrepagada"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar Medicina Prepagada
                                 </div>
                               </div>
                             </div>
+                            <!--Intereses Vivienda-->
                             <div class="form-row mt-2">
-                              <!--Intereses Vivienda-->
                               <div
                                 class="form-group col-md-2"
                                 style="margin: 0px"
@@ -689,7 +788,7 @@
                                   formControlName="interesesViviendaCtrl"
                                   style="text-align: right; height: 30px"
                                   id="inputInteresesVivienda"
-                                  appTwoDigitDecimaNumber
+                                  appDecimalMask
                                 />
                                 <div class="invalid-feedback">
                                   Debe ingresar Intereses Vivienda
@@ -703,7 +802,7 @@
                                 <label
                                   for="inputFechaInicio"
                                   class="col-form-label-md"
-                                  >Fecha inicial interes de vivienda</label
+                                  >Fecha inicial</label
                                 >
 
                                 <input
@@ -741,7 +840,7 @@
                                 <label
                                   for="inputFechaFinal"
                                   class="col-form-label-md"
-                                  >Fecha final interes de vivienda</label
+                                  >Fecha final</label
                                 >
 
                                 <input
@@ -770,6 +869,72 @@
                                 >
                                   La fecha final es requerida
                                 </div>
+                              </div>
+                            </div>
+                            <!--Otros Descuentos-->
+                            <div class="form-row mt-2">
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputOtrosDescuentos"
+                                  class="col-form-label-md"
+                                  >Otros descuentos</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Otros descuentos"
+                                  formControlName="otrosDescuentosCtrl"
+                                  style="text-align: right; height: 30px"
+                                  id="inputOtrosDescuentos"
+                                  appDecimalMask
+                                />
+                              </div>
+                              <!--Fecha de inicio-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputFechaInicioOtrosDescuentos"
+                                  class="col-form-label-md"
+                                  >Fecha inicial</label
+                                >
+
+                                <input
+                                  class="form-control"
+                                  placeholder="Fecha de inicio"
+                                  formControlName="fecIniOtrosDescuentosCtrl"
+                                  type="text"
+                                  bsDatepicker
+                                  style="height: 33px; text-align: center"
+                                  [bsConfig]="bsConfig"
+                                  id="inputFechaInicioOtrosDescuentos"
+                                />
+                              </div>
+                              <!--Fecha Final-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="inputFechaFinalOtrosDescuentos"
+                                  class="col-form-label-md"
+                                  >Fecha final</label
+                                >
+
+                                <input
+                                  class="form-control"
+                                  placeholder="Fecha final"
+                                  formControlName="fecFinOtrosDescuentosCtrl"
+                                  type="text"
+                                  style="height: 33px; text-align: center"
+                                  bsDatepicker
+                                  [bsConfig]="bsConfig"
+                                  id="inputFechaFinalOtrosDescuentos"
+                                />
                               </div>
                             </div>
                           </div>

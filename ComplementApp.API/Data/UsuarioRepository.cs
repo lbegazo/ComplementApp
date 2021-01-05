@@ -8,6 +8,7 @@ using ComplementApp.API.Helpers;
 using System.Text;
 using System.Collections.Generic;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Dtos;
 
 namespace ComplementApp.API.Data
 {
@@ -70,6 +71,23 @@ namespace ComplementApp.API.Data
             return false;
         }
 
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaUsuarioXPerfil(int perfilId)
+        {
+            List<ValorSeleccion> lista = new List<ValorSeleccion>();
+
+            lista = await (from u in _context.Usuario
+                           join pu in _context.UsuarioPerfil on u.UsuarioId equals pu.UsuarioId
+                           where pu.PerfilId == perfilId
+                           select new ValorSeleccion()
+                           {
+                               Id = u.UsuarioId,
+                               Nombre = u.Nombres + ' ' + u.Apellidos,
+                           })
+                           .Distinct()
+                           .ToListAsync();
+            return lista;
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -78,6 +96,7 @@ namespace ComplementApp.API.Data
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
+
 
     }
 }

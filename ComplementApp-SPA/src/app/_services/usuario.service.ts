@@ -7,6 +7,7 @@ import { Usuario } from '../_models/usuario';
 import { catchError } from 'rxjs/Operators';
 import { PaginatedResult, Pagination } from '../_models/pagination';
 import { Transaccion } from '../_models/transaccion';
+import { ValorSeleccion } from '../_dto/valorSeleccion';
 
 @Injectable({
   providedIn: 'root',
@@ -85,6 +86,11 @@ export class UsuarioService {
         this.ActualizarListaUsuarios();
       })
     );
+  }
+
+  ObtenerListaUsuarioXPerfil(perfilId: number): Observable<ValorSeleccion[]> {
+    const path = this.baseUrl + 'ObtenerListaUsuarioXPerfil/';
+    return this.http.get<ValorSeleccion[]>(path + perfilId);
   }
 
   private ActualizarListaUsuarios() {

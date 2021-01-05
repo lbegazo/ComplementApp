@@ -26,9 +26,11 @@ namespace ComplementApp.API.Dtos
         public decimal InteresVivienda { get; set; }
         public string FechaInicioDescuentoInteresViviendaDes { get; set; }
         public string FechaFinalDescuentoInteresViviendaDes { get; set; }
-
         public DateTime? FechaInicioDescuentoInteresVivienda { get; set; }
         public DateTime? FechaFinalDescuentoInteresVivienda { get; set; }
+        public decimal OtrosDescuentos { get; set; }
+        public DateTime? FechaInicioOtrosDescuentos { get; set; }
+        public DateTime? FechaFinalOtrosDescuentos { get; set; }
         public decimal TarifaIva { get; set; }
         public int? TipoIva { get; set; }
         public int? TipoCuentaPorPagar { get; set; }
@@ -38,6 +40,8 @@ namespace ComplementApp.API.Dtos
         public string NumeroCuenta { get; set; }
         public string TipoCuenta { get; set; }
         public int? ConvenioFontic { get; set; }
+        public int? facturaElectronicaId { get; set; }
+        public int? supervisorId { get; set; }
         public ICollection<TerceroDeduccionDto> TerceroDeducciones { get; set; }
     }
 }

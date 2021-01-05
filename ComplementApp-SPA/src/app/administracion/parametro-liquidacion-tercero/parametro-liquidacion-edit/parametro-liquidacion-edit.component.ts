@@ -16,7 +16,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
@@ -34,14 +33,19 @@ import { TerceroDeduccionDto } from 'src/app/_dto/terceroDeduccionDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { ActividadEconomica } from 'src/app/_models/actividadEconomica';
 import { Deduccion } from 'src/app/_models/deduccion';
-import { ModalidadContrato, TipoLista } from 'src/app/_models/enum';
+import {
+  ModalidadContrato,
+  PerfilUsuario,
+  TipoLista,
+} from 'src/app/_models/enum';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { Tercero } from 'src/app/_models/tercero';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { GeneralService } from 'src/app/_services/general.service';
 import { ListaService } from 'src/app/_services/lista.service';
 import { TerceroService } from 'src/app/_services/tercero.service';
+import { UsuarioService } from 'src/app/_services/usuario.service';
 import { environment } from 'src/environments/environment';
-import { ParametroLiquidacionTerceroComponent } from '../parametro-liquidacion-tercero.component';
 import { PopupParametroLiquidacionTerceroComponent } from './popup-parametro-liquidacion-tercero/popup-parametro-liquidacion-tercero.component';
 
 @Component({
@@ -78,6 +82,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   listaTipoIva: ValorSeleccion[] = [];
   listaTipoCuentaXPagar: ValorSeleccion[] = [];
   listaTipoDocumentoSoporte: ValorSeleccion[] = [];
+  listaSupervisor: ValorSeleccion[] = [];
+  listaFacturaElectronica: ValorSeleccion[] = [];
 
   editForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
@@ -99,6 +105,12 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   idTipoDocumentoSoporteSelecionado?: number;
   tipoDocumentoSoporteSeleccionado: ValorSeleccion = null;
 
+  idFacturaElectronicaSeleccionado?: number;
+  facturaElectronicaSeleccionado: ValorSeleccion = null;
+
+  idSupervisorSeleccionado?: number;
+  supervisorSeleccionado: ValorSeleccion = null;
+
   listaTerceroDeducciones: TerceroDeduccionDto[] = [];
   listaParametrosGeneral: ValorSeleccion[] = [];
 
@@ -109,7 +121,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     private fb: FormBuilder,
     private terceroService: TerceroService,
     private modalService: BsModalService,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit() {
@@ -234,8 +247,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       honorarioSinIvaCtrl: ['', Validators.required],
       tarifaIvaCtrl: ['', Validators.required],
       tipoIvaCtrl: [null, Validators.required],
+      facturaElectronicaCtrl: [null, Validators.required],
       tipoCuentaXPagarCtrl: [null, Validators.required],
       tipoDocumentoSoporteCtrl: [null, Validators.required],
+      supervisorCtrl: [null, Validators.required],
 
       baseAporteSaludCtrl: ['', Validators.required],
       aporteSaludCtrl: ['', Validators.required],
@@ -247,9 +262,14 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       dependienteCtrl: ['', Validators.required],
       afcCtrl: ['', Validators.required],
       medicinaPrepagadaCtrl: ['', Validators.required],
+
       interesesViviendaCtrl: ['', Validators.required],
       fechaInicioCtrl: [null, Validators.required],
       fechaFinalCtrl: [null, Validators.required],
+
+      otrosDescuentosCtrl: [''],
+      fecIniOtrosDescuentosCtrl: [null],
+      fecFinOtrosDescuentosCtrl: [null],
 
       codigoDeduccionCtrl: [''],
       deduccionCtrl: [''],
@@ -277,45 +297,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     }
 
     this.editForm.patchValue({
-      tarifaIvaCtrl: tarifaIvaC,
-      baseAporteSaludCtrl: baseAporteSaludC,
-      aporteSaludCtrl: aporteSaludC,
-      aportePensionCtrl: aportePensionC,
-      riesgoLaboralCtrl: riesgoLaboralC,
-      dependienteCtrl: dependientesC,
+      tarifaIvaCtrl: GeneralService.obtenerFormatoLongMoney(tarifaIvaC),
+      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(baseAporteSaludC),
+      aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
+      aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(aportePensionC),
+      riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
+      dependienteCtrl: GeneralService.obtenerFormatoLongMoney(dependientesC),
     });
-
-    /*
-    this.editForm = this.fb.group({
-      modalidadContratoCtrl: [null, Validators.required],
-      tipoPagoCtrl: [null, Validators.required],
-      honorarioSinIvaCtrl: ['', Validators.required],
-      tarifaIvaCtrl: [tarifaIvaC, Validators.required],
-      tipoIvaCtrl: [null, Validators.required],
-      tipoCuentaXPagarCtrl: [null, Validators.required],
-      tipoDocumentoSoporteCtrl: [null, Validators.required],
-
-      baseAporteSaludCtrl: [baseAporteSaludC, Validators.required],
-      aporteSaludCtrl: [aporteSaludC, Validators.required],
-      aportePensionCtrl: [aportePensionC, Validators.required],
-      riesgoLaboralCtrl: [riesgoLaboralC, Validators.required],
-      fondoSolidaridadCtrl: ['', Validators.required],
-
-      pensionVoluntariaCtrl: ['', Validators.required],
-      dependienteCtrl: [dependientesC, Validators.required],
-      afcCtrl: ['', Validators.required],
-      medicinaPrepagadaCtrl: ['', Validators.required],
-      interesesViviendaCtrl: ['', Validators.required],
-      fechaInicioCtrl: [null, Validators.required],
-      fechaFinalCtrl: [null, Validators.required],
-
-      codigoDeduccionCtrl: [''],
-      deduccionCtrl: [''],
-      codigoActividadCtrl: [''],
-      actividadCtrl: [''],
-      planPagoControles: this.arrayControls,
-    });
-    */
   }
 
   createFullForm() {
@@ -333,6 +321,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     let afcC = 0;
     let medicinaPrepagadaC = 0;
     let interesesViviendaC = 0;
+
+    let otrosDescuentosC = 0;
+    let fechaInicioOtrosDescuentos = null;
+    let fechaFinalOtrosDescuentos = null;
 
     let fechaInicio = null;
     let fechaFinal = null;
@@ -362,6 +354,23 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     if (this.idTipoIvaSelecionado !== null) {
       this.tipoIvaSeleccionado = this.listaTipoIva.filter(
         (x) => x.id === this.idTipoIvaSelecionado
+      )[0];
+    }
+
+    this.idSupervisorSeleccionado =
+      this.parametroLiquidacionSeleccionado.supervisorId > 0
+        ? this.parametroLiquidacionSeleccionado.supervisorId
+        : null;
+    if (this.idSupervisorSeleccionado !== null) {
+      this.supervisorSeleccionado = this.listaSupervisor.filter(
+        (x) => x.id === this.idSupervisorSeleccionado
+      )[0];
+    }
+
+    this.idFacturaElectronicaSeleccionado = this.parametroLiquidacionSeleccionado.facturaElectronicaId;
+    if (this.idFacturaElectronicaSeleccionado !== null) {
+      this.facturaElectronicaSeleccionado = this.listaFacturaElectronica.filter(
+        (x) => x.id === this.idFacturaElectronicaSeleccionado
       )[0];
     }
 
@@ -400,8 +409,14 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     afcC = this.parametroLiquidacionSeleccionado?.afc;
     medicinaPrepagadaC = this.parametroLiquidacionSeleccionado
       ?.medicinaPrepagada;
-    interesesViviendaC = this.parametroLiquidacionSeleccionado?.interesVivienda;
 
+    otrosDescuentosC = this.parametroLiquidacionSeleccionado?.otrosDescuentos;
+    fechaInicioOtrosDescuentos = this.parametroLiquidacionSeleccionado
+      .fechaInicioOtrosDescuentos;
+    fechaFinalOtrosDescuentos = this.parametroLiquidacionSeleccionado
+      .fechaFinalOtrosDescuentos;
+
+    interesesViviendaC = this.parametroLiquidacionSeleccionado?.interesVivienda;
     fechaInicio = this.parametroLiquidacionSeleccionado
       .fechaInicioDescuentoInteresVivienda;
     fechaFinal = this.parametroLiquidacionSeleccionado
@@ -431,32 +446,49 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.editForm.patchValue({
       modalidadContratoCtrl: this.modalidadContratoSeleccionado,
       tipoPagoCtrl: this.tipoPagoSeleccionado,
-      honorarioSinIvaCtrl: honorarioSinIvaC,
-      tarifaIvaCtrl: tarifaIvaC,
+      honorarioSinIvaCtrl: GeneralService.obtenerFormatoMoney(honorarioSinIvaC),
+      tarifaIvaCtrl: GeneralService.obtenerFormatoLongMoney(tarifaIvaC),
       tipoIvaCtrl: this.tipoIvaSeleccionado,
       tipoCuentaXPagarCtrl: this.tipoCuentaXPagarSeleccionado,
       tipoDocumentoSoporteCtrl: this.tipoDocumentoSoporteSeleccionado,
 
-      baseAporteSaludCtrl: baseAporteSaludC,
-      aporteSaludCtrl: aporteSaludC,
-      aportePensionCtrl: aportePensionC,
-      riesgoLaboralCtrl: riesgoLaboralC,
-      fondoSolidaridadCtrl: fondoSolidaridadC,
+      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(baseAporteSaludC),
+      aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
+      aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(aportePensionC),
+      riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
+      fondoSolidaridadCtrl: GeneralService.obtenerFormatoMoney(
+        fondoSolidaridadC
+      ),
 
-      pensionVoluntariaCtrl: pensionVoluntariaC,
-      dependienteCtrl: dependienteC,
-      afcCtrl: afcC,
-      medicinaPrepagadaCtrl: medicinaPrepagadaC,
-      interesesViviendaCtrl: interesesViviendaC,
+      pensionVoluntariaCtrl: GeneralService.obtenerFormatoMoney(
+        pensionVoluntariaC
+      ),
+      dependienteCtrl: GeneralService.obtenerFormatoLongMoney(dependienteC),
+      afcCtrl: GeneralService.obtenerFormatoMoney(afcC),
+      medicinaPrepagadaCtrl: GeneralService.obtenerFormatoMoney(
+        medicinaPrepagadaC
+      ),
 
+      interesesViviendaCtrl: GeneralService.obtenerFormatoMoney(
+        interesesViviendaC
+      ),
       fechaInicioCtrl: formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
       fechaFinalCtrl: formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
+
+      otrosDescuentosCtrl: GeneralService.obtenerFormatoMoney(otrosDescuentosC),
+      fecIniOtrosDescuentosCtrl:
+        fechaInicioOtrosDescuentos !== null
+          ? formatDate(fechaInicioOtrosDescuentos, 'dd-MM-yyyy', 'en')
+          : '',
+      fecFinOtrosDescuentosCtrl:
+        fechaFinalOtrosDescuentos !== null
+          ? formatDate(fechaFinalOtrosDescuentos, 'dd-MM-yyyy', 'en')
+          : '',
 
       codigoDeduccionCtrl: '',
       deduccionCtrl: '',
       codigoActividadCtrl: '',
       actividadCtrl: '',
-      //planPagoControles: this.arrayControls,
     });
     this.editForm.setControl('planPagoControles', this.arrayControls);
 
@@ -544,6 +576,18 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       .value as ValorSeleccion;
     this.idTipoDocumentoSoporteSelecionado = +this
       .tipoDocumentoSoporteSeleccionado.id;
+  }
+
+  onFacturaElectronica() {
+    this.facturaElectronicaSeleccionado = this.facturaElectronicaCtrl
+      .value as ValorSeleccion;
+    this.idFacturaElectronicaSeleccionado = +this.facturaElectronicaSeleccionado
+      .id;
+  }
+
+  onSupervisor() {
+    this.supervisorSeleccionado = this.supervisorCtrl.value as ValorSeleccion;
+    this.idSupervisorSeleccionado = +this.supervisorSeleccionado.id;
   }
 
   onAgregarDeduccion() {
@@ -674,19 +718,55 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       const valueFechaInicio = this.editForm.get('fechaInicioCtrl').value;
       const valueFechaFinal = this.editForm.get('fechaFinalCtrl').value;
 
-      if (this.isValidDate(valueFechaInicio)) {
+      if (GeneralService.isValidDate(valueFechaInicio)) {
         dateFechaInicio = valueFechaInicio;
       } else {
         if (valueFechaInicio && valueFechaInicio.indexOf('-') > -1) {
-          dateFechaInicio = this.dateString2Date(valueFechaInicio);
+          dateFechaInicio = GeneralService.dateString2Date(valueFechaInicio);
         }
       }
 
-      if (this.isValidDate(valueFechaFinal)) {
+      if (GeneralService.isValidDate(valueFechaFinal)) {
         dateFechaFinal = valueFechaFinal;
       } else {
         if (valueFechaFinal && valueFechaFinal.indexOf('-') > -1) {
-          dateFechaFinal = this.dateString2Date(valueFechaFinal);
+          dateFechaFinal = GeneralService.dateString2Date(valueFechaFinal);
+        }
+      }
+
+      let dateFechaInicioOtrosDescuentos = null;
+      let dateFechaFinalOtrosDescuentos = null;
+
+      const valueFechaInicioOtrosDescuentos = this.editForm.get(
+        'fecIniOtrosDescuentosCtrl'
+      ).value;
+      const valueFechaFinalOtrosDescuentos = this.editForm.get(
+        'fecFinOtrosDescuentosCtrl'
+      ).value;
+
+      if (GeneralService.isValidDate(valueFechaInicioOtrosDescuentos)) {
+        dateFechaInicioOtrosDescuentos = valueFechaInicioOtrosDescuentos;
+      } else {
+        if (
+          valueFechaInicioOtrosDescuentos &&
+          valueFechaInicioOtrosDescuentos.indexOf('-') > -1
+        ) {
+          dateFechaInicioOtrosDescuentos = GeneralService.dateString2Date(
+            valueFechaInicioOtrosDescuentos
+          );
+        }
+      }
+
+      if (GeneralService.isValidDate(valueFechaFinalOtrosDescuentos)) {
+        dateFechaFinalOtrosDescuentos = valueFechaFinalOtrosDescuentos;
+      } else {
+        if (
+          valueFechaFinalOtrosDescuentos &&
+          valueFechaFinalOtrosDescuentos.indexOf('-') > -1
+        ) {
+          dateFechaFinalOtrosDescuentos = GeneralService.dateString2Date(
+            valueFechaFinalOtrosDescuentos
+          );
         }
       }
 
@@ -700,49 +780,81 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           tipoIva: this.idTipoIvaSelecionado,
           tipoDocumentoSoporte: this.idTipoDocumentoSoporteSelecionado,
           tipoPago: this.idTipoPagoSelecionado,
-          honorarioSinIva: +formValues.honorarioSinIvaCtrl,
-          tarifaIva: +formValues.tarifaIvaCtrl,
+          honorarioSinIva: GeneralService.obtenerValorAbsoluto(
+            formValues.honorarioSinIvaCtrl
+          ),
+          tarifaIva: GeneralService.obtenerValorAbsoluto(
+            formValues.tarifaIvaCtrl
+          ),
+          facturaElectronicaId: this.idFacturaElectronicaSeleccionado,
+          supervisorId: this.idSupervisorSeleccionado,
 
           baseAporteSalud:
             formValues.baseAporteSaludCtrl === undefined
               ? 0
-              : +formValues.baseAporteSaludCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.baseAporteSaludCtrl
+                ),
           aporteSalud:
             formValues.aporteSaludCtrl === undefined
               ? 0
-              : +formValues.aporteSaludCtrl,
+              : GeneralService.obtenerValorAbsoluto(formValues.aporteSaludCtrl),
           aportePension:
             formValues.aportePensionCtrl === undefined
               ? 0
-              : +formValues.aportePensionCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.aportePensionCtrl
+                ),
           riesgoLaboral:
             formValues.riesgoLaboralCtrl === undefined
               ? 0
-              : +formValues.riesgoLaboralCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.riesgoLaboralCtrl
+                ),
           fondoSolidaridad:
             formValues.fondoSolidaridadCtrl === undefined
               ? 0
-              : +formValues.fondoSolidaridadCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.fondoSolidaridadCtrl
+                ),
 
           pensionVoluntaria:
             formValues.pensionVoluntariaCtrl === undefined
               ? 0
-              : +formValues.pensionVoluntariaCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.pensionVoluntariaCtrl
+                ),
           dependiente:
             formValues.dependienteCtrl === undefined
               ? 0
-              : +formValues.dependienteCtrl,
-          afc: formValues.afcCtrl,
+              : GeneralService.obtenerValorAbsoluto(formValues.dependienteCtrl),
+          afc:
+            formValues.afcCtrl === undefined
+              ? 0
+              : GeneralService.obtenerValorAbsoluto(formValues.afcCtrl),
           medicinaPrepagada:
             formValues.medicinaPrepagadaCtrl === undefined
               ? 0
-              : +formValues.medicinaPrepagadaCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.medicinaPrepagadaCtrl
+                ),
           interesVivienda:
             formValues.interesesViviendaCtrl === undefined
               ? 0
-              : +formValues.interesesViviendaCtrl,
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.interesesViviendaCtrl
+                ),
           fechaInicioDescuentoInteresVivienda: dateFechaInicio,
           fechaFinalDescuentoInteresVivienda: dateFechaFinal,
+
+          otrosDescuentos:
+            formValues.otrosDescuentosCtrl === undefined
+              ? 0
+              : GeneralService.obtenerValorAbsoluto(
+                  formValues.otrosDescuentosCtrl
+                ),
+          fechaInicioOtrosDescuentos: dateFechaInicioOtrosDescuentos,
+          fechaFinalOtrosDescuentos: dateFechaFinalOtrosDescuentos,
 
           debito: '',
           credito: '',
@@ -775,53 +887,79 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar = this.idTipoCuentaXPagarSelecionado;
         this.parametroLiquidacionSeleccionado.tipoIva = this.idTipoIvaSelecionado;
         this.parametroLiquidacionSeleccionado.tipoPago = this.idTipoPagoSelecionado;
+        this.parametroLiquidacionSeleccionado.supervisorId = this.idSupervisorSeleccionado;
+        this.parametroLiquidacionSeleccionado.facturaElectronicaId = this.idFacturaElectronicaSeleccionado;
         this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte = this.idTipoDocumentoSoporteSelecionado;
-        this.parametroLiquidacionSeleccionado.honorarioSinIva =
-          formValues.honorarioSinIvaCtrl;
-        this.parametroLiquidacionSeleccionado.tarifaIva =
-          formValues.tarifaIvaCtrl;
+        this.parametroLiquidacionSeleccionado.honorarioSinIva = GeneralService.obtenerValorAbsoluto(
+          formValues.honorarioSinIvaCtrl
+        );
+        this.parametroLiquidacionSeleccionado.tarifaIva = GeneralService.obtenerValorAbsoluto(
+          formValues.tarifaIvaCtrl
+        );
 
         this.parametroLiquidacionSeleccionado.baseAporteSalud =
           formValues.baseAporteSaludCtrl === undefined
             ? 0
-            : +formValues.baseAporteSaludCtrl;
+            : GeneralService.obtenerValorAbsoluto(
+                formValues.baseAporteSaludCtrl
+              );
         this.parametroLiquidacionSeleccionado.aporteSalud =
           formValues.aporteSaludCtrl === undefined
             ? 0
-            : +formValues.aporteSaludCtrl;
+            : GeneralService.obtenerValorAbsoluto(formValues.aporteSaludCtrl);
         this.parametroLiquidacionSeleccionado.aportePension =
           formValues.aportePensionCtrl === undefined
             ? 0
-            : +formValues.aportePensionCtrl;
+            : GeneralService.obtenerValorAbsoluto(formValues.aportePensionCtrl);
         this.parametroLiquidacionSeleccionado.riesgoLaboral =
           formValues.riesgoLaboralCtrl === undefined
             ? 0
-            : +formValues.riesgoLaboralCtrl;
+            : GeneralService.obtenerValorAbsoluto(formValues.riesgoLaboralCtrl);
         this.parametroLiquidacionSeleccionado.fondoSolidaridad =
           formValues.fondoSolidaridadCtrl === undefined
             ? 0
-            : +formValues.fondoSolidaridadCtrl;
+            : GeneralService.obtenerValorAbsoluto(
+                formValues.fondoSolidaridadCtrl
+              );
 
         this.parametroLiquidacionSeleccionado.pensionVoluntaria =
           formValues.pensionVoluntariaCtrl === undefined
             ? 0
-            : +formValues.pensionVoluntariaCtrl;
+            : GeneralService.obtenerValorAbsoluto(
+                formValues.pensionVoluntariaCtrl
+              );
         this.parametroLiquidacionSeleccionado.dependiente =
           formValues.dependienteCtrl === undefined
             ? 0
-            : +formValues.dependienteCtrl;
+            : GeneralService.obtenerValorAbsoluto(formValues.dependienteCtrl);
         this.parametroLiquidacionSeleccionado.afc =
-          formValues.afcCtrl === undefined ? 0 : +formValues.afcCtrl;
+          formValues.afcCtrl === undefined
+            ? 0
+            : GeneralService.obtenerValorAbsoluto(formValues.afcCtrl);
         this.parametroLiquidacionSeleccionado.medicinaPrepagada =
           formValues.medicinaPrepagadaCtrl === undefined
             ? 0
-            : +formValues.medicinaPrepagadaCtrl;
+            : GeneralService.obtenerValorAbsoluto(
+                formValues.medicinaPrepagadaCtrl
+              );
         this.parametroLiquidacionSeleccionado.interesVivienda =
           formValues.interesesViviendaCtrl === undefined
             ? 0
-            : +formValues.interesesViviendaCtrl;
+            : GeneralService.obtenerValorAbsoluto(
+                formValues.interesesViviendaCtrl
+              );
         this.parametroLiquidacionSeleccionado.fechaInicioDescuentoInteresVivienda = dateFechaInicio;
         this.parametroLiquidacionSeleccionado.fechaFinalDescuentoInteresVivienda = dateFechaFinal;
+
+        this.parametroLiquidacionSeleccionado.otrosDescuentos =
+          formValues.otrosDescuentosCtrl === undefined
+            ? 0
+            : GeneralService.obtenerValorAbsoluto(
+                formValues.otrosDescuentosCtrl
+              );
+        this.parametroLiquidacionSeleccionado.fechaInicioOtrosDescuentos = dateFechaInicioOtrosDescuentos;
+        this.parametroLiquidacionSeleccionado.fechaFinalOtrosDescuentos = dateFechaFinalOtrosDescuentos;
+
         this.parametroLiquidacionSeleccionado.terceroDeducciones = this.listaTerceroDeducciones;
 
         this.terceroService
@@ -922,6 +1060,12 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   get tipoDocumentoSoporteCtrl() {
     return this.editForm.get('tipoDocumentoSoporteCtrl');
   }
+  get supervisorCtrl() {
+    return this.editForm.get('supervisorCtrl');
+  }
+  get facturaElectronicaCtrl() {
+    return this.editForm.get('facturaElectronicaCtrl');
+  }
   get baseAporteSaludCtrl() {
     return this.editForm.get('baseAporteSaludCtrl');
   }
@@ -972,22 +1116,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     return this.editForm.get('actividadCtrl');
   }
 
-  dateString2Date(dateString: string) {
-    const day = +dateString.substr(0, 2);
-    const month = +dateString.substr(3, 2) - 1;
-    const year = +dateString.substr(6, 4);
-    const dateFecha = new Date(year, month, day);
-    return dateFecha;
-  }
-
-  isValidDate(d) {
-    return d instanceof Date;
-  }
-
-  obtenerValor(numeroWithComma: string) {
-    return numeroWithComma.replace(',', '');
-  }
-
   //#region Listas
 
   cargarParametrosGenerales() {
@@ -1013,6 +1141,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.cargarlistaTipoDocumentoSoporte(TipoLista.TipoDocumentoSoporte.value);
     this.cargarlistaTipoIva(TipoLista.TipoIva.value);
     this.cargarlistaTipoPago(TipoLista.TipoPago.value);
+    this.cargarListaUsuarioXPerfil(PerfilUsuario.SupervisorContractual.value);
+    this.cargarlistaFacturaElectronica();
   }
 
   cargarListaModalidadContrato(tipo: number) {
@@ -1036,6 +1166,28 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.alertify.error(error);
       },
       () => {}
+    );
+  }
+
+  cargarlistaFacturaElectronica() {
+    this.listaService.ObtenerListaSIoNO().subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaFacturaElectronica = lista;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
+  }
+
+  cargarListaUsuarioXPerfil(tipo: number) {
+    this.usuarioService.ObtenerListaUsuarioXPerfil(tipo).subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaSupervisor = lista;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
     );
   }
 

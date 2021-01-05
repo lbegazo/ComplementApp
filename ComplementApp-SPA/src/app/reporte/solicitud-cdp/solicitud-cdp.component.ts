@@ -81,7 +81,7 @@ export class SolicitudCdpComponent implements OnInit {
     private fb: FormBuilder,
     private cdpService: CdpService,
     private listaService: ListaService,
-    private generalService: GeneralService
+    private generalService: GeneralService,
   ) {}
 
   ngOnInit(): void {
@@ -216,11 +216,11 @@ export class SolicitudCdpComponent implements OnInit {
       }
     }
 
-    if (this.generalService.isValidDate(valorFecha)) {
+    if (GeneralService.isValidDate(valorFecha)) {
       fechaRegistro = this.generalService.convertirAFormatoFecha(valorFecha);
     } else {
       if (valorFecha && valorFecha.indexOf('-') > -1) {
-        fechaRegistro = this.generalService.dateString2Date(valorFecha);
+        fechaRegistro = GeneralService.dateString2Date(valorFecha);
       }
     }
 

@@ -146,6 +146,16 @@ namespace ComplementApp.API.Controllers
             return Ok(datos);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public IActionResult ObtenerListaSIoNO()
+        {
+            List<ValorSeleccion> lista = new List<ValorSeleccion>();
+
+            lista.Add(new ValorSeleccion() { Id = 0, Nombre = "NO" });
+            lista.Add(new ValorSeleccion() { Id = 1, Nombre = "SI" });
+            return Ok(lista);
+        }
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

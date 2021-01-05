@@ -544,7 +544,7 @@
                                 style="text-align: right; height: 30px"
                                 class="form-control col-form-label-sm"
                                 formControlName="rubroControl"
-                                appTwoDigitDecimaNumber
+                                appDecimalMask
                                 placeholder="Ingrese valor solicitud"
                                 value="{{ item?.valorSolicitud }}"
                               />
@@ -799,7 +799,7 @@
                                 style="text-align: right; height: 30px"
                                 class="form-control col-form-label-sm"
                                 formControlName="rubroControl"
-                                appTwoDigitDecimaNumber
+                                appDecimalMask
                                 placeholder="Ingrese valor solicitud"
                               />
                               <div
@@ -1092,7 +1092,7 @@
                       style="margin: 0 auto; width: 100%"
                       class="fontSmaller"
                     >
-                      {{ notaLegal.valor }}
+                      {{ notaLegal?.valor }}
                     </span>
                   </div>
                 </div>

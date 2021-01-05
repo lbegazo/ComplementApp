@@ -5,6 +5,7 @@ import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
+import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
   selector: 'app-popup-solicitud-pago',
@@ -76,22 +77,30 @@ export class PopupSolicitudPagoComponent implements OnInit {
 
   createFullForm() {
     let numeroFacturaC = '';
-    let valorFacturaC = 0;
+    let valorFacturaC = '';
     let observacionesC = '';
     let numeroPlanillaC = '';
-    let baseCotizacionC = 0;
+    let baseCotizacionC = '';
     let fechaInicio = null;
     let fechaFinal = null;
-    let valorBaseGravableC = 0;
-    let valorIvaC = 0;
+    let valorBaseGravableC = '';
+    let valorIvaC = '';
 
     numeroFacturaC = this.formatoSolicitudPagoEdit.numeroFactura;
-    valorFacturaC = this.formatoSolicitudPagoEdit.valorFacturado;
+    valorFacturaC = GeneralService.obtenerFormatoMoney(
+      this.formatoSolicitudPagoEdit.valorFacturado
+    );
     observacionesC = this.formatoSolicitudPagoEdit.observaciones;
     numeroPlanillaC = this.formatoSolicitudPagoEdit.numeroPlanilla;
-    baseCotizacionC = this.formatoSolicitudPagoEdit.baseCotizacion;
-    valorBaseGravableC = this.formatoSolicitudPagoEdit.valorBaseGravableRenta;
-    valorIvaC = this.formatoSolicitudPagoEdit.valorIva;
+    baseCotizacionC = GeneralService.obtenerFormatoMoney(
+      this.formatoSolicitudPagoEdit.baseCotizacion
+    );
+    valorBaseGravableC = GeneralService.obtenerFormatoMoney(
+      this.formatoSolicitudPagoEdit.valorBaseGravableRenta
+    );
+    valorIvaC = GeneralService.obtenerFormatoMoney(
+      this.formatoSolicitudPagoEdit.valorIva
+    );
 
     this.idMesSelecionado = this.formatoSolicitudPagoEdit.mesId;
     this.idActividadEconomicaSelecionada = this.formatoSolicitudPagoEdit.actividadEconomicaId;
@@ -145,19 +154,19 @@ export class PopupSolicitudPagoComponent implements OnInit {
       const valueFechaInicio = formValues.fechaInicioCtrl;
       const valueFechaFin = formValues.fechaFinalCtrl;
 
-      if (this.isValidDate(valueFechaInicio)) {
+      if (GeneralService.isValidDate(valueFechaInicio)) {
         dateFechaInicio = valueFechaInicio;
       } else {
         if (valueFechaInicio && valueFechaInicio.indexOf('-') > -1) {
-          dateFechaInicio = this.dateString2Date(valueFechaInicio);
+          dateFechaInicio = GeneralService.dateString2Date(valueFechaInicio);
         }
       }
 
-      if (this.isValidDate(valueFechaFin)) {
+      if (GeneralService.isValidDate(valueFechaFin)) {
         dateFechaFin = valueFechaFin;
       } else {
         if (valueFechaFin && valueFechaFin.indexOf('-') > -1) {
-          dateFechaFin = this.dateString2Date(valueFechaFin);
+          dateFechaFin = GeneralService.dateString2Date(valueFechaFin);
         }
       }
 
@@ -170,35 +179,29 @@ export class PopupSolicitudPagoComponent implements OnInit {
         planPagoId: 0,
         crp: 0,
         numeroFactura: formValues.numeroFacturaCtrl,
-        valorFacturado: +formValues.valorFacturaCtrl,
+        valorFacturado: +GeneralService.obtenerValorAbsoluto(
+          formValues.valorFacturaCtrl
+        ),
         actividadEconomicaId: this.idActividadEconomicaSelecionada,
         actividadEconomicaDescripcion: this.actividadEconomicaSeleccionada
           .codigo,
         fechaInicio: dateFechaInicio,
         fechaFinal: dateFechaFin,
         observaciones: formValues.observacionesCtrl,
-        valorBaseGravableRenta: +formValues.valorBaseGravableRentaCtrl,
-        valorIva: +formValues.valorIvaCtrl,
+        valorBaseGravableRenta: +GeneralService.obtenerValorAbsoluto(
+          formValues.valorBaseGravableRentaCtrl
+        ),
+        valorIva: +GeneralService.obtenerValorAbsoluto(formValues.valorIvaCtrl),
         numeroPlanilla: formValues.numeroPlanillaCtrl,
         mesId: this.idMesSelecionado,
         mes: this.mesSeleccionado.nombre.toUpperCase(),
-        baseCotizacion: +formValues.baseCotizacionCtrl,
+        baseCotizacion: +GeneralService.obtenerValorAbsoluto(
+          formValues.baseCotizacionCtrl
+        ),
       };
 
       this.bsModalRef.hide();
     }
-  }
-
-  dateString2Date(dateString: string) {
-    const day = +dateString.substr(0, 2);
-    const month = +dateString.substr(3, 2) - 1;
-    const year = +dateString.substr(6, 4);
-    const dateFechaProveedor = new Date(year, month, day);
-    return dateFechaProveedor;
-  }
-
-  isValidDate(d) {
-    return d instanceof Date;
   }
 
   get actividadEconomicaCtrl() {

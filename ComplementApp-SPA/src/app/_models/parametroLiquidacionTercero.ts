@@ -28,4 +28,10 @@ export interface ParametroLiquidacionTercero {
   convenioFontic: number;
   terceroId: number;
   terceroDeducciones?: TerceroDeduccionDto[];
+
+  facturaElectronicaId: number;
+  supervisorId: number;
+  otrosDescuentos: number;
+  fechaInicioOtrosDescuentos: Date;
+  fechaFinalOtrosDescuentos: Date;
 }

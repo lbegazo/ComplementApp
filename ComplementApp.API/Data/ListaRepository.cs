@@ -119,7 +119,6 @@ namespace ComplementApp.API.Data
                 usuario.Perfiles.Add(perfil);
             }
             return listaUsuario;
-
         }
 
         public async Task<IEnumerable<UsoPresupuestal>> ObtenerListaUsoPresupuestalXRubro(int rubroPresupuestalId)

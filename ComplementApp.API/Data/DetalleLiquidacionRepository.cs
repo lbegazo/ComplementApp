@@ -436,14 +436,18 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DeduccionDetalleLiquidacionParaArchivo>> ObtenerDeduccionesLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)
         {
             var lista = await (from ld in _context.LiquidacionDeducciones
+                               join l in _context.DetalleLiquidacion on ld.DetalleLiquidacionId equals l.DetalleLiquidacionId
                                join d in _context.Deduccion on ld.DeduccionId equals d.DeduccionId
+                               join td in _context.TerceroDeducciones on ld.DeduccionId equals td.DeduccionId
+                               join t in _context.Tercero on td.TerceroDeDeduccionId equals t.TerceroId
+                               where (l.TerceroId == td.TerceroId)
                                where (listaLiquidacionId.Contains(ld.DetalleLiquidacionId))
                                select new DeduccionDetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = ld.DetalleLiquidacionId,
                                    DeduccionCodigo = d.Codigo,
-                                   TipoIdentificacion = 1,
-                                   NumeroIdentificacion = "800197268",
+                                   TipoIdentificacion = t.TipoIdentificacion,
+                                   NumeroIdentificacion = t.NumeroIdentificacion,
                                    Base = ld.Base,
                                    Tarifa = ld.Tarifa,
                                    Valor = ld.Tarifa,

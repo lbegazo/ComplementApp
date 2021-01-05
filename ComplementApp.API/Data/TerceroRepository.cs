@@ -103,6 +103,12 @@ namespace ComplementApp.API.Data
                                    InteresVivienda = plt.InteresVivienda,
                                    FechaInicioDescuentoInteresVivienda = plt.FechaInicioDescuentoInteresVivienda,
                                    FechaFinalDescuentoInteresVivienda = plt.FechaFinalDescuentoInteresVivienda,
+
+                                   facturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
+                                   supervisorId = plt.SupervisorId,
+                                   OtrosDescuentos = plt.OtrosDescuentos,
+                                   FechaInicioOtrosDescuentos = plt.FechaInicioOtrosDescuentos,
+                                   FechaFinalOtrosDescuentos = plt.FechaFinalOtrosDescuentos,
                                }).FirstOrDefaultAsync();
 
             return lista;

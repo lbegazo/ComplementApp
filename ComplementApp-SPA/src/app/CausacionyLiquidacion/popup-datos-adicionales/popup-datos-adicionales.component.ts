@@ -4,6 +4,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
+import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
   selector: 'app-popup-datos-adicionales',
@@ -73,7 +74,8 @@ export class PopupDatosAdicionalesComponent implements OnInit {
 
       // Se inserta el valor registrado como segundo elemento
       if (this.mostrarValor) {
-        const valor = formValues.valorCtrl;
+        const valorCtrl = formValues.valorCtrl;
+        const valor = GeneralService.obtenerValorAbsoluto(valorCtrl);
 
         if (isNaN(+valor)) {
           this.alertify.warning('Debe ingresar un valor númerico');

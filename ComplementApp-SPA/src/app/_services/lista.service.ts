@@ -58,7 +58,6 @@ export class ListaService {
 
   //#endregion CDP
 
-
   //#region Transaccion
 
   obtenerNombreTransaccionPorCodigo(codigoTransaccion: string) {
@@ -129,6 +128,12 @@ export class ListaService {
     );
   }
 
+  ObtenerListaSIoNO(): Observable<ValorSeleccion[]> {
+    return this.http.get<ValorSeleccion[]>(
+      this.baseUrl + 'lista/ObtenerListaSIoNO'
+    );
+  }
+
   ObtenerParametrosGeneralesXTipo(tipo: string): Observable<ValorSeleccion[]> {
     let params = new HttpParams();
 
@@ -139,5 +144,4 @@ export class ListaService {
       { params }
     );
   }
-
 }

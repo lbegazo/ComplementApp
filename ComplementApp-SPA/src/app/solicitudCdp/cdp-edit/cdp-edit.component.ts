@@ -27,6 +27,7 @@ import { RubroPresupuestal } from 'src/app/_models/rubroPresupuestal';
 import { EstadoSolicitudCDP } from 'src/app/_models/enum';
 import { Estado } from 'src/app/_models/estado';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
+import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
   selector: 'app-cdp-edit',
@@ -61,7 +62,8 @@ export class CdpEditComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private listaService: ListaService,
-    private cdpService: CdpService
+    private cdpService: CdpService,
+    private generalService: GeneralService
   ) {}
 
   ngOnInit() {
@@ -155,31 +157,7 @@ export class CdpEditComponent implements OnInit {
       this.cdpForm.controls.tipoDetalleControl.disable();
 
       //#endregion Solicitud Inicial
-    }
-
-    //#region No Eliminar
-
-    // this.cdpForm.addControl(
-    //   'objetoBienControl',
-    //   new FormControl(objetoBien, Validators.required)
-    // );
-    // this.cdpForm.addControl(
-    //   'observacionesControl',
-    //   new FormControl('', Validators.required)
-    // );
-    // this.cdpForm.addControl(
-    //   'tipoDetalleControl',
-    //   new FormControl('', Validators.required)
-    // );
-
-    // this.detalleCdp?.forEach((x) => {
-    //   this.cdpForm.addControl(
-    //     x?.id.toString(),
-    //     new FormControl('', Validators.required)
-    //   );
-    // });
-
-    //#endregion No Eliminar
+    }   
   }
 
   get rubrosControles() {
@@ -228,7 +206,7 @@ export class CdpEditComponent implements OnInit {
           for (let index = 0; index < arrayControles.length; index++) {
             const item = arrayControles.at(index);
             const itemDetalle = this.detalleCdp[index];
-            itemDetalle.valorSolicitud = item.value.rubroControl;
+            itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(item.value.rubroControl);
           }
         }
 
@@ -309,7 +287,7 @@ export class CdpEditComponent implements OnInit {
         for (let index = 0; index < arrayControl.length; index++) {
           const item = arrayControl.at(index);
           const itemDetalle = listaDetalleSolicitudCDP[index];
-          itemDetalle.valorSolicitud = item.value.rubroControl;
+          itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(item.value.rubroControl);
         }
       }
 

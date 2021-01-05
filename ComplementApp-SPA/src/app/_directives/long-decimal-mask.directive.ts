@@ -2,9 +2,9 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[appDecimalMask]',
+  selector: '[appLongDecimalMask]',
 })
-export class DecimalMaskDirective {
+export class LongDecimalMaskDirective {
   constructor(private el: ElementRef, public model: NgControl) {}
 
   @HostListener('input', ['$event']) onEvent($event) {
@@ -41,7 +41,7 @@ export class DecimalMaskDirective {
       }
 
       if (valArray.length > 1) {
-        newVal += ',' + valArray[1].substring(0, 2);
+        newVal += ',' + valArray[1].substring(0, 5);
       }
     }
     // set the new value

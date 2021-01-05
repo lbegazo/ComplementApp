@@ -13,6 +13,7 @@ import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
+import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
   selector: 'app-factura-edit',
@@ -27,7 +28,6 @@ export class FacturaEditComponent implements OnInit {
   facturaForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
   detallePlanPago: DetallePlanPago;
-
 
   constructor(
     private alertify: AlertifyService,
@@ -66,13 +66,15 @@ export class FacturaEditComponent implements OnInit {
       let numeroProveedor = '';
       let numeroSupervisor = '';
       let numeroFactura = '';
-      let valorFactura = 0;
+      let valorFactura = '';
       let fechaProveedor = null;
       let fechaSupervisor = null;
       numeroProveedor = this.planPagoSeleccionado?.numeroRadicadoProveedor;
       numeroSupervisor = this.planPagoSeleccionado?.numeroRadicadoSupervisor;
       numeroFactura = this.planPagoSeleccionado?.numeroFactura;
-      valorFactura = this.planPagoSeleccionado?.valorFacturado;
+      valorFactura = GeneralService.obtenerFormatoMoney(
+        this.planPagoSeleccionado?.valorFacturado
+      );
       fechaProveedor = this.planPagoSeleccionado?.fechaRadicadoProveedor;
       fechaSupervisor = this.planPagoSeleccionado?.fechaRadicadoSupervisor;
 
@@ -147,19 +149,19 @@ export class FacturaEditComponent implements OnInit {
       const valueFechaSupervisor = this.facturaForm.get('fechaSupervisorCtrl')
         .value;
 
-      if (this.isValidDate(valueFechaContratista)) {
+      if (GeneralService.isValidDate(valueFechaContratista)) {
         dateFechaProveedor = valueFechaContratista;
       } else {
         if (valueFechaContratista && valueFechaContratista.indexOf('-') > -1) {
-          dateFechaProveedor = this.dateString2Date(valueFechaContratista);
+          dateFechaProveedor = GeneralService.dateString2Date(valueFechaContratista);
         }
       }
 
-      if (this.isValidDate(valueFechaSupervisor)) {
+      if (GeneralService.isValidDate(valueFechaSupervisor)) {
         dateFechaSupervisor = valueFechaSupervisor;
       } else {
         if (valueFechaSupervisor && valueFechaSupervisor.indexOf('-') > -1) {
-          dateFechaSupervisor = this.dateString2Date(valueFechaSupervisor);
+          dateFechaSupervisor = GeneralService.dateString2Date(valueFechaSupervisor);
         }
       }
 
@@ -176,9 +178,9 @@ export class FacturaEditComponent implements OnInit {
       this.planPagoSeleccionado.numeroFactura = this.facturaForm.get(
         'numeroFacturaCtrl'
       ).value;
-      this.planPagoSeleccionado.valorFacturado = this.facturaForm.get(
-        'valorFacturaCtrl'
-      ).value;
+      this.planPagoSeleccionado.valorFacturado = GeneralService.obtenerValorAbsoluto(
+        this.facturaForm.get('valorFacturaCtrl').value
+      );
       this.planPagoSeleccionado.observaciones = this.facturaForm.get(
         'observacionesCtrl'
       ).value;
@@ -209,15 +211,4 @@ export class FacturaEditComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  dateString2Date(dateString: string) {
-    const day = +dateString.substr(0, 2);
-    const month = +dateString.substr(3, 2) - 1;
-    const year = +dateString.substr(6, 4);
-    const dateFechaProveedor = new Date(year, month, day);
-    return dateFechaProveedor;
-  }
-
-  isValidDate(d) {
-    return d instanceof Date;
-  }
 }
