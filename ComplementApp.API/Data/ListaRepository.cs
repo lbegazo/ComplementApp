@@ -153,7 +153,9 @@ namespace ComplementApp.API.Data
                                            Id = Int32.Parse(m.Codigo),
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
-                                       }).ToListAsync();
+                                       })
+                                       .OrderBy(m => m.Nombre)
+                                       .ToListAsync();
                         break;
                     }
                 case TipoLista.TipoIva:
@@ -186,7 +188,9 @@ namespace ComplementApp.API.Data
                                            Id = Int32.Parse(m.Codigo),
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
-                                       }).ToListAsync();
+                                       })
+                                       .OrderBy(m => m.Nombre)
+                                       .ToListAsync();
                         break;
                     }
                 default: break;

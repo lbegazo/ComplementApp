@@ -83,10 +83,12 @@ input[type="text"] {
 select {
   background-color: white;
   height: 30px;
+  padding-left: 5px;
 }
 
 select option {
   background-color: white;
+  padding-left: 5px;
 }
 
 .paragraph {
@@ -95,8 +97,9 @@ select option {
   display: flex;
   width: 100%;
   margin: auto;
-  align-items:center;
-  justify-content:left;
+  align-items: center;
+  justify-content: left;
+  padding-left: 5px;
 }
 
 .parent {
@@ -108,4 +111,3 @@ select option {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-

@@ -75,16 +75,17 @@ namespace ComplementApp.API.Data
         {
             List<ValorSeleccion> lista = new List<ValorSeleccion>();
 
-            lista = await (from u in _context.Usuario
-                           join pu in _context.UsuarioPerfil on u.UsuarioId equals pu.UsuarioId
-                           where pu.PerfilId == perfilId
-                           select new ValorSeleccion()
-                           {
-                               Id = u.UsuarioId,
-                               Nombre = u.Nombres + ' ' + u.Apellidos,
-                           })
-                           .Distinct()
-                           .ToListAsync();
+            var lista1 = (from u in _context.Usuario
+                          join pu in _context.UsuarioPerfil on u.UsuarioId equals pu.UsuarioId
+                          where pu.PerfilId == perfilId
+                          select new ValorSeleccion()
+                          {
+                              Id = u.UsuarioId,
+                              Nombre = u.Nombres + ' ' + u.Apellidos,
+                          });
+
+            lista = await lista1.OrderBy(x => x.Nombre).ToListAsync();
+
             return lista;
         }
 

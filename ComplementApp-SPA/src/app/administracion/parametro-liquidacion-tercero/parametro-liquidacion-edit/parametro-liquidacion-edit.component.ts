@@ -298,7 +298,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
     this.editForm.patchValue({
       tarifaIvaCtrl: GeneralService.obtenerFormatoLongMoney(tarifaIvaC),
-      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(baseAporteSaludC),
+      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
+        baseAporteSaludC
+      ),
       aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
       aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(aportePensionC),
       riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
@@ -452,7 +454,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       tipoCuentaXPagarCtrl: this.tipoCuentaXPagarSeleccionado,
       tipoDocumentoSoporteCtrl: this.tipoDocumentoSoporteSeleccionado,
 
-      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(baseAporteSaludC),
+      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
+        baseAporteSaludC
+      ),
       aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
       aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(aportePensionC),
       riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
@@ -509,6 +513,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.idModalidadContratoSelecionado ===
       ModalidadContrato.ContratoPrestacionServicio.value
     ) {
+      this.honorarioSinIvaCtrl.enable();
+      this.tarifaIvaCtrl.enable();
       this.baseAporteSaludCtrl.enable();
       this.aporteSaludCtrl.enable();
       this.aportePensionCtrl.enable();
@@ -522,6 +528,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.interesesViviendaCtrl.enable();
       this.fechaInicioCtrl.enable();
       this.fechaFinalCtrl.enable();
+      this.tipoPagoCtrl.disable();
+      this.tipoIvaCtrl.disable();
     }
 
     if (
@@ -530,6 +538,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.idModalidadContratoSelecionado ===
         ModalidadContrato.ProveedorSinDescuento.value
     ) {
+      if (
+        this.idModalidadContratoSelecionado ===
+        ModalidadContrato.ProveedorConDescuento.value
+      ) {
+        this.honorarioSinIvaCtrl.disable();
+      }
+
       this.baseAporteSaludCtrl.disable();
       this.aporteSaludCtrl.disable();
       this.aportePensionCtrl.disable();
@@ -543,6 +558,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.interesesViviendaCtrl.disable();
       this.fechaInicioCtrl.disable();
       this.fechaFinalCtrl.disable();
+      this.tipoPagoCtrl.enable();
+      this.tipoIvaCtrl.enable();
     }
 
     if (
@@ -1102,7 +1119,12 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   get fechaFinalCtrl() {
     return this.editForm.get('fechaFinalCtrl');
   }
-
+  get honorarioSinIvaCtrl() {
+    return this.editForm.get('honorarioSinIvaCtrl');
+  }
+  get tarifaIvaCtrl() {
+    return this.editForm.get('tarifaIvaCtrl');
+  }
   get codigoDeduccionCtrl() {
     return this.editForm.get('codigoDeduccionCtrl');
   }
