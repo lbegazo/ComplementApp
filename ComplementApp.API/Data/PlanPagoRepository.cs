@@ -412,6 +412,7 @@ namespace ComplementApp.API.Data
                          select new CDPDto()
                          {
                              Crp = c.Crp,
+                             Cdp = c.Cdp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              Objeto = c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -423,11 +424,12 @@ namespace ComplementApp.API.Data
                         .OrderBy(x => x.Crp);
 
             var lista1 = (from i in lista
-                          group i by new { i.Crp, i.Detalle4, i.NumeroIdentificacionTercero, i.NombreTercero, i.Objeto, i.TerceroId }
+                          group i by new { i.Crp, i.Cdp, i.Detalle4, i.NumeroIdentificacionTercero, i.NombreTercero, i.Objeto, i.TerceroId }
                           into grp
                           select new CDPDto()
                           {
                               Crp = grp.Key.Crp,
+                              Cdp = grp.Key.Cdp,
                               Detalle4 = grp.Key.Detalle4,
                               Objeto = grp.Key.Objeto,
                               NumeroIdentificacionTercero = grp.Key.NumeroIdentificacionTercero,
@@ -455,6 +457,7 @@ namespace ComplementApp.API.Data
                          select new CDPDto()
                          {
                              Crp = c.Crp,
+                             Cdp = c.Cdp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              Objeto = c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -469,6 +472,7 @@ namespace ComplementApp.API.Data
                           group i by new
                           {
                               i.Crp,
+                              i.Cdp,
                               i.Detalle4,
                               i.NumeroIdentificacionTercero,
                               i.NombreTercero,
@@ -479,6 +483,7 @@ namespace ComplementApp.API.Data
                           select new CDPDto()
                           {
                               Crp = grp.Key.Crp,
+                              Cdp = grp.Key.Cdp,
                               Detalle4 = grp.Key.Detalle4,
                               Objeto = grp.Key.Objeto,
                               NumeroIdentificacionTercero = grp.Key.NumeroIdentificacionTercero,

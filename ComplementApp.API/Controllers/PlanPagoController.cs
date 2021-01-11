@@ -423,10 +423,6 @@ namespace ComplementApp.API.Controllers
             {
                 foreach (var item in lista)
                 {
-                    if (mesAnterior != item.MesId)
-                    {
-                        numeroPagos = 1;
-                    }
                     planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos);
 
                     listaPlanPago.Add(planPago);
@@ -442,7 +438,6 @@ namespace ComplementApp.API.Controllers
         private async Task ActualizarListaPlanPago(CDPDto cdp, List<LineaPlanPagoDto> listaTotal)
         {
             int numeroPagos = 1;
-            int mesAnterior = 0;
             List<PlanPago> listaPlanPago = new List<PlanPago>();
             PlanPago planPago = null;
             DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
@@ -460,16 +455,11 @@ namespace ComplementApp.API.Controllers
 
                 foreach (var item in listaNueva)
                 {
-                    var planesPagoBD = listaActualXCompromiso
-                                        .Where(x => x.MesId == item.MesId)
-                                        .ToList();
+                    var planesPagoBD = listaActualXCompromiso.ToList();
 
                     if (planesPagoBD == null)
                     {
-                        if (mesAnterior != item.MesId)
-                        {
-                            numeroPagos = 1;
-                        }
+                        numeroPagos = 1;
                     }
                     else
                     {
@@ -482,7 +472,6 @@ namespace ComplementApp.API.Controllers
                     planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos);
 
                     listaPlanPago.Add(planPago);
-                    mesAnterior = item.MesId;
                     numeroPagos++;
                 }
 

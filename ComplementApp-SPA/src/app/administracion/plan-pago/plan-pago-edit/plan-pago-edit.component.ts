@@ -257,6 +257,13 @@ export class PlanPagoEditComponent implements OnInit {
         rubroControl: new FormControl(''),
       })
     );
+    this.actualizarValorTotal();
+
+    if (this.validarValorTotalSuperior()) {
+      this.alertify.warning(
+        'la suma de los planes de pago es superior al valor del CRP'
+      );
+    }
   }
 
   actualizarValorTotal() {
@@ -324,7 +331,14 @@ export class PlanPagoEditComponent implements OnInit {
   }
 
   validarValoresTotales(): boolean {
-    if (this.valorTotal === this.cdpSeleccionado.saldoActual) {
+    if (this.valorTotal === this.cdpSeleccionado.valorTotal) {
+      return true;
+    }
+    return false;
+  }
+
+  validarValorTotalSuperior(): boolean {
+    if (this.valorTotal > this.cdpSeleccionado.valorTotal) {
       return true;
     }
     return false;
