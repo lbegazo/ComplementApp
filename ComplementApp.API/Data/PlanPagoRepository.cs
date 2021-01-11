@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using AutoMapper;
+using System.Globalization;
 
 namespace ComplementApp.API.Data
 {
@@ -300,7 +301,7 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos)
         {
             var query = await (from t in _context.PlanPago
-                                where compromisos.Contains(t.Crp)
+                               where compromisos.Contains(t.Crp)
                                group t by new { t.Crp }
                          into grp
                                select new DetallePlanPagoDto()
@@ -311,7 +312,6 @@ namespace ComplementApp.API.Data
 
             return query;
         }
-
 
         public async Task RegistrarPlanPago(PlanPago plan)
         {
@@ -394,6 +394,168 @@ namespace ComplementApp.API.Data
             return await PagedList<RadicadoDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
         }
 
+
+        #region Forma Pago Compromiso
+
+        public async Task<PagedList<CDPDto>> ObtenerCompromisosSinPlanPago(int? terceroId, int? numeroCrp, UserParams userParams)
+        {
+            var listaCompromisos = _context.PlanPago.Select(x => x.Crp).ToHashSet();
+            var notFoundItems = _context.CDP.Where(item => !listaCompromisos.Contains(item.Crp)).Select(x => x.Crp).ToHashSet();
+
+            var lista = (from c in _context.CDP
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where notFoundItems.Contains(c.Crp)
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.SaldoActual > 0 //Saldo Disponible
+                         where c.Crp == numeroCrp || numeroCrp == null
+                         where c.TerceroId == terceroId || terceroId == null
+                         select new CDPDto()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                             Objeto = c.Detalle4,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             SaldoActual = c.SaldoActual,
+                             ValorTotal = c.ValorTotal,
+                             TerceroId = c.TerceroId,
+                         })
+                        .OrderBy(x => x.Crp);
+
+            var lista1 = (from i in lista
+                          group i by new { i.Crp, i.Detalle4, i.NumeroIdentificacionTercero, i.NombreTercero, i.Objeto, i.TerceroId }
+                          into grp
+                          select new CDPDto()
+                          {
+                              Crp = grp.Key.Crp,
+                              Detalle4 = grp.Key.Detalle4,
+                              Objeto = grp.Key.Objeto,
+                              NumeroIdentificacionTercero = grp.Key.NumeroIdentificacionTercero,
+                              NombreTercero = grp.Key.NombreTercero,
+                              SaldoActual = grp.Sum(i => i.SaldoActual),
+                              ValorTotal = grp.Sum(i => i.ValorTotal),
+                              TerceroId = grp.Key.TerceroId,
+                          })
+                          .OrderBy(x => x.Crp);
+
+            return await PagedList<CDPDto>.CreateAsync(lista1, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<PagedList<CDPDto>> ObtenerCompromisosConPlanPago(int? terceroId, int? numeroCrp, UserParams userParams)
+        {
+            var listaCompromisos = _context.PlanPago.Select(x => x.Crp).ToHashSet();
+
+            var lista = (from c in _context.CDP
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where listaCompromisos.Contains(c.Crp)
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.SaldoActual > 0 //Saldo Disponible
+                         where c.Crp == numeroCrp || numeroCrp == null
+                         where c.TerceroId == terceroId || terceroId == null
+                         select new CDPDto()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                             Objeto = c.Detalle4,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             SaldoActual = c.SaldoActual,
+                             ValorTotal = c.ValorTotal,
+                             TerceroId = c.TerceroId,
+                         })
+                        .OrderBy(x => x.Crp);
+
+            var lista1 = (from i in lista
+                          group i by new
+                          {
+                              i.Crp,
+                              i.Detalle4,
+                              i.NumeroIdentificacionTercero,
+                              i.NombreTercero,
+                              i.Objeto,
+                              i.TerceroId
+                          }
+                          into grp
+                          select new CDPDto()
+                          {
+                              Crp = grp.Key.Crp,
+                              Detalle4 = grp.Key.Detalle4,
+                              Objeto = grp.Key.Objeto,
+                              NumeroIdentificacionTercero = grp.Key.NumeroIdentificacionTercero,
+                              NombreTercero = grp.Key.NombreTercero,
+                              SaldoActual = grp.Sum(i => i.SaldoActual),
+                              ValorTotal = grp.Sum(i => i.ValorTotal),
+                              TerceroId = grp.Key.TerceroId,
+                          })
+                          .OrderBy(x => x.Crp);
+
+            return await PagedList<CDPDto>.CreateAsync(lista1, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<ICollection<LineaPlanPagoDto>> ObtenerLineasPlanPagoXCompromiso(int numeroCrp)
+        {
+
+            var lista = await (from pp in _context.PlanPago
+                               join c in _context.CDP on pp.Crp equals c.Crp
+                               where pp.TerceroId == c.TerceroId
+                               where c.Instancia == (int)TipoDocumento.Compromiso
+                               where c.SaldoActual > 0 //Saldo Disponible
+                               where c.Crp == numeroCrp
+                               select new LineaPlanPagoDto()
+                               {
+                                   PlanPagoId = pp.PlanPagoId,
+                                   MesId = pp.MesPago,
+                                   Valor = pp.ValorInicial
+                                   //MesDescripcion = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(pp.MesPago).ToUpper(),
+
+                               })
+                         .Distinct()
+                         .ToListAsync();
+
+            foreach (var item in lista)
+            {
+                item.MesDescripcion = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.MesId).ToUpper();
+            }
+
+            var lista1 = lista
+                        .OrderBy(x => x.MesId)
+                        .ToList();
+
+            return lista1;
+        }
+
+        public async Task<PlanPago> ObtenerUltimoPlanPagoDeCompromisoXMes(int crp, int MesId)
+        {
+            PlanPago ultimoPlanPago = new PlanPago();
+            var lista = await (from c in _context.PlanPago
+                               where (c.Crp == crp)
+                               where (c.MesPago == MesId)
+                               select new PlanPago()
+                               {
+                                   PlanPagoId = c.PlanPagoId,
+                                   Cdp = c.Cdp,
+                                   Crp = c.Crp,
+                                   AnioPago = c.AnioPago,
+                                   MesPago = c.MesPago,
+                                   ValorAPagar = c.ValorAPagar,
+                                   Viaticos = c.Viaticos,
+                                   NumeroPago = c.NumeroPago,
+                                   EstadoPlanPagoId = c.EstadoPlanPagoId,
+                                   NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
+                                   FechaRadicadoSupervisor = c.FechaRadicadoSupervisor,
+                                   ValorFacturado = c.ValorFacturado,
+                                   TerceroId = c.TerceroId
+                               }).ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                ultimoPlanPago = lista.OrderBy(x => x.NumeroPago).Last();
+            }
+
+            return ultimoPlanPago;
+        }
+
+        #endregion Forma Pago Compromiso
         private static string ResumirDetalle7(string texto)
         {
             string resultado = string.Empty;

@@ -13,6 +13,9 @@ import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { RadicadoDto } from '../_dto/radicadoDto';
+import { FormaPagoCompromiso } from '../_models/formaPagoCompromiso';
+import { Cdp } from '../_models/cdp';
+import { LineaPlanPagoDto } from '../_dto/LineaPlanPagoDto';
 
 @Injectable({
   providedIn: 'root',
@@ -196,5 +199,82 @@ export class PlanPagoService {
         }
       )
     );
+  }
+
+  RegistrarFormaPagoCompromiso(
+    tipo: number,
+    formaPagoCompromiso: FormaPagoCompromiso
+  ): Observable<any> {
+    const path = 'RegistrarFormaPagoCompromiso';
+    let params = new HttpParams();
+    params = params.append('tipo', tipo.toString());
+    return this.http.post(this.baseUrl + path, formaPagoCompromiso, { params });
+  }
+
+  ObtenerCompromisosParaPlanPago(
+    tipo: number,
+    terceroId: number,
+    numeroCrp: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<Cdp[]>> {
+    const paginatedResult: PaginatedResult<Cdp[]> = new PaginatedResult<
+      Cdp[]
+    >();
+
+    const path = 'ObtenerCompromisosParaPlanPago';
+
+    let params = new HttpParams();
+    params = params.append('tipo', tipo.toString());
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (numeroCrp > 0) {
+      params = params.append('numeroCrp', numeroCrp.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Cdp[]>(this.baseUrl + path, { observe: 'response', params })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  ObtenerLineasPlanPagoXCompromiso(
+    crp: number
+  ): Observable<LineaPlanPagoDto[]> {
+    const paginatedResult: PaginatedResult<Cdp[]> = new PaginatedResult<
+      Cdp[]
+    >();
+
+    const path = 'ObtenerLineasPlanPagoXCompromiso';
+
+    let params = new HttpParams();
+    params = params.append('crp', crp.toString());
+
+    return this.http.get<LineaPlanPagoDto[]>(this.baseUrl + path, { params });
+  }
+
+  ActualizarFormaPagoCompromiso(
+    formaPagoCompromiso: FormaPagoCompromiso
+  ): Observable<boolean> {
+    const path = 'ActualizarFormaPagoCompromiso';
+    this.http.put(this.baseUrl + path, formaPagoCompromiso).subscribe(() => {});
+    return observableOf(true);
   }
 }

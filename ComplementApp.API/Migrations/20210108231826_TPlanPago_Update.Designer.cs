@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210108231826_TPlanPago_Update")]
+    partial class TPlanPago_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1912,9 +1914,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int?>("TerceroId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("VARCHAR(20)");
@@ -1924,8 +1923,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("CargoId");
-
-                    b.HasIndex("TerceroId");
 
                     b.ToTable("TUsuario");
                 });
@@ -2267,10 +2264,6 @@ namespace ComplementApp.API.Migrations
                     b.HasOne("ComplementApp.API.Models.Cargo", "Cargo")
                         .WithMany()
                         .HasForeignKey("CargoId");
-
-                    b.HasOne("ComplementApp.API.Models.Tercero", "Tercero")
-                        .WithMany()
-                        .HasForeignKey("TerceroId");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.UsuarioPerfil", b =>

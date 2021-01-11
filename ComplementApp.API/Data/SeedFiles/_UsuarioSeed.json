@@ -229,7 +229,7 @@
     "CargoId": "6",
     "AreaId": "1",
     "EsAdministrador": 0
-  } ,
+  },
   {
     "Username": "hninog",
     "Password": "6540",
@@ -240,5 +240,226 @@
     "CargoId": "2",
     "AreaId": "2",
     "EsAdministrador": 0
-  } 
+  },
+
+  {
+    "Username": "52380146",
+    "Password": "52380146",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "ABRIL OSPITIA PATRICIA",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "1026267439",
+    "Password": "1026267439",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "ZAMORA CASTRO JORGE ENRIQUE",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "14327451",
+    "Password": "14327451",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "ORTEGON OCAMPO ANDRES ORLANDO",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "19445735",
+    "Password": "19445735",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "JIMENEZ RAMIREZ CARLOS ALBERTO",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "1032446100",
+    "Password": "1032446100",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "GONZALEZ LONDOÑO LAURA GABRIELA",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "52710737",
+    "Password": "52710737",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "REINALES MENDOZA DORIS PATRICIA",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "1052389059",
+    "Password": "1052389059",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "GONZALEZ TOBO WILLIAM FERNANDO",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "52813644",
+    "Password": "52813644",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "AREVALO BRIJALDO DAYANA ANDREA",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "63529516",
+    "Password": "63529516",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "FLOREZ GOMEZ DIANA YADITH",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "11052702",
+    "Password": "11052702",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "VERGARA PERDOMO JUAN LUIS",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "80919781",
+    "Password": "80919781",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "VARGAS SOTO GUSTAVO ANDRES",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "14399679",
+    "Password": "14399679",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "TREJOS GUZMAN HECTOR FABIO",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "52821575",
+    "Password": "52821575",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "LOPEZ ZAPATA SILVIA CAROLINA",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "80211999",
+    "Password": "80211999",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "RUGE BOGOYA JAIRO HERNAN",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "1118539617",
+    "Password": "1118539617",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "ARGUELLO RUBIANO SUSAN YULAY",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "74370424",
+    "Password": "74370424",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "HERNANDEZ CONTRERAS NELSON ENRIQUE",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "1052397571",
+    "Password": "1052397571",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "HERNANDEZ PINEDA MANUEL YESID",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "80731369",
+    "Password": "80731369",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "HERNANDEZ ORTIZ MAURICIO",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "11229179",
+    "Password": "11229179",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "GIRALDO SUAREZ JAVIER ALBERTO",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  },
+  {
+    "Username": "1026251561",
+    "Password": "1026251561",
+    "FechaCreacion": "2021-01-01",
+    "FechaUltimoAcceso": "2021-01-01",
+    "Nombres": "LLANOS HENRIQUEZ LUIS GABRIEL",
+    "Apellidos": "",
+    "CargoId": "6",
+    "AreaId": "1",
+    "EsAdministrador": 0
+  }
 ]

@@ -13,27 +13,27 @@ import { SolicitudCDPDto } from '../_models/solicitudCDPDto';
   providedIn: 'root',
 })
 export class CdpService {
-  baseUrl = environment.apiUrl + 'CDP' ;
+  baseUrl = environment.apiUrl + 'CDP/' ;
 
   constructor(private http: HttpClient) {}
 
   ObtenerListaCDP(): Observable<Cdp[]> {
-    const path = '/ObtenerListaCDP/';
+    const path = 'ObtenerListaCDP/';
     return this.http.get<Cdp[]>(this.baseUrl + path);
   }
 
   ObtenerCDP(numeroCdp: number): Observable<Cdp> {
-    const path = '/ObtenerCDP/';
+    const path = 'ObtenerCDP/';
     return this.http.get<Cdp>(this.baseUrl + path + numeroCdp);
   }
 
   ObtenerDetalleDeCDP(numeroCdp: number): Observable<DetalleCDP[]> {
-    const path = '/ObtenerDetalleDeCDP/';
+    const path = 'ObtenerDetalleDeCDP/';
     return this.http.get<DetalleCDP[]>(this.baseUrl + path + numeroCdp);
   }
 
   RegistrarSolicitudCDP(formato: SolicitudCDP): Observable<any> {
-    const path = '/RegistrarSolicitudCDP';
+    const path = 'RegistrarSolicitudCDP';
     return this.http.post(this.baseUrl + path, formato);
   }
 
@@ -46,7 +46,7 @@ export class CdpService {
     page?,
     pagesize?
   ): Observable<PaginatedResult<SolicitudCDPDto[]>> {
-    const path = '/ObtenerListaSolicitudCDP';
+    const path = 'ObtenerListaSolicitudCDP';
     const paginatedResult: PaginatedResult<
     SolicitudCDPDto[]
     > = new PaginatedResult<SolicitudCDPDto[]>();
@@ -94,7 +94,7 @@ export class CdpService {
   }
 
   ObtenerSolicitudCDP(solicitudId: number): Observable<SolicitudCDP> {
-    const path = '/ObtenerSolicitudCDP';
+    const path = 'ObtenerSolicitudCDP';
     let params = new HttpParams();
 
     if (solicitudId > 0) {
@@ -103,4 +103,6 @@ export class CdpService {
 
     return this.http.get<SolicitudCDP>(this.baseUrl + path, { params });
   }
+
+  
 }

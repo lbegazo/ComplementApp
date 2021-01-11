@@ -67,6 +67,8 @@ namespace ComplementApp.API.Data
             }
             else if (perfilId == (int)PerfilUsuario.Contratista)
             {
+                terceroId = usuario.TerceroId;
+
                 lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where c.Instancia == (int)TipoDocumento.Compromiso

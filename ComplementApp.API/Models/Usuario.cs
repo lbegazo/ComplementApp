@@ -44,6 +44,10 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(100)")]
         public string Email {get; set;}
 
+        public int? TerceroId { get; set; }
+
+        public Tercero Tercero { get; set; }
+
         public ICollection<UsuarioPerfil> UsuarioPerfiles { get; set; }
 
     }

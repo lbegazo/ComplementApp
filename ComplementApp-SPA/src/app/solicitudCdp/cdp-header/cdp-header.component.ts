@@ -129,10 +129,7 @@ export class CdpHeaderComponent implements OnInit {
 
           if (this.rubroPresupuestalSinCdpSeleccionado) {
             this.deshabilitarControles();
-            //this.editForm.reset();
           }
-
-          // console.log(this.rubroPresupuestalSinCdpSeleccionado);
 
           this.unsubscribe();
         })

@@ -499,19 +499,24 @@ namespace ComplementApp.API.Data
 
         private static void SeedUsuario(DataContext context)
         {
-            if (!context.Usuario.Any())
+            //if (!context.Usuario.Any())
             {
                 var data = File.ReadAllText("Data/SeedFiles/_UsuarioSeed.json");
                 var users = JsonConvert.DeserializeObject<List<Usuario>>(data);
                 foreach (var user in users)
                 {
-                    byte[] passwordHash, passwordSalt;
-                    CreatePasswordHash(user.Password, out passwordHash, out passwordSalt);
+                    var usuario = obtenerUsuario(context, user.Username);
 
-                    user.Username = user.Username.ToLower();
-                    user.PasswordHash = passwordHash;
-                    user.PasswordSalt = passwordSalt;
-                    context.Usuario.Add(user);
+                    if (usuario == null)
+                    {
+                        byte[] passwordHash, passwordSalt;
+                        CreatePasswordHash(user.Password, out passwordHash, out passwordSalt);
+
+                        user.Username = user.Username.ToLower();
+                        user.PasswordHash = passwordHash;
+                        user.PasswordSalt = passwordSalt;
+                        context.Usuario.Add(user);
+                    }
                 }
                 context.SaveChanges();
             }

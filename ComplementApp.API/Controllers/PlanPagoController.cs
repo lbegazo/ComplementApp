@@ -230,6 +230,91 @@ namespace ComplementApp.API.Controllers
             return BadRequest();
         }
 
+        #region Forma Pago Compromiso
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> RegistrarFormaPagoCompromiso([FromQuery(Name = "tipo")] int tipo, FormaPagoCompromisoDto forma)
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            if (forma != null)
+            {
+                if (forma.ListaLineaPlanPago != null && forma.ListaLineaPlanPago.Count > 0)
+                {
+                    var lista = forma.ListaLineaPlanPago.OrderBy(x => x.MesId).ToList();
+
+                    if (tipo == 1)
+                    {
+                        await RegistrarListaPlanPago(forma.Cdp, lista);
+                    }
+                    else
+                    {
+                        await ActualizarListaPlanPago(forma.Cdp, lista);
+                    }
+
+                    await transaction.CommitAsync();
+                    return Ok(1);
+                }
+            }
+            return NoContent();
+        }
+
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerCompromisosParaPlanPago([FromQuery(Name = "tipo")] int tipo,
+                                                                        [FromQuery(Name = "terceroId")] int? terceroId,
+                                                                        [FromQuery(Name = "numeroCrp")] int? numeroCrp,
+                                                                        [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                PagedList<CDPDto> pagedList = null;
+
+                if (tipo == 1)
+                {
+                    pagedList = await _repo.ObtenerCompromisosSinPlanPago(terceroId, numeroCrp, userParams);
+                }
+                else
+                {
+                    pagedList = await _repo.ObtenerCompromisosConPlanPago(terceroId, numeroCrp, userParams);
+                }
+                var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
+
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                    pagedList.TotalCount, pagedList.TotalPages);
+
+                return Ok(listaDto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de compromisos");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerLineasPlanPagoXCompromiso([FromQuery(Name = "crp")] int crp)
+        {
+            try
+            {
+                var lista = await _repo.ObtenerLineasPlanPagoXCompromiso(crp);
+                return Ok(lista);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de planes de pago para el compromiso");
+        }
+
+
+        #endregion Forma Pago Compromiso
 
         public FileStreamResult ExportExcel(DataTable dt, string nombreArchivo)
         {
@@ -326,5 +411,135 @@ namespace ComplementApp.API.Controllers
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
+        private async Task RegistrarListaPlanPago(CDPDto cdp, List<LineaPlanPagoDto> lista)
+        {
+            List<PlanPago> listaPlanPago = new List<PlanPago>();
+            PlanPago planPago = null;
+            int numeroPagos = 1;
+            DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
+            int mesAnterior = 0;
+
+            if (lista != null && lista.Count > 0)
+            {
+                foreach (var item in lista)
+                {
+                    if (mesAnterior != item.MesId)
+                    {
+                        numeroPagos = 1;
+                    }
+                    planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos);
+
+                    listaPlanPago.Add(planPago);
+                    mesAnterior = item.MesId;
+                    numeroPagos++;
+                }
+
+                await _dataContext.PlanPago.AddRangeAsync(listaPlanPago);
+                await _dataContext.SaveChangesAsync();
+            }
+        }
+
+        private async Task ActualizarListaPlanPago(CDPDto cdp, List<LineaPlanPagoDto> listaTotal)
+        {
+            int numeroPagos = 1;
+            int mesAnterior = 0;
+            List<PlanPago> listaPlanPago = new List<PlanPago>();
+            PlanPago planPago = null;
+            DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
+
+            #region Registrar nuevos 
+
+            List<LineaPlanPagoDto> listaNueva = listaTotal
+                                                .Where(x => x.EstadoModificacion == (int)EstadoModificacion.Insertado)
+                                                .OrderBy(x => x.MesId)
+                                                .ToList();
+
+            if (listaNueva != null && listaNueva.Count > 0)
+            {
+                var listaActualXCompromiso = await _repo.ObtenerLineasPlanPagoXCompromiso((int)cdp.Crp);
+
+                foreach (var item in listaNueva)
+                {
+                    var planesPagoBD = listaActualXCompromiso
+                                        .Where(x => x.MesId == item.MesId)
+                                        .ToList();
+
+                    if (planesPagoBD == null)
+                    {
+                        if (mesAnterior != item.MesId)
+                        {
+                            numeroPagos = 1;
+                        }
+                    }
+                    else
+                    {
+                        if (numeroPagos == 1)
+                        {
+                            numeroPagos = planesPagoBD.Count() + 1;
+                        }
+                    }
+
+                    planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos);
+
+                    listaPlanPago.Add(planPago);
+                    mesAnterior = item.MesId;
+                    numeroPagos++;
+                }
+
+                await _dataContext.PlanPago.AddRangeAsync(listaPlanPago);
+                await _dataContext.SaveChangesAsync();
+            }
+
+            #endregion Registrar nuevos 
+
+            #region Actualizar registros
+
+            List<LineaPlanPagoDto> listaModificada = listaTotal
+            .Where(x => x.EstadoModificacion == (int)EstadoModificacion.Modificado)
+            .ToList();
+
+            if (listaModificada != null && listaModificada.Count > 0)
+            {
+                foreach (var item in listaModificada)
+                {
+                    planPago = await _repo.ObtenerPlanPagoBase(item.PlanPagoId);
+
+                    if (planPago != null)
+                    {
+                        planPago.ValorInicial = item.Valor;
+                        planPago.ValorAdicion = 0;
+                        planPago.ValorAPagar = item.Valor;
+                        planPago.ValorPagado = 0;
+                        planPago.UsuarioIdModificacion = usuarioId;
+                        planPago.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        await _dataContext.SaveChangesAsync();
+                    }
+                }
+            }
+
+            #endregion Actualizar registros
+        }
+
+        private PlanPago MapearPlanPago(CDPDto cdp, int anio, int mesPago, decimal valor, int numeroPago)
+        {
+            var planPago = new PlanPago();
+            planPago.Crp = cdp.Crp;
+            planPago.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
+            planPago.Cdp = cdp.Cdp;
+            planPago.AnioPago = anio;
+            planPago.MesPago = mesPago;
+            planPago.ValorInicial = valor;
+            planPago.ValorAdicion = 0;
+            planPago.ValorAPagar = valor;
+            planPago.ValorPagado = 0;
+            planPago.Viaticos = false;
+            planPago.TerceroId = cdp.TerceroId;
+            planPago.NumeroPago = numeroPago;
+
+            planPago.UsuarioIdRegistro = usuarioId;
+            planPago.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+
+            return planPago;
+        }
     }
 }

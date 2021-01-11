@@ -17,15 +17,17 @@ import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { CdpService } from 'src/app/_services/cdp.service';
 import { ClavePresupuestalContableService } from 'src/app/_services/clavePresupuestalContable.service';
+import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-clave-presupuestal-contable',
-  templateUrl: './clave-presupuestal-contable.component.html',
-  styleUrls: ['./clave-presupuestal-contable.component.scss'],
+  selector: 'app-plan-pago',
+  templateUrl: './plan-pago.component.html',
+  styleUrls: ['./plan-pago.component.scss'],
 })
-export class ClavePresupuestalContableComponent implements OnInit {
+export class PlanPagoComponent implements OnInit {
   nombreTransaccion: string;
   transaccion: Transaccion;
   search: string;
@@ -35,13 +37,15 @@ export class ClavePresupuestalContableComponent implements OnInit {
   listaEstadoId: string;
   arrayControls = new FormArray([]);
   mostrarCabecera = true;
-  modalidadContrato = 0;
   tipoPago = 0;
 
   listaCdp: Cdp[] = [];
   crp = 0;
   cdpSeleccionado: Cdp;
   tercero: Tercero;
+
+  nombreBoton = 'Registrar Planes de Pago';
+  esCreacion = true;
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;
@@ -53,14 +57,13 @@ export class ClavePresupuestalContableComponent implements OnInit {
     totalPages: 0,
     maxSize: 10,
   };
-  listaClavePresupuestalContable: ClavePresupuestalContableDto[];
 
   constructor(
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private clavePresupuestalContableService: ClavePresupuestalContableService
+    private planPagoService: PlanPagoService
   ) {}
 
   ngOnInit(): void {
@@ -103,6 +106,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
 
   createForm() {
     this.facturaHeaderForm = this.fb.group({
+      rbtRadicarFacturaCtrl: ['1'],
       terceroCtrl: ['', Validators.required],
       terceroDescripcionCtrl: [''],
       planPagoControles: this.arrayControls,
@@ -120,7 +124,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
       }
     } else {
       this.alertify.warning(
-        'El tercero ya tiene registrados clave contable'
+        'No existen compromisos sin planes de pago registrados'
       );
     }
   }
@@ -132,9 +136,29 @@ export class ClavePresupuestalContableComponent implements OnInit {
     }
   }
 
+  onCreacion(event) {
+    this.limpiarVariables();
+    this.esCreacion = true;
+    this.nombreBoton = 'Registrar Planes de Pago';
+    this.onBuscarFactura();
+  }
+
+  onModificacion(event) {
+    this.limpiarVariables();
+    this.esCreacion = false;
+    this.nombreBoton = 'Modificar Planes de Pago';
+    this.onBuscarFactura();
+  }
+
+  onLimpiarFactura() {
+    this.limpiarVariables();
+    this.onBuscarFactura();
+  }
+
   onBuscarFactura() {
-    this.clavePresupuestalContableService
-      .ObtenerCompromisosParaClavePresupuestalContable(
+    this.planPagoService
+      .ObtenerCompromisosParaPlanPago(
+        this.esCreacion ? 1 : 2,
         this.terceroId,
         null,
         this.pagination.currentPage,
@@ -151,7 +175,9 @@ export class ClavePresupuestalContableComponent implements OnInit {
           this.alertify.error(error);
         },
         () => {
+          const tipo = this.esCreacion ? '1' : '2';
           this.facturaHeaderForm = this.fb.group({
+            rbtRadicarFacturaCtrl: [tipo],
             terceroCtrl: ['', Validators.required],
             terceroDescripcionCtrl: [''],
             planPagoControles: this.arrayControls,
@@ -165,15 +191,15 @@ export class ClavePresupuestalContableComponent implements OnInit {
     this.onBuscarFactura();
   }
 
-  onLimpiarFactura() {
+  limpiarVariables() {
+    this.nombreBoton = 'Registrar';
+    this.esCreacion = true;
     this.listaCdp = [];
     this.crp = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
-    this.listaClavePresupuestalContable = [];
-
-    this.onBuscarFactura();
+    this.cdpSeleccionado = null;
   }
 
   unsubscribe() {
@@ -192,39 +218,15 @@ export class ClavePresupuestalContableComponent implements OnInit {
     }
   }
 
-  onRegistrarClavePresupuestal() {
+  onRegistrarPlanPago() {
     if (this.listaCdp && this.listaCdp.length > 0 && this.crp > 0) {
-      this.cdpSeleccionado = this.listaCdp.filter(
-        (x) => x.crp === this.crp
-      )[0];
+      this.cdpSeleccionado = this.listaCdp.filter((x) => x.crp === this.crp)[0];
       if (this.cdpSeleccionado) {
-        this.ObtenerRubrosParaClavePresupuestalContable();
+        this.mostrarCabecera = false;
+      } else {
+        this.alertify.error('Hubo un error al obtener el compromiso.');
       }
     }
-  }
-
-  ObtenerRubrosParaClavePresupuestalContable() {
-    this.clavePresupuestalContableService
-      .ObtenerRubrosPresupuestalesXCompromiso(this.crp)
-      .subscribe(
-        (response: ClavePresupuestalContableDto[]) => {
-          if (response) {
-            this.listaClavePresupuestalContable = response;
-            if (
-              this.listaClavePresupuestalContable &&
-              this.listaClavePresupuestalContable.length > 0
-            ) {
-              this.terceroId = this.listaClavePresupuestalContable[0].tercero.id;
-              this.mostrarCabecera = false;
-            }
-          }
-        },
-        (error) => {
-          this.alertify.error(
-            'Hubo un error al obtener el formato de liquidación.'
-          );
-        }
-      );
   }
 
   HabilitarCabecera($event) {
@@ -235,6 +237,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
       totalPages: 0,
       maxSize: 10,
     };
+
     this.onLimpiarFactura();
     this.mostrarCabecera = true;
   }

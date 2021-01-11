@@ -255,6 +255,14 @@ export class LiquidacionPagoComponent implements OnInit {
   }
 
   HabilitarCabecera($event) {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 0,
+      maxSize: 10,
+    };
+
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }

@@ -99,6 +99,8 @@ import { PopupClavePresupuestalContableComponent } from './administracion/clave-
 import { ObligacionPresupuestalComponent } from './generador/obligacion-presupuestal/obligacion-presupuestal.component';
 import { DecimalMaskDirective } from './_directives/decimal-mask.directive';
 import { PopupParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/popup-parametro-liquidacion-tercero/popup-parametro-liquidacion-tercero.component';
+import { PlanPagoComponent } from './administracion/plan-pago/plan-pago.component';
+import { PlanPagoEditComponent } from './administracion/plan-pago/plan-pago-edit/plan-pago-edit.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -167,6 +169,8 @@ export function tokenGetter() {
     FormatoSolicitudPagoAprobacionComponent,
     PopupSolicitudPagoAprobacionComponent,
     ObligacionPresupuestalComponent,
+    PlanPagoComponent,
+    PlanPagoEditComponent,
   ],
   imports: [
     BrowserModule,

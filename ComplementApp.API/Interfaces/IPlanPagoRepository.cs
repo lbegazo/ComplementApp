@@ -33,5 +33,13 @@ namespace ComplementApp.API.Interfaces
         Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams);
 
         Task<List<PlanPago>> ObtenerListaPlanPagoXIds(List<int> listaPlanPagoId);
+
+        #region Forma Pago Compromiso
+        Task<PagedList<CDPDto>> ObtenerCompromisosSinPlanPago(int? terceroId, int? numeroCrp, UserParams userParams);
+        Task<PagedList<CDPDto>> ObtenerCompromisosConPlanPago(int? terceroId, int? numeroCrp, UserParams userParams);
+        Task<ICollection<LineaPlanPagoDto>> ObtenerLineasPlanPagoXCompromiso(int numeroCrp);
+        Task<PlanPago> ObtenerUltimoPlanPagoDeCompromisoXMes(int crp, int MesId);
+
+        #endregion Forma Pago Compromiso
     }
 }

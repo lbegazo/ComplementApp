@@ -157,7 +157,7 @@ export class CdpEditComponent implements OnInit {
       this.cdpForm.controls.tipoDetalleControl.disable();
 
       //#endregion Solicitud Inicial
-    }   
+    }
   }
 
   get rubrosControles() {
@@ -206,7 +206,9 @@ export class CdpEditComponent implements OnInit {
           for (let index = 0; index < arrayControles.length; index++) {
             const item = arrayControles.at(index);
             const itemDetalle = this.detalleCdp[index];
-            itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(item.value.rubroControl);
+            itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(
+              item.value.rubroControl
+            );
           }
         }
 
@@ -287,7 +289,9 @@ export class CdpEditComponent implements OnInit {
         for (let index = 0; index < arrayControl.length; index++) {
           const item = arrayControl.at(index);
           const itemDetalle = listaDetalleSolicitudCDP[index];
-          itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(item.value.rubroControl);
+          itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(
+            item.value.rubroControl
+          );
         }
       }
 
@@ -366,18 +370,15 @@ export class CdpEditComponent implements OnInit {
   }
 
   cargarNotaLegal() {
-    this.listaService
-      .ObtenerParametroGeneralXNombre('NotaLegalANE')
-      .subscribe(
-        (data: ValorSeleccion) => {
-          this.notaLegal = data;
-        },
-        (error) => {
-          this.alertify.error(error);
-        }
-      );
+    this.listaService.ObtenerParametroGeneralXNombre('NotaLegalANE').subscribe(
+      (data: ValorSeleccion) => {
+        this.notaLegal = data;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
   }
-
 
   get esSolicitudInicial() {
     const idTipoOperacion = this.tipoOperacion?.tipoOperacionId;

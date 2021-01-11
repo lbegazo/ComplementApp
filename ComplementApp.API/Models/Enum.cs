@@ -32,7 +32,6 @@ namespace ComplementApp.API.Models
         Contratista = 6,
     }
 
-
     public enum EstadoSolicitudCDP
     {
         Generado = 16,
@@ -112,5 +111,28 @@ namespace ComplementApp.API.Models
     {
         Cabecera = 1,
         Detalle = 2,
+    }
+
+    public enum Mes
+    {
+        Enero = 1,
+        Febrero = 2,
+        Marzo = 3,
+        Abril = 4,
+        Mayo = 5,
+        Junio = 6,
+        Julio = 7,
+        Agosto = 8,
+        Septiembre = 9,
+        Octubre = 10,
+        Noviembre = 11,
+        Diciembre = 12,
+    }
+
+    public enum EstadoModificacion
+    {
+        Insertado = 1,
+        Modificado = 2,
+        Eliminado = 3,
     }
 }

@@ -67,7 +67,7 @@ export class RadicadoPagoComponent implements OnInit {
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
-    maxSize: 10
+    maxSize: 10,
   };
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
 
@@ -260,6 +260,14 @@ export class RadicadoPagoComponent implements OnInit {
   }
 
   HabilitarCabecera($event) {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 0,
+      maxSize: 10,
+    };
+
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }

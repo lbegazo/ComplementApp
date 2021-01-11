@@ -88,6 +88,15 @@
     "Ruta": "ADMINISTRACION_RELACIONCONTABLE",
     "CodigoPadreTransaccion": "ADMINISTRACION"
   },
+  {
+    "Codigo": "ADMINISTRACION_PLANPAGO",
+    "Nombre": "Plan de Pago",
+    "Descripcion": "Plan de Pago",
+    "Icono": "supervisor_account",
+    "Ruta": "ADMINISTRACION_PLANPAGO",
+    "CodigoPadreTransaccion": "ADMINISTRACION"
+  },
+
 
   {
     "Codigo": "PLAN_CARGAMASIVA",
