@@ -8,7 +8,7 @@
           style="width: 90%; margin-left: auto; margin-right: auto"
         >
           <tr>
-            <td>
+            <td colspan="4">
               <div class="form-row mt-2 ml-1 mr-1">
                 <!--Compromiso-->
                 <div class="form-group col-md-1" style="margin: 0px">
@@ -60,351 +60,375 @@
                   <p class="paragraphLeft">{{ cdpSeleccionado.objeto }}</p>
                 </div>
               </div>
-              <!--Controles Meses-->
-              <div class="form-row mt-2">
-                <!--ENERO-->
-                <div class="form-group col-md-2">
-                  <label for="MesEnero" class="col-form-label-md"
-                    ><strong>ENERO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="eneroCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorEnero"
-                  />
-                </div>
-                <!--FEBRERO-->
-                <div class="form-group col-md-2">
-                  <label for="MesFebrero" class="col-form-label-md"
-                    ><strong>FEBRERO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="febreroCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorFebrero"
-                  />
-                </div>
-                <!--MARZO-->
-                <div class="form-group col-md-2">
-                  <label for="MesMarzo" class="col-form-label-md"
-                    ><strong>MARZO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="marzoCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorMarzo"
-                  />
-                </div>
-              </div>
+            </td>
+          </tr>
+          <tr>
+            <!--Controles Meses-->
+            <td style="width: 34%">
               <div class="form-row">
-                <!--ABRIL-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorAbril" class="col-form-label-md"
-                    ><strong>ABRIL</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="abrilCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorAbril"
-                  />
-                </div>
-                <!--MAYO-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorMayo" class="col-form-label-md"
-                    ><strong>MAYO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="mayoCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorMayo"
-                  />
-                </div>
-                <!--JUNIO-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorJunio" class="col-form-label-md"
-                    ><strong>JUNIO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="junioCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorJunio"
-                  />
+                <div class="col-12 withoutPadding center">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label class="col-form-label-md">MES</label>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label class="col-form-label-md">VALOR</label>
+                    </div>
+                  </div>
+                  <!--ENERO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="MesEnero" class="col-form-label-md"
+                        ><strong>ENERO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6 center">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="eneroCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorEnero"
+                      />
+                    </div>
+                  </div>
+                  <!--FEBRERO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="MesFebrero" class="col-form-label-md"
+                        ><strong>FEBRERO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="febreroCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorFebrero"
+                      />
+                    </div>
+                  </div>
+                  <!--MARZO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="MesMarzo" class="col-form-label-md"
+                        ><strong>MARZO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="marzoCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorMarzo"
+                      />
+                    </div>
+                  </div>
+                  <!--ABRIL-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorAbril" class="col-form-label-md"
+                        ><strong>ABRIL</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="abrilCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorAbril"
+                      />
+                    </div>
+                  </div>
+                  <!--MAYO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorMayo" class="col-form-label-md"
+                        ><strong>MAYO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="mayoCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorMayo"
+                      />
+                    </div>
+                  </div>
+                  <!--JUNIO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorJunio" class="col-form-label-md"
+                        ><strong>JUNIO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="junioCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorJunio"
+                      />
+                    </div>
+                  </div>
+                  <!--JULIO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorJulio" class="col-form-label-md"
+                        ><strong>JULIO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="julioCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorJulio"
+                      />
+                    </div>
+                  </div>
+                  <!--AGOSTO-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorAgosto" class="col-form-label-md"
+                        ><strong>AGOSTO</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="agostoCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorAgosto"
+                      />
+                    </div>
+                  </div>
+                  <!--SEPTIEMBRE-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label
+                        for="inputValorSeptiembre"
+                        class="col-form-label-md"
+                        ><strong>SEPTIEMBRE</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="septiembreCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorSeptiembre"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <!--OCTUBRE-->
+                    <div class="form-group col-md-6">
+                      <label for="inputValorOctubre" class="col-form-label-md"
+                        ><strong>OCTUBRE</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="octubreCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorOctubre"
+                      />
+                    </div>
+                  </div>
+                  <!--NOVIEMBRE-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorNoviembre" class="col-form-label-md"
+                        ><strong>NOVIEMBRE</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="noviembreCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorNoviembre"
+                      />
+                    </div>
+                  </div>
+                  <!--DICIEMBRE-->
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputValorDiciembre" class="col-form-label-md"
+                        ><strong>DICIEMBRE</strong></label
+                      >
+                    </div>
+                    <div class="form-group col-md-6">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 90%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="diciembreCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        id="inputValorDiciembre"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
+            </td>
+            <!--Boton Agregar-->
+            <td style="width: 6%">
               <div class="form-row">
-                <!--JULIO-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorJulio" class="col-form-label-md"
-                    ><strong>JULIO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="julioCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorJulio"
-                  />
-                </div>
-                <!--AGOSTO-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorAgosto" class="col-form-label-md"
-                    ><strong>AGOSTO</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="agostoCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorAgosto"
-                  />
-                </div>
-                <!--SEPTIEMBRE-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorSeptiembre" class="col-form-label-md"
-                    ><strong>SEPTIEMBRE</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="septiembreCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorSeptiembre"
-                  />
-                </div>
-              </div>
-              <div class="form-row">
-                <!--OCTUBRE-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorOctubre" class="col-form-label-md"
-                    ><strong>OCTUBRE</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="octubreCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorOctubre"
-                  />
-                </div>
-                <!--NOVIEMBRE-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorNoviembre" class="col-form-label-md"
-                    ><strong>NOVIEMBRE</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="noviembreCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorNoviembre"
-                  />
-                </div>
-                <!--DICIEMBRE-->
-                <div class="form-group col-md-2">
-                  <label for="inputValorDiciembre" class="col-form-label-md"
-                    ><strong>DICIEMBRE</strong></label
-                  >
-                </div>
-                <div class="form-group col-md-2">
-                  <input
-                    type="text"
-                    style="text-align: right; width: 170px"
-                    class="form-control border border-bottom-0 addPadding"
-                    formControlName="diciembreCtrl"
-                    appDecimalMask
-                    placeholder="Ingrese valor"
-                    id="inputValorDiciembre"
-                  />
-                </div>
-              </div>
-              <div class="form-row mr-1">
-                <div class="col-12 withoutPadding right">
+                <div class="col-12 withoutPadding center">
                   <button class="btn btn-success" (click)="onAgregar()">
                     Agregar
                   </button>
                 </div>
               </div>
-              <div class="row mt-1">
+            </td>
+            <!--Grilla-->
+            <td style="width: 30%">
+              <!--Grilla-->
+              <div class="form-row">
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Sel.</label>
+                </div>
+                <div style="width: 30%" class="inner center">
+                  <label class="col-form-label-md">MES</label>
+                </div>
+                <div style="width: 50%" class="inner center">
+                  <label class="col-form-label-md">VALOR</label>
+                </div>
+              </div>
+              <div *ngIf="listaLineaPlanPago">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaLineaPlanPago; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="radio"
+                        [value]="item?.planPagoId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                        #itemSeleccionado
+                      />
+                    </div>
+                    <div
+                      style="width: 30%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.mesDescripcion }}</p>
+                    </div>
+                    <div
+                      style="width: 50%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.valor | number: "1.2-2" }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="form-row">
+                <div style="width: 10%"></div>
+                <div style="width: 30%" class="inner center aplicaBackground">
+                  <label class="col-form-label-md">VALOR TOTAL</label>
+                </div>
+                <div style="width: 50%" class="inner right aplicaBackground">
+                  <label class="col-form-label-md">{{
+                    valorTotal | number: "1.2-2"
+                  }}</label>
+                </div>
+              </div>
+            </td>
+            <!--Control de Mantenimiento-->
+            <td style="width: 30%">
+              <div class="form-row">
                 <div class="col-12 withoutPadding center">
-                  <table
-                    style="width: 80%; margin-left: auto; margin-right: auto"
-                  >
-                    <tr>
-                      <td>
-                        <!--Grilla-->
-                        <div class="form-row">
-                          <div style="width: 10%" class="inner center">
-                            <label class="col-form-label-md">Sel.</label>
-                          </div>
-                          <div style="width: 30%" class="inner center">
-                            <label class="col-form-label-md">MES</label>
-                          </div>
-                          <div style="width: 30%" class="inner center">
-                            <label class="col-form-label-md">VALOR</label>
-                          </div>
-                        </div>
-                        <div *ngIf="listaLineaPlanPago">
-                          <div
-                            formArrayName="planPagoControles"
-                            class="form-row"
-                            *ngFor="
-                              let item of listaLineaPlanPago;
-                              let i = index
-                            "
-                          >
-                            <ng-container [formGroupName]="i">
-                              <div
-                                style="width: 10%"
-                                class="inner center aplicaBackground"
-                              >
-                                <input
-                                  type="radio"
-                                  [value]="item?.planPagoId"
-                                  (change)="onCheckChange($event)"
-                                  name="inlineDefaultRadiosExample"
-                                  #itemSeleccionado
-                                />
-                              </div>
-                              <div
-                                style="width: 30%"
-                                class="inner center aplicaBackground"
-                              >
-                                <p class="medium">{{ item?.mesDescripcion }}</p>
-                              </div>
-                              <div
-                                style="width: 30%"
-                                class="inner right aplicaBackground"
-                              >
-                                <p class="medium">
-                                  {{ item?.valor | number: "1.2-2" }}
-                                </p>
-                              </div>
-                            </ng-container>
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div style="width: 10%"></div>
-                          <div
-                            style="width: 30%"
-                            class="inner center aplicaBackground"
-                          >
-                            <label class="col-form-label-md">VALOR TOTAL</label>
-                          </div>
-                          <div
-                            style="width: 30%"
-                            class="inner right aplicaBackground"
-                          >
-                            <label class="col-form-label-md">{{
-                              valorTotal | number: "1.2-2"
-                            }}</label>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-row">
-                          <div style="width: 30%" class="inner center">
-                            <label class="col-form-label-md">MES</label>
-                          </div>
-                          <div style="width: 30%" class="inner center">
-                            <label class="col-form-label-md">VALOR</label>
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div style="width: 30%" class="inner center">
-                            <label class="col-form-label-md">{{
-                              planPagoSeleccionado?.mesDescripcion
-                            }}</label>
-                          </div>
-                          <div style="width: 30%" class="inner">
-                            <input
-                              type="text"
-                              style="text-align: right; width: 100%"
-                              class="form-control border border-bottom-0 addPadding"
-                              formControlName="valorCtrl"
-                              appDecimalMask
-                              placeholder="Ingrese valor"
-                              #txtValorActualizado
-                            />
-                          </div>
-                        </div>
-                        <div class="form-row mt-1">
-                          <div style="width: 60%" class="right">
-                            <button
-                              class="btn btn-danger btn-sm mr-1"
-                              (click)="onEliminar()"                              
-                              [disabled]="planPagoSeleccionado === null"
-                              *ngIf="this.esCreacion"
-                            >
-                              Eliminar
-                            </button>
-                            <button
-                              class="btn btn-warning btn-sm"
-                              (click)="onActualizar()"                              
-                              [disabled]="planPagoSeleccionado === null"
-                            >
-                              Actualizar
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
+                  <div class="form-row">
+                    <div style="width: 40%" class="inner center">
+                      <label class="col-form-label-md">MES</label>
+                    </div>
+                    <div style="width: 50%" class="inner center">
+                      <label class="col-form-label-md">VALOR</label>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div style="width: 40%" class="inner center">
+                      <label class="col-form-label-md">{{
+                        planPagoSeleccionado?.mesDescripcion
+                      }}</label>
+                    </div>
+                    <div style="width: 50%" class="inner">
+                      <input
+                        type="text"
+                        style="text-align: right; width: 100%"
+                        class="form-control border border-bottom-0 addPadding"
+                        formControlName="valorCtrl"
+                        appDecimalMask
+                        placeholder="Ingrese valor"
+                        #txtValorActualizado
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row mt-1">
+                    <div style="width: 90%" class="right">
+                      <button
+                        class="btn btn-danger btn-sm mr-1"
+                        (click)="onEliminar()"
+                        [disabled]="planPagoSeleccionado === null"
+                        *ngIf="this.esCreacion"
+                      >
+                        Eliminar
+                      </button>
+                      <button
+                        class="btn btn-warning btn-sm"
+                        (click)="onActualizar()"
+                        [disabled]="planPagoSeleccionado === null"
+                      >
+                        Actualizar
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </td>
@@ -424,7 +448,7 @@
               class="btn btn-primary"
               (click)="onGuardar()"
               style="margin-right: 10px"
-              [disabled]="valorTotal !== cdpSeleccionado.saldoActual"
+              [disabled]="valorTotal !== cdpSeleccionado.valorTotal"
             >
               {{ nombreBoton }}
             </button>

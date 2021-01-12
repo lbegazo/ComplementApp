@@ -261,7 +261,7 @@ export class PlanPagoEditComponent implements OnInit {
 
     if (this.validarValorTotalSuperior()) {
       this.alertify.warning(
-        'la suma de los planes de pago es superior al valor del CRP'
+        'La suma de los planes de pago es superior al valor del CRP'
       );
     }
   }
