@@ -84,6 +84,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   listaTipoDocumentoSoporte: ValorSeleccion[] = [];
   listaSupervisor: ValorSeleccion[] = [];
   listaFacturaElectronica: ValorSeleccion[] = [];
+  listaSubcontrata: ValorSeleccion[] = [];
 
   editForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
@@ -107,6 +108,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   idFacturaElectronicaSeleccionado?: number;
   facturaElectronicaSeleccionado: ValorSeleccion = null;
+
+  idSubcontrataSeleccionado?: number;
+  subcontrataSeleccionado: ValorSeleccion = null;
 
   idSupervisorSeleccionado?: number;
   supervisorSeleccionado: ValorSeleccion = null;
@@ -248,6 +252,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       tarifaIvaCtrl: ['', Validators.required],
       tipoIvaCtrl: [null, Validators.required],
       facturaElectronicaCtrl: [null, Validators.required],
+      subcontrataCtrl: [null, Validators.required],
       tipoCuentaXPagarCtrl: [null, Validators.required],
       tipoDocumentoSoporteCtrl: [null, Validators.required],
       supervisorCtrl: [null, Validators.required],
@@ -359,6 +364,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
+    console.log(this.parametroLiquidacionSeleccionado.supervisorId);
     this.idSupervisorSeleccionado =
       this.parametroLiquidacionSeleccionado.supervisorId > 0
         ? this.parametroLiquidacionSeleccionado.supervisorId
@@ -376,6 +382,14 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
+    this.idSubcontrataSeleccionado = this.parametroLiquidacionSeleccionado.subcontrataId;
+    if (this.idSubcontrataSeleccionado !== null) {
+      this.subcontrataSeleccionado = this.listaSubcontrata.filter(
+        (x) => x.id === this.idSubcontrataSeleccionado
+      )[0];
+    }
+
+    console.log(this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar);
     this.idTipoCuentaXPagarSelecionado =
       this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar > 0
         ? this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar
@@ -386,6 +400,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
+    console.log(this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte);
     this.idTipoDocumentoSoporteSelecionado =
       this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte > 0
         ? this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte
@@ -520,6 +535,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.aportePensionCtrl.enable();
       this.riesgoLaboralCtrl.enable();
       this.fondoSolidaridadCtrl.enable();
+      this.subcontrataCtrl.enable();
 
       this.pensionVoluntariaCtrl.enable();
       this.dependienteCtrl.enable();
@@ -550,6 +566,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.aportePensionCtrl.disable();
       this.riesgoLaboralCtrl.disable();
       this.fondoSolidaridadCtrl.disable();
+      this.subcontrataCtrl.disable();
 
       this.pensionVoluntariaCtrl.disable();
       this.dependienteCtrl.disable();
@@ -600,6 +617,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       .value as ValorSeleccion;
     this.idFacturaElectronicaSeleccionado = +this.facturaElectronicaSeleccionado
       .id;
+  }
+
+  onSubcontrata() {
+    this.subcontrataSeleccionado = this.subcontrataCtrl.value as ValorSeleccion;
+    this.idSubcontrataSeleccionado = +this.subcontrataSeleccionado.id;
   }
 
   onSupervisor() {
@@ -804,6 +826,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             formValues.tarifaIvaCtrl
           ),
           facturaElectronicaId: this.idFacturaElectronicaSeleccionado,
+          subcontrataId: this.idSubcontrataSeleccionado,
           supervisorId: this.idSupervisorSeleccionado,
 
           baseAporteSalud:
@@ -906,6 +929,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.parametroLiquidacionSeleccionado.tipoPago = this.idTipoPagoSelecionado;
         this.parametroLiquidacionSeleccionado.supervisorId = this.idSupervisorSeleccionado;
         this.parametroLiquidacionSeleccionado.facturaElectronicaId = this.idFacturaElectronicaSeleccionado;
+        this.parametroLiquidacionSeleccionado.subcontrataId = this.idSubcontrataSeleccionado;
         this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte = this.idTipoDocumentoSoporteSelecionado;
         this.parametroLiquidacionSeleccionado.honorarioSinIva = GeneralService.obtenerValorAbsoluto(
           formValues.honorarioSinIvaCtrl
@@ -1083,6 +1107,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   get facturaElectronicaCtrl() {
     return this.editForm.get('facturaElectronicaCtrl');
   }
+  get subcontrataCtrl() {
+    return this.editForm.get('subcontrataCtrl');
+  }
   get baseAporteSaludCtrl() {
     return this.editForm.get('baseAporteSaludCtrl');
   }
@@ -1195,6 +1222,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.listaService.ObtenerListaSIoNO().subscribe(
       (lista: ValorSeleccion[]) => {
         this.listaFacturaElectronica = lista;
+        this.listaSubcontrata = lista;
       },
       (error) => {
         this.alertify.error(error);

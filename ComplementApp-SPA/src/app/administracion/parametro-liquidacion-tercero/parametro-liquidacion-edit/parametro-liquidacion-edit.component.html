@@ -75,7 +75,7 @@
                                   placeholder="Modalidad Contrato"
                                   formControlName="modalidadContratoCtrl"
                                   class="form-control withoutPadding"
-                                  style="height: 33px"
+                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onModalidadContrato()"
                                   id="selectModalidadContrato"
                                   [(ngModel)]="modalidadContratoSeleccionado"
@@ -172,19 +172,19 @@
                               </div>
                               <!--Factura Electrónica-->
                               <div
-                                class="form-group col-md-1"
+                                class="form-group col-md-2"
                                 style="margin: 0px"
                               >
                                 <label
                                   for="selectFacturaElectronica"
                                   class="col-form-label-md"
-                                  >Fact. Elec.</label
+                                  >Fact. Electrónica</label
                                 >
                                 <select
                                   placeholder="Fact. Elec."
                                   formControlName="facturaElectronicaCtrl"
                                   class="form-control withoutPadding"
-                                  style="height: 33px"
+                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onFacturaElectronica()"
                                   id="selectFacturaElectronica"
                                   [(ngModel)]="facturaElectronicaSeleccionado"
@@ -220,37 +220,38 @@
                                   Debe seleccionar factura electrónica
                                 </div>
                               </div>
-                              <!--Base Grav. Renta-->
+                              <!--Subcontrata-->
                               <div
                                 class="form-group col-md-2"
                                 style="margin: 0px"
                               >
                                 <label
-                                  for="selectTipoPago"
+                                  for="selectSubContrata"
                                   class="col-form-label-md"
-                                  >Base Grav. Renta</label
+                                  >Subcontrata</label
                                 >
                                 <select
-                                  placeholder="Base Grav. Renta"
-                                  formControlName="tipoPagoCtrl"
+                                  placeholder="Subcontrata"
+                                  formControlName="subcontrataCtrl"
                                   class="form-control withoutPadding"
-                                  style="height: 33px"
-                                  (change)="onTipoPago()"
-                                  id="selectTipoPago"
-                                  [(ngModel)]="tipoPagoSeleccionado"
+                                  style="height: 33px; padding-left: 5px;"
+                                  (change)="onSubcontrata()"
+                                  id="selectSubContrata"
+                                  [(ngModel)]="subcontrataSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
-                                      editForm.get('tipoPagoCtrl').touched &&
+                                      editForm.get('subcontrataCtrl')
+                                        .touched &&
                                       editForm
-                                        .get('tipoPagoCtrl')
+                                        .get('subcontrataCtrl')
                                         .hasError('required')
                                   }"
                                 >
                                   <option disabled [ngValue]="null">
-                                    Base Grav. Renta
+                                    Subcontrata
                                   </option>
                                   <option
-                                    *ngFor="let item of listaTipoPago"
+                                    *ngFor="let item of listaSubcontrata"
                                     [ngValue]="item"
                                   >
                                     {{ item.nombre }}
@@ -259,61 +260,14 @@
                                 <div
                                   class="invalid-feedback"
                                   *ngIf="
-                                    editForm.get('tipoPagoCtrl').touched &&
+                                    editForm.get('subcontrataCtrl')
+                                      .touched &&
                                     editForm
-                                      .get('tipoPagoCtrl')
+                                      .get('subcontrataCtrl')
                                       .hasError('required')
                                   "
                                 >
-                                  Debe seleccionar Tipo de Pago
-                                </div>
-                              </div>
-
-                              <!--Base Grav. Iva-->
-                              <div
-                                class="form-group col-md-2"
-                                style="margin: 0px"
-                              >
-                                <label
-                                  for="selectTipoIva"
-                                  class="col-form-label-md"
-                                  >Base Grav. Iva</label
-                                >
-                                <select
-                                  formControlName="tipoIvaCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px"
-                                  (change)="onTipoIva()"
-                                  id="selectTipoIva"
-                                  [(ngModel)]="tipoIvaSeleccionado"
-                                  [ngClass]="{
-                                    'is-invalid':
-                                      editForm.get('tipoIvaCtrl').touched &&
-                                      editForm
-                                        .get('tipoIvaCtrl')
-                                        .hasError('required')
-                                  }"
-                                >
-                                  <option disabled [ngValue]="null">
-                                    Base Grav. Iva
-                                  </option>
-                                  <option
-                                    *ngFor="let item of listaTipoIva"
-                                    [ngValue]="item"
-                                  >
-                                    {{ item.nombre }}
-                                  </option>
-                                </select>
-                                <div
-                                  class="invalid-feedback"
-                                  *ngIf="
-                                    editForm.get('tipoIvaCtrl').touched &&
-                                    editForm
-                                      .get('tipoIvaCtrl')
-                                      .hasError('required')
-                                  "
-                                >
-                                  Debe seleccionar Tipo de Pago
+                                  Debe seleccionar Subcontrata
                                 </div>
                               </div>
                             </div>
@@ -332,7 +286,7 @@
                                   placeholder="Tipo de Cuenta por Pagar"
                                   formControlName="tipoCuentaXPagarCtrl"
                                   class="form-control withoutPadding"
-                                  style="height: 33px"
+                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onTipoCuentaXPagar()"
                                   id="selectTipoCuentaXPagar"
                                   [(ngModel)]="tipoCuentaXPagarSeleccionado"
@@ -382,7 +336,7 @@
                                   placeholder="Tipo Pago"
                                   formControlName="tipoDocumentoSoporteCtrl"
                                   class="form-control withoutPadding"
-                                  style="height: 33px"
+                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onTipoDocumentoSoporte()"
                                   id="selectTipoDocumentoSoporte"
                                   [(ngModel)]="tipoDocumentoSoporteSeleccionado"
@@ -434,7 +388,7 @@
                                   placeholder="Supervisor"
                                   formControlName="supervisorCtrl"
                                   class="form-control withoutPadding"
-                                  style="height: 33px"
+                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onSupervisor()"
                                   id="selectSupervisor"
                                   [(ngModel)]="supervisorSeleccionado"
@@ -466,6 +420,104 @@
                                   "
                                 >
                                   Debe seleccionar Supervisor
+                                </div>
+                              </div>
+                            </div>
+                            <div  class="form-row mt-2">
+                              <!--Base Grav. Renta-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectTipoPago"
+                                  class="col-form-label-md"
+                                  >Base Grav. Renta</label
+                                >
+                                <select
+                                  placeholder="Base Grav. Renta"
+                                  formControlName="tipoPagoCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px;"
+                                  (change)="onTipoPago()"
+                                  id="selectTipoPago"
+                                  [(ngModel)]="tipoPagoSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tipoPagoCtrl').touched &&
+                                      editForm
+                                        .get('tipoPagoCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Base Grav. Renta
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaTipoPago"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('tipoPagoCtrl').touched &&
+                                    editForm
+                                      .get('tipoPagoCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Tipo de Pago
+                                </div>
+                              </div>
+
+                              <!--Base Grav. Iva-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <label
+                                  for="selectTipoIva"
+                                  class="col-form-label-md"
+                                  >Base Grav. Iva</label
+                                >
+                                <select
+                                  formControlName="tipoIvaCtrl"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px;"
+                                  (change)="onTipoIva()"
+                                  id="selectTipoIva"
+                                  [(ngModel)]="tipoIvaSeleccionado"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('tipoIvaCtrl').touched &&
+                                      editForm
+                                        .get('tipoIvaCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    Base Grav. Iva
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaTipoIva"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('tipoIvaCtrl').touched &&
+                                    editForm
+                                      .get('tipoIvaCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Tipo de Pago
                                 </div>
                               </div>
                             </div>

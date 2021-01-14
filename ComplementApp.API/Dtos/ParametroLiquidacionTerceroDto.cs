@@ -41,6 +41,7 @@ namespace ComplementApp.API.Dtos
         public string TipoCuenta { get; set; }
         public int? ConvenioFontic { get; set; }
         public int? facturaElectronicaId { get; set; }
+        public int? subcontrataId { get; set; }
         public int? supervisorId { get; set; }
         public ICollection<TerceroDeduccionDto> TerceroDeducciones { get; set; }
     }

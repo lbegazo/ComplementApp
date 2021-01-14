@@ -30,6 +30,7 @@ export interface ParametroLiquidacionTercero {
   terceroDeducciones?: TerceroDeduccionDto[];
 
   facturaElectronicaId: number;
+  subcontrataId: number;
   supervisorId: number;
   otrosDescuentos: number;
   fechaInicioOtrosDescuentos: Date;

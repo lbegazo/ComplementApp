@@ -170,7 +170,7 @@
                 registerForm.get('areaControl').touched &&
                 registerForm.get('areaControl').hasError('required')
             }"
-            style="padding: 0px"
+            style="padding: 0px; padding-left: 5px;"
           >
             <option [ngValue]="null" disabled>Selecciona el area</option>
             <option *ngFor="let prf of areas" [ngValue]="prf">

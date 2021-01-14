@@ -99,6 +99,8 @@ namespace ComplementApp.API.Models
 
         public bool FacturaElectronica { get; set; }
 
+        public bool Subcontrata { get; set; }
+
         public int? SupervisorId { get; set; }
 
         public Usuario Supervisor { get; set; }

@@ -105,6 +105,7 @@ namespace ComplementApp.API.Data
                                    FechaFinalDescuentoInteresVivienda = plt.FechaFinalDescuentoInteresVivienda,
 
                                    facturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
+                                   subcontrataId = plt.Subcontrata ? 1 : 0,
                                    supervisorId = plt.SupervisorId,
                                    OtrosDescuentos = plt.OtrosDescuentos,
                                    FechaInicioOtrosDescuentos = plt.FechaInicioOtrosDescuentos,

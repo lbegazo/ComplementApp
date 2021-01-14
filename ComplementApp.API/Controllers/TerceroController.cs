@@ -114,6 +114,7 @@ namespace ComplementApp.API.Controllers
 
                     parametro = _mapper.Map<ParametroLiquidacionTercero>(parametroDto);
 
+                    parametro.Subcontrata = parametroDto.subcontrataId == 1 ? true : false;
                     parametro.FacturaElectronica = parametroDto.facturaElectronicaId == 1 ? true : false;
                     parametro.UsuarioIdRegistro = usuarioId;
                     parametro.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
@@ -170,6 +171,7 @@ namespace ComplementApp.API.Controllers
                 _mapper.Map(parametroDto, parametroBD);
 
                 parametroBD.FacturaElectronica = parametroDto.facturaElectronicaId == 1 ? true : false;
+                parametroBD.Subcontrata = parametroDto.subcontrataId == 1 ? true : false;
                 parametroBD.UsuarioIdModificacion = usuarioId;
                 parametroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
 
