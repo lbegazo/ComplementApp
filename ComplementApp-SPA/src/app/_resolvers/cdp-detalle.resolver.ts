@@ -22,10 +22,8 @@ export class CdpDetalleResolver implements Resolve<Cdp> {
     private alertify: AlertifyService
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Cdp>
-  {
-      var cdp = this.cdpService.ObtenerCDP(+route.params['id']);
-      
+  resolve(route: ActivatedRouteSnapshot): Observable<Cdp> {
+
     return this.cdpService.ObtenerCDP(+route.params['id']).pipe(
       catchError((error) => {
         this.alertify.error('Ocurrió un problema al cargar la información');

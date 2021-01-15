@@ -48,15 +48,18 @@ export class UsuarioEditComponent implements OnInit {
     perfiles: [],
   };
   registerForm = new FormGroup({});
+  arrayControls = new FormArray([]);
 
-  areas: Area[];
-  cargos: Cargo[];
+  areas: Area[] = [];
+  cargos: Cargo[] = [];
   perfiles: Perfil[];
   areaSelected?: number;
   cargoSelected?: number;
   arrayRubro: number[] = [];
   areaSeleccionada: Area = null;
   cargoSeleccionado: Cargo = null;
+
+  isDataLoaded = false;
 
   constructor(
     private listaService: ListaService,
@@ -70,8 +73,17 @@ export class UsuarioEditComponent implements OnInit {
   ngOnInit() {
     this.createEmptyForm();
 
+    this.route.data.subscribe((data) => {
+      this.areas = data['areas'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.cargos = data['cargos'];
+    });
+
     //Cargar datos de controles
-    this.cargarListas();
+    //this.cargarListas();
+    this.cargarPerfiles();
 
     this.route.params.subscribe((params: Params) => {
       this.idUsuario = +params['id'];
@@ -94,7 +106,7 @@ export class UsuarioEditComponent implements OnInit {
         apellidoCtrl: ['', Validators.required],
         areaControl: [0, Validators.required],
         cargoControl: [0, Validators.required],
-        perfilesControles: this.createPerfilesControles(),
+        perfilesControles: this.arrayControls,
         passwordCtrl: [
           '',
           [
@@ -135,11 +147,10 @@ export class UsuarioEditComponent implements OnInit {
     const userNameC = this.user.username;
     const nombresC = this.user.nombres;
     const apellidosC = this.user.apellidos;
-    const areaIdC = this.user.areaId;
-    const cargoIdC = this.user.cargoId;
 
     this.areaSelected = this.user.areaId;
     this.cargoSelected = this.user.cargoId;
+
     this.areaSeleccionada = this.areas.filter(
       (x) => x.areaId === this.areaSelected
     )[0];
@@ -161,26 +172,21 @@ export class UsuarioEditComponent implements OnInit {
       }
     }
 
-    this.registerForm = this.fb.group(
-      {
-        usernameCtrl: [userNameC, Validators.required],
-        nombreCtrl: [nombresC, Validators.required],
-        apellidoCtrl: [apellidosC, Validators.required],
-        areaControl: [areaIdC, Validators.required],
-        cargoControl: [cargoIdC, Validators.required],
-        perfilesControles: this.createPerfilesControles(),
-        passwordCtrl: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(8),
-          ],
-        ],
-        confirmPasswordCtrl: ['', Validators.required],
-      },
-      { validators: this.passwordMatchValidator }
-    );
+    if (this.perfiles) {
+      for (const perfil of this.perfiles) {
+        this.arrayControls.push(new FormControl(perfil.checked || false));
+      }
+    }
+
+    this.registerForm.patchValue({
+      usernameCtrl: userNameC,
+      nombreCtrl: nombresC,
+      apellidoCtrl: apellidosC,
+      areaControl: this.areaSeleccionada,
+      cargoControl: this.cargoSeleccionado,
+    });
+
+    this.registerForm.setControl('perfilesControles', this.arrayControls);
 
     if (this.editMode) {
       this.usernameControl.disable();

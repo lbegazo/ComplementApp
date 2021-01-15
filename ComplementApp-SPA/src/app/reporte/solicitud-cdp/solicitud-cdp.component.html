@@ -43,11 +43,10 @@
                     >Tipo</label
                   >
                   <select
-                    placeholder="Tipo de operación"
                     formControlName="tOperacionCtrl"
-                    class="form-control withoutPadding"
-                    style="height: 23px"
                     (change)="onSelectTipoOperacion()"
+                    class="form-control withoutPadding"
+                    style="height: 23px"                    
                     id="selectOperacion"
                   >
                     <option disabled  [ngValue]="null">Tipo operación</option>

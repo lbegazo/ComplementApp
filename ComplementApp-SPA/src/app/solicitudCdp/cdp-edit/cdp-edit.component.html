@@ -951,18 +951,18 @@
                 </div>
                 <div class="row" *ngIf="!cambiosConfirmados">
                   <div class="col-12" style="padding: 10px">
-                    <select
-                      style="height: 30px; padding-left: 5px;"
+                    <select                      
                       formControlName="tipoDetalleControl"
-                      class="form-control medium"
                       (change)="onSelectTipoDetalle()"
+                      class="form-control medium"
+                      style="height: 30px; padding-left: 5px;"                      
                       [ngClass]="{
                         'is-invalid':
                           cdpForm.get('tipoDetalleControl').touched &&
                           cdpForm.get('tipoDetalleControl').hasError('required')
                       }"
                     >
-                      <option value="" disabled>
+                      <option [ngValue]="null" disabled>
                         Seleccione el detalle de la modificación
                       </option>
                       <option

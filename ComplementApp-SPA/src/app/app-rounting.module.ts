@@ -30,6 +30,15 @@ import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pa
 import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
 import { ObligacionPresupuestalComponent } from './generador/obligacion-presupuestal/obligacion-presupuestal.component';
 import { PlanPagoComponent } from './administracion/plan-pago/plan-pago.component';
+import { ListaAreasResolver } from './_resolvers/lista-areas.resolver';
+import { ListaCargosResolver } from './_resolvers/lista-cargos.resolver';
+import { ListaModalidadContratoResolver } from './_resolvers/lista-ModalidadContrato.resolver';
+import { ListaTipoCuentaPorPagarResolver } from './_resolvers/lista-TipoCuentaPorPagar.resolver';
+import { ListaTipoDocumentoSoporteResolver } from './_resolvers/lista-TipoDocumentoSoporte.resolver';
+import { ListaTipoIvaResolver } from './_resolvers/lista-TipoIva.resolver';
+import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
+import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
+import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -45,7 +54,11 @@ export const routes: Routes = [
     resolve: { transaccion: TransaccionResolver },
     children: [
       { path: '', component: UsuarioStartComponent },
-      { path: 'new', component: UsuarioEditComponent },
+      {
+        path: 'new',
+        component: UsuarioEditComponent,
+        resolve: { areas: ListaAreasResolver, cargos: ListaCargosResolver },
+      },
       {
         path: ':id',
         component: UsuarioDetailComponent,
@@ -54,6 +67,8 @@ export const routes: Routes = [
       {
         path: ':id/edit',
         component: UsuarioEditComponent,
+        resolve: { areas: ListaAreasResolver, cargos: ListaCargosResolver },
+
         // canDeactivate: [PreventUnsavedChangesUsuario],
       },
     ],
@@ -63,7 +78,16 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: ParametroLiquidacionTerceroComponent,
-    resolve: { transaccion: TransaccionResolver },
+    resolve: {
+      transaccion: TransaccionResolver,
+      modalidadContrato: ListaModalidadContratoResolver,
+      tipoCuentaPorPagar: ListaTipoCuentaPorPagarResolver,
+      tipoDocumentoSoporte: ListaTipoDocumentoSoporteResolver,
+      tipoIva: ListaTipoIvaResolver,
+      tipoPago: ListaTipoPagoResolver,
+      supervisor: ListaSupervisorResolver,
+      SIoNO: ListaSIoNOResolver,
+    },
   },
   {
     path: 'ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE',

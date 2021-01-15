@@ -26,7 +26,6 @@ export class PopupDatosAdicionalesComponent implements OnInit {
   datosPopup: any[] = [];
 
   constructor(
-    private liquidacionService: DetalleLiquidacionService,
     private alertify: AlertifyService,
     public bsModalRef: BsModalRef,
     private fb: FormBuilder

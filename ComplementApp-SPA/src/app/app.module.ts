@@ -101,6 +101,15 @@ import { DecimalMaskDirective } from './_directives/decimal-mask.directive';
 import { PopupParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/popup-parametro-liquidacion-tercero/popup-parametro-liquidacion-tercero.component';
 import { PlanPagoComponent } from './administracion/plan-pago/plan-pago.component';
 import { PlanPagoEditComponent } from './administracion/plan-pago/plan-pago-edit/plan-pago-edit.component';
+import { ListaAreasResolver } from './_resolvers/lista-areas.resolver';
+import { ListaCargosResolver } from './_resolvers/lista-cargos.resolver';
+import { ListaModalidadContratoResolver } from './_resolvers/lista-ModalidadContrato.resolver';
+import { ListaTipoCuentaPorPagarResolver } from './_resolvers/lista-TipoCuentaPorPagar.resolver';
+import { ListaTipoDocumentoSoporteResolver } from './_resolvers/lista-TipoDocumentoSoporte.resolver';
+import { ListaTipoIvaResolver } from './_resolvers/lista-TipoIva.resolver';
+import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
+import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
+import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -217,6 +226,15 @@ export function tokenGetter() {
     PlanPagoResolver,
     TransaccionResolver,
     UsuarioDetalleParametroResolver,
+    ListaAreasResolver,
+    ListaCargosResolver,
+    ListaModalidadContratoResolver,
+    ListaTipoCuentaPorPagarResolver,
+    ListaTipoDocumentoSoporteResolver,
+    ListaTipoIvaResolver,
+    ListaTipoPagoResolver,
+    ListaSupervisorResolver,
+    ListaSIoNOResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

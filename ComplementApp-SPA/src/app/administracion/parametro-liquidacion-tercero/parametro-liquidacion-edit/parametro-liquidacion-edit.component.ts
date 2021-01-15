@@ -16,6 +16,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
@@ -126,13 +127,15 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     private terceroService: TerceroService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.createEmptyForm();
 
-    this.cargarListas();
+    //this.cargarListas();
+    this.cargarListasResolver();
 
     this.cargarBusquedaDeducciones();
 
@@ -364,7 +367,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
-    console.log(this.parametroLiquidacionSeleccionado.supervisorId);
     this.idSupervisorSeleccionado =
       this.parametroLiquidacionSeleccionado.supervisorId > 0
         ? this.parametroLiquidacionSeleccionado.supervisorId
@@ -389,7 +391,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
-    console.log(this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar);
     this.idTipoCuentaXPagarSelecionado =
       this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar > 0
         ? this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar
@@ -400,7 +401,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
-    console.log(this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte);
     this.idTipoDocumentoSoporteSelecionado =
       this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte > 0
         ? this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte
@@ -468,6 +468,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       tipoIvaCtrl: this.tipoIvaSeleccionado,
       tipoCuentaXPagarCtrl: this.tipoCuentaXPagarSeleccionado,
       tipoDocumentoSoporteCtrl: this.tipoDocumentoSoporteSeleccionado,
+      supervisorCtrl: this.supervisorSeleccionado,
+      facturaElectronicaCtrl: this.facturaElectronicaSeleccionado,
+      subcontrataCtrl: this.subcontrataSeleccionado,
 
       baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
         baseAporteSaludC
@@ -1182,6 +1185,37 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           this.alertify.error(error);
         }
       );
+  }
+
+  cargarListasResolver() {
+    this.route.data.subscribe((data) => {
+      this.listaModalidadContrato = data['modalidadContrato'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaTipoCuentaXPagar = data['tipoCuentaPorPagar'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaTipoDocumentoSoporte = data['tipoDocumentoSoporte'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaTipoIva = data['tipoIva'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaTipoPago = data['tipoPago'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaSupervisor = data['supervisor'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaFacturaElectronica = data['SIoNO'];
+      this.listaSubcontrata = data['SIoNO'];
+    });
   }
 
   cargarListas() {

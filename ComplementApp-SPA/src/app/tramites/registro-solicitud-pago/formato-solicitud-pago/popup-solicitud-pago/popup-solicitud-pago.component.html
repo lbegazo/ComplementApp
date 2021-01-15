@@ -78,12 +78,10 @@
                 >
                 <select
                   id="selectActividad"
-                  placeholder="Actividad Económica"
                   formControlName="actividadEconomicaCtrl"
-                  class="form-control withoutPadding"
-                  [(ngModel)]="actividadEconomicaSeleccionada"
-                  style="height: 30px; background-color: white; padding-left: 5px;"
                   (change)="onSelectActividadEconomica()"
+                  class="form-control withoutPadding"
+                  style="height: 30px; background-color: white; padding-left: 5px;"                  
                   [ngClass]="{
                     'is-invalid':
                       popupForm.get('actividadEconomicaCtrl').touched &&

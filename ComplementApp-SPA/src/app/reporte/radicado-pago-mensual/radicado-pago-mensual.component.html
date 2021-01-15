@@ -27,13 +27,11 @@
                     >Mes de radicado</label
                   >
                   <select
-                    placeholder="Mes"
                     formControlName="mesCtrl"
-                    class="form-control withoutPadding"
-                    style="height: 33px; padding-left: 5px;"
                     (change)="onSelectMes()"
+                    class="form-control withoutPadding"
+                    style="height: 33px; padding-left: 5px;"                    
                     id="selectMes"
-                    [(ngModel)]="mesSeleccionado"
                     [ngClass]="{
                       'is-invalid':
                         facturaHeaderForm.get('mesCtrl').touched &&

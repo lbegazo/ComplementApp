@@ -72,13 +72,12 @@
                                   >Modalidad de Contrato</label
                                 >
                                 <select
-                                  placeholder="Modalidad Contrato"
+                                  *ngIf="listaModalidadContrato"
                                   formControlName="modalidadContratoCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onModalidadContrato()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectModalidadContrato"
-                                  [(ngModel)]="modalidadContratoSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('modalidadContratoCtrl')
@@ -88,7 +87,7 @@
                                         .hasError('required')
                                   }"
                                 >
-                                  <option disabled [ngValue]="null">
+                                  <option [ngValue]="null" disabled>
                                     Modalidad de contrato
                                   </option>
                                   <option
@@ -181,13 +180,12 @@
                                   >Fact. Electrónica</label
                                 >
                                 <select
-                                  placeholder="Fact. Elec."
+                                  *ngIf="listaFacturaElectronica"
                                   formControlName="facturaElectronicaCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onFacturaElectronica()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectFacturaElectronica"
-                                  [(ngModel)]="facturaElectronicaSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('facturaElectronicaCtrl')
@@ -231,17 +229,15 @@
                                   >Subcontrata</label
                                 >
                                 <select
-                                  placeholder="Subcontrata"
+                                  *ngIf="listaSubcontrata"
                                   formControlName="subcontrataCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onSubcontrata()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectSubContrata"
-                                  [(ngModel)]="subcontrataSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
-                                      editForm.get('subcontrataCtrl')
-                                        .touched &&
+                                      editForm.get('subcontrataCtrl').touched &&
                                       editForm
                                         .get('subcontrataCtrl')
                                         .hasError('required')
@@ -260,8 +256,7 @@
                                 <div
                                   class="invalid-feedback"
                                   *ngIf="
-                                    editForm.get('subcontrataCtrl')
-                                      .touched &&
+                                    editForm.get('subcontrataCtrl').touched &&
                                     editForm
                                       .get('subcontrataCtrl')
                                       .hasError('required')
@@ -283,13 +278,12 @@
                                   >Tipo de cuenta por pagar</label
                                 >
                                 <select
-                                  placeholder="Tipo de Cuenta por Pagar"
+                                  *ngIf="listaTipoCuentaXPagar"
                                   formControlName="tipoCuentaXPagarCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onTipoCuentaXPagar()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectTipoCuentaXPagar"
-                                  [(ngModel)]="tipoCuentaXPagarSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('tipoCuentaXPagarCtrl')
@@ -333,13 +327,12 @@
                                   >Tipo de Documento de Soporte</label
                                 >
                                 <select
-                                  placeholder="Tipo Pago"
+                                  *ngIf="listaTipoDocumentoSoporte"
                                   formControlName="tipoDocumentoSoporteCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onTipoDocumentoSoporte()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectTipoDocumentoSoporte"
-                                  [(ngModel)]="tipoDocumentoSoporteSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('tipoDocumentoSoporteCtrl')
@@ -385,13 +378,12 @@
                                   >Supervisor</label
                                 >
                                 <select
-                                  placeholder="Supervisor"
+                                  *ngIf="listaSupervisor"
                                   formControlName="supervisorCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onSupervisor()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectSupervisor"
-                                  [(ngModel)]="supervisorSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('supervisorCtrl').touched &&
@@ -400,7 +392,7 @@
                                         .hasError('required')
                                   }"
                                 >
-                                  <option disabled [ngValue]="null">
+                                  <option [ngValue]="null" disabled>
                                     SUPERVISOR
                                   </option>
                                   <option
@@ -423,7 +415,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div  class="form-row mt-2">
+                            <div class="form-row mt-2">
                               <!--Base Grav. Renta-->
                               <div
                                 class="form-group col-md-2"
@@ -435,13 +427,12 @@
                                   >Base Grav. Renta</label
                                 >
                                 <select
-                                  placeholder="Base Grav. Renta"
+                                  *ngIf="listaTipoPago"
                                   formControlName="tipoPagoCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onTipoPago()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectTipoPago"
-                                  [(ngModel)]="tipoPagoSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('tipoPagoCtrl').touched &&
@@ -484,12 +475,12 @@
                                   >Base Grav. Iva</label
                                 >
                                 <select
+                                  *ngIf="listaTipoIva"
                                   formControlName="tipoIvaCtrl"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px;"
                                   (change)="onTipoIva()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
                                   id="selectTipoIva"
-                                  [(ngModel)]="tipoIvaSeleccionado"
                                   [ngClass]="{
                                     'is-invalid':
                                       editForm.get('tipoIvaCtrl').touched &&
@@ -1233,44 +1224,43 @@
 <div class="container-fluid">
   <div class="row mt-1">
     <div class="col-12 withoutPadding right">
-        <table style="width: 90%; margin-left: auto; margin-right: auto">
-          <tr>
-            <td>
-              <button
-                type="submit"
-                class="btn btn-success mr-2"
-                (click)="onLimpiarForm()"
-              >
-                Limpiar
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary mr-2"
-                (click)="onGuardar()"
-                [disabled]="!editForm.valid"
-              >
-                {{ nombreBoton }}
-              </button>
-              <button
-                type="button"
-                class="btn btn-default"
-                (click)="onCancelar()"
-              >
-                Volver
-              </button>
-            </td>
-          </tr>
-        </table>
-      </div>
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              type="submit"
+              class="btn btn-success mr-2"
+              (click)="onLimpiarForm()"
+            >
+              Limpiar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary mr-2"
+              (click)="onGuardar()"
+              [disabled]="!editForm.valid"
+            >
+              {{ nombreBoton }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onCancelar()"
+            >
+              Volver
+            </button>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
+</div>
 
-  <!-- <p>Form status: {{ editForm.status | json }}</p>
+<!-- <p>Form status: {{ editForm.status | json }}</p>
 
-  <p>Form value: {{ editForm.value | json }}</p> -->
+  <p>Form value: {{ editForm.value | json }}</p>
 
-  <!-- <p>
+  <p>
   parametroLiquidacionSeleccionado:
   {{ parametroLiquidacionSeleccionado | json }}
-</p>-->
-
+</p> -->

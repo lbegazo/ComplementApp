@@ -118,7 +118,7 @@ export class CdpEditComponent implements OnInit {
       this.cdpForm = this.fb.group({
         objetoBienControl: new FormControl(objetoBien, Validators.required),
         observacionesControl: new FormControl('', Validators.required),
-        tipoDetalleControl: new FormControl('', Validators.required),
+        tipoDetalleControl: new FormControl(null, Validators.required),
         rubrosControles: this.arrayControls,
       });
 
