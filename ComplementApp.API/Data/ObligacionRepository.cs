@@ -37,7 +37,6 @@ namespace ComplementApp.API.Data
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
-                             CdpId = c.CdpId,
                              Crp = c.Crp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -56,7 +55,6 @@ namespace ComplementApp.API.Data
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
-                             CdpId = c.CdpId,
                              Crp = c.Crp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -76,7 +74,6 @@ namespace ComplementApp.API.Data
                          where c.TerceroId == terceroId
                          select new CDPDto()
                          {
-                             CdpId = c.CdpId,
                              Crp = c.Crp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -92,29 +89,55 @@ namespace ComplementApp.API.Data
         public async Task<PagedList<CDPDto>> ObtenerSolicitudesPagoParaAprobar(int usuarioId, int? terceroId, UserParams userParams)
         {
             IQueryable<CDPDto> lista = null;
-            var usuario = await _context.Usuario.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
-            string nombreCompleto = usuario.Nombres.ToUpper().Trim() + ' ' + usuario.Apellidos.ToUpper().Trim();
+            var perfilId = 0;
 
-            lista = (from s in _context.FormatoSolicitudPago
-                     join c in _context.CDP on s.Crp equals c.Crp
-                     join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                     where s.EstadoId == (int)EstadoSolicitudPago.Generado
-                     where c.Instancia == (int)TipoDocumento.Compromiso
-                     where c.SaldoActual > 0 //Saldo Disponible
-                     where c.Detalle5.ToUpper() == nombreCompleto
-                     where c.TerceroId == terceroId || terceroId == null
-                     select new CDPDto()
-                     {
-                         CdpId = c.CdpId,
-                         Crp = c.Crp,
-                         Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                         NumeroIdentificacionTercero = t.NumeroIdentificacion,
-                         NombreTercero = t.Nombre,
-                         FormatoSolicitudPagoId = s.FormatoSolicitudPagoId
-                     })
-                    .Distinct()
-                    .OrderBy(x => x.Crp);
+            var usuarioPerfil = await _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
+            if (usuarioPerfil != null)
+            {
+                perfilId = usuarioPerfil.PerfilId;
+            }
 
+            if (perfilId == (int)PerfilUsuario.Administrador)
+            {
+                lista = (from s in _context.FormatoSolicitudPago
+                         join c in _context.CDP on s.Crp equals c.Crp
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where s.EstadoId == (int)EstadoSolicitudPago.Generado
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.SaldoActual > 0 //Saldo Disponible                     
+                         where c.TerceroId == terceroId || terceroId == null
+                         select new CDPDto()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             FormatoSolicitudPagoId = s.FormatoSolicitudPagoId
+                         })
+                        .Distinct()
+                        .OrderBy(x => x.Crp);
+            }
+            else
+            {
+                lista = (from s in _context.FormatoSolicitudPago
+                         join c in _context.CDP on s.Crp equals c.Crp
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where s.SupervisorId == usuarioId
+                         where s.EstadoId == (int)EstadoSolicitudPago.Generado
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.SaldoActual > 0 //Saldo Disponible                     
+                         where c.TerceroId == terceroId || terceroId == null
+                         select new CDPDto()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             FormatoSolicitudPagoId = s.FormatoSolicitudPagoId
+                         })
+                        .Distinct()
+                        .OrderBy(x => x.Crp);
+            }
 
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
@@ -124,21 +147,25 @@ namespace ComplementApp.API.Data
             return await _context.FormatoSolicitudPago.FirstOrDefaultAsync(u => u.FormatoSolicitudPagoId == formatoSolicitudPagoId);
         }
 
-        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int cdpId)
+        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp)
         {
             var formato = await (from c in _context.CDP
                                  join co in _context.Contrato on c.Crp equals co.Crp
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                                 where c.CdpId == cdpId
+                                 join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
+                                 from pt in ParametroTercero.DefaultIfEmpty()
+                                 join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
+                                 from super in Supervisor.DefaultIfEmpty()
+                                 where c.Crp == crp
                                  select new FormatoSolicitudPagoDto()
                                  {
                                      Cdp = new CDPDto()
                                      {
-                                         CdpId = c.CdpId,
                                          Cdp = c.Cdp,
                                          Crp = c.Crp,
                                          Fecha = c.Fecha, //Fecha compromiso
-                                         Detalle5 = c.Detalle5, //Supervisor
+                                         Detalle5 = super.Nombres + ' ' + super.Apellidos, //Supervisor
+                                         SupervisorId = super.UsuarioId,
                                          Detalle4 = c.Detalle4, //objeto contrato
                                          ValorInicial = c.ValorInicial,
                                          Operacion = c.Operacion, //Valor adicion/reduccion
@@ -179,6 +206,8 @@ namespace ComplementApp.API.Data
                                  join c in _context.CDP on s.Crp equals c.Crp
                                  join co in _context.Contrato on c.Crp equals co.Crp
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                                  join sup in _context.Usuario on s.SupervisorId equals sup.UsuarioId into Supervisor
+                                  from super in Supervisor.DefaultIfEmpty()
                                  join ae in _context.ActividadEconomica on s.ActividadEconomicaId equals ae.ActividadEconomicaId
                                  join pp in _context.PlanPago on s.PlanPagoId equals pp.PlanPagoId
                                  where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
@@ -198,11 +227,11 @@ namespace ComplementApp.API.Data
 
                                      Cdp = new CDPDto()
                                      {
-                                         CdpId = c.CdpId,
                                          Cdp = c.Cdp,
                                          Crp = c.Crp,
                                          Fecha = c.Fecha, //Fecha compromiso
-                                         Detalle5 = c.Detalle5, //Supervisor
+                                         Detalle5 = s.SupervisorId.HasValue ? (super.Nombres + ' ' + super.Apellidos) : string.Empty, //Supervisor
+                                         SupervisorId = s.SupervisorId,
                                          Detalle4 = c.Detalle4, //objeto contrato
                                          ValorInicial = c.ValorInicial,
                                          Operacion = c.Operacion, //Valor adicion/reduccion
@@ -241,7 +270,7 @@ namespace ComplementApp.API.Data
                                      {
                                          PlanPagoId = pp.PlanPagoId,
                                          NumeroPago = pp.NumeroPago,
-                                         ValorFacturado = pp.ValorFacturado.Value,
+                                         ValorFacturado = pp.ValorFacturado.HasValue ? pp.ValorFacturado.Value : 0,
                                          ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
                                      }
                                  }).FirstOrDefaultAsync();
@@ -256,7 +285,6 @@ namespace ComplementApp.API.Data
                                where c.Crp == crp
                                select new CDPDto()
                                {
-                                   CdpId = c.CdpId,
                                    Cdp = c.Cdp,
                                    Crp = c.Crp,
                                    OrdenPago = c.OrdenPago,

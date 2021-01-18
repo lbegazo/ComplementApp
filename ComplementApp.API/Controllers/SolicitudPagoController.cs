@@ -197,13 +197,13 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "cdpId")] int cdpId)
+        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "crp")] int crp)
         {
             FormatoSolicitudPagoDto formato = null;
 
             try
             {
-                formato = await _repo.ObtenerFormatoSolicitudPago(cdpId);
+                formato = await _repo.ObtenerFormatoSolicitudPago(crp);
                 if (formato != null)
                 {
                     var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp);

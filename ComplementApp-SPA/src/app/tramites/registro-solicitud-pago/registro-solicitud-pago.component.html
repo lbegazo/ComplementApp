@@ -118,7 +118,7 @@
                     <div style="width: 2%" class="inner center aplicaBackground">
                       <input
                         type="radio"
-                        [value]="item?.cdpId"
+                        [value]="item?.crp"
                         (change)="onCheckChange($event)"
                         name="inlineDefaultRadiosExample"
                       />
@@ -189,7 +189,7 @@
                     type="button"
                     class="btn btn-primary"
                     (click)="onRegistrarSolicitud()"
-                    [disabled]="cdpId === 0"
+                    [disabled]="crp === 0"
                   >
                     Registrar Solicitud
                   </button>

@@ -20,5 +20,6 @@ namespace ComplementApp.API.Dtos
         public decimal BaseCotizacion { get; set; }
         public decimal ValorBaseGravableRenta { get; set; }
         public decimal ValorIva { get; set; }
+        public int? SupervisorId { get; set; }
     }
 }

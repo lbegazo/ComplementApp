@@ -30,5 +30,7 @@ namespace ComplementApp.API.Models
         [Required]
         public DateTime FechaFinal { get; set; }
 
+        public int? SupervisorId { get; set; }
+
     }
 }

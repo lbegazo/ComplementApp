@@ -12,6 +12,7 @@ export interface Cdp {
   detalle4: string; // Objeto del bien
   objeto: string; // Objeto del bien completo
   detalle5: string; // Supervisor
+  supervisorId: number;
 
   valorInicial: number;
   operacion: number;

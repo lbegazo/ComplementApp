@@ -202,9 +202,9 @@ namespace ComplementApp.API.Controllers
                     tipoCdp = (Obligacion.tipoObligacionPptal)serializer.Deserialize(sr);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             return tipoCdp;
         }

@@ -54,6 +54,7 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(250)")]
         public string ObservacionesModificacion { get; set; }
+        public int? SupervisorId { get; set; }
 
         public int? UsuarioIdRegistro { get; set; }
 

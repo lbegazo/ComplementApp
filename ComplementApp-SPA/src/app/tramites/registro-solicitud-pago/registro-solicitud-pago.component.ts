@@ -40,7 +40,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
   tipoPago = 0;
 
   listaPlanPago: Cdp[] = [];
-  cdpId = 0;
+  crp = 0;
   planPagoSeleccionado: Cdp;
   formatoSolicitudPago: FormatoSolicitudPagoDto;
   tercero: Tercero;
@@ -178,7 +178,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
 
   onLimpiarFactura() {
     this.listaPlanPago = [];
-    this.cdpId = 0;
+    this.crp = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
@@ -196,17 +196,17 @@ export class RegistroSolicitudPagoComponent implements OnInit {
 
   onCheckChange(event) {
     /* Selected */
-    this.cdpId = 0;
+    this.crp = 0;
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.cdpId = +event.target.value;
+      this.crp = +event.target.value;
     }
   }
 
   onRegistrarSolicitud() {
-    if (this.listaPlanPago && this.listaPlanPago.length > 0 && this.cdpId > 0) {
+    if (this.listaPlanPago && this.listaPlanPago.length > 0 && this.crp > 0) {
       this.planPagoSeleccionado = this.listaPlanPago.filter(
-        (x) => x.cdpId === this.cdpId
+        (x) => x.crp === this.crp
       )[0];
       if (this.planPagoSeleccionado) {
         this.ObtenerFormatoSolicitudPago();
@@ -215,7 +215,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
   }
 
   ObtenerFormatoSolicitudPago() {
-    this.solicitudPagoService.ObtenerFormatoSolicitudPago(this.cdpId).subscribe(
+    this.solicitudPagoService.ObtenerFormatoSolicitudPago(this.crp).subscribe(
       (response: FormatoSolicitudPagoDto) => {
         if (response !== null) {
           this.formatoSolicitudPago = response;

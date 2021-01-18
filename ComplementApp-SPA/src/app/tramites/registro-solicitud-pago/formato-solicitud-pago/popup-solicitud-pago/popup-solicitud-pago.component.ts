@@ -73,6 +73,12 @@ export class PopupSolicitudPagoComponent implements OnInit {
       baseCotizacionCtrl: ['', Validators.required],
     });
     this.popupForm.reset();
+
+    if (this.actividadEconomicaSeleccionada) {
+      this.popupForm.patchValue({
+        actividadEconomicaCtrl: this.actividadEconomicaSeleccionada,
+      });
+    }
   }
 
   createFullForm() {
@@ -108,27 +114,18 @@ export class PopupSolicitudPagoComponent implements OnInit {
     fechaInicio = this.formatoSolicitudPagoEdit.fechaInicio;
     fechaFinal = this.formatoSolicitudPagoEdit.fechaFinal;
 
-    this.popupForm = this.fb.group({
-      numeroFacturaCtrl: [numeroFacturaC, Validators.required],
-      valorFacturaCtrl: [valorFacturaC, Validators.required],
-      actividadEconomicaCtrl: [
-        this.idActividadEconomicaSelecionada,
-        Validators.required,
-      ],
-      fechaInicioCtrl: [
-        formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
-        Validators.required,
-      ],
-      fechaFinalCtrl: [
-        formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
-        Validators.required,
-      ],
-      valorBaseGravableRentaCtrl: [valorBaseGravableC, Validators.required],
-      valorIvaCtrl: [valorIvaC, Validators.required],
-      observacionesCtrl: [observacionesC, Validators.required],
-      numeroPlanillaCtrl: [numeroPlanillaC, Validators.required],
-      mesCtrl: [this.idMesSelecionado, Validators.required],
-      baseCotizacionCtrl: [baseCotizacionC, Validators.required],
+    this.popupForm.patchValue({
+      numeroFacturaCtrl: numeroFacturaC,
+      valorFacturaCtrl: valorFacturaC,
+      actividadEconomicaCtrl: this.actividadEconomicaSeleccionada,
+      fechaInicioCtrl: formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
+      fechaFinalCtrl: formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
+      valorBaseGravableRentaCtrl: valorBaseGravableC,
+      valorIvaCtrl: valorIvaC,
+      observacionesCtrl: observacionesC,
+      numeroPlanillaCtrl: numeroPlanillaC,
+      mesCtrl: this.mesSeleccionado,
+      baseCotizacionCtrl: baseCotizacionC,
     });
   }
 
@@ -198,6 +195,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
         baseCotizacion: +GeneralService.obtenerValorAbsoluto(
           formValues.baseCotizacionCtrl
         ),
+        supervisorId: 0,
       };
 
       this.bsModalRef.hide();

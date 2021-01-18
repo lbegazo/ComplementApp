@@ -16,4 +16,5 @@ export interface FormatoSolicitudPago {
   mesId: number;
   mes: string;
   baseCotizacion: number;
+  supervisorId: number;
 }

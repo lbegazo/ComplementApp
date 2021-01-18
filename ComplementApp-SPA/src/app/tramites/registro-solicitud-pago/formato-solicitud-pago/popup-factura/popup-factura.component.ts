@@ -97,12 +97,9 @@ export class PopupFacturaComponent implements OnInit {
 
   cargarListaPlanPago() {
     this.facturaService
-      .ObtenerListaPlanPago(
-        this.listaEstadoId,
-        this.terId,
+      .ObtenerListaPlanPagoXCompromiso(this.crp, this.listaEstadoId,
         this.pagination.currentPage,
-        this.pagination.itemsPerPage
-      )
+        this.pagination.itemsPerPage)
       .subscribe(
         (documentos: PaginatedResult<PlanPago[]>) => {
           this.listaPlanPago = documentos.result;

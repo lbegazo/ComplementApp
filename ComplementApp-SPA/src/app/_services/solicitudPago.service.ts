@@ -113,12 +113,12 @@ export class SolicitudPagoService {
   }
 
   ObtenerFormatoSolicitudPago(
-    cdpId: number
+    crp: number
   ): Observable<FormatoSolicitudPagoDto> {
     const path = 'ObtenerFormatoSolicitudPago';
 
     let params = new HttpParams();
-    params = params.append('cdpId', cdpId.toString());
+    params = params.append('crp', crp.toString());
 
     return this.http.get<FormatoSolicitudPagoDto>(this.baseUrl + path, {
       params,

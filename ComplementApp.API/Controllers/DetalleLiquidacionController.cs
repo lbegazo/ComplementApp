@@ -744,7 +744,7 @@ namespace ComplementApp.API.Controllers
                     request.ToEmail = planPagoDto.Email;
                     request.Subject = "Radicado de Pago " + planPagoDto.NumeroRadicadoProveedor + " Rechazado";
                     request.Body = "El radicado Nro: " + planPagoDto.NumeroRadicadoProveedor
-                                    + " de Fecha " + planPagoDto.FechaRadicadoProveedor.ToString("dd-MM-yyyy")
+                                    + " de Fecha " + planPagoDto.FechaRadicadoProveedor.Value.ToString("dd-MM-yyyy")
                                     + " del tercero identificado " + planPagoDto.IdentificacionTercero
                                     + "-" + planPagoDto.NombreTercero + " fue rechazado, motivo: "
                                     + mensaje + "." + "<br>"

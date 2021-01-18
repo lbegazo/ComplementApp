@@ -14,20 +14,17 @@ import {
   FormArray,
   FormControl,
   FormBuilder,
-  Validators,
 } from '@angular/forms';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
 
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { TipoOperacion } from 'src/app/_models/tipoOperacion';
 import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 import { FormatoSolicitudPagoDto } from 'src/app/_dto/formatoSolicitudPagoDto';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { PopupSolicitudPagoComponent } from './popup-solicitud-pago/popup-solicitud-pago.component';
 import { combineLatest, Subscription } from 'rxjs';
-import { PopupBuscarFacturaComponent } from 'src/app/facturaCompromiso/popup-buscar-factura/popup-buscar-factura.component';
 import { PopupFacturaComponent } from './popup-factura/popup-factura.component';
 import { PlanPago } from 'src/app/_models/planPago';
 import { ListaService } from 'src/app/_services/lista.service';
@@ -103,7 +100,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   seleccionarPlanPago() {
     //#region Abrir Popup
     const initialState = {
-      title: 'SELECCIONE LA FACTURA',
+      title: 'SELECCIONE EL PLAN DE PAGO',
       crp: this.formatoSolicitudPago.cdp.crp,
     };
 
@@ -233,6 +230,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       this.formatoSolicitudPagoPopup.terceroId = this.formatoSolicitudPago.tercero.terceroId;
       this.formatoSolicitudPagoPopup.planPagoId = this.planPagoSeleccionada.planPagoId;
       this.formatoSolicitudPagoPopup.crp = this.formatoSolicitudPago.cdp.crp;
+      this.formatoSolicitudPagoPopup.supervisorId = this.formatoSolicitudPago.cdp.supervisorId;
 
       this.solicitudPagoService
         .RegistrarFormatoSolicitudPago(this.formatoSolicitudPagoPopup)

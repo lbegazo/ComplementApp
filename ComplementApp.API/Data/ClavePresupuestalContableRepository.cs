@@ -34,7 +34,6 @@ namespace ComplementApp.API.Data
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
-                             CdpId = c.CdpId,
                              Crp = c.Crp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -121,10 +120,11 @@ namespace ComplementApp.API.Data
                                        Id = ac.AtributoContableId,
                                        Nombre = ac.Nombre
                                    },
+
                                    TipoGasto = new ValorSeleccion()
                                    {
-                                       Id = t.TipoGastoId,
-                                       Nombre = t.Nombre
+                                       Id = rc.TipoGastoId != null ? t.TipoGastoId : 0,
+                                       Nombre = rc.TipoGastoId != null ? t.Nombre : string.Empty
                                    }
                                })
                                  .Distinct()
