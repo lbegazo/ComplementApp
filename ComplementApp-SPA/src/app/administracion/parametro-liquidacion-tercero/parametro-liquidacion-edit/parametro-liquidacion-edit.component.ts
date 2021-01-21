@@ -57,6 +57,7 @@ import { PopupParametroLiquidacionTerceroComponent } from './popup-parametro-liq
 export class ParametroLiquidacionEditComponent implements OnInit {
   @Input() esCreacion: boolean;
   @Input() tercero: Tercero;
+  @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   @Output() esCancelado = new EventEmitter<boolean>();
   //@ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
@@ -77,7 +78,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   arrayControls = new FormArray([]);
 
-  parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   listaModalidadContrato: ValorSeleccion[] = [];
   listaTipoPago: ValorSeleccion[] = [];
   listaTipoIva: ValorSeleccion[] = [];
@@ -146,7 +146,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.cargarParametrosGenerales();
       this.nombreBoton = 'Registrar';
     } else {
-      this.obtenerParametrizacionTercero();
+      this.createFullForm();
       this.nombreBoton = 'Guardar';
     }
   }
@@ -251,26 +251,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           }
         }
       }
-    }
-  }
-
-  obtenerParametrizacionTercero() {
-    if (this.tercero.terceroId > 0) {
-      this.terceroService
-        .ObtenerParametrizacionLiquidacionXTercero(this.tercero.terceroId)
-        .subscribe((documento: ParametroLiquidacionTercero) => {
-          if (documento) {
-            this.parametroLiquidacionSeleccionado = documento;
-
-            if (this.parametroLiquidacionSeleccionado) {
-              this.createFullForm();
-            }
-          } else {
-            this.alertify.error(
-              'No se pudo obtener información de la parametrización del tercero'
-            );
-          }
-        });
     }
   }
 
@@ -682,7 +662,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         const deduccionT = new ValorSeleccion();
         const terceroDeDeduccionT = new ValorSeleccion();
         const terceroT = new ValorSeleccion();
-        terceroT.id = this.tercero.terceroId;
+        terceroT.id = this.parametroLiquidacionSeleccionado.terceroId;
 
         const terceroDeduccion: TerceroDeduccionDto = {
           deduccion: deduccionT,
@@ -747,7 +727,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         }
 
         const terceroT = new ValorSeleccion();
-        terceroT.id = this.tercero.terceroId;
+        terceroT.id = this.parametroLiquidacionSeleccionado.terceroId;
 
         const terceroDeduccion: TerceroDeduccionDto = {
           deduccion: deduccionT,
@@ -977,7 +957,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           numeroCuenta: '',
           tipoCuenta: '',
           convenioFontic: 0,
-          terceroId: this.tercero.terceroId,
+          terceroId: this.parametroLiquidacionSeleccionado.terceroId,
 
           terceroDeducciones: this.listaTerceroDeducciones,
         };
