@@ -28,7 +28,7 @@ namespace ComplementApp.API.Controllers
         #region Dependency Injection
 
         private readonly DataContext _dataContext;
-        private readonly IObligacionRepository _repo;
+        private readonly ISolicitudPagoRepository _repo;
         private readonly IMapper _mapper;
         private readonly IGeneralInterface _generalInterface;
         private readonly IListaRepository _listaRepository;
@@ -39,7 +39,7 @@ namespace ComplementApp.API.Controllers
         #endregion Dependency Injection
 
 
-        public SolicitudPagoController(IObligacionRepository repo, IMapper mapper,
+        public SolicitudPagoController(ISolicitudPagoRepository repo, IMapper mapper,
                             DataContext dataContext, IGeneralInterface generalInterface,
                             IPlanPagoRepository planPagoRepository, IListaRepository listaRepository,
                             IProcesoLiquidacionSolicitudPago procesoLiquidacion)
@@ -60,14 +60,15 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ActualizarFormatoSolicitudPago(FormatoSolicitudPagoDto formatoDto)
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
+            DetalleFormatoSolicitudPago detalleSolicitud = null;
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             try
             {
                 if (formatoDto != null)
                 {
-                    //Actualizar solicitud de pago
+
+                    #region Actualizar solicitud de pago
                     var formatoBD = await _repo.ObtenerFormatoSolicitudPagoBase(formatoDto.FormatoSolicitudPagoId);
 
                     formatoBD.UsuarioIdModificacion = usuarioId;
@@ -76,24 +77,46 @@ namespace ComplementApp.API.Controllers
                     formatoBD.EstadoId = formatoDto.EstadoId;
                     await _dataContext.SaveChangesAsync();
 
-                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                    #endregion Actualizar solicitud de pago
+
+                    #region Registrar Rubros Presupuestales
+
+                    if (formatoDto.detallesFormatoSolicitudPago != null && formatoDto.detallesFormatoSolicitudPago.Count > 0)
                     {
-                        //Actualizar el plan de pago
+                        foreach (var item in formatoDto.detallesFormatoSolicitudPago)
+                        {
+                            if (item.ValorAPagar > 0)
+                            {
+                                detalleSolicitud = new DetalleFormatoSolicitudPago();
+                                detalleSolicitud.FormatoSolicitudPagoId = formatoBD.FormatoSolicitudPagoId;
+                                detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
+                                detalleSolicitud.ValorAPagar = item.ValorAPagar;
+                                _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
+                            }
+                        }
+                    }
+                    await _dataContext.SaveChangesAsync();  
+
+                    #endregion Registrar Rubros Presupuestales                  
+
+                    #region Actualizar el plan de pago
+                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                    {                        
                         var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
                         planPagoBD.NumeroFactura = formatoDto.NumeroFactura;
                         planPagoBD.ValorFacturado = formatoDto.ValorFacturado;
                         planPagoBD.Observaciones = formatoDto.Observaciones;
-                        planPagoBD.NumeroRadicadoProveedor = formatoDto.FormatoSolicitudPagoId.ToString();
-                        planPagoBD.FechaRadicadoProveedor = _generalInterface.ObtenerFechaHoraActual();
-                        planPagoBD.NumeroRadicadoSupervisor = formatoDto.FormatoSolicitudPagoId.ToString();
-                        planPagoBD.FechaRadicadoSupervisor = _generalInterface.ObtenerFechaHoraActual();
+                        planPagoBD.NumeroRadicadoProveedor = formatoDto.NumeroRadicadoProveedor;
+                        planPagoBD.FechaRadicadoProveedor = formatoDto.FechaRadicadoProveedor;
+                        planPagoBD.NumeroRadicadoSupervisor = formatoDto.NumeroRadicadoSupervisor;
+                        planPagoBD.FechaRadicadoSupervisor = formatoDto.FechaRadicadoSupervisor;
                         planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
                         planPagoBD.UsuarioIdModificacion = usuarioId;
                         planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                         await _dataContext.SaveChangesAsync();
                     }
-
                     await transaction.CommitAsync();
+                    #endregion Actualizar el plan de pago
 
                     return Ok(formatoBD.FormatoSolicitudPagoId);
                 }
@@ -290,6 +313,6 @@ namespace ComplementApp.API.Controllers
 
         #endregion Registro de Solicitud de Pago
 
-   
+
     }
 }

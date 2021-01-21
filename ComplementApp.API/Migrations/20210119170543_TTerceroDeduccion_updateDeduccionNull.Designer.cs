@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210119170543_TTerceroDeduccion_updateDeduccionNull")]
+    partial class TTerceroDeduccion_updateDeduccionNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -578,31 +580,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("TDetalleCDP");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
-                {
-                    b.Property<int>("DetalleFormatoSolicitudPagoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("FormatoSolicitudPagoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RubroPresupuestalId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ValorAPagar")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.HasKey("DetalleFormatoSolicitudPagoId");
-
-                    b.HasIndex("FormatoSolicitudPagoId");
-
-                    b.HasIndex("RubroPresupuestalId");
-
-                    b.ToTable("TDetalleFormatoSolicitudPago");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleLiquidacion", b =>
@@ -2156,25 +2133,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.FormatoSolicitudPago", "FormatoSolicitudPago")
-                        .WithMany("DetallesFormatoSolicitudPago")
-                        .HasForeignKey("FormatoSolicitudPagoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.RubroPresupuestal", "RubroPresupuestal")
-                        .WithMany()
-                        .HasForeignKey("RubroPresupuestalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FormatoSolicitudPago");
-
-                    b.Navigation("RubroPresupuestal");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.DetalleLiquidacion", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.PlanPago", "PlanPago")
@@ -2442,11 +2400,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Deducciones");
 
                     b.Navigation("DetalleArchivo");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.FormatoSolicitudPago", b =>
-                {
-                    b.Navigation("DetallesFormatoSolicitudPago");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.Perfil", b =>

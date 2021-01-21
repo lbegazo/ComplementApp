@@ -11,4 +11,5 @@ export interface Tercero {
   facturadorElectronicoDescripcion: string;
   regimenTributario: string;
   fechaExpedicionDocumento: Date;
+  modalidadContrato: number;
 }

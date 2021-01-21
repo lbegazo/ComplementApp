@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -61,7 +62,6 @@ namespace ComplementApp.API.Models
         public DateTime? FechaRegistro { get; set; }
 
         public int? UsuarioIdModificacion { get; set; }
-
         public DateTime? FechaModificacion { get; set; }
 
         [Required]
@@ -71,5 +71,6 @@ namespace ComplementApp.API.Models
         [Required]
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorIva { get; set; }
+        public ICollection<DetalleFormatoSolicitudPago> DetallesFormatoSolicitudPago { get; set; }
     }
 }

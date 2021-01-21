@@ -185,10 +185,19 @@ namespace ComplementApp.API.Controllers
                     foreach (var item in parametroDto.TerceroDeducciones)
                     {
                         itemTerceroDeduccion = new TerceroDeduccion();
-                        itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
                         itemTerceroDeduccion.TerceroId = item.Tercero.Id;
-                        itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
-                        itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                        itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
+
+                        if (item.Deduccion.Id > 0)
+                        {
+                            itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
+                            itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                        }
+                        else
+                        {
+                            itemTerceroDeduccion.DeduccionId = null;
+                            itemTerceroDeduccion.TerceroDeDeduccionId = null;
+                        }
                         listaTerceroDeduccion.Add(itemTerceroDeduccion);
                     }
                     _dataContext.TerceroDeducciones.AddRange(listaTerceroDeduccion);

@@ -32,6 +32,9 @@ import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
 import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PopupCargarArchivosComponent } from './popup-cargar-archivos/popup-cargar-archivos.component';
+import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
+import { TerceroService } from 'src/app/_services/tercero.service';
+import { ModalidadContrato } from 'src/app/_models/enum';
 
 @Component({
   selector: 'app-formato-solicitud-pago',
@@ -59,6 +62,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   idplanPagoSeleccionada = 0;
   subscriptions: Subscription[] = [];
+  parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
 
   habilitaPlanDePagoSeleccionado = false;
   habilitaDatosRegistrados = false;
@@ -72,7 +76,8 @@ export class FormatoSolicitudPagoComponent implements OnInit {
     private solicitudPagoService: SolicitudPagoService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private listaService: ListaService
+    private listaService: ListaService,
+    private terceroService: TerceroService
   ) {}
 
   ngOnInit() {
@@ -92,9 +97,31 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       }
     }
 
+    if (this.formatoSolicitudPago.tercero.terceroId > 0) {
+      this.obtenerParametrizacionTercero(
+        this.formatoSolicitudPago.tercero.terceroId
+      );
+    }
+
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
     });
+  }
+
+  obtenerParametrizacionTercero(terceroId: number) {
+    if (terceroId > 0) {
+      this.terceroService
+        .ObtenerParametrizacionLiquidacionXTercero(terceroId)
+        .subscribe((documento: ParametroLiquidacionTercero) => {
+          if (documento) {
+            this.parametroLiquidacionSeleccionado = documento;
+          } else {
+            this.alertify.error(
+              'No se pudo obtener información de la parametrización del tercero'
+            );
+          }
+        });
+    }
   }
 
   seleccionarPlanPago() {
@@ -145,6 +172,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       listaActividadEconomica: this.listaActividadEconomica,
       listaMeses: this.listaMeses,
       formatoSolicitudPagoEdit: this.formatoSolicitudPagoPopup,
+      parametroLiquidacionTercero: this.parametroLiquidacionSeleccionado,
     };
 
     this.bsModalRef = this.modalService.show(
@@ -173,6 +201,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
         ) {
           this.formatoSolicitudPagoPopup = this.bsModalRef.content
             .formatoSolicitudPago as FormatoSolicitudPago;
+
           this.cargarDatosSeguridadSocial();
           this.habilitaDatosRegistrados = true;
         }

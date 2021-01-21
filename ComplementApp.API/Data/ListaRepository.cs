@@ -212,9 +212,9 @@ namespace ComplementApp.API.Data
                               Nombre = d.Nombre,
                               Tercero = new Tercero()
                               {
-                                  TerceroId = ded.TerceroId,
-                                  NumeroIdentificacion = ded.NumeroIdentificacion,
-                                  Nombre = ded.Nombre,
+                                  TerceroId = d.TerceroId > 0 ? ded.TerceroId : 0,
+                                  NumeroIdentificacion = d.TerceroId > 0 ? ded.NumeroIdentificacion : string.Empty,
+                                  Nombre = d.TerceroId > 0 ? ded.Nombre : string.Empty,
                               }
                           }).ToListAsync();
         }

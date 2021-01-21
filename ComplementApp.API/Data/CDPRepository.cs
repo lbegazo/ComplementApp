@@ -191,6 +191,23 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
+        public async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp)
+        {
+            var detalles = await (from d in _context.CDP
+                                  join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
+                                  where d.Instancia == (int)TipoDocumento.Compromiso
+                                  where d.Crp == crp
+                                  select new DetalleCDPDto()
+                                  {
+                                      RubroPresupuestalId = i.RubroPresupuestalId,
+                                      IdentificacionRubro = i.Identificacion,
+                                      RubroNombre = i.Nombre,
+                                  })
+                                 .Distinct()
+                                 .OrderBy(x => x.IdentificacionRubro)
+                                 .ToListAsync();
+            return detalles;
+        }
         private async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesConCDP(int usuarioId, int numeroCDP)
         {
             var detalles = await (from d in _context.DetalleCDP

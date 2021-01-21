@@ -33,6 +33,12 @@ namespace ComplementApp.API.Dtos
         public ValorSeleccion ActividadEconomica { get; set; }
         public int NumeroPagoFechaActual { get; set; }
         public int CantidadMaxima { get; set; }
+        public string NumeroRadicadoProveedor { get; set; } 
+        public DateTime FechaRadicadoProveedor { get; set; } 
+        public string NumeroRadicadoSupervisor { get; set; } 
+        public DateTime FechaRadicadoSupervisor { get; set; }
         public ICollection<CDPDto> PagosRealizados { get; set; }
+        public ICollection<DetalleFormatoSolicitudPagoDto> detallesFormatoSolicitudPago { get; set; }
+        
     }
 }

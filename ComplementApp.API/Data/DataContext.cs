@@ -102,6 +102,7 @@ namespace ComplementApp.API.Data
         public DbSet<TipoDocumentoIdentidad> TipoDocumentoIdentidad { get; set; }
         public DbSet<Contrato> Contrato { get; set; }
         public DbSet<FormatoSolicitudPago> FormatoSolicitudPago { get; set; }
+        public DbSet<DetalleFormatoSolicitudPago> DetalleFormatoSolicitudPago { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

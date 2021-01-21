@@ -72,21 +72,6 @@ export class TipoArchivoObligacion extends Enum<number> {
   public static readonly Usos = new Enum(4);
 }
 
-// export class Mes extends Enum<number> {
-//   public static readonly ENERO = new Enum(1);
-//   public static readonly FEBRERO = new Enum(2);
-//   public static readonly MARZO = new Enum(3);
-//   public static readonly ABRIL = new Enum(4);
-//   public static readonly MAYO = new Enum(5);
-//   public static readonly JUNIO = new Enum(6);
-//   public static readonly JULIO = new Enum(7);
-//   public static readonly AGOSTO = new Enum(8);
-//   public static readonly SEPTIEMBRE = new Enum(9);
-//   public static readonly OCTUBRE = new Enum(10);
-//   public static readonly NOVIEMBRE = new Enum(11);
-//   public static readonly DICIEMBRE = new Enum(12);
-// }
-
 export enum Mes {
   ENERO = 1,
   FEBRERO = 2,
@@ -108,26 +93,7 @@ export enum EstadoModificacion {
   Eliminado = 3,
 }
 
-/*
-console.log(PrimaryColor.Red);
-// Output: Enum { value: '#FF0000' }
-console.log(Color.Red); // inherited!
-// Output: Enum { value: '#FF0000' }
-console.log(Color.Red.value); // we have to call .value to get the value.
-// Output: #FF0000
-console.log(Color.Red.toString()); // toString() works too.
-// Output: #FF0000
-
-class Thing {
-  color: Color;
+export enum TipoIva {
+  Fijo = 1,
+  Variable = 2,
 }
-
-let thing: Thing = {
-  color: Color.Red,
-};
-
-switch (thing.color) {
-  case Color.Red: // ...
-  case Color.White: // ...
-}
-*/

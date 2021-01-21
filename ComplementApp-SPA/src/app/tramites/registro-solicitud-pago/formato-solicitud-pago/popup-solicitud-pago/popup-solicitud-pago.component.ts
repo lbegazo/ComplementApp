@@ -4,7 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
+import { ModalidadContrato, TipoIva, TipoPago } from 'src/app/_models/enum';
 import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
+import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
@@ -17,6 +19,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
   listaMeses: ValorSeleccion[];
   formatoSolicitudPagoEdit: FormatoSolicitudPago;
   title: string;
+  parametroLiquidacionTercero: ParametroLiquidacionTercero;
 
   formatoSolicitudPago: FormatoSolicitudPago = null;
   dateObj = new Date();
@@ -55,6 +58,37 @@ export class PopupSolicitudPagoComponent implements OnInit {
       this.createFullForm();
     } else {
       this.createEmptyForm();
+    }
+
+    if (this.parametroLiquidacionTercero) {
+      if (
+        this.parametroLiquidacionTercero.modalidadContrato ===
+        ModalidadContrato.ContratoPrestacionServicio.value
+      ) {
+        this.valorBaseGravableRentaCtrl.disable();
+        this.valorIvaCtrl.disable();
+        this.numeroPlanillaCtrl.enable();
+        this.mesCtrl.enable();
+        this.baseCotizacionCtrl.enable();
+      } else {
+        if (
+          this.parametroLiquidacionTercero.tipoPago === TipoPago.Variable.value
+        ) {
+          this.valorBaseGravableRentaCtrl.enable();
+        } else {
+          this.valorBaseGravableRentaCtrl.disable();
+        }
+
+        if (this.parametroLiquidacionTercero.tipoIva === TipoIva.Variable) {
+          this.valorIvaCtrl.enable();
+        } else {
+          this.valorIvaCtrl.disable();
+        }
+
+        this.numeroPlanillaCtrl.disable();
+        this.mesCtrl.disable();
+        this.baseCotizacionCtrl.disable();
+      }
     }
   }
 
@@ -208,5 +242,25 @@ export class PopupSolicitudPagoComponent implements OnInit {
 
   get mesControl() {
     return this.popupForm.get('mesCtrl');
+  }
+
+  get valorBaseGravableRentaCtrl() {
+    return this.popupForm.get('valorBaseGravableRentaCtrl');
+  }
+
+  get valorIvaCtrl() {
+    return this.popupForm.get('valorIvaCtrl');
+  }
+
+  get numeroPlanillaCtrl() {
+    return this.popupForm.get('numeroPlanillaCtrl');
+  }
+
+  get mesCtrl() {
+    return this.popupForm.get('mesCtrl');
+  }
+
+  get baseCotizacionCtrl() {
+    return this.popupForm.get('baseCotizacionCtrl');
   }
 }

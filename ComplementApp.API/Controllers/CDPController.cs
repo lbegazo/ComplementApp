@@ -234,7 +234,14 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener la solicitud de CDP");
         }
 
-        
+        [Route("[action]/{crp}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerRubrosPresupuestalesPorCompromiso(int crp)
+        {
+            var rubros = await _repo.ObtenerRubrosPresupuestalesPorCompromiso(crp);
+            return Ok(rubros);
+        }
+
 
     }
 }

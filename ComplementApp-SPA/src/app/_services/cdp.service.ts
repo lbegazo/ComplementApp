@@ -13,7 +13,7 @@ import { SolicitudCDPDto } from '../_models/solicitudCDPDto';
   providedIn: 'root',
 })
 export class CdpService {
-  baseUrl = environment.apiUrl + 'CDP/' ;
+  baseUrl = environment.apiUrl + 'CDP/';
 
   constructor(private http: HttpClient) {}
 
@@ -48,7 +48,7 @@ export class CdpService {
   ): Observable<PaginatedResult<SolicitudCDPDto[]>> {
     const path = 'ObtenerListaSolicitudCDP';
     const paginatedResult: PaginatedResult<
-    SolicitudCDPDto[]
+      SolicitudCDPDto[]
     > = new PaginatedResult<SolicitudCDPDto[]>();
 
     let params = new HttpParams();
@@ -104,5 +104,8 @@ export class CdpService {
     return this.http.get<SolicitudCDP>(this.baseUrl + path, { params });
   }
 
-  
+  ObtenerRubrosPresupuestalesPorCompromiso(crp: number): Observable<DetalleCDP[]> {
+    const path = 'ObtenerRubrosPresupuestalesPorCompromiso/';
+    return this.http.get<DetalleCDP[]>(this.baseUrl + path + crp);
+  }
 }

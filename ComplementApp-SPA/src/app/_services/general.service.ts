@@ -108,6 +108,8 @@ export class GeneralService {
       const valor = value.split('.').join('');
       const valor1 = valor.replace(',', '.');
       return valor1;
+    } else {
+      return 0;
     }
   }
 

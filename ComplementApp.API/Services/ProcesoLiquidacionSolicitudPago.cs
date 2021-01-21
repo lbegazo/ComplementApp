@@ -34,10 +34,10 @@ namespace ComplementApp.API.Services
             this._terceroRepository = terceroRepository;
         }
         public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId,
-                                                                                                        decimal valorBaseCotizacion,
-                                                                                                        int? actividadEconomicaId)
+                                                                                        decimal valorBaseCotizacion,
+                                                                                        int? actividadEconomicaId)
         {
-            FormatoCausacionyLiquidacionPagos formato = null;
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
             try
             {
                 var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
@@ -49,8 +49,10 @@ namespace ComplementApp.API.Services
 
                 if (parametroGenerales != null && parametroLiquidacion != null)
                 {
-                    formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, valorBaseCotizacion);
-
+                    if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
+                    {
+                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, valorBaseCotizacion);
+                    }
                     formato.PlanPagoId = planPagoId;
                 }
             }

@@ -73,15 +73,17 @@
             <!--ACTIVIDAD ECONOMICA-->
             <div class="form-row">
               <div class="form-group col-3">
-                <label for="selectActividad">
-                  <strong>Código</strong></label
-                >
+                <label for="selectActividad"> <strong>Código</strong></label>
                 <select
                   id="selectActividad"
                   formControlName="actividadEconomicaCtrl"
                   (change)="onSelectActividadEconomica()"
                   class="form-control withoutPadding"
-                  style="height: 30px; background-color: white; padding-left: 5px;"                  
+                  style="
+                    height: 30px;
+                    background-color: white;
+                    padding-left: 5px;
+                  "
                   [ngClass]="{
                     'is-invalid':
                       popupForm.get('actividadEconomicaCtrl').touched &&
@@ -113,7 +115,7 @@
                 <label for="selectActividad">
                   <strong>Actividad Económica</strong></label
                 >
-                <p>{{ actividadEconomicaSeleccionada.nombre }}</p>
+                <p>{{ actividadEconomicaSeleccionada?.nombre }}</p>
               </div>
             </div>
             <!--RANGO FECHAS-->
@@ -179,64 +181,68 @@
                 </div>
               </div>
             </div>
-             <!--BASE GRAVABLE Y VALOR IVA-->
-            <div class="form-row">
-              <div class="form-group col-6">
-                <label for="inputValorBaseGravable" class="col-form-label-md"
-                  >Valor Base Gravable Renta</label
-                >
+            <!--BASE GRAVABLE Y VALOR IVA-->
+            <div *ngIf="parametroLiquidacionTercero?.modalidadContrato !== 1">
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="inputValorBaseGravable" class="col-form-label-md"
+                    >Valor Base Gravable Renta</label
+                  >
 
-                <input
-                  type="text"
-                  [ngClass]="{
-                    'is-invalid':
-                      popupForm.get('valorBaseGravableRentaCtrl').errors &&
-                      popupForm.get('valorBaseGravableRentaCtrl').touched
-                  }"
-                  style="text-align: right"
-                  class="form-control border border-bottom-0 addPadding"
-                  formControlName="valorBaseGravableRentaCtrl"
-                  appDecimalMask
-                  placeholder="Ingrese valor Base Gravable Renta"
-                  id="inputValorBaseGravable"
-                />
-                <div
-                  class="invalid-feedback"
-                  *ngIf="
-                    popupForm.get('valorBaseGravableRentaCtrl').touched &&
-                    popupForm.get('valorBaseGravableRentaCtrl').hasError('required')
-                  "
-                >
-                  Valor Base Gravable Renta requerido
+                  <input
+                    type="text"
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('valorBaseGravableRentaCtrl').errors &&
+                        popupForm.get('valorBaseGravableRentaCtrl').touched
+                    }"
+                    style="text-align: right"
+                    class="form-control border border-bottom-0 addPadding"
+                    formControlName="valorBaseGravableRentaCtrl"
+                    appDecimalMask
+                    placeholder="Ingrese valor Base Gravable Renta"
+                    id="inputValorBaseGravable"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      popupForm.get('valorBaseGravableRentaCtrl').touched &&
+                      popupForm
+                        .get('valorBaseGravableRentaCtrl')
+                        .hasError('required')
+                    "
+                  >
+                    Valor Base Gravable Renta requerido
+                  </div>
                 </div>
-              </div>
-              <div class="form-group col-6">
-                <label for="inputValorIva" class="col-form-label-md"
-                  >Valor Iva</label
-                >
+                <div class="form-group col-6">
+                  <label for="inputValorIva" class="col-form-label-md"
+                    >Valor Iva</label
+                  >
 
-                <input
-                  type="text"
-                  [ngClass]="{
-                    'is-invalid':
-                      popupForm.get('valorIvaCtrl').errors &&
-                      popupForm.get('valorIvaCtrl').touched
-                  }"
-                  style="text-align: right"
-                  class="form-control border border-bottom-0 addPadding"
-                  formControlName="valorIvaCtrl"
-                  appDecimalMask
-                  placeholder="Ingrese valor Iva"
-                  id="inputValorIva"
-                />
-                <div
-                  class="invalid-feedback"
-                  *ngIf="
-                    popupForm.get('valorIvaCtrl').touched &&
-                    popupForm.get('valorIvaCtrl').hasError('required')
-                  "
-                >
-                  Valor Iva requerido
+                  <input
+                    type="text"
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('valorIvaCtrl').errors &&
+                        popupForm.get('valorIvaCtrl').touched
+                    }"
+                    style="text-align: right"
+                    class="form-control border border-bottom-0 addPadding"
+                    formControlName="valorIvaCtrl"
+                    appDecimalMask
+                    placeholder="Ingrese valor Iva"
+                    id="inputValorIva"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      popupForm.get('valorIvaCtrl').touched &&
+                      popupForm.get('valorIvaCtrl').hasError('required')
+                    "
+                  >
+                    Valor Iva requerido
+                  </div>
                 </div>
               </div>
             </div>
@@ -267,98 +273,100 @@
               </div>
             </div>
             <!--NUMERO DE PLANILLA Y MES DE APORTES-->
-            <div class="form-row">
-              <div class="form-group col-6">
-                <label for="inputNumeroPlanilla" class="col-form-label-md"
-                  >Número de Planilla</label
-                >
+            <div *ngIf="parametroLiquidacionTercero?.modalidadContrato === 1">
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="inputNumeroPlanilla" class="col-form-label-md"
+                    >Número de Planilla</label
+                  >
 
-                <input
-                  type="text"
-                  [ngClass]="{
-                    'is-invalid':
-                      popupForm.get('numeroPlanillaCtrl').errors &&
-                      popupForm.get('numeroPlanillaCtrl').touched
-                  }"
-                  style="text-align: center"
-                  class="form-control border border-bottom-0 addPadding"
-                  formControlName="numeroPlanillaCtrl"
-                  placeholder="Ingrese Número de Planilla"
-                  id="inputNumeroPlanilla"
-                />
-                <div
-                  class="invalid-feedback"
-                  *ngIf="
-                    popupForm.get('numeroPlanillaCtrl').touched &&
-                    popupForm.get('numeroPlanillaCtrl').hasError('required')
-                  "
-                >
-                  Base cotización requerido
+                  <input
+                    type="text"
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('numeroPlanillaCtrl').errors &&
+                        popupForm.get('numeroPlanillaCtrl').touched
+                    }"
+                    style="text-align: center"
+                    class="form-control border border-bottom-0 addPadding"
+                    formControlName="numeroPlanillaCtrl"
+                    placeholder="Ingrese Número de Planilla"
+                    id="inputNumeroPlanilla"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      popupForm.get('numeroPlanillaCtrl').touched &&
+                      popupForm.get('numeroPlanillaCtrl').hasError('required')
+                    "
+                  >
+                    Base cotización requerido
+                  </div>
                 </div>
-              </div>
-              <div class="form-group col-6">
-                <label for="selectMes" class="col-form-label-md"
-                  >Mes de Aportes</label
-                >
-                <select
-                  placeholder="Mes"
-                  formControlName="mesCtrl"
-                  class="form-control withoutPadding"
-                  style="height: 30px; background-color: white"
-                  (change)="onSelectMes()"
-                  id="selectMes"
-                  [(ngModel)]="mesSeleccionado"
-                  [ngClass]="{
-                    'is-invalid':
+                <div class="form-group col-6">
+                  <label for="selectMes" class="col-form-label-md"
+                    >Mes de Aportes</label
+                  >
+                  <select
+                    placeholder="Mes"
+                    formControlName="mesCtrl"
+                    class="form-control withoutPadding"
+                    style="height: 30px; background-color: white"
+                    (change)="onSelectMes()"
+                    id="selectMes"
+                    [(ngModel)]="mesSeleccionado"
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('mesCtrl').touched &&
+                        popupForm.get('mesCtrl').hasError('required')
+                    }"
+                  >
+                    <option disabled [ngValue]="null">Mes</option>
+                    <option *ngFor="let item of listaMeses" [ngValue]="item">
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
                       popupForm.get('mesCtrl').touched &&
                       popupForm.get('mesCtrl').hasError('required')
-                  }"
-                >
-                  <option disabled [ngValue]="null">Mes</option>
-                  <option *ngFor="let item of listaMeses" [ngValue]="item">
-                    {{ item.nombre }}
-                  </option>
-                </select>
-                <div
-                  class="invalid-feedback"
-                  *ngIf="
-                    popupForm.get('mesCtrl').touched &&
-                    popupForm.get('mesCtrl').hasError('required')
-                  "
-                >
-                  Debe seleccionar el mes de aportes
+                    "
+                  >
+                    Debe seleccionar el mes de aportes
+                  </div>
                 </div>
               </div>
-            </div>
-            <!--BASE COTIZACION-->
-            <div class="form-row">
-              <div class="form-group col-6">
-                <label for="inputBaseCotizacion" class="col-form-label-md"
-                  >Base de cotización</label
-                >
+              <!--BASE COTIZACION-->
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="inputBaseCotizacion" class="col-form-label-md"
+                    >Base de cotización</label
+                  >
 
-                <input
-                  type="text"
-                  [ngClass]="{
-                    'is-invalid':
-                      popupForm.get('baseCotizacionCtrl').errors &&
-                      popupForm.get('baseCotizacionCtrl').touched
-                  }"
-                  style="text-align: right"
-                  class="form-control border border-bottom-0 addPadding"
-                  formControlName="baseCotizacionCtrl"
-                  appDecimalMask
-                  placeholder="Ingrese base cotización"
-                  id="inputBaseCotizacion"
-                />
-                <div
-                  class="invalid-feedback"
-                  *ngIf="
-                    popupForm.get('baseCotizacionCtrl').touched &&
-                    popupForm.get('baseCotizacionCtrl').hasError('required')
-                  "
-                >
-                  Base cotización requerido
+                  <input
+                    type="text"
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('baseCotizacionCtrl').errors &&
+                        popupForm.get('baseCotizacionCtrl').touched
+                    }"
+                    style="text-align: right"
+                    class="form-control border border-bottom-0 addPadding"
+                    formControlName="baseCotizacionCtrl"
+                    appDecimalMask
+                    placeholder="Ingrese base cotización"
+                    id="inputBaseCotizacion"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      popupForm.get('baseCotizacionCtrl').touched &&
+                      popupForm.get('baseCotizacionCtrl').hasError('required')
+                    "
+                  >
+                    Base cotización requerido
+                  </div>
                 </div>
               </div>
             </div>

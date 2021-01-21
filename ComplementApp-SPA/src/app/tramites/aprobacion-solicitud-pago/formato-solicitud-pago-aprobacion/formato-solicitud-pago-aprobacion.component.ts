@@ -14,25 +14,21 @@ import {
   FormArray,
   FormControl,
   FormBuilder,
-  Validators,
 } from '@angular/forms';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
 
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { TipoOperacion } from 'src/app/_models/tipoOperacion';
-import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 import { FormatoSolicitudPagoDto } from 'src/app/_dto/formatoSolicitudPagoDto';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { combineLatest, Subscription } from 'rxjs';
-import { PlanPago } from 'src/app/_models/planPago';
-import { ListaService } from 'src/app/_services/lista.service';
-import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
 import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PopupSolicitudPagoAprobacionComponent } from './popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
-import { EstadoSolicitudPago } from 'src/app/_models/enum';
+import { CdpService } from 'src/app/_services/cdp.service';
+import { DetalleCDP } from 'src/app/_models/detalleCDP';
+import { DetalleFormatoSolicitudPagoDto } from 'src/app/_dto/detalleFormatoSolicitudPagoDto';
+import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 
 @Component({
   selector: 'app-formato-solicitud-pago-aprobacion',
@@ -46,6 +42,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   @Input() formatoSolicitudPago: FormatoSolicitudPagoDto;
   @Output() esCancelado = new EventEmitter<boolean>();
   formatoSolicitudPagoId = 0;
+  rubrosPresupuestales: DetalleCDP[] = [];
   solicitudActualizada = false;
 
   formatoForm = new FormGroup({});
@@ -60,11 +57,14 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
     private fb: FormBuilder,
     private solicitudPagoService: SolicitudPagoService,
     private modalService: BsModalService,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private cdpService: CdpService
   ) {}
 
   ngOnInit() {
     this.createForm();
+
+    this.obtenerRubrosPresupuestales();
   }
 
   createForm() {
@@ -83,9 +83,22 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
     });
   }
 
+  obtenerRubrosPresupuestales() {
+    this.cdpService
+      .ObtenerRubrosPresupuestalesPorCompromiso(
+        this.formatoSolicitudPago.cdp.crp
+      )
+      .subscribe((lista: DetalleCDP[]) => {
+        if (lista) {
+          this.rubrosPresupuestales = lista;
+        }
+      });
+  }
+
   abrirPopup(tipo: number) {
     const initialState = {
-      title: 'REGISTRAR OBSERVACIONES',
+      title: 'REGISTRAR DATOS ADICIONALES',
+      rubrosPresupuestales: this.rubrosPresupuestales,
     };
 
     this.bsModalRef = this.modalService.show(
@@ -98,7 +111,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
           ignoreBackdropClick: false,
         },
         { initialState },
-        { class: 'gray modal-md' }
+        { class: 'gray modal-lg' }
       )
     );
 
@@ -113,8 +126,40 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
           this.bsModalRef.content.observaciones != null
         ) {
           this.formatoSolicitudPago.observacionesModificacion = this.bsModalRef.content.observaciones;
+          this.formatoSolicitudPago.numeroRadicadoProveedor = this.bsModalRef.content.numeroContratista;
+          this.formatoSolicitudPago.fechaRadicadoProveedor = this.bsModalRef.content.fechaContratista;
+          this.formatoSolicitudPago.numeroRadicadoSupervisor = this.bsModalRef.content.numeroSupervisor;
+          this.formatoSolicitudPago.fechaRadicadoSupervisor = this.bsModalRef.content.fechaSupervisor;
           this.formatoSolicitudPago.estadoId = tipo;
           this.solicitudActualizada = true;
+
+          const listaDetalle: DetalleFormatoSolicitudPagoDto[] = [];
+
+          if (
+            this.bsModalRef.content.rubrosPresupuestales &&
+            this.bsModalRef.content.rubrosPresupuestales.length
+          ) {
+            this.rubrosPresupuestales.forEach((element) => {
+              if (element.valorSolicitud > 0) {
+                const rubro = new ValorSeleccion();
+
+                rubro.id = element.rubroPresupuestalId;
+                rubro.codigo = element.identificacionRubro;
+                rubro.nombre = element.rubroNombre;
+
+                const item: DetalleFormatoSolicitudPagoDto = {
+                  detalleFormatoSolicitudPagoId: 0,
+                  formatoSolicitudPagoId: this.formatoSolicitudPago
+                    .formatoSolicitudPagoId,
+                  valorAPagar: element.valorSolicitud,
+                  rubroPresupuestal: rubro,
+                };
+
+                listaDetalle.push(item);
+              }
+            });
+          }
+          this.formatoSolicitudPago.detallesFormatoSolicitudPago = listaDetalle;
           this.actualizarSolicitudPago();
         }
         this.unsubscribe();

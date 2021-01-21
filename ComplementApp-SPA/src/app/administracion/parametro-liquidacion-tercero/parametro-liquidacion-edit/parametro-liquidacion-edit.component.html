@@ -222,6 +222,7 @@
                               <div
                                 class="form-group col-md-2"
                                 style="margin: 0px"
+                                *ngIf="this.idModalidadContratoSelecionado === 1"
                               >
                                 <label
                                   for="selectSubContrata"
@@ -415,100 +416,107 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="form-row mt-2">
-                              <!--Base Grav. Renta-->
-                              <div
-                                class="form-group col-md-2"
-                                style="margin: 0px"
-                              >
-                                <label
-                                  for="selectTipoPago"
-                                  class="col-form-label-md"
-                                  >Base Grav. Renta</label
+                            <div
+                              *ngIf="
+                              this.idModalidadContratoSelecionado !==
+                                1
+                              "
+                            >
+                              <div class="form-row mt-2">
+                                <!--Base Grav. Renta-->
+                                <div
+                                  class="form-group col-md-2"
+                                  style="margin: 0px"
                                 >
-                                <select
-                                  *ngIf="listaTipoPago"
-                                  formControlName="tipoPagoCtrl"
-                                  (change)="onTipoPago()"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px"
-                                  id="selectTipoPago"
-                                  [ngClass]="{
-                                    'is-invalid':
+                                  <label
+                                    for="selectTipoPago"
+                                    class="col-form-label-md"
+                                    >Base Grav. Renta</label
+                                  >
+                                  <select
+                                    *ngIf="listaTipoPago"
+                                    formControlName="tipoPagoCtrl"
+                                    (change)="onTipoPago()"
+                                    class="form-control withoutPadding"
+                                    style="height: 33px; padding-left: 5px"
+                                    id="selectTipoPago"
+                                    [ngClass]="{
+                                      'is-invalid':
+                                        editForm.get('tipoPagoCtrl').touched &&
+                                        editForm
+                                          .get('tipoPagoCtrl')
+                                          .hasError('required')
+                                    }"
+                                  >
+                                    <option disabled [ngValue]="null">
+                                      Base Grav. Renta
+                                    </option>
+                                    <option
+                                      *ngFor="let item of listaTipoPago"
+                                      [ngValue]="item"
+                                    >
+                                      {{ item.nombre }}
+                                    </option>
+                                  </select>
+                                  <div
+                                    class="invalid-feedback"
+                                    *ngIf="
                                       editForm.get('tipoPagoCtrl').touched &&
                                       editForm
                                         .get('tipoPagoCtrl')
                                         .hasError('required')
-                                  }"
-                                >
-                                  <option disabled [ngValue]="null">
-                                    Base Grav. Renta
-                                  </option>
-                                  <option
-                                    *ngFor="let item of listaTipoPago"
-                                    [ngValue]="item"
+                                    "
                                   >
-                                    {{ item.nombre }}
-                                  </option>
-                                </select>
-                                <div
-                                  class="invalid-feedback"
-                                  *ngIf="
-                                    editForm.get('tipoPagoCtrl').touched &&
-                                    editForm
-                                      .get('tipoPagoCtrl')
-                                      .hasError('required')
-                                  "
-                                >
-                                  Debe seleccionar Tipo de Pago
+                                    Debe seleccionar Tipo de Pago
+                                  </div>
                                 </div>
-                              </div>
 
-                              <!--Base Grav. Iva-->
-                              <div
-                                class="form-group col-md-2"
-                                style="margin: 0px"
-                              >
-                                <label
-                                  for="selectTipoIva"
-                                  class="col-form-label-md"
-                                  >Base Grav. Iva</label
+                                <!--Base Grav. Iva-->
+                                <div
+                                  class="form-group col-md-2"
+                                  style="margin: 0px"
                                 >
-                                <select
-                                  *ngIf="listaTipoIva"
-                                  formControlName="tipoIvaCtrl"
-                                  (change)="onTipoIva()"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px"
-                                  id="selectTipoIva"
-                                  [ngClass]="{
-                                    'is-invalid':
+                                  <label
+                                    for="selectTipoIva"
+                                    class="col-form-label-md"
+                                    >Base Grav. Iva</label
+                                  >
+                                  <select
+                                    *ngIf="listaTipoIva"
+                                    formControlName="tipoIvaCtrl"
+                                    (change)="onTipoIva()"
+                                    class="form-control withoutPadding"
+                                    style="height: 33px; padding-left: 5px"
+                                    id="selectTipoIva"
+                                    [ngClass]="{
+                                      'is-invalid':
+                                        editForm.get('tipoIvaCtrl').touched &&
+                                        editForm
+                                          .get('tipoIvaCtrl')
+                                          .hasError('required')
+                                    }"
+                                  >
+                                    <option disabled [ngValue]="null">
+                                      Base Grav. Iva
+                                    </option>
+                                    <option
+                                      *ngFor="let item of listaTipoIva"
+                                      [ngValue]="item"
+                                    >
+                                      {{ item.nombre }}
+                                    </option>
+                                  </select>
+                                  <div
+                                    class="invalid-feedback"
+                                    *ngIf="
                                       editForm.get('tipoIvaCtrl').touched &&
                                       editForm
                                         .get('tipoIvaCtrl')
                                         .hasError('required')
-                                  }"
-                                >
-                                  <option disabled [ngValue]="null">
-                                    Base Grav. Iva
-                                  </option>
-                                  <option
-                                    *ngFor="let item of listaTipoIva"
-                                    [ngValue]="item"
+                                    "
                                   >
-                                    {{ item.nombre }}
-                                  </option>
-                                </select>
-                                <div
-                                  class="invalid-feedback"
-                                  *ngIf="
-                                    editForm.get('tipoIvaCtrl').touched &&
-                                    editForm
-                                      .get('tipoIvaCtrl')
-                                      .hasError('required')
-                                  "
-                                >
-                                  Debe seleccionar Tipo de Pago
+                                    Debe seleccionar Tipo de Pago
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -986,9 +994,9 @@
                     </tr>
                   </table>
                 </tab>
-                <tab heading="DEDUCCIONES" [disabled]="true">
+                <tab heading="ACTIVIDAD ECONOMICA Y DEDUCCIONES">
                   <table>
-                    <!--Deducción-->
+                    <!--ACTIVIDAD ECONOMICA Y DEDUCCIONES-->
                     <tr>
                       <td style="padding: 0px 10px">
                         <div class="form-row mt-4">
@@ -1092,10 +1100,7 @@
                                     type="submit"
                                     class="btn btn-primary"
                                     (click)="onAgregarDeduccion()"
-                                    [disabled]="
-                                      actividadEconomicaId === 0 ||
-                                      deduccionId === 0
-                                    "
+                                    [disabled]="!habilitarBotonAgregar"
                                   >
                                     Agregar</button
                                   >&nbsp;
@@ -1121,7 +1126,7 @@
                             </table>
                           </div>
                         </div>
-                        <!--Grilla de deducciones-->
+                        <!--Grilla-->
                         <div class="form-row mt-2">
                           <div style="width: 3%" class="inner center">
                             <label class="col-form-label-md">Cod.</label>
@@ -1255,8 +1260,8 @@
     </div>
   </div>
 </div>
-
-<!-- <p>Form status: {{ editForm.status | json }}</p>
+<!-- 
+<p>Form status: {{ editForm.status | json }}</p>
 
   <p>Form value: {{ editForm.value | json }}</p>
 

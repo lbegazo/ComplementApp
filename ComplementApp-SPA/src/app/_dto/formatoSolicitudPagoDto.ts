@@ -2,6 +2,7 @@ import { Cdp } from '../_models/cdp';
 import { Contrato } from '../_models/contrato';
 import { PlanPago } from '../_models/planPago';
 import { Tercero } from '../_models/tercero';
+import { DetalleFormatoSolicitudPagoDto } from './detalleFormatoSolicitudPagoDto';
 import { ValorSeleccion } from './valorSeleccion';
 
 export interface FormatoSolicitudPagoDto {
@@ -32,5 +33,11 @@ export interface FormatoSolicitudPagoDto {
   riesgoLaboral: number;
   fondoSolidaridad: number;
   pagosRealizados: Cdp[];
+  detallesFormatoSolicitudPago: DetalleFormatoSolicitudPagoDto[];
   estadoId: number;
+
+  numeroRadicadoProveedor: string;
+  fechaRadicadoProveedor: Date;
+  numeroRadicadoSupervisor: string;
+  fechaRadicadoSupervisor: Date;
 }

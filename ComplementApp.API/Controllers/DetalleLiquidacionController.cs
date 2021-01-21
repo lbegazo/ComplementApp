@@ -779,7 +779,7 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.ValorCancelado = detallePlanPago.SaldoActual;
             detalleLiquidacion.TotalACancelar = detallePlanPago.ValorFacturado.Value;
             detalleLiquidacion.SaldoActual = (detallePlanPago.SaldoActual - detallePlanPago.ValorFacturado.Value);
-            detalleLiquidacion.RubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal.ToString();
+            detalleLiquidacion.RubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal != null ? detallePlanPago.IdentificacionRubroPresupuestal : string.Empty;
             detalleLiquidacion.UsoPresupuestal = detallePlanPago.IdentificacionUsoPresupuestal != null ? detallePlanPago.IdentificacionUsoPresupuestal : string.Empty;
 
             detalleLiquidacion.NombreSupervisor = detallePlanPago.Detalle5;

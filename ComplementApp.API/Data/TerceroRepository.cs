@@ -123,28 +123,23 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int terceroId)
         {
-            var lista = await (from d in _context.Deduccion
-                               join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
+            var lista = await (from td in _context.TerceroDeducciones
                                join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
-                               join td1 in _context.Tercero on d.TerceroId equals td1.TerceroId into TerceroDeducciones1
+                               join d in _context.Deduccion on td.DeduccionId equals d.DeduccionId into Deducciones
+                               from ded in Deducciones.DefaultIfEmpty()
+                               join td1 in _context.Tercero on ded.TerceroId equals td1.TerceroId into TerceroDeducciones1
                                from ter1 in TerceroDeducciones1.DefaultIfEmpty()
                                join td2 in _context.Tercero on td.TerceroDeDeduccionId equals td2.TerceroId into TerceroDeducciones2
                                from ter2 in TerceroDeducciones2.DefaultIfEmpty()
                                where (td.TerceroId == terceroId)
-                               where (d.estado == true)
+                               //where (ded.estado == true)
                                select new TerceroDeduccionDto()
                                {
                                    TerceroDeduccionId = td.TerceroDeduccionId,
-                                   Codigo = d.Codigo,
+                                   Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
                                    Tercero = new ValorSeleccion()
                                    {
                                        Id = td.TerceroId
-                                   },
-                                   Deduccion = new ValorSeleccion()
-                                   {
-                                       Id = d.DeduccionId,
-                                       Codigo = d.Codigo,
-                                       Nombre = d.Nombre
                                    },
                                    ActividadEconomica = new ValorSeleccion()
                                    {
@@ -152,12 +147,19 @@ namespace ComplementApp.API.Data
                                        Codigo = ae.Codigo,
                                        Nombre = ae.Nombre
                                    },
+                                   Deduccion = new ValorSeleccion()
+                                   {
+                                       Id = ded.DeduccionId > 0 ? ded.DeduccionId : 0,
+                                       Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
+                                       Nombre = ded.DeduccionId > 0 ? ded.Nombre : string.Empty
+                                   },
+
                                    TerceroDeDeduccion = new ValorSeleccion()
                                    {
-                                       Id = ((ter1.TerceroId > 0) ? (ter1.TerceroId) : (ter2.TerceroId)),
-                                       Codigo = ((ter1.TerceroId > 0) ? (ter1.NumeroIdentificacion) : (ter2.NumeroIdentificacion)),
-                                       Nombre = ((ter1.TerceroId > 0) ? (ter1.Nombre) : (ter2.Nombre)),
-                                       Valor = ((ter1.TerceroId > 0) ? ("SI") : (string.Empty)),
+                                       Id = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.TerceroId) : (ter2.TerceroId)) : 0,
+                                       Codigo = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.NumeroIdentificacion) : (ter2.NumeroIdentificacion)) : string.Empty,
+                                       Nombre = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.Nombre) : (ter2.Nombre)) : string.Empty,
+                                       Valor = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? ("SI") : (string.Empty)) : "NO",
                                    },
                                }
                          )

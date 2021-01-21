@@ -6,7 +6,7 @@ using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Interfaces
 {
-    public interface IObligacionRepository
+    public interface ISolicitudPagoRepository
     {        
         Task<PagedList<CDPDto>> ObtenerCompromisosParaSolicitudRegistroPago(int usuarioId, int perfilId, int? terceroId, UserParams userParams);
         Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int cdpId);

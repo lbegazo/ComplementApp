@@ -10,11 +10,11 @@ using System.Globalization;
 
 namespace ComplementApp.API.Data
 {
-    public class ObligacionRepository : IObligacionRepository
+    public class SolicitudPagoRepository : ISolicitudPagoRepository
     {
         private readonly DataContext _context;
 
-        public ObligacionRepository(DataContext context)
+        public SolicitudPagoRepository(DataContext context)
         {
             _context = context;
         }
@@ -25,7 +25,6 @@ namespace ComplementApp.API.Data
         {
             IQueryable<CDPDto> lista = null;
             var usuario = await _context.Usuario.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
-            string nombreCompleto = usuario.Nombres.ToUpper().Trim() + ' ' + usuario.Apellidos.ToUpper().Trim();
 
 
             if (perfilId == (int)PerfilUsuario.Administrador || perfilId == (int)PerfilUsuario.CoordinadorFinanciero)
@@ -49,9 +48,11 @@ namespace ComplementApp.API.Data
             {
                 lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
+                         from pt in ParametroTercero.DefaultIfEmpty()
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
-                         where c.Detalle5.ToUpper() == nombreCompleto
+                         where pt.SupervisorId == usuarioId
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
@@ -206,8 +207,10 @@ namespace ComplementApp.API.Data
                                  join c in _context.CDP on s.Crp equals c.Crp
                                  join co in _context.Contrato on c.Crp equals co.Crp
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                                  join sup in _context.Usuario on s.SupervisorId equals sup.UsuarioId into Supervisor
-                                  from super in Supervisor.DefaultIfEmpty()
+                                 join plt in _context.ParametroLiquidacionTercero on t.TerceroId equals plt.TerceroId into ParametroTercero
+                                 from par in ParametroTercero.DefaultIfEmpty()
+                                 join sup in _context.Usuario on s.SupervisorId equals sup.UsuarioId into Supervisor
+                                 from super in Supervisor.DefaultIfEmpty()
                                  join ae in _context.ActividadEconomica on s.ActividadEconomicaId equals ae.ActividadEconomicaId
                                  join pp in _context.PlanPago on s.PlanPagoId equals pp.PlanPagoId
                                  where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
@@ -264,7 +267,8 @@ namespace ComplementApp.API.Data
                                          FechaExpedicionDocumento = t.FechaExpedicionDocumento,
                                          RegimenTributario = t.RegimenTributario,
                                          DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
-                                         FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO"
+                                         FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO",
+                                         ModalidadContrato = par.TerceroId > 0 ? par.ModalidadContrato : 0,
                                      },
                                      PlanPago = new PlanPagoDto()
                                      {

@@ -11,11 +11,6 @@ table {
     padding: 10px;
   } 
 
-  .addPaddingTop {
-    padding-top: 10px;
-    background-color: transparent;
-  } 
-  
   .withoutPadding {
     padding: 0px;
     padding-left: 0px;
@@ -55,7 +50,7 @@ table {
   }
   
   .aplicaBackground {
-    background-color: gainsboro;
+    background-color: white;
   }
   
   .gfg {
@@ -83,6 +78,16 @@ table {
     background-color: white;
     height: 30px;
     padding: 0px;
+  }
+
+  .parent {
+    position: relative;
+  }
+  .child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   

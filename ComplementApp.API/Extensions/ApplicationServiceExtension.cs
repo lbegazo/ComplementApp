@@ -4,8 +4,6 @@ using ComplementApp.API.Settings;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Services;
 using ComplementApp.API.Data;
-using System;
-using Microsoft.EntityFrameworkCore;
 
 namespace ComplementApp.API.Extensions
 {
@@ -29,7 +27,7 @@ namespace ComplementApp.API.Extensions
             services.AddScoped<IPlanPagoRepository, PlanPagoRepository>();
             services.AddScoped<IDetalleLiquidacionRepository, DetalleLiquidacionRepository>();
             services.AddScoped<ITransaccionRepository, TransaccionRepository>();
-            services.AddScoped<IObligacionRepository, ObligacionRepository>();
+            services.AddScoped<ISolicitudPagoRepository, SolicitudPagoRepository>();
             services.AddScoped<ITerceroRepository, TerceroRepository>();
             services.AddScoped<IClavePresupuestalContableRepository, ClavePresupuestalContableRepository>();
             services.AddScoped<IProcesoCreacionArchivo, ProcesoCreacionArchivo>();

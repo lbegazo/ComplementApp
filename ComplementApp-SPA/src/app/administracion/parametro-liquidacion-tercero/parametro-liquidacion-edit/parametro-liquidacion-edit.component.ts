@@ -58,7 +58,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   @Input() esCreacion: boolean;
   @Input() tercero: Tercero;
   @Output() esCancelado = new EventEmitter<boolean>();
-  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
+  //@ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
   searchDeduccion: string;
   suggestionsDeduccion$: Observable<Deduccion[]>;
@@ -119,6 +119,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   listaTerceroDeducciones: TerceroDeduccionDto[] = [];
   listaParametrosGeneral: ValorSeleccion[] = [];
 
+  habilitarBotonAgregar = false;
+
   constructor(
     private http: HttpClient,
     private listaService: ListaService,
@@ -134,7 +136,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   ngOnInit() {
     this.createEmptyForm();
 
-    //this.cargarListas();
     this.cargarListasResolver();
 
     this.cargarBusquedaDeducciones();
@@ -144,7 +145,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     if (this.esCreacion) {
       this.cargarParametrosGenerales();
       this.nombreBoton = 'Registrar';
-      // this.editForm.reset();
     } else {
       this.obtenerParametrizacionTercero();
       this.nombreBoton = 'Guardar';
@@ -186,6 +186,20 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.deduccion = e.item as Deduccion;
     if (this.deduccion) {
       this.deduccionId = this.deduccion.deduccionId;
+
+      if (this.deduccionId > 0) {
+        if (
+          this.idModalidadContratoSelecionado !==
+          ModalidadContrato.ProveedorSinDescuento.value
+        ) {
+          if (
+            this.actividadEconomica &&
+            this.actividadEconomica.actividadEconomicaId > 0
+          ) {
+            this.habilitarBotonAgregar = true;
+          }
+        }
+      }
     }
   }
 
@@ -224,6 +238,19 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.actividadEconomica = e.item as ActividadEconomica;
     if (this.actividadEconomica) {
       this.actividadEconomicaId = this.actividadEconomica.actividadEconomicaId;
+
+      if (this.actividadEconomicaId > 0) {
+        if (
+          this.idModalidadContratoSelecionado ===
+          ModalidadContrato.ProveedorSinDescuento.value
+        ) {
+          this.habilitarBotonAgregar = true;
+        } else {
+          if (this.deduccion && this.deduccion.deduccionId > 0) {
+            this.habilitarBotonAgregar = true;
+          }
+        }
+      }
     }
   }
 
@@ -582,14 +609,14 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.tipoIvaCtrl.enable();
     }
 
-    if (
-      this.idModalidadContratoSelecionado ===
-      ModalidadContrato.ProveedorSinDescuento.value
-    ) {
-      this.staticTabs.tabs[1].disabled = true;
-    } else {
-      this.staticTabs.tabs[1].disabled = false;
-    }
+    // if (
+    //   this.idModalidadContratoSelecionado ===
+    //   ModalidadContrato.ProveedorSinDescuento.value
+    // ) {
+    //   this.staticTabs.tabs[1].disabled = true;
+    // } else {
+    //   this.staticTabs.tabs[1].disabled = false;
+    // }
   }
 
   onTipoPago() {
@@ -634,71 +661,116 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   onAgregarDeduccion() {
     if (
-      this.deduccion &&
-      this.deduccion.deduccionId > 0 &&
-      this.actividadEconomica &&
-      this.actividadEconomicaId > 0
+      this.idModalidadContratoSelecionado ===
+      ModalidadContrato.ProveedorSinDescuento.value
     ) {
-      const filtro = this.listaTerceroDeducciones.filter(
-        (x) =>
-          x.deduccion.id === this.deduccion.deduccionId &&
-          x.actividadEconomica.id === this.actividadEconomicaId
-      )[0];
+      if (this.actividadEconomica && this.actividadEconomicaId > 0) {
+        const filtro = this.listaTerceroDeducciones.filter(
+          (x) => x.actividadEconomica.id === this.actividadEconomicaId
+        )[0];
 
-      if (filtro) {
-        this.alertify.error(
-          'Ya existe la combinación deducción-activadad económica'
+        if (filtro) {
+          this.alertify.error('La activadad económica ya fue agregada');
+          return;
+        }
+
+        const actividadT = new ValorSeleccion();
+        actividadT.id = this.actividadEconomicaId;
+        actividadT.codigo = this.actividadEconomica.codigo;
+        actividadT.nombre = this.actividadEconomica.nombre;
+
+        const deduccionT = new ValorSeleccion();
+        const terceroDeDeduccionT = new ValorSeleccion();
+        const terceroT = new ValorSeleccion();
+        terceroT.id = this.tercero.terceroId;
+
+        const terceroDeduccion: TerceroDeduccionDto = {
+          deduccion: deduccionT,
+          actividadEconomica: actividadT,
+          tercero: terceroT,
+          terceroDeDeduccion: terceroDeDeduccionT,
+          tipoIdentificacion: 0,
+          identificacionTercero: '',
+          codigo: '',
+          terceroDeduccionId: 0,
+        };
+
+        this.listaTerceroDeducciones.push(terceroDeduccion);
+
+        this.arrayControls.push(
+          new FormGroup({
+            rubroControl: new FormControl(''),
+          })
         );
-        return;
       }
+    } else {
+      if (
+        this.deduccion &&
+        this.deduccion.deduccionId > 0 &&
+        this.actividadEconomica &&
+        this.actividadEconomicaId > 0
+      ) {
+        const filtro = this.listaTerceroDeducciones.filter(
+          (x) =>
+            x.deduccion.id === this.deduccion.deduccionId &&
+            x.actividadEconomica.id === this.actividadEconomicaId
+        )[0];
 
-      const actividadT = new ValorSeleccion();
-      actividadT.id = this.actividadEconomicaId;
-      actividadT.codigo = this.actividadEconomica.codigo;
-      actividadT.nombre = this.actividadEconomica.nombre;
+        if (filtro) {
+          this.alertify.error(
+            'Ya existe la combinación deducción-activadad económica'
+          );
+          return;
+        }
 
-      const deduccionT = new ValorSeleccion();
-      deduccionT.id = this.deduccion.deduccionId;
-      deduccionT.codigo = this.deduccion.codigo;
-      deduccionT.nombre = this.deduccion.nombre;
+        const actividadT = new ValorSeleccion();
+        actividadT.id = this.actividadEconomicaId;
+        actividadT.codigo = this.actividadEconomica.codigo;
+        actividadT.nombre = this.actividadEconomica.nombre;
 
-      const terceroDeDeduccionT = new ValorSeleccion();
-      if (this.deduccion.tercero && this.deduccion.tercero.terceroId > 0) {
-        terceroDeDeduccionT.id = this.deduccion.tercero.terceroId;
-        terceroDeDeduccionT.codigo = this.deduccion.tercero.numeroIdentificacion;
-        terceroDeDeduccionT.nombre = this.deduccion.tercero.nombre;
-        terceroDeDeduccionT.valor = 'SI';
-      } else {
-        terceroDeDeduccionT.id = 0;
-        terceroDeDeduccionT.codigo = '';
-        terceroDeDeduccionT.nombre = '';
-        terceroDeDeduccionT.valor = '';
+        const deduccionT = new ValorSeleccion();
+        deduccionT.id = this.deduccion.deduccionId;
+        deduccionT.codigo = this.deduccion.codigo;
+        deduccionT.nombre = this.deduccion.nombre;
+
+        const terceroDeDeduccionT = new ValorSeleccion();
+        if (this.deduccion.tercero && this.deduccion.tercero.terceroId > 0) {
+          terceroDeDeduccionT.id = this.deduccion.tercero.terceroId;
+          terceroDeDeduccionT.codigo = this.deduccion.tercero.numeroIdentificacion;
+          terceroDeDeduccionT.nombre = this.deduccion.tercero.nombre;
+          terceroDeDeduccionT.valor = 'SI';
+        } else {
+          terceroDeDeduccionT.id = 0;
+          terceroDeDeduccionT.codigo = '';
+          terceroDeDeduccionT.nombre = '';
+          terceroDeDeduccionT.valor = '';
+        }
+
+        const terceroT = new ValorSeleccion();
+        terceroT.id = this.tercero.terceroId;
+
+        const terceroDeduccion: TerceroDeduccionDto = {
+          deduccion: deduccionT,
+          actividadEconomica: actividadT,
+          tercero: terceroT,
+          terceroDeDeduccion: terceroDeDeduccionT,
+          tipoIdentificacion: 0,
+          identificacionTercero: '',
+          codigo: '',
+          terceroDeduccionId: 0,
+        };
+
+        this.listaTerceroDeducciones.push(terceroDeduccion);
+
+        this.arrayControls.push(
+          new FormGroup({
+            rubroControl: new FormControl(''),
+          })
+        );
       }
-
-      const terceroT = new ValorSeleccion();
-      terceroT.id = this.tercero.terceroId;
-
-      const terceroDeduccion: TerceroDeduccionDto = {
-        deduccion: deduccionT,
-        actividadEconomica: actividadT,
-        tercero: terceroT,
-        terceroDeDeduccion: terceroDeDeduccionT,
-        tipoIdentificacion: 0,
-        identificacionTercero: '',
-        codigo: '',
-        terceroDeduccionId: 0,
-      };
-
-      this.listaTerceroDeducciones.push(terceroDeduccion);
-
-      this.arrayControls.push(
-        new FormGroup({
-          rubroControl: new FormControl(''),
-        })
-      );
-
-      this.onLimpiarDeduccion();
     }
+
+    this.onLimpiarDeduccion();
   }
 
   onEliminarDeduccion() {
@@ -718,6 +790,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.actividadEconomica = null;
     this.searchActividad = '';
     this.searchDeduccion = '';
+    this.habilitarBotonAgregar = false;
   }
 
   onLimpiarForm() {
