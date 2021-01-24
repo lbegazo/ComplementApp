@@ -54,7 +54,7 @@ namespace ComplementApp.API.Data
                                  TerceroId = c.TerceroId,
                                  NumeroIdentificacion = t.NumeroIdentificacion,
                                  Nombre = t.Nombre,
-                                 ModalidadContrato =  pl.ModalidadContrato,
+                                 ModalidadContrato = pl.ModalidadContrato,
                                  TipoPago = pl.TipoPago
                              }
                          })
@@ -92,7 +92,8 @@ namespace ComplementApp.API.Data
                                   NumeroIdentificacion = t.NumeroIdentificacion,
                                   Nombre = t.Nombre,
                                   ModalidadContrato = pl.ModalidadContrato,
-                                  TipoPago = pl.TipoPago
+                                  TipoPago = pl.TipoPago,
+                                  TipoIva = pl.TipoIva.HasValue ? pl.TipoIva.Value : 0,
                               }
                           })
                         .OrderBy(c => c.FechaRadicadoSupervisor)
@@ -149,14 +150,8 @@ namespace ComplementApp.API.Data
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
 
-                          //   join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId into RubroPresupuestal
-                          //   from ru in RubroPresupuestal.DefaultIfEmpty()
-
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
-
-                          join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
-                          from up in UsosPresupuestales.DefaultIfEmpty()
 
                           join us in _context.Usuario on pp.UsuarioIdRegistro equals us.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
@@ -194,8 +189,6 @@ namespace ComplementApp.API.Data
                               NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
                               FechaRadicadoProveedor = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value : null,
 
-                              //IdentificacionRubroPresupuestal =  ru.Identificacion,
-                              IdentificacionUsoPresupuestal = up.Identificacion,
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
 
@@ -210,16 +203,15 @@ namespace ComplementApp.API.Data
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
-                          join r in _context.RubroPresupuestal on pp.RubroPresupuestalId equals r.RubroPresupuestalId
 
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
 
-                          join u in _context.UsoPresupuestal on pp.UsoPresupuestalId equals u.UsoPresupuestalId into UsosPresupuestales
-                          from up in UsosPresupuestales.DefaultIfEmpty()
-
                           join u in _context.Usuario on pp.UsuarioIdRegistro equals u.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
+
+                          join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
+                          from super in Supervisor.DefaultIfEmpty()
 
                           where listaPlanPagoId.Contains(pp.PlanPagoId)
                           where c.Instancia == (int)TipoDocumento.Compromiso
@@ -228,7 +220,7 @@ namespace ComplementApp.API.Data
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
                               Detalle4 = CortarTexto(c.Detalle4, 50),
-                              Detalle5 = c.Detalle5,
+                              Detalle5 = super.Nombres + ' ' + super.Apellidos,
                               Detalle6 = c.Detalle6,
                               Detalle7 = ResumirDetalle7(c.Detalle7),
                               ValorTotal = c.ValorTotal,
@@ -251,8 +243,6 @@ namespace ComplementApp.API.Data
                               NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
                               FechaRadicadoProveedor = pp.FechaRadicadoProveedor.Value,
 
-                              IdentificacionRubroPresupuestal = r.Identificacion,
-                              IdentificacionUsoPresupuestal = up.Identificacion,
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
 

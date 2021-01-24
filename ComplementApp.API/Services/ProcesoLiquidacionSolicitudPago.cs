@@ -14,6 +14,7 @@ namespace ComplementApp.API.Services
         private readonly IListaRepository _repoLista;
         private readonly IPlanPagoRepository _planPagoRepository;
         private readonly ITerceroRepository _terceroRepository;
+        private readonly IGeneralInterface _generalInterface;
 
         #region Constantes
 
@@ -27,11 +28,12 @@ namespace ComplementApp.API.Services
         #endregion Constantes
 
         public ProcesoLiquidacionSolicitudPago(IListaRepository listaRepository, IPlanPagoRepository planPagoRepository,
-        ITerceroRepository terceroRepository)
+        ITerceroRepository terceroRepository, IGeneralInterface generalInterface)
         {
             this._repoLista = listaRepository;
             this._planPagoRepository = planPagoRepository;
             this._terceroRepository = terceroRepository;
+            this._generalInterface = generalInterface;
         }
         public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId,
                                                                                         decimal valorBaseCotizacion,
@@ -142,11 +144,11 @@ namespace ComplementApp.API.Services
 
             C7baseAporteSalud = valorBaseCotizacion;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
-            C8aporteASalud = ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
+            C8aporteASalud = _generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
-            C9aporteAPension = ObtenerValorRedondeadoAl100XEncima(C9aporteAPension);
+            C9aporteAPension = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C9aporteAPension);
             C10aporteRiesgoLaboral = C7baseAporteSalud * (PLriesgoLaboral);
-            C10aporteRiesgoLaboral = ObtenerValorRedondeadoAl100XEncima(C10aporteRiesgoLaboral);
+            C10aporteRiesgoLaboral = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C10aporteRiesgoLaboral);
 
             if (decimal.TryParse(parametroSMLV, out valorSMLV))
             {
@@ -158,7 +160,7 @@ namespace ComplementApp.API.Services
             if (C7baseAporteSalud > cuatroSMLV)
             {
                 C11fondoSolidaridad = C7baseAporteSalud * (PLfondoSolidaridad);
-                C11fondoSolidaridad = ObtenerValorRedondeadoAl100XEncima(C11fondoSolidaridad);
+                C11fondoSolidaridad = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C11fondoSolidaridad);
             }
             else
             {
@@ -188,23 +190,6 @@ namespace ComplementApp.API.Services
                 valor = item.Valor;
 
             return valor;
-        }
-
-        private decimal ObtenerValorRedondeadoAl100XEncima(decimal valor)
-        {
-            decimal valorNuevo = 0;
-            var modValorRentaCalculado = valor % 100;
-
-            if (modValorRentaCalculado > 0)
-            {
-                valorNuevo = valor + (100 - modValorRentaCalculado);
-            }
-            else
-            {
-                valorNuevo = valor;
-            }
-
-            return valorNuevo;
         }
 
     }

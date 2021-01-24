@@ -372,7 +372,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
       )[0];
 
       if (this.planPagoSeleccionado) {
-        this.cargarListaActividadEconomicaXTercero();
+        this.obtenerDetallePlanPago(0);
       }
     }
   }
@@ -389,17 +389,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
         (error) => {
           this.alertify.error(error);
         },
-        () => {
-          // Si la lista de actividades económicas es mayor a 1
-          // entonces no se obliga a escoger actividad económica
-          // o
-          // Modalidad de contrato: ProveedorConDescuento o TipoPago: Variable
-          if (this.esAbrirPopup) {
-            this.abrirPopup();
-          } else {
-            this.obtenerDetallePlanPago(0);
-          }
-        }
+        () => {}
       );
   }
 

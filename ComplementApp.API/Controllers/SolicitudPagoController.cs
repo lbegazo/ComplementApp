@@ -81,27 +81,31 @@ namespace ComplementApp.API.Controllers
 
                     #region Registrar Rubros Presupuestales
 
-                    if (formatoDto.detallesFormatoSolicitudPago != null && formatoDto.detallesFormatoSolicitudPago.Count > 0)
+                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
                     {
-                        foreach (var item in formatoDto.detallesFormatoSolicitudPago)
+                        if (formatoDto.detallesFormatoSolicitudPago != null && formatoDto.detallesFormatoSolicitudPago.Count > 0)
                         {
-                            if (item.ValorAPagar > 0)
+                            foreach (var item in formatoDto.detallesFormatoSolicitudPago)
                             {
-                                detalleSolicitud = new DetalleFormatoSolicitudPago();
-                                detalleSolicitud.FormatoSolicitudPagoId = formatoBD.FormatoSolicitudPagoId;
-                                detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
-                                detalleSolicitud.ValorAPagar = item.ValorAPagar;
-                                _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
+                                if (item.ValorAPagar > 0)
+                                {
+                                    detalleSolicitud = new DetalleFormatoSolicitudPago();
+                                    detalleSolicitud.FormatoSolicitudPagoId = formatoBD.FormatoSolicitudPagoId;
+                                    detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
+                                    detalleSolicitud.ValorAPagar = item.ValorAPagar;
+                                    _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
+                                }
                             }
                         }
+                        await _dataContext.SaveChangesAsync();
                     }
-                    await _dataContext.SaveChangesAsync();  
 
                     #endregion Registrar Rubros Presupuestales                  
 
                     #region Actualizar el plan de pago
+
                     if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
-                    {                        
+                    {
                         var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
                         planPagoBD.NumeroFactura = formatoDto.NumeroFactura;
                         planPagoBD.ValorFacturado = formatoDto.ValorFacturado;
@@ -115,7 +119,15 @@ namespace ComplementApp.API.Controllers
                         planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                         await _dataContext.SaveChangesAsync();
                     }
+                    else
+                    {
+                        var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
+                        planPagoBD.UsuarioIdModificacion = usuarioId;
+                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                    }
                     await transaction.CommitAsync();
+                    
                     #endregion Actualizar el plan de pago
 
                     return Ok(formatoBD.FormatoSolicitudPagoId);
@@ -155,6 +167,16 @@ namespace ComplementApp.API.Controllers
                     //Registrar detalle de liquidación
                     _dataContext.FormatoSolicitudPago.Add(formato);
                     await _dataContext.SaveChangesAsync();
+
+                    #region Actualizar el plan de pago
+
+                    var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConSolicitudPago;
+                    planPagoBD.UsuarioIdModificacion = usuarioId;
+                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                    await _dataContext.SaveChangesAsync();
+
+                    #endregion Actualizar el plan de pago
 
                     await transaction.CommitAsync();
 

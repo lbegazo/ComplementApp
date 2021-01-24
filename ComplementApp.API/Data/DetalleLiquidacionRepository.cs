@@ -159,8 +159,8 @@ namespace ComplementApp.API.Data
                              IdentificacionTercero = dl.NumeroIdentificacion,
                              NombreTercero = dl.Nombre,
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
-                             FechaRadicadoSupervisor = dl.FechaRegistro.Value,
-                             ValorTotal = c.ValorFacturado.Value,
+                             FechaRadicadoSupervisor = dl.FechaRegistro.HasValue ? dl.FechaRegistro.Value : _generalInterface.ObtenerFechaHoraActual(),
+                             ValorTotal = c.ValorFacturado.HasValue ? c.ValorFacturado.Value : 0,
 
                          });
 
@@ -364,7 +364,6 @@ namespace ComplementApp.API.Data
 
 
             var lista = await (from dl in _context.DetalleLiquidacion
-                                   //join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
@@ -374,7 +373,7 @@ namespace ComplementApp.API.Data
 
                                select new DetalleLiquidacionParaArchivo()
                                {
-                                   FechaActual = System.DateTime.Now.ToString("yyyy-MM-dd"),
+                                   FechaActual = System.DateTime.Now.ToString("yyyy/MM/dd"),
                                    PCI = "23-09-00",
                                    Crp = dl.Crp,
                                    Dip = "NO",
@@ -400,22 +399,25 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)
         {
-            var lista = await (from cpc in _context.ClavePresupuestalContable
-                               join rc in _context.RelacionContable on cpc.RelacionContableId equals rc.RelacionContableId
-                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
+            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
-                               join dl in _context.DetalleLiquidacion on cpc.Crp equals dl.Crp
-                               join sf in _context.SituacionFondo on cpc.SituacionFondoId equals sf.SituacionFondoId
-                               join ff in _context.FuenteFinanciacion on cpc.FuenteFinanciacionId equals ff.FuenteFinanciacionId
-                               join rpr in _context.RecursoPresupuestal on cpc.RecursoPresupuestalId equals rpr.RecursoPresupuestalId
+                               join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
+                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
+                               join rc in _context.RelacionContable on cp.RelacionContableId equals rc.RelacionContableId
+                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
+                               join sf in _context.SituacionFondo on cp.SituacionFondoId equals sf.SituacionFondoId
+                               join ff in _context.FuenteFinanciacion on cp.FuenteFinanciacionId equals ff.FuenteFinanciacionId
+                               join rpr in _context.RecursoPresupuestal on cp.RecursoPresupuestalId equals rpr.RecursoPresupuestalId
                                join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
                                join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into tipoGasto
                                from tga in tipoGasto.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               where (sp.PlanPagoId == dl.PlanPagoId)
                                select new ClavePresupuestalContableParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
-                                   Dependencia = cpc.Dependencia,
+                                   Dependencia = cp.Dependencia,
                                    RubroPresupuestalIdentificacion = rp.Identificacion,
                                    RecursoPresupuestalCodigo = rpr.Codigo,
                                    FuenteFinanciacionCodigo = ff.Codigo,
@@ -448,9 +450,9 @@ namespace ComplementApp.API.Data
                                    DeduccionCodigo = d.Codigo,
                                    TipoIdentificacion = t.TipoIdentificacion,
                                    NumeroIdentificacion = t.NumeroIdentificacion,
-                                   Base = ld.Base,
-                                   Tarifa = ld.Tarifa,
-                                   Valor = ld.Tarifa,
+                                   Base = Math.Round(ld.Base, 0, MidpointRounding.AwayFromZero),
+                                   Tarifa = Math.Round(ld.Tarifa * 100, 5, MidpointRounding.AwayFromZero),
+                                   Valor = ld.Valor,
                                })
                     .ToListAsync();
 
@@ -461,15 +463,22 @@ namespace ComplementApp.API.Data
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
 
-            var lista = await (from dl in _context.DetalleLiquidacion
+            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
+                               join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
+                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
+                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               where (sp.PlanPagoId == dl.PlanPagoId)
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
-                                   UsoPresupuestalCodigo = dl.UsoPresupuestal,
-                                   ValorTotal = dl.ValorTotal,
+                                   UsoPresupuestalCodigo = up.Identificacion,
+                                   ValorTotal = cpc.ValorAPagar,
                                    FechaRegistro = dl.FechaRegistro.Value,
                                })
+                               .Distinct()
                     .ToListAsync();
 
             if (lista != null && lista.Count > 0)

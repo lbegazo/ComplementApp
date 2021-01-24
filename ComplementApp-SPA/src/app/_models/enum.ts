@@ -19,6 +19,7 @@ export class Color extends PrimaryColor {
 export class EstadoPlanPago extends Enum<number> {
   public static readonly PorPagar = new Enum(4);
   public static readonly PorObligar = new Enum(5);
+  public static readonly ConSolicitudPago = new Enum(27);
   public static readonly ConLiquidacionDeducciones = new Enum(6);
   public static readonly Obligado = new Enum(7);
   public static readonly Pagado = new Enum(8);

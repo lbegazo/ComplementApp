@@ -282,8 +282,11 @@ namespace ComplementApp.API.Data
                           select new TerceroDeduccion()
                           {
                               TerceroId = td.TerceroId,
+                              ActividadEconomicaId = td.ActividadEconomicaId,
                               Deduccion = d,
                           }).ToListAsync();
         }
+
+       
     }
 }

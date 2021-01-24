@@ -44,6 +44,9 @@ namespace ComplementApp.API.Models
 
         [NotMapped]
         public int TipoPago { get; set; }
+        
+        [NotMapped]
+        public int TipoIva { get; set; }
 
         public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
     }

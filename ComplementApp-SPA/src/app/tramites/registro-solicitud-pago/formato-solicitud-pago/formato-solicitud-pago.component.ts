@@ -34,7 +34,6 @@ import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausaci
 import { PopupCargarArchivosComponent } from './popup-cargar-archivos/popup-cargar-archivos.component';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { TerceroService } from 'src/app/_services/tercero.service';
-import { ModalidadContrato } from 'src/app/_models/enum';
 
 @Component({
   selector: 'app-formato-solicitud-pago',

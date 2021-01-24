@@ -29,6 +29,7 @@ import { CdpService } from 'src/app/_services/cdp.service';
 import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { DetalleFormatoSolicitudPagoDto } from 'src/app/_dto/detalleFormatoSolicitudPagoDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
+import { PopupSolicitudPagoRechazoComponent } from './popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
 
 @Component({
   selector: 'app-formato-solicitud-pago-aprobacion',
@@ -99,6 +100,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
     const initialState = {
       title: 'REGISTRAR DATOS ADICIONALES',
       rubrosPresupuestales: this.rubrosPresupuestales,
+      formatoSolicitudPago: this.formatoSolicitudPago,
     };
 
     this.bsModalRef = this.modalService.show(
@@ -160,6 +162,46 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
             });
           }
           this.formatoSolicitudPago.detallesFormatoSolicitudPago = listaDetalle;
+          this.actualizarSolicitudPago();
+        }
+        this.unsubscribe();
+      })
+    );
+    this.subscriptions.push(combine);
+  }
+
+  abrirPopupRechazo(tipo: number) {
+    const initialState = {
+      title: 'REGISTRAR OBSERVACIONES',
+    };
+
+    this.bsModalRef = this.modalService.show(
+      PopupSolicitudPagoRechazoComponent,
+      Object.assign(
+        {
+          animated: true,
+          keyboard: true,
+          backdrop: true,
+          ignoreBackdropClick: false,
+        },
+        { initialState },
+        { class: 'gray modal-md' }
+      )
+    );
+
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
+      this.changeDetection.markForCheck()
+    );
+
+    this.subscriptions.push(
+      this.modalService.onHidden.subscribe((reason: string) => {
+        if (
+          this.bsModalRef.content != null &&
+          this.bsModalRef.content.observaciones != null
+        ) {
+          this.formatoSolicitudPago.observacionesModificacion = this.bsModalRef.content.observaciones;
+          this.formatoSolicitudPago.estadoId = tipo;
+          this.solicitudActualizada = true;
           this.actualizarSolicitudPago();
         }
         this.unsubscribe();

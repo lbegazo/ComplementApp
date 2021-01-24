@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -9,9 +8,8 @@ import {
 } from '@angular/forms';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
+import { FormatoSolicitudPagoDto } from 'src/app/_dto/formatoSolicitudPagoDto';
 import { DetalleCDP } from 'src/app/_models/detalleCDP';
-import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
 
@@ -24,6 +22,7 @@ export class PopupSolicitudPagoAprobacionComponent implements OnInit {
   //Datos de ingreso
   title: string;
   rubrosPresupuestales: DetalleCDP[];
+  formatoSolicitudPago: FormatoSolicitudPagoDto;
 
   //Datos de salida
   observaciones: string;
@@ -46,15 +45,34 @@ export class PopupSolicitudPagoAprobacionComponent implements OnInit {
     this.crearControlesRubros();
 
     this.createEmptyForm();
+
+    this.popupForm.setControl('rubrosControles', this.arrayControls);
   }
 
   crearControlesRubros() {
-    for (const detalle of this.rubrosPresupuestales) {
-      this.arrayControls.push(
-        new FormGroup({
-          rubroControl: new FormControl('', [Validators.required]),
-        })
-      );
+    if (this.rubrosPresupuestales) {
+      if (this.rubrosPresupuestales.length === 1) {
+        const valorFacturado = this.formatoSolicitudPago.valorFacturado;
+
+        for (const detalle of this.rubrosPresupuestales) {
+          this.arrayControls.push(
+            new FormGroup({
+              rubroControl: new FormControl(
+                GeneralService.obtenerFormatoLongMoney(valorFacturado),
+                [Validators.required]
+              ),
+            })
+          );
+        }
+      } else {
+        for (const detalle of this.rubrosPresupuestales) {
+          this.arrayControls.push(
+            new FormGroup({
+              rubroControl: new FormControl('', [Validators.required]),
+            })
+          );
+        }
+      }
     }
   }
 
@@ -67,7 +85,6 @@ export class PopupSolicitudPagoAprobacionComponent implements OnInit {
       observacionesCtrl: ['', Validators.required],
       rubrosControles: this.arrayControls,
     });
-    this.popupForm.reset();
   }
 
   EliminarRubroPresupuestal(index: number) {
@@ -83,9 +100,7 @@ export class PopupSolicitudPagoAprobacionComponent implements OnInit {
     if (this.popupForm.valid) {
       const formValues = Object.assign({}, this.popupForm.value);
 
-      //#region Read dates
-
-      //#region Rubros Presupuestales
+      //#region Read Rubros Presupuestales
 
       const arrayControles = this.rubrosControles as FormArray;
       if (arrayControles && arrayControles.length > 0) {
@@ -98,7 +113,16 @@ export class PopupSolicitudPagoAprobacionComponent implements OnInit {
         }
       }
 
-      //#endregion
+      //#endregion Read Rubros Presupuestales
+
+      if (!this.validarValorIngresado) {
+        this.alertify.warning(
+          'Los valores registrados en los Rubros Presupuestales no es igual al valor facturado del Plan de Pago.'
+        );
+        return;
+      }
+
+      //#region Read dates
 
       let dateFechaProveedor = null;
       let dateFechaSupervisor = null;
@@ -155,5 +179,18 @@ export class PopupSolicitudPagoAprobacionComponent implements OnInit {
   }
   get observacionesCtrl() {
     return this.popupForm.get('observacionesCtrl');
+  }
+
+  get validarValorIngresado(): boolean {
+    let sum = 0;
+
+    this.rubrosPresupuestales.forEach((x) => {
+      sum = +sum + +x.valorSolicitud;
+    });
+
+    if (sum !== this.formatoSolicitudPago.valorFacturado) {
+      return false;
+    }
+    return true;
   }
 }

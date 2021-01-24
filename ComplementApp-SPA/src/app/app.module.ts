@@ -110,6 +110,7 @@ import { ListaTipoIvaResolver } from './_resolvers/lista-TipoIva.resolver';
 import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
 import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
 import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
+import { PopupSolicitudPagoRechazoComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -177,6 +178,7 @@ export function tokenGetter() {
     AprobacionSolicitudPagoComponent,
     FormatoSolicitudPagoAprobacionComponent,
     PopupSolicitudPagoAprobacionComponent,
+    PopupSolicitudPagoRechazoComponent,
     ObligacionPresupuestalComponent,
     PlanPagoComponent,
     PlanPagoEditComponent,

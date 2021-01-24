@@ -104,5 +104,10 @@
     "Nombre": "Rechazado",
     "Descripcion": "Rechazado",
     "TipoDocumento": "EstadoSolicitudPago"
+  },
+  {
+    "Nombre": "ConSolicitudPago",
+    "Descripcion": "ConSolicitudPago",
+    "TipoDocumento": "PlanDePagos"
   }
 ]

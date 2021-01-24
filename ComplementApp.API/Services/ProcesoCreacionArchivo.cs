@@ -142,7 +142,7 @@ namespace ComplementApp.API.Services
             foreach (var item in listaLiquidacionIds)
             {
                 lista = listaTotal.Where(x => x.DetalleLiquidacionId == item).ToList();
-                
+
                 foreach (var itemInterno in lista)
                 {
                     sbBody.Append(consecutivoCabecera);
@@ -164,7 +164,7 @@ namespace ComplementApp.API.Services
                     sbBody.Append(itemInterno.AtributoContableCodigo);
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.TipoGastoCodigo);
-                    sbBody.Append("||");
+                    sbBody.Append("|");
                     sbBody.Append(itemInterno.TipoOperacion);
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.UsoContable);
@@ -213,11 +213,11 @@ namespace ComplementApp.API.Services
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.NumeroIdentificacion);
                     sbBody.Append("|");
-                    sbBody.Append(itemInterno.Base.ToString().Replace(".", ","));
+                    sbBody.Append((int)Math.Round(itemInterno.Base, 0, MidpointRounding.AwayFromZero)).ToString();
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.Tarifa.ToString().Replace(".", ","));
                     sbBody.Append("|");
-                    sbBody.Append(itemInterno.Valor.ToString().Replace(".", ","));
+                    sbBody.Append((int)Math.Round(itemInterno.Valor, 0, MidpointRounding.AwayFromZero)).ToString();
                     sbBody.Append(Environment.NewLine);
 
                     consecutivoInterno++;

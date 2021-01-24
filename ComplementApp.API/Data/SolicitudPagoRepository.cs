@@ -307,7 +307,23 @@ namespace ComplementApp.API.Data
         }
 
         #endregion Registro de Solicitud de Pago
+        public async Task<ICollection<FormatoSolicitudPago>> ObtenerListaSolicitudPagoXPlanPagoIds(List<int> planPagoIds)
+        {
+            return await (from sp in _context.FormatoSolicitudPago
+                          where planPagoIds.Contains(sp.PlanPagoId)
+                          where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
+                          select sp
+                          ).ToListAsync();
+        }
 
+        public async Task<FormatoSolicitudPago> ObtenerSolicitudPagoXPlanPagoId(int planPagoId)
+        {
+            return await (from sp in _context.FormatoSolicitudPago
+                          where sp.PlanPagoId == planPagoId
+                          where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
+                          select sp
+                          ).FirstOrDefaultAsync();
+        }
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

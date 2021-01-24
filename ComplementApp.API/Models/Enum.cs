@@ -3,6 +3,7 @@ namespace ComplementApp.API.Models
     public enum EstadoPlanPago
     {
         PorPagar = 4,
+        ConSolicitudPago = 27,
         PorObligar = 5,
         ConLiquidacionDeducciones = 6,
         Obligado = 7,
@@ -58,6 +59,12 @@ namespace ComplementApp.API.Models
     }
 
     public enum TipoPago
+    {
+        Fijo = 1,
+        Variable = 2
+    }
+
+    public enum TipoDeIva
     {
         Fijo = 1,
         Variable = 2
