@@ -108,10 +108,13 @@
             <td style="padding: 0px 15px">
               <div class="form-row mt-2">
                 <div style="width: 2%"></div>
+                <div style="width: 8%" class="inner center">
+                  <label class="col-form-label-md">Id</label>
+                </div>
                 <div style="width: 10%" class="inner center">
                   <label class="col-form-label-md">Identificación</label>
                 </div>
-                <div style="width: 48%" class="inner center">
+                <div style="width: 40%" class="inner center">
                   <label class="col-form-label-md">Tercero</label>
                 </div>
                 <div style="width: 15%" class="inner center">
@@ -142,22 +145,28 @@
                       </label>
                     </div>
                     <div
+                      style="width: 8%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p >{{ item?.detalleLiquidacionId }}</p>
+                    </div>
+                    <div
                       style="width: 10%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">{{ item?.identificacionTercero }}</p>
+                      <p >{{ item?.identificacionTercero }}</p>
                     </div>
                     <div
-                      style="width: 48%"
+                      style="width: 40%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">{{ item?.nombreTercero }}</p>
+                      <p >{{ item?.nombreTercero }}</p>
                     </div>
                     <div
                       style="width: 15%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">
+                      <p >
                         {{ item?.numeroRadicadoSupervisor }}
                       </p>
                     </div>
@@ -165,7 +174,7 @@
                       style="width: 10%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">
+                      <p >
                         {{ item?.fechaRadicadoSupervisor | date: "dd/MM/yyyy" }}
                       </p>
                     </div>
@@ -173,7 +182,7 @@
                       style="width: 15%"
                       class="inner right aplicaBackground"
                     >
-                      <p class="medium">
+                      <p >
                         {{ item?.valorTotal | number: "1.2-2" }}
                       </p>
                     </div>

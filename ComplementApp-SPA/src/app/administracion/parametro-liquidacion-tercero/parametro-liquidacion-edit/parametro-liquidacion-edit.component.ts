@@ -662,7 +662,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         const deduccionT = new ValorSeleccion();
         const terceroDeDeduccionT = new ValorSeleccion();
         const terceroT = new ValorSeleccion();
-        terceroT.id = this.parametroLiquidacionSeleccionado.terceroId;
+        terceroT.id = this.tercero.terceroId;
 
         const terceroDeduccion: TerceroDeduccionDto = {
           deduccion: deduccionT,
@@ -727,7 +727,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         }
 
         const terceroT = new ValorSeleccion();
-        terceroT.id = this.parametroLiquidacionSeleccionado.terceroId;
+        terceroT.id = this.tercero.terceroId;
 
         const terceroDeduccion: TerceroDeduccionDto = {
           deduccion: deduccionT,
@@ -872,9 +872,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           parametroLiquidacionTerceroId: 0,
           modalidadContrato: this.idModalidadContratoSelecionado,
           tipoCuentaPorPagar: this.idTipoCuentaXPagarSelecionado,
-          tipoIva: this.idTipoIvaSelecionado,
           tipoDocumentoSoporte: this.idTipoDocumentoSoporteSelecionado,
-          tipoPago: this.idTipoPagoSelecionado,
+          tipoIva:
+            this.idTipoIvaSelecionado !== null ? this.idTipoIvaSelecionado : 0,
+          tipoPago:
+            this.idTipoPagoSelecionado !== null
+              ? this.idTipoPagoSelecionado
+              : 0,
           honorarioSinIva: GeneralService.obtenerValorAbsoluto(
             formValues.honorarioSinIvaCtrl
           ),
@@ -957,7 +961,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           numeroCuenta: '',
           tipoCuenta: '',
           convenioFontic: 0,
-          terceroId: this.parametroLiquidacionSeleccionado.terceroId,
+          terceroId: this.tercero.terceroId,
 
           terceroDeducciones: this.listaTerceroDeducciones,
         };
@@ -980,9 +984,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           );
       } else {
         this.parametroLiquidacionSeleccionado.modalidadContrato = this.idModalidadContratoSelecionado;
+
+        this.parametroLiquidacionSeleccionado.tipoIva =
+          this.idTipoIvaSelecionado !== null ? this.idTipoIvaSelecionado : 0;
+        this.parametroLiquidacionSeleccionado.tipoPago =
+          this.idTipoPagoSelecionado !== null ? this.idTipoPagoSelecionado : 0;
+
         this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar = this.idTipoCuentaXPagarSelecionado;
-        this.parametroLiquidacionSeleccionado.tipoIva = this.idTipoIvaSelecionado;
-        this.parametroLiquidacionSeleccionado.tipoPago = this.idTipoPagoSelecionado;
         this.parametroLiquidacionSeleccionado.supervisorId = this.idSupervisorSeleccionado;
         this.parametroLiquidacionSeleccionado.facturaElectronicaId = this.idFacturaElectronicaSeleccionado;
         this.parametroLiquidacionSeleccionado.subcontrataId = this.idSubcontrataSeleccionado;

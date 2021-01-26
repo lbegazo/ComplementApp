@@ -13,10 +13,12 @@ namespace ComplementApp.API.Data
     public class SolicitudPagoRepository : ISolicitudPagoRepository
     {
         private readonly DataContext _context;
+        private readonly IGeneralInterface _generalInterface;
 
-        public SolicitudPagoRepository(DataContext context)
+        public SolicitudPagoRepository(DataContext context, IGeneralInterface generalInterface)
         {
             _context = context;
+            this._generalInterface = generalInterface;
         }
 
         #region Registro de Solicitud de Pago
@@ -151,7 +153,8 @@ namespace ComplementApp.API.Data
         public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp)
         {
             var formato = await (from c in _context.CDP
-                                 join co in _context.Contrato on c.Crp equals co.Crp
+                                 join co in _context.Contrato on c.Crp equals co.Crp into Contrato
+                                 from ctr in Contrato.DefaultIfEmpty()
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                  join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
                                  from pt in ParametroTercero.DefaultIfEmpty()
@@ -175,12 +178,12 @@ namespace ComplementApp.API.Data
                                      },
                                      Contrato = new Contrato()
                                      {
-                                         ContratoId = co.ContratoId,
-                                         NumeroContrato = co.NumeroContrato,
-                                         Crp = co.Crp,
-                                         FechaInicio = co.FechaInicio,
-                                         FechaFinal = co.FechaFinal,
-                                         FechaRegistro = co.FechaRegistro
+                                         ContratoId = ctr.ContratoId > 0 ? ctr.ContratoId : 0,
+                                         NumeroContrato = ctr.ContratoId > 0 ? ctr.NumeroContrato : string.Empty,
+                                         Crp = ctr.ContratoId > 0 ? ctr.Crp : 0,
+                                         FechaInicio = ctr.ContratoId > 0 ? ctr.FechaInicio : _generalInterface.ObtenerFechaHoraActual(),
+                                         FechaFinal = ctr.ContratoId > 0 ? ctr.FechaFinal : _generalInterface.ObtenerFechaHoraActual(),
+                                         FechaRegistro = ctr.ContratoId > 0 ? ctr.FechaRegistro : _generalInterface.ObtenerFechaHoraActual(),
                                      },
                                      Tercero = new TerceroDto()
                                      {
@@ -205,7 +208,8 @@ namespace ComplementApp.API.Data
         {
             var formato = await (from s in _context.FormatoSolicitudPago
                                  join c in _context.CDP on s.Crp equals c.Crp
-                                 join co in _context.Contrato on c.Crp equals co.Crp
+                                 join co in _context.Contrato on c.Crp equals co.Crp into Contrato
+                                 from ctro in Contrato.DefaultIfEmpty()
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                  join plt in _context.ParametroLiquidacionTercero on t.TerceroId equals plt.TerceroId into ParametroTercero
                                  from par in ParametroTercero.DefaultIfEmpty()
@@ -249,12 +253,12 @@ namespace ComplementApp.API.Data
                                      },
                                      Contrato = new Contrato()
                                      {
-                                         ContratoId = co.ContratoId,
-                                         NumeroContrato = co.NumeroContrato,
-                                         Crp = co.Crp,
-                                         FechaInicio = co.FechaInicio,
-                                         FechaFinal = co.FechaFinal,
-                                         FechaRegistro = co.FechaRegistro
+                                         ContratoId = ctro.ContratoId > 0 ? ctro.ContratoId : 0,
+                                         NumeroContrato = ctro.ContratoId > 0 ? ctro.NumeroContrato : string.Empty,
+                                         Crp = ctro.ContratoId > 0 ? ctro.Crp : 0,
+                                         FechaInicio = ctro.ContratoId > 0 ? ctro.FechaInicio : System.DateTime.Now,
+                                         FechaFinal = ctro.ContratoId > 0 ? ctro.FechaFinal : System.DateTime.Now,
+                                         FechaRegistro = ctro.ContratoId > 0 ? ctro.FechaRegistro : System.DateTime.Now,
                                      },
                                      Tercero = new TerceroDto()
                                      {

@@ -7,6 +7,8 @@ import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { ModalidadContrato, TipoIva, TipoPago } from 'src/app/_models/enum';
 import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
+import { PlanPago } from 'src/app/_models/planPago';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
@@ -20,6 +22,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
   formatoSolicitudPagoEdit: FormatoSolicitudPago;
   title: string;
   parametroLiquidacionTercero: ParametroLiquidacionTercero;
+  planPagoSeleccionada: PlanPago;
 
   formatoSolicitudPago: FormatoSolicitudPago = null;
   dateObj = new Date();
@@ -33,7 +36,11 @@ export class PopupSolicitudPagoComponent implements OnInit {
   popupForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
 
-  constructor(public bsModalRef: BsModalRef, private fb: FormBuilder) {}
+  constructor(
+    public bsModalRef: BsModalRef,
+    private fb: FormBuilder,
+    private alertify: AlertifyService
+  ) {}
 
   ngOnInit() {
     this.idMesSelecionado = this.dateObj.getUTCMonth() + 1;
@@ -178,6 +185,17 @@ export class PopupSolicitudPagoComponent implements OnInit {
     if (this.popupForm.valid) {
       const formValues = Object.assign({}, this.popupForm.value);
 
+      const valorIngresado = +GeneralService.obtenerValorAbsoluto(
+        formValues.valorFacturaCtrl
+      );
+
+      if (!this.validarValorIngresado(valorIngresado)) {
+        this.alertify.warning(
+          'El Valor Facturado no puede ser superior al Valor a Pagar'
+        );
+        return;
+      }
+
       //#region Read dates
 
       let dateFechaInicio = null;
@@ -234,6 +252,14 @@ export class PopupSolicitudPagoComponent implements OnInit {
 
       this.bsModalRef.hide();
     }
+  }
+
+  validarValorIngresado(valor: number): boolean {
+    const valorAPagar = this.planPagoSeleccionada.valorAPagar;
+    if (valor > valorAPagar) {
+      return false;
+    }
+    return true;
   }
 
   get actividadEconomicaCtrl() {

@@ -38,7 +38,7 @@
                   </div>
                   <div *ngIf="listaUsoPresupuestal">
                     <div
-                      formArrayName="planPagoControles"
+                      formArrayName="usoControles"
                       class="row"
                       *ngFor="let item of listaUsoPresupuestal; let i = index"
                     >
@@ -105,7 +105,7 @@
                     </div>
                     <div class="inner center" style="width: 10%">
                       <label class="col-form-label"
-                        ><strong>Tipo Operacion</strong></label
+                        ><strong>Tipo Oper.</strong></label
                       >
                     </div>
                     <div class="inner center" style="width: 10%">
@@ -116,7 +116,7 @@
                   </div>
                   <div *ngIf="listaRelacionContable">
                     <div
-                      formArrayName="relacionContableControles"
+                      formArrayName="relacionControles"
                       class="row"
                       *ngFor="let item of listaRelacionContable; let i = index"
                     >
@@ -193,10 +193,7 @@
               type="button"
               class="btn btn-primary"
               (click)="onAceptar()"
-              [disabled]="
-                idUsoPresupuestalSelecionado === 0 ||
-                idRelacionContableSelecionado === 0
-              "
+              [disabled]="!habilitaControlAceptar"
             >
               Aceptar
             </button>

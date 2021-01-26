@@ -264,24 +264,20 @@
                           >
                             {{
                               this.detallePlanPago?.detalle6 +
-                                " " +
-                                detallePlanPago?.detalle7 +
-                                " - OBJETO: " +
-                                detallePlanPago?.detalle4 +
-                                " " +
-                                detallePlanPago?.identificacionTercero +
-                                " " +
-                                detallePlanPago?.nombreTercero +
-                                " " +
+                                " FACTURA: " +
+                                detallePlanPago?.numeroFactura +  
+                                " OBSERVACIONES: " +
                                 detallePlanPago?.observaciones +
-                                " DOC SOP " +
-                                detallePlanPago?.numeroFactura +
-                                " AUT: " +
-                                detallePlanPago?.detalle5 +
-                                " " +
-                                detallePlanPago?.numeroRadicadoSupervisor +
-                                " " +
-                                detallePlanPago?.fechaRadicadoSupervisorFormato
+                                " RAD_PROV: " +
+                                detallePlanPago?.numeroRadicadoProveedor +
+								                " FECHA: " +
+                                detallePlanPago?.fechaRadicadoProveedorFormato +
+								                " RAD_SUP: " +
+                                 detallePlanPago?.numeroRadicadoSupervisor +
+								                " FECHA: " +
+                                detallePlanPago?.fechaRadicadoSupervisorFormato +
+                                " APRUEBA: " +
+                                detallePlanPago?.detalle5
                             }}
                           </p>
                         </td>

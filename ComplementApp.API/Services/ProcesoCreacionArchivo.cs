@@ -115,7 +115,9 @@ namespace ComplementApp.API.Services
                 sbBody.Append(item.NombreSupervisor);
                 sbBody.Append("|");
                 sbBody.Append(item.ConstanteCargo);
-                sbBody.Append("|||");
+                sbBody.Append("|");
+                sbBody.Append(item.TextoComprobanteContable);
+                sbBody.Append("||");
                 sbBody.Append(Environment.NewLine);
                 consecutivo++;
             }
@@ -131,7 +133,7 @@ namespace ComplementApp.API.Services
 
             var listaAgrupada = (from l in listaTotal
                                  group l by new { l.DetalleLiquidacionId }
-                               into grp
+                                 into grp
                                  select new
                                  {
                                      grp.Key.DetalleLiquidacionId
@@ -227,14 +229,16 @@ namespace ComplementApp.API.Services
             return sbBody.ToString();
         }
 
-        public string ObtenerInformacionUsosLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> listaTotal)
+        public string ObtenerInformacionUsosLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> listaUsos,
+                                                                            List<ClavePresupuestalContableParaArchivo> listaRubros)
         {
-            List<DetalleLiquidacionParaArchivo> lista = null;
+            List<DetalleLiquidacionParaArchivo> listaUsoFiltrada = null;
+            List<ClavePresupuestalContableParaArchivo> listaRubroFiltrada = null;
             int consecutivoCabecera = 1;
             int consecutivoInterno = 1;
             StringBuilder sbBody = new StringBuilder();
 
-            var listaAgrupada = (from l in listaTotal
+            var listaAgrupada = (from l in listaUsos
                                  group l by new { l.DetalleLiquidacionId }
                                 into grp
                                  select new
@@ -246,21 +250,29 @@ namespace ComplementApp.API.Services
 
             foreach (var item in listaLiquidacionIds)
             {
-                lista = listaTotal.Where(x => x.DetalleLiquidacionId == item).ToList();
+                listaUsoFiltrada = listaUsos.Where(x => x.DetalleLiquidacionId == item).ToList();
+                listaRubroFiltrada = listaRubros.Where(x => x.DetalleLiquidacionId == item).ToList();
 
-                foreach (var itemInterno in lista)
+                foreach (var rubro in listaRubroFiltrada)
                 {
-                    sbBody.Append(consecutivoCabecera);
-                    sbBody.Append("|");
-                    sbBody.Append(consecutivoInterno);
-                    sbBody.Append("|");
-                    sbBody.Append(itemInterno.UsoPresupuestalCodigo);
-                    sbBody.Append("|");
-                    sbBody.Append(itemInterno.ValorTotal.ToString().Replace(".", ","));
-                    sbBody.Append(Environment.NewLine);
-                    consecutivoInterno++;
+                    var uso = listaUsoFiltrada
+                                .Where(x => x.UsoPresupuestalId == rubro.UsoPresupuestalId
+                                            && x.RubroPresupuestalId == rubro.RubroPresupuestalId).FirstOrDefault();
+
+                    if (uso != null && uso.UsoPresupuestalCodigo.Length > 0)
+                    {
+                        sbBody.Append(consecutivoCabecera);
+                        sbBody.Append("|");
+                        sbBody.Append(consecutivoInterno);
+                        sbBody.Append("|");
+                        sbBody.Append(uso.UsoPresupuestalCodigo);
+                        sbBody.Append("|");
+                        sbBody.Append(uso.ValorTotal.ToString().Replace(".", ","));
+                        sbBody.Append(Environment.NewLine);
+                        consecutivoInterno++;
+                    }
+                    consecutivoCabecera++;
                 }
-                consecutivoCabecera++;
             }
             return sbBody.ToString();
         }

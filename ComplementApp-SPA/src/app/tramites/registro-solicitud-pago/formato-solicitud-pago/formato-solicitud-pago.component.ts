@@ -172,6 +172,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       listaMeses: this.listaMeses,
       formatoSolicitudPagoEdit: this.formatoSolicitudPagoPopup,
       parametroLiquidacionTercero: this.parametroLiquidacionSeleccionado,
+      planPagoSeleccionada: this.planPagoSeleccionada,
     };
 
     this.bsModalRef = this.modalService.show(

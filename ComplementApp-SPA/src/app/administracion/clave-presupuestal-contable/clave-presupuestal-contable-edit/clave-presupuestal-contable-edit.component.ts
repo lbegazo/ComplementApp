@@ -96,15 +96,14 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
 
       //#region Cargar información del popup (OnHidden event)
 
-      const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
-        this.changeDetection.markForCheck()
-      );
+      const combine = combineLatest([
+        this.modalService.onHidden,
+      ]).subscribe(() => this.changeDetection.markForCheck());
 
       this.subscriptions.push(
         this.modalService.onHidden.subscribe((reason: string) => {
           if (
             this.bsModalRef.content != null &&
-            this.bsModalRef.content.usoPresupuestalSeleccionado !== null &&
             this.bsModalRef.content.relacionContableSeleccionado !== null
           ) {
             const relacionContable = this.bsModalRef.content
@@ -114,10 +113,12 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
               (valorRelacionContable.codigo =
                 relacionContable.cuentaContable.codigo);
 
-            clavePresupuestal.usoPresupuestal = this.bsModalRef.content
-              .usoPresupuestalSeleccionado as ValorSeleccion;
-
             clavePresupuestal.relacionContable = valorRelacionContable;
+
+            if (this.bsModalRef.content.usoPresupuestalSeleccionado !== null) {
+              clavePresupuestal.usoPresupuestal = this.bsModalRef.content
+                .usoPresupuestalSeleccionado as ValorSeleccion;
+            }
           }
           this.unsubscribe();
         })
@@ -150,10 +151,10 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
             );
           }
         );
-    }
-    else
-    {
-      this.alertify.warning('Debe definir los datos contables a los rubros presupuestales');
+    } else {
+      this.alertify.warning(
+        'Debe definir los datos contables a los rubros presupuestales'
+      );
     }
   }
 
@@ -170,7 +171,7 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
 
   get validarListaClavePresupuetalContable() {
     const resultado = this.listaClavePresupuestalContable.filter(
-      (x) => x.usoPresupuestal === null || x.relacionContable === null
+      (x) => x.relacionContable === null
     )[0];
     if (resultado === null || resultado === undefined) {
       return true;

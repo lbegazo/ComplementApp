@@ -214,7 +214,7 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
-
+        
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerDeduccionesXTercero([FromQuery(Name = "terceroId")] int terceroId)

@@ -4,6 +4,8 @@ namespace ComplementApp.API.Dtos.Archivo
     {
         public int DetalleLiquidacionId { get; set; }
         public string Dependencia { get; set; }
+        public int RubroPresupuestalId { get; set; }
+        public int? UsoPresupuestalId { get; set; }
         public string RubroPresupuestalIdentificacion { get; set; }
         public string RecursoPresupuestalCodigo { get; set; }
         public string SituacionFondoCodigo { get; set; }

@@ -37,6 +37,7 @@ namespace ComplementApp.API.Dtos
         public string NumeroRadicadoProveedor { get; set; }
 
         public DateTime? FechaRadicadoProveedor { get; set; }
+        public string FechaRadicadoProveedorFormato { get; set; }
         public string Email { get; set; }
 
         public string Usuario { get; set; }

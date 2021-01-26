@@ -149,6 +149,8 @@ namespace ComplementApp.API.Data
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
+                          join sp in _context.FormatoSolicitudPago on pp.PlanPagoId equals sp.PlanPagoId into SolicitudPago
+                          from sol in SolicitudPago.DefaultIfEmpty()
 
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
@@ -184,10 +186,11 @@ namespace ComplementApp.API.Data
                               NumeroRadicadoSupervisor = pp.NumeroRadicadoSupervisor,
                               FechaRadicadoSupervisor = pp.FechaRadicadoSupervisor,
                               FechaRadicadoSupervisorFormato = pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty,
-                              NumeroFactura = pp.NumeroFactura,
-                              Observaciones = pp.Observaciones,
+                              NumeroFactura = sol.NumeroFactura,
+                              Observaciones = sol.ObservacionesModificacion.Length > 100 ? sol.ObservacionesModificacion.Substring(0, 100) : sol.ObservacionesModificacion,
                               NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
                               FechaRadicadoProveedor = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value : null,
+                              FechaRadicadoProveedorFormato = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value.ToString("yyyy-MM-dd") : string.Empty,
 
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
@@ -203,6 +206,7 @@ namespace ComplementApp.API.Data
             return await (from pp in _context.PlanPago
                           join c in _context.CDP on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
+                          join sp in _context.FormatoSolicitudPago on pp.PlanPagoId equals sp.PlanPagoId
 
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
@@ -249,24 +253,20 @@ namespace ComplementApp.API.Data
                               Usuario = us.Nombres + ' ' + us.Apellidos,
                               Email = us.Email,
                               TextoComprobanteContable = c.Detalle6 +
-                                " " +
-                                c.Detalle7 +
-                                " - OBJETO: " +
-                                c.Detalle4 +
-                                " " +
-                               t.NumeroIdentificacion +
-                                " " +
-                                t.Nombre +
-                                " " +
-                                pp.Observaciones +
-                                " DOC SOP " +
-                                pp.NumeroFactura +
-                                " AUT: " +
-                                c.Detalle5 +
-                                " " +
-                               pp.NumeroRadicadoSupervisor +
-                                " " +
-                                pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd")
+                                " FACTURA: " +
+                                sp.NumeroFactura +
+                                " OBSERVACIONES: " +
+                                (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
+                                " RAD_PROV: " +
+                                pp.NumeroRadicadoProveedor +
+                                " FECHA: " +
+                                (pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value.ToString("yyyy-MM-dd") : string.Empty) +
+                                " RAD_SUP: " +
+                                pp.NumeroRadicadoSupervisor +
+                                " FECHA: " +
+                                (pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty)+
+                                " APRUEBA: " +
+                                super.Nombres + ' ' + super.Apellidos
                           })
                     .ToListAsync();
         }

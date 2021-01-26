@@ -19,12 +19,14 @@ namespace ComplementApp.API.Data
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IGeneralInterface _generalInterface;
+        private readonly IListaRepository _listaRepository;
 
-        public DetalleLiquidacionRepository(DataContext context, IMapper mapper, IGeneralInterface generalInterface)
+        public DetalleLiquidacionRepository(DataContext context, IMapper mapper, IGeneralInterface generalInterface, IListaRepository listaRepository)
         {
             _mapper = mapper;
             _context = context;
             this._generalInterface = generalInterface;
+            this._listaRepository = listaRepository;
         }
 
         public async Task RegistrarDetalleLiquidacion(DetalleLiquidacion detalleLiquidacion)
@@ -213,6 +215,13 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
+            string identificacionPCI = string.Empty;            
+            ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
+
+            if (parametroPCI != null)
+            {
+                identificacionPCI = parametroPCI.Valor;
+            }
 
             var lista = await (from dl in _context.DetalleLiquidacion
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
@@ -222,7 +231,7 @@ namespace ComplementApp.API.Data
                                where (dl.Procesado == false)
                                select new DetalleLiquidacionParaArchivo()
                                {
-                                   PCI = "23-09-00",
+                                   PCI = identificacionPCI,
                                    FechaActual = System.DateTime.Now.ToString("yyyy-MM-dd"),
                                    TipoIdentificacion = t.TipoIdentificacion,
                                    NumeroIdentificacion = t.NumeroIdentificacion,
@@ -303,7 +312,7 @@ namespace ComplementApp.API.Data
                     bool? procesado,
                     UserParams userParams)
         {
-            int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
+            //int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
             //int estadoPlanPago_ConLiquidacionDeducciones = (int)EstadoPlanPago.ConLiquidacionDeducciones;
 
             var lista = (from dl in _context.DetalleLiquidacion
@@ -313,7 +322,7 @@ namespace ComplementApp.API.Data
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                         where (pl.ModalidadContrato == modalidadContrato)
+                         //where (pl.ModalidadContrato == modalidadContrato)
                          where (dl.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
@@ -361,6 +370,13 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
+            string identificacionPCI = string.Empty;            
+            ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
+
+            if (parametroPCI != null)
+            {
+                identificacionPCI = parametroPCI.Valor;
+            }
 
 
             var lista = await (from dl in _context.DetalleLiquidacion
@@ -374,7 +390,7 @@ namespace ComplementApp.API.Data
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    FechaActual = System.DateTime.Now.ToString("yyyy/MM/dd"),
-                                   PCI = "23-09-00",
+                                   PCI = identificacionPCI,
                                    Crp = dl.Crp,
                                    Dip = "NO",
                                    TipoCuentaPagarCodigo = tcp.Codigo,
@@ -384,7 +400,8 @@ namespace ComplementApp.API.Data
                                    ConstanteExpedidor = "11",
                                    ConstanteCargo = "SUPERVISOR",
                                    NombreSupervisor = dl.NombreSupervisor,
-                                   TextoComprobanteContable = dl.TextoComprobanteContable,
+                                   TextoComprobanteContable =
+                                   dl.TextoComprobanteContable.Length > 220 ? dl.TextoComprobanteContable.Substring(0, 220) : dl.TextoComprobanteContable,
                                    ValorTotal = decimal.Round(dl.ValorTotal, 2, MidpointRounding.AwayFromZero),
                                    FechaRegistro = dl.FechaRegistro.Value
                                })
@@ -417,20 +434,22 @@ namespace ComplementApp.API.Data
                                select new ClavePresupuestalContableParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                   RubroPresupuestalId = rp.RubroPresupuestalId,
+                                   UsoPresupuestalId = cp.UsoPresupuestalId.HasValue ? cp.UsoPresupuestalId.Value : null,
                                    Dependencia = cp.Dependencia,
                                    RubroPresupuestalIdentificacion = rp.Identificacion,
                                    RecursoPresupuestalCodigo = rpr.Codigo,
                                    FuenteFinanciacionCodigo = ff.Codigo,
                                    SituacionFondoCodigo = sf.Codigo,
-                                   ValorTotal = dl.ValorTotal,
+                                   ValorTotal = cpc.ValorAPagar,
                                    AtributoContableCodigo = ac.Codigo,
                                    TipoGastoCodigo = tga.Codigo,
                                    UsoContable = rc.UsoContable.ToString(),
                                    TipoOperacion = rc.TipoOperacion.ToString(),
                                    NumeroCuenta = cc.NumeroCuenta
                                })
-                               .Distinct()
-                    .ToListAsync();
+                                .Distinct()
+                                .ToListAsync();
 
             return lista;
         }
@@ -442,7 +461,6 @@ namespace ComplementApp.API.Data
                                join d in _context.Deduccion on ld.DeduccionId equals d.DeduccionId
                                join td in _context.TerceroDeducciones on ld.DeduccionId equals td.DeduccionId
                                join t in _context.Tercero on td.TerceroDeDeduccionId equals t.TerceroId
-                               where (l.TerceroId == td.TerceroId)
                                where (listaLiquidacionId.Contains(ld.DetalleLiquidacionId))
                                select new DeduccionDetalleLiquidacionParaArchivo()
                                {
@@ -454,6 +472,7 @@ namespace ComplementApp.API.Data
                                    Tarifa = Math.Round(ld.Tarifa * 100, 5, MidpointRounding.AwayFromZero),
                                    Valor = ld.Valor,
                                })
+                    .Distinct()
                     .ToListAsync();
 
             return lista;
@@ -468,18 +487,22 @@ namespace ComplementApp.API.Data
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
                                join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
-                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
+                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
+                               from upr in UsoPresupuestal.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
-                                   UsoPresupuestalCodigo = up.Identificacion,
+                                   UsoPresupuestalId = cp.UsoPresupuestalId,
+                                   RubroPresupuestalId = rp.RubroPresupuestalId,
+                                   UsoPresupuestalCodigo = upr.UsoPresupuestalId > 0 ? upr.Identificacion : string.Empty,
                                    ValorTotal = cpc.ValorAPagar,
                                    FechaRegistro = dl.FechaRegistro.Value,
                                })
                                .Distinct()
-                    .ToListAsync();
+                               .ToListAsync();
+
 
             if (lista != null && lista.Count > 0)
             {

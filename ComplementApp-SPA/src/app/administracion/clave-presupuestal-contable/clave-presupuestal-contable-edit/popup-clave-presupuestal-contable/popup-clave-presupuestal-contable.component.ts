@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ClavePresupuestalContableDto } from 'src/app/_dto/clavePresupuestalContableDto';
 import { RelacionContableDto } from 'src/app/_dto/relacionContableDto';
@@ -27,6 +33,8 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
   usoPresupuestalSeleccionado: ValorSeleccion = null;
   relacionContableSeleccionado: RelacionContableDto;
 
+  habilitaControlAceptar = false;
+
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -45,14 +53,10 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
       for (const detalle of this.listaUsoPresupuestal) {
         this.arrayControls1.push(
           new FormGroup({
-            rubroControl: new FormControl(''),
+            usoControl: new FormControl(''),
           })
         );
       }
-    } else {
-      this.alertify.warning(
-        'No existen Usos Presupuestales para el Rubro seleccionado'
-      );
     }
   }
 
@@ -61,7 +65,7 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
       for (const detalle of this.listaRelacionContable) {
         this.arrayControls2.push(
           new FormGroup({
-            rubroControl: new FormControl(''),
+            relacionControl: new FormControl(''),
           })
         );
       }
@@ -74,8 +78,8 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
 
   createEmptyForm() {
     this.popupForm = this.fb.group({
-      planPagoControles: this.arrayControls1,
-      relacionContableControles: this.arrayControls2,
+      usoControles: this.arrayControls1,
+      relacionControles: this.arrayControls2,
     });
   }
 
@@ -88,6 +92,8 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
         (x) => x.id === this.idUsoPresupuestalSelecionado
       )[0];
     }
+
+    this.habilitaControlAceptar = this.habilitarBotonAceptar();
   }
 
   onCheckChangeRelacionContable(event) {
@@ -99,6 +105,8 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
         (x) => x.relacionContableId === this.idRelacionContableSelecionado
       )[0];
     }
+
+    this.habilitaControlAceptar = this.habilitarBotonAceptar();
   }
 
   cargarUsosPresupuestales() {
@@ -136,11 +144,27 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
   }
 
   onAceptar() {
-    if (
-      this.idUsoPresupuestalSelecionado > 0 &&
-      this.idRelacionContableSelecionado > 0
-    ) {
+    if (this.validarUsoPresupuestal && this.idRelacionContableSelecionado > 0) {
       this.bsModalRef.hide();
     }
+  }
+
+  get validarUsoPresupuestal(): boolean {
+    if (this.listaUsoPresupuestal && this.listaUsoPresupuestal.length === 0) {
+      return true;
+    }
+    if (this.listaUsoPresupuestal && this.listaUsoPresupuestal.length > 0) {
+      if (this.idUsoPresupuestalSelecionado > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  habilitarBotonAceptar(): boolean {
+    if (this.validarUsoPresupuestal && this.idRelacionContableSelecionado > 0) {
+      return true;
+    }
+    return false;
   }
 }

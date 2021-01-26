@@ -75,7 +75,7 @@ namespace ComplementApp.API.Controllers
                 string identificacionPCI = string.Empty;
 
                 ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
-                if (identificacionPCI != null)
+                if (parametroPCI != null)
                 {
                     identificacionPCI = parametroPCI.Valor;
                 }
@@ -175,9 +175,11 @@ namespace ComplementApp.API.Controllers
                     clavePresupuestalContable.SituacionFondoId = item.SituacionFondo.Id;
                     clavePresupuestalContable.FuenteFinanciacionId = item.FuenteFinanciacion.Id;
                     clavePresupuestalContable.RecursoPresupuestalId = item.RecursoPresupuestal.Id;
-                    clavePresupuestalContable.UsoPresupuestalId = item.UsoPresupuestal.Id;
+                    if (item.UsoPresupuestal != null)
+                    {
+                        clavePresupuestalContable.UsoPresupuestalId = item.UsoPresupuestal.Id;
+                    }
                     clavePresupuestalContable.RelacionContableId = item.RelacionContable.Id;
-
                     listaClavePresupuestal.Add(clavePresupuestalContable);
                 }
 

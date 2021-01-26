@@ -21,10 +21,12 @@ export interface DetallePlanPago {
   identificacionRubroPresupuestal: string;
   identificacionUsoPresupuestal: string;
   numeroRadicadoSupervisor: string;
+  numeroRadicadoProveedor: string;
   fechaRadicadoSupervisor: Date;
   numeroFactura: string;
   observaciones: string;
   modalidadContrato: number;
   tipoPago: number;
   fechaRadicadoSupervisorFormato: string;
+  fechaRadicadoProveedorFormato: string;
 }

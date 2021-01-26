@@ -44,8 +44,7 @@ namespace ComplementApp.API.Models
 
         public RecursoPresupuestal RecursoPresupuestal { get; set; }
 
-        [Required]
-        public int UsoPresupuestalId { get; set; }
+         public int? UsoPresupuestalId { get; set; }
 
         public UsoPresupuestal UsoPresupuestal { get; set; }
 

@@ -323,6 +323,8 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
+        #region Archivo Cuenta Por Pagar
+
         [HttpGet]
         [Route("DescargarMaestroLiquidacion_ArchivoCuentaPorPagar")]
         public async Task<IActionResult> DescargarMaestroLiquidacion_ArchivoCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
@@ -446,6 +448,8 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
+
+        #endregion Archivo Cuenta Por Pagar
 
         [HttpGet]
         [Route("[action]")]
@@ -672,7 +676,8 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Usos
 
-                            var lista = await _repo.ObtenerUsosParaArchivoObligacion(listDistinct);
+                            var listaUso = await _repo.ObtenerUsosParaArchivoObligacion(listDistinct);
+                            var listaRubros = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(listDistinct);
 
                             //Obtener nombre del archivo detalle
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
@@ -680,14 +685,14 @@ namespace ComplementApp.API.Controllers
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Uso);
 
-                            if (lista != null && lista.Count > 0)
+                            if (listaUso != null && listaUso.Count > 0)
                             {
                                 //Actualizar el estado de las liquidaciones procesadas
                                 await ActualizarEstadoDetalleLiquidacion(usuarioId, listDistinct);
                                 await _dataContext.SaveChangesAsync();
 
                                 //Obtener información para el archivo
-                                cadena = _procesoCreacionArchivo.ObtenerInformacionUsosLiquidacion_ArchivoObligacion(lista.ToList());
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionUsosLiquidacion_ArchivoObligacion(listaUso.ToList(), listaRubros.ToList());
 
                                 //Encoding.UTF8: Respeta las tildes en las palabras
                                 byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
@@ -709,8 +714,6 @@ namespace ComplementApp.API.Controllers
                                 if (stream == null)
                                     return NotFound();
 
-                                //Response.AddFileName(archivo.Nombre);
-                                //return File(stream, "application/octet-stream", archivo.Nombre);
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
