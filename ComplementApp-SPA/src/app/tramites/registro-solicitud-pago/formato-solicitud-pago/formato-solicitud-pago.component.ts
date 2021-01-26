@@ -45,6 +45,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   @ViewChild('formatoNgForm', { static: true }) formatoNgForm: NgForm;
 
   @Input() formatoSolicitudPago: FormatoSolicitudPagoDto;
+  @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   @Output() esCancelado = new EventEmitter<boolean>();
 
   listaMeses: ValorSeleccion[] = [];
@@ -61,7 +62,6 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   idplanPagoSeleccionada = 0;
   subscriptions: Subscription[] = [];
-  parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
 
   habilitaPlanDePagoSeleccionado = false;
   habilitaDatosRegistrados = false;
@@ -75,8 +75,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
     private solicitudPagoService: SolicitudPagoService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private listaService: ListaService,
-    private terceroService: TerceroService
+    private listaService: ListaService
   ) {}
 
   ngOnInit() {
@@ -96,31 +95,9 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       }
     }
 
-    if (this.formatoSolicitudPago.tercero.terceroId > 0) {
-      this.obtenerParametrizacionTercero(
-        this.formatoSolicitudPago.tercero.terceroId
-      );
-    }
-
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
     });
-  }
-
-  obtenerParametrizacionTercero(terceroId: number) {
-    if (terceroId > 0) {
-      this.terceroService
-        .ObtenerParametrizacionLiquidacionXTercero(terceroId)
-        .subscribe((documento: ParametroLiquidacionTercero) => {
-          if (documento) {
-            this.parametroLiquidacionSeleccionado = documento;
-          } else {
-            this.alertify.error(
-              'No se pudo obtener información de la parametrización del tercero'
-            );
-          }
-        });
-    }
   }
 
   seleccionarPlanPago() {

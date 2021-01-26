@@ -80,10 +80,15 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<ActionResult> ObtenerParametrizacionLiquidacionXTercero([FromQuery(Name = "terceroId")] int terceroId)
         {
+            ICollection<TerceroDeduccionDto> lista = null;
             try
             {
                 var item = await _repo.ObtenerParametrizacionLiquidacionXTercero(terceroId);
-                item.TerceroDeducciones = await _repo.ObtenerDeduccionesXTercero(terceroId);
+                if (item != null)
+                {
+                    lista = await _repo.ObtenerDeduccionesXTercero(terceroId);
+                    item.TerceroDeducciones = lista;
+                }
                 return Ok(item);
             }
             catch (Exception)
@@ -214,7 +219,7 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
-        
+
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerDeduccionesXTercero([FromQuery(Name = "terceroId")] int terceroId)

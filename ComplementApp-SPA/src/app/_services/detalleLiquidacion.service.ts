@@ -269,16 +269,17 @@ export class DetalleLiquidacionService {
     listaEstadoId: string,
     seleccionarTodo: number,
     terceroId: number,
-    tipoArchivoObligacionId: number
+    tipoArchivoObligacionId: number,
+    conUsoPresupuestal: number
   ): Observable<HttpEvent<Blob>> {
-
     let params = new HttpParams();
     params = params.append('listaEstadoId', listaEstadoId);
     params = params.append(
       'tipoArchivoObligacionId',
       tipoArchivoObligacionId.toString()
     );
-    
+    params = params.append('conUsoPresupuestal', conUsoPresupuestal.toString());
+
     if (listaLiquidacionId.length > 0) {
       params = params.append(
         'listaLiquidacionId',

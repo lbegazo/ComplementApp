@@ -63,6 +63,7 @@ namespace ComplementApp.API.Interfaces
 
         Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerUsosParaArchivoObligacion(List<int> listaLiquidacionId);
 
+        Task<List<int>> ObtenerLiquidacionIdsConUsosPresupuestales(List<int> listaLiquidacionId);
 
         #endregion Archivo Obligacion Presupuestal
     }

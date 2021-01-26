@@ -349,8 +349,6 @@ namespace ComplementApp.API.Data
                                                                                         List<int> listaEstadoId,
                                                                                         bool? procesado)
         {
-            int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
-
             var lista = await (from dl in _context.DetalleLiquidacion
                                join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
                                join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
@@ -358,10 +356,26 @@ namespace ComplementApp.API.Data
                                join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
                                where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                               where (pl.ModalidadContrato == modalidadContrato)
                                where (dl.TerceroId == terceroId || terceroId == null)
                                where (dl.Procesado == procesado || procesado == null)
                                select dl.DetalleLiquidacionId).ToListAsync();
+            return lista;
+        }
+
+
+        public async Task<List<int>> ObtenerLiquidacionIdsConUsosPresupuestales(List<int> listaLiquidacionId)
+        {
+            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago                               
+                               join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
+                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
+                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               where (sp.PlanPagoId == dl.PlanPagoId)
+                               select dl.DetalleLiquidacionId)
+                               .Distinct()
+                               .ToListAsync();
 
             return lista;
         }
@@ -487,8 +501,7 @@ namespace ComplementApp.API.Data
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
                                join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
-                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
-                               from upr in UsoPresupuestal.DefaultIfEmpty()
+                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                select new DetalleLiquidacionParaArchivo()
@@ -496,7 +509,7 @@ namespace ComplementApp.API.Data
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
                                    UsoPresupuestalId = cp.UsoPresupuestalId,
                                    RubroPresupuestalId = rp.RubroPresupuestalId,
-                                   UsoPresupuestalCodigo = upr.UsoPresupuestalId > 0 ? upr.Identificacion : string.Empty,
+                                   UsoPresupuestalCodigo = up.UsoPresupuestalId > 0 ? up.Identificacion : string.Empty,
                                    ValorTotal = cpc.ValorAPagar,
                                    FechaRegistro = dl.FechaRegistro.Value,
                                })

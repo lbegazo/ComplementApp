@@ -124,7 +124,8 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int terceroId)
         {
             var lista = await (from td in _context.TerceroDeducciones
-                               join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
+                               join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId into ActividadEconomica
+                               from acteco in ActividadEconomica.DefaultIfEmpty()
                                join d in _context.Deduccion on td.DeduccionId equals d.DeduccionId into Deducciones
                                from ded in Deducciones.DefaultIfEmpty()
                                join td1 in _context.Tercero on ded.TerceroId equals td1.TerceroId into TerceroDeducciones1
@@ -143,9 +144,9 @@ namespace ComplementApp.API.Data
                                    },
                                    ActividadEconomica = new ValorSeleccion()
                                    {
-                                       Id = ae.ActividadEconomicaId,
-                                       Codigo = ae.Codigo,
-                                       Nombre = ae.Nombre
+                                       Id = acteco.ActividadEconomicaId > 0 ? acteco.ActividadEconomicaId : 0,
+                                       Codigo = acteco.ActividadEconomicaId > 0 ? acteco.Codigo : string.Empty,
+                                       Nombre = acteco.ActividadEconomicaId > 0 ? acteco.Nombre : string.Empty,
                                    },
                                    Deduccion = new ValorSeleccion()
                                    {
@@ -153,14 +154,20 @@ namespace ComplementApp.API.Data
                                        Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
                                        Nombre = ded.DeduccionId > 0 ? ded.Nombre : string.Empty
                                    },
-
                                    TerceroDeDeduccion = new ValorSeleccion()
                                    {
-                                       Id = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.TerceroId) : (ter2.TerceroId)) : 0,
-                                       Codigo = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.NumeroIdentificacion) : (ter2.NumeroIdentificacion)) : string.Empty,
-                                       Nombre = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.Nombre) : (ter2.Nombre)) : string.Empty,
-                                       Valor = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? ("SI") : (string.Empty)) : "NO",
+                                       Id = ter2.TerceroId > 0 ? ter2.TerceroId : 0,
+                                       Codigo = ter2.TerceroId > 0 ? ter2.NumeroIdentificacion : string.Empty,
+                                       Nombre = ter2.TerceroId > 0 ? ter2.Nombre : string.Empty,
+                                       Valor = ter2.TerceroId > 0 ? "SI" : "NO",
                                    },
+                                   //    TerceroDeDeduccion = new ValorSeleccion()
+                                   //    {
+                                   //        Id = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.TerceroId) : (ter2.TerceroId)) : 0,
+                                   //        Codigo = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.NumeroIdentificacion) : (ter2.NumeroIdentificacion)) : string.Empty,
+                                   //        Nombre = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.Nombre) : (ter2.Nombre)) : string.Empty,
+                                   //        Valor = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? ("SI") : (string.Empty)) : "NO",
+                                   //    },
                                }
                          )
                          .Distinct()
@@ -287,6 +294,6 @@ namespace ComplementApp.API.Data
                           }).ToListAsync();
         }
 
-       
+
     }
 }

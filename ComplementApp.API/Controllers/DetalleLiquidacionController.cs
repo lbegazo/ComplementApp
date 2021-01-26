@@ -493,19 +493,22 @@ namespace ComplementApp.API.Controllers
                                                                                [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                                                [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
                                                                                [FromQuery(Name = "terceroId")] int? terceroId,
-                                                                                [FromQuery(Name = "tipoArchivoObligacionId")] int? tipoArchivoObligacionId
+                                                                                [FromQuery(Name = "tipoArchivoObligacionId")] int? tipoArchivoObligacionId,
+                                                                                [FromQuery(Name = "conUsoPresupuestal")] int? conUsoPresupuestal
                                                                                )
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             List<int> listaEstadoIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
-            List<int> LiquidacionIds = new List<int>();
+            bool esUsoPresupuestal = conUsoPresupuestal > 0 ? true : false;
+            List<int> liquidacionIdsTotal = new List<int>();
+            List<int> liquidacionIdsConUsoPresupuestal = new List<int>();
+            List<int> liquidacionIdsSinUsoPresupuestal = new List<int>();
+            List<int> liquidacionIds = new List<int>();
             string cadena = string.Empty;
             string nombreArchivo = string.Empty;
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
-            int consecutivo = 0;
-
-            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+            int consecutivo = 0; 
 
             try
             {
@@ -515,7 +518,7 @@ namespace ComplementApp.API.Controllers
                 {
                     #region esSeleccionarTodo
 
-                    LiquidacionIds = await _repo.ObtenerLiquidacionIdsParaArchivoObligacion(terceroId, listaEstadoIds, false);
+                    liquidacionIdsTotal = await _repo.ObtenerLiquidacionIdsParaArchivoObligacion(terceroId, listaEstadoIds, false);
 
                     #endregion esSeleccionarTodo
                 }
@@ -525,15 +528,33 @@ namespace ComplementApp.API.Controllers
                     {
                         #region Procesar por lista de ids
 
-                        LiquidacionIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
+                        liquidacionIdsTotal = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
 
                         #endregion Procesar por lista de ids
                     }
                 }
 
-                List<int> listDistinct = LiquidacionIds.Distinct().ToList();
+                List<int> listaIdsTotal = liquidacionIdsTotal.Distinct().ToList();
 
                 #endregion Obtener lista de liquidaciones a procesar
+
+                #region Filtrar lista de liquidaciones por Usos Presupuestales
+
+                liquidacionIdsConUsoPresupuestal = await _repo.ObtenerLiquidacionIdsConUsosPresupuestales(listaIdsTotal);
+
+                if (esUsoPresupuestal)
+                {
+                    liquidacionIds = liquidacionIdsConUsoPresupuestal;
+                }
+                else
+                {
+                    liquidacionIdsSinUsoPresupuestal = liquidacionIdsTotal.Except(liquidacionIdsConUsoPresupuestal).ToList();
+                    liquidacionIds = liquidacionIdsSinUsoPresupuestal;
+                }
+
+                #endregion Filtrar lista de liquidaciones por Usos Presupuestales
+
+                await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
                 switch (tipoArchivoObligacionId)
                 {
@@ -541,7 +562,7 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Cabecera
 
-                            var listaLiquidacion = await _repo.ObtenerCabeceraParaArchivoObligacion(listDistinct);
+                            var listaLiquidacion = await _repo.ObtenerCabeceraParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
@@ -555,12 +576,12 @@ namespace ComplementApp.API.Controllers
                                 cadena = _procesoCreacionArchivo.ObtenerInformacionCabeceraLiquidacion_ArchivoObligacion(listaLiquidacion.ToList());
 
                                 //Registrar archivo y sus detalles
-                                ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listDistinct,
+                                ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, liquidacionIds,
                                                                                                         nombreArchivo, consecutivo,
                                                                                                         (int)TipoDocumentoArchivo.Obligacion);
                                 _dataContext.SaveChanges();
 
-                                RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
+                                RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, liquidacionIds);
                                 _dataContext.SaveChanges();
 
                                 //Encoding.UTF8: Respeta las tildes en las palabras
@@ -568,7 +589,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 await transaction.CommitAsync();
                                 Response.AddFileName(archivo.Nombre);
@@ -580,7 +601,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
@@ -591,7 +612,7 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Deducciones
 
-                            var lista = await _repo.ObtenerDeduccionesLiquidacionParaArchivoObligacion(listDistinct);
+                            var lista = await _repo.ObtenerDeduccionesLiquidacionParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
@@ -609,7 +630,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 await transaction.CommitAsync();
 
@@ -622,7 +643,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
@@ -633,7 +654,7 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Items
 
-                            var lista = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(listDistinct);
+                            var lista = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
@@ -651,7 +672,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 await transaction.CommitAsync();
 
@@ -664,7 +685,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
@@ -676,8 +697,8 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Usos
 
-                            var listaUso = await _repo.ObtenerUsosParaArchivoObligacion(listDistinct);
-                            var listaRubros = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(listDistinct);
+                            var listaUso = await _repo.ObtenerUsosParaArchivoObligacion(liquidacionIds);
+                            var listaRubros = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
@@ -688,7 +709,7 @@ namespace ComplementApp.API.Controllers
                             if (listaUso != null && listaUso.Count > 0)
                             {
                                 //Actualizar el estado de las liquidaciones procesadas
-                                await ActualizarEstadoDetalleLiquidacion(usuarioId, listDistinct);
+                                await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
                                 await _dataContext.SaveChangesAsync();
 
                                 //Obtener información para el archivo
@@ -699,7 +720,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 await transaction.CommitAsync();
 
@@ -712,7 +733,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();
+                                    return null;
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
@@ -981,6 +1002,7 @@ namespace ComplementApp.API.Controllers
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+
 
         #endregion Funciones Generales
 

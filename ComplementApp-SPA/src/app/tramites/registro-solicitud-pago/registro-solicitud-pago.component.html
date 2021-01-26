@@ -115,7 +115,10 @@
                   *ngFor="let item of listaPlanPago; let i = index"
                 >
                   <ng-container [formGroupName]="i">
-                    <div style="width: 2%" class="inner center aplicaBackground">
+                    <div
+                      style="width: 2%"
+                      class="inner center aplicaBackground"
+                    >
                       <input
                         type="radio"
                         [value]="item?.crp"
@@ -207,10 +210,11 @@
   <div class="row no-gutters center">
     <div
       class="col-12"
-      *ngIf="formatoSolicitudPago"
+      *ngIf="formatoSolicitudPago && parametroLiquidacionSeleccionado"
     >
       <app-formato-solicitud-pago
         [formatoSolicitudPago]="formatoSolicitudPago"
+        [parametroLiquidacionSeleccionado]="parametroLiquidacionSeleccionado"
         (esCancelado)="HabilitarCabecera($event)"
       >
       </app-formato-solicitud-pago>

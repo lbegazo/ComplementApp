@@ -259,7 +259,7 @@ namespace ComplementApp.API.Services
                                 .Where(x => x.UsoPresupuestalId == rubro.UsoPresupuestalId
                                             && x.RubroPresupuestalId == rubro.RubroPresupuestalId).FirstOrDefault();
 
-                    if (uso != null && uso.UsoPresupuestalCodigo.Length > 0)
+                    if (uso != null)
                     {
                         sbBody.Append(consecutivoCabecera);
                         sbBody.Append("|");

@@ -71,30 +71,18 @@ namespace ComplementApp.API
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            // app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
+            
             app.UseAuthorization();
 
+            // this will serve wwwroot/index.html when path is '/'
             app.UseDefaultFiles();
 
-            // app.UseStaticFiles(new StaticFileOptions
-            // {
-            //     OnPrepareResponse = context =>
-            //     {
-            //         if (context.File.Name == "index.html")
-            //         {
-            //             context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            //             httpContext.Response.Headers.Append( "Pragma", "no-cache" );
-            //             context.Context.Response.Headers.Add("Expires", "0");
-            //         }
-            //     }
-            // });
-
+            // this will serve js, css, images etc.
             app.UseStaticFiles();
 
             app.UseMiddleware<NoCacheMiddleware>();
