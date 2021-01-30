@@ -59,57 +59,37 @@ namespace ComplementApp.API.Models
         public decimal InteresVivienda { get; set; }
 
         public DateTime? FechaInicioDescuentoInteresVivienda { get; set; }
-
         public DateTime? FechaFinalDescuentoInteresVivienda { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(30,8)")]
         public decimal TarifaIva { get; set; }
-
         public int? TipoIva { get; set; }
-
         public int? TipoCuentaPorPagar { get; set; }
 
         [Required]
         public int TipoDocumentoSoporte { get; set; }
 
-        public string Debito { get; set; }
-
-        public string Credito { get; set; }
-
-        public string NumeroCuenta { get; set; }
-
-        public string TipoCuenta { get; set; }
-
-        public int? ConvenioFontic { get; set; }
-
         public int TerceroId { get; set; }
-
         public Tercero Tercero { get; set; }
-
         public bool GmfAfc { get; set; }
-
         public int UsuarioIdRegistro { get; set; }
-
         public DateTime? FechaRegistro { get; set; }
-
         public int UsuarioIdModificacion { get; set; }
-
         public DateTime? FechaModificacion { get; set; }
-
         public bool FacturaElectronica { get; set; }
-
         public bool Subcontrata { get; set; }
-
         public int? SupervisorId { get; set; }
-
         public Usuario Supervisor { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal OtrosDescuentos { get; set; }
-
         public DateTime? FechaInicioOtrosDescuentos { get; set; }
-
         public DateTime? FechaFinalOtrosDescuentos { get; set; }
+        public bool EsObraPublica { get; set; }
+        public bool MasDeUnContrato { get; set; }
+        public int? TipoAdminPilaId { get; set; }
+        public TipoAdminPila TipoAdminPila { get; set; }
+        
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
-     [Table("TTipoBaseDeduccion")]
+    [Table("TTipoBaseDeduccion")]
     public class TipoBaseDeduccion
     {
         public int TipoBaseDeduccionId { get; set; }

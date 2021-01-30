@@ -59,7 +59,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   @Input() tercero: Tercero;
   @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   @Output() esCancelado = new EventEmitter<boolean>();
-  //@ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
+  // @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
   searchDeduccion: string;
   suggestionsDeduccion$: Observable<Deduccion[]>;
@@ -86,6 +86,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   listaSupervisor: ValorSeleccion[] = [];
   listaFacturaElectronica: ValorSeleccion[] = [];
   listaSubcontrata: ValorSeleccion[] = [];
+  listaAdminPila: ValorSeleccion[] = [];
 
   editForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
@@ -115,6 +116,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   idSupervisorSeleccionado?: number;
   supervisorSeleccionado: ValorSeleccion = null;
+
+  idTipoAdminPila?: number;
+  tipoAdminPilaSeleccionado: ValorSeleccion = null;
 
   listaTerceroDeducciones: TerceroDeduccionDto[] = [];
   listaParametrosGeneral: ValorSeleccion[] = [];
@@ -263,6 +267,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       tipoIvaCtrl: [null, Validators.required],
       facturaElectronicaCtrl: [null, Validators.required],
       subcontrataCtrl: [null, Validators.required],
+      adminPilaCtrl: [null, Validators.required],
       tipoCuentaXPagarCtrl: [null, Validators.required],
       tipoDocumentoSoporteCtrl: [null, Validators.required],
       supervisorCtrl: [null, Validators.required],
@@ -285,6 +290,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       otrosDescuentosCtrl: [''],
       fecIniOtrosDescuentosCtrl: [null],
       fecFinOtrosDescuentosCtrl: [null],
+
+      esObraPublicaCtrl: [''],
+      masDeUnContratoCtrl: [''],
 
       codigoDeduccionCtrl: [''],
       deduccionCtrl: [''],
@@ -346,6 +354,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     let fechaInicio = null;
     let fechaFinal = null;
 
+    let esObraPublica = false;
+    let masDeUnContrato = false;
+
     this.idModalidadContratoSelecionado =
       this.parametroLiquidacionSeleccionado.modalidadContrato > 0
         ? this.parametroLiquidacionSeleccionado.modalidadContrato
@@ -398,6 +409,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
+    this.idTipoAdminPila = this.parametroLiquidacionSeleccionado.tipoAdminPilaId;
+    if (this.idTipoAdminPila !== null) {
+      this.tipoAdminPilaSeleccionado = this.listaAdminPila.filter(
+        (x) => x.id === this.idTipoAdminPila
+      )[0];
+    }
+
     this.idTipoCuentaXPagarSelecionado =
       this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar > 0
         ? this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar
@@ -446,6 +464,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     fechaFinal = this.parametroLiquidacionSeleccionado
       .fechaFinalDescuentoInteresVivienda;
 
+    esObraPublica = this.parametroLiquidacionSeleccionado.esObraPublica;
+    masDeUnContrato = this.parametroLiquidacionSeleccionado.masDeUnContrato;
+
     //#region Deducciones
 
     if (
@@ -478,6 +499,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       supervisorCtrl: this.supervisorSeleccionado,
       facturaElectronicaCtrl: this.facturaElectronicaSeleccionado,
       subcontrataCtrl: this.subcontrataSeleccionado,
+      adminPilaCtrl: this.tipoAdminPilaSeleccionado,
 
       baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
         baseAporteSaludC
@@ -513,6 +535,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         fechaFinalOtrosDescuentos !== null
           ? formatDate(fechaFinalOtrosDescuentos, 'dd-MM-yyyy', 'en')
           : '',
+
+      esObraPublicaCtrl: esObraPublica,
+      masDeUnContratoCtrl: masDeUnContrato,
 
       codigoDeduccionCtrl: '',
       deduccionCtrl: '',
@@ -554,6 +579,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.interesesViviendaCtrl.enable();
       this.fechaInicioCtrl.enable();
       this.fechaFinalCtrl.enable();
+      this.adminPilaCtrl.enable();
+
       this.tipoPagoCtrl.disable();
       this.tipoIvaCtrl.disable();
     }
@@ -577,6 +604,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.riesgoLaboralCtrl.disable();
       this.fondoSolidaridadCtrl.disable();
       this.subcontrataCtrl.disable();
+      this.adminPilaCtrl.disable();
 
       this.pensionVoluntariaCtrl.disable();
       this.dependienteCtrl.disable();
@@ -632,6 +660,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onSubcontrata() {
     this.subcontrataSeleccionado = this.subcontrataCtrl.value as ValorSeleccion;
     this.idSubcontrataSeleccionado = +this.subcontrataSeleccionado.id;
+  }
+
+  onAdminPila() {
+    this.tipoAdminPilaSeleccionado = this.adminPilaCtrl.value as ValorSeleccion;
+    this.idTipoAdminPila = +this.tipoAdminPilaSeleccionado.id;
   }
 
   onSupervisor() {
@@ -873,6 +906,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           modalidadContrato: this.idModalidadContratoSelecionado,
           tipoCuentaPorPagar: this.idTipoCuentaXPagarSelecionado,
           tipoDocumentoSoporte: this.idTipoDocumentoSoporteSelecionado,
+          tipoAdminPilaId: this.idTipoAdminPila,
           tipoIva:
             this.idTipoIvaSelecionado !== null ? this.idTipoIvaSelecionado : 0,
           tipoPago:
@@ -946,6 +980,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
                 ),
           fechaInicioDescuentoInteresVivienda: dateFechaInicio,
           fechaFinalDescuentoInteresVivienda: dateFechaFinal,
+
+          masDeUnContrato: formValues.masDeUnContratoCtrl === '' ? false : true,
+          esObraPublica: formValues.esObraPublicaCtrl === '' ? false : true,
 
           otrosDescuentos:
             formValues.otrosDescuentosCtrl === undefined
@@ -1067,6 +1104,12 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
         this.parametroLiquidacionSeleccionado.terceroDeducciones = this.listaTerceroDeducciones;
 
+        this.parametroLiquidacionSeleccionado.esObraPublica =
+          formValues.esObraPublicaCtrl;
+        this.parametroLiquidacionSeleccionado.masDeUnContrato =
+          formValues.masDeUnContratoCtrl;
+        this.parametroLiquidacionSeleccionado.tipoAdminPilaId = this.idTipoAdminPila;
+
         this.terceroService
           .ActualizarParametroLiquidacionTercero(
             this.parametroLiquidacionSeleccionado
@@ -1158,6 +1201,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   }
   get tipoIvaCtrl() {
     return this.editForm.get('tipoIvaCtrl');
+  }
+  get adminPilaCtrl() {
+    return this.editForm.get('adminPilaCtrl');
   }
   get tipoCuentaXPagarCtrl() {
     return this.editForm.get('tipoCuentaXPagarCtrl');
@@ -1271,6 +1317,15 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
     this.route.data.subscribe((data) => {
       this.listaSupervisor = data['supervisor'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaAdminPila = data['adminPila'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaFacturaElectronica = data['SIoNO'];
+      this.listaSubcontrata = data['SIoNO'];
     });
 
     this.route.data.subscribe((data) => {

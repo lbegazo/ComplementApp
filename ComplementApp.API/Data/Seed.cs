@@ -54,8 +54,29 @@ namespace ComplementApp.API.Data
             SeedTipoCuentaXPagar(context);
             SeedTipoDocumentoSoporte(context);
             SeedTipoDocumentoIdentidad(context);
+
+            SeedTipoAdminPila(context);
         }
 
+        private static void SeedTipoAdminPila(DataContext context)
+        {
+            TipoAdminPila valor = null;
+            List<TipoAdminPila> lista = new List<TipoAdminPila>();
+
+            if (!context.TipoAdminPila.Any())
+            {
+                var data = File.ReadAllText("Data/SeedFiles/_TipoAdminPila.json");
+                var items = JsonConvert.DeserializeObject<List<TipoAdminPila>>(data);
+                foreach (var item in items)
+                {
+                    valor = new TipoAdminPila();
+                    valor.Nombre = item.Nombre;
+                    valor.Codigo = item.Codigo;
+                    context.TipoAdminPila.AddRange(valor);
+                    context.SaveChanges();
+                }
+            }
+        }
         private static void SeedTipoDocumentoIdentidad(DataContext context)
         {
             TipoDocumentoIdentidad valor = null;
@@ -75,6 +96,7 @@ namespace ComplementApp.API.Data
                 }
             }
         }
+
         private static void SeedModalidadContrato(DataContext context)
         {
             TipoModalidadContrato valor = null;
@@ -385,9 +407,6 @@ namespace ComplementApp.API.Data
                         nuevoItem.AportePension = item.AportePension;
                         nuevoItem.AporteSalud = item.AporteSalud;
                         nuevoItem.BaseAporteSalud = item.BaseAporteSalud;
-                        nuevoItem.ConvenioFontic = item.ConvenioFontic;
-                        nuevoItem.Credito = item.Credito;
-                        nuevoItem.Debito = item.Debito;
                         nuevoItem.Dependiente = item.Dependiente;
 
                         if (!string.IsNullOrEmpty(item.FechaFinalDescuentoInteresViviendaDes))
@@ -405,11 +424,9 @@ namespace ComplementApp.API.Data
                         nuevoItem.InteresVivienda = item.InteresVivienda;
                         nuevoItem.MedicinaPrepagada = item.MedicinaPrepagada;
                         nuevoItem.ModalidadContrato = item.ModalidadContrato;
-                        nuevoItem.NumeroCuenta = item.NumeroCuenta;
                         nuevoItem.PensionVoluntaria = item.PensionVoluntaria;
                         nuevoItem.RiesgoLaboral = item.RiesgoLaboral;
                         nuevoItem.TarifaIva = item.TarifaIva;
-                        nuevoItem.TipoCuenta = item.TipoCuenta;
                         nuevoItem.TipoCuentaPorPagar = item.TipoCuentaPorPagar;
                         nuevoItem.TipoDocumentoSoporte = item.TipoDocumentoSoporte;
                         nuevoItem.TipoIva = item.TipoIva;

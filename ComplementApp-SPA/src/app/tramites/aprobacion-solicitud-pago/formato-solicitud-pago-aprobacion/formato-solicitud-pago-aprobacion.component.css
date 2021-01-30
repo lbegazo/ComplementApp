@@ -78,7 +78,7 @@ table {
   }
   
   .fontSmaller {
-    font-size: 10px;
+    font-size: 11.2px;
   }
   
   .fontVerySmaller {
@@ -123,5 +123,9 @@ table {
   .withoutMarginBottom {
     margin-bottom: 0px;
     margin-top: 5px;
+  }
+
+  .withoutMargin {
+    margin: 0px;
   }
   

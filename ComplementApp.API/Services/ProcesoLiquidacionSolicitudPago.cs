@@ -49,11 +49,14 @@ namespace ComplementApp.API.Services
 
                 ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
 
-                if (parametroGenerales != null && parametroLiquidacion != null)
+                IEnumerable<ValorSeleccion> listaAdminPila = await _repoLista.ObtenerListaXTipo(TipoLista.TipoAdminPila);
+                var listaTipoAdminPila = listaAdminPila.ToList();
+
+                if (parametroGenerales != null && parametroLiquidacion != null && listaTipoAdminPila != null)
                 {
                     if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                     {
-                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, valorBaseCotizacion);
+                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, listaTipoAdminPila, valorBaseCotizacion);
                     }
                     formato.PlanPagoId = planPagoId;
                 }
@@ -67,7 +70,9 @@ namespace ComplementApp.API.Services
 
         private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ContratoPrestacionServicio(DetallePlanPagoDto planPago,
                                         ParametroLiquidacionTercero parametroLiquidacion,
-                                        List<ParametroGeneral> parametroGenerales, decimal valorBaseCotizacion)
+                                        List<ParametroGeneral> parametroGenerales,
+                                        List<ValorSeleccion> listaAdminPila,
+                                        decimal valorBaseCotizacion)
         {
             #region variables 
 
@@ -82,6 +87,13 @@ namespace ComplementApp.API.Services
             formato = formatoIgual30;
 
             #endregion Calcular valores y obtener formato
+
+            var adminPila = listaAdminPila.Where(x => x.Id == parametroLiquidacion.TipoAdminPilaId).FirstOrDefault();
+            if (adminPila != null)
+            {
+                formato.TipoAdminPila = adminPila.Nombre;
+            }
+
 
             return formato;
         }

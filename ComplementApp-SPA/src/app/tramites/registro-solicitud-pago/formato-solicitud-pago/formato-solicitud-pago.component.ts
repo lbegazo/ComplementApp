@@ -34,6 +34,8 @@ import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausaci
 import { PopupCargarArchivosComponent } from './popup-cargar-archivos/popup-cargar-archivos.component';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { TerceroService } from 'src/app/_services/tercero.service';
+import { CdpService } from 'src/app/_services/cdp.service';
+import { DetalleCDP } from 'src/app/_models/detalleCDP';
 
 @Component({
   selector: 'app-formato-solicitud-pago',
@@ -54,6 +56,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
   formatoForm = new FormGroup({});
   arrayControls = new FormArray([]);
+  arrayRubrosControls = new FormArray([]);
 
   listaActividadEconomica: ValorSeleccion[];
   bsModalRef: BsModalRef;
@@ -62,11 +65,16 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   idplanPagoSeleccionada = 0;
   subscriptions: Subscription[] = [];
+  listaNotasLegales: ValorSeleccion[] = [];
 
   habilitaPlanDePagoSeleccionado = false;
   habilitaDatosRegistrados = false;
   habilitaArchivosCargados = false;
   solicitudRegistrada = false;
+
+  notaLegalObraPublica = '';
+  notaLegalMasDeUnContrato = '';
+  rubrosPresupuestales: DetalleCDP[] = [];
 
   constructor(
     private alertify: AlertifyService,
@@ -75,16 +83,37 @@ export class FormatoSolicitudPagoComponent implements OnInit {
     private solicitudPagoService: SolicitudPagoService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private listaService: ListaService
+    private listaService: ListaService,
+    private cdpService: CdpService
   ) {}
 
   ngOnInit() {
+    this.createEmptyForm();
+    this.obtenerRubrosPresupuestales();
     this.cargarListaActividadEconomicaXTercero();
     this.cargarMeses();
-    this.createForm();
+    this.cargarNotasLegales();
+    //this.createForm();
+  }
+
+  createEmptyForm() {
+    this.formatoForm = this.fb.group({
+      deduccionControles: this.arrayControls,
+      rubrosControles: this.arrayRubrosControls,
+    });
   }
 
   createForm() {
+    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
+      for (const detalle of this.rubrosPresupuestales) {
+        this.arrayRubrosControls.push(
+          new FormGroup({
+            rubroControl: new FormControl('', []),
+          })
+        );
+      }
+    }
+
     if (this.formatoSolicitudPago.pagosRealizados != null) {
       for (const detalle of this.formatoSolicitudPago.pagosRealizados) {
         this.arrayControls.push(
@@ -97,6 +126,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
+      rubrosControles: this.arrayRubrosControls,
     });
   }
 
@@ -343,6 +373,48 @@ export class FormatoSolicitudPagoComponent implements OnInit {
         this.alertify.error(error);
       }
     );
+  }
+
+  cargarNotasLegales() {
+    this.listaService.ObtenerParametrosGeneralesXTipo('NotaLegal').subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaNotasLegales = lista;
+
+        if (this.listaNotasLegales) {
+          if (this.parametroLiquidacionSeleccionado) {
+            if (this.parametroLiquidacionSeleccionado.esObraPublica) {
+              this.notaLegalObraPublica = (this
+                .listaNotasLegales[0] as ValorSeleccion).valor;
+            }
+            if (this.parametroLiquidacionSeleccionado.masDeUnContrato) {
+              this.notaLegalMasDeUnContrato = (this
+                .listaNotasLegales[1] as ValorSeleccion).valor;
+            }
+          }
+        }
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
+  }
+
+  obtenerRubrosPresupuestales() {
+    this.cdpService
+      .ObtenerRubrosPresupuestalesPorCompromiso(
+        this.formatoSolicitudPago.cdp.crp
+      )
+      .subscribe(
+        (lista: DetalleCDP[]) => {
+          if (lista) {
+            this.rubrosPresupuestales = lista;
+          }
+        },
+        () => {},
+        () => {
+          this.createForm();
+        }
+      );
   }
 
   unsubscribe() {

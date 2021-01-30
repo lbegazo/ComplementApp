@@ -15,11 +15,13 @@ import { FormatoSolicitudPagoDto } from 'src/app/_dto/formatoSolicitudPagoDto';
 import { Cdp } from 'src/app/_models/cdp';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
+import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
+import { TerceroService } from 'src/app/_services/tercero.service';
 import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-aprobacion-solicitud-pago',
@@ -60,12 +62,15 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
   usuarioLogueado: Usuario;
   perfilId: number;
 
+  parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
+
   constructor(
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private solicitudPagoService: SolicitudPagoService
+    private solicitudPagoService: SolicitudPagoService,
+    private terceroService: TerceroService
   ) {}
 
   ngOnInit(): void {
@@ -242,8 +247,31 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
             'Hubo un error al obtener el formato de liquidación.'
           );
         },
-        () => {}
+        () => {
+          if (this.terceroId > 0) {
+            this.obtenerParametrizacionTercero(
+              this.terceroId
+            );
+          }
+        }
       );
+  }
+
+  obtenerParametrizacionTercero(terceroId: number) {
+    if (terceroId > 0) {
+      this.terceroService
+        .ObtenerParametrizacionLiquidacionXTercero(terceroId)
+        .subscribe((documento: ParametroLiquidacionTercero) => {
+          if (documento) {
+            this.parametroLiquidacionSeleccionado = documento;
+            this.mostrarCabecera = false;
+          } else {
+            this.alertify.error(
+              'No se pudo obtener información de la parametrización del tercero'
+            );
+          }
+        });
+    }
   }
 
   HabilitarCabecera($event) {
@@ -254,7 +282,7 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
       totalPages: 0,
       maxSize: 10,
     };
-    
+
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }

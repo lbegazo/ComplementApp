@@ -85,6 +85,7 @@ namespace ComplementApp.API.Models
         TipoIva = 3,
         TipoCuentaXPagar = 4,
         TipoDocumentoSoporte = 5,
+        TipoAdminPila = 6,
     }
 
     public enum TipoOperacionTransaccion

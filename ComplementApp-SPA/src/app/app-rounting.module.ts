@@ -39,6 +39,7 @@ import { ListaTipoIvaResolver } from './_resolvers/lista-TipoIva.resolver';
 import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
 import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
 import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
+import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -87,6 +88,7 @@ export const routes: Routes = [
       tipoPago: ListaTipoPagoResolver,
       supervisor: ListaSupervisorResolver,
       SIoNO: ListaSIoNOResolver,
+      adminPila: ListaAdminPilaResolver,
     },
   },
   {

@@ -111,6 +111,7 @@ import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
 import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
 import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
 import { PopupSolicitudPagoRechazoComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
+import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -237,6 +238,7 @@ export function tokenGetter() {
     ListaTipoPagoResolver,
     ListaSupervisorResolver,
     ListaSIoNOResolver,
+    ListaAdminPilaResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

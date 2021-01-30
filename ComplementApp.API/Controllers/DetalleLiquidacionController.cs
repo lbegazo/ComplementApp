@@ -508,7 +508,7 @@ namespace ComplementApp.API.Controllers
             string cadena = string.Empty;
             string nombreArchivo = string.Empty;
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
-            int consecutivo = 0; 
+            int consecutivo = 0;
 
             try
             {
@@ -589,7 +589,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return null;
+                                    return NotFound();
 
                                 await transaction.CommitAsync();
                                 Response.AddFileName(archivo.Nombre);
@@ -601,55 +601,14 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return null;
+                                    return NotFound();
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
                             #endregion Cabecera
                         };
-                    case (int)TipoArchivoObligacion.Deducciones:
-                        {
-                            #region Deducciones
 
-                            var lista = await _repo.ObtenerDeduccionesLiquidacionParaArchivoObligacion(liquidacionIds);
-
-                            //Obtener nombre del archivo detalle
-                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
-                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
-                                                                (int)TipoDocumentoArchivo.Obligacion,
-                                                                (int)TipoArchivoObligacion.Deducciones);
-
-                            if (lista != null && lista.Count > 0)
-                            {
-                                //Obtener información para el archivo
-                                cadena = _procesoCreacionArchivo.ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(lista.ToList());
-
-                                //Encoding.UTF8: Respeta las tildes en las palabras
-                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return null;
-
-                                await transaction.CommitAsync();
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
-                            }
-                            else
-                            {
-                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return null;
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
-                            }
-                            #endregion Deducciones
-                        };
                     case (int)TipoArchivoObligacion.Item:
                         {
                             #region Items
@@ -672,7 +631,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return null;
+                                    return NotFound();
 
                                 await transaction.CommitAsync();
 
@@ -685,13 +644,61 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return null;
+                                    return NotFound();
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
 
                             #endregion Items
+                        };
+                    case (int)TipoArchivoObligacion.Deducciones:
+                        {
+                            #region Deducciones
+
+                            var lista = await _repo.ObtenerDeduccionesLiquidacionParaArchivoObligacion(liquidacionIds);
+
+                            //Obtener nombre del archivo detalle
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                                (int)TipoDocumentoArchivo.Obligacion,
+                                                                (int)TipoArchivoObligacion.Deducciones);
+
+                            if (!esUsoPresupuestal)
+                            {
+                                //Actualizar el estado de las liquidaciones procesadas
+                                await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
+                                await _dataContext.SaveChangesAsync();
+                                 await transaction.CommitAsync();
+                            }
+
+                            if (lista != null && lista.Count > 0)
+                            {
+                                //Obtener información para el archivo
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(lista.ToList());
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();                               
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            else
+                            {
+                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            #endregion Deducciones
                         };
                     case (int)TipoArchivoObligacion.Uso:
                         {
@@ -706,12 +713,16 @@ namespace ComplementApp.API.Controllers
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Uso);
 
-                            if (listaUso != null && listaUso.Count > 0)
+                            if (esUsoPresupuestal)
                             {
                                 //Actualizar el estado de las liquidaciones procesadas
                                 await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
                                 await _dataContext.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                            }
 
+                            if (listaUso != null && listaUso.Count > 0)
+                            {
                                 //Obtener información para el archivo
                                 cadena = _procesoCreacionArchivo.ObtenerInformacionUsosLiquidacion_ArchivoObligacion(listaUso.ToList(), listaRubros.ToList());
 
@@ -720,9 +731,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return null;
-
-                                await transaction.CommitAsync();
+                                    return NotFound();                                
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
@@ -733,7 +742,7 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return null;
+                                    return NotFound();
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);

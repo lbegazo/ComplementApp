@@ -564,27 +564,15 @@ namespace ComplementApp.API.Data
                 nuevoItem.AportePension = item.AportePension;
                 nuevoItem.AporteSalud = item.AporteSalud;
                 nuevoItem.BaseAporteSalud = item.BaseAporteSalud;
-                nuevoItem.ConvenioFontic = item.ConvenioFontic;
-                nuevoItem.Credito = item.Credito;
-                nuevoItem.Debito = item.Debito;
                 nuevoItem.Dependiente = item.Dependiente;
-
-                // if (item.FechaFinalDescuentoInteresVivienda != DateTime.MinValue)
-                //     nuevoItem.FechaFinalDescuentoInteresVivienda = item.FechaFinalDescuentoInteresVivienda;
-
-                // if (item.FechaInicioDescuentoInteresVivienda != DateTime.MinValue)
-                //     nuevoItem.FechaInicioDescuentoInteresVivienda = item.FechaInicioDescuentoInteresVivienda;
-
                 nuevoItem.FondoSolidaridad = item.FondoSolidaridad;
                 nuevoItem.HonorarioSinIva = item.HonorarioSinIva;
                 nuevoItem.InteresVivienda = item.InteresVivienda;
                 nuevoItem.MedicinaPrepagada = item.MedicinaPrepagada;
                 nuevoItem.ModalidadContrato = item.ModalidadContrato;
-                nuevoItem.NumeroCuenta = item.NumeroCuenta;
                 nuevoItem.PensionVoluntaria = item.PensionVoluntaria;
                 nuevoItem.RiesgoLaboral = item.RiesgoLaboral;
                 nuevoItem.TarifaIva = item.TarifaIva;
-                nuevoItem.TipoCuenta = item.TipoCuenta;
                 nuevoItem.TipoCuentaPorPagar = item.TipoCuentaPorPagar;
                 nuevoItem.TipoDocumentoSoporte = item.TipoDocumentoSoporte;
                 nuevoItem.TipoIva = item.TipoIva;

@@ -186,7 +186,7 @@
                                 style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
-                                FECHA INICIO CONTRATO
+                                FECHA ACTA INICIO CONTRATO
                               </td>
                               <td
                                 style="width: 15%"
@@ -633,12 +633,17 @@
                           </table>
                         </td>
                       </tr>
-                      <tr *ngIf="parametroLiquidacionSeleccionado?.modalidadContrato === 1">
+                      <tr
+                        *ngIf="
+                          parametroLiquidacionSeleccionado?.modalidadContrato ===
+                          1
+                        "
+                      >
                         <td class="withoutPadding">
                           <table>
                             <tr style="width: 100%" class="aplicaBackground">
                               <td
-                                style="width: 15%"
+                                style="width: 10%"
                                 class="center fontSmaller stronger"
                               >
                                 NUMERO DE PLANILLA
@@ -662,7 +667,7 @@
                                 VALOR APORTE SALUD
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 10%"
                                 class="center fontSmaller stronger"
                               >
                                 VALOR APORTE PENSION
@@ -674,10 +679,16 @@
                                 RIESGO LABORAL
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 10%"
                                 class="center fontSmaller stronger"
                               >
                                 FONDO DE SOLIDARIDAD
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                ADMIN. PILA
                               </td>
                             </tr>
                             <tr style="width: 100%">
@@ -699,23 +710,184 @@
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 10%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago?.aportePension
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 10%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago?.riesgoLaboral
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 10%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago?.fondoSolidaridad
                                     | number: "1.0-0"
                                 }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoCausacionyLiquidacionPago?.tipoAdminPila
+                                }}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr
+                        *ngIf="
+                          notaLegalObraPublica !== '' ||
+                          notaLegalMasDeUnContrato !== ''
+                        "
+                      >
+                        <td>
+                          <p
+                            *ngIf="notaLegalObraPublica !== ''"
+                            class="left fontSmaller withoutMargin addPaddingLeft"
+                          >
+                            {{ notaLegalObraPublica }}
+                          </p>
+                          <p
+                            *ngIf="notaLegalMasDeUnContrato !== ''"
+                            class="left fontSmaller withoutMargin addPaddingLeft"
+                          >
+                            {{ notaLegalMasDeUnContrato }}
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <table>
+                            <tr>
+                              <td class="withoutPadding">
+                                <div class="container-fluid">
+                                  <div>
+                                    <!--Titulo de Columnas-->
+                                    <div class="row borderTop">
+                                      <div
+                                        style="width: 20%"
+                                        class="borderBottonRight aplicaBackground"
+                                      >
+                                        <small><strong>CODIGO</strong></small>
+                                      </div>
+                                      <div
+                                        style="width: 40%"
+                                        class="borderBottonRight aplicaBackground"
+                                      >
+                                        <small
+                                          ><strong>NOMBRE RUBRO</strong></small
+                                        >
+                                      </div>
+                                      <div
+                                        style="width: 10%"
+                                        class="borderBottonRight aplicaBackground"
+                                      >
+                                        <small
+                                          ><strong>VALOR INICIAL</strong></small
+                                        >
+                                      </div>
+                                      <div
+                                        style="width: 10%"
+                                        class="borderBottonRight aplicaBackground"
+                                      >
+                                        <small
+                                          ><strong
+                                            >VALOR OPERACION</strong
+                                          ></small
+                                        >
+                                      </div>
+                                      <div
+                                        style="width: 10%"
+                                        class="borderBottonRight aplicaBackground"
+                                      >
+                                        <small
+                                          ><strong> VALOR ACTUAL</strong></small
+                                        >
+                                      </div>
+                                      <div
+                                        style="width: 10%"
+                                        class="borderBottonRight aplicaBackground"
+                                      >
+                                        <small
+                                          ><strong>SALDO ACTUAL</strong></small
+                                        >
+                                      </div>
+                                    </div>
+                                    <!--Valores Rubros Presupuestales-->
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <div *ngIf="rubrosPresupuestales">
+                                          <div
+                                            formArrayName="rubrosControles"
+                                            class="row"
+                                            *ngFor="
+                                              let item of rubrosPresupuestales;
+                                              let i = index
+                                            "
+                                          >
+                                            <ng-container [formGroupName]="i">
+                                              <div
+                                                style="width: 20%"
+                                                class="borderBottonRight centerAlign"
+                                              >
+                                                <small>{{
+                                                  item?.identificacionRubro
+                                                }}</small>
+                                              </div>
+                                              <div
+                                                style="width: 40%"
+                                                class="borderBottonRight left addPaddingLeft addPaddingRight"
+                                              >
+                                                <small
+                                                  >{{ item?.rubroNombre }}
+                                                </small>
+                                              </div>
+                                              <div
+                                                style="width: 10%"
+                                                class="borderBottonRight right addPaddingRight"
+                                              >
+                                                <small>{{
+                                                  item?.valorCDP
+                                                    | number: "1.2-2"
+                                                }}</small>
+                                              </div>
+                                              <div
+                                                style="width: 10%"
+                                                class="borderBottonRight right addPaddingRight"
+                                              >
+                                                <small>{{
+                                                  item?.saldoCDP
+                                                    | number: "1.2-2"
+                                                }}</small>
+                                              </div>
+                                              <div
+                                                style="width: 10%"
+                                                class="borderBottonRight right addPaddingRight"
+                                              >
+                                                <small>{{
+                                                  item?.valorOP
+                                                    | number: "1.2-2"
+                                                }}</small>
+                                              </div>
+                                              <div
+                                                style="width: 10%"
+                                                class="borderBottonRight right addPaddingRight"
+                                              >
+                                                <small>{{
+                                                  item?.saldoAct
+                                                    | number: "1.2-2"
+                                                }}</small>
+                                              </div>
+                                            </ng-container>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </td>
                             </tr>
                           </table>
@@ -752,7 +924,11 @@
             type="submit"
             class="btn btn-warning mr-2"
             (click)="registrarSeguridadSocial()"
-            [disabled]="!habilitaPlanDePagoSeleccionado || habilitaArchivosCargados || solicitudRegistrada"
+            [disabled]="
+              !habilitaPlanDePagoSeleccionado ||
+              habilitaArchivosCargados ||
+              solicitudRegistrada
+            "
           >
             Registrar datos
           </button>

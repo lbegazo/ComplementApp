@@ -22,7 +22,8 @@
   {
     "Nombre": "NotaLegalANE",
     "Descripcion": "Nota Legal ANE",
-    "Valor": "El presente documento es firmado bajo los parámetros establecidos en en el Decreto 1168 de 2020, prorrogado por el Decreto 1550 de 2020 concordante con las Resoluciones Nro. 283 y 405 de 2020 expedidas por la ANE."
+    "Valor": "El presente documento es firmado bajo los parámetros establecidos en en el Decreto 1168 de 2020, prorrogado por el Decreto 1550 de 2020 concordante con las Resoluciones Nro. 283 y 405 de 2020 expedidas por la ANE.",
+    "Tipo": "NotaLegal"
   },
   {
     "Nombre": "BaseAporteSalud",
@@ -59,5 +60,17 @@
     "Descripcion": "Dependientes",
     "Valor": "0.1",
     "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "EsObraPublica",
+    "Descripcion": "EsObraPublica",
+    "Valor": "*La presente cuenta de cobro se realiza con el pago de seguridad social del mes de octubre de 2020 e incluye el pago de seguridad social en pensiones a la tarifa del 16%",    
+    "Tipo": "NotaLegal"
+  },  
+  {
+    "Nombre": "MasDeUnContrato",
+    "Descripcion": "MasDeUnContrato",
+    "Valor": "** Dando cumplimiento a la Circular Interna con radicado GD-003981-1-2020 del pasado 24-abril-2020, me permito certificar que estoy vinculado con dos o más contratos de prestación de servicios profesionales y de apoyo a la gestión pública.",
+    "Tipo": "NotaLegal"    
   }
 ]

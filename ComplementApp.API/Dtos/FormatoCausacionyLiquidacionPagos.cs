@@ -72,6 +72,7 @@ namespace ComplementApp.API.Dtos
         public int BaseGravableUvt { get; set; }
         public decimal BaseGravableUvtCalculada { get; set; }
         public ICollection<DeduccionDto> Deducciones { get; set; }
+        public string TipoAdminPila { get; set; }
 
         #endregion Formato de liquidación
     }

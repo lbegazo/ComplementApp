@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210128161810_TParametroLiquidacionTercero_EliminarColumnas")]
+    partial class TParametroLiquidacionTercero_EliminarColumnas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1067,11 +1069,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<decimal>("Dependiente")
                         .HasColumnType("decimal(30,8)");
 
-                    b.Property<bool>("EsObraPublica")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<bool>("FacturaElectronica")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1107,11 +1104,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<decimal>("InteresVivienda")
                         .HasColumnType("decimal(30,8)");
 
-                    b.Property<bool>("MasDeUnContrato")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<decimal>("MedicinaPrepagada")
                         .HasColumnType("decimal(30,8)");
 
@@ -1139,9 +1131,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("TerceroId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TipoAdminPilaId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TipoCuentaPorPagar")
                         .HasColumnType("int");
 
@@ -1165,8 +1154,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("SupervisorId");
 
                     b.HasIndex("TerceroId");
-
-                    b.HasIndex("TipoAdminPilaId");
 
                     b.ToTable("TParametroLiquidacionTercero");
                 });
@@ -1596,26 +1583,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("TerceroId");
 
                     b.ToTable("TTerceroDeduccion");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.TipoAdminPila", b =>
-                {
-                    b.Property<int>("TipoAdminPilaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Codigo")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(10)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(250)");
-
-                    b.HasKey("TipoAdminPilaId");
-
-                    b.ToTable("TTipoAdminPila");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.TipoBaseDeduccion", b =>
@@ -2273,15 +2240,9 @@ namespace ComplementApp.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ComplementApp.API.Models.TipoAdminPila", "TipoAdminPila")
-                        .WithMany()
-                        .HasForeignKey("TipoAdminPilaId");
-
                     b.Navigation("Supervisor");
 
                     b.Navigation("Tercero");
-
-                    b.Navigation("TipoAdminPila");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.PerfilTransaccion", b =>

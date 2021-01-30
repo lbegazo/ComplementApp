@@ -202,6 +202,10 @@ namespace ComplementApp.API.Data
                                       RubroPresupuestalId = i.RubroPresupuestalId,
                                       IdentificacionRubro = i.Identificacion,
                                       RubroNombre = i.Nombre,
+                                      ValorCDP = d.ValorInicial,
+                                      SaldoCDP = d.Operacion,
+                                      ValorOP = d.ValorTotal,
+                                      SaldoAct = d.SaldoActual
                                   })
                                  .Distinct()
                                  .OrderBy(x => x.IdentificacionRubro)

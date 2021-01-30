@@ -77,16 +77,16 @@ td {
   padding: 15px;
 }
 
+.withoutPadding {
+  padding: 0px;
+}
+
 .fontSmaller {
-  font-size: 10px;
+  font-size: 11.2px;
 }
 
 .fontVerySmaller {
   font-size: 9px;
-}
-
-.withoutPadding {
-  padding: 0px;
 }
 
 .stronger {
@@ -123,4 +123,8 @@ td {
 .withoutMarginBottom {
   margin-bottom: 0px;
   margin-top: 5px;
+}
+
+.withoutMargin {
+  margin: 0px;
 }

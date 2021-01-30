@@ -40,4 +40,5 @@ export interface FormatoSolicitudPagoDto {
   fechaRadicadoProveedor: Date;
   numeroRadicadoSupervisor: string;
   fechaRadicadoSupervisor: Date;
+  tipoAdminPila: string;
 }

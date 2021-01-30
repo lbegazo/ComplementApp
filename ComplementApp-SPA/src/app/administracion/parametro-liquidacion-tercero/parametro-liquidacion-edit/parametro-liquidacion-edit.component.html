@@ -220,9 +220,11 @@
                               </div>
                               <!--Subcontrata-->
                               <div
-                                class="form-group col-md-2"
+                                class="form-group col-md-1"
                                 style="margin: 0px"
-                                *ngIf="this.idModalidadContratoSelecionado === 1"
+                                *ngIf="
+                                  this.idModalidadContratoSelecionado === 1
+                                "
                               >
                                 <label
                                   for="selectSubContrata"
@@ -264,6 +266,56 @@
                                   "
                                 >
                                   Debe seleccionar Subcontrata
+                                </div>
+                              </div>
+                              <!--AdminPila-->
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                                *ngIf="
+                                  this.idModalidadContratoSelecionado === 1
+                                "
+                              >
+                                <label
+                                  for="selectAdminPila"
+                                  class="col-form-label-md"
+                                  >Admin. Pila</label
+                                >
+                                <select
+                                  *ngIf="listaAdminPila"
+                                  formControlName="adminPilaCtrl"
+                                  (change)="onAdminPila()"
+                                  class="form-control withoutPadding"
+                                  style="height: 33px; padding-left: 5px"
+                                  id="selectAdminPila"
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      editForm.get('adminPilaCtrl').touched &&
+                                      editForm
+                                        .get('adminPilaCtrl')
+                                        .hasError('required')
+                                  }"
+                                >
+                                  <option disabled [ngValue]="null">
+                                    ADMIN. PILA
+                                  </option>
+                                  <option
+                                    *ngFor="let item of listaAdminPila"
+                                    [ngValue]="item"
+                                  >
+                                    {{ item.nombre }}
+                                  </option>
+                                </select>
+                                <div
+                                  class="invalid-feedback"
+                                  *ngIf="
+                                    editForm.get('adminPilaCtrl').touched &&
+                                    editForm
+                                      .get('adminPilaCtrl')
+                                      .hasError('required')
+                                  "
+                                >
+                                  Debe seleccionar Admin. Pila
                                 </div>
                               </div>
                             </div>
@@ -417,10 +469,7 @@
                               </div>
                             </div>
                             <div
-                              *ngIf="
-                              this.idModalidadContratoSelecionado !==
-                                1
-                              "
+                              *ngIf="this.idModalidadContratoSelecionado !== 1"
                             >
                               <div class="form-row mt-2">
                                 <!--Base Grav. Renta-->
@@ -517,6 +566,42 @@
                                   >
                                     Debe seleccionar Tipo de Pago
                                   </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!--EsObraPública y Tiene mas de un contrato-->
+                            <div class="form-row mt-3">
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <div
+                                  class="aplicaBackground"
+                                  style="padding: 3px;"
+                                >
+                                  <label class="col-form-label-md">
+                                    <input
+                                      type="checkbox"
+                                      formControlName="esObraPublicaCtrl"
+                                    />
+                                    Nota 1
+                                  </label>
+                                </div>
+                              </div>
+                              <div
+                                class="form-group col-md-2"
+                                style="margin: 0px"
+                              >
+                                <div
+                                  class="aplicaBackground"
+                                  style="padding: 3px;"
+                                >
+                                  <label class="col-form-label-md">
+                                    <input
+                                      type="checkbox"
+                                      formControlName="masDeUnContratoCtrl"
+                                    /> Nota 2
+                                  </label>
                                 </div>
                               </div>
                             </div>
@@ -1260,8 +1345,8 @@
     </div>
   </div>
 </div>
-<!-- 
-<p>Form status: {{ editForm.status | json }}</p>
+
+<!-- <p>Form status: {{ editForm.status | json }}</p>
 
   <p>Form value: {{ editForm.value | json }}</p>
 

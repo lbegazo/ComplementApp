@@ -103,6 +103,7 @@ namespace ComplementApp.API.Data
         public DbSet<Contrato> Contrato { get; set; }
         public DbSet<FormatoSolicitudPago> FormatoSolicitudPago { get; set; }
         public DbSet<DetalleFormatoSolicitudPago> DetalleFormatoSolicitudPago { get; set; }
+        public DbSet<TipoAdminPila> TipoAdminPila { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -159,6 +160,14 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<ParametroLiquidacionTercero>()
                 .Property(b => b.FacturaElectronica)
                 .HasDefaultValue(0);
+
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+            .Property(b => b.EsObraPublica)
+            .HasDefaultValue(0);
+
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+            .Property(b => b.MasDeUnContrato)
+            .HasDefaultValue(0);
         }
 
     }

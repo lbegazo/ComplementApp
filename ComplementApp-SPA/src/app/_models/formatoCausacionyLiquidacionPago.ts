@@ -63,4 +63,5 @@ export interface FormatoCausacionyLiquidacionPago {
   deducciones?: Deduccion[];
 
   esSeleccionada: boolean;
+  tipoAdminPila: string;
 }

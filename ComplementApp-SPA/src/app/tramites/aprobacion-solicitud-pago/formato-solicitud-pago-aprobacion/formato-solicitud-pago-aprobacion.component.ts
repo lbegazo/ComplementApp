@@ -30,6 +30,8 @@ import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { DetalleFormatoSolicitudPagoDto } from 'src/app/_dto/detalleFormatoSolicitudPagoDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { PopupSolicitudPagoRechazoComponent } from './popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
+import { ListaService } from 'src/app/_services/lista.service';
+import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 
 @Component({
   selector: 'app-formato-solicitud-pago-aprobacion',
@@ -41,17 +43,24 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   @ViewChild('formatoNgForm', { static: true }) formatoNgForm: NgForm;
 
   @Input() formatoSolicitudPago: FormatoSolicitudPagoDto;
+  @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   @Output() esCancelado = new EventEmitter<boolean>();
+
   formatoSolicitudPagoId = 0;
   rubrosPresupuestales: DetalleCDP[] = [];
   solicitudActualizada = false;
 
   formatoForm = new FormGroup({});
   arrayControls = new FormArray([]);
+  arrayRubrosControls = new FormArray([]);
 
   bsModalRef: BsModalRef;
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   subscriptions: Subscription[] = [];
+  listaNotasLegales: ValorSeleccion[] = [];
+
+  notaLegalObraPublica = '';
+  notaLegalMasDeUnContrato = '';
 
   constructor(
     private alertify: AlertifyService,
@@ -59,16 +68,34 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
     private solicitudPagoService: SolicitudPagoService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private cdpService: CdpService
+    private cdpService: CdpService,
+    private listaService: ListaService
   ) {}
 
   ngOnInit() {
-    this.createForm();
-
+    this.createEmptyForm();
     this.obtenerRubrosPresupuestales();
+    this.cargarNotasLegales();
+  }
+
+  createEmptyForm() {
+    this.formatoForm = this.fb.group({
+      deduccionControles: this.arrayControls,
+      rubrosControles: this.arrayRubrosControls,
+    });
   }
 
   createForm() {
+    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
+      for (const detalle of this.rubrosPresupuestales) {
+        this.arrayRubrosControls.push(
+          new FormGroup({
+            rubroControl: new FormControl('', []),
+          })
+        );
+      }
+    }
+
     if (this.formatoSolicitudPago.pagosRealizados != null) {
       for (const detalle of this.formatoSolicitudPago.pagosRealizados) {
         this.arrayControls.push(
@@ -81,6 +108,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
 
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
+      rubrosControles: this.arrayRubrosControls,
     });
   }
 
@@ -89,11 +117,17 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
       .ObtenerRubrosPresupuestalesPorCompromiso(
         this.formatoSolicitudPago.cdp.crp
       )
-      .subscribe((lista: DetalleCDP[]) => {
-        if (lista) {
-          this.rubrosPresupuestales = lista;
+      .subscribe(
+        (lista: DetalleCDP[]) => {
+          if (lista) {
+            this.rubrosPresupuestales = lista;
+          }
+        },
+        () => {},
+        () => {
+          this.createForm();
         }
-      });
+      );
   }
 
   abrirPopup(tipo: number) {
@@ -236,6 +270,30 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
           () => {}
         );
     }
+  }
+
+  cargarNotasLegales() {
+    this.listaService.ObtenerParametrosGeneralesXTipo('NotaLegal').subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaNotasLegales = lista;
+
+        if (this.listaNotasLegales) {
+          if (this.parametroLiquidacionSeleccionado) {
+            if (this.parametroLiquidacionSeleccionado.esObraPublica) {
+              this.notaLegalObraPublica = (this
+                .listaNotasLegales[0] as ValorSeleccion).valor;
+            }
+            if (this.parametroLiquidacionSeleccionado.masDeUnContrato) {
+              this.notaLegalMasDeUnContrato = (this
+                .listaNotasLegales[1] as ValorSeleccion).valor;
+            }
+          }
+        }
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
   }
 
   exportarPDF() {

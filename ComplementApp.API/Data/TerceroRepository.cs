@@ -24,7 +24,6 @@ namespace ComplementApp.API.Data
             if (tipo == (int)TipoOperacionTransaccion.Creacion)
             {
                 var terceroConParametrizacionIds = _context.ParametroLiquidacionTercero.Select(x => x.TerceroId).ToHashSet();
-                //var notFoundItems = _context.CDP.Where(item => !listaCompromisos.Contains(item.Crp)).Select(x => x.Crp).ToHashSet();
 
                 lista = (from t in _context.Tercero
                          join c in _context.CDP on t.TerceroId equals c.TerceroId
@@ -104,12 +103,16 @@ namespace ComplementApp.API.Data
                                    FechaInicioDescuentoInteresVivienda = plt.FechaInicioDescuentoInteresVivienda,
                                    FechaFinalDescuentoInteresVivienda = plt.FechaFinalDescuentoInteresVivienda,
 
-                                   facturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
-                                   subcontrataId = plt.Subcontrata ? 1 : 0,
-                                   supervisorId = plt.SupervisorId,
+                                   FacturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
+                                   SubcontrataId = plt.Subcontrata ? 1 : 0,
+                                   SupervisorId = plt.SupervisorId,
                                    OtrosDescuentos = plt.OtrosDescuentos,
                                    FechaInicioOtrosDescuentos = plt.FechaInicioOtrosDescuentos,
                                    FechaFinalOtrosDescuentos = plt.FechaFinalOtrosDescuentos,
+
+                                   TipoAdminPilaId = plt.TipoAdminPilaId,
+                                   EsObraPublica = plt.EsObraPublica,
+                                   MasDeUnContrato = plt.MasDeUnContrato,
                                }).FirstOrDefaultAsync();
 
             return lista;
