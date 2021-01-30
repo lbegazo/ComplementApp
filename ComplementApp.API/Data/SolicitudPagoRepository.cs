@@ -152,15 +152,58 @@ namespace ComplementApp.API.Data
 
         public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp)
         {
-            var formato = await (from c in _context.CDP
+            var lista = (from c in _context.CDP
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where c.Crp == crp
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         select new CDPDto()
+                         {
+                             Cdp = c.Cdp,
+                             Crp = c.Crp,
+                             Fecha = c.Fecha, //Fecha compromiso
+                             Detalle4 = c.Detalle4, //objeto contrato
+                             TerceroId = c.TerceroId,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.Operacion, //Valor adicion/reduccion
+                             ValorTotal = c.ValorTotal, //valor actual
+                             SaldoActual = c.SaldoActual, //saldo actual
+                         });
+
+            var listaAgrupada = (from i in lista
+                                 group i by new
+                                 {
+                                     i.Cdp,
+                                     i.Crp,
+                                     i.Fecha,
+                                     i.Detalle4,
+                                     i.TerceroId,
+                                     i.ValorInicial,
+                                     i.Operacion,
+                                     i.ValorTotal,
+                                     i.SaldoActual
+                                 }
+                          into grp
+                                 select new CDPDto()
+                                 {
+                                     Cdp = grp.Key.Cdp,
+                                     Crp = grp.Key.Crp,
+                                     Fecha = grp.Key.Fecha,
+                                     Detalle4 = grp.Key.Detalle4,
+                                     TerceroId = grp.Key.TerceroId,
+                                     ValorInicial = grp.Sum(i => i.SaldoActual),
+                                     Operacion = grp.Sum(i => i.Operacion),
+                                     ValorTotal = grp.Sum(i => i.ValorTotal),
+                                     SaldoActual = grp.Sum(i => i.SaldoActual)
+                                 });
+
+            var formato = await (from c in listaAgrupada
+                                 join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                  join co in _context.Contrato on c.Crp equals co.Crp into Contrato
                                  from ctr in Contrato.DefaultIfEmpty()
-                                 join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                  join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
                                  from pt in ParametroTercero.DefaultIfEmpty()
                                  join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
                                  from super in Supervisor.DefaultIfEmpty()
-                                 where c.Crp == crp
                                  select new FormatoSolicitudPagoDto()
                                  {
                                      Cdp = new CDPDto()
@@ -200,23 +243,67 @@ namespace ComplementApp.API.Data
                                      }
                                  }).FirstOrDefaultAsync();
 
-
             return formato;
         }
 
         public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPagoXId(int formatoSolicitudPagoId)
         {
+            var lista = (from s in _context.FormatoSolicitudPago
+                         join c in _context.CDP on s.Crp equals c.Crp
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         select new CDPDto()
+                         {
+                             Cdp = c.Cdp,
+                             Crp = c.Crp,
+                             Fecha = c.Fecha, //Fecha compromiso
+                             Detalle4 = c.Detalle4, //objeto contrato
+                             TerceroId = c.TerceroId,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.Operacion, //Valor adicion/reduccion
+                             ValorTotal = c.ValorTotal, //valor actual
+                             SaldoActual = c.SaldoActual, //saldo actual
+                         });
+
+            var listaAgrupada = (from i in lista
+                                 group i by new
+                                 {
+                                     i.Cdp,
+                                     i.Crp,
+                                     i.Fecha,
+                                     i.Detalle4,
+                                     i.TerceroId,
+                                     i.ValorInicial,
+                                     i.Operacion,
+                                     i.ValorTotal,
+                                     i.SaldoActual
+                                 }
+                          into grp
+                                 select new CDPDto()
+                                 {
+                                     Cdp = grp.Key.Cdp,
+                                     Crp = grp.Key.Crp,
+                                     Fecha = grp.Key.Fecha,
+                                     Detalle4 = grp.Key.Detalle4,
+                                     TerceroId = grp.Key.TerceroId,
+                                     ValorInicial = grp.Sum(i => i.SaldoActual),
+                                     Operacion = grp.Sum(i => i.Operacion),
+                                     ValorTotal = grp.Sum(i => i.ValorTotal),
+                                     SaldoActual = grp.Sum(i => i.SaldoActual)
+                                 });
+
             var formato = await (from s in _context.FormatoSolicitudPago
-                                 join c in _context.CDP on s.Crp equals c.Crp
+                                 join c in listaAgrupada on s.Crp equals c.Crp
+                                 join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                                 join ae in _context.ActividadEconomica on s.ActividadEconomicaId equals ae.ActividadEconomicaId
+                                 join pp in _context.PlanPago on s.PlanPagoId equals pp.PlanPagoId
                                  join co in _context.Contrato on c.Crp equals co.Crp into Contrato
                                  from ctro in Contrato.DefaultIfEmpty()
-                                 join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                  join plt in _context.ParametroLiquidacionTercero on t.TerceroId equals plt.TerceroId into ParametroTercero
                                  from par in ParametroTercero.DefaultIfEmpty()
                                  join sup in _context.Usuario on s.SupervisorId equals sup.UsuarioId into Supervisor
                                  from super in Supervisor.DefaultIfEmpty()
-                                 join ae in _context.ActividadEconomica on s.ActividadEconomicaId equals ae.ActividadEconomicaId
-                                 join pp in _context.PlanPago on s.PlanPagoId equals pp.PlanPagoId
                                  where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
                                  select new FormatoSolicitudPagoDto()
                                  {

@@ -6,3 +6,4 @@ git
 wwwroot
 appsettings.json
 appsettings.Development.json
+_UsuarioSeed.json
