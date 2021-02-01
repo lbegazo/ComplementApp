@@ -373,6 +373,7 @@ namespace ComplementApp.API.Data
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
+                               where (sp.Crp == cp.Crp)
                                select dl.DetalleLiquidacionId)
                                .Distinct()
                                .ToListAsync();
@@ -400,7 +401,6 @@ namespace ComplementApp.API.Data
                                join cp in _context.TipoCuentaXPagar on pl.TipoCuentaPorPagar equals cp.TipoCuentaXPagarId into tipoCuentaPagar
                                from tcp in tipoCuentaPagar.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
-
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    FechaActual = System.DateTime.Now.ToString("yyyy/MM/dd"),
@@ -445,6 +445,7 @@ namespace ComplementApp.API.Data
                                from tga in tipoGasto.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
+                               where (sp.Crp == cp.Crp)
                                select new ClavePresupuestalContableParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
@@ -504,6 +505,7 @@ namespace ComplementApp.API.Data
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
+                               where (sp.Crp == cp.Crp)
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
