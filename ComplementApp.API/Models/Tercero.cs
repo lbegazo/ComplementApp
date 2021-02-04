@@ -20,8 +20,7 @@ namespace ComplementApp.API.Models
         [Required]
         [Column(TypeName = "VARCHAR(250)")]
         public string Nombre { get; set; }
-
-        public DateTime FechaExpedicionDocumento { get; set; }
+        public DateTime? FechaExpedicionDocumento { get; set; }
 
         [Column(TypeName = "VARCHAR(100)")]
         public string RegimenTributario { get; set; }
@@ -34,9 +33,7 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(20)")]
         public string Telefono { get; set; }
-
         public bool DeclaranteRenta { get; set; }
-
         public bool FacturadorElectronico { get; set; }
 
         [NotMapped]
@@ -47,7 +44,6 @@ namespace ComplementApp.API.Models
         
         [NotMapped]
         public int TipoIva { get; set; }
-
         public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
     }
 }

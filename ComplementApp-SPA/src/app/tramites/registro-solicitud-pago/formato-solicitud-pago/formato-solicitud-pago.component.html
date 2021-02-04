@@ -18,18 +18,51 @@
                     <table>
                       <!--Formato-->
                       <tr>
-                        <th class="center">
-                          <span>
-                            FORMATO DE SOLICITUD DE PAGO - CONTRATISTA Y
-                            PROVEEDORES
-                          </span>
-                        </th>
+                        <td class="withoutPadding">
+                          <table>
+                            <tr>
+                              <td
+                                style="width: 15%; height: 80px"
+                                class="center fontSmaller stronger"
+                              >
+                                VERSION: 6
+                              </td>
+                              <td
+                                style="width: 70%; height: 80px"
+                                class="center fontLarge stronger"
+                              >
+                                <STRONG
+                                  >FORMATO DE CAUSACION Y PAGO A
+                                  PROVEEDORES</STRONG
+                                >
+                              </td>
+                              <td
+                                style="width: 15%; height: 80px"
+                                class="center fontSmaller stronger"
+                              >
+                                CODIGO TRD: 130.131.41..
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
                       </tr>
-                      <!--Num Documento-->
+                      <!--FECHA DE EXPEDICION-->
                       <tr>
                         <td class="withoutPadding">
                           <table>
                             <tr class="aplicaBackground">
+                              <td
+                                style="width: 7%"
+                                class="center fontSmaller stronger"
+                              >
+                                NUM.
+                              </td>
+                              <td
+                                style="width: 8%"
+                                class="center fontSmaller stronger"
+                              >
+                                FECHA
+                              </td>
                               <td
                                 style="width: 10%"
                                 class="center fontSmaller stronger"
@@ -37,7 +70,7 @@
                                 NUM. DOCUMENTO
                               </td>
                               <td
-                                style="width: 40%"
+                                style="width: 25%"
                                 class="center fontSmaller stronger"
                               >
                                 NOMBRE DEL CONTRATISTA/PROVEEDOR
@@ -62,13 +95,24 @@
                               </td>
                             </tr>
                             <tr>
+                              <td style="width: 7%" class="center fontSmaller">
+                                <strong>{{
+                                  formatoSolicitudPagoId
+                                }}</strong>
+                              </td>
+                              <td style="width: 8%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.fechaSistema
+                                    | date: "dd/MM/yyyy"
+                                }}
+                              </td>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.tercero
                                     .numeroIdentificacion
                                 }}
                               </td>
-                              <td style="width: 40%" class="center fontSmaller">
+                              <td style="width: 25%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.tercero.nombre }}
                               </td>
                               <td style="width: 20%" class="center fontSmaller">
@@ -105,13 +149,13 @@
                                   >FACTURADOR ELECTRONICO</span
                                 >
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 7%" class="center fontSmaller">
                                 <span class="stronger">NUMERO CDP</span>
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 <span class="stronger">NUMERO COMPROMISO</span>
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
+                              <td style="width: 18%" class="center fontSmaller">
                                 <span class="stronger"
                                   >FECHA REG. COMPROMISO</span
                                 >
@@ -143,13 +187,13 @@
                                     .facturadorElectronicoDescripcion
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 7%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.cdp.cdp }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.cdp.crp }}
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
+                              <td style="width: 18%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.cdp.fecha
                                     | date: "dd/MM/yyyy"
@@ -165,22 +209,28 @@
                           <table>
                             <tr style="width: 100%" class="aplicaBackground">
                               <td
-                                style="width: 40%"
+                                style="width: 30%"
                                 class="center fontSmaller stronger"
                               >
-                                NOMBRE SUPERVISOR CONTRATO
+                                MODALIDAD DE CONTRATO
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 13%"
                                 class="center fontSmaller stronger"
                               >
                                 NUMERO DE CONTRATO
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 12%"
                                 class="center fontSmaller stronger"
                               >
                                 FECHA CONTRATO
+                              </td>
+                              <td
+                                style="width: 15%"
+                                class="center fontSmaller stronger"
+                              >
+                                FECHA EXP. POLIZA
                               </td>
                               <td
                                 style="width: 15%"
@@ -196,18 +246,24 @@
                               </td>
                             </tr>
                             <tr>
-                              <td style="width: 40%" class="center fontSmaller">
-                                {{ formatoSolicitudPago?.cdp.detalle5 }}
+                              <td style="width: 30%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.cdp.detalle7 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.contrato.numeroContrato
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 12%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.contrato.fechaRegistro
                                     | date: "dd/MM/yyyy"
+                                }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPago?.contrato
+                                    .fechaExpedicionPoliza | date: "dd/MM/yyyy"
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
@@ -224,6 +280,23 @@
                               </td>
                             </tr>
                           </table>
+                        </td>
+                      </tr>
+                      <!--NOTA LEGAL 3 Y NOTAL LEGAL 4-->
+                      <tr *ngIf="notaLegal3 !== '' || notaLegal4 !== ''">
+                        <td>
+                          <p
+                            *ngIf="notaLegal3 !== ''"
+                            class="left fontSmaller withoutMargin addPaddingLeft"
+                          >
+                            {{ notaLegal3 }}
+                          </p>
+                          <p
+                            *ngIf="notaLegal4 !== ''"
+                            class="left fontSmaller withoutMargin addPaddingLeft"
+                          >
+                            {{ notaLegal4 }}
+                          </p>
                         </td>
                       </tr>
                       <!--OBJETO DE COMPROMISO PRESUPUESTAL-->
@@ -245,8 +318,8 @@
                       <!--INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL-->
                       <tr>
                         <td class="center">
-                          <span class="stronger">
-                            INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL
+                          <span class="stronger fontMedium">
+                           <strong>INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL</strong> 
                           </span>
                         </td>
                       </tr>
@@ -350,11 +423,7 @@
                             <!--Titulo Principal-->
                             <div class="row borderTop">
                               <div class="col-12">
-                                <small
-                                  ><strong
-                                    >DETALLE DE PAGOS REALIZADOS</strong
-                                  ></small
-                                >
+                                <strong>DETALLE DE PAGOS REALIZADOS</strong>
                               </div>
                             </div>
                             <div>
@@ -362,53 +431,45 @@
                               <div class="row borderTop">
                                 <div
                                   style="width: 10%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small><strong>NUM. PAGO</strong></small>
+                                  <strong>NUM. PAGO</strong>
                                 </div>
                                 <div
                                   style="width: 15%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small
-                                    ><strong>NUM. ORDEN DE PAGO</strong></small
-                                  >
+                                  <strong>NUM. ORDEN DE PAGO</strong>
                                 </div>
                                 <div
                                   style="width: 15%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small
-                                    ><strong>ESTADO ORDEN PAGO</strong></small
-                                  >
+                                  <strong>ESTADO ORDEN PAGO</strong>
                                 </div>
                                 <div
                                   style="width: 15%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small
-                                    ><strong>FECHA ORDEN PAGO</strong></small
-                                  >
+                                  <strong>FECHA ORDEN PAGO</strong>
                                 </div>
                                 <div
                                   style="width: 15%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small><strong>VALOR BRUTO</strong></small>
+                                  <strong>VALOR BRUTO</strong>
                                 </div>
                                 <div
                                   style="width: 15%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small
-                                    ><strong>VALOR DEDUCCIONES</strong></small
-                                  >
+                                  <strong>VALOR DEDUCCIONES</strong>
                                 </div>
                                 <div
                                   style="width: 15%"
-                                  class="borderBottonRight aplicaBackground"
+                                  class="borderBottonRight aplicaBackground fontSmaller"
                                 >
-                                  <small><strong>VALOR NETO</strong></small>
+                                  <strong>VALOR NETO</strong>
                                 </div>
                               </div>
                               <!--Pagos realizados-->
@@ -427,13 +488,13 @@
                                       <ng-container [formGroupName]="i">
                                         <div
                                           style="width: 10%"
-                                          class="borderBottonRight centerAlign small"
+                                          class="borderBottonRight centerAlign fontSmaller"
                                         >
-                                          <small>{{ i + 1 }}</small>
+                                          {{ i + 1 }}
                                         </div>
                                         <div
                                           style="width: 15%"
-                                          class="borderBottonRight center small"
+                                          class="borderBottonRight center"
                                         >
                                           <p class="addPaddingLeft fontSmaller">
                                             {{ item?.ordenPago }}
@@ -509,12 +570,8 @@
                       </tr>
                       <!--DETALLE SOLICITUD DE PAGO ACTUAL-->
                       <tr>
-                        <td class="center">
-                          <small
-                            ><strong
-                              >DETALLE DE SOLICITUD DE PAGO ACTUAL</strong
-                            ></small
-                          >
+                        <td class="center fontMedium" style="height: 40px">
+                          <strong>DETALLE DE SOLICITUD DE PAGO ACTUAL</strong>
                         </td>
                       </tr>
                       <tr>
@@ -555,7 +612,7 @@
                                 style="width: 10%"
                                 class="center fontSmaller stronger"
                               >
-                                ACTIVIDAD ECONOMICA
+                                ACT. ECONOMICA
                               </td>
                               <td
                                 style="width: 12%"
@@ -576,7 +633,7 @@
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
-                                  planPagoSeleccionada?.valorFacturado
+                                  planPagoSeleccionada?.valorAPagar
                                     | number: "1.0-0"
                                 }}
                               </td>
@@ -655,19 +712,19 @@
                                 MES DE APORTES
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 12%"
                                 class="center fontSmaller stronger"
                               >
                                 BASE DE COTIZACION
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 12%"
                                 class="center fontSmaller stronger"
                               >
                                 VALOR APORTE SALUD
                               </td>
                               <td
-                                style="width: 10%"
+                                style="width: 13%"
                                 class="center fontSmaller stronger"
                               >
                                 VALOR APORTE PENSION
@@ -679,10 +736,10 @@
                                 RIESGO LABORAL
                               </td>
                               <td
-                                style="width: 10%"
+                                style="width: 13%"
                                 class="center fontSmaller stronger"
                               >
-                                FONDO DE SOLIDARIDAD
+                                FONDO SOLIDARIDAD
                               </td>
                               <td
                                 style="width: 15%"
@@ -698,19 +755,19 @@
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ formatoSolicitudPagoPopup?.mes }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 12%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPagoPopup?.baseCotizacion
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 12%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago?.aporteSalud
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
+                              <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago?.aportePension
                                     | number: "1.0-0"
@@ -722,7 +779,7 @@
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
+                              <td style="width: 13%" class="center fontSmaller">
                                 {{
                                   formatoCausacionyLiquidacionPago?.fondoSolidaridad
                                     | number: "1.0-0"
@@ -737,24 +794,19 @@
                           </table>
                         </td>
                       </tr>
-                      <tr
-                        *ngIf="
-                          notaLegalObraPublica !== '' ||
-                          notaLegalMasDeUnContrato !== ''
-                        "
-                      >
+                      <tr *ngIf="notaLegal1 !== '' || notaLegal2 !== ''">
                         <td>
                           <p
-                            *ngIf="notaLegalObraPublica !== ''"
+                            *ngIf="notaLegal1 !== ''"
                             class="left fontSmaller withoutMargin addPaddingLeft"
                           >
-                            {{ notaLegalObraPublica }}
+                            {{ notaLegal1 }}
                           </p>
                           <p
-                            *ngIf="notaLegalMasDeUnContrato !== ''"
+                            *ngIf="notaLegal2 !== ''"
                             class="left fontSmaller withoutMargin addPaddingLeft"
                           >
-                            {{ notaLegalMasDeUnContrato }}
+                            {{ notaLegal2 }}
                           </p>
                         </td>
                       </tr>
@@ -769,51 +821,39 @@
                                     <div class="row borderTop">
                                       <div
                                         style="width: 20%"
-                                        class="borderBottonRight aplicaBackground"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <small><strong>CODIGO</strong></small>
+                                        <strong>CODIGO</strong>
                                       </div>
                                       <div
                                         style="width: 40%"
-                                        class="borderBottonRight aplicaBackground"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <small
-                                          ><strong>NOMBRE RUBRO</strong></small
-                                        >
+                                        <strong>NOMBRE RUBRO</strong>
                                       </div>
                                       <div
                                         style="width: 10%"
-                                        class="borderBottonRight aplicaBackground"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <small
-                                          ><strong>VALOR INICIAL</strong></small
-                                        >
+                                        <strong>VALOR INICIAL</strong>
                                       </div>
                                       <div
                                         style="width: 10%"
-                                        class="borderBottonRight aplicaBackground"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <small
-                                          ><strong
-                                            >VALOR OPERACION</strong
-                                          ></small
-                                        >
+                                        <strong>VALOR OPERACION</strong>
                                       </div>
                                       <div
                                         style="width: 10%"
-                                        class="borderBottonRight aplicaBackground"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <small
-                                          ><strong> VALOR ACTUAL</strong></small
-                                        >
+                                        <strong> VALOR ACTUAL</strong>
                                       </div>
                                       <div
                                         style="width: 10%"
-                                        class="borderBottonRight aplicaBackground"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <small
-                                          ><strong>SALDO ACTUAL</strong></small
-                                        >
+                                        <strong>SALDO ACTUAL</strong>
                                       </div>
                                     </div>
                                     <!--Valores Rubros Presupuestales-->
@@ -831,55 +871,51 @@
                                             <ng-container [formGroupName]="i">
                                               <div
                                                 style="width: 20%"
-                                                class="borderBottonRight centerAlign"
+                                                class="borderBottonRight centerAlign fontSmaller"
                                               >
-                                                <small>{{
-                                                  item?.identificacionRubro
-                                                }}</small>
+                                                {{ item?.identificacionRubro }}
                                               </div>
                                               <div
                                                 style="width: 40%"
-                                                class="borderBottonRight left addPaddingLeft addPaddingRight"
+                                                class="borderBottonRight left addPaddingLeft addPaddingRight fontSmaller"
                                               >
-                                                <small
-                                                  >{{ item?.rubroNombre }}
-                                                </small>
+                                                {{ item?.rubroNombre }}
                                               </div>
                                               <div
                                                 style="width: 10%"
-                                                class="borderBottonRight right addPaddingRight"
+                                                class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
-                                                <small>{{
+                                                {{
                                                   item?.valorCDP
                                                     | number: "1.2-2"
-                                                }}</small>
+                                                }}
                                               </div>
                                               <div
                                                 style="width: 10%"
-                                                class="borderBottonRight right addPaddingRight"
+                                                class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
-                                                <small>{{
+                                                {{
                                                   item?.saldoCDP
                                                     | number: "1.2-2"
-                                                }}</small>
+                                                }}
                                               </div>
                                               <div
                                                 style="width: 10%"
-                                                class="borderBottonRight right addPaddingRight"
+                                                class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
-                                                <small>{{
+                                                {{
                                                   item?.valorOP
                                                     | number: "1.2-2"
-                                                }}</small>
+                                                }}
                                               </div>
                                               <div
                                                 style="width: 10%"
-                                                class="borderBottonRight right addPaddingRight"
+                                                class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
-                                                <small>{{
+                                                {{
                                                   item?.saldoAct
                                                     | number: "1.2-2"
-                                                }}</small>
+                                                }}
                                               </div>
                                             </ng-container>
                                           </div>
@@ -972,6 +1008,6 @@
     </div>
   </div>
 </form>
-<!-- <p>Form value: {{ detallePlanPago | json }}</p>
-<p>Form value: {{ formatoForm.value | json }}</p>
+<!-- <p>Form value: {{ formatoSolicitudPago | json }}</p> -->
+<!--<p>Form value: {{ formatoForm.value | json }}</p>
 <p>Form status: {{ formatoForm.status | json }}</p> -->

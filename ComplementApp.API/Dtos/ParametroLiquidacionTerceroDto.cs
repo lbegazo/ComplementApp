@@ -44,8 +44,11 @@ namespace ComplementApp.API.Dtos
         public int? SubcontrataId { get; set; }
         public int? SupervisorId { get; set; }
         public int? TipoAdminPilaId { get; set; }
-        public bool EsObraPublica { get; set; }
-        public bool MasDeUnContrato { get; set; }
+        public bool NotaLegal1 { get; set; }
+        public bool NotaLegal2 { get; set; }
+        public bool NotaLegal3 { get; set; }
+        public bool NotaLegal4 { get; set; }
+        public bool NotaLegal5 { get; set; }
         public ICollection<TerceroDeduccionDto> TerceroDeducciones { get; set; }
     }
 }

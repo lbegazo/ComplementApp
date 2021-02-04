@@ -30,7 +30,7 @@ namespace ComplementApp.API.Dtos
 
         public string RegimenTributario { get; set; }
 
-        public DateTime FechaExpedicionDocumento { get; set; }  
+        public DateTime? FechaExpedicionDocumento { get; set; }  
 
         public int ModalidadContrato { get; set; }
         

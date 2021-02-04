@@ -7,6 +7,7 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Helpers;
 using System.Globalization;
+using System;
 
 namespace ComplementApp.API.Data
 {
@@ -111,6 +112,7 @@ namespace ComplementApp.API.Data
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
+                             CdpId = s.FormatoSolicitudPagoId,
                              Crp = c.Crp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -118,7 +120,7 @@ namespace ComplementApp.API.Data
                              FormatoSolicitudPagoId = s.FormatoSolicitudPagoId
                          })
                         .Distinct()
-                        .OrderBy(x => x.Crp);
+                        .OrderBy(x => x.CdpId);
             }
             else
             {
@@ -132,6 +134,7 @@ namespace ComplementApp.API.Data
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
+                             CdpId = s.FormatoSolicitudPagoId,
                              Crp = c.Crp,
                              Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
@@ -139,7 +142,7 @@ namespace ComplementApp.API.Data
                              FormatoSolicitudPagoId = s.FormatoSolicitudPagoId
                          })
                         .Distinct()
-                        .OrderBy(x => x.Crp);
+                        .OrderBy(x => x.CdpId);
             }
 
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
@@ -167,6 +170,7 @@ namespace ComplementApp.API.Data
                              Operacion = c.Operacion, //Valor adicion/reduccion
                              ValorTotal = c.ValorTotal, //valor actual
                              SaldoActual = c.SaldoActual, //saldo actual
+                             Detalle7 = c.Detalle7,
                          });
 
             var listaAgrupada = (from i in lista
@@ -180,7 +184,8 @@ namespace ComplementApp.API.Data
                                      i.ValorInicial,
                                      i.Operacion,
                                      i.ValorTotal,
-                                     i.SaldoActual
+                                     i.SaldoActual,
+                                     i.Detalle7,
                                  }
                           into grp
                                  select new CDPDto()
@@ -189,6 +194,7 @@ namespace ComplementApp.API.Data
                                      Crp = grp.Key.Crp,
                                      Fecha = grp.Key.Fecha,
                                      Detalle4 = grp.Key.Detalle4,
+                                     Detalle7 = grp.Key.Detalle7,
                                      TerceroId = grp.Key.TerceroId,
                                      ValorInicial = grp.Sum(i => i.SaldoActual),
                                      Operacion = grp.Sum(i => i.Operacion),
@@ -206,6 +212,8 @@ namespace ComplementApp.API.Data
                                  from super in Supervisor.DefaultIfEmpty()
                                  select new FormatoSolicitudPagoDto()
                                  {
+                                     FechaSistema = _generalInterface.ObtenerFechaHoraActual(),
+
                                      Cdp = new CDPDto()
                                      {
                                          Cdp = c.Cdp,
@@ -214,19 +222,21 @@ namespace ComplementApp.API.Data
                                          Detalle5 = super.Nombres + ' ' + super.Apellidos, //Supervisor
                                          SupervisorId = super.UsuarioId,
                                          Detalle4 = c.Detalle4, //objeto contrato
+                                         Detalle7 = c.Detalle7, //modalidad de contrato
                                          ValorInicial = c.ValorInicial,
                                          Operacion = c.Operacion, //Valor adicion/reduccion
                                          ValorTotal = c.ValorTotal, //valor actual
                                          SaldoActual = c.SaldoActual, //saldo actual
                                      },
-                                     Contrato = new Contrato()
+                                     Contrato = new ContratoDto()
                                      {
                                          ContratoId = ctr.ContratoId > 0 ? ctr.ContratoId : 0,
                                          NumeroContrato = ctr.ContratoId > 0 ? ctr.NumeroContrato : string.Empty,
                                          Crp = ctr.ContratoId > 0 ? ctr.Crp : 0,
-                                         FechaInicio = ctr.ContratoId > 0 ? ctr.FechaInicio : _generalInterface.ObtenerFechaHoraActual(),
-                                         FechaFinal = ctr.ContratoId > 0 ? ctr.FechaFinal : _generalInterface.ObtenerFechaHoraActual(),
-                                         FechaRegistro = ctr.ContratoId > 0 ? ctr.FechaRegistro : _generalInterface.ObtenerFechaHoraActual(),
+                                         FechaInicio = ctr.ContratoId > 0 ? ctr.FechaInicio : null,
+                                         FechaFinal = ctr.ContratoId > 0 ? ctr.FechaFinal : null,
+                                         FechaRegistro = ctr.ContratoId > 0 ? ctr.FechaRegistro : null,
+                                         FechaExpedicionPoliza = ctr.ContratoId > 0 ? (ctr.FechaExpedicionPoliza.HasValue ? (ctr.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? ctr.FechaExpedicionPoliza.Value : null) : null) : null,
                                      },
                                      Tercero = new TerceroDto()
                                      {
@@ -235,8 +245,8 @@ namespace ComplementApp.API.Data
                                          NumeroIdentificacion = t.NumeroIdentificacion,
                                          Email = t.Email,
                                          Telefono = t.Telefono,
-                                         Direccion = t.Direccion,
-                                         FechaExpedicionDocumento = t.FechaExpedicionDocumento,
+                                         Direccion = t.Direccion.Length > 45 ? t.Direccion.Substring(0, 45) + "..." : t.Direccion,
+                                         FechaExpedicionDocumento = t.FechaExpedicionDocumento.HasValue ? (t.FechaExpedicionDocumento.Value.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionDocumento.Value : null) : null,
                                          RegimenTributario = t.RegimenTributario,
                                          DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
                                          FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO"
@@ -260,6 +270,7 @@ namespace ComplementApp.API.Data
                              Fecha = c.Fecha, //Fecha compromiso
                              Detalle4 = c.Detalle4, //objeto contrato
                              TerceroId = c.TerceroId,
+                             Detalle7 = c.Detalle7,//Modalidad de contrato
                              ValorInicial = c.ValorInicial,
                              Operacion = c.Operacion, //Valor adicion/reduccion
                              ValorTotal = c.ValorTotal, //valor actual
@@ -274,6 +285,7 @@ namespace ComplementApp.API.Data
                                      i.Fecha,
                                      i.Detalle4,
                                      i.TerceroId,
+                                     i.Detalle7,
                                      i.ValorInicial,
                                      i.Operacion,
                                      i.ValorTotal,
@@ -287,6 +299,7 @@ namespace ComplementApp.API.Data
                                      Fecha = grp.Key.Fecha,
                                      Detalle4 = grp.Key.Detalle4,
                                      TerceroId = grp.Key.TerceroId,
+                                     Detalle7 = grp.Key.Detalle7,
                                      ValorInicial = grp.Sum(i => i.SaldoActual),
                                      Operacion = grp.Sum(i => i.Operacion),
                                      ValorTotal = grp.Sum(i => i.ValorTotal),
@@ -311,6 +324,7 @@ namespace ComplementApp.API.Data
                                      PlanPagoId = s.PlanPagoId,
                                      FechaInicio = s.FechaInicio,
                                      FechaFinal = s.FechaFinal,
+                                     FechaSistema = s.FechaRegistro.Value,
                                      ValorFacturado = s.valorFacturado,
                                      MesId = s.MesId,
                                      MesDescripcion = DateTimeFormatInfo.CurrentInfo.GetMonthName(s.MesId).ToUpper(),
@@ -327,6 +341,7 @@ namespace ComplementApp.API.Data
                                          Detalle5 = s.SupervisorId.HasValue ? (super.Nombres + ' ' + super.Apellidos) : string.Empty, //Supervisor
                                          SupervisorId = s.SupervisorId,
                                          Detalle4 = c.Detalle4, //objeto contrato
+                                         Detalle7 = c.Detalle7, //Modalidad de Contrato
                                          ValorInicial = c.ValorInicial,
                                          Operacion = c.Operacion, //Valor adicion/reduccion
                                          ValorTotal = c.ValorTotal, //valor actual
@@ -338,14 +353,15 @@ namespace ComplementApp.API.Data
                                          Codigo = ae.Codigo,
                                          Nombre = ae.Nombre,
                                      },
-                                     Contrato = new Contrato()
+                                     Contrato = new ContratoDto()
                                      {
                                          ContratoId = ctro.ContratoId > 0 ? ctro.ContratoId : 0,
                                          NumeroContrato = ctro.ContratoId > 0 ? ctro.NumeroContrato : string.Empty,
                                          Crp = ctro.ContratoId > 0 ? ctro.Crp : 0,
-                                         FechaInicio = ctro.ContratoId > 0 ? ctro.FechaInicio : System.DateTime.Now,
-                                         FechaFinal = ctro.ContratoId > 0 ? ctro.FechaFinal : System.DateTime.Now,
-                                         FechaRegistro = ctro.ContratoId > 0 ? ctro.FechaRegistro : System.DateTime.Now,
+                                         FechaInicio = ctro.ContratoId > 0 ? ctro.FechaInicio : null,
+                                         FechaFinal = ctro.ContratoId > 0 ? ctro.FechaFinal : null,
+                                         FechaRegistro = ctro.ContratoId > 0 ? ctro.FechaRegistro : null,
+                                         FechaExpedicionPoliza = ctro.ContratoId > 0 ? (ctro.FechaExpedicionPoliza.HasValue ? (ctro.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? ctro.FechaExpedicionPoliza.Value : null) : null) : null,
                                      },
                                      Tercero = new TerceroDto()
                                      {
@@ -354,8 +370,8 @@ namespace ComplementApp.API.Data
                                          NumeroIdentificacion = t.NumeroIdentificacion,
                                          Email = t.Email,
                                          Telefono = t.Telefono,
-                                         Direccion = t.Direccion,
-                                         FechaExpedicionDocumento = t.FechaExpedicionDocumento,
+                                         Direccion = t.Direccion.Length > 45 ? t.Direccion.Substring(0, 45) + "..." : t.Direccion,
+                                         FechaExpedicionDocumento = t.FechaExpedicionDocumento.HasValue ? (t.FechaExpedicionDocumento.Value.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionDocumento.Value : null) : null,
                                          RegimenTributario = t.RegimenTributario,
                                          DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
                                          FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO",
@@ -369,7 +385,6 @@ namespace ComplementApp.API.Data
                                          ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
                                      }
                                  }).FirstOrDefaultAsync();
-
             return formato;
         }
 

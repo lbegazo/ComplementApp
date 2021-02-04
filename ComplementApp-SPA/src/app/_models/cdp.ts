@@ -1,4 +1,3 @@
-import { DetalleCDP } from './detalleCDP';
 
 export interface Cdp {
   id: number;
@@ -12,6 +11,7 @@ export interface Cdp {
   detalle4: string; // Objeto del bien
   objeto: string; // Objeto del bien completo
   detalle5: string; // Supervisor
+  detalle7: string; // ModalidadContrato
   supervisorId: number;
 
   valorInicial: number;

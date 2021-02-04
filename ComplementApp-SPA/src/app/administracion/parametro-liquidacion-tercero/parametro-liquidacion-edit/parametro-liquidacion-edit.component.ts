@@ -291,8 +291,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       fecIniOtrosDescuentosCtrl: [null],
       fecFinOtrosDescuentosCtrl: [null],
 
-      esObraPublicaCtrl: [''],
-      masDeUnContratoCtrl: [''],
+      notaLegal1Ctrl: [''],
+      notaLegal2Ctrl: [''],
+      notaLegal3Ctrl: [''],
+      notaLegal4Ctrl: [''],
+      notaLegal5Ctrl: [''],
 
       codigoDeduccionCtrl: [''],
       deduccionCtrl: [''],
@@ -354,8 +357,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     let fechaInicio = null;
     let fechaFinal = null;
 
-    let esObraPublica = false;
-    let masDeUnContrato = false;
+    let notaLegal1 = false;
+    let notaLegal2 = false;
+    let notaLegal3 = false;
+    let notaLegal4 = false;
+    let notaLegal5 = false;
 
     this.idModalidadContratoSelecionado =
       this.parametroLiquidacionSeleccionado.modalidadContrato > 0
@@ -464,8 +470,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     fechaFinal = this.parametroLiquidacionSeleccionado
       .fechaFinalDescuentoInteresVivienda;
 
-    esObraPublica = this.parametroLiquidacionSeleccionado.esObraPublica;
-    masDeUnContrato = this.parametroLiquidacionSeleccionado.masDeUnContrato;
+    notaLegal1 = this.parametroLiquidacionSeleccionado.notaLegal1;
+    notaLegal2 = this.parametroLiquidacionSeleccionado.notaLegal2;
+    notaLegal3 = this.parametroLiquidacionSeleccionado.notaLegal3;
+    notaLegal4 = this.parametroLiquidacionSeleccionado.notaLegal4;
+    notaLegal5 = this.parametroLiquidacionSeleccionado.notaLegal5;
 
     //#region Deducciones
 
@@ -536,8 +545,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           ? formatDate(fechaFinalOtrosDescuentos, 'dd-MM-yyyy', 'en')
           : '',
 
-      esObraPublicaCtrl: esObraPublica,
-      masDeUnContratoCtrl: masDeUnContrato,
+      notaLegal1Ctrl: notaLegal1,
+      notaLegal2Ctrl: notaLegal2,
+      notaLegal3Ctrl: notaLegal3,
+      notaLegal4Ctrl: notaLegal4,
+      notaLegal5Ctrl: notaLegal5,
 
       codigoDeduccionCtrl: '',
       deduccionCtrl: '',
@@ -981,8 +993,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           fechaInicioDescuentoInteresVivienda: dateFechaInicio,
           fechaFinalDescuentoInteresVivienda: dateFechaFinal,
 
-          masDeUnContrato: formValues.masDeUnContratoCtrl === '' ? false : true,
-          esObraPublica: formValues.esObraPublicaCtrl === '' ? false : true,
+          notaLegal1: formValues.notaLegal1Ctrl === '' ? false : true,
+          notaLegal2: formValues.notaLegal2Ctrl === '' ? false : true,
+          notaLegal3: formValues.notaLegal3Ctrl === '' ? false : true,
+          notaLegal4: formValues.notaLegal4Ctrl === '' ? false : true,
+          notaLegal5: formValues.notaLegal5Ctrl === '' ? false : true,
 
           otrosDescuentos:
             formValues.otrosDescuentosCtrl === undefined
@@ -1104,10 +1119,17 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
         this.parametroLiquidacionSeleccionado.terceroDeducciones = this.listaTerceroDeducciones;
 
-        this.parametroLiquidacionSeleccionado.esObraPublica =
-          formValues.esObraPublicaCtrl;
-        this.parametroLiquidacionSeleccionado.masDeUnContrato =
-          formValues.masDeUnContratoCtrl;
+        this.parametroLiquidacionSeleccionado.notaLegal1 =
+          formValues.notaLegal1Ctrl;
+        this.parametroLiquidacionSeleccionado.notaLegal2 =
+          formValues.notaLegal2Ctrl;
+        this.parametroLiquidacionSeleccionado.notaLegal3 =
+          formValues.notaLegal3Ctrl;
+        this.parametroLiquidacionSeleccionado.notaLegal4 =
+          formValues.notaLegal4Ctrl;
+        this.parametroLiquidacionSeleccionado.notaLegal5 =
+          formValues.notaLegal5Ctrl;
+
         this.parametroLiquidacionSeleccionado.tipoAdminPilaId = this.idTipoAdminPila;
 
         this.terceroService

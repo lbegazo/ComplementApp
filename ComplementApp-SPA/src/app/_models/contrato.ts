@@ -5,4 +5,5 @@ export interface Contrato {
   fechaRegistro: Date;
   fechaInicio: Date;
   fechaFinal: Date;
+  fechaExpedicionPoliza: Date;
 }

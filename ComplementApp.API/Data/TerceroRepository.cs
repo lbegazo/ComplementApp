@@ -111,8 +111,11 @@ namespace ComplementApp.API.Data
                                    FechaFinalOtrosDescuentos = plt.FechaFinalOtrosDescuentos,
 
                                    TipoAdminPilaId = plt.TipoAdminPilaId,
-                                   EsObraPublica = plt.EsObraPublica,
-                                   MasDeUnContrato = plt.MasDeUnContrato,
+                                   NotaLegal1 = plt.NotaLegal1,
+                                   NotaLegal2 = plt.NotaLegal2,
+                                   NotaLegal3 = plt.NotaLegal3,
+                                   NotaLegal4 = plt.NotaLegal4,
+                                   NotaLegal5 = plt.NotaLegal5,
                                }).FirstOrDefaultAsync();
 
             return lista;

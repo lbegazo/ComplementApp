@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210203024638_TParametroLiquidacionTercero_NotasLegales")]
+    partial class TParametroLiquidacionTercero_NotasLegales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,7 +348,7 @@ namespace ComplementApp.API.Migrations
                     b.Property<long>("Crp")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("FechaExpedicionPoliza")
+                    b.Property<DateTime>("FechaExpedicionPoliza")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaFinal")
@@ -922,7 +924,7 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NumeroFactura")
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("NumeroPlanilla")
                         .HasColumnType("VARCHAR(50)");
@@ -1044,7 +1046,7 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("Valor")
-                        .HasColumnType("VARCHAR(8000)");
+                        .HasColumnType("VARCHAR(500)");
 
                     b.HasKey("ParametroGeneralId");
 
@@ -1564,7 +1566,7 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<DateTime?>("FechaExpedicionDocumento")
+                    b.Property<DateTime>("FechaExpedicionDocumento")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")

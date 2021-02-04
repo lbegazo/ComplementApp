@@ -10,6 +10,7 @@ export interface FormatoSolicitudPagoDto {
   planPagoId: number;
   fechaInicio: Date;
   fechaFinal: Date;
+  fechaSistema: Date;
   valorFacturado: number;
   mesId: number;
   mesDescripcion: string;
@@ -20,11 +21,7 @@ export interface FormatoSolicitudPagoDto {
   valorIva: number;
   baseCotizacion: number;
   observacionesModificacion: string;
-  cdp: Cdp;
-  tercero: Tercero;
-  contrato: Contrato;
-  actividadEconomica: ValorSeleccion;
-  planPago: PlanPago;
+
   valorPagadoFechaActual: number;
   numeroPagoFechaActual: number;
   cantidadMaxima: number;
@@ -32,13 +29,18 @@ export interface FormatoSolicitudPagoDto {
   aportePension: number;
   riesgoLaboral: number;
   fondoSolidaridad: number;
-  pagosRealizados: Cdp[];
-  detallesFormatoSolicitudPago: DetalleFormatoSolicitudPagoDto[];
   estadoId: number;
-
   numeroRadicadoProveedor: string;
   fechaRadicadoProveedor: Date;
   numeroRadicadoSupervisor: string;
   fechaRadicadoSupervisor: Date;
   tipoAdminPila: string;
+
+  actividadEconomica: ValorSeleccion;
+  planPago: PlanPago;
+  pagosRealizados: Cdp[];
+  cdp: Cdp;
+  tercero: Tercero;
+  contrato: Contrato;
+  detallesFormatoSolicitudPago: DetalleFormatoSolicitudPagoDto[];
 }

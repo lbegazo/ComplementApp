@@ -86,8 +86,11 @@ namespace ComplementApp.API.Models
         public decimal OtrosDescuentos { get; set; }
         public DateTime? FechaInicioOtrosDescuentos { get; set; }
         public DateTime? FechaFinalOtrosDescuentos { get; set; }
-        public bool EsObraPublica { get; set; }
-        public bool MasDeUnContrato { get; set; }
+        public bool NotaLegal1 { get; set; }
+        public bool NotaLegal2 { get; set; }
+        public bool NotaLegal3 { get; set; }
+        public bool NotaLegal4 { get; set; }
+        public bool NotaLegal5 { get; set; }
         public int? TipoAdminPilaId { get; set; }
         public TipoAdminPila TipoAdminPila { get; set; }
         

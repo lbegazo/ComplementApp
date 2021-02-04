@@ -37,6 +37,9 @@ export interface ParametroLiquidacionTercero {
   fechaFinalOtrosDescuentos: Date;
 
   tipoAdminPilaId: number;
-  esObraPublica: boolean;
-  masDeUnContrato: boolean;
+  notaLegal1: boolean;
+  notaLegal2: boolean;
+  notaLegal3: boolean;
+  notaLegal4: boolean;
+  notaLegal5: boolean;
 }

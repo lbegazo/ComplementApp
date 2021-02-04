@@ -81,15 +81,14 @@ export class UsuarioEditComponent implements OnInit {
       this.cargos = data['cargos'];
     });
 
-    //Cargar datos de controles
-    //this.cargarListas();
-    this.cargarPerfiles();
-
     this.route.params.subscribe((params: Params) => {
       this.idUsuario = +params['id'];
       this.editMode = params['id'] != null;
       this.initForm();
     });
+
+    // Cargar datos de controles
+    this.cargarPerfiles();
   }
 
   private initForm() {
@@ -170,9 +169,7 @@ export class UsuarioEditComponent implements OnInit {
           }
         }
       }
-    }
 
-    if (this.perfiles) {
       for (const perfil of this.perfiles) {
         this.arrayControls.push(new FormControl(perfil.checked || false));
       }
@@ -316,6 +313,14 @@ export class UsuarioEditComponent implements OnInit {
     this.listaService.ObtenerListaPerfiles().subscribe(
       (result: Perfil[]) => {
         this.perfiles = result;
+
+        if (!this.editMode) {
+          if (this.perfiles) {
+            for (const perfil of this.perfiles) {
+              this.arrayControls.push(new FormControl(false));
+            }
+          }
+        }
       },
       (error) => {
         this.alertify.error(error);

@@ -41,7 +41,7 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(50)")]
         public string NumeroPlanilla { get; set; }
 
-        [Column(TypeName = "VARCHAR(50)")]
+        [Column(TypeName = "VARCHAR(100)")]
         public string NumeroFactura { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]

@@ -162,11 +162,19 @@ namespace ComplementApp.API.Data
                 .HasDefaultValue(0);
 
             modelBuilder.Entity<ParametroLiquidacionTercero>()
-            .Property(b => b.EsObraPublica)
+            .Property(b => b.NotaLegal1)
             .HasDefaultValue(0);
-
             modelBuilder.Entity<ParametroLiquidacionTercero>()
-            .Property(b => b.MasDeUnContrato)
+            .Property(b => b.NotaLegal2)
+            .HasDefaultValue(0);
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+            .Property(b => b.NotaLegal3)
+            .HasDefaultValue(0);
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+            .Property(b => b.NotaLegal4)
+            .HasDefaultValue(0);
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+            .Property(b => b.NotaLegal5)
             .HasDefaultValue(0);
         }
 

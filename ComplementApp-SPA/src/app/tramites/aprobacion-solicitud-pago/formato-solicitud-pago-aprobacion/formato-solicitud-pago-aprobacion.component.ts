@@ -44,6 +44,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
 
   @Input() formatoSolicitudPago: FormatoSolicitudPagoDto;
   @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
+  @Input() listaNotasLegales: ValorSeleccion[];
   @Output() esCancelado = new EventEmitter<boolean>();
 
   formatoSolicitudPagoId = 0;
@@ -57,10 +58,12 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   bsModalRef: BsModalRef;
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   subscriptions: Subscription[] = [];
-  listaNotasLegales: ValorSeleccion[] = [];
 
-  notaLegalObraPublica = '';
-  notaLegalMasDeUnContrato = '';
+  notaLegal1 = '';
+  notaLegal2 = '';
+  notaLegal3 = '';
+  notaLegal4 = '';
+  notaLegal5 = '';
 
   constructor(
     private alertify: AlertifyService,
@@ -73,9 +76,9 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarNotasLegales();
     this.createEmptyForm();
     this.obtenerRubrosPresupuestales();
-    this.cargarNotasLegales();
   }
 
   createEmptyForm() {
@@ -273,27 +276,41 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   }
 
   cargarNotasLegales() {
-    this.listaService.ObtenerParametrosGeneralesXTipo('NotaLegal').subscribe(
-      (lista: ValorSeleccion[]) => {
-        this.listaNotasLegales = lista;
-
-        if (this.listaNotasLegales) {
-          if (this.parametroLiquidacionSeleccionado) {
-            if (this.parametroLiquidacionSeleccionado.esObraPublica) {
-              this.notaLegalObraPublica = (this
-                .listaNotasLegales[0] as ValorSeleccion).valor;
-            }
-            if (this.parametroLiquidacionSeleccionado.masDeUnContrato) {
-              this.notaLegalMasDeUnContrato = (this
-                .listaNotasLegales[1] as ValorSeleccion).valor;
-            }
+    console.log(this.listaNotasLegales);
+    if (this.listaNotasLegales) {
+      if (this.parametroLiquidacionSeleccionado) {
+        if (this.parametroLiquidacionSeleccionado.notaLegal1) {
+          if (this.listaNotasLegales[0] != null) {
+            this.notaLegal1 = (this
+              .listaNotasLegales[0] as ValorSeleccion).valor;
           }
         }
-      },
-      (error) => {
-        this.alertify.error(error);
+        if (this.parametroLiquidacionSeleccionado.notaLegal2) {
+          if (this.listaNotasLegales[1] != null) {
+            this.notaLegal2 = (this
+              .listaNotasLegales[1] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal3) {
+          if (this.listaNotasLegales[2] != null) {
+            this.notaLegal3 = (this
+              .listaNotasLegales[2] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal4) {
+          if (this.listaNotasLegales[3] != null) {
+            this.notaLegal4 = (this
+              .listaNotasLegales[3] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal5) {
+          if (this.listaNotasLegales[4] != null) {
+            this.notaLegal5 = (this
+              .listaNotasLegales[4] as ValorSeleccion).valor;
+          }
+        }
       }
-    );
+    }
   }
 
   exportarPDF() {
