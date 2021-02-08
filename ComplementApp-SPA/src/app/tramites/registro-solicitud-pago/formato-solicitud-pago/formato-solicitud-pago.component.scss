@@ -41,18 +41,6 @@ td {
   border: 1px solid black;
 }
 
-.addHeight {
-  height: 20px;
-}
-
-.addHeight30 {
-  height: 30px;
-}
-
-.addHeight50 {
-  height: 100px;
-}
-
 .aplicaBackground {
   background-color: lightgrey;
 }
@@ -69,8 +57,16 @@ td {
   padding-left: 10px;
 }
 
+.addPaddingLeft5 {
+  padding-left: 5px;
+}
+
 .addPaddingRight {
   padding-right: 10px;
+}
+
+.addPaddingRight5 {
+  padding-right: 5px;
 }
 
 .addPadding {
@@ -82,7 +78,7 @@ td {
 }
 
 .fontLarge {
-  font-size: 20px;
+  font-size: 23px;
 }
 
 .fontMedium {
@@ -94,7 +90,7 @@ td {
 }
 
 .fontVerySmaller {
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .stronger {

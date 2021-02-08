@@ -42,6 +42,7 @@ export class UsuarioEditComponent implements OnInit {
     areaId: 0,
     areaNombre: '',
     cargoNombre: '',
+    numeroIdentificacion: '',
     fechaCreacion: new Date(),
     fechaUltimoAcceso: new Date(),
     nombreCompleto: '',

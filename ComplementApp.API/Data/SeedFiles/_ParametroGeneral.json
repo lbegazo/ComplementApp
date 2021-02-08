@@ -1,0 +1,94 @@
+[
+  {
+    "Nombre": "SalarioMinimo",
+    "Descripcion": "Salario Minimo",
+    "Valor": "877,803"
+  },
+  {
+    "Nombre": "ValorUVT",
+    "Descripcion": "Valor UVT",
+    "Valor": "35,607"
+  },
+  {
+    "Nombre": "CodigoRenta",
+    "Descripcion": "Codigo Renta",
+    "Valor": "2-01-04-01-29"
+  },
+  {
+    "Nombre": "Pci-ANE",
+    "Descripcion": "Pci ANE",
+    "Valor": "23-09-00"
+  },
+  {
+    "Nombre": "NotaLegalANE",
+    "Descripcion": "Nota Legal ANE",
+    "Valor": "El presente documento es firmado bajo los parámetros establecidos en en el Decreto 1168 de 2020, prorrogado por el Decreto 1550 de 2020 concordante con las Resoluciones Nro. 283 y 405 de 2020 expedidas por la ANE.",
+    "Tipo": "NotaLegal"
+  },
+  {
+    "Nombre": "BaseAporteSalud",
+    "Descripcion": "Base Aporte Salud",
+    "Valor": "0.40000",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "AporteSalud",
+    "Descripcion": "Aporte Salud",
+    "Valor": "0.12500",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "AportePension",
+    "Descripcion": "Aporte Pension",
+    "Valor": "0.16000",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "RiesgoLaboral",
+    "Descripcion": "Riesgo Laboral",
+    "Valor": "0.024360",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "TarifaIva",
+    "Descripcion": "Tarifa Iva",
+    "Valor": "0.19",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "Dependientes",
+    "Descripcion": "Dependientes",
+    "Valor": "0.1",
+    "Tipo": "ParametroLiquidacionTercero"
+  },
+  {
+    "Nombre": "NotaLegal1",
+    "Descripcion": "NotaLegal1",
+    "Valor": "* En mi calidad de Contratista declaro bajo la gravedad del juramento que la información proporcionada es correcta, verdadera y se relaciona con el propósito de acogerme a lo establecido en el artículo 4 del Decreto 2271 del 18 de junio de 2009, que hace referencia a la disminución de la base gravable de trabajadores independientes; estos aportes obligatorios al Sistema General de Seguridad Social en salud, pensión y riesgos profesionales, corresponden a los ingresos provenientes del contrato arriba relacionado en la información contractual y período certificado.",
+    "Tipo": "NotaLegal"
+  },
+  {
+    "Nombre": "NotaLegal2",
+    "Descripcion": "NotaLegal2",
+    "Valor": "** Dando cumplimiento a la Circular Interna con radicado GD-003981-1-2020 del pasado 24-abril-2020, me permito certificar que estoy vinculado con dos o más contratos de prestación de servicios profesionales y de apoyo a la gestión pública.",
+    "Tipo": "NotaLegal"
+  },
+  {
+    "Nombre": "NotaLegal3",
+    "Descripcion": "NotaLegal3",
+    "Valor": "Se consideran como no responsables del Iva en función de unos topes mínimos de ingresos y otros conceptos señalados por el parágrafo 3 del artículo 437 del estatuto tributario.",
+    "Tipo": "NotaLegal"
+  },
+  {
+    "Nombre": "NotaLegal4",
+    "Descripcion": "NotaLegal4",
+    "Valor": "Son declarantes del impuesto sobre la renta quienes en la vigencia fiscal anterior al año en curso recibieron ingresos superiores a 1,400 UVTS y patrimonio superior a 4,500 UVTS.",
+    "Tipo": "NotaLegal"
+  },
+  {
+    "Nombre": "NotaLegal5",
+    "Descripcion": "NotaLegal5",
+    "Valor": "El suscrito Supervisor / Interventor certifica que el contratista cumplió a cabalidad con las obligaciones en los términos y tiempo pactados, las cuales se verificaron y avalaron por el período certificado, conforme a las condiciones de pago. Así mismo, se constataron los pagos efectuados por el contratista para Salud, Pensión y/o Fondo de Solidaridad y riesgos profesionales; y en el caso de los proveedores se verificó la certificación expedida por el representante legal o revisor fiscal o contador de la empresa, los cuales se presentaron de acuerdo con lo establecido en la Ley 789 de 2002 y Decreto 1703 de 2002. Igualmente certifico que conforme a lo establecido en el artículo 18 del Decreto 723 de 2013, el certificado de examen médico preocupacional se encuentra vigente 3 (tres años). Por lo tanto, autorizo el pago.",
+    "Tipo": "NotaLegal"
+  }
+]

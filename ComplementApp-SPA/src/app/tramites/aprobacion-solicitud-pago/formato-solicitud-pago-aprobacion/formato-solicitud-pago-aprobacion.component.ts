@@ -59,6 +59,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   subscriptions: Subscription[] = [];
 
+  notaLegal: ValorSeleccion;
   notaLegal1 = '';
   notaLegal2 = '';
   notaLegal3 = '';
@@ -76,7 +77,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cargarNotasLegales();
+    this.cargarNotaLegal();
     this.createEmptyForm();
     this.obtenerRubrosPresupuestales();
   }
@@ -113,6 +114,20 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
       deduccionControles: this.arrayControls,
       rubrosControles: this.arrayRubrosControls,
     });
+  }
+
+  cargarNotaLegal() {
+    this.listaService.ObtenerParametroGeneralXNombre('NotaLegalANE').subscribe(
+      (data: ValorSeleccion) => {
+        this.notaLegal = data;
+      },
+      (error) => {
+        this.alertify.error(error);
+      },
+      () => {
+        this.cargarNotasLegales();
+      }
+    );
   }
 
   obtenerRubrosPresupuestales() {
@@ -276,7 +291,6 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   }
 
   cargarNotasLegales() {
-    console.log(this.listaNotasLegales);
     if (this.listaNotasLegales) {
       if (this.parametroLiquidacionSeleccionado) {
         if (this.parametroLiquidacionSeleccionado.notaLegal1) {

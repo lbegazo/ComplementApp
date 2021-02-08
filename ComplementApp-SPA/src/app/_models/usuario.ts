@@ -13,5 +13,6 @@ export interface Usuario {
   areaId: number;
   cargoNombre: string;
   areaNombre: string;
+  numeroIdentificacion: string;
   perfiles?: Perfil[];
 }

@@ -182,7 +182,7 @@ namespace ComplementApp.API.Services
         }
 
 
-        public string ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(List<DeduccionDetalleLiquidacionParaArchivo> listaTotal)
+        public string ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(List<int> liquidacionIds, List<DeduccionDetalleLiquidacionParaArchivo> listaTotal)
         {
             List<DeduccionDetalleLiquidacionParaArchivo> lista = null;
             int consecutivoCabecera = 1;
@@ -199,30 +199,33 @@ namespace ComplementApp.API.Services
 
             var listaLiquidacionIds = listaAgrupada.Select(s => s.DetalleLiquidacionId).ToList();
 
-            foreach (var item in listaLiquidacionIds)
+            foreach (var liquidacionId in liquidacionIds)
             {
-                lista = listaTotal.Where(x => x.DetalleLiquidacionId == item).ToList();
+                lista = listaTotal.Where(x => x.DetalleLiquidacionId == liquidacionId).ToList();
 
-                foreach (var itemInterno in lista)
-                {
-                    sbBody.Append(consecutivoCabecera);
-                    sbBody.Append("|");
-                    sbBody.Append(consecutivoInterno);
-                    sbBody.Append("|");
-                    sbBody.Append(itemInterno.DeduccionCodigo);
-                    sbBody.Append("|");
-                    sbBody.Append("0" + itemInterno.TipoIdentificacion);
-                    sbBody.Append("|");
-                    sbBody.Append(itemInterno.NumeroIdentificacion);
-                    sbBody.Append("|");
-                    sbBody.Append((int)Math.Round(itemInterno.Base, 0, MidpointRounding.AwayFromZero)).ToString();
-                    sbBody.Append("|");
-                    sbBody.Append(itemInterno.Tarifa.ToString().Replace(".", ","));
-                    sbBody.Append("|");
-                    sbBody.Append((int)Math.Round(itemInterno.Valor, 0, MidpointRounding.AwayFromZero)).ToString();
-                    sbBody.Append(Environment.NewLine);
+                if (lista != null && lista.Count > 0)
+                {                    
+                    foreach (var itemInterno in lista)
+                    {
+                        sbBody.Append(consecutivoCabecera);
+                        sbBody.Append("|");
+                        sbBody.Append(consecutivoInterno);
+                        sbBody.Append("|");
+                        sbBody.Append(itemInterno.DeduccionCodigo);
+                        sbBody.Append("|");
+                        sbBody.Append("0" + itemInterno.TipoIdentificacion);
+                        sbBody.Append("|");
+                        sbBody.Append(itemInterno.NumeroIdentificacion);
+                        sbBody.Append("|");
+                        sbBody.Append((int)Math.Round(itemInterno.Base, 0, MidpointRounding.AwayFromZero)).ToString();
+                        sbBody.Append("|");
+                        sbBody.Append(itemInterno.Tarifa.ToString().Replace(".", ","));
+                        sbBody.Append("|");
+                        sbBody.Append((int)Math.Round(itemInterno.Valor, 0, MidpointRounding.AwayFromZero)).ToString();
+                        sbBody.Append(Environment.NewLine);
 
-                    consecutivoInterno++;
+                        consecutivoInterno++;
+                    }                    
                 }
                 consecutivoCabecera++;
             }

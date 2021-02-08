@@ -42,5 +42,6 @@ export interface FormatoSolicitudPagoDto {
   cdp: Cdp;
   tercero: Tercero;
   contrato: Contrato;
+
   detallesFormatoSolicitudPago: DetalleFormatoSolicitudPagoDto[];
 }

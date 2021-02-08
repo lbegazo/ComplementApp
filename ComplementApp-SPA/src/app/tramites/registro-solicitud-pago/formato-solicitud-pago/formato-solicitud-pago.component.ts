@@ -72,6 +72,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   habilitaArchivosCargados = false;
   solicitudRegistrada = false;
 
+  notaLegal: ValorSeleccion;
   notaLegal1 = '';
   notaLegal2 = '';
   notaLegal3 = '';
@@ -91,11 +92,11 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarNotasLegales();
     this.createEmptyForm();
     this.obtenerRubrosPresupuestales();
     this.cargarListaActividadEconomicaXTercero();
     this.cargarMeses();
-    this.cargarNotasLegales();
   }
 
   createEmptyForm() {
@@ -414,6 +415,20 @@ export class FormatoSolicitudPagoComponent implements OnInit {
             }
           }
         }
+      },
+      (error) => {
+        this.alertify.error(error);
+      },
+      () => {
+        this.cargarNotaLegal();
+      }
+    );
+  }
+
+  cargarNotaLegal() {
+    this.listaService.ObtenerParametroGeneralXNombre('NotaLegalANE').subscribe(
+      (data: ValorSeleccion) => {
+        this.notaLegal = data;
       },
       (error) => {
         this.alertify.error(error);

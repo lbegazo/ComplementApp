@@ -27,20 +27,20 @@ namespace ComplementApp.API.Dtos
         public decimal AportePension { get; set; }
         public decimal RiesgoLaboral { get; set; }
         public decimal FondoSolidaridad { get; set; }
+        public int NumeroPagoFechaActual { get; set; }
+        public int CantidadMaxima { get; set; }
+        public string NumeroRadicadoProveedor { get; set; }
+        public DateTime FechaRadicadoProveedor { get; set; }
+        public string NumeroRadicadoSupervisor { get; set; }
+        public string ModalidadContrato { get; set; }
+        public DateTime FechaRadicadoSupervisor { get; set; }        
         public CDPDto Cdp { get; set; }
         public TerceroDto Tercero { get; set; }
         public ContratoDto Contrato { get; set; }
         public PlanPagoDto PlanPago { get; set; }
         public ValorSeleccion ActividadEconomica { get; set; }
-        public int NumeroPagoFechaActual { get; set; }
-        public int CantidadMaxima { get; set; }
-        public string NumeroRadicadoProveedor { get; set; } 
-        public DateTime FechaRadicadoProveedor { get; set; } 
-        public string NumeroRadicadoSupervisor { get; set; } 
-        public string ModalidadContrato { get; set; } 
-        public DateTime FechaRadicadoSupervisor { get; set; }
         public ICollection<CDPDto> PagosRealizados { get; set; }
         public ICollection<DetalleFormatoSolicitudPagoDto> detallesFormatoSolicitudPago { get; set; }
-        
+
     }
 }

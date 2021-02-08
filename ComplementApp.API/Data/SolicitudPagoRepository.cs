@@ -57,6 +57,7 @@ namespace ComplementApp.API.Data
                          where c.SaldoActual > 0 //Saldo Disponible
                          where pt.SupervisorId == usuarioId
                          where c.TerceroId == terceroId || terceroId == null
+                         where pt.ModalidadContrato != (int)ModalidadContrato.ContratoPrestacionServicio
                          select new CDPDto()
                          {
                              Crp = c.Crp,
@@ -204,14 +205,27 @@ namespace ComplementApp.API.Data
 
             var formato = await (from c in listaAgrupada
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                                 join co in _context.Contrato on c.Crp equals co.Crp into Contrato
-                                 from ctr in Contrato.DefaultIfEmpty()
+                                 join co in _context.Contrato on c.Crp equals co.Crp
                                  join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
                                  from pt in ParametroTercero.DefaultIfEmpty()
-                                 join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
-                                 from super in Supervisor.DefaultIfEmpty()
+
+                                 join sup1 in _context.Usuario on co.Supervisor1Id equals sup1.UsuarioId into Supervisor1
+                                 from super1 in Supervisor1.DefaultIfEmpty()
+                                 join carg1 in _context.Cargo on super1.CargoId equals carg1.CargoId into Cargo1
+                                 from cargoSuper1 in Cargo1.DefaultIfEmpty()
+                                 join tercSup1 in _context.Tercero on super1.TerceroId equals tercSup1.TerceroId into TerceroSupervisor1
+                                 from tercSuper1 in TerceroSupervisor1.DefaultIfEmpty()
+
+                                 join sup2 in _context.Usuario on co.Supervisor2Id equals sup2.UsuarioId into Supervisor2
+                                 from super2 in Supervisor2.DefaultIfEmpty()
+                                 join carg2 in _context.Cargo on super2.CargoId equals carg2.CargoId into Cargo2
+                                 from cargoSuper2 in Cargo2.DefaultIfEmpty()
+                                 join tercSup2 in _context.Tercero on super2.TerceroId equals tercSup2.TerceroId into TerceroSupervisor2
+                                 from tercSuper2 in TerceroSupervisor2.DefaultIfEmpty()
+
                                  select new FormatoSolicitudPagoDto()
                                  {
+                                     FormatoSolicitudPagoId = 666,
                                      FechaSistema = _generalInterface.ObtenerFechaHoraActual(),
 
                                      Cdp = new CDPDto()
@@ -219,8 +233,6 @@ namespace ComplementApp.API.Data
                                          Cdp = c.Cdp,
                                          Crp = c.Crp,
                                          Fecha = c.Fecha, //Fecha compromiso
-                                         Detalle5 = super.Nombres + ' ' + super.Apellidos, //Supervisor
-                                         SupervisorId = super.UsuarioId,
                                          Detalle4 = c.Detalle4, //objeto contrato
                                          Detalle7 = c.Detalle7, //modalidad de contrato
                                          ValorInicial = c.ValorInicial,
@@ -230,13 +242,32 @@ namespace ComplementApp.API.Data
                                      },
                                      Contrato = new ContratoDto()
                                      {
-                                         ContratoId = ctr.ContratoId > 0 ? ctr.ContratoId : 0,
-                                         NumeroContrato = ctr.ContratoId > 0 ? ctr.NumeroContrato : string.Empty,
-                                         Crp = ctr.ContratoId > 0 ? ctr.Crp : 0,
-                                         FechaInicio = ctr.ContratoId > 0 ? ctr.FechaInicio : null,
-                                         FechaFinal = ctr.ContratoId > 0 ? ctr.FechaFinal : null,
-                                         FechaRegistro = ctr.ContratoId > 0 ? ctr.FechaRegistro : null,
-                                         FechaExpedicionPoliza = ctr.ContratoId > 0 ? (ctr.FechaExpedicionPoliza.HasValue ? (ctr.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? ctr.FechaExpedicionPoliza.Value : null) : null) : null,
+                                         ContratoId = co.ContratoId,
+                                         NumeroContrato = co.NumeroContrato,
+                                         Crp = co.Crp,
+                                         FechaInicio = co.FechaInicio,
+                                         FechaFinal = co.FechaFinal,
+                                         FechaRegistro = co.FechaRegistro,
+                                         FechaExpedicionPoliza = (co.FechaExpedicionPoliza.HasValue ? (co.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? co.FechaExpedicionPoliza.Value : null) : null),
+
+                                         Supervisor1 = new UsuarioParaDetalleDto()
+                                         {
+                                             UsuarioId = super1.UsuarioId > 0 ? super1.UsuarioId : 0,
+                                             Nombres = super1.Nombres,
+                                             Apellidos = super1.Apellidos,
+                                             NombreCompleto = co.Supervisor1Id > 0 ? super1.Nombres + " " + super1.Apellidos : string.Empty,
+                                             CargoNombre = cargoSuper1.CargoId > 0 ? cargoSuper1.Nombre : string.Empty,
+                                             NumeroIdentificacion = tercSuper1.NumeroIdentificacion,
+                                         },
+                                         Supervisor2 = new UsuarioParaDetalleDto()
+                                         {
+                                             UsuarioId = co.Supervisor2Id.HasValue ? co.Supervisor2Id.Value : 0,
+                                             Nombres = super2.Nombres,
+                                             Apellidos = super2.Apellidos,
+                                             NombreCompleto = co.Supervisor2Id > 0 ? super2.Nombres + " " + super2.Apellidos : string.Empty,
+                                             CargoNombre = cargoSuper2.CargoId > 0 ? cargoSuper2.Nombre : string.Empty,
+                                             NumeroIdentificacion = tercSuper2.NumeroIdentificacion,
+                                         }
                                      },
                                      Tercero = new TerceroDto()
                                      {
@@ -250,7 +281,8 @@ namespace ComplementApp.API.Data
                                          RegimenTributario = t.RegimenTributario,
                                          DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
                                          FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO"
-                                     }
+                                     },
+
                                  }).FirstOrDefaultAsync();
 
             return formato;
@@ -311,12 +343,24 @@ namespace ComplementApp.API.Data
                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                  join ae in _context.ActividadEconomica on s.ActividadEconomicaId equals ae.ActividadEconomicaId
                                  join pp in _context.PlanPago on s.PlanPagoId equals pp.PlanPagoId
-                                 join co in _context.Contrato on c.Crp equals co.Crp into Contrato
-                                 from ctro in Contrato.DefaultIfEmpty()
+                                 join co in _context.Contrato on c.Crp equals co.Crp
                                  join plt in _context.ParametroLiquidacionTercero on t.TerceroId equals plt.TerceroId into ParametroTercero
                                  from par in ParametroTercero.DefaultIfEmpty()
-                                 join sup in _context.Usuario on s.SupervisorId equals sup.UsuarioId into Supervisor
-                                 from super in Supervisor.DefaultIfEmpty()
+
+                                 join sup1 in _context.Usuario on co.Supervisor1Id equals sup1.UsuarioId into Supervisor1
+                                 from super1 in Supervisor1.DefaultIfEmpty()
+                                 join carg1 in _context.Cargo on super1.CargoId equals carg1.CargoId into Cargo1
+                                 from cargoSuper1 in Cargo1.DefaultIfEmpty()
+                                 join tercSup1 in _context.Tercero on super1.TerceroId equals tercSup1.TerceroId into TerceroSupervisor1
+                                 from tercSuper1 in TerceroSupervisor1.DefaultIfEmpty()
+
+                                 join sup2 in _context.Usuario on co.Supervisor2Id equals sup2.UsuarioId into Supervisor2
+                                 from super2 in Supervisor2.DefaultIfEmpty()
+                                 join carg2 in _context.Cargo on super2.CargoId equals carg2.CargoId into Cargo2
+                                 from cargoSuper2 in Cargo2.DefaultIfEmpty()
+                                 join tercSup2 in _context.Tercero on super2.TerceroId equals tercSup2.TerceroId into TerceroSupervisor2
+                                 from tercSuper2 in TerceroSupervisor2.DefaultIfEmpty()
+
                                  where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
                                  select new FormatoSolicitudPagoDto()
                                  {
@@ -338,8 +382,6 @@ namespace ComplementApp.API.Data
                                          Cdp = c.Cdp,
                                          Crp = c.Crp,
                                          Fecha = c.Fecha, //Fecha compromiso
-                                         Detalle5 = s.SupervisorId.HasValue ? (super.Nombres + ' ' + super.Apellidos) : string.Empty, //Supervisor
-                                         SupervisorId = s.SupervisorId,
                                          Detalle4 = c.Detalle4, //objeto contrato
                                          Detalle7 = c.Detalle7, //Modalidad de Contrato
                                          ValorInicial = c.ValorInicial,
@@ -355,13 +397,32 @@ namespace ComplementApp.API.Data
                                      },
                                      Contrato = new ContratoDto()
                                      {
-                                         ContratoId = ctro.ContratoId > 0 ? ctro.ContratoId : 0,
-                                         NumeroContrato = ctro.ContratoId > 0 ? ctro.NumeroContrato : string.Empty,
-                                         Crp = ctro.ContratoId > 0 ? ctro.Crp : 0,
-                                         FechaInicio = ctro.ContratoId > 0 ? ctro.FechaInicio : null,
-                                         FechaFinal = ctro.ContratoId > 0 ? ctro.FechaFinal : null,
-                                         FechaRegistro = ctro.ContratoId > 0 ? ctro.FechaRegistro : null,
-                                         FechaExpedicionPoliza = ctro.ContratoId > 0 ? (ctro.FechaExpedicionPoliza.HasValue ? (ctro.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? ctro.FechaExpedicionPoliza.Value : null) : null) : null,
+                                         ContratoId = co.ContratoId,
+                                         NumeroContrato = co.NumeroContrato,
+                                         Crp = co.Crp,
+                                         FechaInicio = co.FechaInicio,
+                                         FechaFinal = co.FechaFinal,
+                                         FechaRegistro = co.FechaRegistro,
+                                         FechaExpedicionPoliza = (co.FechaExpedicionPoliza.HasValue ? (co.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? co.FechaExpedicionPoliza.Value : null) : null),
+
+                                         Supervisor1 = new UsuarioParaDetalleDto()
+                                         {
+                                             UsuarioId = super1.UsuarioId > 0 ? super1.UsuarioId : 0,
+                                             Nombres = super1.Nombres,
+                                             Apellidos = super1.Apellidos,
+                                             NombreCompleto = co.Supervisor1Id > 0 ? super1.Nombres + " " + super1.Apellidos : string.Empty,
+                                             CargoNombre = cargoSuper1.CargoId > 0 ? cargoSuper1.Nombre : string.Empty,
+                                             NumeroIdentificacion = tercSuper1.NumeroIdentificacion,
+                                         },
+                                         Supervisor2 = new UsuarioParaDetalleDto()
+                                         {
+                                             UsuarioId = co.Supervisor2Id.HasValue ? co.Supervisor2Id.Value : 0,
+                                             Nombres = co.Supervisor2Id.HasValue ? super2.Nombres : string.Empty,
+                                             Apellidos = super2.UsuarioId > 0 ? super2.Apellidos : string.Empty,
+                                             NombreCompleto = super2.UsuarioId > 0 ? super2.Nombres + " " + super2.Apellidos : string.Empty,
+                                             CargoNombre = cargoSuper2.CargoId > 0 ? cargoSuper2.Nombre : string.Empty,
+                                             NumeroIdentificacion = tercSuper2.NumeroIdentificacion,
+                                         }
                                      },
                                      Tercero = new TerceroDto()
                                      {

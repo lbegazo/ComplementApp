@@ -27,6 +27,8 @@ namespace ComplementApp.API.Dtos
 
         public string AreaNombre { get; set; }
 
+        public string NumeroIdentificacion { get; set; }
+
         public ICollection<Perfil> Perfiles { get; set; }
 
         public string NombreCompleto

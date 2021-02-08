@@ -568,7 +568,8 @@ namespace ComplementApp.API.Controllers
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
-                                                                (int)TipoArchivoObligacion.Cabecera);
+                                                                (int)TipoArchivoObligacion.Cabecera
+                                                                );
 
                             if (listaLiquidacion != null && listaLiquidacion.Count > 0)
                             {
@@ -597,6 +598,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
+                                nombreArchivo = "SIGPAA Cabecera sin registros";
                                 byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
                                 MemoryStream stream = new MemoryStream(byteArray);
 
@@ -640,6 +642,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
+                                nombreArchivo = "SIGPAA Items sin registros";
                                 byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
                                 MemoryStream stream = new MemoryStream(byteArray);
 
@@ -669,26 +672,27 @@ namespace ComplementApp.API.Controllers
                                 //Actualizar el estado de las liquidaciones procesadas
                                 await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
                                 await _dataContext.SaveChangesAsync();
-                                 await transaction.CommitAsync();
+                                await transaction.CommitAsync();
                             }
 
                             if (lista != null && lista.Count > 0)
                             {
                                 //Obtener información para el archivo
-                                cadena = _procesoCreacionArchivo.ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(lista.ToList());
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(liquidacionIds, lista.ToList());
 
                                 //Encoding.UTF8: Respeta las tildes en las palabras
                                 byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();                               
+                                    return NotFound();
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
                             else
                             {
+                                nombreArchivo = "SIGPAA Deducciones sin registros";
                                 byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
                                 MemoryStream stream = new MemoryStream(byteArray);
 
@@ -731,13 +735,14 @@ namespace ComplementApp.API.Controllers
                                 MemoryStream stream = new MemoryStream(byteArray);
 
                                 if (stream == null)
-                                    return NotFound();                                
+                                    return NotFound();
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
                             else
                             {
+                                nombreArchivo = "SIGPAA Usos sin registros";
                                 byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
                                 MemoryStream stream = new MemoryStream(byteArray);
 

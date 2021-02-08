@@ -16,7 +16,7 @@ namespace ComplementApp.API.Interfaces
         string ObtenerInformacionCabeceraLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> lista);
         string ObtenerInformacionItemsLiquidacion_ArchivoObligacion(List<ClavePresupuestalContableParaArchivo> lista);
         string ObtenerInformacionUsosLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> lista, List<ClavePresupuestalContableParaArchivo> listaRubros);
-        string ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(List<DeduccionDetalleLiquidacionParaArchivo> lista);
+        string ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(List<int> liquidacionIds, List<DeduccionDetalleLiquidacionParaArchivo> lista);
 
         #endregion Obligacion
     }

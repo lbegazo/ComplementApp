@@ -215,7 +215,7 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
-            string identificacionPCI = string.Empty;            
+            string identificacionPCI = string.Empty;
             ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
 
             if (parametroPCI != null)
@@ -322,8 +322,8 @@ namespace ComplementApp.API.Data
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                         //where (pl.ModalidadContrato == modalidadContrato)
                          where (dl.TerceroId == terceroId || terceroId == null)
+                         where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                          where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
                          {
@@ -358,6 +358,7 @@ namespace ComplementApp.API.Data
                                where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                                where (dl.TerceroId == terceroId || terceroId == null)
                                where (dl.Procesado == procesado || procesado == null)
+                               where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                                select dl.DetalleLiquidacionId).ToListAsync();
             return lista;
         }
@@ -365,7 +366,7 @@ namespace ComplementApp.API.Data
 
         public async Task<List<int>> ObtenerLiquidacionIdsConUsosPresupuestales(List<int> listaLiquidacionId)
         {
-            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago                               
+            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
@@ -374,7 +375,9 @@ namespace ComplementApp.API.Data
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
+                               where (sp.EstadoId == (int)EstadoSolicitudPago.Aprobado)
                                select dl.DetalleLiquidacionId)
+
                                .Distinct()
                                .ToListAsync();
 
@@ -385,7 +388,7 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
-            string identificacionPCI = string.Empty;            
+            string identificacionPCI = string.Empty;
             ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
 
             if (parametroPCI != null)

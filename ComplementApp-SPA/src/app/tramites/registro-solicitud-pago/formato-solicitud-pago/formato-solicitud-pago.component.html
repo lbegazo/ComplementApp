@@ -22,13 +22,13 @@
                           <table>
                             <tr>
                               <td
-                                style="width: 15%; height: 80px"
+                                style="width: 15%; height: 60px"
                                 class="center fontSmaller stronger"
                               >
                                 VERSION: 6
                               </td>
                               <td
-                                style="width: 70%; height: 80px"
+                                style="width: 70%; height: 60px"
                                 class="center fontLarge stronger"
                               >
                                 <STRONG
@@ -37,13 +37,21 @@
                                 >
                               </td>
                               <td
-                                style="width: 15%; height: 80px"
+                                style="width: 15%; height: 60px"
                                 class="center fontSmaller stronger"
                               >
                                 CODIGO TRD: 130.131.41..
                               </td>
                             </tr>
                           </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="center stronger fontMedium"
+                          style="height: 40px"
+                        >
+                          <strong>I. INFORMACION DEL CONTRATISTA</strong>
                         </td>
                       </tr>
                       <!--FECHA DE EXPEDICION-->
@@ -76,19 +84,19 @@
                                 NOMBRE DEL CONTRATISTA/PROVEEDOR
                               </td>
                               <td
-                                style="width: 20%"
+                                style="width: 18%"
                                 class="center fontSmaller stronger"
                               >
                                 CORREO ELECTRONICO
                               </td>
                               <td
-                                style="width: 10%"
+                                style="width: 8%"
                                 class="center fontSmaller stronger"
                               >
-                                TELEFONO CONTACTO
+                                TELEFONO
                               </td>
                               <td
-                                style="width: 20%"
+                                style="width: 24%"
                                 class="center fontSmaller stronger"
                               >
                                 DIRECCION CONTRACTUAL
@@ -96,9 +104,7 @@
                             </tr>
                             <tr>
                               <td style="width: 7%" class="center fontSmaller">
-                                <strong>{{
-                                  formatoSolicitudPagoId
-                                }}</strong>
+                                <strong>{{ formatoSolicitudPagoId }}</strong>
                               </td>
                               <td style="width: 8%" class="center fontSmaller">
                                 {{
@@ -115,13 +121,13 @@
                               <td style="width: 25%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.tercero.nombre }}
                               </td>
-                              <td style="width: 20%" class="center fontSmaller">
+                              <td style="width: 18%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.tercero.email }}
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
+                              <td style="width: 8%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.tercero.telefono }}
                               </td>
-                              <td style="width: 20%" class="center fontSmaller">
+                              <td style="width: 24%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.tercero.direccion }}
                               </td>
                             </tr>
@@ -149,13 +155,13 @@
                                   >FACTURADOR ELECTRONICO</span
                                 >
                               </td>
-                              <td style="width: 7%" class="center fontSmaller">
-                                <span class="stronger">NUMERO CDP</span>
+                              <td style="width: 15%" class="center fontSmaller">
+                                <span class="stronger">NUM. CDP</span>
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                <span class="stronger">NUM. COMPROMISO</span>
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
-                                <span class="stronger">NUMERO COMPROMISO</span>
-                              </td>
-                              <td style="width: 18%" class="center fontSmaller">
                                 <span class="stronger"
                                   >FECHA REG. COMPROMISO</span
                                 >
@@ -187,13 +193,13 @@
                                     .facturadorElectronicoDescripcion
                                 }}
                               </td>
-                              <td style="width: 7%" class="center fontSmaller">
+                              <td style="width: 15%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.cdp.cdp }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 10%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.cdp.crp }}
                               </td>
-                              <td style="width: 18%" class="center fontSmaller">
+                              <td style="width: 15%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.cdp.fecha
                                     | date: "dd/MM/yyyy"
@@ -242,7 +248,7 @@
                                 style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
-                                FECHA TERMINACION CONTRATO
+                                FECHA FIN CONTRATO
                               </td>
                             </tr>
                             <tr>
@@ -287,13 +293,13 @@
                         <td>
                           <p
                             *ngIf="notaLegal3 !== ''"
-                            class="left fontSmaller withoutMargin addPaddingLeft"
+                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal3 }}
                           </p>
                           <p
                             *ngIf="notaLegal4 !== ''"
-                            class="left fontSmaller withoutMargin addPaddingLeft"
+                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal4 }}
                           </p>
@@ -317,10 +323,11 @@
 
                       <!--INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL-->
                       <tr>
-                        <td class="center">
-                          <span class="stronger fontMedium">
-                           <strong>INFORMACION FINANCIERA DEL COMPROMISO PRESUPUESTAL</strong> 
-                          </span>
+                        <td class="center fontMedium" style="height: 40px">
+                          <strong
+                            >II. INFORMACION FINANCIERA DEL COMPROMISO
+                            PRESUPUESTAL</strong
+                          >
                         </td>
                       </tr>
                       <tr>
@@ -337,7 +344,7 @@
                                 style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
-                                VALOR ADICIONES/REDUCCIONES
+                                VALOR ADI./RED.
                               </td>
                               <td
                                 style="width: 15%"
@@ -571,7 +578,9 @@
                       <!--DETALLE SOLICITUD DE PAGO ACTUAL-->
                       <tr>
                         <td class="center fontMedium" style="height: 40px">
-                          <strong>DETALLE DE SOLICITUD DE PAGO ACTUAL</strong>
+                          <strong
+                            >III. DETALLE DE SOLICITUD DE PAGO ACTUAL</strong
+                          >
                         </td>
                       </tr>
                       <tr>
@@ -703,7 +712,7 @@
                                 style="width: 10%"
                                 class="center fontSmaller stronger"
                               >
-                                NUMERO DE PLANILLA
+                                NUM. DE PLANILLA
                               </td>
                               <td
                                 style="width: 15%"
@@ -798,13 +807,13 @@
                         <td>
                           <p
                             *ngIf="notaLegal1 !== ''"
-                            class="left fontSmaller withoutMargin addPaddingLeft"
+                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal1 }}
                           </p>
                           <p
                             *ngIf="notaLegal2 !== ''"
-                            class="left fontSmaller withoutMargin addPaddingLeft"
+                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal2 }}
                           </p>
@@ -820,13 +829,13 @@
                                     <!--Titulo de Columnas-->
                                     <div class="row borderTop">
                                       <div
-                                        style="width: 20%"
+                                        style="width: 15%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong>CODIGO</strong>
                                       </div>
                                       <div
-                                        style="width: 40%"
+                                        style="width: 45%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong>NOMBRE RUBRO</strong>
@@ -870,14 +879,14 @@
                                           >
                                             <ng-container [formGroupName]="i">
                                               <div
-                                                style="width: 20%"
-                                                class="borderBottonRight centerAlign fontSmaller"
+                                                style="width: 15%"
+                                                class="borderBottonRight centerAlign fontVerySmaller"
                                               >
                                                 {{ item?.identificacionRubro }}
                                               </div>
                                               <div
-                                                style="width: 40%"
-                                                class="borderBottonRight left addPaddingLeft addPaddingRight fontSmaller"
+                                                style="width: 45%"
+                                                class="borderBottonRight left addPaddingLeft5 addPaddingRight5 fontVerySmaller"
                                               >
                                                 {{ item?.rubroNombre }}
                                               </div>
@@ -929,6 +938,230 @@
                           </table>
                         </td>
                       </tr>
+                      <!--DETALLE SOLICITUD DE PAGO ACTUAL-->
+                      <tr>
+                        <td class="center fontMedium" style="height: 40px">
+                          <strong>IV. CERTIFICACIÓN</strong>
+                        </td>
+                      </tr>
+                      <!--Nota 5-->
+                      <tr *ngIf="notaLegal5 !== ''">
+                        <td>
+                          <p
+                            *ngIf="notaLegal5 !== ''"
+                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
+                          >
+                            {{ notaLegal5 }}
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="withoutPadding">
+                          <table style="width: 100%">
+                            <tr>
+                              <td style="width: 33%">
+                                <table>
+                                  <tr>
+                                    <td
+                                      class="center fontSmaller"
+                                      style="
+                                        height: 80px;
+                                        vertical-align: bottom;
+                                      "
+                                      colspan="2"
+                                    >
+                                      FIRMA DEL CONTRATISTA
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                      style="width: 40%"
+                                    >
+                                      NOMBRES:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                      style="width: 60%"
+                                    >
+                                      {{ formatoSolicitudPago?.tercero.nombre }}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      NUM. IDENTIFICACION:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.tercero
+                                          .numeroIdentificacion
+                                      }}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      CARGO:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      CONTRATISTA
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td style="width: 34%">
+                                <table
+                                  *ngIf="
+                                    formatoSolicitudPago?.contrato?.supervisor1
+                                      .usuarioId > 0
+                                  "
+                                >
+                                  <tr>
+                                    <td
+                                      class="center fontSmaller"
+                                      style="
+                                        height: 80px;
+                                        vertical-align: bottom;
+                                      "
+                                      colspan="2"
+                                    >
+                                      FIRMA DEL SUPERVISOR O INTERVENTOR
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                      style="width: 40%"
+                                    >
+                                      NOMBRES:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                      style="width: 60%"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.contrato
+                                          ?.supervisor1?.nombreCompleto
+                                      }}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      NUM. IDENTIFICACION:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.contrato
+                                          ?.supervisor1?.numeroIdentificacion
+                                      }}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      CARGO:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.contrato
+                                          ?.supervisor1?.cargoNombre
+                                      }}
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                              <td style="width: 33%">
+                                <table
+                                  *ngIf="
+                                    formatoSolicitudPago?.contrato?.supervisor2
+                                      .usuarioId > 0
+                                  "
+                                >
+                                  <tr>
+                                    <td
+                                      class="center fontSmaller"
+                                      style="
+                                        height: 80px;
+                                        vertical-align: bottom;
+                                      "
+                                      colspan="2"
+                                    >
+                                      FIRMA DEL SUPERVISOR O INTERVENTOR
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                      style="width: 40%"
+                                    >
+                                      NOMBRES:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller"
+                                      style="width: 60%"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.contrato
+                                          ?.supervisor2?.nombreCompleto
+                                      }}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      NUM. IDENTIFICACION:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.contrato
+                                          ?.supervisor2?.numeroIdentificacion
+                                      }}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      CARGO:
+                                    </td>
+                                    <td
+                                      class="left fontSmaller addPaddingLeft5"
+                                    >
+                                      {{
+                                        formatoSolicitudPago?.contrato
+                                          ?.supervisor2?.cargoNombre
+                                      }}
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!--Nota Legal-->
+                      <tr *ngIf="notaLegal">
+                        <td class="center fontVerySmaller">
+                          {{ notaLegal?.valor }}
+                        </td>
+                      </tr>
                     </table>
                   </td>
                 </tr>
@@ -938,76 +1171,78 @@
         </div>
       </div>
     </div>
-    <!--Botones-->
-    <div class="row">
-      <div class="col-12" style="padding-right: 15px">
-        <div
-          style="width: 100%; margin-left: auto; margin-right: auto"
-          class="right"
+  </div>
+</form>
+<div class="container-fluid">
+  <!--Botones-->
+  <div class="row">
+    <div class="col-12" style="padding-right: 15px">
+      <div
+        style="width: 100%; margin-left: auto; margin-right: auto"
+        class="right"
+      >
+        <!--Plan Pago-->
+        <button
+          type="submit"
+          class="btn btn-info mr-2"
+          (click)="seleccionarPlanPago()"
+          [disabled]="habilitaDatosRegistrados || solicitudRegistrada"
         >
-          <!--Plan Pago-->
-          <button
-            type="submit"
-            class="btn btn-info mr-2"
-            (click)="seleccionarPlanPago()"
-            [disabled]="habilitaDatosRegistrados || solicitudRegistrada"
-          >
-            Plan de Pago
-          </button>
+          Plan de Pago
+        </button>
 
-          <!--Seguridad Social-->
-          <button
-            type="submit"
-            class="btn btn-warning mr-2"
-            (click)="registrarSeguridadSocial()"
-            [disabled]="
-              !habilitaPlanDePagoSeleccionado ||
-              habilitaArchivosCargados ||
-              solicitudRegistrada
-            "
-          >
-            Registrar datos
-          </button>
+        <!--Seguridad Social-->
+        <button
+          type="submit"
+          class="btn btn-warning mr-2"
+          (click)="registrarSeguridadSocial()"
+          [disabled]="
+            !habilitaPlanDePagoSeleccionado ||
+            habilitaArchivosCargados ||
+            solicitudRegistrada
+          "
+        >
+          Registrar datos
+        </button>
 
-          <!--Cargar archivos-->
-          <button
-            type="submit"
-            class="btn btn-light mr-2"
-            (click)="cargarArchivos()"
-            [disabled]="!habilitaDatosRegistrados || solicitudRegistrada"
-          >
-            Cargar archivos
-          </button>
+        <!--Cargar archivos-->
+        <button
+          type="submit"
+          class="btn btn-light mr-2"
+          (click)="cargarArchivos()"
+          [disabled]="!habilitaDatosRegistrados || solicitudRegistrada"
+        >
+          Cargar archivos
+        </button>
 
-          <!--Guardar-->
-          <button
-            type="submit"
-            class="btn btn-success mr-2"
-            (click)="registrarSolicitudPago()"
-            [disabled]="!habilitaArchivosCargados || solicitudRegistrada"
-          >
-            Guardar
-          </button>
+        <!--Guardar-->
+        <button
+          type="submit"
+          class="btn btn-success mr-2"
+          (click)="registrarSolicitudPago()"
+          [disabled]="!habilitaArchivosCargados || solicitudRegistrada"
+        >
+          Guardar
+        </button>
 
-          <!--Exportar PDF-->
-          <button
-            type="submit"
-            class="btn btn-primary mr-2"
-            (click)="exportarPDF()"
-            [disabled]="!solicitudRegistrada"
-          >
-            Exportar PDF
-          </button>
+        <!--Exportar PDF-->
+        <button
+          type="submit"
+          class="btn btn-primary mr-2"
+          (click)="exportarPDF()"
+          [disabled]="!solicitudRegistrada"
+        >
+          Exportar PDF
+        </button>
 
-          <!--Cancelar-->
-          <button type="button" class="btn btn-default" (click)="onCancelar()">
-            Volver
-          </button>
-        </div>
+        <!--Cancelar-->
+        <button type="button" class="btn btn-default" (click)="onCancelar()">
+          Volver
+        </button>
       </div>
     </div>
   </div>
-</form>
+</div>
 <!-- <p>Form value: {{ formatoSolicitudPago | json }}</p> -->
 <!--<p>Form value: {{ formatoForm.value | json }}</p>
 <p>Form status: {{ formatoForm.status | json }}</p> -->

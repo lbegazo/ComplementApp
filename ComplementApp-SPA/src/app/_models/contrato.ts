@@ -1,3 +1,5 @@
+import { Usuario } from './usuario';
+
 export interface Contrato {
   contratoId: number;
   crp: number;
@@ -6,4 +8,6 @@ export interface Contrato {
   fechaInicio: Date;
   fechaFinal: Date;
   fechaExpedicionPoliza: Date;
+  supervisor1: Usuario;
+  supervisor2: Usuario;
 }
