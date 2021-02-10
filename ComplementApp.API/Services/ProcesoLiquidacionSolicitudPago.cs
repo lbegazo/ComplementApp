@@ -49,14 +49,11 @@ namespace ComplementApp.API.Services
 
                 ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
 
-                IEnumerable<ValorSeleccion> listaAdminPila = await _repoLista.ObtenerListaXTipo(TipoLista.TipoAdminPila);
-                var listaTipoAdminPila = listaAdminPila.ToList();
-
-                if (parametroGenerales != null && parametroLiquidacion != null && listaTipoAdminPila != null)
+                if (parametroGenerales != null && parametroLiquidacion != null)
                 {
                     if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                     {
-                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, listaTipoAdminPila, valorBaseCotizacion);
+                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, valorBaseCotizacion);
                     }
                     formato.PlanPagoId = planPagoId;
                 }
@@ -71,7 +68,6 @@ namespace ComplementApp.API.Services
         private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ContratoPrestacionServicio(DetallePlanPagoDto planPago,
                                         ParametroLiquidacionTercero parametroLiquidacion,
                                         List<ParametroGeneral> parametroGenerales,
-                                        List<ValorSeleccion> listaAdminPila,
                                         decimal valorBaseCotizacion)
         {
             #region variables 
@@ -87,14 +83,7 @@ namespace ComplementApp.API.Services
             formato = formatoIgual30;
 
             #endregion Calcular valores y obtener formato
-
-            var adminPila = listaAdminPila.Where(x => x.Id == parametroLiquidacion.TipoAdminPilaId).FirstOrDefault();
-            if (adminPila != null)
-            {
-                formato.TipoAdminPila = adminPila.Nombre;
-            }
-
-
+           
             return formato;
         }
 

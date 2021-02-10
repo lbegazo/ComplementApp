@@ -58,6 +58,7 @@ namespace ComplementApp.API.Data
                                  TipoPago = pl.TipoPago
                              }
                          })
+                         .Distinct()
                         .OrderBy(c => c.FechaRadicadoSupervisor);
 
             return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
@@ -264,7 +265,7 @@ namespace ComplementApp.API.Data
                                 " RAD_SUP: " +
                                 pp.NumeroRadicadoSupervisor +
                                 " FECHA: " +
-                                (pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty)+
+                                (pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty) +
                                 " APRUEBA: " +
                                 super.Nombres + ' ' + super.Apellidos
                           })

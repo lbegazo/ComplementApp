@@ -208,6 +208,8 @@ namespace ComplementApp.API.Data
                                  join co in _context.Contrato on c.Crp equals co.Crp
                                  join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
                                  from pt in ParametroTercero.DefaultIfEmpty()
+                                 join ap in _context.TipoAdminPila on pt.TipoAdminPilaId equals ap.TipoAdminPilaId into AdminPila
+                                 from adminPila in AdminPila.DefaultIfEmpty()
 
                                  join sup1 in _context.Usuario on co.Supervisor1Id equals sup1.UsuarioId into Supervisor1
                                  from super1 in Supervisor1.DefaultIfEmpty()
@@ -227,6 +229,7 @@ namespace ComplementApp.API.Data
                                  {
                                      FormatoSolicitudPagoId = 666,
                                      FechaSistema = _generalInterface.ObtenerFechaHoraActual(),
+                                     TipoAdminPila = adminPila.TipoAdminPilaId > 0 ? adminPila.Nombre : string.Empty,
 
                                      Cdp = new CDPDto()
                                      {
@@ -239,6 +242,7 @@ namespace ComplementApp.API.Data
                                          Operacion = c.Operacion, //Valor adicion/reduccion
                                          ValorTotal = c.ValorTotal, //valor actual
                                          SaldoActual = c.SaldoActual, //saldo actual
+                                         SupervisorId = super1.UsuarioId,
                                      },
                                      Contrato = new ContratoDto()
                                      {
@@ -346,6 +350,8 @@ namespace ComplementApp.API.Data
                                  join co in _context.Contrato on c.Crp equals co.Crp
                                  join plt in _context.ParametroLiquidacionTercero on t.TerceroId equals plt.TerceroId into ParametroTercero
                                  from par in ParametroTercero.DefaultIfEmpty()
+                                 join ap in _context.TipoAdminPila on par.TipoAdminPilaId equals ap.TipoAdminPilaId into AdminPila
+                                 from adminPila in AdminPila.DefaultIfEmpty()
 
                                  join sup1 in _context.Usuario on co.Supervisor1Id equals sup1.UsuarioId into Supervisor1
                                  from super1 in Supervisor1.DefaultIfEmpty()
@@ -376,6 +382,7 @@ namespace ComplementApp.API.Data
                                      NumeroFactura = s.NumeroFactura,
                                      Observaciones = s.Observaciones,
                                      BaseCotizacion = s.BaseCotizacion,
+                                     TipoAdminPila = adminPila.TipoAdminPilaId > 0 ? adminPila.Nombre : string.Empty,
 
                                      Cdp = new CDPDto()
                                      {

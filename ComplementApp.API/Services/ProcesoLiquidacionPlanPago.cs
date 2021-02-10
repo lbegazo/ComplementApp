@@ -154,10 +154,12 @@ namespace ComplementApp.API.Services
             #region variables 
 
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+            FormatoCausacionyLiquidacionPagos formatoIgual = new FormatoCausacionyLiquidacionPagos();
             FormatoCausacionyLiquidacionPagos formatoIgual30 = new FormatoCausacionyLiquidacionPagos();
             CriterioCalculoReteFuente criterioReteFuente = null;
 
-            decimal C30ValorIva = 0, PL17HonorarioSinIva = 0, baseGravableFinal = 0, valorUvt, baseGravableUvtCalculada = 0;
+            decimal C30ValorIva = 0, PL17HonorarioSinIva = 0, PL17HonorarioSinIvaParametro = 0,
+            baseGravableFinal = 0, valorUvt, baseGravableUvtCalculada = 0;
             int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
             decimal factorCalculo = 0;
 
@@ -171,6 +173,7 @@ namespace ComplementApp.API.Services
 
             var tarifaIva = parametroLiquidacion.TarifaIva;
             var GmfAfc = parametroLiquidacion.GmfAfc;
+            PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
 
             #endregion Parametros de liquidación de tercero
 
@@ -194,20 +197,26 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIva > 0)
             {
-                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIva);
+                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIvaParametro);
                 C32NumeroDiaLaborados = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                factorCalculo = 30 / C32NumeroDiaLaborados;
+                factorCalculo = ((decimal)C32NumeroDiaLaborados / (decimal)30);
             }
 
             #endregion Numero de dias laborados
 
             #region Calcular valores y obtener formato
 
-            formatoIgual30 = await CalcularValoresFormatoContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30, factorCalculo);
-            formato = formatoIgual30;
-            baseGravableUvtCalculada = formato.BaseGravableUvtCalculada;
+            formatoIgual = await CalcularValoresFormatoContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30, factorCalculo);
+            formatoIgual30 = await CalcularValoresBaseGravableParaContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales);
+
+            formato = formatoIgual;
+            baseGravableUvtCalculada = formatoIgual30.BaseGravableUvtCalculada;
             baseGravableFinal = formatoIgual30.BaseGravableRenta;
             baseGravableUvtFinal = formatoIgual30.BaseGravableUvt;
+
+            formato.BaseGravableUvtCalculada = formatoIgual30.BaseGravableUvtCalculada;
+            formato.BaseGravableRenta = formatoIgual30.BaseGravableRenta;
+            formato.BaseGravableUvt = formatoIgual30.BaseGravableUvt;
 
             #endregion Calcular valores y obtener formato
 
@@ -233,7 +242,7 @@ namespace ComplementApp.API.Services
                     {
                         deduccion.Base = baseGravableFinal;
                         var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                        + factorIncremento) * valorUvt) / factorCalculo;
+                                                        + factorIncremento) * valorUvt) * factorCalculo;
                         deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
@@ -382,7 +391,7 @@ namespace ComplementApp.API.Services
             decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0,
             PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
             PL14Afc = 0, PL16MedicinaPrepagada = 0,
-            PL17HonorarioSinIva = 0, PL17DescuentoDependiente = 0,
+            PL17HonorarioSinIva = 0, PL17HonorarioSinIvaParametro = 0, PL17DescuentoDependiente = 0,
             PL18InteresVivienda = 0, PL24PensionVoluntaria = 0, viaticosPagados = 0;
 
             decimal C1honorario = 0, C2honorarioUvt = 0, C3valorIva = 0,
@@ -408,8 +417,16 @@ namespace ComplementApp.API.Services
             PLriesgoLaboral = parametroLiquidacion.RiesgoLaboral;
             PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
             PL14Afc = parametroLiquidacion.Afc / factorCalculo;
-            PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada / factorCalculo;
-            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value) / factorCalculo;
+            PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
+            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
+
+            if (factorCalculo == 1)
+            {
+                PL17HonorarioSinIva = PL17HonorarioSinIvaParametro;
+            }
+
+
             PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
             PL18InteresVivienda = parametroLiquidacion.InteresVivienda / factorCalculo;
             PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria / factorCalculo;
@@ -454,14 +471,7 @@ namespace ComplementApp.API.Services
 
             #region Honorario 
 
-            if (numeroDiasLaborados < 30)
-            {
-                C1honorario = (planPago.ValorFacturado.Value + viaticosPagados) / (1 + PLtarifaIva);
-            }
-            else
-            {
-                C1honorario = PL17HonorarioSinIva + viaticosPagados;
-            }
+            C1honorario = PL17HonorarioSinIva + viaticosPagados;
 
             #endregion Honorario 
 
@@ -508,13 +518,13 @@ namespace ComplementApp.API.Services
 
             #region Descuento Dependiente
 
-            if (PL17HonorarioSinIva * valorDescuentoDependiente > valorUvt * 32)
+            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
             {
                 C17DescuentoDependiente = valorUvt * 32;
             }
             else
             {
-                C17DescuentoDependiente = PL17HonorarioSinIva * PL17DescuentoDependiente;
+                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
             }
 
             #endregion Descuento Dependiente
@@ -618,7 +628,7 @@ namespace ComplementApp.API.Services
 
             C25BaseGravableRenta = (C20subTotal3 - C21RentaExenta - C24DiferencialRenta);
 
-            C26BaseGravableRentaUvt = (C25BaseGravableRenta / valorUvt) * factorCalculo;
+            C26BaseGravableRentaUvt = (C25BaseGravableRenta / valorUvt) / factorCalculo;
             C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);
 
             #endregion Base Gravable
@@ -656,6 +666,264 @@ namespace ComplementApp.API.Services
 
             return formato;
         }
+
+        private async Task<FormatoCausacionyLiquidacionPagos> CalcularValoresBaseGravableParaContratoPrestacionServicio(
+                                                 DetallePlanPagoDto planPago,
+                                                 ParametroLiquidacionTercero parametroLiquidacion,
+                                                 List<ParametroGeneral> parametroGenerales)
+        {
+            #region variables 
+
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+
+            DateTime? fechaInicio = null, fechaFinal = null;
+
+            decimal valorUvt = 0, valorSMLV = 0;
+            decimal valorDescuentoDependiente = 0.10m;
+            decimal valorRentaExenta = 0.25m;
+            decimal valorLimiteRentaExenta = 0.4m;
+            decimal valorDiferencialRenta = 0.3m;
+
+            decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0,
+            PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
+            PL14Afc = 0, PL16MedicinaPrepagada = 0,
+            PL17HonorarioSinIva = 0, PL17HonorarioSinIvaParametro = 0, PL17DescuentoDependiente = 0,
+            PL18InteresVivienda = 0, PL24PensionVoluntaria = 0, viaticosPagados = 0;
+
+            decimal C1honorario = 0, C2honorarioUvt = 0, C3valorIva = 0,
+            C8aporteASalud = 0, C9aporteAPension = 0, C10aporteRiesgoLaboral = 0,
+            C7baseAporteSalud = 0, C11fondoSolidaridad, C12subTotal1 = 0,
+            C15subTotal2 = 0, C20subTotal3 = 0, C17DescuentoDependiente = 0,
+            C19TotalDeducciones = 0, C21RentaExenta = 0, C22LimiteRentaExenta = 0,
+            C23TotalRentaExenta = 0, C24DiferencialRenta = 0,
+            C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
+
+            int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
+
+            decimal cuatroSMLV = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
+
+            PLtarifaIva = parametroLiquidacion.TarifaIva;
+            PLbaseAporteSalud = parametroLiquidacion.BaseAporteSalud;
+            PLaporteSalud = parametroLiquidacion.AporteSalud;
+            PLaportePension = parametroLiquidacion.AportePension;
+            PLriesgoLaboral = parametroLiquidacion.RiesgoLaboral;
+            PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
+            PL14Afc = parametroLiquidacion.Afc;
+            PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
+            PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
+            PL17HonorarioSinIva = PL17HonorarioSinIvaParametro;
+
+            PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
+            PL18InteresVivienda = parametroLiquidacion.InteresVivienda;
+            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria;
+
+            if (parametroLiquidacion.FechaInicioDescuentoInteresVivienda.HasValue)
+                fechaInicio = parametroLiquidacion.FechaInicioDescuentoInteresVivienda.Value;
+
+            if (parametroLiquidacion.FechaFinalDescuentoInteresVivienda.HasValue)
+                fechaFinal = parametroLiquidacion.FechaFinalDescuentoInteresVivienda.Value;
+
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
+            parametroUvt = parametroUvt.Replace(",", "");
+            parametroSMLV = parametroSMLV.Replace(",", "");
+
+            #endregion Parametros Generales
+
+            #region Viaticos y Aporte Salud Anterior
+
+            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId);
+
+            if (listaDetalleLiquidacionViaticos != null && listaDetalleLiquidacionViaticos.Count > 0)
+            {
+                viaticosPagados = ObtenerValorViaticosAnteriores(listaDetalleLiquidacionViaticos.ToList());
+            }
+
+            #endregion Viáticos y Aporte Salud Anterior
+
+            #region Honorario 
+
+            C1honorario = PL17HonorarioSinIva + viaticosPagados;
+
+            #endregion Honorario 
+
+            if (decimal.TryParse(parametroUvt, out valorUvt))
+            {
+                if (valorUvt > 0)
+                {
+                    C2honorarioUvt = C1honorario / valorUvt;
+                    C2honorarioUvtFinal = (int)Math.Round(C2honorarioUvt, 0, MidpointRounding.AwayFromZero);
+                }
+            }
+
+            C3valorIva = C1honorario * PLtarifaIva;
+            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
+            C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
+            C9aporteAPension = C7baseAporteSalud * (PLaportePension);
+            C9aporteAPension = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C9aporteAPension);
+            C10aporteRiesgoLaboral = C7baseAporteSalud * (PLriesgoLaboral);
+            C10aporteRiesgoLaboral = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C10aporteRiesgoLaboral);
+
+            if (decimal.TryParse(parametroSMLV, out valorSMLV))
+            {
+                //Se cambia de forma temporal, debe ser 4
+                cuatroSMLV = 2 * valorSMLV;
+            }
+
+            #region Fondo de solidaridad
+
+            if (C7baseAporteSalud > cuatroSMLV)
+            {
+                C11fondoSolidaridad = C7baseAporteSalud * (PLfondoSolidaridad);
+                C11fondoSolidaridad = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C11fondoSolidaridad);
+            }
+            else
+            {
+                C11fondoSolidaridad = 0;
+            }
+
+            #endregion Fondo de solidaridad
+
+            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            C15subTotal2 = C12subTotal1 - PL24PensionVoluntaria - PL14Afc;
+
+            #region Descuento Dependiente
+
+            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
+            {
+                C17DescuentoDependiente = valorUvt * 32;
+            }
+            else
+            {
+                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
+            }
+
+            #endregion Descuento Dependiente
+
+            #region Interes de vivienda
+
+            if (fechaInicio != null && fechaFinal != null)
+            {
+                if (!FechaActualEntreFechasVigencia(fechaInicio.Value, fechaFinal.Value))
+                {
+                    PL18InteresVivienda = 0;
+                }
+            }
+
+            #endregion Interes de vivienda
+
+            #region Total Deducciones
+
+            decimal CT16MedicinaPrepagadaDeduccion = 0, CT17DescuentoDependienteDeduccion = 0,
+            CT18InteresViviendaDeduccion = 0;
+
+            //Deduccion Medicina Prepagada
+            if (PL16MedicinaPrepagada > valorUvt * 16)
+            {
+                CT16MedicinaPrepagadaDeduccion = valorUvt * 16;
+            }
+            else
+            {
+                CT16MedicinaPrepagadaDeduccion = PL16MedicinaPrepagada;
+            }
+
+            //Deducción Descuento Dependiente
+            if (PL17DescuentoDependiente > valorUvt * 32)
+            {
+                CT17DescuentoDependienteDeduccion = valorUvt * 32;
+            }
+            else
+            {
+                CT17DescuentoDependienteDeduccion = C17DescuentoDependiente;
+            }
+
+            //Deducción Interes Vivienda
+            if (PL18InteresVivienda > valorUvt * 100)
+            {
+                CT18InteresViviendaDeduccion = valorUvt * 100;
+            }
+            else
+            {
+                CT18InteresViviendaDeduccion = PL18InteresVivienda;
+            }
+
+            C19TotalDeducciones = CT16MedicinaPrepagadaDeduccion + CT17DescuentoDependienteDeduccion + CT18InteresViviendaDeduccion;
+
+            #endregion Total Deducciones
+
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+
+            #region Renta exenta
+
+            if (C20subTotal3 * valorRentaExenta > 240 * valorUvt)
+            {
+                C21RentaExenta = 240 * valorUvt;
+            }
+            else
+            {
+                C21RentaExenta = C20subTotal3 * valorRentaExenta;
+            }
+
+            C22LimiteRentaExenta = C12subTotal1 * valorLimiteRentaExenta;
+            C23TotalRentaExenta = PL14Afc + PL16MedicinaPrepagada + C17DescuentoDependiente + PL18InteresVivienda + C21RentaExenta;
+
+            #endregion Renta exenta
+
+            #region Diferencial Renta 
+
+            decimal CT24DiferenciaRenta = 0;
+
+            if ((PL24PensionVoluntaria + PL14Afc) > (C1honorario * valorDiferencialRenta))
+            {
+                CT24DiferenciaRenta = C1honorario * valorDiferencialRenta;
+            }
+            else
+            {
+                CT24DiferenciaRenta = PL24PensionVoluntaria + PL14Afc;
+            }
+
+            C24DiferencialRenta = CT24DiferenciaRenta + C19TotalDeducciones + C21RentaExenta;
+
+            if (C24DiferencialRenta > C22LimiteRentaExenta)
+            {
+                C24DiferencialRenta = C22LimiteRentaExenta - C24DiferencialRenta;
+            }
+            else
+            {
+                C24DiferencialRenta = 0;
+            }
+
+            #endregion Diferencial Renta 
+
+            #region Base Gravable
+
+            C25BaseGravableRenta = (C20subTotal3 - C21RentaExenta - C24DiferencialRenta);
+
+            C26BaseGravableRentaUvt = (C25BaseGravableRenta / valorUvt);
+            C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);
+
+            #endregion Base Gravable
+
+            #region Setear valores a formato
+
+            formato.BaseGravableRenta = C25BaseGravableRenta;
+            formato.BaseGravableUvt = C26BaseGravableRentaUvtFinal;
+            formato.BaseGravableUvtCalculada = C26BaseGravableRentaUvt;
+
+            #endregion Setear valores a formato
+
+            return formato;
+        }
+
 
         #endregion Contrato Prestación de Servicio
 
@@ -1192,7 +1460,7 @@ namespace ComplementApp.API.Services
                                 detalleLiquidacion.MesPagoActual = fechaActual.Month;
                                 detalleLiquidacion.ModalidadContrato = planPago.Tercero.ModalidadContrato;
                                 detalleLiquidacion.UsuarioIdRegistro = usuarioId;
-                                detalleLiquidacion.FechaRegistro = fechaActual;
+                                detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
 
                                 MapearLiquidacionDeducciones(formato, detalleLiquidacion);
 
@@ -1229,11 +1497,13 @@ namespace ComplementApp.API.Services
             #region variables 
 
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+            FormatoCausacionyLiquidacionPagos formatoIgual = new FormatoCausacionyLiquidacionPagos();
             FormatoCausacionyLiquidacionPagos formatoIgual30 = new FormatoCausacionyLiquidacionPagos();
             CriterioCalculoReteFuente criterioReteFuente = null;
 
-            decimal C30ValorIva = 0, PL17HonorarioSinIva = 0, baseGravableFinal = 0, valorUvt, baseGravableUvtCalculada = 0;
-            int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0, factorCalculo = 0;
+            decimal C30ValorIva = 0, PL17HonorarioSinIva = 0, PL17HonorarioSinIvaParametro = 0, baseGravableFinal = 0,
+            valorUvt, baseGravableUvtCalculada = 0, factorCalculo = 0;
+            int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
 
             decimal valor = 0;
 
@@ -1242,6 +1512,7 @@ namespace ComplementApp.API.Services
             #region Parametros de liquidación de tercero
 
             PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
 
             var tarifaIva = parametroLiquidacion.TarifaIva;
             var GmfAfc = parametroLiquidacion.GmfAfc;
@@ -1268,24 +1539,31 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIva > 0)
             {
-                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIva);
+                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIvaParametro);
                 C32NumeroDiaLaborados = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                factorCalculo = 30 / C32NumeroDiaLaborados;
+                factorCalculo = ((decimal)C32NumeroDiaLaborados / (decimal)30);
             }
 
             #endregion Numero de dias laborados
 
             #region Calcular valores y obtener formato
 
-            formatoIgual30 = CalcularValoresFormatoContratoPrestacionServicioMasivo(planPago, parametroLiquidacion,
+            formatoIgual = CalcularValoresFormatoContratoPrestacionServicioMasivo(planPago, parametroLiquidacion,
                                                                                 parametroGenerales, numeroDiasLaborados: 30,
                                                                                 listaDetalleLiquidacionMesAnteriorViatico,
                                                                                 detalleLiquidacionMesAnterior,
                                                                                 factorCalculo);
-            formato = formatoIgual30;
-            baseGravableUvtCalculada = formato.BaseGravableUvtCalculada;
+
+            formatoIgual30 = CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(planPago, parametroLiquidacion, parametroGenerales, listaDetalleLiquidacionMesAnteriorViatico);
+
+            formato = formatoIgual;
+            baseGravableUvtCalculada = formatoIgual30.BaseGravableUvtCalculada;
             baseGravableFinal = formatoIgual30.BaseGravableRenta;
             baseGravableUvtFinal = formatoIgual30.BaseGravableUvt;
+
+            formato.BaseGravableUvtCalculada = baseGravableUvtCalculada;
+            formato.BaseGravableRenta = baseGravableFinal;
+            formato.BaseGravableUvt = baseGravableUvtFinal;
 
             #endregion Calcular valores y obtener formato
 
@@ -1310,8 +1588,8 @@ namespace ComplementApp.API.Services
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = (((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                        + factorIncremento) * valorUvt) / 30) * C32NumeroDiaLaborados;
+                        var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
+                                                        + factorIncremento) * valorUvt) * factorCalculo;
                         deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
 
                         if (deduccion.Base > 0)
@@ -1403,7 +1681,7 @@ namespace ComplementApp.API.Services
             PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
             //PL13PensionVoluntaria = 0, 
             PL14Afc = 0, PL16MedicinaPrepagada = 0,
-            PL17HonorarioSinIva = 0, PL17DescuentoDependiente = 0,
+            PL17HonorarioSinIva = 0, PL17HonorarioSinIvaParametro = 0, PL17DescuentoDependiente = 0,
             PL18InteresVivienda = 0, PL24PensionVoluntaria = 0, viaticosPagados = 0;
 
             decimal C1honorario = 0, C2honorarioUvt = 0, C3valorIva = 0,
@@ -1429,11 +1707,17 @@ namespace ComplementApp.API.Services
             PLriesgoLaboral = parametroLiquidacion.RiesgoLaboral;
             PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
             PL14Afc = parametroLiquidacion.Afc / factorCalculo;
-            PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada / factorCalculo;
-            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value) / factorCalculo;
+            PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
+            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
             PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
             PL18InteresVivienda = parametroLiquidacion.InteresVivienda / factorCalculo;
             PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria / factorCalculo;
+
+            if (factorCalculo == 1)
+            {
+                PL17HonorarioSinIva = PL17HonorarioSinIvaParametro;
+            }
 
             if (parametroLiquidacion.FechaInicioDescuentoInteresVivienda.HasValue)
                 fechaInicio = parametroLiquidacion.FechaInicioDescuentoInteresVivienda.Value;
@@ -1469,16 +1753,9 @@ namespace ComplementApp.API.Services
 
             #endregion Viáticos y Aporte Salud Anterior
 
-            #region Honorario 
+            #region Honorario
 
-            if (numeroDiasLaborados < 30)
-            {
-                C1honorario = (planPago.ValorFacturado.Value + viaticosPagados) / (1 + PLtarifaIva);
-            }
-            else
-            {
-                C1honorario = PL17HonorarioSinIva + viaticosPagados;
-            }
+            C1honorario = PL17HonorarioSinIva + viaticosPagados;
 
             #endregion Honorario 
 
@@ -1525,13 +1802,13 @@ namespace ComplementApp.API.Services
 
             #region Descuento Dependiente
 
-            if (PL17HonorarioSinIva * valorDescuentoDependiente > valorUvt * 32)
+            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
             {
                 C17DescuentoDependiente = valorUvt * 32;
             }
             else
             {
-                C17DescuentoDependiente = PL17HonorarioSinIva * PL17DescuentoDependiente;
+                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
             }
 
             #endregion Descuento Dependiente
@@ -1673,6 +1950,262 @@ namespace ComplementApp.API.Services
             return formato;
         }
 
+        private FormatoCausacionyLiquidacionPagos CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(
+                                                          PlanPago planPago,
+                                                          ParametroLiquidacionTercero parametroLiquidacion,
+                                                          List<ParametroGeneral> parametroGenerales,
+                                                          List<DetalleLiquidacion> listaDetalleLiquidacionMesAnteriorViatico)
+        {
+            #region variables 
+
+            FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
+
+            DateTime? fechaInicio = null, fechaFinal = null;
+
+            decimal valorUvt = 0, valorSMLV = 0;
+            decimal valorDescuentoDependiente = 0.10m;
+            decimal valorRentaExenta = 0.25m;
+            decimal valorLimiteRentaExenta = 0.4m;
+            decimal valorDiferencialRenta = 0.3m;
+
+            decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0,
+            PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
+            PL14Afc = 0, PL16MedicinaPrepagada = 0,
+            PL17HonorarioSinIva = 0, PL17HonorarioSinIvaParametro = 0, PL17DescuentoDependiente = 0,
+            PL18InteresVivienda = 0, PL24PensionVoluntaria = 0, viaticosPagados = 0;
+
+            decimal C1honorario = 0, C2honorarioUvt = 0, C3valorIva = 0,
+            C8aporteASalud = 0, C9aporteAPension = 0, C10aporteRiesgoLaboral = 0,
+            C7baseAporteSalud = 0, C11fondoSolidaridad, C12subTotal1 = 0,
+            C15subTotal2 = 0, C20subTotal3 = 0, C17DescuentoDependiente = 0,
+            C19TotalDeducciones = 0, C21RentaExenta = 0, C22LimiteRentaExenta = 0,
+            C23TotalRentaExenta = 0, C24DiferencialRenta = 0,
+            C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
+
+            int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
+
+            decimal cuatroSMLV = 0;
+
+            #endregion variables 
+
+            #region Parametros de liquidación de tercero
+
+            PLtarifaIva = parametroLiquidacion.TarifaIva;
+            PLbaseAporteSalud = parametroLiquidacion.BaseAporteSalud;
+            PLaporteSalud = parametroLiquidacion.AporteSalud;
+            PLaportePension = parametroLiquidacion.AportePension;
+            PLriesgoLaboral = parametroLiquidacion.RiesgoLaboral;
+            PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
+            PL14Afc = parametroLiquidacion.Afc;
+            PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
+            PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
+            PL17HonorarioSinIva = PL17HonorarioSinIvaParametro;
+
+            PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
+            PL18InteresVivienda = parametroLiquidacion.InteresVivienda;
+            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria;
+
+            if (parametroLiquidacion.FechaInicioDescuentoInteresVivienda.HasValue)
+                fechaInicio = parametroLiquidacion.FechaInicioDescuentoInteresVivienda.Value;
+
+            if (parametroLiquidacion.FechaFinalDescuentoInteresVivienda.HasValue)
+                fechaFinal = parametroLiquidacion.FechaFinalDescuentoInteresVivienda.Value;
+
+            #endregion Parametros de liquidación de tercero
+
+            #region Parametros Generales
+
+            var parametroUvt = ObtenerValorDeParametroGeneral(parametroGenerales, valorUVT);
+            var parametroSMLV = ObtenerValorDeParametroGeneral(parametroGenerales, salarioMinimo);
+            parametroUvt = parametroUvt.Replace(",", "");
+            parametroSMLV = parametroSMLV.Replace(",", "");
+
+            #endregion Parametros Generales
+
+            #region Viaticos y Aporte Salud Anterior
+
+            if (listaDetalleLiquidacionMesAnteriorViatico != null && listaDetalleLiquidacionMesAnteriorViatico.Count > 0)
+            {
+                viaticosPagados = ObtenerValorViaticosAnteriores(listaDetalleLiquidacionMesAnteriorViatico.ToList());
+            }
+
+            #endregion Viáticos y Aporte Salud Anterior
+
+            #region Honorario 
+
+            C1honorario = PL17HonorarioSinIva + viaticosPagados;
+
+            #endregion Honorario 
+
+            if (decimal.TryParse(parametroUvt, out valorUvt))
+            {
+                if (valorUvt > 0)
+                {
+                    C2honorarioUvt = C1honorario / valorUvt;
+                    C2honorarioUvtFinal = (int)Math.Round(C2honorarioUvt, 0, MidpointRounding.AwayFromZero);
+                }
+            }
+
+            C3valorIva = C1honorario * PLtarifaIva;
+            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
+            C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
+            C9aporteAPension = C7baseAporteSalud * (PLaportePension);
+            C9aporteAPension = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C9aporteAPension);
+            C10aporteRiesgoLaboral = C7baseAporteSalud * (PLriesgoLaboral);
+            C10aporteRiesgoLaboral = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C10aporteRiesgoLaboral);
+
+            if (decimal.TryParse(parametroSMLV, out valorSMLV))
+            {
+                //Se cambia de forma temporal, debe ser 4
+                cuatroSMLV = 2 * valorSMLV;
+            }
+
+            #region Fondo de solidaridad
+
+            if (C7baseAporteSalud > cuatroSMLV)
+            {
+                C11fondoSolidaridad = C7baseAporteSalud * (PLfondoSolidaridad);
+                C11fondoSolidaridad = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C11fondoSolidaridad);
+            }
+            else
+            {
+                C11fondoSolidaridad = 0;
+            }
+
+            #endregion Fondo de solidaridad
+
+            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            C15subTotal2 = C12subTotal1 - PL24PensionVoluntaria - PL14Afc;
+
+            #region Descuento Dependiente
+
+            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
+            {
+                C17DescuentoDependiente = valorUvt * 32;
+            }
+            else
+            {
+                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
+            }
+
+            #endregion Descuento Dependiente
+
+            #region Interes de vivienda
+
+            if (fechaInicio != null && fechaFinal != null)
+            {
+                if (!FechaActualEntreFechasVigencia(fechaInicio.Value, fechaFinal.Value))
+                {
+                    PL18InteresVivienda = 0;
+                }
+            }
+
+            #endregion Interes de vivienda
+
+            #region Total Deducciones
+
+            decimal CT16MedicinaPrepagadaDeduccion = 0, CT17DescuentoDependienteDeduccion = 0,
+            CT18InteresViviendaDeduccion = 0;
+
+            //Deduccion Medicina Prepagada
+            if (PL16MedicinaPrepagada > valorUvt * 16)
+            {
+                CT16MedicinaPrepagadaDeduccion = valorUvt * 16;
+            }
+            else
+            {
+                CT16MedicinaPrepagadaDeduccion = PL16MedicinaPrepagada;
+            }
+
+            //Deducción Descuento Dependiente
+            if (PL17DescuentoDependiente > valorUvt * 32)
+            {
+                CT17DescuentoDependienteDeduccion = valorUvt * 32;
+            }
+            else
+            {
+                CT17DescuentoDependienteDeduccion = C17DescuentoDependiente;
+            }
+
+            //Deducción Interes Vivienda
+            if (PL18InteresVivienda > valorUvt * 100)
+            {
+                CT18InteresViviendaDeduccion = valorUvt * 100;
+            }
+            else
+            {
+                CT18InteresViviendaDeduccion = PL18InteresVivienda;
+            }
+
+            C19TotalDeducciones = CT16MedicinaPrepagadaDeduccion + CT17DescuentoDependienteDeduccion + CT18InteresViviendaDeduccion;
+
+            #endregion Total Deducciones
+
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+
+            #region Renta exenta
+
+            if (C20subTotal3 * valorRentaExenta > 240 * valorUvt)
+            {
+                C21RentaExenta = 240 * valorUvt;
+            }
+            else
+            {
+                C21RentaExenta = C20subTotal3 * valorRentaExenta;
+            }
+
+            C22LimiteRentaExenta = C12subTotal1 * valorLimiteRentaExenta;
+            C23TotalRentaExenta = PL14Afc + PL16MedicinaPrepagada + C17DescuentoDependiente + PL18InteresVivienda + C21RentaExenta;
+
+            #endregion Renta exenta
+
+            #region Diferencial Renta 
+
+            decimal CT24DiferenciaRenta = 0;
+
+            if ((PL24PensionVoluntaria + PL14Afc) > (C1honorario * valorDiferencialRenta))
+            {
+                CT24DiferenciaRenta = C1honorario * valorDiferencialRenta;
+            }
+            else
+            {
+                CT24DiferenciaRenta = PL24PensionVoluntaria + PL14Afc;
+            }
+
+            C24DiferencialRenta = CT24DiferenciaRenta + C19TotalDeducciones + C21RentaExenta;
+
+            if (C24DiferencialRenta > C22LimiteRentaExenta)
+            {
+                C24DiferencialRenta = C22LimiteRentaExenta - C24DiferencialRenta;
+            }
+            else
+            {
+                C24DiferencialRenta = 0;
+            }
+
+            #endregion Diferencial Renta 
+
+            #region Base Gravable
+
+            C25BaseGravableRenta = (C20subTotal3 - C21RentaExenta - C24DiferencialRenta);
+
+            C26BaseGravableRentaUvt = (C25BaseGravableRenta / valorUvt);
+            C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);
+
+            #endregion Base Gravable
+
+            #region Setear valores a formato
+
+            formato.BaseGravableRenta = C25BaseGravableRenta;
+            formato.BaseGravableUvt = C26BaseGravableRentaUvtFinal;
+            formato.BaseGravableUvtCalculada = C26BaseGravableRentaUvt;
+
+            #endregion Setear valores a formato
+
+            return formato;
+        }
+
         #endregion Contrato Prestación de Servicio
 
         #endregion Liquidación Masiva
@@ -1734,7 +2267,7 @@ namespace ComplementApp.API.Services
                                                                                 listaDetalleLiquidacionMesAnteriorViatico,
                                                                                 listaDetalleLiquidacionMesAnterior);
 
-            DateTime fechaSistema = _generalInterface.ObtenerFechaHoraActual();
+            //DateTime fechaSistema = 
 
             #region Proceso de Actualización de BD
 
@@ -1766,10 +2299,7 @@ namespace ComplementApp.API.Services
                 listaLiquidacionDeduccionARegistrar.AddRange(detalleLiquidacion.Deducciones);
             }
 
-            //var test = listaDetalleLiquidacionARegistrar.Select(u => u.Deducciones);
-
             await _dataContext.BulkInsertAsync(listaLiquidacionDeduccionARegistrar);
-            //_dataContext.SaveChanges();
 
             //Actualización de Plan
             var q = from pp in _dataContext.PlanPago
@@ -1780,7 +2310,7 @@ namespace ComplementApp.API.Services
             {
                 EstadoPlanPagoId = planPagoEstado_ConLiquidacionDeducciones,
                 UsuarioIdModificacion = usuarioId,
-                FechaModificacion = fechaSistema,
+                FechaModificacion = _generalInterface.ObtenerFechaHoraActual(),
             });
             _dataContext.SaveChanges();
 

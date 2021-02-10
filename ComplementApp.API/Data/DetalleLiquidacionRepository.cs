@@ -144,13 +144,13 @@ namespace ComplementApp.API.Data
                     List<int> listaEstadoId,
                     bool? procesado, UserParams userParams)
         {
-
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where (dl.Crp == c.Crp)
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          where (dl.Procesado == procesado || procesado == null)
@@ -164,11 +164,12 @@ namespace ComplementApp.API.Data
                              FechaRadicadoSupervisor = dl.FechaRegistro.HasValue ? dl.FechaRegistro.Value : _generalInterface.ObtenerFechaHoraActual(),
                              ValorTotal = c.ValorFacturado.HasValue ? c.ValorFacturado.Value : 0,
 
-                         });
+                         }).
+                         Distinct();
 
             if (lista != null)
             {
-                lista.OrderByDescending(c => c.FechaRadicadoSupervisor);
+                lista.OrderByDescending(c => c.DetalleLiquidacionId);
             }
 
             return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);

@@ -33,6 +33,7 @@ namespace ComplementApp.API.Dtos
         public DateTime FechaRadicadoProveedor { get; set; }
         public string NumeroRadicadoSupervisor { get; set; }
         public string ModalidadContrato { get; set; }
+        public string TipoAdminPila { get; set; }
         public DateTime FechaRadicadoSupervisor { get; set; }        
         public CDPDto Cdp { get; set; }
         public TerceroDto Tercero { get; set; }
