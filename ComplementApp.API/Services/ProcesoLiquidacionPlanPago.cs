@@ -416,7 +416,7 @@ namespace ComplementApp.API.Services
             PLaportePension = parametroLiquidacion.AportePension;
             PLriesgoLaboral = parametroLiquidacion.RiesgoLaboral;
             PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
-            PL14Afc = parametroLiquidacion.Afc / factorCalculo;
+            PL14Afc = parametroLiquidacion.Afc;
             PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
             PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
             PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
@@ -428,8 +428,8 @@ namespace ComplementApp.API.Services
 
 
             PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
-            PL18InteresVivienda = parametroLiquidacion.InteresVivienda / factorCalculo;
-            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria / factorCalculo;
+            PL18InteresVivienda = parametroLiquidacion.InteresVivienda;
+            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria;
 
             if (parametroLiquidacion.FechaInicioDescuentoInteresVivienda.HasValue)
                 fechaInicio = parametroLiquidacion.FechaInicioDescuentoInteresVivienda.Value;
@@ -1706,13 +1706,13 @@ namespace ComplementApp.API.Services
             PLaportePension = parametroLiquidacion.AportePension;
             PLriesgoLaboral = parametroLiquidacion.RiesgoLaboral;
             PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
-            PL14Afc = parametroLiquidacion.Afc / factorCalculo;
+            PL14Afc = parametroLiquidacion.Afc;
             PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
             PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
             PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
             PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
-            PL18InteresVivienda = parametroLiquidacion.InteresVivienda / factorCalculo;
-            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria / factorCalculo;
+            PL18InteresVivienda = parametroLiquidacion.InteresVivienda;
+            PL24PensionVoluntaria = parametroLiquidacion.PensionVoluntaria;
 
             if (factorCalculo == 1)
             {
