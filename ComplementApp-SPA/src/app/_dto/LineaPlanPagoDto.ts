@@ -5,4 +5,5 @@ export interface LineaPlanPagoDto {
   mesDescripcion: string;
   valor: number;
   estadoModificacion: number;
+  viaticos: boolean;
 }

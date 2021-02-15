@@ -40,6 +40,8 @@ import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
 import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
 import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
 import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
+import { TerceroComponent } from './administracion/tercero/tercero.component';
+import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -107,6 +109,23 @@ export const routes: Routes = [
   },
   {
     path: 'ADMINISTRACION_PLANPAGO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: PlanPagoComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'ADMINISTRACION_TERCERO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: TerceroComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      tipoDocumentoIdentidad: ListaTipoDocumentoIdentidadResolver,
+    },
+  },
+  {
+    path: 'ADMINISTRACION_CONTRATO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: PlanPagoComponent,

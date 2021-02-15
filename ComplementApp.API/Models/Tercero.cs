@@ -35,6 +35,11 @@ namespace ComplementApp.API.Models
         public string Telefono { get; set; }
         public bool DeclaranteRenta { get; set; }
         public bool FacturadorElectronico { get; set; }
+        public int UsuarioIdRegistro { get; set; }  
+        public DateTime? FechaRegistro { get; set; }   
+        public int UsuarioIdModificacion { get; set; }  
+        public DateTime? FechaModificacion { get; set; }
+        public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
 
         [NotMapped]
         public int ModalidadContrato { get; set; }
@@ -44,6 +49,6 @@ namespace ComplementApp.API.Models
         
         [NotMapped]
         public int TipoIva { get; set; }
-        public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
+        
     }
 }

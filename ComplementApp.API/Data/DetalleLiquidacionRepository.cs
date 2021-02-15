@@ -237,7 +237,7 @@ namespace ComplementApp.API.Data
                                    TipoIdentificacion = t.TipoIdentificacion,
                                    NumeroIdentificacion = t.NumeroIdentificacion,
                                    Crp = dl.Crp,
-                                   TipoCuentaPagar = pl.TipoCuentaPorPagar.Value,
+                                   TipoCuentaPagar = pl.TipoCuentaPorPagar.HasValue ? pl.TipoCuentaPorPagar.Value : 0,
                                    TotalACancelar = decimal.Round(dl.TotalACancelar, 2, MidpointRounding.AwayFromZero),
                                    ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
                                    TextoComprobanteContable = dl.TextoComprobanteContable,
@@ -402,8 +402,6 @@ namespace ComplementApp.API.Data
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
-                               join cp in _context.TipoCuentaXPagar on pl.TipoCuentaPorPagar equals cp.TipoCuentaXPagarId into tipoCuentaPagar
-                               from tcp in tipoCuentaPagar.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                select new DetalleLiquidacionParaArchivo()
                                {
@@ -411,7 +409,7 @@ namespace ComplementApp.API.Data
                                    PCI = identificacionPCI,
                                    Crp = dl.Crp,
                                    Dip = "NO",
-                                   TipoCuentaPagarCodigo = tcp.Codigo,
+                                   TipoCuentaPagarCodigo = pl.TipoCuentaPorPagar.HasValue ? pl.TipoCuentaPorPagar.Value.ToString() : string.Empty,
                                    ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
                                    TipoDocumentoSoporte = pl.TipoDocumentoSoporte,
                                    NumeroFactura = dl.NumeroFactura,
@@ -481,6 +479,7 @@ namespace ComplementApp.API.Data
                                join td in _context.TerceroDeducciones on ld.DeduccionId equals td.DeduccionId
                                join t in _context.Tercero on td.TerceroDeDeduccionId equals t.TerceroId
                                where (listaLiquidacionId.Contains(ld.DetalleLiquidacionId))
+                               where l.TerceroId == td.TerceroId
                                select new DeduccionDetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = ld.DetalleLiquidacionId,

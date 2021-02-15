@@ -8,5 +8,6 @@ namespace ComplementApp.API.Dtos
         public string MesDescripcion { get; set; }
         public decimal Valor { get; set; }
         public int EstadoModificacion { get; set; }
+        public bool Viaticos { get; set; }
     }
 }

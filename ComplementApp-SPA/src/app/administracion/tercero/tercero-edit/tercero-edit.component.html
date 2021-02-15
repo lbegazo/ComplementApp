@@ -1,0 +1,306 @@
+<form #formatoNgForm="ngForm" id="formatoNgForm" [formGroup]="editForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2">
+      <div class="col-12 withoutPadding">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td>
+              <table>
+                <!--Tercero-->
+                <tr>
+                  <td style="padding: 0px 10px">
+                    <div class="panel panel-primary mt-2 mb-2">
+                      <div class="panel-heading">
+                        <strong>DATOS BASICOS</strong>
+                      </div>
+                      <div class="panel-body mt-3 mb-2">
+                        <div class="form-row mt-3">
+                          <!--TIPO DE DOCUMENTO DE IDENTIDAD-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label
+                              for="selectTipoDocumento"
+                              class="col-form-label-md"
+                              >Tipo de Documento Identidad</label
+                            >
+                            <select
+                              *ngIf="listaTipoDocumento"
+                              formControlName="tipoDocumentoCtrl"
+                              (change)="onTipoDocumento()"
+                              class="form-control withoutPadding"
+                              style="height: 33px; padding-left: 5px"
+                              id="selectTipoDocumento"
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('tipoDocumentoCtrl').touched &&
+                                  editForm
+                                    .get('tipoDocumentoCtrl')
+                                    .hasError('required')
+                              }"
+                            >
+                              <option disabled [ngValue]="null">
+                                TIPO DOCUMENTO IDENTIDAD
+                              </option>
+                              <option
+                                *ngFor="let item of listaTipoDocumento"
+                                [ngValue]="item"
+                              >
+                                {{ item.nombre }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('tipoDocumentoCtrl').touched &&
+                                editForm
+                                  .get('tipoDocumentoCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              Debe seleccionar tipo de documento de identidad
+                            </div>
+                          </div>
+                          <!--NUMERO DE IDENTIFICACION-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label
+                              for="inputNumeroIdentificacion"
+                              class="col-form-label-md"
+                              >Número de identificación</label
+                            >
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('numeroIdentificacionCtrl')
+                                    .errors &&
+                                  editForm.get('numeroIdentificacionCtrl')
+                                    .touched
+                              }"
+                              type="text"
+                              (keypress)="numberOnly($event)"
+                              class="form-control"
+                              placeholder="Número de Identificación"
+                              formControlName="numeroIdentificacionCtrl"
+                              style="text-align: center; height: 30px"
+                              id="inputNumeroIdentificacion"
+                              maxlength="20"
+                              onCopy="return false"
+                              onDrag="return false"
+                              onDrop="return false"
+                              onPaste="return false"
+                              autocomplete="off"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('numeroIdentificacionCtrl')
+                                  .touched &&
+                                editForm
+                                  .get('numeroIdentificacionCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              Debe ingresar el número de identificación
+                            </div>
+                          </div>
+                          <!--NOMBRE DEL TERCERO-->
+                          <div class="form-group col-md-6" style="margin: 0px">
+                            <label for="NombreTercero" class="col-form-label-md"
+                              >Nombre</label
+                            >
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('nombreCtrl').errors &&
+                                  editForm.get('nombreCtrl').touched
+                              }"
+                              type="text"
+                              class="form-control addPaddingLeft"
+                              placeholder="Nombre"
+                              formControlName="nombreCtrl"
+                              maxlength="250"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('nombreCtrl').touched &&
+                                editForm.get('nombreCtrl').hasError('required')
+                              "
+                            >
+                              Debe ingresar el nombre
+                            </div>
+                          </div>
+                          <!--FECHA DE EXPEDICION-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label
+                              for="inputFechaExpedicion"
+                              class="col-form-label-md"
+                              >Fecha Expedición Documento</label
+                            >
+
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('fechaExpedicionCtrl').errors &&
+                                  editForm.get('fechaExpedicionCtrl').touched
+                              }"
+                              class="form-control"
+                              placeholder="Fecha de inicio"
+                              formControlName="fechaExpedicionCtrl"
+                              type="text"
+                              bsDatepicker
+                              style="height: 33px; text-align: center"
+                              [bsConfig]="bsConfig"
+                              id="inputfechaExpedicion"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('fechaExpedicionCtrl').touched &&
+                                editForm
+                                  .get('fechaExpedicionCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              La fecha de Expedición es requerida
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-row mt-3">
+                          <!--TELEFONO-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label for="inputTelefono" class="col-form-label-md"
+                              >Teléfono</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Teléfono"
+                              (keypress)="numberOnly($event)"
+                              formControlName="telefonoCtrl"
+                              style="text-align: center; height: 30px"
+                              id="inputTelefono"
+                              maxlength="20"
+                            />
+                          </div>
+                          <!--EMAIL-->
+                          <div class="form-group col-md-3" style="margin: 0px">
+                            <label for="inputEmail" class="col-form-label-md"
+                              >Email</label
+                            >
+                            <input
+                              [ngClass]="{
+                                'is-invalid': editForm.get('emailCtrl').errors
+                              }"
+                              type="email"
+                              class="form-control"
+                              placeholder="Email"
+                              formControlName="emailCtrl"
+                              style="text-align: center; height: 30px"
+                              id="inputEmail"
+                              maxlength="100"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="editForm.get('emailCtrl').errors"
+                            >
+                              Debe ingresar un email valido
+                            </div>
+                          </div>
+                          <!--DIRECCION-->
+                          <div class="form-group col-md-7" style="margin: 0px">
+                            <label
+                              for="inputDireccion"
+                              class="col-form-label-md"
+                              >Dirección Contractual</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control addPaddingLeft"
+                              placeholder="Dirección"
+                              formControlName="direccionCtrl"
+                              maxlength="100"
+                            />
+                          </div>
+                        </div>
+                        <div class="form-row mt-4">
+                          <div class="form-group col-md-2" style="margin: 0px;">
+                            <div class="aplicaBackground left parent" style="padding: 5px; height: 33px;">
+                              <label class="col-form-label-md child">
+                                <input
+                                  type="checkbox"
+                                  formControlName="facturadorElectronicoCtrl"
+                                />
+                                Facturador Electrónico
+                              </label>
+                            </div>
+                          </div>
+                          <div class="form-group col-md-2" style="margin: 0px;">
+                            <div class="aplicaBackground left parent" style="padding: 5px; height: 33px;">
+                              <label class="col-form-label-md child">
+                                <input
+                                  type="checkbox"
+                                  formControlName="declaranteRentaCtrl"
+                                />
+                                Declarante de Renta
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-12 withoutPadding right">
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              type="submit"
+              class="btn btn-success mr-2"
+              (click)="onLimpiarForm()"
+            >
+              Limpiar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary mr-2"
+              (click)="onGuardar()"
+              [disabled]="!editForm.valid"
+            >
+              {{ nombreBoton }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onCancelar()"
+            >
+              Volver
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- <p>Form status: {{ editForm.status | json }}</p>
+
+  <p>Form value: {{ editForm.value | json }}</p>
+
+  <p>
+    terceroSeleccionado:
+  {{ terceroSeleccionado | json }}
+</p> -->

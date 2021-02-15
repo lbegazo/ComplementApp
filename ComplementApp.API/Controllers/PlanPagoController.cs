@@ -423,7 +423,7 @@ namespace ComplementApp.API.Controllers
             {
                 foreach (var item in lista)
                 {
-                    planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos);
+                    planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos, item.Viaticos);
 
                     listaPlanPago.Add(planPago);
                     mesAnterior = item.MesId;
@@ -469,7 +469,7 @@ namespace ComplementApp.API.Controllers
                         }
                     }
 
-                    planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos);
+                    planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos, item.Viaticos);
 
                     listaPlanPago.Add(planPago);
                     numeroPagos++;
@@ -500,6 +500,7 @@ namespace ComplementApp.API.Controllers
                         planPago.ValorAPagar = item.Valor;
                         planPago.ValorPagado = 0;
                         planPago.UsuarioIdModificacion = usuarioId;
+                        planPago.Viaticos = item.Viaticos;
                         planPago.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                         await _dataContext.SaveChangesAsync();
                     }
@@ -509,7 +510,7 @@ namespace ComplementApp.API.Controllers
             #endregion Actualizar registros
         }
 
-        private PlanPago MapearPlanPago(CDPDto cdp, int anio, int mesPago, decimal valor, int numeroPago)
+        private PlanPago MapearPlanPago(CDPDto cdp, int anio, int mesPago, decimal valor, int numeroPago, bool viaticos)
         {
             var planPago = new PlanPago();
             planPago.Crp = cdp.Crp;
@@ -521,7 +522,7 @@ namespace ComplementApp.API.Controllers
             planPago.ValorAdicion = 0;
             planPago.ValorAPagar = valor;
             planPago.ValorPagado = 0;
-            planPago.Viaticos = false;
+            planPago.Viaticos = viaticos;
             planPago.TerceroId = cdp.TerceroId;
             planPago.NumeroPago = numeroPago;
 

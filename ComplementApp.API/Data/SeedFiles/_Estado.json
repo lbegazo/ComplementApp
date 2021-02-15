@@ -1,0 +1,112 @@
+[
+  {
+    "Nombre": "Provisional",
+    "Descripcion": "Provisional",
+    "TipoDocumento": "DetallePresupuesto"
+  },
+  {
+    "Nombre": "Vigente",
+    "Descripcion": "Vigente",
+    "TipoDocumento": "DetallePresupuesto"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "DetallePresupuesto"
+  },
+  {
+    "Nombre": "Por Pagar",
+    "Descripcion": "Por Pagar",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Por Obligar",
+    "Descripcion": "Por Obligar",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Con liquidacion Deducciones",
+    "Descripcion": "Con liquidacion deducciones",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Obligado",
+    "Descripcion": "Obligado",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Pagado",
+    "Descripcion": "Pagado",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Rechazada",
+    "Descripcion": "Rechazada",
+    "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Autorizada",
+    "Descripcion": "Autorizada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Anulada",
+    "Descripcion": "Anulada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Pagada",
+    "Descripcion": "Pagada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Bloqueada",
+    "Descripcion": "Bloqueada",
+    "TipoDocumento": "OrdenPago"
+  },
+  {
+    "Nombre": "Activo",
+    "Descripcion": "Activo",
+    "TipoDocumento": "EstadoGeneral"
+  },
+  {
+    "Nombre": "Inactivo",
+    "Descripcion": "Inactivo",
+    "TipoDocumento": "EstadoGeneral"
+  },
+  {
+    "Nombre": "Generado",
+    "Descripcion": "Generado",
+    "TipoDocumento": "EstadoSolicitudCDP"
+  },
+  {
+    "Nombre": "Aprobado",
+    "Descripcion": "Aprobado",
+    "TipoDocumento": "EstadoSolicitudCDP"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "EstadoSolicitudCDP"
+  },
+  {
+    "Nombre": "Generado",
+    "Descripcion": "Generado",
+    "TipoDocumento": "EstadoSolicitudPago"
+  },
+  {
+    "Nombre": "Aprobado",
+    "Descripcion": "Aprobado",
+    "TipoDocumento": "EstadoSolicitudPago"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "EstadoSolicitudPago"
+  },
+  {
+    "Nombre": "ConSolicitudPago",
+    "Descripcion": "ConSolicitudPago",
+    "TipoDocumento": "PlanDePagos"
+  }
+]

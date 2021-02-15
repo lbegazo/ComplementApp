@@ -40,6 +40,7 @@ export class PlanPagoEditComponent implements OnInit {
   mesSeleccionadoId = 0;
   mesSeleccionadoDescripcion = '';
   valorSeleccionado = 0;
+  viaticos = false;
 
   planPagoSeleccionado: LineaPlanPagoDto = null;
 
@@ -97,6 +98,7 @@ export class PlanPagoEditComponent implements OnInit {
       noviembreCtrl: [''],
       diciembreCtrl: [''],
       valorCtrl: [''],
+      viaticosCtrl: [''],
       planPagoControles: this.arrayControls,
     });
   }
@@ -125,12 +127,20 @@ export class PlanPagoEditComponent implements OnInit {
   }
 
   createFullForm() {
+    if (this.listaLineaPlanPago && this.listaLineaPlanPago.length > 0) {
+      const lineaPlanPago = this.listaLineaPlanPago[0];
+      this.viaticos = lineaPlanPago.viaticos;
+    }
+
     this.listaLineaPlanPago.forEach((x) => {
       this.arrayControls.push(
         new FormGroup({
           rubroControl: new FormControl(''),
         })
       );
+    });
+    this.editForm.patchValue({
+      viaticosCtrl: this.viaticos,
     });
     this.editForm.setControl('planPagoControles', this.arrayControls);
     this.actualizarValorTotal();
@@ -250,6 +260,7 @@ export class PlanPagoEditComponent implements OnInit {
       mesId: mes,
       valor: +valor,
       estadoModificacion: EstadoModificacion.Insertado,
+      viaticos: false,
     };
     this.listaLineaPlanPago.push(item);
     this.arrayControls.push(
@@ -278,6 +289,13 @@ export class PlanPagoEditComponent implements OnInit {
 
   onGuardar() {
     if (this.validarValoresTotales()) {
+      const viaticos = this.viaticosCtrl.value as boolean;
+
+      this.listaLineaPlanPago.forEach((x) => {
+        x.viaticos = viaticos;
+        x.estadoModificacion = EstadoModificacion.Modificado;
+      });
+
       this.formaPagoCompromiso = {
         cdp: this.cdpSeleccionado,
         listaLineaPlanPago: this.listaLineaPlanPago,
@@ -557,6 +575,7 @@ export class PlanPagoEditComponent implements OnInit {
   get valorCtrl() {
     return this.editForm.get('valorCtrl');
   }
+
   get eneroCtrl() {
     return this.editForm.get('eneroCtrl');
   }
@@ -580,23 +599,33 @@ export class PlanPagoEditComponent implements OnInit {
   get junioCtrl() {
     return this.editForm.get('junioCtrl');
   }
+
   get julioCtrl() {
     return this.editForm.get('julioCtrl');
   }
+
   get agostoCtrl() {
     return this.editForm.get('agostoCtrl');
   }
+
   get septiembreCtrl() {
     return this.editForm.get('septiembreCtrl');
   }
+
   get octubreCtrl() {
     return this.editForm.get('octubreCtrl');
   }
+
   get noviembreCtrl() {
     return this.editForm.get('noviembreCtrl');
   }
+
   get diciembreCtrl() {
     return this.editForm.get('diciembreCtrl');
+  }
+
+  get viaticosCtrl() {
+    return this.editForm.get('viaticosCtrl');
   }
 
   //#endregion Controles

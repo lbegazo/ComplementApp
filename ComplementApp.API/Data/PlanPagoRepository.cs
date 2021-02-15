@@ -507,8 +507,8 @@ namespace ComplementApp.API.Data
                                {
                                    PlanPagoId = pp.PlanPagoId,
                                    MesId = pp.MesPago,
-                                   Valor = pp.ValorInicial
-                                   //MesDescripcion = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(pp.MesPago).ToUpper(),
+                                   Valor = pp.ValorInicial,
+                                   Viaticos = pp.Viaticos,
 
                                })
                          .Distinct()

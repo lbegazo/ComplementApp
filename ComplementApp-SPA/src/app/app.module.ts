@@ -112,6 +112,9 @@ import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver'
 import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
 import { PopupSolicitudPagoRechazoComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
 import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
+import { TerceroEditComponent } from './administracion/tercero/tercero-edit/tercero-edit.component';
+import { TerceroComponent } from './administracion/tercero/tercero.component';
+import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -183,6 +186,8 @@ export function tokenGetter() {
     ObligacionPresupuestalComponent,
     PlanPagoComponent,
     PlanPagoEditComponent,
+    TerceroComponent,
+    TerceroEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -239,6 +244,7 @@ export function tokenGetter() {
     ListaSupervisorResolver,
     ListaSIoNOResolver,
     ListaAdminPilaResolver,
+    ListaTipoDocumentoIdentidadResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

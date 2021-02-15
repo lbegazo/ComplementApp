@@ -51,6 +51,165 @@ namespace ComplementApp.API.Controllers
             _listaRepository = listaRepository;
         }
 
+        #region Tercero
+
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarTercero(TerceroDto terceroDto)
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Tercero tercero = new Tercero();
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            bool existe = await _repo.ValidarExistenciaTercero(terceroDto.TipoDocumentoIdentidadId, terceroDto.NumeroIdentificacion);
+
+            try
+            {
+                if (!existe)
+                {
+                    if (terceroDto != null)
+                    {
+                        #region Mapear datos Tercero
+
+                        tercero.TipoIdentificacion = terceroDto.TipoDocumentoIdentidadId;
+                        tercero.NumeroIdentificacion = terceroDto.NumeroIdentificacion;
+                        tercero.Nombre = terceroDto.Nombre;
+                        tercero.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
+                        tercero.Telefono = terceroDto.Telefono;
+                        tercero.Email = terceroDto.Email;
+                        tercero.Direccion = terceroDto.Direccion;
+                        tercero.FacturadorElectronico = terceroDto.FacturadorElectronico;
+                        tercero.DeclaranteRenta = terceroDto.DeclaranteRenta;
+
+                        if (terceroDto.FacturadorElectronico)
+                        {
+                            tercero.RegimenTributario = "RESPONSABLE DE IVA";
+                        }
+                        else
+                        {
+                            tercero.RegimenTributario = "NO RESPONSABLE DE IVA";
+                        }
+
+                        tercero.UsuarioIdRegistro = usuarioId;
+                        tercero.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+
+                        #endregion Mapear datos Tercero
+
+                        //Registrar Parametro liquidación Tercero
+                        _dataContext.Tercero.Add(tercero);
+                        await _dataContext.SaveChangesAsync();
+
+                        await transaction.CommitAsync();
+
+                        return Ok(tercero.TerceroId);
+                    }
+                }
+                else
+                {
+                    return Ok(0);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            throw new Exception($"No se pudo registrar el tercero");
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> ActualizarTercero(TerceroDto terceroDto)
+        {
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                //Registrar Parametro liquidación Tercero
+                var terceroBD = await _repo.ObtenerTerceroBase(terceroDto.TerceroId);
+
+                #region Mapear datos Tercero
+
+                terceroBD.TipoIdentificacion = terceroDto.TipoDocumentoIdentidadId;
+                terceroBD.NumeroIdentificacion = terceroDto.NumeroIdentificacion;
+                terceroBD.Nombre = terceroDto.Nombre;
+                terceroBD.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
+                terceroBD.Telefono = terceroDto.Telefono;
+                terceroBD.Email = terceroDto.Email;
+                terceroBD.Direccion = terceroDto.Direccion;
+                terceroBD.FacturadorElectronico = terceroDto.FacturadorElectronico;
+                terceroBD.DeclaranteRenta = terceroDto.DeclaranteRenta;
+
+                if (terceroDto.FacturadorElectronico)
+                {
+                    terceroBD.RegimenTributario = "RESPONSABLE DE IVA";
+                }
+                else
+                {
+                    terceroBD.RegimenTributario = "NO RESPONSABLE DE IVA";
+                }
+
+                terceroBD.UsuarioIdModificacion = usuarioId;
+                terceroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+
+                #endregion Mapear datos Tercero
+
+                await _dataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerTercero([FromQuery(Name = "terceroId")] int terceroId)
+        {
+            try
+            {
+                var item = await _repo.ObtenerTercero(terceroId);
+                return Ok(item);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener información para la parametrización del tercero");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerTerceros([FromQuery(Name = "tipo")] int tipo,
+                                                        [FromQuery(Name = "terceroId")] int? terceroId,
+                                                        [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                var pagedList = await _repo.ObtenerTerceros(terceroId, userParams);
+                var listaDto = _mapper.Map<IEnumerable<TerceroDto>>(pagedList);
+
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                    pagedList.TotalCount, pagedList.TotalPages);
+
+                return Ok(listaDto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de terceros");
+        }
+
+
+        #endregion Tercero
+
+        #region Parametrizacion Liquidacion Tercero
+
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerTercerosParaParametrizacionLiquidacion([FromQuery(Name = "tipo")] int tipo,
@@ -267,5 +426,6 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener las deducciones");
         }
 
+        #endregion Parametrizacion Liquidacion Tercero
     }
 }

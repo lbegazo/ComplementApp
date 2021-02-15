@@ -17,6 +17,86 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
+
+        #region Tercero
+        public async Task<Tercero> ObtenerTerceroBase(int terceroId)
+        {
+            return await _context.Tercero
+                        .FirstOrDefaultAsync(u => u.TerceroId == terceroId);
+        }
+
+        public async Task<TerceroDto> ObtenerTercero(int terceroId)
+        {
+            var lista = await (from t in _context.Tercero
+                               join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
+                               where t.TerceroId == terceroId
+                               select new TerceroDto()
+                               {
+                                   TerceroId = t.TerceroId,
+
+                                   TipoDocumentoIdentidadId = t.TipoIdentificacion,
+                                   TipoDocumentoIdentidad = ti.Nombre,
+                                   NumeroIdentificacion = t.NumeroIdentificacion,
+                                   Nombre = t.Nombre,
+                                   Direccion = t.Direccion,
+                                   Email = t.Email,
+                                   Telefono = t.Telefono,
+                                   DeclaranteRenta = t.DeclaranteRenta,
+                                   DeclaranteRentaDescripcion = string.Empty,
+                                   FacturadorElectronico = t.FacturadorElectronico,
+                                   FacturadorElectronicoDescripcion = string.Empty,
+
+                                   RegimenTributario = t.RegimenTributario,
+                                   FechaExpedicionDocumento = (t.FechaExpedicionDocumento.HasValue ? (t.FechaExpedicionDocumento.Value.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionDocumento.Value : null) : null),
+                               }).FirstOrDefaultAsync();
+
+            return lista;
+        }
+
+        public async Task<PagedList<TerceroDto>> ObtenerTerceros(int? terceroId, UserParams userParams)
+        {
+            IOrderedQueryable<TerceroDto> lista = null;
+
+            lista = (from t in _context.Tercero
+                     join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
+                     where t.TerceroId == terceroId || terceroId == null
+                     select new TerceroDto()
+                     {
+                         TerceroId = t.TerceroId,
+                         TipoDocumentoIdentidadId = t.TipoIdentificacion,
+                         TipoDocumentoIdentidad = ti.Nombre,
+                         NumeroIdentificacion = t.NumeroIdentificacion,
+                         Nombre = t.Nombre,
+                     })
+                       .Distinct()
+                       .OrderBy(t => t.Nombre);
+
+
+            return await PagedList<TerceroDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<bool> ValidarExistenciaTercero(int TipoIdentificacion, string numeroIdentificacion)
+        {
+            var tercero = await (from t in _context.Tercero
+                                 where t.TipoIdentificacion == TipoIdentificacion
+                                 where t.NumeroIdentificacion == numeroIdentificacion
+                                 select new TerceroDto()
+                                 {
+                                     TerceroId = t.TerceroId
+                                 }).FirstOrDefaultAsync();
+
+            if (tercero != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion Tercero
+
+        #region Parametrización de Liquidación Tercero
+
         public async Task<PagedList<TerceroDto>> ObtenerTercerosParaParametrizacionLiquidacion(int tipo, int? terceroId, UserParams userParams)
         {
             IOrderedQueryable<TerceroDto> lista = null;
@@ -260,7 +340,6 @@ namespace ComplementApp.API.Data
             return terceros;
         }
 
-
         public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
         {
             return await _context.ParametroLiquidacionTercero
@@ -300,6 +379,6 @@ namespace ComplementApp.API.Data
                           }).ToListAsync();
         }
 
-
+        #endregion Parametrización de Liquidación Tercero
     }
 }

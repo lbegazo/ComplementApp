@@ -17,6 +17,74 @@ export class TerceroService {
 
   constructor(private http: HttpClient) {}
 
+  //#region Tercero
+
+  ObtenerTerceros(
+    tipo: number,
+    terceroId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<Tercero[]>> {
+    const path = 'ObtenerTerceros';
+    const paginatedResult: PaginatedResult<Tercero[]> = new PaginatedResult<
+      Tercero[]
+    >();
+
+    let params = new HttpParams();
+
+    params = params.append('tipo', tipo.toString());
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Tercero[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  ObtenerTercero(terceroId: number): Observable<Tercero> {
+    const path = 'ObtenerTercero';
+    let params = new HttpParams();
+    params = params.append('terceroId', terceroId.toString());
+    return this.http.get<Tercero>(this.baseUrl + path, {
+      params,
+    });
+  }
+
+  ActualizarTercero(tercero: Tercero) {
+    const path = 'ActualizarTercero';
+    return this.http.put(this.baseUrl + path, tercero);
+  }
+
+  RegistrarTercero(tercero: Tercero): Observable<any> {
+    const path = 'RegistrarTercero';
+    return this.http.post(this.baseUrl + path, tercero);
+  }
+
+  //#endregion Tercero
+
+  //#region Parametro Liquidacion Tercero
+
   ObtenerTercerosParaParametrizacionLiquidacion(
     tipo: number,
     terceroId?: number,
@@ -96,7 +164,9 @@ export class TerceroService {
     return this.deducciones;
   }
 
-  ObtenerDeduccionesXTercero(terceroId: number): Observable<TerceroDeduccionDto[]> {
+  ObtenerDeduccionesXTercero(
+    terceroId: number
+  ): Observable<TerceroDeduccionDto[]> {
     const path = 'ObtenerDeduccionesXTercero';
     let params = new HttpParams();
     params = params.append('terceroId', terceroId.toString());
@@ -113,4 +183,6 @@ export class TerceroService {
     const path = 'ObteneListaDeducciones';
     return this.http.get<TerceroDeduccionDto[]>(this.baseUrl + path);
   }
+
+  //#endregion Parametro Liquidacion Tercero
 }

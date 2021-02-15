@@ -409,11 +409,22 @@
                         #txtValorActualizado
                       />
                     </div>
-                  </div>
+                  </div>                  
                   <div class="form-row mt-1">
-                    <div style="width: 90%" class="right">
+                    <div style="width: 40%" class="inner center">
+                      <div class="aplicaBackground left" style="padding: 3px;">
+                        <label class="col-form-label-md" style="margin: 0px;">
+                          <input
+                            type="checkbox"
+                            formControlName="viaticosCtrl"
+                          />
+                          VIATICOS
+                        </label>
+                      </div>
+                    </div>
+                    <div style="width: 50%" class="right">
                       <button
-                        class="btn btn-danger btn-sm mr-1"
+                        class="btn btn-danger btn-md mr-1"
                         (click)="onEliminar()"
                         [disabled]="planPagoSeleccionado === null"
                         *ngIf="this.esCreacion"
@@ -421,7 +432,7 @@
                         Eliminar
                       </button>
                       <button
-                        class="btn btn-warning btn-sm"
+                        class="btn btn-warning btn-md"
                         (click)="onActualizar()"
                         [disabled]="planPagoSeleccionado === null"
                       >
@@ -465,4 +476,4 @@
     </div>
   </div>
 </div>
-<!-- <p>formaPagoCompromiso: {{ formaPagoCompromiso | json }}</p> -->
+<!-- <p>Form value: {{ editForm.value | json }}</p> -->
