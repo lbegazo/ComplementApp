@@ -29,7 +29,7 @@ export class PopupSolicitudPagoRechazoComponent implements OnInit {
   onAceptar() {
     if (this.popupForm.valid) {
       const formValues = Object.assign({}, this.popupForm.value);
-      this.observaciones = formValues.observacionesCtrl;
+      this.observaciones = formValues.observacionesCtrl.trim();
       this.bsModalRef.hide();
     }
   }

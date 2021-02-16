@@ -164,6 +164,7 @@ namespace ComplementApp.API.Data
 
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
+                          where sol.EstadoId == (int)EstadoSolicitudPago.Aprobado
                           select new DetallePlanPagoDto()
                           {
                               PlanPagoId = pp.PlanPagoId,
@@ -189,6 +190,60 @@ namespace ComplementApp.API.Data
                               FechaRadicadoSupervisorFormato = pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty,
                               NumeroFactura = sol.NumeroFactura,
                               Observaciones = sol.ObservacionesModificacion.Length > 100 ? sol.ObservacionesModificacion.Substring(0, 100) : sol.ObservacionesModificacion,
+                              NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
+                              FechaRadicadoProveedor = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value : null,
+                              FechaRadicadoProveedorFormato = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value.ToString("yyyy-MM-dd") : string.Empty,
+
+                              IdentificacionTercero = t.NumeroIdentificacion,
+                              NombreTercero = CortarTexto(t.Nombre, 30),
+
+                              Usuario = us.Nombres + ' ' + us.Apellidos,
+                              Email = us.Email,
+                          })
+                    .FirstOrDefaultAsync();
+        }
+
+        //Utilizado para mostrar la cabecera de la Solicitud Pago
+        public async Task<DetallePlanPagoDto> ObtenerDetallePlanPagoParaSolicitudPago(int planPagoId)
+        {
+            return await (from pp in _context.PlanPago
+                          join c in _context.CDP on pp.Crp equals c.Crp
+                          join t in _context.Tercero on pp.TerceroId equals t.TerceroId
+
+                          join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
+                          from pt in ParametroTercero.DefaultIfEmpty()
+
+                          join us in _context.Usuario on pp.UsuarioIdRegistro equals us.UsuarioId into Usuario
+                          from us in Usuario.DefaultIfEmpty()
+
+                          join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
+                          from super in Supervisor.DefaultIfEmpty()
+
+                          where pp.PlanPagoId == planPagoId
+                          where c.Instancia == (int)TipoDocumento.Compromiso
+                          select new DetallePlanPagoDto()
+                          {
+                              PlanPagoId = pp.PlanPagoId,
+                              TerceroId = pp.TerceroId,
+                              Detalle4 = CortarTexto(c.Detalle4, 50),
+                              Detalle5 = super.Nombres + ' ' + super.Apellidos,
+                              Detalle6 = c.Detalle6,
+                              Detalle7 = ResumirDetalle7(c.Detalle7),
+                              ValorTotal = c.ValorTotal,
+                              SaldoActual = c.SaldoActual,
+                              Fecha = c.Fecha,
+                              Operacion = c.Operacion,
+                              ModalidadContrato = pt.ModalidadContrato,
+                              TipoPago = pt.TipoPago,
+
+                              Viaticos = pp.Viaticos,
+                              ViaticosDescripcion = pp.Viaticos ? "SI" : "NO",
+                              Crp = pp.Crp,
+                              NumeroPago = pp.NumeroPago,
+                              ValorFacturado = pp.ValorFacturado.HasValue ? pp.ValorFacturado.Value : 0,
+                              NumeroRadicadoSupervisor = pp.NumeroRadicadoSupervisor,
+                              FechaRadicadoSupervisor = pp.FechaRadicadoSupervisor,
+                              FechaRadicadoSupervisorFormato = pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty,
                               NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
                               FechaRadicadoProveedor = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value : null,
                               FechaRadicadoProveedorFormato = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value.ToString("yyyy-MM-dd") : string.Empty,

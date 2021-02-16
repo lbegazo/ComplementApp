@@ -1,0 +1,392 @@
+<form #formatoNgForm="ngForm" id="formatoNgForm" [formGroup]="editForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2">
+      <div class="col-12 withoutPadding">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td>
+              <table>
+                <tr>
+                  <td style="padding: 0px;">
+                    <div class="form-row mt-2 ml-1 mr-1">
+                      <!--Compromiso-->
+                      <div class="form-group col-md-1" style="margin: 0px">
+                        <label for="tipoDocumentoIdentidad" class="col-form-label-md"
+                          ><strong>Compromiso</strong></label
+                        >
+                        <p class="paragraph">{{ cdpSeleccionado.crp }}</p>
+                      </div>
+                      <!--NumeroDocumentoIdentidad-->
+                      <div class="form-group col-md-2" style="margin: 0px">
+                        <label
+                          for="NumeroDocumentoIdentidad"
+                          class="col-form-label-md"
+                          ><strong>Número de identificación</strong></label
+                        >
+                        <p class="paragraph">
+                          {{ cdpSeleccionado.numeroIdentificacionTercero }}
+                        </p>
+                      </div>
+                      <!--NombreTercero-->
+                      <div class="form-group col-md-5" style="margin: 0px">
+                        <label for="NombreTercero" class="col-form-label-md"
+                          ><strong>Nombre</strong></label
+                        >
+                        <p class="paragraph">{{ cdpSeleccionado.nombreTercero }}</p>
+                      </div>
+                      <!--Saldo Act-->
+                      <div class="form-group col-md-2" style="margin: 0px">
+                        <label class="col-form-label-md"
+                          ><strong>Saldo Act.</strong></label
+                        >
+                        <p class="paragraph">
+                          {{ cdpSeleccionado.saldoActual | number: "1.2-2" }}
+                        </p>
+                      </div>
+                      <!--Valor Total-->
+                      <div class="form-group col-md-2" style="margin: 0px">
+                        <label class="col-form-label-md"
+                          ><strong>Valor Total</strong></label
+                        >
+                        <p class="paragraph">
+                          {{ cdpSeleccionado.valorTotal | number: "1.2-2" }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="form-row mt-4 ml-1 mr-1">
+                      <!--Objeto-->
+                      <div class="form-group col-md-12" style="margin: 0px">
+                        <p class="paragraphLeft">{{ cdpSeleccionado.objeto }}</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <!--Contrato-->
+                <tr>
+                  <td style="padding: 0px 10px">
+                    <div class="panel panel-primary mt-2 mb-2 left">
+                      <div class="panel-heading">
+                        <strong>DATOS BASICOS</strong>
+                      </div>
+                      <div class="panel-body mt-3 mb-2">
+                        <div class="form-row mt-3">
+                          <!--MODALIDAD DE CONTRATO-->
+                          <div class="form-group col-md-3 left" style="margin: 0px">
+                            <label
+                              for="selectTipoModalidadContrato"
+                              class="col-form-label-md"
+                              >Modalidad de Contrato</label
+                            >
+                            <select
+                              formControlName="tipoModalidadContratoCtrl"
+                              (change)="onModalidadContrato()"
+                              class="form-control withoutPadding"
+                              style="height: 33px; padding-left: 5px"
+                              id="selectTipoModalidadContrato"
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('tipoModalidadContratoCtrl').touched &&
+                                  editForm
+                                    .get('tipoModalidadContratoCtrl')
+                                    .hasError('required')
+                              }"
+                            >
+                              <option disabled [ngValue]="null">
+                                TIPO DE MODALIDAD CONTRATO
+                              </option>
+                              <option
+                                *ngFor="let item of listaTipoModalidadContrato"
+                                [ngValue]="item"
+                              >
+                                {{ item.nombre }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('tipoModalidadContratoCtrl').touched &&
+                                editForm
+                                  .get('tipoModalidadContratoCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              Debe seleccionar tipo de Modalidad de Contrato
+                            </div>
+                          </div>
+                          <!--NUMERO DE CONTRATO-->
+                          <div class="form-group col-md-2 left" style="margin: 0px">
+                            <label
+                              for="inputNumeroContrato"
+                              class="col-form-label-md"
+                              >Número de Contrato</label
+                            >
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('numeroContratoCtrl')
+                                    .errors &&
+                                  editForm.get('numeroContratoCtrl')
+                                    .touched
+                              }"
+                              type="text"
+                              (keypress)="numberOnly($event)"
+                              class="form-control"
+                              placeholder="Número de Contrato"
+                              formControlName="numeroContratoCtrl"
+                              style="text-align: center; height: 30px"
+                              id="inputNumeroContrato"
+                              maxlength="20"
+                              onDrag="return false"
+                              onDrop="return false"
+                              onPaste="return false"
+                              autocomplete="off"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('numeroContratoCtrl')
+                                  .touched &&
+                                editForm
+                                  .get('numeroContratoCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              Debe ingresar el número de Contrato
+                            </div>
+                          </div>                          
+                          <!--FECHA DE INICIO-->
+                          <div class="form-group col-md-2 left" style="margin: 0px">
+                            <label
+                              for="inputFechaInicio"
+                              class="col-form-label-md"
+                              >Fecha Inicio</label
+                            >
+
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('fechaInicioCtrl').errors &&
+                                  editForm.get('fechaInicioCtrl').touched
+                              }"
+                              class="form-control"
+                              placeholder="Fecha de inicio"
+                              formControlName="fechaInicioCtrl"
+                              type="text"
+                              bsDatepicker
+                              style="height: 33px; text-align: center"
+                              [bsConfig]="bsConfig"
+                              id="inputfechaInicio"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('fechaInicioCtrl').touched &&
+                                editForm
+                                  .get('fechaInicioCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              La fecha de inicio es requerida
+                            </div>
+                          </div>
+                           <!--FECHA FINAL-->
+                           <div class="form-group col-md-2 left" style="margin: 0px">
+                            <label
+                              for="inputFechaFinal"
+                              class="col-form-label-md"
+                              >Fecha Final</label
+                            >
+
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('fechaFinalCtrl').errors &&
+                                  editForm.get('fechaFinalCtrl').touched
+                              }"
+                              class="form-control"
+                              placeholder="Fecha de inicio"
+                              formControlName="fechaFinalCtrl"
+                              type="text"
+                              bsDatepicker
+                              style="height: 33px; text-align: center"
+                              [bsConfig]="bsConfig"
+                              id="inputfechaFinal"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('fechaFinalCtrl').touched &&
+                                editForm
+                                  .get('fechaFinalCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              La fecha final es requerida
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-row mt-3">
+                          <!--FECHA EXPEDICION POLIZA-->
+                          <div class="form-group col-md-2 left" style="margin: 0px">
+                            <label
+                              for="inputFechaExpedicionPoliza"
+                              class="col-form-label-md"
+                              >Fecha Expedición Poliza</label
+                            >
+
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('fechaExpedicionPolizaCtrl').errors &&
+                                  editForm.get('fechaExpedicionPolizaCtrl').touched
+                              }"
+                              class="form-control"
+                              placeholder="Fecha de inicio"
+                              formControlName="fechaExpedicionPolizaCtrl"
+                              type="text"
+                              bsDatepicker
+                              style="height: 33px; text-align: center"
+                              [bsConfig]="bsConfig"
+                              id="inputfechaExpedicionPoliza"
+                            />
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('fechaExpedicionPolizaCtrl').touched &&
+                                editForm
+                                  .get('fechaExpedicionPolizaCtrl')
+                                  .hasError('required')
+                              "
+                            >
+                              La fecha de Expedición de Poliza es requerida
+                            </div>
+                          </div>
+                           <!--SUPERVISOR 1-->
+                           <div class="form-group col-md-3 left" style="margin: 0px">
+                            <label
+                              for="selectSupervisor1"
+                              class="col-form-label-md"
+                              >Supervisor 1</label
+                            >
+                            <select
+                              formControlName="supervisor1Ctrl"
+                              (change)="onSupervisor1()"
+                              class="form-control withoutPadding"
+                              style="height: 33px; padding-left: 5px"
+                              id="selectSupervisor1"
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('supervisor1Ctrl').touched &&
+                                  editForm
+                                    .get('supervisor1Ctrl')
+                                    .hasError('required')
+                              }"
+                            >
+                              <option disabled [ngValue]="null">
+                                SUPERVISOR 1
+                              </option>
+                              <option
+                                *ngFor="let item of listaSupervisor"
+                                [ngValue]="item"
+                              >
+                                {{ item.nombre }}
+                              </option>
+                            </select>
+                            <div
+                              class="invalid-feedback"
+                              *ngIf="
+                                editForm.get('supervisor1Ctrl').touched &&
+                                editForm
+                                  .get('supervisor1Ctrl')
+                                  .hasError('required')
+                              "
+                            >
+                              Debe seleccionar el supervisor
+                            </div>
+                          </div>
+                          <!--SUPERVISOR 2-->
+                          <div class="form-group col-md-3 left" style="margin: 0px">
+                            <label
+                              for="selectSupervisor2"
+                              class="col-form-label-md"
+                              >Supervisor 2</label
+                            >
+                            <select
+                              formControlName="supervisor2Ctrl"
+                              (change)="onSupervisor2()"
+                              class="form-control withoutPadding"
+                              style="height: 33px; padding-left: 5px"
+                              id="selectSupervisor2"
+                            >
+                              <option disabled [ngValue]="null">
+                                SUPERVISOR 2
+                              </option>
+                              <option
+                                *ngFor="let item of listaSupervisor"
+                                [ngValue]="item"
+                              >
+                                {{ item.nombre }}
+                              </option>
+                            </select>                          
+                          </div>
+                        </div>                      
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-12 withoutPadding right">
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              type="submit"
+              class="btn btn-success mr-2"
+              (click)="onLimpiarForm()"
+            >
+              Limpiar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary mr-2"
+              (click)="onGuardar()"
+              [disabled]="!editForm.valid"
+            >
+              {{ nombreBoton }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onCancelar()"
+            >
+              Volver
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- <p>Form status: {{ editForm.status | json }}</p>
+
+  <p>Form value: {{ editForm.value | json }}</p>
+
+  <p>
+    terceroSeleccionado:
+  {{ terceroSeleccionado | json }}
+</p> -->
+

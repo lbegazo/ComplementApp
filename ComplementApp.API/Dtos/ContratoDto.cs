@@ -8,7 +8,6 @@ namespace ComplementApp.API.Dtos
         public long Crp { get; set; }
         public string NumeroContrato { get; set; }
         public int TipoModalidadContratoId { get; set; }
-        //public TipoModalidadContrato TipoModalidadContrato { get; set; }
         public DateTime? FechaRegistro { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinal { get; set; }

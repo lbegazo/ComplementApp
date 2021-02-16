@@ -32,6 +32,7 @@ import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { PopupSolicitudPagoRechazoComponent } from './popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
 import { ListaService } from 'src/app/_services/lista.service';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
+import { Cdp } from 'src/app/_models/cdp';
 
 @Component({
   selector: 'app-formato-solicitud-pago-aprobacion',
@@ -49,6 +50,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
 
   formatoSolicitudPagoId = 0;
   rubrosPresupuestales: DetalleCDP[] = [];
+  cdps: Cdp[] = [];
   solicitudActualizada = false;
 
   formatoForm = new FormGroup({});
@@ -90,21 +92,25 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
   }
 
   createForm() {
-    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
-      for (const detalle of this.rubrosPresupuestales) {
-        this.arrayRubrosControls.push(
+    if (
+      this.formatoSolicitudPago.pagosRealizados != null &&
+      this.formatoSolicitudPago.pagosRealizados.length > 0
+    ) {
+      this.cdps = this.formatoSolicitudPago.pagosRealizados;
+      for (const detalle of this.cdps) {
+        this.arrayControls.push(
           new FormGroup({
-            rubroControl: new FormControl('', []),
+            deduccionControl: new FormControl('', []),
           })
         );
       }
     }
 
-    if (this.formatoSolicitudPago.pagosRealizados != null) {
-      for (const detalle of this.formatoSolicitudPago.pagosRealizados) {
-        this.arrayControls.push(
+    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
+      for (const detalle of this.rubrosPresupuestales) {
+        this.arrayRubrosControls.push(
           new FormGroup({
-            deduccionControl: new FormControl('', []),
+            rubroControl: new FormControl('', []),
           })
         );
       }
@@ -179,10 +185,13 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
           this.bsModalRef.content != null &&
           this.bsModalRef.content.observaciones != null
         ) {
-          this.formatoSolicitudPago.observacionesModificacion = this.bsModalRef.content.observaciones;
-          this.formatoSolicitudPago.numeroRadicadoProveedor = this.bsModalRef.content.numeroContratista;
+          this.formatoSolicitudPago.observacionesModificacion =
+            this.bsModalRef.content.observaciones !== undefined
+              ? this.bsModalRef.content.observaciones.trim()
+              : '';
+          this.formatoSolicitudPago.numeroRadicadoProveedor = this.bsModalRef.content.numeroContratista.trim();
           this.formatoSolicitudPago.fechaRadicadoProveedor = this.bsModalRef.content.fechaContratista;
-          this.formatoSolicitudPago.numeroRadicadoSupervisor = this.bsModalRef.content.numeroSupervisor;
+          this.formatoSolicitudPago.numeroRadicadoSupervisor = this.bsModalRef.content.numeroSupervisor.trim();
           this.formatoSolicitudPago.fechaRadicadoSupervisor = this.bsModalRef.content.fechaSupervisor;
           this.formatoSolicitudPago.estadoId = tipo;
           this.solicitudActualizada = true;
@@ -251,7 +260,10 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
           this.bsModalRef.content != null &&
           this.bsModalRef.content.observaciones != null
         ) {
-          this.formatoSolicitudPago.observacionesModificacion = this.bsModalRef.content.observaciones;
+          this.formatoSolicitudPago.observacionesModificacion =
+            this.bsModalRef.content.observaciones !== undefined
+              ? this.bsModalRef.content.observaciones.trim()
+              : '';
           this.formatoSolicitudPago.estadoId = tipo;
           this.solicitudActualizada = true;
           this.actualizarSolicitudPago();

@@ -41,8 +41,8 @@ namespace ComplementApp.API.Services
         {
             FormatoCausacionyLiquidacionPagos formato = new FormatoCausacionyLiquidacionPagos();
             try
-            {
-                var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
+            { 
+                var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPagoParaSolicitudPago(planPagoId);
 
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
                 var parametros = parametroGenerales.ToList();

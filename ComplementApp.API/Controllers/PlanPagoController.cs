@@ -122,6 +122,20 @@ namespace ComplementApp.API.Controllers
             return base.Ok(planPagoBD);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerDetallePlanPagoParaSolicitudPago([FromQuery(Name = "planPagoId")] int planPagoId)
+        {
+            var planPagoBD = await _repo.ObtenerDetallePlanPagoParaSolicitudPago(planPagoId);
+
+            if (planPagoBD != null)
+            {
+                var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp);
+                planPagoBD.CantidadPago = cantidad;
+            }
+            return base.Ok(planPagoBD);
+        }
+
 
         [HttpPut]
         public async Task<IActionResult> ActualizarPlanPago(PlanPagoDto planPagoDto)

@@ -682,7 +682,6 @@ namespace ComplementApp.API.Services
             decimal valorDescuentoDependiente = 0.10m;
             decimal valorRentaExenta = 0.25m;
             decimal valorLimiteRentaExenta = 0.4m;
-            decimal valorDiferencialRenta = 0.3m;
 
             decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0,
             PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
@@ -695,7 +694,7 @@ namespace ComplementApp.API.Services
             C7baseAporteSalud = 0, C11fondoSolidaridad, C12subTotal1 = 0,
             C15subTotal2 = 0, C20subTotal3 = 0, C17DescuentoDependiente = 0,
             C19TotalDeducciones = 0, C21RentaExenta = 0, C22LimiteRentaExenta = 0,
-            C23TotalRentaExenta = 0, C24DiferencialRenta = 0,
+            C23TotalRentaExenta = 0,
             C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
 
             int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
@@ -882,31 +881,29 @@ namespace ComplementApp.API.Services
 
             decimal CT24DiferenciaRenta = 0;
 
-            if ((PL24PensionVoluntaria + PL14Afc) > (C1honorario * valorDiferencialRenta))
+            decimal variableDiferencialRenta = PL24PensionVoluntaria + PL14Afc + C19TotalDeducciones + C21RentaExenta;
+            if ((variableDiferencialRenta) > (C22LimiteRentaExenta))
             {
-                CT24DiferenciaRenta = C1honorario * valorDiferencialRenta;
+                CT24DiferenciaRenta = C22LimiteRentaExenta - (variableDiferencialRenta);
             }
             else
             {
-                CT24DiferenciaRenta = PL24PensionVoluntaria + PL14Afc;
-            }
-
-            C24DiferencialRenta = CT24DiferenciaRenta + C19TotalDeducciones + C21RentaExenta;
-
-            if (C24DiferencialRenta > C22LimiteRentaExenta)
-            {
-                C24DiferencialRenta = C22LimiteRentaExenta - C24DiferencialRenta;
-            }
-            else
-            {
-                C24DiferencialRenta = 0;
+                CT24DiferenciaRenta = 0;
             }
 
             #endregion Diferencial Renta 
 
             #region Base Gravable
 
-            C25BaseGravableRenta = (C20subTotal3 - C21RentaExenta - C24DiferencialRenta);
+            if (CT24DiferenciaRenta < 0)
+            {
+                CT24DiferenciaRenta = CT24DiferenciaRenta * (-1);
+                C25BaseGravableRenta = C20subTotal3 - C21RentaExenta + CT24DiferenciaRenta;
+            }
+            else
+            {
+                C25BaseGravableRenta = C20subTotal3 - C21RentaExenta - CT24DiferenciaRenta;
+            }
 
             C26BaseGravableRentaUvt = (C25BaseGravableRenta / valorUvt);
             C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);
@@ -1966,7 +1963,6 @@ namespace ComplementApp.API.Services
             decimal valorDescuentoDependiente = 0.10m;
             decimal valorRentaExenta = 0.25m;
             decimal valorLimiteRentaExenta = 0.4m;
-            decimal valorDiferencialRenta = 0.3m;
 
             decimal PLtarifaIva = 0, PLbaseAporteSalud = 0, PLaporteSalud = 0,
             PLaportePension = 0, PLriesgoLaboral = 0, PLfondoSolidaridad = 0,
@@ -1979,8 +1975,7 @@ namespace ComplementApp.API.Services
             C7baseAporteSalud = 0, C11fondoSolidaridad, C12subTotal1 = 0,
             C15subTotal2 = 0, C20subTotal3 = 0, C17DescuentoDependiente = 0,
             C19TotalDeducciones = 0, C21RentaExenta = 0, C22LimiteRentaExenta = 0,
-            C23TotalRentaExenta = 0, C24DiferencialRenta = 0,
-            C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
+            C23TotalRentaExenta = 0, C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
 
             int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
 
@@ -2164,31 +2159,29 @@ namespace ComplementApp.API.Services
 
             decimal CT24DiferenciaRenta = 0;
 
-            if ((PL24PensionVoluntaria + PL14Afc) > (C1honorario * valorDiferencialRenta))
+            decimal variableDiferencialRenta = PL24PensionVoluntaria + PL14Afc + C19TotalDeducciones + C21RentaExenta;
+            if ((variableDiferencialRenta) > (C22LimiteRentaExenta))
             {
-                CT24DiferenciaRenta = C1honorario * valorDiferencialRenta;
+                CT24DiferenciaRenta = C22LimiteRentaExenta - (variableDiferencialRenta);
             }
             else
             {
-                CT24DiferenciaRenta = PL24PensionVoluntaria + PL14Afc;
-            }
-
-            C24DiferencialRenta = CT24DiferenciaRenta + C19TotalDeducciones + C21RentaExenta;
-
-            if (C24DiferencialRenta > C22LimiteRentaExenta)
-            {
-                C24DiferencialRenta = C22LimiteRentaExenta - C24DiferencialRenta;
-            }
-            else
-            {
-                C24DiferencialRenta = 0;
+                CT24DiferenciaRenta = 0;
             }
 
             #endregion Diferencial Renta 
 
             #region Base Gravable
 
-            C25BaseGravableRenta = (C20subTotal3 - C21RentaExenta - C24DiferencialRenta);
+            if (CT24DiferenciaRenta < 0)
+            {
+                CT24DiferenciaRenta = CT24DiferenciaRenta * (-1);
+                C25BaseGravableRenta = C20subTotal3 - C21RentaExenta + CT24DiferenciaRenta;
+            }
+            else
+            {
+                C25BaseGravableRenta = C20subTotal3 - C21RentaExenta - CT24DiferenciaRenta;
+            }
 
             C26BaseGravableRentaUvt = (C25BaseGravableRenta / valorUvt);
             C26BaseGravableRentaUvtFinal = (int)Math.Round(C26BaseGravableRentaUvt, 0, MidpointRounding.AwayFromZero);

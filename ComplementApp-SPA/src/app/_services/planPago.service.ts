@@ -132,6 +132,19 @@ export class PlanPagoService {
     return this.http.get<DetallePlanPago>(this.baseUrl + path, { params });
   }
 
+  ObtenerDetallePlanPagoParaSolicitudPago(planPagoId: number): Observable<DetallePlanPago> {
+    const path = 'ObtenerDetallePlanPagoParaSolicitudPago';
+
+    let params = new HttpParams();
+
+    if (planPagoId > 0) {
+      params = params.append('planPagoId', planPagoId.toString());
+    }
+
+    return this.http.get<DetallePlanPago>(this.baseUrl + path, { params });
+  }
+
+
   ActualizarPlanPago(factura: PlanPago): Observable<boolean> {
     this.http.put(this.baseUrl, factura).subscribe(() => {});
     return observableOf(true);

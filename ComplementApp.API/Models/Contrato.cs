@@ -29,10 +29,12 @@ namespace ComplementApp.API.Models
 
         [Required]
         public DateTime FechaFinal { get; set; }
-
         public DateTime? FechaExpedicionPoliza { get; set; }
-
         public int? Supervisor1Id { get; set; }
         public int? Supervisor2Id { get; set; }
+        public int UsuarioIdRegistro { get; set; }  
+        public DateTime? FechaInsercion { get; set; }   
+        public int UsuarioIdModificacion { get; set; }  
+        public DateTime? FechaModificacion { get; set; }
     }
 }

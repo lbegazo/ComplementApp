@@ -22,7 +22,6 @@ export class TerceroEditComponent implements OnInit {
 
   editForm = new FormGroup({});
   bsConfig: Partial<BsDaterangepickerConfig>;
-
   nombreBoton = 'Registrar';
 
   listaTipoDocumento: ValorSeleccion[] = [];

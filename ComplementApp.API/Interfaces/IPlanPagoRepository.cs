@@ -15,6 +15,7 @@ namespace ComplementApp.API.Interfaces
         Task<PlanPago> ObtenerPlanPagoBase(int planPagoId);
 
         Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId);
+        Task<DetallePlanPagoDto> ObtenerDetallePlanPagoParaSolicitudPago(int planPagoId);
 
         Task<ICollection<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaPlanPagoId);
 

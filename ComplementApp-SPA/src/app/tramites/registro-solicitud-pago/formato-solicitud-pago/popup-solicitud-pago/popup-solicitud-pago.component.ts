@@ -227,7 +227,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
         terceroId: 0,
         planPagoId: 0,
         crp: 0,
-        numeroFactura: formValues.numeroFacturaCtrl,
+        numeroFactura: formValues.numeroFacturaCtrl.trim(),
         valorFacturado: +GeneralService.obtenerValorAbsoluto(
           formValues.valorFacturaCtrl
         ),
@@ -236,12 +236,18 @@ export class PopupSolicitudPagoComponent implements OnInit {
           .codigo,
         fechaInicio: dateFechaInicio,
         fechaFinal: dateFechaFin,
-        observaciones: formValues.observacionesCtrl,
+        observaciones:
+          formValues.observacionesCtrl !== undefined
+            ? formValues.observacionesCtrl.trim()
+            : '',
         valorBaseGravableRenta: +GeneralService.obtenerValorAbsoluto(
           formValues.valorBaseGravableRentaCtrl
         ),
         valorIva: +GeneralService.obtenerValorAbsoluto(formValues.valorIvaCtrl),
-        numeroPlanilla: formValues.numeroPlanillaCtrl,
+        numeroPlanilla:
+          formValues.numeroPlanillaCtrl !== undefined
+            ? formValues.numeroPlanillaCtrl.trim()
+            : '',
         mesId: this.idMesSelecionado,
         mes: this.mesSeleccionado.nombre.toUpperCase(),
         baseCotizacion: +GeneralService.obtenerValorAbsoluto(

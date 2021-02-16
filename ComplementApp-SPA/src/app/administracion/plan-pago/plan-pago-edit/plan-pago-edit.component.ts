@@ -98,7 +98,7 @@ export class PlanPagoEditComponent implements OnInit {
       noviembreCtrl: [''],
       diciembreCtrl: [''],
       valorCtrl: [''],
-      viaticosCtrl: [''],
+      viaticosCtrl: [false],
       planPagoControles: this.arrayControls,
     });
   }

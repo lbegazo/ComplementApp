@@ -36,6 +36,7 @@ import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacio
 import { TerceroService } from 'src/app/_services/tercero.service';
 import { CdpService } from 'src/app/_services/cdp.service';
 import { DetalleCDP } from 'src/app/_models/detalleCDP';
+import { Cdp } from 'src/app/_models/cdp';
 
 @Component({
   selector: 'app-formato-solicitud-pago',
@@ -78,7 +79,9 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   notaLegal3 = '';
   notaLegal4 = '';
   notaLegal5 = '';
+
   rubrosPresupuestales: DetalleCDP[] = [];
+  cdps: Cdp[] = [];
 
   constructor(
     private alertify: AlertifyService,
@@ -107,21 +110,25 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   }
 
   createForm() {
-    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
-      for (const detalle of this.rubrosPresupuestales) {
-        this.arrayRubrosControls.push(
+    if (
+      this.formatoSolicitudPago.pagosRealizados != null &&
+      this.formatoSolicitudPago.pagosRealizados.length > 0
+    ) {
+      this.cdps = this.formatoSolicitudPago.pagosRealizados;
+      for (const detalle of this.cdps) {
+        this.arrayControls.push(
           new FormGroup({
-            rubroControl: new FormControl('', []),
+            deduccionControl: new FormControl('', []),
           })
         );
       }
     }
 
-    if (this.formatoSolicitudPago.pagosRealizados != null) {
-      for (const detalle of this.formatoSolicitudPago.pagosRealizados) {
-        this.arrayControls.push(
+    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
+      for (const detalle of this.rubrosPresupuestales) {
+        this.arrayRubrosControls.push(
           new FormGroup({
-            deduccionControl: new FormControl('', []),
+            rubroControl: new FormControl('', []),
           })
         );
       }

@@ -484,12 +484,12 @@
                               <!--Pagos realizados-->
                               <div class="row">
                                 <div class="col-12">
-                                  <div>
+                                  <div *ngIf="cdps">
                                     <div
                                       formArrayName="deduccionControles"
                                       class="row"
                                       *ngFor="
-                                        let item of formatoSolicitudPago.pagosRealizados;
+                                        let item of cdps;
                                         let i = index
                                       "
                                       style="height: 20px"
@@ -800,9 +800,7 @@
                                 }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago?.tipoAdminPila
-                                }}
+                                {{ formatoSolicitudPago?.tipoAdminPila }}
                               </td>
                             </tr>
                           </table>
@@ -1097,7 +1095,7 @@
                                 </table>
                               </td>
                               <td
-                                style="width: 33%"                                
+                                style="width: 33%"
                                 *ngIf="
                                   formatoSolicitudPago?.contrato?.supervisor2
                                     .usuarioId > 0

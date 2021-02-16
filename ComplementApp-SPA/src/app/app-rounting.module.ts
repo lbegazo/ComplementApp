@@ -42,6 +42,7 @@ import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
 import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
 import { TerceroComponent } from './administracion/tercero/tercero.component';
 import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
+import { ContratoComponent } from './administracion/contrato/contrato.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -128,8 +129,12 @@ export const routes: Routes = [
     path: 'ADMINISTRACION_CONTRATO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
-    component: PlanPagoComponent,
-    resolve: { transaccion: TransaccionResolver },
+    component: ContratoComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      supervisor: ListaSupervisorResolver,
+      modalidadContrato: ListaModalidadContratoResolver,
+    },
   },
 
   {

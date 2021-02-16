@@ -482,12 +482,12 @@
                               <!--Pagos realizados-->
                               <div class="row">
                                 <div class="col-12">
-                                  <div>
+                                  <div *ngIf="cdps">
                                     <div
                                       formArrayName="deduccionControles"
                                       class="row"
                                       *ngFor="
-                                        let item of formatoSolicitudPago.pagosRealizados;
+                                        let item of cdps;
                                         let i = index
                                       "
                                       style="height: 20px"

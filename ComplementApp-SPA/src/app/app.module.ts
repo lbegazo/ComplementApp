@@ -115,6 +115,8 @@ import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
 import { TerceroEditComponent } from './administracion/tercero/tercero-edit/tercero-edit.component';
 import { TerceroComponent } from './administracion/tercero/tercero.component';
 import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
+import { ContratoEditComponent } from './administracion/contrato/contrato-edit/contrato-edit.component';
+import { ContratoComponent } from './administracion/contrato/contrato.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -188,6 +190,8 @@ export function tokenGetter() {
     PlanPagoEditComponent,
     TerceroComponent,
     TerceroEditComponent,
+    ContratoEditComponent,
+    ContratoComponent,
   ],
   imports: [
     BrowserModule,
