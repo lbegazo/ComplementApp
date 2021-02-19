@@ -100,7 +100,7 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.Dip);
                 sbBody.Append("|");
-                sbBody.Append(item.TipoCuentaPagarCodigo);
+                sbBody.Append(item.TipoCuentaPagarCodigo.ToString().PadLeft(2, '0'));
                 sbBody.Append("|");
                 sbBody.Append(item.ValorIva.ToString().Replace(".", ","));
                 sbBody.Append("|");

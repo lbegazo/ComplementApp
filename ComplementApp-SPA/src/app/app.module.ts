@@ -117,6 +117,7 @@ import { TerceroComponent } from './administracion/tercero/tercero.component';
 import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
 import { ContratoEditComponent } from './administracion/contrato/contrato-edit/contrato-edit.component';
 import { ContratoComponent } from './administracion/contrato/contrato.component';
+import { SpecialCharacterDirective } from './_directives/special-character.directive';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -149,6 +150,7 @@ export function tokenGetter() {
     TwoDigitDecimaNumberDirective,
     LongDecimalMaskDirective,
     DecimalMaskDirective,
+    SpecialCharacterDirective,
     PopupCdpComponent,
     NumberCommaDirective,
     FacturaMainComponent,

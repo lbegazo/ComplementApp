@@ -265,8 +265,12 @@
                   style="width: 100%; background-color: white"
                   id="inputObservaciones"
                   rows="2"
-                  maxlength="200"
+                  maxlength="100"
                   placeholder="Ingrese las observaciones aquí"
+                  onDrag="return false"
+                  onDrop="return false"
+                  autocomplete="off"
+                  appSpecialCharacter
                 ></textarea>
                 <div class="invalid-feedback left">
                   Registre el campo observaciones
