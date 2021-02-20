@@ -12,6 +12,7 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
 import { Cdp } from 'src/app/_models/cdp';
+import { Contrato } from 'src/app/_models/contrato';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
@@ -22,10 +23,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-contrato',
   templateUrl: './contrato.component.html',
-  styleUrls: ['./contrato.component.scss']
+  styleUrls: ['./contrato.component.scss'],
 })
 export class ContratoComponent implements OnInit {
-
   nombreTransaccion: string;
   transaccion: Transaccion;
   search: string;
@@ -40,6 +40,7 @@ export class ContratoComponent implements OnInit {
   listaCdp: Cdp[] = [];
   crp = 0;
   cdpSeleccionado: Cdp;
+  contratoSeleccionado: Contrato;
   tercero: Tercero;
 
   nombreBoton = 'Registrar Contrato';
@@ -121,9 +122,7 @@ export class ContratoComponent implements OnInit {
         );
       }
     } else {
-      this.alertify.warning(
-        'No existen compromisos sin contrato registrado'
-      );
+      this.alertify.warning('No existen compromisos sin contrato registrado');
     }
   }
 
@@ -220,6 +219,30 @@ export class ContratoComponent implements OnInit {
       this.cdpSeleccionado = this.listaCdp.filter((x) => x.crp === this.crp)[0];
       if (this.cdpSeleccionado) {
         this.mostrarCabecera = false;
+
+        if (!this.esCreacion) {
+          this.contratoService
+            .ObtenerContrato(this.cdpSeleccionado.contratoId)
+            .subscribe(
+              (documento: Contrato) => {
+                if (documento) {
+                  this.contratoSeleccionado = documento;
+                  this.mostrarCabecera = false;
+                } else {
+                  this.alertify.error(
+                    'No se pudo obtener información del contrato seleccionado'
+                  );
+                  this.mostrarCabecera = true;
+                }
+              },
+              (error) => {
+                this.alertify.error(error);
+              },
+              () => {
+                
+              }
+            );
+        }
       } else {
         this.alertify.error('Hubo un error al obtener el compromiso.');
       }
@@ -238,5 +261,4 @@ export class ContratoComponent implements OnInit {
     this.onLimpiarFactura();
     this.mostrarCabecera = true;
   }
-
 }

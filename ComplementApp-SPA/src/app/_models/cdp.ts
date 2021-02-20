@@ -1,4 +1,3 @@
-
 export interface Cdp {
   id: number;
   cdpId: number;
@@ -23,4 +22,5 @@ export interface Cdp {
   nombreTercero: string;
 
   formatoSolicitudPagoId: number;
+  contratoId?: number;
 }

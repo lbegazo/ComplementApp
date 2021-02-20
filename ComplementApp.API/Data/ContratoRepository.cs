@@ -27,18 +27,17 @@ namespace ComplementApp.API.Data
         public async Task<ContratoDto> ObtenerContrato(int contratoId)
         {
             var lista = await (from t in _context.Contrato
-                               join ti in _context.TipoModalidadContrato on t.TipoModalidadContratoId equals ti.TipoModalidadContratoId
                                where t.ContratoId == contratoId
                                select new ContratoDto()
                                {
                                    ContratoId = t.ContratoId,
                                    TipoModalidadContratoId = t.TipoModalidadContratoId,
                                    NumeroContrato = t.NumeroContrato,
-                                   FechaInicio = (t.FechaInicio.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaInicio : null),
-                                   FechaFinal = (t.FechaFinal.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaFinal : null),
-                                   FechaExpedicionPoliza = t.FechaExpedicionPoliza.HasValue ? (t.FechaExpedicionPoliza.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionPoliza : null) : null,
                                    Crp = t.Crp,
-                                   Supervisor1Id = t.Supervisor1Id.HasValue ? t.Supervisor1Id.Value : null,
+                                   FechaInicio = t.FechaInicio,
+                                   FechaFinal = t.FechaFinal,
+                                   FechaExpedicionPoliza = t.FechaExpedicionPoliza,
+                                   Supervisor1Id = t.Supervisor1Id,
                                    Supervisor2Id = t.Supervisor2Id.HasValue ? t.Supervisor2Id.Value : null,
                                }).FirstOrDefaultAsync();
 
@@ -95,11 +94,9 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDPDto>> ObtenerCompromisosConContrato(int? terceroId, UserParams userParams)
         {
-            var listaCompromisosConContrato = _context.Contrato.Select(x => x.Crp).ToHashSet();
-
             var lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where listaCompromisosConContrato.Contains(c.Crp)
+                         join con in _context.Contrato on c.Crp equals con.Crp
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
@@ -114,6 +111,7 @@ namespace ComplementApp.API.Data
                              SaldoActual = c.SaldoActual,
                              ValorTotal = c.ValorTotal,
                              TerceroId = c.TerceroId,
+                             ContratoId = con.ContratoId,
                          })
                         .OrderBy(x => x.Crp);
 
@@ -126,7 +124,8 @@ namespace ComplementApp.API.Data
                               i.NumeroIdentificacionTercero,
                               i.NombreTercero,
                               i.Objeto,
-                              i.TerceroId
+                              i.TerceroId,
+                              i.ContratoId,
                           }
                           into grp
                           select new CDPDto()
@@ -140,6 +139,7 @@ namespace ComplementApp.API.Data
                               SaldoActual = grp.Sum(i => i.SaldoActual),
                               ValorTotal = grp.Sum(i => i.ValorTotal),
                               TerceroId = grp.Key.TerceroId,
+                              ContratoId = grp.Key.ContratoId,
                           })
                           .OrderBy(x => x.Crp);
 

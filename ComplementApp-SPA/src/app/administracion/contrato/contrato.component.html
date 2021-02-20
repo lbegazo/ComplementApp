@@ -254,9 +254,16 @@
 
 <div class="container-fluid mt-2">
   <div class="row no-gutters center">
-    <div class="col-12" *ngIf="cdpSeleccionado">
+    <div
+      class="col-12"
+      *ngIf="
+        (!esCreacion && cdpSeleccionado && contratoSeleccionado) ||
+        (esCreacion && cdpSeleccionado)
+      "
+    >
       <app-contrato-edit
         [cdpSeleccionado]="cdpSeleccionado"
+        [contratoSeleccionado]="contratoSeleccionado"
         [esCreacion]="esCreacion"
         (esCancelado)="HabilitarCabecera($event)"
       >

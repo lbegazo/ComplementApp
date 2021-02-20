@@ -95,17 +95,26 @@ namespace ComplementApp.API.Services
                 {
                     if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                     {
-                        if (!planPagoDto.Viaticos)
+                        if (!parametroLiquidacion.Subcontrata)
                         {
-                            formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion,
-                                                                        parametros, listaCriterioReteFuente.ToList(),
-                                                                        listaDeduccionesDto.ToList());
+                            if (!planPagoDto.Viaticos)
+                            {
+                                formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion,
+                                                                            parametros, listaCriterioReteFuente.ToList(),
+                                                                            listaDeduccionesDto.ToList());
+                            }
+                            else
+                            {
+                                //Contratistas con viaticos liquida de otra manera
+                                formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto2, parametroLiquidacion,
+                                                                                            parametros, listaCriterioReteFuente.ToList());
+                            }
                         }
                         else
                         {
-                            //Contratistas con viaticos liquida de otra manera
-                            formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto2, parametroLiquidacion,
-                                                                                        parametros, listaCriterioReteFuente.ToList());
+                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoDto2, parametroLiquidacion,
+                                                                                                    parametros, listaCriterioReteFuente.ToList(),
+                                                                                                    listaDeduccionesDto.ToList());
                         }
                     }
                     else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
@@ -520,7 +529,10 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
             {
-                C17DescuentoDependiente = valorUvt * 32;
+                if (PL17DescuentoDependiente > 0)
+                {
+                    C17DescuentoDependiente = valorUvt * 32;
+                }
             }
             else
             {
@@ -799,7 +811,10 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
             {
-                C17DescuentoDependiente = valorUvt * 32;
+                if (PL17DescuentoDependiente > 0)
+                {
+                    C17DescuentoDependiente = valorUvt * 32;
+                }
             }
             else
             {
@@ -1392,32 +1407,42 @@ namespace ComplementApp.API.Services
 
                                 if (planPago.Tercero.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                                 {
-                                    if (!planPago.Viaticos)
+                                    if (!parametroLiquidacionTercero.Subcontrata)
                                     {
-                                        if (listaDetalleLiquidacionMesAnterior != null && listaDetalleLiquidacionMesAnterior.Count > 0)
+                                        if (!planPago.Viaticos)
                                         {
-                                            detalleLiquidacionMesAnterior = listaDetalleLiquidacionMesAnterior
-                                                                            .Where(x => x.TerceroId == planPago.TerceroId)
-                                                                            .FirstOrDefault();
-                                        }
-                                        if (listaDetalleLiquidacionMesAnteriorViatico != null && listaDetalleLiquidacionMesAnteriorViatico.Count > 0)
-                                        {
-                                            listaLiquidacionMesAnteriorViaticoXTercero = listaDetalleLiquidacionMesAnteriorViatico
-                                                                                        .Where(x => x.TerceroId == planPago.TerceroId)
-                                                                                        .ToList();
-                                        }
+                                            if (listaDetalleLiquidacionMesAnterior != null && listaDetalleLiquidacionMesAnterior.Count > 0)
+                                            {
+                                                detalleLiquidacionMesAnterior = listaDetalleLiquidacionMesAnterior
+                                                                                .Where(x => x.TerceroId == planPago.TerceroId)
+                                                                                .FirstOrDefault();
+                                            }
+                                            if (listaDetalleLiquidacionMesAnteriorViatico != null && listaDetalleLiquidacionMesAnteriorViatico.Count > 0)
+                                            {
+                                                listaLiquidacionMesAnteriorViaticoXTercero = listaDetalleLiquidacionMesAnteriorViatico
+                                                                                            .Where(x => x.TerceroId == planPago.TerceroId)
+                                                                                            .ToList();
+                                            }
 
-                                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(planPago, parametroLiquidacionTercero,
-                                                                                    listaParametrosGenerales, listaCriterioCalculoReteFuente,
-                                                                                    listaDeduccionesDto.ToList(),
-                                                                                    listaLiquidacionMesAnteriorViaticoXTercero,
-                                                                                    detalleLiquidacionMesAnterior);
+                                            formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(planPago, parametroLiquidacionTercero,
+                                                                                        listaParametrosGenerales, listaCriterioCalculoReteFuente,
+                                                                                        listaDeduccionesDto.ToList(),
+                                                                                        listaLiquidacionMesAnteriorViaticoXTercero,
+                                                                                        detalleLiquidacionMesAnterior);
+                                        }
+                                        else
+                                        {
+                                            //Contratistas con viaticos liquida de otra manera
+                                            formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto, parametroLiquidacionTercero,
+                                                                                                        listaParametrosGenerales, listaCriterioCalculoReteFuente);
+                                        }
                                     }
                                     else
                                     {
-                                        //Contratistas con viaticos liquida de otra manera
-                                        formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto, parametroLiquidacionTercero,
-                                                                                                    listaParametrosGenerales, listaCriterioCalculoReteFuente);
+                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoDto, parametroLiquidacionTercero,
+                                                                                                        listaParametrosGenerales,
+                                                                                                        listaCriterioCalculoReteFuente,
+                                                                                                        listaDeduccionesDto.ToList());
                                     }
                                 }
                                 else if (planPago.Tercero.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
@@ -1801,7 +1826,10 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
             {
-                C17DescuentoDependiente = valorUvt * 32;
+                if (PL17DescuentoDependiente > 0)
+                {
+                    C17DescuentoDependiente = valorUvt * 32;
+                }
             }
             else
             {
@@ -2077,7 +2105,10 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
             {
-                C17DescuentoDependiente = valorUvt * 32;
+                if (PL17DescuentoDependiente > 0)
+                {
+                    C17DescuentoDependiente = valorUvt * 32;
+                }
             }
             else
             {
@@ -2259,8 +2290,6 @@ namespace ComplementApp.API.Services
                                                                                 listaDeduccionesXTercero,
                                                                                 listaDetalleLiquidacionMesAnteriorViatico,
                                                                                 listaDetalleLiquidacionMesAnterior);
-
-            //DateTime fechaSistema = 
 
             #region Proceso de Actualización de BD
 

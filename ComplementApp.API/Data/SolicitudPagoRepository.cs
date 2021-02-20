@@ -252,7 +252,7 @@ namespace ComplementApp.API.Data
                                          FechaInicio = co.FechaInicio,
                                          FechaFinal = co.FechaFinal,
                                          FechaRegistro = co.FechaRegistro,
-                                         FechaExpedicionPoliza = (co.FechaExpedicionPoliza.HasValue ? (co.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? co.FechaExpedicionPoliza.Value : null) : null),
+                                         FechaExpedicionPoliza = co.FechaExpedicionPoliza,
 
                                          Supervisor1 = new UsuarioParaDetalleDto()
                                          {
@@ -410,7 +410,7 @@ namespace ComplementApp.API.Data
                                          FechaInicio = co.FechaInicio,
                                          FechaFinal = co.FechaFinal,
                                          FechaRegistro = co.FechaRegistro,
-                                         FechaExpedicionPoliza = (co.FechaExpedicionPoliza.HasValue ? (co.FechaExpedicionPoliza.Value.ToString() != "0001-01-01 00:00:00.0000000" ? co.FechaExpedicionPoliza.Value : null) : null),
+                                         FechaExpedicionPoliza = co.FechaExpedicionPoliza,
 
                                          Supervisor1 = new UsuarioParaDetalleDto()
                                          {

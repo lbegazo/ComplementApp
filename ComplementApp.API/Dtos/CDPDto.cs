@@ -34,5 +34,6 @@ namespace ComplementApp.API.Dtos
         public int FormatoSolicitudPagoId { get; set; }
         public string Objeto { get; set; }
         public int? SupervisorId { get; set; }
+        public int? ContratoId { get; set; }
     }
 }

@@ -295,13 +295,13 @@
                         <td>
                           <p
                             *ngIf="notaLegal3 !== ''"
-                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
+                            class="left fontSmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal3 }}
                           </p>
                           <p
                             *ngIf="notaLegal4 !== ''"
-                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
+                            class="left fontSmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal4 }}
                           </p>
@@ -810,13 +810,13 @@
                         <td>
                           <p
                             *ngIf="notaLegal1 !== ''"
-                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
+                            class="left fontSmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal1 }}
                           </p>
                           <p
                             *ngIf="notaLegal2 !== ''"
-                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
+                            class="left fontSmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal2 }}
                           </p>
@@ -883,13 +883,13 @@
                                             <ng-container [formGroupName]="i">
                                               <div
                                                 style="width: 15%"
-                                                class="borderBottonRight centerAlign fontVerySmaller"
+                                                class="borderBottonRight centerAlign fontSmaller"
                                               >
                                                 {{ item?.identificacionRubro }}
                                               </div>
                                               <div
                                                 style="width: 45%"
-                                                class="borderBottonRight left addPaddingLeft5 addPaddingRight5 fontVerySmaller"
+                                                class="borderBottonRight left addPaddingLeft5 addPaddingRight5 fontSmaller"
                                               >
                                                 {{ item?.rubroNombre }}
                                               </div>
@@ -952,7 +952,7 @@
                         <td>
                           <p
                             *ngIf="notaLegal5 !== ''"
-                            class="left fontVerySmaller withoutMargin addPaddingLeft5"
+                            class="left fontSmaller withoutMargin addPaddingLeft5"
                           >
                             {{ notaLegal5 }}
                           </p>
@@ -1308,9 +1308,12 @@
                       </tr>
                       <!--Nota Legal-->
                       <tr *ngIf="notaLegal">
-                        <td class="center fontVerySmaller">
+                        <td class="center fontSmaller">
                           {{ notaLegal?.valor }}
                         </td>
+                      </tr>
+                      <tr style="height: 10px;">
+                        <td style="height: 10px;"></td>
                       </tr>
                     </table>
                   </td>

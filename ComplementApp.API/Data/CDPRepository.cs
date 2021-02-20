@@ -212,6 +212,23 @@ namespace ComplementApp.API.Data
                                  .ToListAsync();
             return detalles;
         }
+
+        public async Task<CDPDto> ObtenerCDPPorCompromiso(long crp)
+        {
+            var cdp = await (from d in _context.CDP
+                             where d.Instancia == (int)TipoDocumento.Compromiso
+                             where d.Crp == crp
+                             select new CDPDto()
+                             {
+                                 Cdp = d.Cdp,
+                                 Crp = d.Crp,
+                                 Fecha = d.Fecha,
+                             })
+                            .Distinct()
+                            .FirstOrDefaultAsync();
+            return cdp;
+        }
+
         private async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesConCDP(int usuarioId, int numeroCDP)
         {
             var detalles = await (from d in _context.DetalleCDP

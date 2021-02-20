@@ -11,11 +11,13 @@
             <td>
               <table>
                 <tr>
-                  <td style="padding: 0px;">
+                  <td style="padding: 0px">
                     <div class="form-row mt-2 ml-1 mr-1">
                       <!--Compromiso-->
                       <div class="form-group col-md-1" style="margin: 0px">
-                        <label for="tipoDocumentoIdentidad" class="col-form-label-md"
+                        <label
+                          for="tipoDocumentoIdentidad"
+                          class="col-form-label-md"
                           ><strong>Compromiso</strong></label
                         >
                         <p class="paragraph">{{ cdpSeleccionado.crp }}</p>
@@ -36,7 +38,9 @@
                         <label for="NombreTercero" class="col-form-label-md"
                           ><strong>Nombre</strong></label
                         >
-                        <p class="paragraph">{{ cdpSeleccionado.nombreTercero }}</p>
+                        <p class="paragraph">
+                          {{ cdpSeleccionado.nombreTercero }}
+                        </p>
                       </div>
                       <!--Saldo Act-->
                       <div class="form-group col-md-2" style="margin: 0px">
@@ -60,7 +64,9 @@
                     <div class="form-row mt-4 ml-1 mr-1">
                       <!--Objeto-->
                       <div class="form-group col-md-12" style="margin: 0px">
-                        <p class="paragraphLeft">{{ cdpSeleccionado.objeto }}</p>
+                        <p class="paragraphLeft">
+                          {{ cdpSeleccionado.objeto }}
+                        </p>
                       </div>
                     </div>
                   </td>
@@ -75,7 +81,10 @@
                       <div class="panel-body mt-3 mb-2">
                         <div class="form-row mt-3">
                           <!--MODALIDAD DE CONTRATO-->
-                          <div class="form-group col-md-3 left" style="margin: 0px">
+                          <div
+                            class="form-group col-md-3 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="selectTipoModalidadContrato"
                               class="col-form-label-md"
@@ -89,7 +98,8 @@
                               id="selectTipoModalidadContrato"
                               [ngClass]="{
                                 'is-invalid':
-                                  editForm.get('tipoModalidadContratoCtrl').touched &&
+                                  editForm.get('tipoModalidadContratoCtrl')
+                                    .touched &&
                                   editForm
                                     .get('tipoModalidadContratoCtrl')
                                     .hasError('required')
@@ -108,7 +118,8 @@
                             <div
                               class="invalid-feedback"
                               *ngIf="
-                                editForm.get('tipoModalidadContratoCtrl').touched &&
+                                editForm.get('tipoModalidadContratoCtrl')
+                                  .touched &&
                                 editForm
                                   .get('tipoModalidadContratoCtrl')
                                   .hasError('required')
@@ -118,7 +129,10 @@
                             </div>
                           </div>
                           <!--NUMERO DE CONTRATO-->
-                          <div class="form-group col-md-2 left" style="margin: 0px">
+                          <div
+                            class="form-group col-md-2 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="inputNumeroContrato"
                               class="col-form-label-md"
@@ -127,10 +141,8 @@
                             <input
                               [ngClass]="{
                                 'is-invalid':
-                                  editForm.get('numeroContratoCtrl')
-                                    .errors &&
-                                  editForm.get('numeroContratoCtrl')
-                                    .touched
+                                  editForm.get('numeroContratoCtrl').errors &&
+                                  editForm.get('numeroContratoCtrl').touched
                               }"
                               type="text"
                               (keypress)="numberOnly($event)"
@@ -142,14 +154,12 @@
                               maxlength="20"
                               onDrag="return false"
                               onDrop="return false"
-                              onPaste="return false"
                               autocomplete="off"
                             />
                             <div
                               class="invalid-feedback"
                               *ngIf="
-                                editForm.get('numeroContratoCtrl')
-                                  .touched &&
+                                editForm.get('numeroContratoCtrl').touched &&
                                 editForm
                                   .get('numeroContratoCtrl')
                                   .hasError('required')
@@ -157,13 +167,16 @@
                             >
                               Debe ingresar el número de Contrato
                             </div>
-                          </div>                          
+                          </div>
                           <!--FECHA DE INICIO-->
-                          <div class="form-group col-md-2 left" style="margin: 0px">
+                          <div
+                            class="form-group col-md-2 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="inputFechaInicio"
                               class="col-form-label-md"
-                              >Fecha Inicio</label
+                              >Fecha Acta de Inicio</label
                             >
 
                             <input
@@ -193,12 +206,15 @@
                               La fecha de inicio es requerida
                             </div>
                           </div>
-                           <!--FECHA FINAL-->
-                           <div class="form-group col-md-2 left" style="margin: 0px">
+                          <!--FECHA FINAL-->
+                          <div
+                            class="form-group col-md-2 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="inputFechaFinal"
                               class="col-form-label-md"
-                              >Fecha Final</label
+                              >Fecha Finalización Contrato</label
                             >
 
                             <input
@@ -228,10 +244,11 @@
                               La fecha final es requerida
                             </div>
                           </div>
-                        </div>
-                        <div class="form-row mt-3">
                           <!--FECHA EXPEDICION POLIZA-->
-                          <div class="form-group col-md-2 left" style="margin: 0px">
+                          <div
+                            class="form-group col-md-2 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="inputFechaExpedicionPoliza"
                               class="col-form-label-md"
@@ -241,8 +258,10 @@
                             <input
                               [ngClass]="{
                                 'is-invalid':
-                                  editForm.get('fechaExpedicionPolizaCtrl').errors &&
-                                  editForm.get('fechaExpedicionPolizaCtrl').touched
+                                  editForm.get('fechaExpedicionPolizaCtrl')
+                                    .errors &&
+                                  editForm.get('fechaExpedicionPolizaCtrl')
+                                    .touched
                               }"
                               class="form-control"
                               placeholder="Fecha de inicio"
@@ -256,7 +275,8 @@
                             <div
                               class="invalid-feedback"
                               *ngIf="
-                                editForm.get('fechaExpedicionPolizaCtrl').touched &&
+                                editForm.get('fechaExpedicionPolizaCtrl')
+                                  .touched &&
                                 editForm
                                   .get('fechaExpedicionPolizaCtrl')
                                   .hasError('required')
@@ -265,8 +285,13 @@
                               La fecha de Expedición de Poliza es requerida
                             </div>
                           </div>
-                           <!--SUPERVISOR 1-->
-                           <div class="form-group col-md-3 left" style="margin: 0px">
+                        </div>
+                        <div class="form-row mt-3">
+                          <!--SUPERVISOR 1-->
+                          <div
+                            class="form-group col-md-3 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="selectSupervisor1"
                               class="col-form-label-md"
@@ -309,7 +334,10 @@
                             </div>
                           </div>
                           <!--SUPERVISOR 2-->
-                          <div class="form-group col-md-3 left" style="margin: 0px">
+                          <div
+                            class="form-group col-md-3 left"
+                            style="margin: 0px"
+                          >
                             <label
                               for="selectSupervisor2"
                               class="col-form-label-md"
@@ -331,9 +359,9 @@
                               >
                                 {{ item.nombre }}
                               </option>
-                            </select>                          
+                            </select>
                           </div>
-                        </div>                      
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -389,4 +417,3 @@
     terceroSeleccionado:
   {{ terceroSeleccionado | json }}
 </p> -->
-

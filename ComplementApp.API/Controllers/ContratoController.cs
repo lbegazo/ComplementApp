@@ -49,20 +49,22 @@ namespace ComplementApp.API.Controllers
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerCompromisosParaContrato([FromQuery(Name = "tipo")] int tipo,
-                                                                        [FromQuery(Name = "contratoId")] int? contratoId,
+                                                                        [FromQuery(Name = "terceroId")] int? terceroId,
                                                                         [FromQuery] UserParams userParams)
         {
             try
             {
                 PagedList<CDPDto> pagedList = null;
 
+                //Registrar contratos
                 if (tipo == 1)
                 {
-                    pagedList = await _repo.ObtenerCompromisosSinContrato(contratoId, userParams);
+                    pagedList = await _repo.ObtenerCompromisosSinContrato(terceroId, userParams);
                 }
                 else
                 {
-                    pagedList = await _repo.ObtenerCompromisosConContrato(contratoId, userParams);
+                    //Modificar contratos
+                    pagedList = await _repo.ObtenerCompromisosConContrato(terceroId, userParams);
                 }
                 var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
 
@@ -94,7 +96,7 @@ namespace ComplementApp.API.Controllers
             }
             throw new Exception($"No se pudo obtener información del contrato");
         }
-/*
+
         [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> RegistrarContrato(ContratoDto contratoDto)
@@ -106,42 +108,34 @@ namespace ComplementApp.API.Controllers
 
             try
             {
-
                 if (contratoDto != null)
                 {
+                    var cdp = await _cdpRepo.ObtenerCDPPorCompromiso(contratoDto.Crp);
+
                     #region Mapear datos Contrato
 
-                    tercero.TipoIdentificacion = terceroDto.TipoDocumentoIdentidadId;
-                    tercero.NumeroIdentificacion = terceroDto.NumeroIdentificacion;
-                    tercero.Nombre = terceroDto.Nombre;
-                    tercero.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
-                    tercero.Telefono = terceroDto.Telefono;
-                    tercero.Email = terceroDto.Email;
-                    tercero.Direccion = terceroDto.Direccion;
-                    tercero.FacturadorElectronico = terceroDto.FacturadorElectronico;
-                    tercero.DeclaranteRenta = terceroDto.DeclaranteRenta;
+                    contrato.NumeroContrato = contratoDto.NumeroContrato;
+                    contrato.TipoModalidadContratoId = contratoDto.TipoModalidadContratoId;
+                    contrato.Crp = contratoDto.Crp;
+                    contrato.FechaRegistro = cdp.Fecha;
+                    contrato.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
+                    contrato.FechaInicio = contratoDto.FechaInicio;
+                    contrato.FechaFinal = contratoDto.FechaFinal;
+                    contrato.Supervisor1Id = contratoDto.Supervisor1Id;
+                    contrato.Supervisor2Id = contratoDto.Supervisor2Id.HasValue ? contratoDto.Supervisor2Id.Value : null;
 
-                    if (terceroDto.FacturadorElectronico)
-                    {
-                        tercero.RegimenTributario = "RESPONSABLE DE IVA";
-                    }
-                    else
-                    {
-                        tercero.RegimenTributario = "NO RESPONSABLE DE IVA";
-                    }
-
-                    tercero.UsuarioIdRegistro = usuarioId;
-                    tercero.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                    contrato.UsuarioIdRegistro = usuarioId;
+                    contrato.FechaInsercion = _generalInterface.ObtenerFechaHoraActual();
 
                     #endregion Mapear datos Contrato
 
                     //Registrar Parametro liquidación Contrato
-                    _dataContext.Contrato.Add(tercero);
+                    _dataContext.Contrato.Add(contrato);
                     await _dataContext.SaveChangesAsync();
 
                     await transaction.CommitAsync();
 
-                    return Ok(tercero.ContratoId);
+                    return Ok(contrato.ContratoId);
                 }
 
             }
@@ -159,32 +153,21 @@ namespace ComplementApp.API.Controllers
 
             try
             {
-                //Registrar Contrato
-                var terceroBD = await _repo.ObtenerContratoBase(terceroDto.ContratoId);
+                var contratoBD = await _repo.ObtenerContratoBase(contratoDto.ContratoId);
 
                 #region Mapear datos Contrato
 
-                terceroBD.TipoIdentificacion = terceroDto.TipoDocumentoIdentidadId;
-                terceroBD.NumeroIdentificacion = terceroDto.NumeroIdentificacion;
-                terceroBD.Nombre = terceroDto.Nombre;
-                terceroBD.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
-                terceroBD.Telefono = terceroDto.Telefono;
-                terceroBD.Email = terceroDto.Email;
-                terceroBD.Direccion = terceroDto.Direccion;
-                terceroBD.FacturadorElectronico = terceroDto.FacturadorElectronico;
-                terceroBD.DeclaranteRenta = terceroDto.DeclaranteRenta;
+                contratoBD.NumeroContrato = contratoDto.NumeroContrato;
+                contratoBD.TipoModalidadContratoId = contratoDto.TipoModalidadContratoId;
+                contratoBD.Crp = contratoDto.Crp;
+                contratoBD.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
+                contratoBD.FechaInicio = contratoDto.FechaInicio;
+                contratoBD.FechaFinal = contratoDto.FechaFinal;
+                contratoBD.Supervisor1Id = contratoDto.Supervisor1Id;
+                contratoBD.Supervisor2Id = contratoDto.Supervisor2Id;
 
-                if (terceroDto.FacturadorElectronico)
-                {
-                    terceroBD.RegimenTributario = "RESPONSABLE DE IVA";
-                }
-                else
-                {
-                    terceroBD.RegimenTributario = "NO RESPONSABLE DE IVA";
-                }
-
-                terceroBD.UsuarioIdModificacion = usuarioId;
-                terceroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                contratoBD.UsuarioIdModificacion = usuarioId;
+                contratoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
 
                 #endregion Mapear datos Contrato
 
@@ -198,6 +181,6 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
-*/
+
     }
 }

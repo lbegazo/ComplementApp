@@ -128,9 +128,7 @@ namespace ComplementApp.API.Controllers
                 var terceroBD = await _repo.ObtenerTerceroBase(terceroDto.TerceroId);
 
                 #region Mapear datos Tercero
-
-                terceroBD.TipoIdentificacion = terceroDto.TipoDocumentoIdentidadId;
-                terceroBD.NumeroIdentificacion = terceroDto.NumeroIdentificacion;
+                
                 terceroBD.Nombre = terceroDto.Nombre;
                 terceroBD.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
                 terceroBD.Telefono = terceroDto.Telefono;

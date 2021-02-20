@@ -46,8 +46,12 @@ export class TerceroEditComponent implements OnInit {
     if (!this.esCreacion) {
       this.createFullForm();
       this.nombreBoton = 'Guardar';
+      this.tipoDocumentoCtrl.disable();
+      this.numeroIdentificacionCtrl.disable();
     } else {
       this.nombreBoton = 'Registrar';
+      this.tipoDocumentoCtrl.enable();
+      this.numeroIdentificacionCtrl.enable();
     }
   }
 
@@ -157,12 +161,21 @@ export class TerceroEditComponent implements OnInit {
         const terceroNuevo: Tercero = {
           terceroId: 0,
           tipoDocumentoIdentidadId: this.idTipoDocumentoSeleccionado,
-          numeroIdentificacion: formValues.numeroIdentificacionCtrl,
-          nombre: formValues.nombreCtrl,
+          numeroIdentificacion: formValues.numeroIdentificacionCtrl.trim(),
+          nombre:
+            formValues.nombreCtrl !== undefined
+              ? formValues.nombreCtrl.trim()
+              : '',
           fechaExpedicionDocumento: dateFecha,
           telefono: formValues.telefonoCtrl,
-          email: formValues.emailCtrl,
-          direccion: formValues.direccionCtrl,
+          email:
+            formValues.emailCtrl !== undefined
+              ? formValues.emailCtrl.trim()
+              : '',
+          direccion:
+            formValues.direccionCtrl !== undefined
+              ? formValues.direccionCtrl.trim()
+              : '',
           declaranteRenta: formValues.declaranteRentaCtrl,
           facturadorElectronico: formValues.facturadorElectronicoCtrl,
           facturadorElectronicoDescripcion: '',
@@ -193,14 +206,15 @@ export class TerceroEditComponent implements OnInit {
           }
         );
       } else {
-        this.terceroSeleccionado.tipoDocumentoIdentidadId = this.idTipoDocumentoSeleccionado;
-        this.terceroSeleccionado.numeroIdentificacion =
-          formValues.numeroIdentificacionCtrl;
-        this.terceroSeleccionado.nombre = formValues.nombreCtrl;
+        this.terceroSeleccionado.nombre = formValues.nombreCtrl.trim();
         this.terceroSeleccionado.fechaExpedicionDocumento = dateFecha;
         this.terceroSeleccionado.telefono = formValues.telefonoCtrl;
-        this.terceroSeleccionado.email = formValues.emailCtrl;
-        this.terceroSeleccionado.direccion = formValues.direccionCtrl;
+        this.terceroSeleccionado.email =
+          formValues.emailCtrl !== undefined ? formValues.emailCtrl.trim() : '';
+        this.terceroSeleccionado.direccion =
+          formValues.direccionCtrl !== undefined
+            ? formValues.direccionCtrl.trim()
+            : '';
         (this.terceroSeleccionado.declaranteRenta =
           formValues.declaranteRentaCtrl),
           (this.terceroSeleccionado.facturadorElectronico =
@@ -233,6 +247,10 @@ export class TerceroEditComponent implements OnInit {
 
   get tipoDocumentoCtrl() {
     return this.editForm.get('tipoDocumentoCtrl');
+  }
+
+  get numeroIdentificacionCtrl() {
+    return this.editForm.get('numeroIdentificacionCtrl');
   }
 
   //#endregion Controles
