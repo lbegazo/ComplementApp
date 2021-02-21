@@ -16,6 +16,8 @@ namespace ComplementApp.API.Interfaces
         Task<FormatoSolicitudPago> ObtenerFormatoSolicitudPagoBase(int formatoSolicitudPagoId);
         Task<ICollection<FormatoSolicitudPago>> ObtenerListaSolicitudPagoXPlanPagoIds(List<int> planPagoIds);
         Task<FormatoSolicitudPago> ObtenerSolicitudPagoXPlanPagoId(int planPagoId);
-
+        Task<Numeracion> ObtenerUltimaNumeracionDisponible();
+        Task<Numeracion> ObtenerNumeracionBase(int numeracionId);
+        Task<Numeracion> ObtenerNumeracionxNumeroFactura(string numeroFactura);
     }
 }

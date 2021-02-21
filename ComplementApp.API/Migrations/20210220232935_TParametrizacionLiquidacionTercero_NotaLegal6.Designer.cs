@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210220232935_TParametrizacionLiquidacionTercero_NotaLegal6")]
+    partial class TParametrizacionLiquidacionTercero_NotaLegal6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1035,35 +1037,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("DetalleLiquidacionId");
 
                     b.ToTable("TLiquidacionDeduccion");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.Numeracion", b =>
-                {
-                    b.Property<int>("NumeracionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("Consecutivo")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FormatoSolicitudPagoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NumeroConsecutivo")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(10)");
-
-                    b.Property<bool>("Utilizado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.HasKey("NumeracionId");
-
-                    b.HasIndex("FormatoSolicitudPagoId");
-
-                    b.ToTable("TNumeracion");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.ParametroGeneral", b =>
@@ -2338,15 +2311,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Deduccion");
 
                     b.Navigation("DetalleLiquidacion");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.Numeracion", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.FormatoSolicitudPago", "FormatoSolicitudPago")
-                        .WithMany()
-                        .HasForeignKey("FormatoSolicitudPagoId");
-
-                    b.Navigation("FormatoSolicitudPago");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.ParametroLiquidacionTercero", b =>

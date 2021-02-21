@@ -196,6 +196,7 @@ namespace ComplementApp.API.Data
                                    NotaLegal3 = plt.NotaLegal3,
                                    NotaLegal4 = plt.NotaLegal4,
                                    NotaLegal5 = plt.NotaLegal5,
+                                   NotaLegal6 = plt.NotaLegal6,
                                }).FirstOrDefaultAsync();
 
             return lista;

@@ -284,7 +284,7 @@ namespace ComplementApp.API.Data
                                          FechaExpedicionDocumento = t.FechaExpedicionDocumento.HasValue ? (t.FechaExpedicionDocumento.Value.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionDocumento.Value : null) : null,
                                          RegimenTributario = t.RegimenTributario,
                                          DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
-                                         FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO"
+                                         FacturadorElectronicoDescripcion = pt.FacturaElectronica ? "SI" : "NO"
                                      },
 
                                  }).FirstOrDefaultAsync();
@@ -480,6 +480,43 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
+        public async Task<Numeracion> ObtenerUltimaNumeracionDisponible()
+        {
+            Numeracion numeracion = new Numeracion();
+            var lista = await (from c in _context.Numeracion
+                               where c.Utilizado == false
+                               select c)
+                              .ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                numeracion = lista.OrderBy(x => x.Consecutivo).First();
+            }
+            return numeracion;
+        }
+
+        public async Task<Numeracion> ObtenerNumeracionBase(int numeracionId)
+        {
+            var numeracion = await (from c in _context.Numeracion
+                                    where c.NumeracionId == numeracionId
+                                    select c)
+                              .FirstOrDefaultAsync();
+
+
+            return numeracion;
+        }
+
+        public async Task<Numeracion> ObtenerNumeracionxNumeroFactura(string numeroFactura)
+        {
+            var numeracion = await (from c in _context.Numeracion
+                                    where c.NumeroConsecutivo == numeroFactura
+                                    select c)
+                              .FirstOrDefaultAsync();
+
+            return numeracion;
+        }
+
+
         #endregion Registro de Solicitud de Pago
         public async Task<ICollection<FormatoSolicitudPago>> ObtenerListaSolicitudPagoXPlanPagoIds(List<int> planPagoIds)
         {
@@ -489,7 +526,6 @@ namespace ComplementApp.API.Data
                           select sp
                           ).ToListAsync();
         }
-
         public async Task<FormatoSolicitudPago> ObtenerSolicitudPagoXPlanPagoId(int planPagoId)
         {
             return await (from sp in _context.FormatoSolicitudPago

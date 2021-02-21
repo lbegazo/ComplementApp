@@ -96,6 +96,12 @@ export class PopupSolicitudPagoComponent implements OnInit {
         this.mesCtrl.disable();
         this.baseCotizacionCtrl.disable();
       }
+
+      if (this.parametroLiquidacionTercero.facturaElectronicaId === 0) {
+        this.numeroFacturaCtrl.disable();
+      } else {
+        this.numeroFacturaCtrl.enable();
+      }
     }
   }
 
@@ -227,7 +233,10 @@ export class PopupSolicitudPagoComponent implements OnInit {
         terceroId: 0,
         planPagoId: 0,
         crp: 0,
-        numeroFactura: formValues.numeroFacturaCtrl.trim(),
+        numeroFactura:
+          formValues.numeroFacturaCtrl !== undefined
+            ? formValues.numeroFacturaCtrl.trim()
+            : 0,
         valorFacturado: +GeneralService.obtenerValorAbsoluto(
           formValues.valorFacturaCtrl
         ),
@@ -266,6 +275,10 @@ export class PopupSolicitudPagoComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  get numeroFacturaCtrl() {
+    return this.popupForm.get('numeroFacturaCtrl');
   }
 
   get actividadEconomicaCtrl() {

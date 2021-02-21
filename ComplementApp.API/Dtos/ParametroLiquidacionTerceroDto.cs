@@ -49,6 +49,7 @@ namespace ComplementApp.API.Dtos
         public bool NotaLegal3 { get; set; }
         public bool NotaLegal4 { get; set; }
         public bool NotaLegal5 { get; set; }
+        public bool NotaLegal6 { get; set; }
         public ICollection<TerceroDeduccionDto> TerceroDeducciones { get; set; }
     }
 }

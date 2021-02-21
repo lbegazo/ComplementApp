@@ -91,6 +91,7 @@ namespace ComplementApp.API.Models
         public bool NotaLegal3 { get; set; }
         public bool NotaLegal4 { get; set; }
         public bool NotaLegal5 { get; set; }
+        public bool NotaLegal6 { get; set; }
         public int? TipoAdminPilaId { get; set; }
         public TipoAdminPila TipoAdminPila { get; set; }
         

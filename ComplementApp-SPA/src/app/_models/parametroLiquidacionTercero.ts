@@ -42,4 +42,5 @@ export interface ParametroLiquidacionTercero {
   notaLegal3: boolean;
   notaLegal4: boolean;
   notaLegal5: boolean;
+  notaLegal6: boolean;
 }

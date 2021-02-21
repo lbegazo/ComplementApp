@@ -12,6 +12,7 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
 import { FormatoSolicitudPagoDto } from 'src/app/_dto/formatoSolicitudPagoDto';
+import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { Cdp } from 'src/app/_models/cdp';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
@@ -19,6 +20,7 @@ import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { ListaService } from 'src/app/_services/lista.service';
 import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { TerceroService } from 'src/app/_services/tercero.service';
 import { environment } from 'src/environments/environment';
@@ -61,6 +63,7 @@ export class RegistroSolicitudPagoComponent implements OnInit {
 
   usuarioLogueado: Usuario;
   perfilId: number;
+  listaNotasLegales: ValorSeleccion[] = [];
 
   constructor(
     private http: HttpClient,
@@ -68,10 +71,13 @@ export class RegistroSolicitudPagoComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private solicitudPagoService: SolicitudPagoService,
-    private terceroService: TerceroService
+    private terceroService: TerceroService,
+    private listaService: ListaService
   ) {}
 
   ngOnInit(): void {
+    this.cargarNotasLegales();
+
     this.route.data.subscribe((data) => {
       this.transaccion = data['transaccion'];
       if (this.transaccion) {
@@ -268,6 +274,17 @@ export class RegistroSolicitudPagoComponent implements OnInit {
           }
         });
     }
+  }
+
+  cargarNotasLegales() {
+    this.listaService.ObtenerParametrosGeneralesXTipo('NotaLegal').subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaNotasLegales = lista;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
   }
 
   HabilitarCabecera($event) {

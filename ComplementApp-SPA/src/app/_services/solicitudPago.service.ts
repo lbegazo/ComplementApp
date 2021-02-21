@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
 import { FormatoSolicitudPagoDto } from '../_dto/formatoSolicitudPagoDto';
+import { RespuestaSolicitudPago } from '../_dto/respuestaSolicitudPago';
 import { Cdp } from '../_models/cdp';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { FormatoSolicitudPago } from '../_models/formatoSolicitudPago';
@@ -143,9 +144,9 @@ export class SolicitudPagoService {
 
   RegistrarFormatoSolicitudPago(
     formato: FormatoSolicitudPago
-  ): Observable<any> {
+  ): Observable<RespuestaSolicitudPago> {
     const path = 'RegistrarFormatoSolicitudPago';
-    return this.http.post(this.baseUrl + path, formato);
+    return this.http.post<RespuestaSolicitudPago>(this.baseUrl + path, formato);
   }
 
   ObtenerSeguridadSocialParaSolicitudPago(

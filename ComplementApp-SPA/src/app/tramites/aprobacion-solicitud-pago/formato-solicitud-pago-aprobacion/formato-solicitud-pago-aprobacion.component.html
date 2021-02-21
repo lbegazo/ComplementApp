@@ -488,10 +488,7 @@
                                     <div
                                       formArrayName="deduccionControles"
                                       class="row"
-                                      *ngFor="
-                                        let item of cdps;
-                                        let i = index
-                                      "
+                                      *ngFor="let item of cdps; let i = index"
                                       style="height: 20px"
                                     >
                                       <ng-container [formGroupName]="i">
@@ -969,58 +966,69 @@
                           <table style="width: 100%">
                             <tr>
                               <td style="width: 33%">
-                                <table>
+                                <table style="width: 100%; height: 100%">
                                   <tr>
+                                    <td style="width: 66%; padding: 0px">
+                                      <table style="width: 100%">
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 38%"
+                                          >
+                                            NOMBRES:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 62%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.tercero
+                                                .nombre
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 38%"
+                                          >
+                                            NUM. IDENTIFICACION:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 62%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.tercero
+                                                .numeroIdentificacion
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 38%"
+                                          >
+                                            CARGO:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 62%"
+                                          >
+                                            CONTRATISTA
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
                                     <td
-                                      class="center fontSmaller"
+                                      class="center fontVerySmaller"
                                       style="
-                                        height: 80px;
                                         vertical-align: bottom;
+                                        width: 34%;
+                                        height: 100%;
                                       "
-                                      colspan="2"
                                     >
                                       FIRMA DEL CONTRATISTA
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 40%"
-                                    >
-                                      NOMBRES:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 60%"
-                                    >
-                                      {{ formatoSolicitudPago?.tercero.nombre }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      NUM. IDENTIFICACION:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.tercero
-                                          .numeroIdentificacion
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CARGO:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CONTRATISTA
                                     </td>
                                   </tr>
                                 </table>
@@ -1032,64 +1040,69 @@
                                     .usuarioId > 0
                                 "
                               >
-                                <table>
+                                <table style="width: 100%; height: 100%">
                                   <tr>
+                                    <td style="width: 66%; padding: 0px">
+                                      <table style="width: 100%; height: 100%">
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 37%"
+                                          >
+                                            NOMBRES:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 63%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor1?.nombreCompleto
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 37%"
+                                          >
+                                            NUM. IDENTIFICACION:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 63%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor1
+                                                ?.numeroIdentificacion
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 37%"
+                                          >
+                                            CARGO:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 63%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor1?.cargoNombre
+                                            }}
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
                                     <td
-                                      class="center fontSmaller"
-                                      style="
-                                        height: 80px;
-                                        vertical-align: bottom;
-                                      "
-                                      colspan="2"
+                                      class="center fontVerySmaller"
+                                      style="vertical-align: bottom; width: 34%"
                                     >
                                       FIRMA DEL SUPERVISOR O INTERVENTOR
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 40%"
-                                    >
-                                      NOMBRES:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 60%"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor1?.nombreCompleto
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      NUM. IDENTIFICACION:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor1?.numeroIdentificacion
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CARGO:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor1?.cargoNombre
-                                      }}
                                     </td>
                                   </tr>
                                 </table>
@@ -1101,64 +1114,69 @@
                                     .usuarioId > 0
                                 "
                               >
-                                <table>
+                                <table style="width: 100%; height: 100%">
                                   <tr>
+                                    <td style="width: 66%; padding: 0px">
+                                      <table style="width: 100%; height: 100%">
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 38%"
+                                          >
+                                            NOMBRES:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 62%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor2?.nombreCompleto
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 38%"
+                                          >
+                                            NUM. IDENTIFICACION:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 62%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor2
+                                                ?.numeroIdentificacion
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5 addHeight"
+                                            style="width: 38%"
+                                          >
+                                            CARGO:
+                                          </td>
+                                          <td
+                                            class="left fontVerySmaller addPaddingLeft5"
+                                            style="width: 62%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor2?.cargoNombre
+                                            }}
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
                                     <td
-                                      class="center fontSmaller"
-                                      style="
-                                        height: 80px;
-                                        vertical-align: bottom;
-                                      "
-                                      colspan="2"
+                                      class="center fontVerySmaller"
+                                      style="vertical-align: bottom; width: 34%"
                                     >
                                       FIRMA DEL SUPERVISOR O INTERVENTOR
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 40%"
-                                    >
-                                      NOMBRES:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller"
-                                      style="width: 60%"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor2?.nombreCompleto
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      NUM. IDENTIFICACION:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor2?.numeroIdentificacion
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CARGO:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor2?.cargoNombre
-                                      }}
                                     </td>
                                   </tr>
                                 </table>
@@ -1174,61 +1192,72 @@
                         "
                       >
                         <td class="withoutPadding">
-                          <table style="width: 100%">
+                          <table style="width: 100%" class="withoutPadding">
                             <tr>
-                              <td style="width: 50%">
-                                <table>
+                              <td style="width: 50%" class="withoutPadding">
+                                <table style="width: 100%; height: 100%">
                                   <tr>
+                                    <td style="width: 66%; padding: 0px">
+                                      <table style="width: 100%">
+                                        <tr>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5 addHeight"
+                                            style="width: 40%"
+                                          >
+                                            NOMBRES:
+                                          </td>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5"
+                                            style="width: 60%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.tercero
+                                                .nombre
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5 addHeight"
+                                            style="width: 40%"
+                                          >
+                                            NUM. IDENTIFICACION:
+                                          </td>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5"
+                                            style="width: 60%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.tercero
+                                                .numeroIdentificacion
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5 addHeight"
+                                            style="width: 40%"
+                                          >
+                                            CARGO:
+                                          </td>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5"
+                                            style="width: 60%"
+                                          >
+                                            CONTRATISTA
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
                                     <td
                                       class="center fontSmaller"
                                       style="
-                                        height: 80px;
                                         vertical-align: bottom;
+                                        width: 34%;
+                                        height: 100%;
                                       "
-                                      colspan="2"
                                     >
                                       FIRMA DEL CONTRATISTA
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 40%"
-                                    >
-                                      NOMBRES:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 60%"
-                                    >
-                                      {{ formatoSolicitudPago?.tercero.nombre }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      NUM. IDENTIFICACION:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.tercero
-                                          .numeroIdentificacion
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CARGO:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CONTRATISTA
                                     </td>
                                   </tr>
                                 </table>
@@ -1240,64 +1269,69 @@
                                     .usuarioId > 0
                                 "
                               >
-                                <table>
+                                <table style="width: 100%; height: 100%">
                                   <tr>
+                                    <td style="width: 66%; padding: 0px">
+                                      <table style="width: 100%; height: 100%">
+                                        <tr>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5 addHeight"
+                                            style="width: 40%"
+                                          >
+                                            NOMBRES:
+                                          </td>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5"
+                                            style="width: 60%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor1?.nombreCompleto
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5 addHeight"
+                                            style="width: 40%"
+                                          >
+                                            NUM. IDENTIFICACION:
+                                          </td>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5"
+                                            style="width: 60%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor1
+                                                ?.numeroIdentificacion
+                                            }}
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5 addHeight"
+                                            style="width: 40%"
+                                          >
+                                            CARGO:
+                                          </td>
+                                          <td
+                                            class="left fontSmaller addPaddingLeft5"
+                                            style="width: 60%"
+                                          >
+                                            {{
+                                              formatoSolicitudPago?.contrato
+                                                ?.supervisor1?.cargoNombre
+                                            }}
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
                                     <td
                                       class="center fontSmaller"
-                                      style="
-                                        height: 80px;
-                                        vertical-align: bottom;
-                                      "
-                                      colspan="2"
+                                      style="vertical-align: bottom; width: 34%"
                                     >
                                       FIRMA DEL SUPERVISOR O INTERVENTOR
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 40%"
-                                    >
-                                      NOMBRES:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                      style="width: 60%"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor1?.nombreCompleto
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      NUM. IDENTIFICACION:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor1?.numeroIdentificacion
-                                      }}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      CARGO:
-                                    </td>
-                                    <td
-                                      class="left fontSmaller addPaddingLeft5"
-                                    >
-                                      {{
-                                        formatoSolicitudPago?.contrato
-                                          ?.supervisor1?.cargoNombre
-                                      }}
                                     </td>
                                   </tr>
                                 </table>
@@ -1312,8 +1346,8 @@
                           {{ notaLegal?.valor }}
                         </td>
                       </tr>
-                      <tr style="height: 10px;">
-                        <td style="height: 10px;"></td>
+                      <tr style="height: 10px">
+                        <td style="height: 10px"></td>
                       </tr>
                     </table>
                   </td>

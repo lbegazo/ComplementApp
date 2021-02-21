@@ -133,4 +133,8 @@ table {
     display: flex;
     justify-content: center; 
   }
+
+  .addHeight {
+    height: 35px;
+  }
   

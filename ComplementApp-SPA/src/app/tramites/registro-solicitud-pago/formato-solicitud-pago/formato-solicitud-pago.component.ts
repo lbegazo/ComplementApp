@@ -37,6 +37,7 @@ import { TerceroService } from 'src/app/_services/tercero.service';
 import { CdpService } from 'src/app/_services/cdp.service';
 import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { Cdp } from 'src/app/_models/cdp';
+import { RespuestaSolicitudPago } from 'src/app/_dto/respuestaSolicitudPago';
 
 @Component({
   selector: 'app-formato-solicitud-pago',
@@ -49,11 +50,13 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
   @Input() formatoSolicitudPago: FormatoSolicitudPagoDto;
   @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
+  @Input() listaNotasLegales: ValorSeleccion[];
   @Output() esCancelado = new EventEmitter<boolean>();
 
   listaMeses: ValorSeleccion[] = [];
   mesSaludActual = '';
   formatoSolicitudPagoId = 0;
+  numeroFactura = '';
 
   formatoForm = new FormGroup({});
   arrayControls = new FormArray([]);
@@ -66,7 +69,6 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
   idplanPagoSeleccionada = 0;
   subscriptions: Subscription[] = [];
-  listaNotasLegales: ValorSeleccion[] = [];
 
   habilitaPlanDePagoSeleccionado = false;
   habilitaDatosRegistrados = false;
@@ -79,6 +81,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   notaLegal3 = '';
   notaLegal4 = '';
   notaLegal5 = '';
+  notaLegal6 = '';
 
   rubrosPresupuestales: DetalleCDP[] = [];
   cdps: Cdp[] = [];
@@ -281,17 +284,22 @@ export class FormatoSolicitudPagoComponent implements OnInit {
       this.solicitudPagoService
         .RegistrarFormatoSolicitudPago(this.formatoSolicitudPagoPopup)
         .subscribe(
-          (response: any) => {
-            if (!isNaN(response)) {
-              this.formatoSolicitudPagoId = +response;
-              this.alertify.success(
-                'El Formato de Solicitud de Pago se registró correctamente'
-              );
-              this.solicitudRegistrada = true;
-            } else {
-              this.alertify.error(
-                'No se pudo registrar el Formato de Solicitud de Pago'
-              );
+          (response: RespuestaSolicitudPago) => {
+            if (response) {
+              const formatoId = response.formatoSolicitudPagoId;
+              this.numeroFactura = response.numeroFactura;
+
+              if (!isNaN(formatoId)) {
+                this.formatoSolicitudPagoId = +formatoId;
+                this.alertify.success(
+                  'El Formato de Solicitud de Pago se registró correctamente'
+                );
+                this.solicitudRegistrada = true;
+              } else {
+                this.alertify.error(
+                  'No se pudo registrar el Formato de Solicitud de Pago'
+                );
+              }
             }
           },
           (error) => {
@@ -306,6 +314,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
   exportarPDF() {
     const node = document.getElementById('content');
+    const node2 = document.getElementById('content2');
 
     let img;
     let filename;
@@ -333,6 +342,38 @@ export class FormatoSolicitudPagoComponent implements OnInit {
           doc.addImage(newImage, 'PNG', 0, 0, width, height);
           filename = 'documento' + '.pdf';
           doc.save(filename);
+        };
+      })
+      .catch((error) => {
+        // Error Handling
+      });
+
+    let img2;
+    let filename2;
+    let newImage2;
+
+    domtoimage
+      .toPng(node2, { bgcolor: '#fff' })
+
+      .then((dataUrl) => {
+        img2 = new Image();
+        img2.src = dataUrl;
+        newImage2 = img2.src;
+
+        img2.onload = () => {
+          const pdfWidth = img2.width - 20;
+          const pdfHeight = img2.height;
+
+          let doc;
+
+          doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
+
+          const width = doc.internal.pageSize.getWidth();
+          const height = doc.internal.pageSize.getHeight();
+
+          doc.addImage(newImage2, 'PNG', 0, 0, width, height);
+          filename2 = 'documento' + '.pdf';
+          doc.save(filename2);
         };
       })
       .catch((error) => {
@@ -386,50 +427,46 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   }
 
   cargarNotasLegales() {
-    this.listaService.ObtenerParametrosGeneralesXTipo('NotaLegal').subscribe(
-      (lista: ValorSeleccion[]) => {
-        this.listaNotasLegales = lista;
-
-        if (this.listaNotasLegales) {
-          if (this.parametroLiquidacionSeleccionado) {
-            if (this.parametroLiquidacionSeleccionado.notaLegal1) {
-              this.notaLegal1 = (this
-                .listaNotasLegales[0] as ValorSeleccion).valor;
-            }
-            if (this.parametroLiquidacionSeleccionado.notaLegal2) {
-              if (this.listaNotasLegales[1] != null) {
-                this.notaLegal2 = (this
-                  .listaNotasLegales[1] as ValorSeleccion).valor;
-              }
-            }
-            if (this.parametroLiquidacionSeleccionado.notaLegal3) {
-              if (this.listaNotasLegales[2] != null) {
-                this.notaLegal3 = (this
-                  .listaNotasLegales[2] as ValorSeleccion).valor;
-              }
-            }
-            if (this.parametroLiquidacionSeleccionado.notaLegal4) {
-              if (this.listaNotasLegales[3] != null) {
-                this.notaLegal4 = (this
-                  .listaNotasLegales[3] as ValorSeleccion).valor;
-              }
-            }
-            if (this.parametroLiquidacionSeleccionado.notaLegal5) {
-              if (this.listaNotasLegales[4] != null) {
-                this.notaLegal5 = (this
-                  .listaNotasLegales[4] as ValorSeleccion).valor;
-              }
-            }
+    if (this.listaNotasLegales) {
+      if (this.parametroLiquidacionSeleccionado) {
+        if (this.parametroLiquidacionSeleccionado.notaLegal1) {
+          if (this.listaNotasLegales[0] != null) {
+            this.notaLegal1 = (this
+              .listaNotasLegales[0] as ValorSeleccion).valor;
           }
         }
-      },
-      (error) => {
-        this.alertify.error(error);
-      },
-      () => {
-        this.cargarNotaLegal();
+        if (this.parametroLiquidacionSeleccionado.notaLegal2) {
+          if (this.listaNotasLegales[1] != null) {
+            this.notaLegal2 = (this
+              .listaNotasLegales[1] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal3) {
+          if (this.listaNotasLegales[2] != null) {
+            this.notaLegal3 = (this
+              .listaNotasLegales[2] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal4) {
+          if (this.listaNotasLegales[3] != null) {
+            this.notaLegal4 = (this
+              .listaNotasLegales[3] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal5) {
+          if (this.listaNotasLegales[4] != null) {
+            this.notaLegal5 = (this
+              .listaNotasLegales[4] as ValorSeleccion).valor;
+          }
+        }
+        if (this.parametroLiquidacionSeleccionado.notaLegal6) {
+          if (this.listaNotasLegales[5] != null) {
+            this.notaLegal6 = (this
+              .listaNotasLegales[5] as ValorSeleccion).valor;
+          }
+        }
       }
-    );
+    }
   }
 
   cargarNotaLegal() {

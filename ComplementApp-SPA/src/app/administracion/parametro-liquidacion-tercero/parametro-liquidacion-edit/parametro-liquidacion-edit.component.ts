@@ -296,6 +296,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       notaLegal3Ctrl: [''],
       notaLegal4Ctrl: [''],
       notaLegal5Ctrl: [''],
+      notaLegal6Ctrl: [''],
 
       codigoDeduccionCtrl: [''],
       deduccionCtrl: [''],
@@ -362,6 +363,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     let notaLegal3 = false;
     let notaLegal4 = false;
     let notaLegal5 = false;
+    let notaLegal6 = false;
 
     this.idModalidadContratoSelecionado =
       this.parametroLiquidacionSeleccionado.modalidadContrato > 0
@@ -475,6 +477,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     notaLegal3 = this.parametroLiquidacionSeleccionado.notaLegal3;
     notaLegal4 = this.parametroLiquidacionSeleccionado.notaLegal4;
     notaLegal5 = this.parametroLiquidacionSeleccionado.notaLegal5;
+    notaLegal6 = this.parametroLiquidacionSeleccionado.notaLegal6;
 
     //#region Deducciones
 
@@ -550,6 +553,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       notaLegal3Ctrl: notaLegal3,
       notaLegal4Ctrl: notaLegal4,
       notaLegal5Ctrl: notaLegal5,
+      notaLegal6Ctrl: notaLegal6,
 
       codigoDeduccionCtrl: '',
       deduccionCtrl: '',
@@ -998,6 +1002,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           notaLegal3: formValues.notaLegal3Ctrl === '' ? false : true,
           notaLegal4: formValues.notaLegal4Ctrl === '' ? false : true,
           notaLegal5: formValues.notaLegal5Ctrl === '' ? false : true,
+          notaLegal6: formValues.notaLegal6Ctrl === '' ? false : true,
 
           otrosDescuentos:
             formValues.otrosDescuentosCtrl === undefined
@@ -1129,6 +1134,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           formValues.notaLegal4Ctrl;
         this.parametroLiquidacionSeleccionado.notaLegal5 =
           formValues.notaLegal5Ctrl;
+        this.parametroLiquidacionSeleccionado.notaLegal6 =
+          formValues.notaLegal6Ctrl;
 
         this.parametroLiquidacionSeleccionado.tipoAdminPilaId = this.idTipoAdminPila;
 

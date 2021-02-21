@@ -33,8 +33,8 @@ namespace ComplementApp.API.Controllers
         private readonly IGeneralInterface _generalInterface;
         private readonly IListaRepository _listaRepository;
         private readonly IPlanPagoRepository _planPagoRepository;
-
         private readonly IProcesoLiquidacionSolicitudPago _procesoLiquidacion;
+        private readonly ITerceroRepository _terceroRepository;
 
         #endregion Dependency Injection
 
@@ -42,7 +42,8 @@ namespace ComplementApp.API.Controllers
         public SolicitudPagoController(ISolicitudPagoRepository repo, IMapper mapper,
                             DataContext dataContext, IGeneralInterface generalInterface,
                             IPlanPagoRepository planPagoRepository, IListaRepository listaRepository,
-                            IProcesoLiquidacionSolicitudPago procesoLiquidacion)
+                            IProcesoLiquidacionSolicitudPago procesoLiquidacion,
+                            ITerceroRepository terceroRepository)
         {
             _mapper = mapper;
             _repo = repo;
@@ -51,6 +52,7 @@ namespace ComplementApp.API.Controllers
             _listaRepository = listaRepository;
             _planPagoRepository = planPagoRepository;
             _procesoLiquidacion = procesoLiquidacion;
+            _terceroRepository = terceroRepository;
         }
 
         #region Registro de Solicitud de Pago
@@ -69,12 +71,24 @@ namespace ComplementApp.API.Controllers
                 {
 
                     #region Actualizar solicitud de pago
+
                     var formatoBD = await _repo.ObtenerFormatoSolicitudPagoBase(formatoDto.FormatoSolicitudPagoId);
 
                     formatoBD.UsuarioIdModificacion = usuarioId;
                     formatoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                     formatoBD.ObservacionesModificacion = formatoDto.ObservacionesModificacion;
                     formatoBD.EstadoId = formatoDto.EstadoId;
+
+                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Rechazado)
+                    {
+                        var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.Tercero.TerceroId);
+
+                        if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
+                        {
+                            formatoBD.NumeroFactura = string.Empty;
+                        }
+                    }
+
                     await _dataContext.SaveChangesAsync();
 
                     #endregion Actualizar solicitud de pago
@@ -127,8 +141,28 @@ namespace ComplementApp.API.Controllers
                         planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                     }
                     await transaction.CommitAsync();
-                    
+
                     #endregion Actualizar el plan de pago
+
+                    #region Actualizar Numeración
+
+                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Rechazado)
+                    {
+                        var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.Tercero.TerceroId);
+
+                        if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
+                        {
+                            var numeracion = await _repo.ObtenerNumeracionxNumeroFactura(formatoDto.NumeroFactura);
+                            if (numeracion != null)
+                            {
+                                numeracion.Utilizado = false;
+                                numeracion.FormatoSolicitudPagoId = null;
+                                await _dataContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+
+                    #endregion Actualizar Numeración
 
                     return Ok(formatoBD.FormatoSolicitudPagoId);
                 }
@@ -149,6 +183,8 @@ namespace ComplementApp.API.Controllers
 
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
             FormatoSolicitudPago formato = null;
+            RespuestaSolicitudPago respuestaSolicitud = new RespuestaSolicitudPago();
+            Numeracion numeracionDisponible = null;
 
             try
             {
@@ -164,7 +200,21 @@ namespace ComplementApp.API.Controllers
 
                     #endregion Mapear datos 
 
-                    //Registrar detalle de liquidación
+                    #region Numeracion Disponible
+
+                    var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.TerceroId);
+
+                    if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
+                    {
+                        numeracionDisponible = await _repo.ObtenerUltimaNumeracionDisponible();
+                        if (numeracionDisponible != null)
+                        {
+                            formato.NumeroFactura = numeracionDisponible.NumeroConsecutivo;
+                        }
+                    }
+
+                    #endregion Numeracion Disponible
+
                     _dataContext.FormatoSolicitudPago.Add(formato);
                     await _dataContext.SaveChangesAsync();
 
@@ -178,9 +228,30 @@ namespace ComplementApp.API.Controllers
 
                     #endregion Actualizar el plan de pago
 
+                    #region Actualizar Numeracion Utilizada
+
+                    if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
+                    {
+                        if (numeracionDisponible != null)
+                        {
+                            var numeracionBase = await _repo.ObtenerNumeracionBase(numeracionDisponible.NumeracionId);
+                            if (numeracionBase != null)
+                            {
+                                numeracionBase.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
+                                numeracionBase.Utilizado = true;
+                                await _dataContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+
+                    #endregion Actualizar Numeracion Utilizada
+
                     await transaction.CommitAsync();
 
-                    return Ok(formato.FormatoSolicitudPagoId);
+                    respuestaSolicitud.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
+                    respuestaSolicitud.NumeroFactura = formato.NumeroFactura;
+
+                    return Ok(respuestaSolicitud);
                 }
             }
             catch (Exception)

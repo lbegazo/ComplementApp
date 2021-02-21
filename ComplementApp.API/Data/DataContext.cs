@@ -104,6 +104,7 @@ namespace ComplementApp.API.Data
         public DbSet<FormatoSolicitudPago> FormatoSolicitudPago { get; set; }
         public DbSet<DetalleFormatoSolicitudPago> DetalleFormatoSolicitudPago { get; set; }
         public DbSet<TipoAdminPila> TipoAdminPila { get; set; }
+        public DbSet<Numeracion> Numeracion { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -176,6 +177,13 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<ParametroLiquidacionTercero>()
             .Property(b => b.NotaLegal5)
             .HasDefaultValue(0);
+            modelBuilder.Entity<ParametroLiquidacionTercero>()
+            .Property(b => b.NotaLegal6)
+            .HasDefaultValue(0);
+
+            modelBuilder.Entity<Numeracion>()
+                .Property(b => b.Utilizado)
+                .HasDefaultValue(0);
         }
 
     }
