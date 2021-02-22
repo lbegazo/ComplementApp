@@ -442,7 +442,7 @@ namespace ComplementApp.API.Data
                                          FechaExpedicionDocumento = t.FechaExpedicionDocumento.HasValue ? (t.FechaExpedicionDocumento.Value.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionDocumento.Value : null) : null,
                                          RegimenTributario = t.RegimenTributario,
                                          DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
-                                         FacturadorElectronicoDescripcion = t.FacturadorElectronico ? "SI" : "NO",
+                                         FacturadorElectronicoDescripcion = par.FacturaElectronica ? "SI" : "NO",
                                          ModalidadContrato = par.TerceroId > 0 ? par.ModalidadContrato : 0,
                                      },
                                      PlanPago = new PlanPagoDto()

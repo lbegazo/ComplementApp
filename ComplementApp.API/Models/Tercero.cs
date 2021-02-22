@@ -34,7 +34,6 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(20)")]
         public string Telefono { get; set; }
         public bool DeclaranteRenta { get; set; }
-        public bool FacturadorElectronico { get; set; }
         public int UsuarioIdRegistro { get; set; }  
         public DateTime? FechaRegistro { get; set; }   
         public int UsuarioIdModificacion { get; set; }  

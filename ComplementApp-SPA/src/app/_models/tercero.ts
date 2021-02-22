@@ -9,8 +9,6 @@ export interface Tercero {
   telefono: string;
   declaranteRenta: boolean;
   declaranteRentaDescripcion: string;
-  facturadorElectronico: boolean;
-  facturadorElectronicoDescripcion: string;
   regimenTributario: string;
   fechaExpedicionDocumento: Date;
   modalidadContrato: number;

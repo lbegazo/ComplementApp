@@ -1355,6 +1355,7 @@
     </div>
   </div>
 </form>
+<!--DOCUMENTO SOPORTE-->
 <div
   class="container-fluid"
   style="color: black"
@@ -1369,7 +1370,6 @@
       style="width: 100%"
     >
       <div class="container-fluid">
-        <!--Formato de causacion y liquidación de pago-->
         <div class="row">
           <div class="col-12" style="padding: 0px">
             <table style="width: 100%; margin-left: auto; margin-right: auto">
@@ -1855,12 +1855,17 @@
                                 </tr>
                               </table>
                             </td>
-                            <td
-                              style="width: 50%"
-                              class="center fontSmaller withoutPadding"
-                              style="vertical-align: bottom"
-                            >
-                              FIRMA DEL CONTRATISTA
+                            <td style="width: 50%" class="withoutPadding">
+                              <table style="width: 100%; height: 105px">
+                                <tr class="withoutPadding">
+                                  <td
+                                    class="center fontSmaller withoutPadding"
+                                    style="vertical-align: bottom"
+                                  >
+                                    FIRMA DEL CONTRATISTA
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                           </tr>
                         </table>
@@ -1891,8 +1896,8 @@
     </div>
   </div>
 </div>
+<!--Botones-->
 <div class="container-fluid">
-  <!--Botones-->
   <div class="row">
     <div class="col-12" style="padding-right: 15px">
       <div
@@ -1924,11 +1929,19 @@
         </button>
 
         <!--Cargar archivos-->
-        <button
+        <!-- <button
           type="submit"
           class="btn btn-light mr-2"
           (click)="cargarArchivos()"
           [disabled]="!habilitaDatosRegistrados || solicitudRegistrada"
+        >
+          Cargar archivos
+        </button> -->
+        <button
+          type="submit"
+          class="btn btn-light mr-2"
+          (click)="cargarArchivos()"
+          [disabled]="true"
         >
           Cargar archivos
         </button>
@@ -1961,6 +1974,6 @@
     </div>
   </div>
 </div>
- <!-- <p>Form value: {{ parametroLiquidacionSeleccionado | json }}</p> -->
+<!-- <p>Form value: {{ parametroLiquidacionSeleccionado | json }}</p> -->
 <!--<p>Form value: {{ formatoForm.value | json }}</p>
 <p>Form status: {{ formatoForm.status | json }}</p> -->

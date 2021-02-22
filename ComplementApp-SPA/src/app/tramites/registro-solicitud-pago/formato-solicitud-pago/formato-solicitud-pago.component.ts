@@ -98,6 +98,7 @@ export class FormatoSolicitudPagoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarNotaLegal();
     this.cargarNotasLegales();
     this.createEmptyForm();
     this.obtenerRubrosPresupuestales();
@@ -224,6 +225,8 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
           this.cargarDatosSeguridadSocial();
           this.habilitaDatosRegistrados = true;
+          //Temporal: Disabled el botón cargar archivos
+          this.habilitaArchivosCargados = true;
         }
 
         this.unsubscribe();

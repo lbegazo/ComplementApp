@@ -43,7 +43,6 @@ namespace ComplementApp.API.Data
                                    Telefono = t.Telefono,
                                    DeclaranteRenta = t.DeclaranteRenta,
                                    DeclaranteRentaDescripcion = string.Empty,
-                                   FacturadorElectronico = t.FacturadorElectronico,
                                    FacturadorElectronicoDescripcion = string.Empty,
 
                                    RegimenTributario = t.RegimenTributario,

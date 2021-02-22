@@ -79,7 +79,6 @@ namespace ComplementApp.API.Controllers
                         tercero.Telefono = terceroDto.Telefono;
                         tercero.Email = terceroDto.Email;
                         tercero.Direccion = terceroDto.Direccion;
-                        tercero.FacturadorElectronico = terceroDto.FacturadorElectronico;
                         tercero.DeclaranteRenta = terceroDto.DeclaranteRenta;
 
                         if (terceroDto.FacturadorElectronico)
@@ -134,7 +133,6 @@ namespace ComplementApp.API.Controllers
                 terceroBD.Telefono = terceroDto.Telefono;
                 terceroBD.Email = terceroDto.Email;
                 terceroBD.Direccion = terceroDto.Direccion;
-                terceroBD.FacturadorElectronico = terceroDto.FacturadorElectronico;
                 terceroBD.DeclaranteRenta = terceroDto.DeclaranteRenta;
 
                 if (terceroDto.FacturadorElectronico)

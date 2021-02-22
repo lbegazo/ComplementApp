@@ -65,7 +65,6 @@ export class TerceroEditComponent implements OnInit {
       emailCtrl: ['', Validators.email],
       direccionCtrl: [''],
       declaranteRentaCtrl: [false],
-      facturadorElectronicoCtrl: [false],
     });
   }
 
@@ -77,7 +76,6 @@ export class TerceroEditComponent implements OnInit {
     let telefono = '';
     let fechaExpedicion = null;
     let declaranteRenta = false;
-    let facturadorElectronico = false;
 
     this.idTipoDocumentoSeleccionado =
       this.terceroSeleccionado.tipoDocumentoIdentidadId > 0
@@ -96,7 +94,6 @@ export class TerceroEditComponent implements OnInit {
     telefono = this.terceroSeleccionado.telefono;
     direccion = this.terceroSeleccionado.direccion;
     declaranteRenta = this.terceroSeleccionado.declaranteRenta;
-    facturadorElectronico = this.terceroSeleccionado.facturadorElectronico;
 
     this.editForm.patchValue({
       tipoDocumentoCtrl: this.tipoDocumentoSeleccionado,
@@ -110,7 +107,6 @@ export class TerceroEditComponent implements OnInit {
       telefonoCtrl: telefono,
       direccionCtrl: direccion,
       declaranteRentaCtrl: declaranteRenta,
-      facturadorElectronicoCtrl: facturadorElectronico,
     });
   }
 
@@ -177,8 +173,6 @@ export class TerceroEditComponent implements OnInit {
               ? formValues.direccionCtrl.trim()
               : '',
           declaranteRenta: formValues.declaranteRentaCtrl,
-          facturadorElectronico: formValues.facturadorElectronicoCtrl,
-          facturadorElectronicoDescripcion: '',
           declaranteRentaDescripcion: '',
           tipoDocumentoIdentidad: '',
           regimenTributario: '',
@@ -217,8 +211,6 @@ export class TerceroEditComponent implements OnInit {
             : '';
         (this.terceroSeleccionado.declaranteRenta =
           formValues.declaranteRentaCtrl),
-          (this.terceroSeleccionado.facturadorElectronico =
-            formValues.facturadorElectronicoCtrl),
           this.terceroService
             .ActualizarTercero(this.terceroSeleccionado)
             .subscribe(

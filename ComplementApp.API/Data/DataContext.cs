@@ -143,10 +143,6 @@ namespace ComplementApp.API.Data
                 .Property(b => b.DeclaranteRenta)
                 .HasDefaultValue(0);
 
-            modelBuilder.Entity<Tercero>()
-            .Property(b => b.FacturadorElectronico)
-            .HasDefaultValue(0);
-
             modelBuilder.Entity<DetalleArchivoLiquidacion>()
           .HasKey(bc => new { bc.ArchivoDetalleLiquidacionId, bc.DetalleLiquidacionId });
             modelBuilder.Entity<DetalleArchivoLiquidacion>()
