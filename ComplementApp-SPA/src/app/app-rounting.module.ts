@@ -89,7 +89,6 @@ export const routes: Routes = [
       tipoDocumentoSoporte: ListaTipoDocumentoSoporteResolver,
       tipoIva: ListaTipoIvaResolver,
       tipoPago: ListaTipoPagoResolver,
-      supervisor: ListaSupervisorResolver,
       SIoNO: ListaSIoNOResolver,
       adminPila: ListaAdminPilaResolver,
     },

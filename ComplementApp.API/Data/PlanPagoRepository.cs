@@ -159,7 +159,9 @@ namespace ComplementApp.API.Data
                           join us in _context.Usuario on pp.UsuarioIdRegistro equals us.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
-                          join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
+                          join con in _context.Contrato on pp.Crp equals con.Crp into Contrato
+                          from contra in Contrato.DefaultIfEmpty()
+                          join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
 
                           where pp.PlanPagoId == planPagoId
@@ -216,8 +218,12 @@ namespace ComplementApp.API.Data
                           join us in _context.Usuario on pp.UsuarioIdRegistro equals us.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
-                          join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
+
+                          join con in _context.Contrato on pp.Crp equals con.Crp into Contrato
+                          from contra in Contrato.DefaultIfEmpty()
+                          join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
+
 
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
@@ -270,7 +276,9 @@ namespace ComplementApp.API.Data
                           join u in _context.Usuario on pp.UsuarioIdRegistro equals u.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
-                          join sup in _context.Usuario on pt.SupervisorId equals sup.UsuarioId into Supervisor
+                          join con in _context.Contrato on pp.Crp equals con.Crp into Contrato
+                          from contra in Contrato.DefaultIfEmpty()
+                          join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
 
                           where listaPlanPagoId.Contains(pp.PlanPagoId)

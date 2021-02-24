@@ -82,6 +82,7 @@
                     class="form-control border border-bottom-0 addPaddingLeft"
                     style="height: 20px"
                     id="inputNumeroTercero"
+                    value="{{ tercero?.numeroIdentificacion }}"
                   />
                   <div
                     class="alert alert-danger"
@@ -96,14 +97,17 @@
                     >Nombre del tercero</label
                   >
                   <input
-                    type="text"
+                    [(ngModel)]="searchNombre"
+                    typeaheadOptionField="nombre"
+                    [typeahead]="suggestionsXNombre$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelectXNombre($event)"
                     class="form-control border addPaddingLeft"
-                    style="height: 20px"
+                    style="height: 20px; background-color: white"
                     maxlength="50"
                     formControlName="terceroDescripcionCtrl"
                     id="inputTercero"
                     value="{{ tercero?.nombre }}"
-                    readonly
                   />
                 </div>
 

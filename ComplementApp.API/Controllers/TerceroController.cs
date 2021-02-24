@@ -298,9 +298,9 @@ namespace ComplementApp.API.Controllers
                             itemTerceroDeduccion.TerceroId = item.Tercero.Id;
                             itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
 
-                            if (item.Deduccion.Id > 0)
+                            if (item.Deduccion.DeduccionId > 0)
                             {
-                                itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
+                                itemTerceroDeduccion.DeduccionId = item.Deduccion.DeduccionId;
                                 itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
                             }
                             else
@@ -358,9 +358,9 @@ namespace ComplementApp.API.Controllers
                         itemTerceroDeduccion.TerceroId = item.Tercero.Id;
                         itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
 
-                        if (item.Deduccion.Id > 0)
+                        if (item.Deduccion.DeduccionId > 0)
                         {
-                            itemTerceroDeduccion.DeduccionId = item.Deduccion.Id;
+                            itemTerceroDeduccion.DeduccionId = item.Deduccion.DeduccionId;
                             itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
                         }
                         else

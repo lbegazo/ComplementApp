@@ -30,14 +30,15 @@
                     <input
                       [(ngModel)]="search"
                       typeaheadOptionField="numeroIdentificacion"
-                      [typeahead]="suggestions$"
+                      [typeahead]="suggestionsXCodigo$"
                       [typeaheadAsync]="true"
                       (typeaheadOnSelect)="typeaheadOnSelect($event)"
                       placeholder="Ingrese el número tercero"
                       formControlName="terceroCtrl"
                       class="form-control border border-bottom-0 addPaddingLeft"
-                      style="height: 20px"
+                      style="height: 20px; background-color: white"
                       id="inputNumeroTercero"
+                      value="{{ tercero?.numeroIdentificacion }}"
                     />
                     <div
                       class="alert alert-danger"
@@ -52,14 +53,18 @@
                       >Nombre del tercero</label
                     >
                     <input
-                      type="text"
+                      [(ngModel)]="searchNombre"
+                      typeaheadOptionField="nombre"
+                      [typeahead]="suggestionsXNombre$"
+                      [typeaheadAsync]="true"
+                      (typeaheadOnSelect)="typeaheadOnSelectXNombre($event)"
                       class="form-control border addPaddingLeft"
                       formControlName="terceroDescripcionCtrl"
-                      id="inputTercero"
+                      id="inputTercero"                      
+                      style="height: 20px; background-color: white"
                       value="{{ tercero?.nombre }}"
-                      readonly
                     />
-                  </div>                  
+                  </div>
                 </div>
               </div>
             </div>

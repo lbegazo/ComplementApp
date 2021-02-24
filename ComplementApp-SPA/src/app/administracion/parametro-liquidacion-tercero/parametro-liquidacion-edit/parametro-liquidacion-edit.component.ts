@@ -7,7 +7,6 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import {
   FormArray,
@@ -19,7 +18,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import {
   combineLatest,
@@ -30,15 +28,12 @@ import {
   Subscription,
 } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
+import { DeduccionDto } from 'src/app/_dto/deduccionDto';
 import { TerceroDeduccionDto } from 'src/app/_dto/terceroDeduccionDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { ActividadEconomica } from 'src/app/_models/actividadEconomica';
 import { Deduccion } from 'src/app/_models/deduccion';
-import {
-  ModalidadContrato,
-  PerfilUsuario,
-  TipoLista,
-} from 'src/app/_models/enum';
+import { ModalidadContrato, TipoLista } from 'src/app/_models/enum';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { Tercero } from 'src/app/_models/tercero';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -61,8 +56,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   @Output() esCancelado = new EventEmitter<boolean>();
   // @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
-  searchDeduccion: string;
-  suggestionsDeduccion$: Observable<Deduccion[]>;
+  searchCodigoDeduccion: string;
+  searchNombreDeduccion: string;
+  suggestionsCodigoDeduccion$: Observable<Deduccion[]>;
+  suggestionsNombreDeduccion$: Observable<Deduccion[]>;
   errorMessage: string;
   subscriptions: Subscription[] = [];
   baseUrlDeduccion = environment.apiUrl + 'lista/ObtenerListaDeducciones';
@@ -83,7 +80,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   listaTipoIva: ValorSeleccion[] = [];
   listaTipoCuentaXPagar: ValorSeleccion[] = [];
   listaTipoDocumentoSoporte: ValorSeleccion[] = [];
-  listaSupervisor: ValorSeleccion[] = [];
   listaFacturaElectronica: ValorSeleccion[] = [];
   listaSubcontrata: ValorSeleccion[] = [];
   listaAdminPila: ValorSeleccion[] = [];
@@ -114,9 +110,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   idSubcontrataSeleccionado?: number;
   subcontrataSeleccionado: ValorSeleccion = null;
 
-  idSupervisorSeleccionado?: number;
-  supervisorSeleccionado: ValorSeleccion = null;
-
   idTipoAdminPila?: number;
   tipoAdminPilaSeleccionado: ValorSeleccion = null;
 
@@ -144,6 +137,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
     this.cargarBusquedaDeducciones();
 
+    this.cargarBusquedaDeduccionesXDescripcion();
+
     this.cargarBusquedaActividad();
 
     if (this.esCreacion) {
@@ -156,9 +151,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   }
 
   cargarBusquedaDeducciones() {
-    this.suggestionsDeduccion$ = new Observable(
+    this.suggestionsCodigoDeduccion$ = new Observable(
       (observer: Observer<string>) => {
-        observer.next(this.searchDeduccion);
+        observer.next(this.searchCodigoDeduccion);
       }
     ).pipe(
       switchMap((query: string) => {
@@ -180,13 +175,63 @@ export class ParametroLiquidacionEditComponent implements OnInit {
               )
             );
         }
+        return of([]);
+      })
+    );
+  }
 
+  cargarBusquedaDeduccionesXDescripcion() {
+    this.suggestionsNombreDeduccion$ = new Observable(
+      (observer: Observer<string>) => {
+        observer.next(this.searchNombreDeduccion);
+      }
+    ).pipe(
+      switchMap((query: string) => {
+        if (query) {
+          return this.http
+            .get<Deduccion[]>(this.baseUrlDeduccion, {
+              params: { nombre: query },
+            })
+            .pipe(
+              map((data: Deduccion[]) => data || []),
+              tap(
+                () => noop,
+                (err) => {
+                  // in case of http error
+                  this.errorMessage =
+                    (err && err.message) ||
+                    'Algo salió mal, consulte a su administrador';
+                }
+              )
+            );
+        }
         return of([]);
       })
     );
   }
 
   typeaheadOnSelectDeduccion(e: TypeaheadMatch): void {
+    this.deduccion = e.item as Deduccion;
+    if (this.deduccion) {
+      this.deduccionId = this.deduccion.deduccionId;
+
+      if (this.deduccionId > 0) {
+        if (
+          this.idModalidadContratoSelecionado !==
+          ModalidadContrato.ProveedorSinDescuento.value
+        ) {
+          if (
+            this.actividadEconomica &&
+            this.actividadEconomica.actividadEconomicaId > 0
+          ) {
+            this.habilitarBotonAgregar = true;
+          }
+        }
+      }
+    }
+  }
+
+  typeaheadOnSelectDeduccionXNombre(e: TypeaheadMatch): void {
     this.deduccion = e.item as Deduccion;
     if (this.deduccion) {
       this.deduccionId = this.deduccion.deduccionId;
@@ -270,7 +315,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       adminPilaCtrl: [null, Validators.required],
       tipoCuentaXPagarCtrl: [null, Validators.required],
       tipoDocumentoSoporteCtrl: [null, Validators.required],
-      supervisorCtrl: [null, Validators.required],
 
       baseAporteSaludCtrl: ['', Validators.required],
       aporteSaludCtrl: ['', Validators.required],
@@ -393,16 +437,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
-    this.idSupervisorSeleccionado =
-      this.parametroLiquidacionSeleccionado.supervisorId > 0
-        ? this.parametroLiquidacionSeleccionado.supervisorId
-        : null;
-    if (this.idSupervisorSeleccionado !== null) {
-      this.supervisorSeleccionado = this.listaSupervisor.filter(
-        (x) => x.id === this.idSupervisorSeleccionado
-      )[0];
-    }
-
     this.idFacturaElectronicaSeleccionado = this.parametroLiquidacionSeleccionado.facturaElectronicaId;
     if (this.idFacturaElectronicaSeleccionado !== null) {
       this.facturaElectronicaSeleccionado = this.listaFacturaElectronica.filter(
@@ -508,7 +542,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       tipoIvaCtrl: this.tipoIvaSeleccionado,
       tipoCuentaXPagarCtrl: this.tipoCuentaXPagarSeleccionado,
       tipoDocumentoSoporteCtrl: this.tipoDocumentoSoporteSeleccionado,
-      supervisorCtrl: this.supervisorSeleccionado,
       facturaElectronicaCtrl: this.facturaElectronicaSeleccionado,
       subcontrataCtrl: this.subcontrataSeleccionado,
       adminPilaCtrl: this.tipoAdminPilaSeleccionado,
@@ -683,11 +716,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.idTipoAdminPila = +this.tipoAdminPilaSeleccionado.id;
   }
 
-  onSupervisor() {
-    this.supervisorSeleccionado = this.supervisorCtrl.value as ValorSeleccion;
-    this.idSupervisorSeleccionado = +this.supervisorSeleccionado.id;
-  }
-
   onAgregarDeduccion() {
     if (
       this.idModalidadContratoSelecionado ===
@@ -708,7 +736,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         actividadT.codigo = this.actividadEconomica.codigo;
         actividadT.nombre = this.actividadEconomica.nombre;
 
-        const deduccionT = new ValorSeleccion();
+        const deduccionT = new DeduccionDto();
         const terceroDeDeduccionT = new ValorSeleccion();
         const terceroT = new ValorSeleccion();
         terceroT.id = this.tercero.terceroId;
@@ -741,7 +769,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       ) {
         const filtro = this.listaTerceroDeducciones.filter(
           (x) =>
-            x.deduccion.id === this.deduccion.deduccionId &&
+            x.deduccion.deduccionId === this.deduccion.deduccionId &&
             x.actividadEconomica.id === this.actividadEconomicaId
         )[0];
 
@@ -757,10 +785,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         actividadT.codigo = this.actividadEconomica.codigo;
         actividadT.nombre = this.actividadEconomica.nombre;
 
-        const deduccionT = new ValorSeleccion();
-        deduccionT.id = this.deduccion.deduccionId;
+        const deduccionT = new DeduccionDto();
+        deduccionT.deduccionId = this.deduccion.deduccionId;
         deduccionT.codigo = this.deduccion.codigo;
         deduccionT.nombre = this.deduccion.nombre;
+        deduccionT.tarifa = this.deduccion.tarifa;
 
         const terceroDeDeduccionT = new ValorSeleccion();
         if (this.deduccion.tercero && this.deduccion.tercero.terceroId > 0) {
@@ -818,7 +847,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.actividadEconomicaId = 0;
     this.actividadEconomica = null;
     this.searchActividad = '';
-    this.searchDeduccion = '';
+    this.searchCodigoDeduccion = '';
+    this.searchNombreDeduccion = '';
     this.habilitarBotonAgregar = false;
   }
 
@@ -937,7 +967,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           ),
           facturaElectronicaId: this.idFacturaElectronicaSeleccionado,
           subcontrataId: this.idSubcontrataSeleccionado,
-          supervisorId: this.idSupervisorSeleccionado,
 
           baseAporteSalud:
             formValues.baseAporteSaludCtrl === undefined
@@ -1048,7 +1077,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           this.idTipoPagoSelecionado !== null ? this.idTipoPagoSelecionado : 0;
 
         this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar = this.idTipoCuentaXPagarSelecionado;
-        this.parametroLiquidacionSeleccionado.supervisorId = this.idSupervisorSeleccionado;
         this.parametroLiquidacionSeleccionado.facturaElectronicaId = this.idFacturaElectronicaSeleccionado;
         this.parametroLiquidacionSeleccionado.subcontrataId = this.idSubcontrataSeleccionado;
         this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte = this.idTipoDocumentoSoporteSelecionado;
@@ -1240,9 +1268,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   get tipoDocumentoSoporteCtrl() {
     return this.editForm.get('tipoDocumentoSoporteCtrl');
   }
-  get supervisorCtrl() {
-    return this.editForm.get('supervisorCtrl');
-  }
   get facturaElectronicaCtrl() {
     return this.editForm.get('facturaElectronicaCtrl');
   }
@@ -1345,10 +1370,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     });
 
     this.route.data.subscribe((data) => {
-      this.listaSupervisor = data['supervisor'];
-    });
-
-    this.route.data.subscribe((data) => {
       this.listaAdminPila = data['adminPila'];
     });
 
@@ -1369,7 +1390,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.cargarlistaTipoDocumentoSoporte(TipoLista.TipoDocumentoSoporte.value);
     this.cargarlistaTipoIva(TipoLista.TipoIva.value);
     this.cargarlistaTipoPago(TipoLista.TipoPago.value);
-    this.cargarListaUsuarioXPerfil(PerfilUsuario.SupervisorContractual.value);
     this.cargarlistaFacturaElectronica();
   }
 
@@ -1402,17 +1422,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       (lista: ValorSeleccion[]) => {
         this.listaFacturaElectronica = lista;
         this.listaSubcontrata = lista;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
-  }
-
-  cargarListaUsuarioXPerfil(tipo: number) {
-    this.usuarioService.ObtenerListaUsuarioXPerfil(tipo).subscribe(
-      (lista: ValorSeleccion[]) => {
-        this.listaSupervisor = lista;
       },
       (error) => {
         this.alertify.error(error);

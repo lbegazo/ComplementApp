@@ -31,7 +31,6 @@ export interface ParametroLiquidacionTercero {
 
   facturaElectronicaId: number;
   subcontrataId: number;
-  supervisorId: number;
   otrosDescuentos: number;
   fechaInicioOtrosDescuentos: Date;
   fechaFinalOtrosDescuentos: Date;

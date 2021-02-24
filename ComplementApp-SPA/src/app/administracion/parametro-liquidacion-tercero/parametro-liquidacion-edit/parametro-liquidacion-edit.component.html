@@ -420,53 +420,6 @@
                                   Debe seleccionar Tipo de Pago
                                 </div>
                               </div>
-                              <!--Supervisor-->
-                              <div
-                                class="form-group col-md-4"
-                                style="margin: 0px"
-                              >
-                                <label
-                                  for="selectSupervisor"
-                                  class="col-form-label-md"
-                                  >Supervisor</label
-                                >
-                                <select
-                                  *ngIf="listaSupervisor"
-                                  formControlName="supervisorCtrl"
-                                  (change)="onSupervisor()"
-                                  class="form-control withoutPadding"
-                                  style="height: 33px; padding-left: 5px"
-                                  id="selectSupervisor"
-                                  [ngClass]="{
-                                    'is-invalid':
-                                      editForm.get('supervisorCtrl').touched &&
-                                      editForm
-                                        .get('supervisorCtrl')
-                                        .hasError('required')
-                                  }"
-                                >
-                                  <option [ngValue]="null" disabled>
-                                    SUPERVISOR
-                                  </option>
-                                  <option
-                                    *ngFor="let item of listaSupervisor"
-                                    [ngValue]="item"
-                                  >
-                                    {{ item.nombre }}
-                                  </option>
-                                </select>
-                                <div
-                                  class="invalid-feedback"
-                                  *ngIf="
-                                    editForm.get('supervisorCtrl').touched &&
-                                    editForm
-                                      .get('supervisorCtrl')
-                                      .hasError('required')
-                                  "
-                                >
-                                  Debe seleccionar Supervisor
-                                </div>
-                              </div>
                             </div>
                             <div
                               *ngIf="this.idModalidadContratoSelecionado !== 1"
@@ -1101,9 +1054,9 @@
                               >Código</label
                             >
                             <input
-                              [(ngModel)]="searchDeduccion"
+                              [(ngModel)]="searchCodigoDeduccion"
                               typeaheadOptionField="codigo"
-                              [typeahead]="suggestionsDeduccion$"
+                              [typeahead]="suggestionsCodigoDeduccion$"
                               [typeaheadAsync]="true"
                               (typeaheadOnSelect)="
                                 typeaheadOnSelectDeduccion($event)
@@ -1113,6 +1066,7 @@
                               class="form-control border border-bottom-0 addPaddingLeft"
                               style="height: 20px; background-color: white"
                               id="inputCodigo"
+                              value="{{ deduccion?.codigo }}"      
                             />
                             <div
                               class="alert alert-danger"
@@ -1129,14 +1083,19 @@
                               >Deducción</label
                             >
                             <input
-                              type="text"
+                            [(ngModel)]="searchNombreDeduccion"
+                            typeaheadOptionField="nombre"
+                            [typeahead]="suggestionsNombreDeduccion$"
+                            [typeaheadAsync]="true"
+                            (typeaheadOnSelect)="
+                            typeaheadOnSelectDeduccionXNombre($event)
+                            "
                               class="form-control border addPaddingLeft"
-                              style="height: 20px"
+                              style="height: 20px; background-color: white"
                               maxlength="50"
                               formControlName="deduccionCtrl"
                               id="inputDeduccion"
-                              value="{{ deduccion?.nombre }}"
-                              readonly
+                              value="{{ deduccion?.nombre }}"                              
                             />
                           </div>
                         </div>
@@ -1180,7 +1139,7 @@
                           <div style="width: 3%" class="inner center">
                             <label class="col-form-label-md">Cod.</label>
                           </div>
-                          <div style="width: 30%" class="inner center">
+                          <div style="width: 25%" class="inner center">
                             <label class="col-form-label-md"
                               >Actividad Económica</label
                             >
@@ -1191,9 +1150,12 @@
                           <div style="width: 28%" class="inner center">
                             <label class="col-form-label-md">Deducción</label>
                           </div>
+                          <div style="width: 5%" class="inner center">
+                            <label class="col-form-label-md">Tarifa</label>
+                          </div>
                           <div style="width: 23%" class="inner center">
                             <label class="col-form-label-md">Tercero</label>
-                          </div>
+                          </div>                          
                           <div style="width: 4%" class="inner center">
                             <label class="col-form-label-md">Sel.</label>
                           </div>
@@ -1217,7 +1179,7 @@
                                 </p>
                               </div>
                               <div
-                                style="width: 30%"
+                                style="width: 25%"
                                 class="inner left aplicaBackground"
                               >
                                 <p style="font-size: 12px">
@@ -1241,13 +1203,21 @@
                                 </p>
                               </div>
                               <div
+                                style="width: 5%"
+                                class="inner center aplicaBackground"
+                              >
+                                <p style="font-size: 12px">
+                                  {{ item?.deduccion.tarifa | number: "1.5-5" }}
+                                </p>
+                              </div>
+                              <div
                                 style="width: 23%"
                                 class="inner left aplicaBackground"
                               >
                                 <p style="font-size: 12px">
                                   {{ item?.terceroDeDeduccion.nombre }}
                                 </p>
-                              </div>
+                              </div>                              
                               <div
                                 style="width: 4%"
                                 class="inner aplicaBackground parent"
@@ -1375,7 +1345,7 @@
                                 </label>
                               </div>
                             </div>
-                          </div>                          
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1423,8 +1393,8 @@
     </div>
   </div>
 </div>
-
-<!-- <p>Form status: {{ editForm.status | json }}</p>
+<!-- 
+<p>Form status: {{ editForm.status | json }}</p>
 
   <p>Form value: {{ editForm.value | json }}</p>
 

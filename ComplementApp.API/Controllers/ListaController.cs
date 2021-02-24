@@ -57,9 +57,10 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerListaTercero([FromQuery(Name = "numeroIdentificacion")] string numeroIdentificacion)
+        public async Task<IActionResult> ObtenerListaTercero([FromQuery(Name = "numeroIdentificacion")] string numeroIdentificacion,
+                                                             [FromQuery(Name = "nombre")] string nombre)
         {
-            var datos = await _repo.ObtenerListaTercero(numeroIdentificacion);
+            var datos = await _repo.ObtenerListaTercero(numeroIdentificacion, nombre);
             return Ok(datos);
         }
 
@@ -132,9 +133,9 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerListaDeducciones([FromQuery(Name = "codigo")] string codigo)
+        public async Task<IActionResult> ObtenerListaDeducciones([FromQuery(Name = "codigo")] string codigo, [FromQuery(Name = "nombre")] string nombre)
         {
-            var datos = await _repo.ObtenerListaDeducciones(codigo);
+            var datos = await _repo.ObtenerListaDeducciones(codigo, nombre);
             return Ok(datos);
         }
 

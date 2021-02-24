@@ -184,7 +184,6 @@ namespace ComplementApp.API.Data
 
                                    FacturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
                                    SubcontrataId = plt.Subcontrata ? 1 : 0,
-                                   SupervisorId = plt.SupervisorId,
                                    OtrosDescuentos = plt.OtrosDescuentos,
                                    FechaInicioOtrosDescuentos = plt.FechaInicioOtrosDescuentos,
                                    FechaFinalOtrosDescuentos = plt.FechaFinalOtrosDescuentos,
@@ -219,7 +218,6 @@ namespace ComplementApp.API.Data
                                join td2 in _context.Tercero on td.TerceroDeDeduccionId equals td2.TerceroId into TerceroDeducciones2
                                from ter2 in TerceroDeducciones2.DefaultIfEmpty()
                                where (td.TerceroId == terceroId)
-                               //where (ded.estado == true)
                                select new TerceroDeduccionDto()
                                {
                                    TerceroDeduccionId = td.TerceroDeduccionId,
@@ -234,11 +232,12 @@ namespace ComplementApp.API.Data
                                        Codigo = acteco.ActividadEconomicaId > 0 ? acteco.Codigo : string.Empty,
                                        Nombre = acteco.ActividadEconomicaId > 0 ? acteco.Nombre : string.Empty,
                                    },
-                                   Deduccion = new ValorSeleccion()
+                                   Deduccion = new DeduccionDto()
                                    {
-                                       Id = ded.DeduccionId > 0 ? ded.DeduccionId : 0,
+                                       DeduccionId = ded.DeduccionId > 0 ? ded.DeduccionId : 0,
                                        Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
-                                       Nombre = ded.DeduccionId > 0 ? ded.Nombre : string.Empty
+                                       Nombre = ded.DeduccionId > 0 ? ded.Nombre : string.Empty,
+                                       Tarifa = ded.DeduccionId > 0 ? ded.Tarifa : 0,
                                    },
                                    TerceroDeDeduccion = new ValorSeleccion()
                                    {
@@ -246,14 +245,7 @@ namespace ComplementApp.API.Data
                                        Codigo = ter2.TerceroId > 0 ? ter2.NumeroIdentificacion : string.Empty,
                                        Nombre = ter2.TerceroId > 0 ? ter2.Nombre : string.Empty,
                                        Valor = ter2.TerceroId > 0 ? "SI" : "NO",
-                                   },
-                                   //    TerceroDeDeduccion = new ValorSeleccion()
-                                   //    {
-                                   //        Id = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.TerceroId) : (ter2.TerceroId)) : 0,
-                                   //        Codigo = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.NumeroIdentificacion) : (ter2.NumeroIdentificacion)) : string.Empty,
-                                   //        Nombre = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? (ter1.Nombre) : (ter2.Nombre)) : string.Empty,
-                                   //        Valor = ded.DeduccionId > 0 ? ((ter1.TerceroId > 0) ? ("SI") : (string.Empty)) : "NO",
-                                   //    },
+                                   }
                                }
                          )
                          .Distinct()

@@ -42,7 +42,6 @@ namespace ComplementApp.API.Dtos
         public int? ConvenioFontic { get; set; }
         public int? FacturaElectronicaId { get; set; }
         public int? SubcontrataId { get; set; }
-        public int? SupervisorId { get; set; }
         public int? TipoAdminPilaId { get; set; }
         public bool NotaLegal1 { get; set; }
         public bool NotaLegal2 { get; set; }

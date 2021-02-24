@@ -18,10 +18,12 @@ export class PopupParametroLiquidacionTerceroComponent implements OnInit {
   title: string;
 
   popupForm = new FormGroup({});
-  suggestions$: Observable<Tercero[]>;
+  suggestionsXCodigo$: Observable<Tercero[]>;
+  suggestionsXNombre$: Observable<Tercero[]>;
   errorMessage: string;
   subscriptions: Subscription[] = [];
   search: string;
+  searchNombre: string;
   baseUrl = environment.apiUrl + 'lista/ObtenerListaTercero';
 
   tercero: Tercero;
@@ -37,7 +39,20 @@ export class PopupParametroLiquidacionTerceroComponent implements OnInit {
   ngOnInit() {
     this.createEmptyForm();
 
-    this.suggestions$ = new Observable((observer: Observer<string>) => {
+    this.cargarBusquedaTerceroXCodigo();
+
+    this.cargarBusquedaTerceroXNombre();
+  }
+
+  createEmptyForm() {
+    this.popupForm = this.fb.group({
+      terceroCtrl: ['', Validators.required],
+      terceroDescripcionCtrl: ['', Validators.required],
+    });
+  }
+
+  cargarBusquedaTerceroXCodigo() {
+    this.suggestionsXCodigo$ = new Observable((observer: Observer<string>) => {
       observer.next(this.search);
     }).pipe(
       switchMap((query: string) => {
@@ -65,15 +80,44 @@ export class PopupParametroLiquidacionTerceroComponent implements OnInit {
     );
   }
 
-  createEmptyForm() {
-    this.popupForm = this.fb.group({
-      terceroCtrl: ['', Validators.required],
-      terceroDescripcionCtrl: ['', Validators.required],
-    });
+  cargarBusquedaTerceroXNombre() {
+    this.suggestionsXNombre$ = new Observable((observer: Observer<string>) => {
+      observer.next(this.searchNombre);
+    }).pipe(
+      switchMap((query: string) => {
+        if (query) {
+          return this.http
+            .get<Tercero[]>(this.baseUrl, {
+              params: { nombre: query },
+            })
+            .pipe(
+              map((data: Tercero[]) => data || []),
+              tap(
+                () => noop,
+                (err) => {
+                  // in case of http error
+                  this.errorMessage =
+                    (err && err.message) ||
+                    'Algo salió mal, consulte a su administrador';
+                }
+              )
+            );
+        }
+
+        return of([]);
+      })
+    );
   }
 
   // Selected value event
   typeaheadOnSelect(e: TypeaheadMatch): void {
+    this.tercero = e.item as Tercero;
+    if (this.tercero) {
+      this.terceroId = this.tercero.terceroId;
+    }
+  }
+
+  typeaheadOnSelectXNombre(e: TypeaheadMatch): void {
     this.tercero = e.item as Tercero;
     if (this.tercero) {
       this.terceroId = this.tercero.terceroId;

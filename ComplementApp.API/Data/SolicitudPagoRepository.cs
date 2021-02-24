@@ -53,9 +53,11 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
                          from pt in ParametroTercero.DefaultIfEmpty()
+                         join con in _context.Contrato on c.Crp equals con.ContratoId into Contrato
+                         from contra in Contrato.DefaultIfEmpty()                         
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
-                         where pt.SupervisorId == usuarioId
+                         where contra.Supervisor1Id == usuarioId
                          where c.TerceroId == terceroId || terceroId == null
                          where pt.ModalidadContrato != (int)ModalidadContrato.ContratoPrestacionServicio
                          select new CDPDto()

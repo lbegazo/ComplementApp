@@ -79,8 +79,6 @@ namespace ComplementApp.API.Models
         public DateTime? FechaModificacion { get; set; }
         public bool FacturaElectronica { get; set; }
         public bool Subcontrata { get; set; }
-        public int? SupervisorId { get; set; }
-        public Usuario Supervisor { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal OtrosDescuentos { get; set; }

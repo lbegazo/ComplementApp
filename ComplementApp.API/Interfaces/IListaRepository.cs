@@ -15,7 +15,7 @@ namespace ComplementApp.API.Interfaces
 
         Task<IEnumerable<TipoDetalleCDP>> ObtenerListaTipoDetalleModificacion();
 
-        Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion);
+        Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion, string nombre);
 
         Task<IEnumerable<Perfil>> ObtenerListaPerfiles();
 
@@ -36,7 +36,7 @@ namespace ComplementApp.API.Interfaces
 
         Task<ICollection<ValorSeleccion>> ObtenerListaXTipo(TipoLista tipo);
 
-        Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo);
+        Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo, string descripcion);
 
         Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo);
 

@@ -37,11 +37,35 @@ namespace ComplementApp.API.Data
             return await _context.TipoDetalleModificacion.ToListAsync();
         }
 
-        public async Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion)
+        public async Task<IEnumerable<Tercero>> ObtenerListaTercero(string numeroIdentificacion, string nombre)
         {
-            return await _context.Tercero
-                            .Where(t => t.NumeroIdentificacion.Contains(numeroIdentificacion))
-                            .ToListAsync();
+
+            IQueryable<Tercero> listaFiltrada = null;
+
+            var lista = (from d in _context.Tercero
+                         select new Tercero()
+                         {
+                             TerceroId = d.TerceroId,
+                             NumeroIdentificacion = d.NumeroIdentificacion,
+                             Nombre = d.Nombre,
+                         }).OrderBy(d => d.Nombre);
+
+            if (!string.IsNullOrEmpty(numeroIdentificacion))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.NumeroIdentificacion.Contains(numeroIdentificacion)
+                                 select l);
+            }
+
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.Nombre.Contains(nombre)
+                                 select l);
+            }
+
+
+            return await listaFiltrada.ToListAsync();
         }
 
         public async Task<IEnumerable<Perfil>> ObtenerListaPerfiles()
@@ -193,7 +217,7 @@ namespace ComplementApp.API.Data
                                        .ToListAsync();
                         break;
                     }
-                    case TipoLista.TipoAdminPila:
+                case TipoLista.TipoAdminPila:
                     {
                         lista = await (from m in _context.TipoAdminPila
                                        select new ValorSeleccion()
@@ -206,7 +230,7 @@ namespace ComplementApp.API.Data
                                        .ToListAsync();
                         break;
                     }
-                    case TipoLista.TipoDocumentoIdentidad:
+                case TipoLista.TipoDocumentoIdentidad:
                     {
                         lista = await (from m in _context.TipoDocumentoIdentidad
                                        select new ValorSeleccion()
@@ -225,24 +249,43 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo)
+        public async Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo, string descripcion)
         {
-            return await (from d in _context.Deduccion
-                          join t in _context.Tercero on d.TerceroId equals t.TerceroId into TerceroDeduccion
-                          from ded in TerceroDeduccion.DefaultIfEmpty()
-                          where d.Codigo.Contains(codigo)
-                          select new Deduccion()
-                          {
-                              DeduccionId = d.DeduccionId,
-                              Codigo = d.Codigo,
-                              Nombre = d.Nombre,
-                              Tercero = new Tercero()
-                              {
-                                  TerceroId = d.TerceroId > 0 ? ded.TerceroId : 0,
-                                  NumeroIdentificacion = d.TerceroId > 0 ? ded.NumeroIdentificacion : string.Empty,
-                                  Nombre = d.TerceroId > 0 ? ded.Nombre : string.Empty,
-                              }
-                          }).ToListAsync();
+            IQueryable<Deduccion> listaFiltrada = null;
+
+            var lista = (from d in _context.Deduccion
+                         join t in _context.Tercero on d.TerceroId equals t.TerceroId into TerceroDeduccion
+                         from ded in TerceroDeduccion.DefaultIfEmpty()
+                         select new Deduccion()
+                         {
+                             DeduccionId = d.DeduccionId,
+                             Codigo = d.Codigo,
+                             Nombre = d.Nombre,
+                             Tarifa = d.Tarifa,
+                             Tercero = new Tercero()
+                             {
+                                 TerceroId = d.TerceroId > 0 ? ded.TerceroId : 0,
+                                 NumeroIdentificacion = d.TerceroId > 0 ? ded.NumeroIdentificacion : string.Empty,
+                                 Nombre = d.TerceroId > 0 ? ded.Nombre : string.Empty,
+                             }
+                         }).OrderBy(d => d.Nombre);
+
+            if (!string.IsNullOrEmpty(codigo))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.Codigo.Contains(codigo)
+                                 select l);
+            }
+
+            if (!string.IsNullOrEmpty(descripcion))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.Nombre.Contains(descripcion)
+                                 select l);
+            }
+
+
+            return await listaFiltrada.ToListAsync();
         }
 
         public async Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo)

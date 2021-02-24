@@ -1,3 +1,4 @@
+import { DeduccionDto } from './deduccionDto';
 import { ValorSeleccion } from './valorSeleccion';
 
 export interface TerceroDeduccionDto {
@@ -6,7 +7,7 @@ export interface TerceroDeduccionDto {
   codigo: string;
   terceroDeduccionId: number;
   tercero: ValorSeleccion;
-  deduccion: ValorSeleccion;
+  deduccion: DeduccionDto;
   actividadEconomica: ValorSeleccion;
   terceroDeDeduccion: ValorSeleccion;
 }
