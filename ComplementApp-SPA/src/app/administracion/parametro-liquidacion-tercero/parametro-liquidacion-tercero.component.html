@@ -108,6 +108,7 @@
                     formControlName="terceroDescripcionCtrl"
                     id="inputTercero"
                     value="{{ tercero?.nombre }}"
+                    placeholder="Ingrese el nombre del tercero"
                   />
                 </div>
 
@@ -257,11 +258,17 @@
 
 <div class="container-fluid mt-1">
   <div class="row">
-    <div class="col-12" *ngIf="!mostrarCabecera">
+    <div
+      class="col-12"
+      *ngIf="
+        !mostrarCabecera && listaNotasLegales && listaNotasLegales.length > 0
+      "
+    >
       <app-parametro-liquidacion-edit
         [tercero]="terceroSeleccionado"
         [esCreacion]="esCreacion"
         [parametroLiquidacionSeleccionado]="parametroLiquidacionSeleccionado"
+        [listaNotasLegales]="listaNotasLegales"
         (esCancelado)="HabilitarCabecera($event)"
       ></app-parametro-liquidacion-edit>
     </div>

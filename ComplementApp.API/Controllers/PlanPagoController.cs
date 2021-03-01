@@ -38,6 +38,7 @@ namespace ComplementApp.API.Controllers
         private readonly IProcesoLiquidacionPlanPago _procesoLiquidacion;
         private readonly IMailService mailService;
         private readonly IGeneralInterface _generalInterface;
+        private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
 
         #endregion Dependency Injection
 
@@ -45,7 +46,8 @@ namespace ComplementApp.API.Controllers
                                     IMapper mapper, DataContext dataContext,
                                     IMailService mailService,
                                     IProcesoLiquidacionPlanPago procesoLiquidacion,
-                                    IGeneralInterface generalInterface)
+                                    IGeneralInterface generalInterface,
+                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -54,6 +56,7 @@ namespace ComplementApp.API.Controllers
             _dataContext = dataContext;
             this._procesoLiquidacion = procesoLiquidacion;
             this._generalInterface = generalInterface;
+            this._procesoCreacionExcelInterface = procesoCreacionExcelInterface;
         }
 
         [Route("[action]")]
@@ -217,7 +220,7 @@ namespace ComplementApp.API.Controllers
             {
                 if (mes > 0 && mes < 13)
                 {
-                    mesDescripcion = UppercaseFirst(DateTimeFormatInfo.CurrentInfo.GetMonthName(mes));
+                    mesDescripcion = _generalInterface.UppercaseFirst(DateTimeFormatInfo.CurrentInfo.GetMonthName(mes));
                     nombreArchivo = "Radicados_" + mesDescripcion + ".xlsx";
                 }
                 if (terceroId > 0)
@@ -233,8 +236,8 @@ namespace ComplementApp.API.Controllers
                 var lista = await _repo.ObtenerListaRadicado(mes, terceroIdTemp, listIds);
                 if (lista != null)
                 {
-                    DataTable dtResultado = ObtenerTablaDeListaRadicado(lista.ToList());
-                    return this.ExportExcel(dtResultado, nombreArchivo);
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaRadicado(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
                 }
             }
             catch (Exception)
@@ -329,102 +332,6 @@ namespace ComplementApp.API.Controllers
 
 
         #endregion Forma Pago Compromiso
-
-        public FileStreamResult ExportExcel(DataTable dt, string nombreArchivo)
-        {
-            var memoryStream = new MemoryStream();
-
-            using (var package = new ExcelPackage(memoryStream))
-            {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Radicados");
-                int currentRowNo = 1;
-                int totalRows = dt.Rows.Count;
-                int k = 0;
-                foreach (DataColumn column in dt.Columns)
-                {
-                    worksheet.Cells[currentRowNo, k + 1].Value = column.ColumnName;
-                    k++;
-                }
-                currentRowNo++;
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    for (int j = 0; j < dt.Columns.Count; j++)
-                    {
-                        worksheet.Cells[currentRowNo, j + 1].Value = Convert.ToString(dt.Rows[i][j]);
-                    }
-                    currentRowNo++;
-                }
-
-                int columnCount = dt.Columns.Count;
-                for (int i = 1; i <= columnCount; i++)
-                {
-                    worksheet.Column(i).AutoFit();
-                }
-                worksheet.Row(1).Height = 55;
-                worksheet.Row(1).Style.Font.Bold = true;
-
-                package.Save();
-            }
-
-            memoryStream.Position = 0;
-            var contentType = "application/octet-stream";
-            var fileName = nombreArchivo;
-            Response.AddFileName(nombreArchivo);
-            return File(memoryStream, contentType, fileName);
-        }
-
-        private DataTable ObtenerTablaDeListaRadicado(List<RadicadoDto> lista)
-        {
-            int consecutivo = 1;
-            DataTable dt = new DataTable();
-            DataRow dr = null;
-            dt.Columns.Add(new DataColumn("ID", typeof(int)));
-            dt.Columns.Add(new DataColumn("FECHA_RAD", typeof(string)));
-            dt.Columns.Add(new DataColumn("ESTADO", typeof(string)));
-            dt.Columns.Add(new DataColumn("CRP", typeof(string)));
-            dt.Columns.Add(new DataColumn("NIT", typeof(string)));
-            dt.Columns.Add(new DataColumn("NOMBRE_TERCERO", typeof(string)));
-            dt.Columns.Add(new DataColumn("NUM_RAD_PROV", typeof(string)));
-            dt.Columns.Add(new DataColumn("NUM_RAD_SUP", typeof(string)));
-            dt.Columns.Add(new DataColumn("TOTAL_A_PAGAR", typeof(decimal)));
-            dt.Columns.Add(new DataColumn("NUM_OBLI", typeof(string)));
-            dt.Columns.Add(new DataColumn("NUM_OP", typeof(string)));
-            dt.Columns.Add(new DataColumn("FECHA_PAGO", typeof(string)));
-            dt.Columns.Add(new DataColumn("DETALLE", typeof(string)));
-
-            foreach (var item in lista)
-            {
-                dr = dt.NewRow();
-                dr["ID"] = consecutivo;
-                dr["FECHA_RAD"] = item.FechaRadicadoSupervisorDescripcion;
-                dr["ESTADO"] = item.Estado;
-                dr["CRP"] = item.Crp;
-                dr["NIT"] = item.NIT;
-                dr["NOMBRE_TERCERO"] = item.NombreTercero;
-                dr["NUM_RAD_PROV"] = item.NumeroRadicadoProveedor;
-                dr["NUM_RAD_SUP"] = item.NumeroRadicadoSupervisor;
-                dr["TOTAL_A_PAGAR"] = item.ValorAPagar;
-                dr["NUM_OBLI"] = item.Obligacion;
-                dr["NUM_OP"] = item.OrdenPago;
-                dr["FECHA_PAGO"] = item.FechaOrdenPagoDescripcion;
-                dr["DETALLE"] = item.TextoComprobanteContable;
-                dt.Rows.Add(dr);
-                consecutivo++;
-            }
-            return dt;
-        }
-
-        static string UppercaseFirst(string s)
-        {
-            // Check for empty string.
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            // Return char and concat substring.
-            return char.ToUpper(s[0]) + s.Substring(1);
-        }
-
         private async Task RegistrarListaPlanPago(CDPDto cdp, List<LineaPlanPagoDto> lista)
         {
             List<PlanPago> listaPlanPago = new List<PlanPago>();

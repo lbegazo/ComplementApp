@@ -9,5 +9,6 @@ namespace ComplementApp.API.Interfaces
          decimal ObtenerValorRedondeadoCPS(decimal valor);
          decimal ObtenerValorRedondeadoAl100XEncima(decimal valor);
          decimal ObtenerValorRedondeadoAl1000XEncima(decimal valor);
+         string UppercaseFirst(string s);
     }
 }

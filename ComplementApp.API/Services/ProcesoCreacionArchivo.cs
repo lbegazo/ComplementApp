@@ -11,7 +11,6 @@ namespace ComplementApp.API.Services
     public class ProcesoCreacionArchivo : IProcesoCreacionArchivo
     {
         #region Cuenta Por Pagar
-
         public string ObtenerInformacionMaestroLiquidacion_ArchivoCuentaPagar(List<DetalleLiquidacionParaArchivo> lista)
         {
             int consecutivo = 1;
@@ -78,7 +77,6 @@ namespace ComplementApp.API.Services
         }
 
         #endregion Cuenta Por Pagar
-
 
         #region Obligacion
         public string ObtenerInformacionCabeceraLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> lista)
@@ -282,5 +280,6 @@ namespace ComplementApp.API.Services
 
 
         #endregion Obligacion
+    
     }
 }

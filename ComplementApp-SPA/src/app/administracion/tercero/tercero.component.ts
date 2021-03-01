@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
@@ -28,7 +28,10 @@ export class TerceroComponent implements OnInit {
   transaccion: Transaccion;
 
   search: string;
+  searchNombre: string;
   suggestions$: Observable<Tercero[]>;
+  suggestionsXNombre$: Observable<Tercero[]>;
+
   errorMessage: string;
   subscriptions: Subscription[] = [];
   esCreacion = false;
@@ -57,7 +60,8 @@ export class TerceroComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private terceroService: TerceroService
+    private terceroService: TerceroService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +74,35 @@ export class TerceroComponent implements OnInit {
 
     this.createForm();
 
+    this.cargarBusquedaTerceroXCodigo();
+
+    this.cargarBusquedaTerceroXNombre();
+
+    this.onBuscarTercero();
+  }
+
+  createForm() {
+    this.facturaHeaderForm = this.fb.group({
+      rbtRadicarFacturaCtrl: ['1'],
+      terceroCtrl: [''],
+      terceroDescripcionCtrl: [''],
+      planPagoControles: this.arrayControls,
+    });
+  }
+
+  onCreacion(event) {
+    this.limpiarVariables();
+    this.esCreacion = true;
+    this.mostrarCabecera = false;
+  }
+
+  onModificacion(event) {
+    this.limpiarVariables();
+    this.esCreacion = false;
+    this.onBuscarTercero();
+  }
+
+  cargarBusquedaTerceroXCodigo() {
     this.suggestions$ = new Observable((observer: Observer<string>) => {
       observer.next(this.search);
     }).pipe(
@@ -96,33 +129,45 @@ export class TerceroComponent implements OnInit {
         return of([]);
       })
     );
-
-    this.onBuscarTercero();
   }
 
-  createForm() {
-    this.facturaHeaderForm = this.fb.group({
-      rbtRadicarFacturaCtrl: ['1'],
-      terceroCtrl: [''],
-      terceroDescripcionCtrl: [''],
-      planPagoControles: this.arrayControls,
-    });
+  cargarBusquedaTerceroXNombre() {
+    this.suggestionsXNombre$ = new Observable((observer: Observer<string>) => {
+      observer.next(this.searchNombre);
+    }).pipe(
+      switchMap((query: string) => {
+        if (query) {
+          return this.http
+            .get<Tercero[]>(this.baseUrl, {
+              params: { nombre: query },
+            })
+            .pipe(
+              map((data: Tercero[]) => data || []),
+              tap(
+                () => noop,
+                (err) => {
+                  // in case of http error
+                  this.errorMessage =
+                    (err && err.message) ||
+                    'Algo salió mal, consulte a su administrador';
+                }
+              )
+            );
+        }
+
+        return of([]);
+      })
+    );
   }
 
-  onCreacion(event) {
-    this.limpiarVariables();
-    this.esCreacion = true;
-    this.mostrarCabecera = false;
-  }
-
-  onModificacion(event) {
-    this.limpiarVariables();
-    this.esCreacion = false;
-    this.onBuscarTercero();
-  }
-
-  // Selected value event
   typeaheadOnSelect(e: TypeaheadMatch): void {
+    this.tercero = e.item as Tercero;
+    if (this.tercero) {
+      this.terceroId = this.tercero.terceroId;
+    }
+  }
+
+  typeaheadOnSelectXNombre(e: TypeaheadMatch): void {
     this.tercero = e.item as Tercero;
     if (this.tercero) {
       this.terceroId = this.tercero.terceroId;
@@ -237,6 +282,47 @@ export class TerceroComponent implements OnInit {
     this.terceroId = 0;
     this.search = '';
     this.terceroSeleccionado = null;
+  }
+
+  exportarExcel() {
+    let fileName = '';
+
+    this.terceroService
+      .DescargarListaTercero()
+      .subscribe(
+        (response) => {
+          switch (response.type) {
+            case HttpEventType.Response:
+              const downloadedFile = new Blob([response.body], {
+                type: response.body.type,
+              });
+
+              const nombreArchivo = response.headers.get('filename');
+
+              if (nombreArchivo != null && nombreArchivo.length > 0) {
+                fileName = nombreArchivo;
+              } else {
+                fileName = 'Terceros.xlsx';
+              }
+
+              const a = document.createElement('a');
+              a.setAttribute('style', 'display:none;');
+              document.body.appendChild(a);
+              a.download = fileName;
+              a.href = URL.createObjectURL(downloadedFile);
+              a.target = '_blank';
+              a.click();
+              document.body.removeChild(a);
+              break;
+          }
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          this.router.navigate(['/ADMINISTRACION_TERCERO']);
+        }
+      );
   }
 
   pageChanged(event: any): void {

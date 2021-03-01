@@ -1061,12 +1061,12 @@
                               (typeaheadOnSelect)="
                                 typeaheadOnSelectDeduccion($event)
                               "
-                              placeholder="Deducción"
+                              placeholder="Ingreso cód. de deducción"
                               formControlName="codigoDeduccionCtrl"
                               class="form-control border border-bottom-0 addPaddingLeft"
                               style="height: 20px; background-color: white"
                               id="inputCodigo"
-                              value="{{ deduccion?.codigo }}"      
+                              value="{{ deduccion?.codigo }}"
                             />
                             <div
                               class="alert alert-danger"
@@ -1083,19 +1083,20 @@
                               >Deducción</label
                             >
                             <input
-                            [(ngModel)]="searchNombreDeduccion"
-                            typeaheadOptionField="nombre"
-                            [typeahead]="suggestionsNombreDeduccion$"
-                            [typeaheadAsync]="true"
-                            (typeaheadOnSelect)="
-                            typeaheadOnSelectDeduccionXNombre($event)
-                            "
+                              [(ngModel)]="searchNombreDeduccion"
+                              typeaheadOptionField="nombre"
+                              [typeahead]="suggestionsNombreDeduccion$"
+                              [typeaheadAsync]="true"
+                              (typeaheadOnSelect)="
+                                typeaheadOnSelectDeduccionXNombre($event)
+                              "
                               class="form-control border addPaddingLeft"
                               style="height: 20px; background-color: white"
                               maxlength="50"
                               formControlName="deduccionCtrl"
+                              placeholder="Ingreso nombre de deducción"
                               id="inputDeduccion"
-                              value="{{ deduccion?.nombre }}"                              
+                              value="{{ deduccion?.nombre }}"
                             />
                           </div>
                         </div>
@@ -1155,7 +1156,7 @@
                           </div>
                           <div style="width: 23%" class="inner center">
                             <label class="col-form-label-md">Tercero</label>
-                          </div>                          
+                          </div>
                           <div style="width: 4%" class="inner center">
                             <label class="col-form-label-md">Sel.</label>
                           </div>
@@ -1217,7 +1218,7 @@
                                 <p style="font-size: 12px">
                                   {{ item?.terceroDeDeduccion.nombre }}
                                 </p>
-                              </div>                              
+                              </div>
                               <div
                                 style="width: 4%"
                                 class="inner aplicaBackground parent"
@@ -1244,7 +1245,7 @@
                         <div class="container-fluid mt-2">
                           <div class="form-row">
                             <div
-                              class="form-group col-md-2"
+                              class="form-group col-md-12"
                               style="margin: 0px"
                             >
                               <div
@@ -1256,12 +1257,14 @@
                                     type="checkbox"
                                     formControlName="notaLegal1Ctrl"
                                   />
-                                  Nota 1
+                                  {{ notaLegal1Descripcion }}
                                 </label>
                               </div>
                             </div>
+                          </div>
+                          <div class="form-row mt-3">
                             <div
-                              class="form-group col-md-2"
+                              class="form-group col-md-12"
                               style="margin: 0px"
                             >
                               <div
@@ -1273,12 +1276,14 @@
                                     type="checkbox"
                                     formControlName="notaLegal2Ctrl"
                                   />
-                                  Nota 2
+                                  {{ notaLegal2Descripcion }}
                                 </label>
                               </div>
                             </div>
+                          </div>
+                          <div class="form-row mt-3">
                             <div
-                              class="form-group col-md-2"
+                              class="form-group col-md-12"
                               style="margin: 0px"
                             >
                               <div
@@ -1290,12 +1295,14 @@
                                     type="checkbox"
                                     formControlName="notaLegal3Ctrl"
                                   />
-                                  Nota 3
+                                  {{ notaLegal3Descripcion }}
                                 </label>
                               </div>
                             </div>
+                          </div>
+                          <div class="form-row mt-3">
                             <div
-                              class="form-group col-md-2"
+                              class="form-group col-md-12"
                               style="margin: 0px"
                             >
                               <div
@@ -1307,12 +1314,14 @@
                                     type="checkbox"
                                     formControlName="notaLegal4Ctrl"
                                   />
-                                  Nota 4
+                                  {{ notaLegal4Descripcion }}
                                 </label>
                               </div>
                             </div>
+                          </div>
+                          <div class="form-row mt-3">
                             <div
-                              class="form-group col-md-2"
+                              class="form-group col-md-12"
                               style="margin: 0px"
                             >
                               <div
@@ -1324,12 +1333,14 @@
                                     type="checkbox"
                                     formControlName="notaLegal5Ctrl"
                                   />
-                                  Nota 5
+                                  {{ notaLegal5Descripcion }}
                                 </label>
                               </div>
                             </div>
+                          </div>
+                          <div class="form-row mt-3">
                             <div
-                              class="form-group col-md-2"
+                              class="form-group col-md-12"
                               style="margin: 0px"
                             >
                               <div
@@ -1341,7 +1352,7 @@
                                     type="checkbox"
                                     formControlName="notaLegal6Ctrl"
                                   />
-                                  Nota 6
+                                  {{ notaLegal6Descripcion }}
                                 </label>
                               </div>
                             </div>

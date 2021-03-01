@@ -12,6 +12,7 @@ namespace ComplementApp.API.Interfaces
         Task<Tercero> ObtenerTerceroBase(int terceroId);
         Task<PagedList<TerceroDto>> ObtenerTerceros(int? terceroId, UserParams userParams);
         Task<bool> ValidarExistenciaTercero(int TipoIdentificacion, string numeroIdentificacion);
+        Task<ICollection<TerceroDto>> ObtenerListaTercero();
         Task<PagedList<TerceroDto>> ObtenerTercerosParaParametrizacionLiquidacion(int tipo, int? terceroId, UserParams userParams);
         Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId);
         Task<ParametroLiquidacionTercero> ObtenerParametrizacionLiquidacionTerceroBase(int parametroLiquidacionTerceroId);

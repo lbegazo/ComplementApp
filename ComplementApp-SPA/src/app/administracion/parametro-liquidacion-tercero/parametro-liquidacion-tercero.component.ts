@@ -11,11 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
+import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { ListaService } from 'src/app/_services/lista.service';
 import { TerceroService } from 'src/app/_services/tercero.service';
 import { environment } from 'src/environments/environment';
 
@@ -32,6 +34,7 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
   searchNombre: string;
   suggestions$: Observable<Tercero[]>;
   suggestionsXNombre$: Observable<Tercero[]>;
+  
   errorMessage: string;
   subscriptions: Subscription[] = [];
   esCreacion = true;
@@ -42,6 +45,7 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
   listaTercero: Tercero[] = [];
   tercero: Tercero;
   terceroSeleccionado: Tercero;
+  listaNotasLegales: ValorSeleccion[] = [];
 
   pagination: Pagination = {
     currentPage: 1,
@@ -62,7 +66,8 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private terceroService: TerceroService
+    private terceroService: TerceroService,
+    private listaService: ListaService
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +83,8 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
     this.cargarBusquedaTerceroXCodigo();
 
     this.cargarBusquedaTerceroXNombre();
+
+    this.cargarNotasLegales();
 
     this.onBuscarFactura();
   }
@@ -291,6 +298,17 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
     this.terceroId = 0;
     this.search = '';
     this.parametroLiquidacionSeleccionado = null;
+  }
+
+  cargarNotasLegales() {
+    this.listaService.ObtenerParametrosGeneralesXTipo('NotaLegal').subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaNotasLegales = lista;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
   }
 
   pageChanged(event: any): void {

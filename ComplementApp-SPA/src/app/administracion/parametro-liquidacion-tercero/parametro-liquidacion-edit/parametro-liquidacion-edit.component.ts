@@ -53,6 +53,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   @Input() esCreacion: boolean;
   @Input() tercero: Tercero;
   @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
+  @Input() listaNotasLegales: ValorSeleccion[];
   @Output() esCancelado = new EventEmitter<boolean>();
   // @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
 
@@ -118,6 +119,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
   habilitarBotonAgregar = false;
 
+  notaLegal1Descripcion = '';
+  notaLegal2Descripcion = '';
+  notaLegal3Descripcion = '';
+  notaLegal4Descripcion = '';
+  notaLegal5Descripcion = '';
+  notaLegal6Descripcion = '';
+
   constructor(
     private http: HttpClient,
     private listaService: ListaService,
@@ -141,12 +149,25 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
     this.cargarBusquedaActividad();
 
+    this.cargarInformacionNotasLegales();
+
     if (this.esCreacion) {
       this.cargarParametrosGenerales();
       this.nombreBoton = 'Registrar';
     } else {
       this.createFullForm();
       this.nombreBoton = 'Guardar';
+    }
+  }
+
+  cargarInformacionNotasLegales() {
+    if (this.listaNotasLegales && this.listaNotasLegales.length > 0) {
+      this.notaLegal1Descripcion = this.listaNotasLegales[0].valor;
+      this.notaLegal2Descripcion = this.listaNotasLegales[1].valor;
+      this.notaLegal3Descripcion = this.listaNotasLegales[2].valor;
+      this.notaLegal4Descripcion = this.listaNotasLegales[3].valor;
+      this.notaLegal5Descripcion = this.listaNotasLegales[4].valor;
+      this.notaLegal6Descripcion = this.listaNotasLegales[5].valor;
     }
   }
 

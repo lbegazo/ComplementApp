@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/Operators';
@@ -79,6 +79,22 @@ export class TerceroService {
   RegistrarTercero(tercero: Tercero): Observable<any> {
     const path = 'RegistrarTercero';
     return this.http.post(this.baseUrl + path, tercero);
+  }
+
+  public DescargarListaTercero(): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${
+          this.baseUrl + 'DescargarListaTercero'
+        }`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
   }
 
   //#endregion Tercero

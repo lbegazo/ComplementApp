@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -31,10 +33,9 @@ namespace ComplementApp.API.Controllers
         private readonly DataContext _dataContext;
         private readonly ITerceroRepository _repo;
         private readonly IGeneralInterface _generalInterface;
-
         private readonly IListaRepository _listaRepository;
-
         private readonly IMapper _mapper;
+        private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
 
         #endregion Dependency Injection
 
@@ -42,13 +43,15 @@ namespace ComplementApp.API.Controllers
         public TerceroController(ITerceroRepository repo, IMapper mapper,
                                     DataContext dataContext,
                                     IGeneralInterface generalInterface,
-                                    IListaRepository listaRepository)
+                                    IListaRepository listaRepository,
+                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
         {
             _mapper = mapper;
             _repo = repo;
             _dataContext = dataContext;
             _generalInterface = generalInterface;
             _listaRepository = listaRepository;
+            _procesoCreacionExcelInterface = procesoCreacionExcelInterface;
         }
 
         #region Tercero
@@ -127,7 +130,7 @@ namespace ComplementApp.API.Controllers
                 var terceroBD = await _repo.ObtenerTerceroBase(terceroDto.TerceroId);
 
                 #region Mapear datos Tercero
-                
+
                 terceroBD.Nombre = terceroDto.Nombre;
                 terceroBD.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
                 terceroBD.Telefono = terceroDto.Telefono;
@@ -201,6 +204,27 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener la lista de terceros");
         }
 
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaTercero()
+        {
+            string nombreArchivo = "Tercero.xlsx";
+            try
+            {
+                var lista = await _repo.ObtenerListaTercero();
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaTercero(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
+        }
 
         #endregion Tercero
 

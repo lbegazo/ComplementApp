@@ -92,6 +92,27 @@ namespace ComplementApp.API.Data
             return false;
         }
 
+        public async Task<ICollection<TerceroDto>> ObtenerListaTercero()
+        {
+            var lista = (from t in _context.Tercero
+                         join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
+                         select new TerceroDto()
+                         {
+                             TerceroId = t.TerceroId,
+                             TipoDocumentoIdentidadId = t.TipoIdentificacion,
+                             TipoDocumentoIdentidad = ti.Nombre,
+                             NumeroIdentificacion = t.NumeroIdentificacion,
+                             Nombre = t.Nombre,
+                             Direccion = t.Direccion,
+                             Telefono = t.Telefono,
+                             DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
+                             RegimenTributario = t.RegimenTributario,
+                         })
+                        .OrderBy(c => c.Nombre);
+
+            return await lista.ToListAsync();
+        }
+
         #endregion Tercero
 
         #region Parametrización de Liquidación Tercero

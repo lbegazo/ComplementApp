@@ -109,7 +109,6 @@ namespace ComplementApp.API.Data
                         .ToListAsync();
         }
 
-
         public async Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente()
         {
             return await _context.CriterioCalculoReteFuente.ToListAsync();

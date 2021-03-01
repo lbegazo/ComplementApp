@@ -81,5 +81,15 @@ namespace ComplementApp.API.Services
             return valorNuevo;
         }
 
+        public string UppercaseFirst(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
     }
 }

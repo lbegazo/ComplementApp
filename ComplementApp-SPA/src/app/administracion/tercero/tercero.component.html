@@ -82,6 +82,7 @@
                     class="form-control border border-bottom-0 addPaddingLeft"
                     style="height: 20px"
                     id="inputNumeroTercero"
+                    value="{{ tercero?.numeroIdentificacion }}"
                   />
                   <div
                     class="alert alert-danger"
@@ -96,14 +97,19 @@
                     >Nombre del tercero</label
                   >
                   <input
+                    [(ngModel)]="searchNombre"
+                    typeaheadOptionField="nombre"
+                    [typeahead]="suggestionsXNombre$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelectXNombre($event)"
                     type="text"
                     class="form-control border addPaddingLeft"
-                    style="height: 20px"
+                    style="height: 20px; background-color: white"
                     maxlength="50"
                     formControlName="terceroDescripcionCtrl"
                     id="inputTercero"
                     value="{{ tercero?.nombre }}"
-                    readonly
+                    placeholder="Ingrese el nombre del tercero"
                   />
                 </div>
 
@@ -111,22 +117,27 @@
                   <table>
                     <tr style="vertical-align: bottom">
                       <td style="padding-top: 15px">
-                        &nbsp;
+                        
                         <button
                           type="submit"
                           class="btn btn-primary"
                           (click)="onBuscarTercero()"
-                          style="width: 80px"
                         >
                           Buscar</button
-                        >&nbsp;
+                        >
                         <button
                           type="submit"
-                          class="btn btn-success"
+                          class="btn btn-success ml-2"
                           (click)="onLimpiarFactura()"
-                          style="width: 80px"
                         >
                           Limpiar
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-warning ml-2"
+                          (click)="exportarExcel()"
+                        >
+                          Reporte
                         </button>
                       </td>
                     </tr>
