@@ -282,7 +282,11 @@ export class ClavePresupuestalContableComponent implements OnInit {
     if (this.listaCdp && this.listaCdp.length > 0 && this.crp > 0) {
       this.cdpSeleccionado = this.listaCdp.filter((x) => x.crp === this.crp)[0];
       if (this.cdpSeleccionado) {
-        this.ObtenerRubrosPresupuestalesXCompromiso();
+        if (this.esCreacion) {
+          this.ObtenerRubrosPresupuestalesXCompromiso();
+        } else {
+          this.ObtenerClavesPresupuestalContableXCompromiso();
+        }
       }
     }
   }
@@ -290,6 +294,30 @@ export class ClavePresupuestalContableComponent implements OnInit {
   ObtenerRubrosPresupuestalesXCompromiso() {
     this.clavePresupuestalContableService
       .ObtenerRubrosPresupuestalesXCompromiso(this.crp)
+      .subscribe(
+        (response: ClavePresupuestalContableDto[]) => {
+          if (response) {
+            this.listaClavePresupuestalContable = response;
+            if (
+              this.listaClavePresupuestalContable &&
+              this.listaClavePresupuestalContable.length > 0
+            ) {
+              this.terceroId = this.listaClavePresupuestalContable[0].tercero.id;
+              this.mostrarCabecera = false;
+            }
+          }
+        },
+        (error) => {
+          this.alertify.error(
+            'Hubo un error al obtener el formato de liquidación.'
+          );
+        }
+      );
+  }
+
+  ObtenerClavesPresupuestalContableXCompromiso() {
+    this.clavePresupuestalContableService
+      .ObtenerClavesPresupuestalContableXCompromiso(this.crp)
       .subscribe(
         (response: ClavePresupuestalContableDto[]) => {
           if (response) {

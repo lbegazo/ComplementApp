@@ -13,4 +13,5 @@ export interface ClavePresupuestalContableDto {
   recursoPresupuestal: ValorSeleccion;
   usoPresupuestal: ValorSeleccion;
   relacionContable: ValorSeleccion;
+  estadoModificacion: number;
 }

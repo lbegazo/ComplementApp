@@ -19,6 +19,7 @@ namespace ComplementApp.API.Dtos
         public ValorSeleccion RelacionContable { get; set; }
         public RelacionContable RelacionContableDto { get; set; }
         public ValorSeleccion CuentaContable { get; set; }
+        public int EstadoModificacion { get; set; }
 
     }
 }

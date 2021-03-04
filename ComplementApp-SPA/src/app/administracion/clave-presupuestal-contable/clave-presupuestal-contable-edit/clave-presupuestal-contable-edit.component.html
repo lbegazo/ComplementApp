@@ -24,7 +24,9 @@
                     class="col-form-label-md"
                     ><strong>Número de identificación</strong></label
                   >
-                  <p class="paragraph">{{ cdpSeleccionado.numeroIdentificacionTercero }}</p>
+                  <p class="paragraph">
+                    {{ cdpSeleccionado.numeroIdentificacionTercero }}
+                  </p>
                 </div>
                 <!--NombreTercero-->
                 <div class="form-group col-md-8" style="margin: 0px">
@@ -53,7 +55,7 @@
                       ><strong>Rubro Presupuestal</strong></label
                     >
                   </div>
-                
+
                   <div class="inner center" style="width: 15%">
                     <label class="col-form-label"
                       ><strong>Uso Presupuestal</strong></label
@@ -64,8 +66,7 @@
                       ><strong>Relación Contable</strong></label
                     >
                   </div>
-                  <div class="inner center" style="width: 8%">                    
-                  </div>
+                  <div class="inner center" style="width: 8%"></div>
                 </div>
                 <div *ngIf="listaClavePresupuestalContable">
                   <div
@@ -77,34 +78,49 @@
                     "
                   >
                     <ng-container [formGroupName]="i">
-                      <div class="inner center aplicaBackground"  style="width: 17%">
-                        <p class="medium">                          
+                      <div
+                        class="inner center aplicaBackground"
+                        style="width: 17%"
+                      >
+                        <p class="medium">
                           {{ item?.rubroPresupuestal.codigo }}
                         </p>
                       </div>
-                      <div class="inner left aplicaBackground" style="width: 45%">
+                      <div
+                        class="inner left aplicaBackground"
+                        style="width: 45%"
+                      >
                         <p class="medium">
                           {{ item?.rubroPresupuestal.nombre }}
                         </p>
                       </div>
-                      
-                      <div class="inner center aplicaBackground" style="width: 15%">
+
+                      <div
+                        class="inner center aplicaBackground"
+                        style="width: 15%"
+                      >
                         <p class="medium">
                           {{ item?.usoPresupuestal?.nombre }}
                         </p>
                       </div>
-                      <div class="inner center aplicaBackground" style="width: 15%">
+                      <div
+                        class="inner center aplicaBackground"
+                        style="width: 15%"
+                      >
                         <p class="medium">
                           {{ item?.relacionContable?.codigo }}
                         </p>
                       </div>
-                      <div class="inner aplicaBackground control" style="width: 8%">
-                        <button
-                        class="btn btn-success btn-sm child"
-                        (click)="abrirPopup(i)"
+                      <div
+                        class="inner aplicaBackground control"
+                        style="width: 8%"
                       >
-                        Registrar
-                      </button>
+                        <button
+                          class="btn btn-success btn-sm child"
+                          (click)="abrirPopup(i)"
+                        >
+                          {{ nombreBotonPopup }}
+                        </button>
                       </div>
                     </ng-container>
                   </div>
@@ -129,7 +145,7 @@
               style="margin-right: 10px"
               [disabled]="solicitudRegistrada"
             >
-              Registrar
+              {{ nombreBoton }}
             </button>
             <button
               class="btn btn-default"

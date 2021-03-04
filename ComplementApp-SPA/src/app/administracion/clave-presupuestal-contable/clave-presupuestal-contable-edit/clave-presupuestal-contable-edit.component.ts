@@ -24,12 +24,15 @@ import { PopupClavePresupuestalContableComponent } from './popup-clave-presupues
   styleUrls: ['./clave-presupuestal-contable-edit.component.scss'],
 })
 export class ClavePresupuestalContableEditComponent implements OnInit {
+  @Input() esCreacion: boolean;
   @Input() listaClavePresupuestalContable: ClavePresupuestalContableDto[];
   @Input() cdpSeleccionado: Cdp;
   @Output() esCancelado = new EventEmitter<boolean>();
 
   cdpId: number;
   solicitudRegistrada = false;
+  nombreBoton = 'Registrar';
+  nombreBotonPopup = 'Registrar';
 
   editForm = new FormGroup({});
   arrayControls = new FormArray([]);
@@ -49,6 +52,15 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
   ngOnInit() {
     this.cdpId = this.cdpSeleccionado.cdpId;
     this.cargarClavesPresupuestales();
+
+    if (!this.esCreacion) {
+      this.createFullForm();
+      this.nombreBoton = 'Actualizar';
+      this.nombreBotonPopup = 'Modificar';
+    } else {
+      this.nombreBoton = 'Registrar';
+      this.nombreBotonPopup = 'Registrar';
+    }
   }
 
   cargarClavesPresupuestales() {
@@ -73,6 +85,8 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
       planPagoControles: this.arrayControls,
     });
   }
+
+  createFullForm() {}
 
   cargarListaUsosPresupuestales() {}
 
@@ -104,6 +118,8 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
         this.modalService.onHidden.subscribe((reason: string) => {
           if (
             this.bsModalRef.content != null &&
+            this.bsModalRef.content.relacionContableSeleccionado !==
+              undefined &&
             this.bsModalRef.content.relacionContableSeleccionado !== null
           ) {
             const relacionContable = this.bsModalRef.content
@@ -132,25 +148,51 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
 
   onGuardar() {
     if (this.validarListaClavePresupuetalContable) {
-      this.clavePresupuestalService
-        .RegistrarClavePresupuestalContable(this.listaClavePresupuestalContable)
-        .subscribe(
-          (response: any) => {
-            if (!isNaN(response)) {
-              this.alertify.success(
-                'Se registraron los datos contables exitosamente'
+      if (this.esCreacion) {
+        this.clavePresupuestalService
+          .RegistrarClavePresupuestalContable(
+            this.listaClavePresupuestalContable
+          )
+          .subscribe(
+            (response: any) => {
+              if (!isNaN(response)) {
+                this.alertify.success(
+                  'Se registraron los datos contables exitosamente'
+                );
+                this.solicitudRegistrada = true;
+              } else {
+                this.alertify.error('No se pudo registrar los datos contables');
+              }
+            },
+            (error) => {
+              this.alertify.error(
+                'Hubó un error al registrar los datos contables ' + error
               );
-              this.solicitudRegistrada = true;
-            } else {
-              this.alertify.error('No se pudo registrar los datos contables');
             }
-          },
-          (error) => {
-            this.alertify.error(
-              'Hubó un error al registrar los datos contables ' + error
-            );
-          }
-        );
+          );
+      } else {
+        this.clavePresupuestalService
+          .ActualizarClavePresupuestalContable(
+            this.listaClavePresupuestalContable
+          )
+          .subscribe(
+            (response: any) => {
+              if (!isNaN(response)) {
+                this.alertify.success(
+                  'Se modificaron los datos contables exitosamente'
+                );
+                this.solicitudRegistrada = true;
+              } else {
+                this.alertify.error('No se pudo modificar los datos contables');
+              }
+            },
+            (error) => {
+              this.alertify.error(
+                'Hubó un error al registrar los datos contables ' + error
+              );
+            }
+          );
+      }
     } else {
       this.alertify.warning(
         'Debe definir los datos contables a los rubros presupuestales'

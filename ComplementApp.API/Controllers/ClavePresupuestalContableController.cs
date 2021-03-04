@@ -104,6 +104,37 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<ActionResult> ObtenerClavesPresupuestalContableXCompromiso([FromQuery(Name = "crp")] int crp)
+        {
+            try
+            {
+                string identificacionPCI = string.Empty;
+
+                ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
+                if (parametroPCI != null)
+                {
+                    identificacionPCI = parametroPCI.Valor;
+                }
+
+                var lista = await _repo.ObtenerClavesPresupuestalContableXCompromiso(crp);
+
+                foreach (var item in lista)
+                {
+                    item.Pci = identificacionPCI;
+                }
+
+                return Ok(lista);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener los rubros presupuestales");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<ActionResult> ObtenerRelacionesContableXRubroPresupuestal([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId)
         {
             try
@@ -208,24 +239,17 @@ namespace ComplementApp.API.Controllers
 
             try
             {
-                //Registrar Parametro liquidación Tercero
-                //var terceroBD = await _repo.ObtenerTerceroBase(terceroDto.TerceroId);
+                foreach (var item in lista)
+                {
+                    var claveBD = await _repo.ObtenerClavePresupuestalContableBase(item.ClavePresupuestalContableId);
+                    if (item.UsoPresupuestal != null)
+                    {
+                        claveBD.UsoPresupuestalId = item.UsoPresupuestal.Id;
+                    }
+                    claveBD.RelacionContableId = item.RelacionContable.Id;
+                    await _dataContext.SaveChangesAsync();
+                }
 
-                #region Mapear datos 
-
-                // terceroBD.Nombre = terceroDto.Nombre;
-                // terceroBD.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
-                // terceroBD.Telefono = terceroDto.Telefono;
-                // terceroBD.Email = terceroDto.Email;
-                // terceroBD.Direccion = terceroDto.Direccion;
-                // terceroBD.DeclaranteRenta = terceroDto.DeclaranteRenta;
-
-                // terceroBD.UsuarioIdModificacion = usuarioId;
-                // terceroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-
-                #endregion Mapear datos 
-
-                await _dataContext.SaveChangesAsync();
                 await transaction.CommitAsync();
 
                 return NoContent();

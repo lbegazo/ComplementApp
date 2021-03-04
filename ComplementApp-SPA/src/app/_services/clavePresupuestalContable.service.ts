@@ -78,6 +78,20 @@ export class ClavePresupuestalContableService {
     });
   }
 
+  ObtenerClavesPresupuestalContableXCompromiso(
+    crp: number
+  ): Observable<ClavePresupuestalContableDto[]> {
+    const path = 'ObtenerClavesPresupuestalContableXCompromiso';
+
+    let params = new HttpParams();
+
+    params = params.append('crp', crp.toString());
+
+    return this.http.get<ClavePresupuestalContableDto[]>(this.baseUrl + path, {
+      params,
+    });
+  }
+
   ObtenerRelacionesContableXRubroPresupuestal(
     rubroPresupuestalId: number
   ): Observable<RelacionContableDto[]> {
@@ -115,6 +129,13 @@ export class ClavePresupuestalContableService {
   ): Observable<any> {
     const path = 'RegistrarClavePresupuestalContable';
     return this.http.post(this.baseUrl + path, lista);
+  }
+
+  ActualizarClavePresupuestalContable(
+    lista: ClavePresupuestalContableDto[]
+  ): Observable<any> {
+    const path = 'ActualizarClavePresupuestalContable';
+    return this.http.put(this.baseUrl + path, lista);
   }
 
   public DescargarListaClavePresupuestalContable(): Observable<

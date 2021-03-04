@@ -134,7 +134,7 @@ namespace ComplementApp.API.Data
                                  TipoPago = pl.TipoPago
                              }
                          })
-                               .OrderBy(c => c.FechaRadicadoSupervisor);
+                        .OrderBy(c => c.FechaRadicadoSupervisor);
 
             return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }

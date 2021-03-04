@@ -83,6 +83,7 @@ namespace ComplementApp.API.Data
                          join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
                          from usoPre in UsoPresupuestal.DefaultIfEmpty()
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where rp.RubroPresupuestalId == c.RubroPresupuestalId
                          select new ClavePresupuestalContableDto()
                          {
                              Crp = c.Crp,
@@ -121,6 +122,7 @@ namespace ComplementApp.API.Data
                                  Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
                              },
                          })
+                         .Distinct()
                         .OrderBy(c => c.Crp);
 
             return await lista.ToListAsync();
@@ -169,6 +171,74 @@ namespace ComplementApp.API.Data
                                           Id = r.RecursoPresupuestalId,
                                           Codigo = c.Detalle10,
                                           Nombre = r.Nombre
+                                      },
+                                  })
+                                 .Distinct()
+                                 .OrderBy(rp => rp.RubroPresupuestal.Codigo)
+                                 .ToListAsync();
+            return detalles;
+        }
+
+        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerClavesPresupuestalContableXCompromiso(int crp)
+        {
+
+            var detalles = await (from cla in _context.ClavePresupuestalContable
+                                  join rp in _context.RubroPresupuestal on cla.RubroPresupuestalId equals rp.RubroPresupuestalId
+                                  join c in _context.CDP on cla.Crp equals c.Crp
+                                  join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                                //   join sf in _context.SituacionFondo on c.Detalle9 equals sf.Nombre
+                                //   join ff in _context.FuenteFinanciacion on c.Detalle8 equals ff.Nombre
+                                //   join r in _context.RecursoPresupuestal on c.Detalle10 equals r.Codigo
+                                  join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
+                                  join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
+                                  from cuCo in CuentaContable.DefaultIfEmpty()
+                                  join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
+                                  from usoPre in UsoPresupuestal.DefaultIfEmpty()
+                                  where rp.RubroPresupuestalId == c.RubroPresupuestalId
+                                  where c.Crp == crp
+                                  where c.Instancia == (int)TipoDocumento.Compromiso
+                                  select new ClavePresupuestalContableDto()
+                                  {
+                                      ClavePresupuestalContableId = cla.ClavePresupuestalContableId,
+                                      CdpId = c.CdpId,
+                                      Crp = c.Crp,
+                                      Dependencia = c.Detalle2,
+                                      RubroPresupuestal = new ValorSeleccion()
+                                      {
+                                          Id = rp.RubroPresupuestalId,
+                                          Codigo = rp.Identificacion,
+                                          Nombre = rp.Nombre,
+                                      },
+                                      Tercero = new ValorSeleccion()
+                                      {
+                                          Id = t.TerceroId,
+                                          Codigo = t.NumeroIdentificacion,
+                                          Nombre = t.Nombre,
+                                      },
+                                    //   FuenteFinanciacion = new ValorSeleccion()
+                                    //   {
+                                    //       Id = ff.FuenteFinanciacionId,
+                                    //       Nombre = c.Detalle8
+                                    //   },
+                                    //   SituacionFondo = new ValorSeleccion()
+                                    //   {
+                                    //       Id = sf.SituacionFondoId,
+                                    //       Nombre = c.Detalle9
+                                    //   },
+                                    //   RecursoPresupuestal = new ValorSeleccion()
+                                    //   {
+                                    //       Id = r.RecursoPresupuestalId,
+                                    //       Codigo = c.Detalle10,
+                                    //       Nombre = r.Nombre
+                                    //   },
+                                      RelacionContable = new ValorSeleccion()
+                                      {
+                                          Codigo = cuCo.NumeroCuenta
+                                      },
+                                      UsoPresupuestal = new ValorSeleccion()
+                                      {
+                                          Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
+                                          Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
                                       },
                                   })
                                  .Distinct()
@@ -236,6 +306,12 @@ namespace ComplementApp.API.Data
         {
             await _context.RelacionContable.AddAsync(relacion);
             return true;
+        }
+
+        public async Task<ClavePresupuestalContable> ObtenerClavePresupuestalContableBase(int claveId)
+        {
+            return await _context.ClavePresupuestalContable
+                        .FirstOrDefaultAsync(u => u.ClavePresupuestalContableId == claveId);
         }
 
         #endregion Clave Presupuestal Contable

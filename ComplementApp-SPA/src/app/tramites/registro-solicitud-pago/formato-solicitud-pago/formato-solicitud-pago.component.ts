@@ -225,8 +225,8 @@ export class FormatoSolicitudPagoComponent implements OnInit {
 
           this.cargarDatosSeguridadSocial();
           this.habilitaDatosRegistrados = true;
-          //Temporal: Disabled el botón cargar archivos
-          this.habilitaArchivosCargados = true;
+          // Temporal: Disabled el botón cargar archivos
+          // this.habilitaArchivosCargados = true;
         }
 
         this.unsubscribe();
