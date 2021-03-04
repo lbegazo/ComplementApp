@@ -8,10 +8,11 @@ namespace ComplementApp.API.Interfaces
 {
     public interface IClavePresupuestalContableRepository
     {
-        Task<PagedList<CDPDto>> ObtenerCompromisosParaClavePresupuestalContable(int? terceroId, int? numeroCrp, UserParams userParams);
+        Task<PagedList<CDPDto>> ObtenerCompromisosParaClavePresupuestalContable(int tipo, int? terceroId, UserParams userParams);
         Task<ICollection<ClavePresupuestalContableDto>> ObtenerRubrosPresupuestalesXCompromiso(int cdpId);
         Task<ICollection<RelacionContableDto>> ObtenerRelacionesContableXRubroPresupuestal(int rubroPresupuestalId);
         Task<ICollection<ValorSeleccion>> ObtenerUsosPresupuestalesXRubroPresupuestal(int rubroPresupuestalId);
         Task<bool> RegistrarRelacionContable(RelacionContable relacion);
+        Task<ICollection<ClavePresupuestalContableDto>> ObtenerListaClavePresupuestalContable();
     }
 }

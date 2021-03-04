@@ -1,4 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpParams,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
@@ -18,8 +23,8 @@ export class ClavePresupuestalContableService {
   constructor(private http: HttpClient) {}
 
   ObtenerCompromisosParaClavePresupuestalContable(
+    tipo: number,
     terceroId: number,
-    numeroCrp: number,
     page?,
     pagesize?
   ): Observable<PaginatedResult<Cdp[]>> {
@@ -30,11 +35,11 @@ export class ClavePresupuestalContableService {
     const path = 'ObtenerCompromisosParaClavePresupuestalContable';
 
     let params = new HttpParams();
+    if (tipo > 0) {
+      params = params.append('tipo', tipo.toString());
+    }
     if (terceroId > 0) {
       params = params.append('terceroId', terceroId.toString());
-    }
-    if (numeroCrp > 0) {
-      params = params.append('numeroCrp', numeroCrp.toString());
     }
     if (page != null) {
       params = params.append('pageNumber', page);
@@ -110,5 +115,21 @@ export class ClavePresupuestalContableService {
   ): Observable<any> {
     const path = 'RegistrarClavePresupuestalContable';
     return this.http.post(this.baseUrl + path, lista);
+  }
+
+  public DescargarListaClavePresupuestalContable(): Observable<
+    HttpEvent<Blob>
+  > {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarListaClavePresupuestalContable'}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
   }
 }

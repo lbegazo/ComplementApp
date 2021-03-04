@@ -20,17 +20,19 @@ namespace ComplementApp.API.Data
 
         #region Clave Presupuestal Contable
 
-        public async Task<PagedList<CDPDto>> ObtenerCompromisosParaClavePresupuestalContable(int? terceroId, int? numeroCrp, UserParams userParams)
+        public async Task<PagedList<CDPDto>> ObtenerCompromisosParaClavePresupuestalContable(int tipo, int? terceroId, UserParams userParams)
         {
+            IOrderedQueryable<CDPDto> lista = null;
             var listaCompromisos = _context.ClavePresupuestalContable.Select(x => x.Crp).ToHashSet();
-            var notFoundItems = _context.CDP.Where(item => !listaCompromisos.Contains(item.Crp)).Select(x => x.Crp).ToHashSet();
+            //var notFoundItems = _context.CDP.Where(item => !listaCompromisos.Contains(item.Crp)).Select(x => x.Crp).ToHashSet();
 
-            var lista = (from c in _context.CDP
+            if (tipo == (int)TipoOperacionTransaccion.Creacion)
+            {
+                lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where notFoundItems.Contains(c.Crp)
+                         where !listaCompromisos.Contains(c.Crp)
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
-                         where c.Crp == numeroCrp || numeroCrp == null
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
@@ -39,10 +41,89 @@ namespace ComplementApp.API.Data
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
                          })
-                        .Distinct()
-                        .OrderBy(x => x.Crp);
+                            .Distinct()
+                            .OrderBy(x => x.Crp);
+            }
+            else
+            {
+                lista = (from cla in _context.ClavePresupuestalContable
+                         join c in _context.CDP on cla.Crp equals c.Crp
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.SaldoActual > 0 //Saldo Disponible
+                         where c.TerceroId == terceroId || terceroId == null
+                         select new CDPDto()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                         })
+                            .Distinct()
+                            .OrderBy(x => x.Crp);
+
+            }
 
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerListaClavePresupuestalContable()
+        {
+            var lista = (from cla in _context.ClavePresupuestalContable
+                         join c in _context.CDP on cla.Crp equals c.Crp
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join rp in _context.RubroPresupuestal on cla.RubroPresupuestalId equals rp.RubroPresupuestalId
+                         join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
+                         join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into TipoGasto
+                         from tiGa in TipoGasto.DefaultIfEmpty()
+                         join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
+                         from cuCo in CuentaContable.DefaultIfEmpty()
+                         join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId into AtributoContable
+                         from atrCon in AtributoContable.DefaultIfEmpty()
+                         join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
+                         from usoPre in UsoPresupuestal.DefaultIfEmpty()
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         select new ClavePresupuestalContableDto()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4,
+
+                             Tercero = new ValorSeleccion()
+                             {
+                                 Codigo = t.NumeroIdentificacion,
+                                 Nombre = t.Nombre,
+                             },
+                             RubroPresupuestal = new ValorSeleccion()
+                             {
+                                 Codigo = rp.Identificacion,
+                             },
+                             RelacionContableDto = new RelacionContable()
+                             {
+                                 TipoOperacion = rc.TipoOperacion,
+                                 UsoContable = rc.UsoContable,
+                                 TipoGasto = new TipoGasto()
+                                 {
+                                     Codigo = rc.TipoGastoId > 0 ? tiGa.Codigo : string.Empty,
+                                 },
+                                 AtributoContable = new AtributoContable()
+                                 {
+                                     Nombre = rc.AtributoContableId > 0 ? atrCon.Nombre : string.Empty
+                                 }
+                             },
+                             CuentaContable = new ValorSeleccion()
+                             {
+                                 Codigo = cuCo.NumeroCuenta,
+                                 Nombre = cuCo.DescripcionCuenta
+                             },
+                             UsoPresupuestal = new ValorSeleccion()
+                             {
+                                 Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
+                                 Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
+                             },
+                         })
+                        .OrderBy(c => c.Crp);
+
+            return await lista.ToListAsync();
         }
 
         public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerRubrosPresupuestalesXCompromiso(int crp)

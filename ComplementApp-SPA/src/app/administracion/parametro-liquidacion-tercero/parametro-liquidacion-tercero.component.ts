@@ -34,7 +34,7 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
   searchNombre: string;
   suggestions$: Observable<Tercero[]>;
   suggestionsXNombre$: Observable<Tercero[]>;
-  
+
   errorMessage: string;
   subscriptions: Subscription[] = [];
   esCreacion = true;
@@ -298,6 +298,15 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
     this.terceroId = 0;
     this.search = '';
     this.parametroLiquidacionSeleccionado = null;
+
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 0,
+      maxSize: 10,
+    };
+
   }
 
   cargarNotasLegales() {

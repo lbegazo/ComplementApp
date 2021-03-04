@@ -120,6 +120,7 @@ namespace ComplementApp.API.Controllers
         }
 
         [Route("[action]")]
+        [HttpPut]
         public async Task<IActionResult> ActualizarTercero(TerceroDto terceroDto)
         {
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();

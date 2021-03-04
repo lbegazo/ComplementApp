@@ -85,13 +85,57 @@ namespace ComplementApp.API.Services
             return dt;
         }
 
+        public DataTable ObtenerTablaDeListaClavePresupuestalContable(List<ClavePresupuestalContableDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("CRP", typeof(long)));
+            dt.Columns.Add(new DataColumn("NUM_IDENT", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_TERCERO", typeof(string)));
+            dt.Columns.Add(new DataColumn("DETALLE4", typeof(string)));
+            dt.Columns.Add(new DataColumn("RUBRO_PTAL", typeof(string)));
+            dt.Columns.Add(new DataColumn("USO_PTAL", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_USO_PTAL", typeof(string)));
+            dt.Columns.Add(new DataColumn("ATRIBUTO_CNT", typeof(string)));
+            dt.Columns.Add(new DataColumn("TIPO_GASTO", typeof(string)));
+            dt.Columns.Add(new DataColumn("CTA_CNT", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_CTA_CNT", typeof(string)));
+            dt.Columns.Add(new DataColumn("TIPO_OPERACION", typeof(int)));
+            dt.Columns.Add(new DataColumn("USO_CONTABLE", typeof(int)));
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["CRP"] = item.Crp;
+                dr["NUM_IDENT"] = item.Tercero.Codigo;
+                dr["NOMBRE_TERCERO"] = item.Tercero.Nombre;
+                dr["DETALLE4"] = item.Detalle4;
+                dr["RUBRO_PTAL"] = item.RubroPresupuestal.Codigo;
+                dr["USO_PTAL"] = item.UsoPresupuestal.Codigo;
+                dr["NOMBRE_USO_PTAL"] = item.UsoPresupuestal.Nombre;
+                dr["ATRIBUTO_CNT"] = item.RelacionContableDto.AtributoContable.Nombre;
+                dr["TIPO_GASTO"] = item.RelacionContableDto.TipoGasto.Codigo;
+                dr["CTA_CNT"] = item.CuentaContable.Codigo;
+                dr["NOMBRE_CTA_CNT"] = item.CuentaContable.Nombre;
+                dr["TIPO_OPERACION"] = item.RelacionContableDto.TipoOperacion.HasValue ? item.RelacionContableDto.TipoOperacion.Value : 0;
+                dr["USO_CONTABLE"] = item.RelacionContableDto.UsoContable.HasValue ? item.RelacionContableDto.UsoContable.Value : 0;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
+
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {
             var memoryStream = new MemoryStream();
 
             using (var package = new ExcelPackage(memoryStream))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Radicados");
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("SIGPAA");
                 int currentRowNo = 1;
                 int totalRows = dt.Rows.Count;
                 int k = 0;

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
@@ -28,8 +28,12 @@ import { environment } from 'src/environments/environment';
 export class ClavePresupuestalContableComponent implements OnInit {
   nombreTransaccion: string;
   transaccion: Transaccion;
+
   search: string;
+  searchNombre: string;
   suggestions$: Observable<Tercero[]>;
+  suggestionsXNombre$: Observable<Tercero[]>;
+
   errorMessage: string;
   subscriptions: Subscription[] = [];
   listaEstadoId: string;
@@ -55,12 +59,16 @@ export class ClavePresupuestalContableComponent implements OnInit {
   };
   listaClavePresupuestalContable: ClavePresupuestalContableDto[];
 
+  esCreacion = true;
+  nombreBoton = 'Registrar Clave Presupuestal';
+
   constructor(
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private clavePresupuestalContableService: ClavePresupuestalContableService
+    private clavePresupuestalContableService: ClavePresupuestalContableService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -72,8 +80,50 @@ export class ClavePresupuestalContableComponent implements OnInit {
     });
 
     this.createForm();
-    this.onBuscarFactura();
 
+    this.cargarBusquedaTerceroXCodigo();
+
+    this.cargarBusquedaTerceroXNombre();
+
+    this.onBuscarFactura();
+  }
+
+  createForm() {
+    this.facturaHeaderForm = this.fb.group({
+      rbtRadicarFacturaCtrl: ['1'],
+      terceroCtrl: ['', Validators.required],
+      terceroDescripcionCtrl: [''],
+      planPagoControles: this.arrayControls,
+    });
+  }
+
+  onCreacion(event) {
+    this.limpiarVariables();
+    this.esCreacion = true;
+    this.nombreBoton = 'Registrar Clave Presupuestal';
+    this.onBuscarFactura();
+  }
+
+  onModificacion(event) {
+    this.limpiarVariables();
+    this.esCreacion = false;
+    this.nombreBoton = 'Modificar Clave Presupuestal';
+    this.onBuscarFactura();
+  }
+
+  crearControlesDeArray() {
+    if (this.listaCdp && this.listaCdp.length > 0) {
+      for (const detalle of this.listaCdp) {
+        this.arrayControls.push(
+          new FormGroup({
+            rubroControl: new FormControl('', [Validators.required]),
+          })
+        );
+      }
+    }
+  }
+
+  cargarBusquedaTerceroXCodigo() {
     this.suggestions$ = new Observable((observer: Observer<string>) => {
       observer.next(this.search);
     }).pipe(
@@ -96,33 +146,39 @@ export class ClavePresupuestalContableComponent implements OnInit {
               )
             );
         }
+
         return of([]);
       })
     );
   }
 
-  createForm() {
-    this.facturaHeaderForm = this.fb.group({
-      terceroCtrl: ['', Validators.required],
-      terceroDescripcionCtrl: [''],
-      planPagoControles: this.arrayControls,
-    });
-  }
+  cargarBusquedaTerceroXNombre() {
+    this.suggestionsXNombre$ = new Observable((observer: Observer<string>) => {
+      observer.next(this.searchNombre);
+    }).pipe(
+      switchMap((query: string) => {
+        if (query) {
+          return this.http
+            .get<Tercero[]>(this.baseUrl, {
+              params: { nombre: query },
+            })
+            .pipe(
+              map((data: Tercero[]) => data || []),
+              tap(
+                () => noop,
+                (err) => {
+                  // in case of http error
+                  this.errorMessage =
+                    (err && err.message) ||
+                    'Algo salió mal, consulte a su administrador';
+                }
+              )
+            );
+        }
 
-  crearControlesDeArray() {
-    if (this.listaCdp && this.listaCdp.length > 0) {
-      for (const detalle of this.listaCdp) {
-        this.arrayControls.push(
-          new FormGroup({
-            rubroControl: new FormControl('', [Validators.required]),
-          })
-        );
-      }
-    } else {
-      this.alertify.warning(
-        'El tercero ya tiene registrados clave contable'
-      );
-    }
+        return of([]);
+      })
+    );
   }
 
   typeaheadOnSelect(e: TypeaheadMatch): void {
@@ -132,11 +188,18 @@ export class ClavePresupuestalContableComponent implements OnInit {
     }
   }
 
+  typeaheadOnSelectXNombre(e: TypeaheadMatch): void {
+    this.tercero = e.item as Tercero;
+    if (this.tercero) {
+      this.terceroId = this.tercero.terceroId;
+    }
+  }
+
   onBuscarFactura() {
     this.clavePresupuestalContableService
       .ObtenerCompromisosParaClavePresupuestalContable(
+        this.esCreacion ? 1 : 2,
         this.terceroId,
-        null,
         this.pagination.currentPage,
         this.pagination.itemsPerPage
       )
@@ -151,7 +214,15 @@ export class ClavePresupuestalContableComponent implements OnInit {
           this.alertify.error(error);
         },
         () => {
+          if (this.listaCdp && this.listaCdp.length === 0) {
+            this.alertify.warning(
+              'No existen compromisos sin clave presupuestal contable'
+            );
+          }
+
+          const tipo = this.esCreacion ? '1' : '2';
           this.facturaHeaderForm = this.fb.group({
+            rbtRadicarFacturaCtrl: [tipo],
             terceroCtrl: ['', Validators.required],
             terceroDescripcionCtrl: [''],
             planPagoControles: this.arrayControls,
@@ -161,19 +232,34 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   pageChanged(event: any): void {
+    console.log(event);
     this.pagination.currentPage = event.page;
     this.onBuscarFactura();
   }
 
   onLimpiarFactura() {
-    this.listaCdp = [];
-    this.crp = 0;
-    this.tercero = null;
-    this.search = '';
-    this.terceroId = null;
-    this.listaClavePresupuestalContable = [];
-
+    this.limpiarVariables();
     this.onBuscarFactura();
+  }
+
+  limpiarVariables() {
+    this.crp = 0;
+    this.esCreacion = true;
+    this.listaCdp = [];
+    this.listaClavePresupuestalContable = [];
+    this.tercero = null;
+    this.terceroId = 0;
+    this.search = '';
+    this.cdpSeleccionado = null;
+    this.nombreBoton = 'Registrar';
+
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 0,
+      maxSize: 10,
+    };
   }
 
   unsubscribe() {
@@ -194,16 +280,14 @@ export class ClavePresupuestalContableComponent implements OnInit {
 
   onRegistrarClavePresupuestal() {
     if (this.listaCdp && this.listaCdp.length > 0 && this.crp > 0) {
-      this.cdpSeleccionado = this.listaCdp.filter(
-        (x) => x.crp === this.crp
-      )[0];
+      this.cdpSeleccionado = this.listaCdp.filter((x) => x.crp === this.crp)[0];
       if (this.cdpSeleccionado) {
-        this.ObtenerRubrosParaClavePresupuestalContable();
+        this.ObtenerRubrosPresupuestalesXCompromiso();
       }
     }
   }
 
-  ObtenerRubrosParaClavePresupuestalContable() {
+  ObtenerRubrosPresupuestalesXCompromiso() {
     this.clavePresupuestalContableService
       .ObtenerRubrosPresupuestalesXCompromiso(this.crp)
       .subscribe(
@@ -237,5 +321,46 @@ export class ClavePresupuestalContableComponent implements OnInit {
     };
     this.onLimpiarFactura();
     this.mostrarCabecera = true;
+  }
+
+  exportarExcel() {
+    let fileName = '';
+
+    this.clavePresupuestalContableService
+      .DescargarListaClavePresupuestalContable()
+      .subscribe(
+        (response) => {
+          switch (response.type) {
+            case HttpEventType.Response:
+              const downloadedFile = new Blob([response.body], {
+                type: response.body.type,
+              });
+
+              const nombreArchivo = response.headers.get('filename');
+
+              if (nombreArchivo != null && nombreArchivo.length > 0) {
+                fileName = nombreArchivo;
+              } else {
+                fileName = 'ClavePresupuestalContable.xlsx';
+              }
+
+              const a = document.createElement('a');
+              a.setAttribute('style', 'display:none;');
+              document.body.appendChild(a);
+              a.download = fileName;
+              a.href = URL.createObjectURL(downloadedFile);
+              a.target = '_blank';
+              a.click();
+              document.body.removeChild(a);
+              break;
+          }
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          this.router.navigate(['/ADMINISTRACION_CLAVEPRESUPUESTALCONTABLE']);
+        }
+      );
   }
 }

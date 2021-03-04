@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Data;
@@ -26,12 +28,14 @@ namespace ComplementApp.API.Controllers
         private readonly IGeneralInterface _generalInterface;
 
         private readonly IListaRepository _listaRepository;
+        private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
 
         #endregion Dependency Injection
 
         public ClavePresupuestalContableController(IUnitOfWork unitOfWork, IClavePresupuestalContableRepository repo,
                                     IMapper mapper, DataContext dataContext, IListaRepository listaRepository,
-                                    IGeneralInterface generalInterface)
+                                    IGeneralInterface generalInterface,
+                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -39,17 +43,18 @@ namespace ComplementApp.API.Controllers
             _dataContext = dataContext;
             this._generalInterface = generalInterface;
             this._listaRepository = listaRepository;
+            this._procesoCreacionExcelInterface = procesoCreacionExcelInterface;
         }
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<ActionResult> ObtenerCompromisosParaClavePresupuestalContable([FromQuery(Name = "terceroId")] int? terceroId,
-                                                                                           [FromQuery(Name = "numeroCrp")] int? numeroCrp,
-                                                                                           [FromQuery] UserParams userParams)
+        public async Task<ActionResult> ObtenerCompromisosParaClavePresupuestalContable([FromQuery(Name = "tipo")] int tipo,
+                                                                                        [FromQuery(Name = "terceroId")] int? terceroId,
+                                                                                        [FromQuery] UserParams userParams)
         {
             try
             {
-                var pagedList = await _repo.ObtenerCompromisosParaClavePresupuestalContable(terceroId, numeroCrp, userParams);
+                var pagedList = await _repo.ObtenerCompromisosParaClavePresupuestalContable(tipo, terceroId, userParams);
                 var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
 
                 Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
@@ -194,6 +199,62 @@ namespace ComplementApp.API.Controllers
             {
                 throw;
             }
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> ActualizarClavePresupuestalContable(ClavePresupuestalContableDto[] lista)
+        {
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                //Registrar Parametro liquidación Tercero
+                //var terceroBD = await _repo.ObtenerTerceroBase(terceroDto.TerceroId);
+
+                #region Mapear datos 
+
+                // terceroBD.Nombre = terceroDto.Nombre;
+                // terceroBD.FechaExpedicionDocumento = terceroDto.FechaExpedicionDocumento;
+                // terceroBD.Telefono = terceroDto.Telefono;
+                // terceroBD.Email = terceroDto.Email;
+                // terceroBD.Direccion = terceroDto.Direccion;
+                // terceroBD.DeclaranteRenta = terceroDto.DeclaranteRenta;
+
+                // terceroBD.UsuarioIdModificacion = usuarioId;
+                // terceroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+
+                #endregion Mapear datos 
+
+                await _dataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaClavePresupuestalContable()
+        {
+            string nombreArchivo = "ClavePresupuestalContable.xlsx";
+            try
+            {
+                var lista = await _repo.ObtenerListaClavePresupuestalContable();
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaClavePresupuestalContable(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
         }
 
     }

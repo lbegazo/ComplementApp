@@ -2,7 +2,6 @@ namespace ComplementApp.API.Dtos
 {
     public class LineaPlanPagoDto
     {
-
         public int PlanPagoId { get; set; }
         public int MesId { get; set; }
         public string MesDescripcion { get; set; }

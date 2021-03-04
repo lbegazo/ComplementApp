@@ -106,7 +106,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
     this.cargarBusquedaTerceroXCodigo();
 
-    this.cargarBusquedaTerceroXNombre();    
+    this.cargarBusquedaTerceroXNombre();
   }
 
   createForm() {
@@ -116,7 +116,6 @@ export class CausacionyLiquidacionComponent implements OnInit {
       planPagoControles: this.arrayControls,
     });
   }
-
 
   crearControlesDeArray() {
     if (this.listaPlanPago && this.listaPlanPago.length > 0) {
