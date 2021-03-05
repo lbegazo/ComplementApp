@@ -24,7 +24,7 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.FechaActual);
                 sbBody.Append("|");
-                sbBody.Append("0" + item.TipoIdentificacion);
+                sbBody.Append(item.TipoIdentificacion.ToString().PadLeft(2, '0'));
                 sbBody.Append("|");
                 sbBody.Append(item.NumeroIdentificacion);
                 sbBody.Append("|");
@@ -98,7 +98,7 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.Dip);
                 sbBody.Append("|");
-                sbBody.Append(item.TipoCuentaPagarCodigo.ToString().PadLeft(2, '0'));
+                sbBody.Append(item.TipoCuentaPagarCodigo.PadLeft(2, '0'));
                 sbBody.Append("|");
                 sbBody.Append(item.ValorIva.ToString().Replace(".", ","));
                 sbBody.Append("|");
@@ -149,7 +149,7 @@ namespace ComplementApp.API.Services
                     sbBody.Append("|");
                     sbBody.Append(consecutivoInterno);
                     sbBody.Append("|");
-                    sbBody.Append("00" + itemInterno.Dependencia);
+                    sbBody.Append(itemInterno.Dependencia);
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.RubroPresupuestalIdentificacion);
                     sbBody.Append("|");
@@ -211,7 +211,7 @@ namespace ComplementApp.API.Services
                         sbBody.Append("|");
                         sbBody.Append(itemInterno.DeduccionCodigo);
                         sbBody.Append("|");
-                        sbBody.Append("0" + itemInterno.TipoIdentificacion);
+                        sbBody.Append(itemInterno.TipoIdentificacion.ToString().PadLeft(2, '0'));
                         sbBody.Append("|");
                         sbBody.Append(itemInterno.NumeroIdentificacion);
                         sbBody.Append("|");

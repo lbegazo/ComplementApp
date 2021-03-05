@@ -186,9 +186,9 @@ namespace ComplementApp.API.Data
                                   join rp in _context.RubroPresupuestal on cla.RubroPresupuestalId equals rp.RubroPresupuestalId
                                   join c in _context.CDP on cla.Crp equals c.Crp
                                   join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                                //   join sf in _context.SituacionFondo on c.Detalle9 equals sf.Nombre
-                                //   join ff in _context.FuenteFinanciacion on c.Detalle8 equals ff.Nombre
-                                //   join r in _context.RecursoPresupuestal on c.Detalle10 equals r.Codigo
+                                  join sf in _context.SituacionFondo on c.Detalle9 equals sf.Nombre
+                                  join ff in _context.FuenteFinanciacion on c.Detalle8 equals ff.Nombre
+                                  join r in _context.RecursoPresupuestal on c.Detalle10 equals r.Codigo
                                   join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
                                   join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
                                   from cuCo in CuentaContable.DefaultIfEmpty()
@@ -215,22 +215,22 @@ namespace ComplementApp.API.Data
                                           Codigo = t.NumeroIdentificacion,
                                           Nombre = t.Nombre,
                                       },
-                                    //   FuenteFinanciacion = new ValorSeleccion()
-                                    //   {
-                                    //       Id = ff.FuenteFinanciacionId,
-                                    //       Nombre = c.Detalle8
-                                    //   },
-                                    //   SituacionFondo = new ValorSeleccion()
-                                    //   {
-                                    //       Id = sf.SituacionFondoId,
-                                    //       Nombre = c.Detalle9
-                                    //   },
-                                    //   RecursoPresupuestal = new ValorSeleccion()
-                                    //   {
-                                    //       Id = r.RecursoPresupuestalId,
-                                    //       Codigo = c.Detalle10,
-                                    //       Nombre = r.Nombre
-                                    //   },
+                                      FuenteFinanciacion = new ValorSeleccion()
+                                      {
+                                          Id = ff.FuenteFinanciacionId,
+                                          Nombre = c.Detalle8
+                                      },
+                                      SituacionFondo = new ValorSeleccion()
+                                      {
+                                          Id = sf.SituacionFondoId,
+                                          Nombre = c.Detalle9
+                                      },
+                                      RecursoPresupuestal = new ValorSeleccion()
+                                      {
+                                          Id = r.RecursoPresupuestalId,
+                                          Codigo = c.Detalle10,
+                                          Nombre = r.Nombre
+                                      },
                                       RelacionContable = new ValorSeleccion()
                                       {
                                           Codigo = cuCo.NumeroCuenta
