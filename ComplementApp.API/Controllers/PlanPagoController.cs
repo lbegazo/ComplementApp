@@ -247,6 +247,27 @@ namespace ComplementApp.API.Controllers
             return BadRequest();
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaPlanPago()
+        {
+            string nombreArchivo = "ListaPlanPago.xlsx";
+            try
+            {
+                var lista = await _repo.ObtenerListaPlanPagoTotal();
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaPlanPago(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
+        }
+
         #region Forma Pago Compromiso
 
         [HttpPost]

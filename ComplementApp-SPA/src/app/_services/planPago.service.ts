@@ -194,7 +194,7 @@ export class PlanPagoService {
       );
   }
 
-  public DescargarListaRadicado(
+  DescargarListaRadicado(
     mes: number,
     listaEstadoId: string,
     terceroId?: number
@@ -205,6 +205,22 @@ export class PlanPagoService {
         `${
           this.baseUrl + 'DescargarListaRadicado'
         }?mes=${mes}&listaEstadoId=${listaEstadoId}&terceroId=${terceroId}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
+  }
+
+  DescargarListaPlanPago(): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${
+          this.baseUrl + 'DescargarListaPlanPago'
+        }`,
         null,
         {
           reportProgress: true,

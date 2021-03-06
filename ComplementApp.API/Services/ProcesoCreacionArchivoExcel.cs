@@ -85,6 +85,39 @@ namespace ComplementApp.API.Services
             return dt;
         }
 
+        public DataTable ObtenerTablaDeListaPlanPago(List<PlanPagoDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("CDP", typeof(int)));
+            dt.Columns.Add(new DataColumn("CRP", typeof(int)));
+            dt.Columns.Add(new DataColumn("AÑO", typeof(int)));
+            dt.Columns.Add(new DataColumn("MES", typeof(int)));
+            dt.Columns.Add(new DataColumn("IDENTIFICACION", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_CONTRATISTA/PROVEEDOR", typeof(string)));
+            dt.Columns.Add(new DataColumn("OBJETO_COMPROMISO", typeof(string)));
+            dt.Columns.Add(new DataColumn("VALOR_PAGAR", typeof(decimal)));
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["CDP"] = item.Cdp;
+                dr["CRP"] = item.Crp;
+                dr["AÑO"] = item.AnioPago;
+                dr["MES"] = item.MesPago;
+                dr["IDENTIFICACION"] = item.IdentificacionTercero;
+                dr["NOMBRE_CONTRATISTA/PROVEEDOR"] = item.NombreTercero;
+                dr["OBJETO_COMPROMISO"] = item.DetallePlanPago;
+                dr["VALOR_PAGAR"] = item.ValorAPagar;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
         public DataTable ObtenerTablaDeListaClavePresupuestalContable(List<ClavePresupuestalContableDto> lista)
         {
             int consecutivo = 1;
@@ -127,7 +160,6 @@ namespace ComplementApp.API.Services
             }
             return dt;
         }
-
 
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {

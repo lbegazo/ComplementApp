@@ -64,6 +64,32 @@ namespace ComplementApp.API.Data
             return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
+        public async Task<ICollection<PlanPagoDto>> ObtenerListaPlanPagoTotal()
+        {
+            var lista = (from pp in _context.PlanPago
+                         join c in _context.CDP on pp.Crp equals c.Crp
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where pp.Cdp == c.Cdp
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         where pp.EstadoPlanPagoId == (int)EstadoPlanPago.PorPagar
+                         select new PlanPagoDto()
+                         {
+                             Cdp = pp.Cdp,
+                             Crp = pp.Crp,
+                             AnioPago = pp.AnioPago,
+                             MesPago = pp.MesPago,
+                             IdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             DetallePlanPago = c.Detalle4,
+                             ValorAPagar = pp.ValorAPagar,
+                         })
+                         .Distinct()
+                        .OrderBy(c => c.Cdp)
+                        .OrderBy(c => c.Crp);
+
+            return await lista.ToListAsync();
+        }
+
         public async Task<List<PlanPago>> ObtenerListaPlanPagoXIds(List<int> listaPlanPagoId)
         {
             return await (from c in _context.PlanPago
