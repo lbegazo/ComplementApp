@@ -15,6 +15,8 @@ namespace ComplementApp.API.Interfaces
         DataTable ObtenerTablaDeListaClavePresupuestalContable(List<ClavePresupuestalContableDto> lista);
 
         DataTable ObtenerTablaDeListaPlanPago(List<PlanPagoDto> lista);
+
+        DataTable ObtenerTablaDeListaContrato(List<ContratoDto> lista);
         
         FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo);
     }

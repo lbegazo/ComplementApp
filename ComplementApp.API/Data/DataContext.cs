@@ -105,6 +105,7 @@ namespace ComplementApp.API.Data
         public DbSet<DetalleFormatoSolicitudPago> DetalleFormatoSolicitudPago { get; set; }
         public DbSet<TipoAdminPila> TipoAdminPila { get; set; }
         public DbSet<Numeracion> Numeracion { get; set; }
+        public DbSet<TipoContrato> TipoContrato { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

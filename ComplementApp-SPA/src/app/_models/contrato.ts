@@ -2,7 +2,7 @@ import { Usuario } from './usuario';
 
 export interface Contrato {
   contratoId: number;
-  tipoModalidadContratoId: number;
+  tipoContratoId: number;
   crp: number;
   numeroContrato: number;
   fechaRegistro?: Date;

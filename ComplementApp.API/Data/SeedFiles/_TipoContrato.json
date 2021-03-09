@@ -1,0 +1,46 @@
+[
+  {
+    "Codigo": "01",
+    "Nombre": "Servicios Profesionales"
+  },
+  {
+    "Codigo": "02",
+    "Nombre": "Contrato Interadministrativo"
+  },
+  {
+    "Codigo": "03",
+    "Nombre": "Suministro de Bienes en general"
+  },
+  {
+    "Codigo": "04",
+    "Nombre": "Arrendamiento de bienes inmuebles"
+  },
+  {
+    "Codigo": "05",
+    "Nombre": "Compraventa (Bienes Muebles)"
+  },
+  {
+    "Codigo": "06",
+    "Nombre": "Servicios Apoyo a la Gestión de la Entidad"
+  },
+  {
+    "Codigo": "07",
+    "Nombre": "Otros Suministros"
+  },
+  {
+    "Codigo": "08",
+    "Nombre": "Convenio Interadministrativo"
+  },
+  {
+    "Codigo": "09",
+    "Nombre": "Contrato de Obra"
+  },
+  {
+    "Codigo": "10",
+    "Nombre": "Consultoría (Asesoría Técnica)"
+  },
+  {
+    "Codigo": "11",
+    "Nombre": "Servicios de Capacitación"
+  }
+]

@@ -15,11 +15,8 @@ namespace ComplementApp.API.Models
         [Required]
         [Column(TypeName = "VARCHAR(50)")]
         public string NumeroContrato { get; set; }
-
-        [Required]
-        public int TipoModalidadContratoId { get; set; }
-
-        public TipoModalidadContrato TipoModalidadContrato { get; set; }
+        
+        public int TipoContratoId { get; set; }
 
         [Required]
         public DateTime FechaRegistro { get; set; }

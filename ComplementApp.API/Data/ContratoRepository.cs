@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
@@ -31,7 +32,7 @@ namespace ComplementApp.API.Data
                                select new ContratoDto()
                                {
                                    ContratoId = t.ContratoId,
-                                   TipoModalidadContratoId = t.TipoModalidadContratoId,
+                                   TipoContratoId = t.TipoContratoId,
                                    NumeroContrato = t.NumeroContrato,
                                    Crp = t.Crp,
                                    FechaInicio = t.FechaInicio,
@@ -146,6 +147,44 @@ namespace ComplementApp.API.Data
             return await PagedList<CDPDto>.CreateAsync(lista1, userParams.PageNumber, userParams.PageSize);
         }
 
+        public async Task<ICollection<ContratoDto>> ObtenerListaContratoTotal()
+        {
+            var lista = (from c in _context.Contrato
+                         join tc in _context.TipoContrato on c.TipoContratoId equals tc.TipoContratoId
+                         join sup1 in _context.Usuario on c.Supervisor1Id equals sup1.UsuarioId into Supervisor1
+                         from super1 in Supervisor1.DefaultIfEmpty()
+                         join sup2 in _context.Usuario on c.Supervisor2Id equals sup2.UsuarioId into Supervisor2
+                         from super2 in Supervisor2.DefaultIfEmpty()
+                         select new ContratoDto()
+                         {
+                             NumeroContrato = c.NumeroContrato,
+                             Crp = c.Crp,
+                             TipoContrato = new ValorSeleccion()
+                             {
+                                 Nombre = tc.Nombre
+                             },
+                             FechaRegistro = c.FechaRegistro,
+                             FechaInicio = c.FechaInicio,
+                             FechaFinal = c.FechaFinal,
+                             FechaExpedicionPoliza = c.FechaExpedicionPoliza,
+                             Supervisor1 = new UsuarioParaDetalleDto()
+                             {
+                                 Nombres = super1.Nombres,
+                                 Apellidos = super1.Apellidos,
+                                 NombreCompleto = c.Supervisor1Id > 0 ? super1.Nombres + " " + super1.Apellidos : string.Empty,
+                             },
+                             Supervisor2 = new UsuarioParaDetalleDto()
+                             {
+                                 Nombres = super2.Nombres,
+                                 Apellidos = super2.Apellidos,
+                                 NombreCompleto = c.Supervisor2Id > 0 ? super2.Nombres + " " + super2.Apellidos : string.Empty,
+                             }
+                         })
+                        .Distinct()
+                        .OrderBy(c => c.NumeroContrato);
+
+            return await lista.ToListAsync();
+        }
         #endregion Contrato
 
     }

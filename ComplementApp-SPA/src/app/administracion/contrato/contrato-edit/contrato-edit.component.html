@@ -88,7 +88,7 @@
                             <label
                               for="selectTipoModalidadContrato"
                               class="col-form-label-md"
-                              >Modalidad de Contrato</label
+                              >Tipo de Contrato</label
                             >
                             <select
                               formControlName="tipoModalidadContratoCtrl"
@@ -106,10 +106,10 @@
                               }"
                             >
                               <option disabled [ngValue]="null">
-                                TIPO DE MODALIDAD CONTRATO
+                                TIPO DE CONTRATO
                               </option>
                               <option
-                                *ngFor="let item of listaTipoModalidadContrato"
+                                *ngFor="let item of listaTipoContrato"
                                 [ngValue]="item"
                               >
                                 {{ item.nombre }}

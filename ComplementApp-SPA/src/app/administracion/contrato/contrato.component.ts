@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
@@ -66,7 +66,8 @@ export class ContratoComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private contratoService: ContratoService
+    private contratoService: ContratoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -301,6 +302,47 @@ export class ContratoComponent implements OnInit {
         this.alertify.error('Hubo un error al obtener el compromiso.');
       }
     }
+  }
+
+  exportarExcel() {
+    let fileName = '';
+
+    this.contratoService
+      .DescargarListaContratoTotal()
+      .subscribe(
+        (response) => {
+          switch (response.type) {
+            case HttpEventType.Response:
+              const downloadedFile = new Blob([response.body], {
+                type: response.body.type,
+              });
+
+              const nombreArchivo = response.headers.get('filename');
+
+              if (nombreArchivo != null && nombreArchivo.length > 0) {
+                fileName = nombreArchivo;
+              } else {
+                fileName = 'Contratos.xlsx';
+              }
+
+              const a = document.createElement('a');
+              a.setAttribute('style', 'display:none;');
+              document.body.appendChild(a);
+              a.download = fileName;
+              a.href = URL.createObjectURL(downloadedFile);
+              a.target = '_blank';
+              a.click();
+              document.body.removeChild(a);
+              break;
+          }
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          this.router.navigate(['/ADMINISTRACION_CONTRATO']);
+        }
+      );
   }
 
   HabilitarCabecera($event) {

@@ -118,6 +118,7 @@ import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocu
 import { ContratoEditComponent } from './administracion/contrato/contrato-edit/contrato-edit.component';
 import { ContratoComponent } from './administracion/contrato/contrato.component';
 import { SpecialCharacterDirective } from './_directives/special-character.directive';
+import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -251,6 +252,7 @@ export function tokenGetter() {
     ListaSIoNOResolver,
     ListaAdminPilaResolver,
     ListaTipoDocumentoIdentidadResolver,
+    ListaTipoContratoResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

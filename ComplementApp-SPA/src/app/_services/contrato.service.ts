@@ -78,4 +78,20 @@ export class ContratoService {
     const path = 'RegistrarContrato';
     return this.http.post(this.baseUrl + path, contrato);
   }
+
+  public DescargarListaContratoTotal(): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${
+          this.baseUrl + 'DescargarListaContratoTotal'
+        }`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
+  }
 }

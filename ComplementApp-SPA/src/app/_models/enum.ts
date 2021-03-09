@@ -60,6 +60,7 @@ export class TipoLista extends Enum<number> {
   public static readonly TipoDocumentoSoporte = new Enum(5);
   public static readonly TipoAdminPila = new Enum(6);
   public static readonly TipoDocumentoIdentidad = new Enum(7);
+  public static readonly TipoContrato = new Enum(8);
 }
 
 export class EstadoSolicitudPago extends Enum<number> {

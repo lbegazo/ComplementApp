@@ -161,6 +161,41 @@ namespace ComplementApp.API.Services
             return dt;
         }
 
+        public DataTable ObtenerTablaDeListaContrato(List<ContratoDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("CONTRATO", typeof(long)));
+            dt.Columns.Add(new DataColumn("COMPROMISO", typeof(long)));
+            dt.Columns.Add(new DataColumn("MODALIDAD_CONTRATO", typeof(string)));
+            dt.Columns.Add(new DataColumn("FECHA_REGISTRO", typeof(string)));
+            dt.Columns.Add(new DataColumn("FECHA_ACTA_INICIO", typeof(string)));
+            dt.Columns.Add(new DataColumn("FECHA_FINAL", typeof(string)));
+            dt.Columns.Add(new DataColumn("FECHA_APROBAR_POLIZA", typeof(string)));
+            dt.Columns.Add(new DataColumn("SUPERVISOR_1", typeof(string)));
+            dt.Columns.Add(new DataColumn("SUPERVISOR_2", typeof(string)));
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["CONTRATO"] = item.Crp;
+                dr["COMPROMISO"] = item.Crp;
+                dr["MODALIDAD_CONTRATO"] = item.TipoContrato.Nombre;
+                dr["FECHA_REGISTRO"] = item.FechaRegistro.ToString("yyyy-MM-dd");
+                dr["FECHA_ACTA_INICIO"] = item.FechaInicio.ToString("yyyy-MM-dd");
+                dr["FECHA_FINAL"] = item.FechaFinal.ToString("yyyy-MM-dd");
+                dr["FECHA_APROBAR_POLIZA"] = item.FechaExpedicionPoliza.ToString("yyyy-MM-dd");
+                dr["SUPERVISOR_1"] = item.Supervisor1.NombreCompleto;
+                dr["SUPERVISOR_2"] = item.Supervisor2.NombreCompleto;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {
             var memoryStream = new MemoryStream();

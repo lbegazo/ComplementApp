@@ -43,6 +43,7 @@ import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
 import { TerceroComponent } from './administracion/tercero/tercero.component';
 import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
 import { ContratoComponent } from './administracion/contrato/contrato.component';
+import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -132,7 +133,7 @@ export const routes: Routes = [
     resolve: {
       transaccion: TransaccionResolver,
       supervisor: ListaSupervisorResolver,
-      modalidadContrato: ListaModalidadContratoResolver,
+      tipoContrato: ListaTipoContratoResolver,
     },
   },
 

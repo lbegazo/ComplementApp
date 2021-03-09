@@ -15,6 +15,7 @@ namespace ComplementApp.API.Data
     {
         public static void CargarDataInicial(DataContext context)
         {
+            SeedTipoContrato(context);
             SeedRubroPresupuestal(context);
             SeedCargo(context);
             SeedArea(context);
@@ -57,6 +58,30 @@ namespace ComplementApp.API.Data
 
             SeedTipoAdminPila(context);
         }
+
+        private static void SeedTipoContrato(DataContext context)
+        {
+            TipoContrato valor = null;
+            List<TipoContrato> lista = new List<TipoContrato>();
+
+            if (!context.TipoContrato.Any())
+            {
+                if (File.Exists("Data/SeedFiles/_TipoContrato.json"))
+                {
+                    var data = File.ReadAllText("Data/SeedFiles/_TipoContrato.json");
+                    var items = JsonConvert.DeserializeObject<List<TipoContrato>>(data);
+                    foreach (var item in items)
+                    {
+                        valor = new TipoContrato();
+                        valor.Nombre = item.Nombre;
+                        valor.Codigo = item.Codigo;
+                        context.TipoContrato.AddRange(valor);
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
+
 
         private static void SeedTipoAdminPila(DataContext context)
         {

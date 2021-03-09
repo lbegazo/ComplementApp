@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,17 +33,20 @@ namespace ComplementApp.API.Controllers
         private readonly IMapper _mapper;
         private readonly IGeneralInterface _generalInterface;
         private readonly IContratoRepository _repo;
+        private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
 
         #endregion Dependency Injection
 
         public ContratoController(IContratoRepository repo, IMapper mapper, ICDPRepository cdpRepo,
-                            DataContext dataContext, IGeneralInterface generalInterface)
+                            DataContext dataContext, IGeneralInterface generalInterface,
+                            IProcesoCreacionArchivoExcel procesoCreacionExcelInterface )
         {
             _mapper = mapper;
             _repo = repo;
             _cdpRepo = cdpRepo;
             _dataContext = dataContext;
             _generalInterface = generalInterface;
+            _procesoCreacionExcelInterface = procesoCreacionExcelInterface;
         }
 
 
@@ -115,7 +119,7 @@ namespace ComplementApp.API.Controllers
                     #region Mapear datos Contrato
 
                     contrato.NumeroContrato = contratoDto.NumeroContrato;
-                    contrato.TipoModalidadContratoId = contratoDto.TipoModalidadContratoId;
+                    contrato.TipoContratoId = contratoDto.TipoContratoId;
                     contrato.Crp = contratoDto.Crp;
                     contrato.FechaRegistro = cdp.Fecha;
                     contrato.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
@@ -158,7 +162,7 @@ namespace ComplementApp.API.Controllers
                 #region Mapear datos Contrato
 
                 contratoBD.NumeroContrato = contratoDto.NumeroContrato;
-                contratoBD.TipoModalidadContratoId = contratoDto.TipoModalidadContratoId;
+                contratoBD.TipoContratoId = contratoDto.TipoContratoId;
                 contratoBD.Crp = contratoDto.Crp;
                 contratoBD.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
                 contratoBD.FechaInicio = contratoDto.FechaInicio;
@@ -180,6 +184,27 @@ namespace ComplementApp.API.Controllers
             {
                 throw;
             }
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaContratoTotal()
+        {
+            string nombreArchivo = "Contrato.xlsx";
+            try
+            {
+                var lista = await _repo.ObtenerListaContratoTotal();
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaContrato(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
         }
 
     }

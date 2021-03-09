@@ -242,6 +242,19 @@ namespace ComplementApp.API.Data
                                        .ToListAsync();
                         break;
                     }
+                case TipoLista.TipoContrato:
+                    {
+                        lista = await (from m in _context.TipoContrato
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.TipoContratoId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       })
+                                        .OrderBy(m => m.Nombre)
+                                        .ToListAsync();
+                        break;
+                    }
                 default: break;
             }
 

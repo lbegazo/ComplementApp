@@ -27,11 +27,11 @@ export class ContratoEditComponent implements OnInit {
   nombreBoton = 'Registrar';
   contratoExiste = false;
 
-  listaTipoModalidadContrato: ValorSeleccion[] = [];
+  listaTipoContrato: ValorSeleccion[] = [];
   listaSupervisor: ValorSeleccion[] = [];
 
-  idTipoModalidadContratoSeleccionado?: number;
-  tipoModalidadContratoSeleccionado: ValorSeleccion = null;
+  idTipoContratoSeleccionado?: number;
+  tipoContratoSeleccionado: ValorSeleccion = null;
 
   idSupervisor1Seleccionado?: number;
   supervisor1Seleccionado: ValorSeleccion = null;
@@ -82,13 +82,13 @@ export class ContratoEditComponent implements OnInit {
     let fechaFinal = null;
     let fechaExpedicionPoliza = null;
 
-    this.idTipoModalidadContratoSeleccionado =
-      this.contratoSeleccionado.tipoModalidadContratoId > 0
-        ? this.contratoSeleccionado.tipoModalidadContratoId
+    this.idTipoContratoSeleccionado =
+      this.contratoSeleccionado.tipoContratoId > 0
+        ? this.contratoSeleccionado.tipoContratoId
         : null;
-    if (this.idTipoModalidadContratoSeleccionado !== null) {
-      this.tipoModalidadContratoSeleccionado = this.listaTipoModalidadContrato.filter(
-        (x) => x.id === this.idTipoModalidadContratoSeleccionado
+    if (this.idTipoContratoSeleccionado !== null) {
+      this.tipoContratoSeleccionado = this.listaTipoContrato.filter(
+        (x) => x.id === this.idTipoContratoSeleccionado
       )[0];
     }
 
@@ -118,7 +118,7 @@ export class ContratoEditComponent implements OnInit {
     fechaExpedicionPoliza = this.contratoSeleccionado.fechaExpedicionPoliza;
 
     this.editForm.patchValue({
-      tipoModalidadContratoCtrl: this.tipoModalidadContratoSeleccionado,
+      tipoModalidadContratoCtrl: this.tipoContratoSeleccionado,
       numeroContratoCtrl: numeroContrato,
       supervisor1Ctrl: this.supervisor1Seleccionado,
       supervisor2Ctrl: this.supervisor2Seleccionado,
@@ -138,15 +138,15 @@ export class ContratoEditComponent implements OnInit {
       this.listaSupervisor = data['supervisor'];
     });
     this.route.data.subscribe((data) => {
-      this.listaTipoModalidadContrato = data['modalidadContrato'];
+      this.listaTipoContrato = data['tipoContrato'];
     });
   }
 
   onModalidadContrato() {
-    this.tipoModalidadContratoSeleccionado = this.tipoModalidadContratoCtrl
+    this.tipoContratoSeleccionado = this.tipoModalidadContratoCtrl
       .value as ValorSeleccion;
-    this.idTipoModalidadContratoSeleccionado = +this
-      .tipoModalidadContratoSeleccionado.id;
+    this.idTipoContratoSeleccionado = +this
+      .tipoContratoSeleccionado.id;
   }
 
   onSupervisor1() {
@@ -205,7 +205,7 @@ export class ContratoEditComponent implements OnInit {
       if (this.esCreacion) {
         const contratoNuevo: Contrato = {
           contratoId: 0,
-          tipoModalidadContratoId: this.idTipoModalidadContratoSeleccionado,
+          tipoContratoId: this.idTipoContratoSeleccionado,
           supervisor1Id: this.idSupervisor1Seleccionado,
           supervisor2Id:
             this.idSupervisor2Seleccionado != null
@@ -239,7 +239,7 @@ export class ContratoEditComponent implements OnInit {
           }
         );
       } else {
-        this.contratoSeleccionado.tipoModalidadContratoId = this.idTipoModalidadContratoSeleccionado;
+        this.contratoSeleccionado.tipoContratoId = this.idTipoContratoSeleccionado;
         this.contratoSeleccionado.numeroContrato =
           formValues.numeroContratoCtrl;
         this.contratoSeleccionado.fechaInicio = dateFechaInicio;
