@@ -116,7 +116,6 @@
                   <table>
                     <tr style="vertical-align: bottom">
                       <td style="padding-top: 15px">
-                        &nbsp;
                         <button
                           type="submit"
                           class="btn btn-primary"
@@ -124,14 +123,21 @@
                           style="width: 80px"
                         >
                           Buscar</button
-                        >&nbsp;
+                        >
                         <button
                           type="submit"
-                          class="btn btn-success"
+                          class="btn btn-success ml-2"
                           (click)="onLimpiarFactura()"
                           style="width: 80px"
                         >
                           Limpiar
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-warning ml-2"
+                          (click)="exportarExcel()"
+                        >
+                          Reporte
                         </button>
                       </td>
                     </tr>

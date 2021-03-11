@@ -447,6 +447,45 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener las deducciones");
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaParametroLiquidacionTerceroTotal([FromQuery(Name = "tipoArchivo")] int tipoArchivo)
+        {
+            string nombreArchivo = string.Empty;
+            ICollection<ParametroLiquidacionTerceroDto> listaParametroLiquidacion = null;
+            ICollection<TerceroDeduccionDto> listaDeducciones = null;
+            try
+            {
+                if (tipoArchivo == 1)
+                {
+                    nombreArchivo = "SIGPAA_ParametroLiquidacionTercero.xlsx";
+                    listaParametroLiquidacion = await _repo.ObtenerListaParametroLiquidacionTerceroTotal();
+
+                    if (listaParametroLiquidacion != null)
+                    {
+                        DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaParametroLiquidacionTercero(listaParametroLiquidacion.ToList());
+                        return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                    }
+                }
+                else
+                {
+                    nombreArchivo = "SIGPAA_Deducciones.xlsx";
+                    listaDeducciones = await _repo.ObtenerListaTerceroDeduccionTotal();
+
+                    if (listaDeducciones != null)
+                    {
+                        DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaTerceroDeduccion(listaDeducciones.ToList());
+                        return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
+        }
+
         #endregion Parametrizacion Liquidacion Tercero
     }
 }

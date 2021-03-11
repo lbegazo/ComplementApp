@@ -65,10 +65,11 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal TarifaIva { get; set; }
         public int? TipoIva { get; set; }
-        public int? TipoCuentaPorPagar { get; set; }
+        [Required]
+        public int TipoCuentaXPagarId { get; set; }
 
         [Required]
-        public int TipoDocumentoSoporte { get; set; }
+        public int TipoDocumentoSoporteId { get; set; }
 
         public int TerceroId { get; set; }
         public Tercero Tercero { get; set; }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -290,6 +290,93 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
     this.onBuscarFactura();
   }
 
+  exportarExcel() {
+    let fileName = '';
+    let tipoArchivo = 0;
+
+    //#region Descargar archivo CABECERA
+
+    tipoArchivo = 1;
+
+    this.terceroService
+      .DescargarListaParametroLiquidacionTerceroTotal(tipoArchivo)
+      .subscribe(
+        (response) => {
+          switch (response.type) {
+            case HttpEventType.Response:
+              const downloadedFile = new Blob([response.body], {
+                type: response.body.type,
+              });
+
+              const nombreArchivo = response.headers.get('filename');
+
+              if (nombreArchivo != null && nombreArchivo.length > 0) {
+                fileName = nombreArchivo;
+              } else {
+                fileName = 'SIGPAA_ParametroLiquidacionTercero.xlsx';
+              }
+
+              const a = document.createElement('a');
+              a.setAttribute('style', 'display:none;');
+              document.body.appendChild(a);
+              a.download = fileName;
+              a.href = URL.createObjectURL(downloadedFile);
+              a.target = '_blank';
+              a.click();
+              document.body.removeChild(a);
+              break;
+          }
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          //#region Descargar archivo ITEM
+
+          tipoArchivo = 2;
+
+          this.terceroService
+            .DescargarListaParametroLiquidacionTerceroTotal(tipoArchivo)
+            .subscribe(
+              (response) => {
+                switch (response.type) {
+                  case HttpEventType.Response:
+                    const downloadedFile = new Blob([response.body], {
+                      type: response.body.type,
+                    });
+
+                    const nombreArchivo = response.headers.get('filename');
+
+                    if (nombreArchivo != null && nombreArchivo.length > 0) {
+                      fileName = nombreArchivo;
+                    } else {
+                      fileName = 'SIGPAA_Deducciones.xlsx';
+                    }
+
+                    const a = document.createElement('a');
+                    a.setAttribute('style', 'display:none;');
+                    document.body.appendChild(a);
+                    a.download = fileName;
+                    a.href = URL.createObjectURL(downloadedFile);
+                    a.target = '_blank';
+                    a.click();
+                    document.body.removeChild(a);
+                    break;
+                }
+              },
+              (error) => {
+                this.alertify.warning(error);
+              },
+              () => {}
+            );
+
+          //#endregion Descargar archivo ITEM
+        }
+      );
+
+    //#endregion Descargar archivo CABECERA
+  }
+
   limpiarVariables() {
     this.nombreBoton = 'Registrar';
     this.esCreacion = true;
@@ -306,7 +393,6 @@ export class ParametroLiquidacionTerceroComponent implements OnInit {
       totalPages: 0,
       maxSize: 10,
     };
-
   }
 
   cargarNotasLegales() {

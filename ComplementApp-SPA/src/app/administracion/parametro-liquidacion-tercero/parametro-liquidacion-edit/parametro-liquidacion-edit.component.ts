@@ -480,8 +480,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     }
 
     this.idTipoCuentaXPagarSelecionado =
-      this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar > 0
-        ? this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar
+      this.parametroLiquidacionSeleccionado.tipoCuentaXPagarId > 0
+        ? this.parametroLiquidacionSeleccionado.tipoCuentaXPagarId
         : null;
     if (this.idTipoCuentaXPagarSelecionado !== null) {
       this.tipoCuentaXPagarSeleccionado = this.listaTipoCuentaXPagar.filter(
@@ -490,8 +490,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     }
 
     this.idTipoDocumentoSoporteSelecionado =
-      this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte > 0
-        ? this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte
+      this.parametroLiquidacionSeleccionado.tipoDocumentoSoporteId > 0
+        ? this.parametroLiquidacionSeleccionado.tipoDocumentoSoporteId
         : null;
     if (this.idTipoDocumentoSoporteSelecionado !== null) {
       this.tipoDocumentoSoporteSeleccionado = this.listaTipoDocumentoSoporte.filter(
@@ -971,8 +971,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         const parametroNuevo: ParametroLiquidacionTercero = {
           parametroLiquidacionTerceroId: 0,
           modalidadContrato: this.idModalidadContratoSelecionado,
-          tipoCuentaPorPagar: this.idTipoCuentaXPagarSelecionado,
-          tipoDocumentoSoporte: this.idTipoDocumentoSoporteSelecionado,
+          tipoCuentaXPagarId: this.idTipoCuentaXPagarSelecionado,
+          tipoDocumentoSoporteId: this.idTipoDocumentoSoporteSelecionado,
           tipoAdminPilaId: this.idTipoAdminPila,
           tipoIva:
             this.idTipoIvaSelecionado !== null ? this.idTipoIvaSelecionado : 0,
@@ -1097,10 +1097,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.parametroLiquidacionSeleccionado.tipoPago =
           this.idTipoPagoSelecionado !== null ? this.idTipoPagoSelecionado : 0;
 
-        this.parametroLiquidacionSeleccionado.tipoCuentaPorPagar = this.idTipoCuentaXPagarSelecionado;
+        this.parametroLiquidacionSeleccionado.tipoCuentaXPagarId = this.idTipoCuentaXPagarSelecionado;
         this.parametroLiquidacionSeleccionado.facturaElectronicaId = this.idFacturaElectronicaSeleccionado;
         this.parametroLiquidacionSeleccionado.subcontrataId = this.idSubcontrataSeleccionado;
-        this.parametroLiquidacionSeleccionado.tipoDocumentoSoporte = this.idTipoDocumentoSoporteSelecionado;
+        this.parametroLiquidacionSeleccionado.tipoDocumentoSoporteId = this.idTipoDocumentoSoporteSelecionado;
         this.parametroLiquidacionSeleccionado.honorarioSinIva = GeneralService.obtenerValorAbsoluto(
           formValues.honorarioSinIvaCtrl
         );

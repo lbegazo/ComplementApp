@@ -186,8 +186,8 @@ namespace ComplementApp.API.Data
                                    HonorarioSinIva = plt.HonorarioSinIva,
                                    TarifaIva = plt.TarifaIva,
                                    TipoIva = plt.TipoIva,
-                                   TipoCuentaPorPagar = plt.TipoCuentaPorPagar,
-                                   TipoDocumentoSoporte = plt.TipoDocumentoSoporte,
+                                   TipoCuentaXPagarId = plt.TipoCuentaXPagarId,
+                                   TipoDocumentoSoporteId = plt.TipoDocumentoSoporteId,
 
                                    BaseAporteSalud = plt.BaseAporteSalud,
                                    AporteSalud = plt.AporteSalud,
@@ -390,6 +390,82 @@ namespace ComplementApp.API.Data
                               ActividadEconomicaId = td.ActividadEconomicaId,
                               Deduccion = d,
                           }).ToListAsync();
+        }
+
+
+        public async Task<ICollection<ParametroLiquidacionTerceroDto>> ObtenerListaParametroLiquidacionTerceroTotal()
+        {
+            var listaInicial = await (from pl in _context.ParametroLiquidacionTercero
+                                      join t in _context.Tercero on pl.TerceroId equals t.TerceroId
+                                      join tmc in _context.TipoModalidadContrato on pl.ModalidadContrato equals tmc.TipoModalidadContratoId
+                                      join tds in _context.TipoDocumentoSoporte on pl.TipoDocumentoSoporteId equals
+                                                                                   tds.TipoDocumentoSoporteId into DocumentoSoporte
+                                      from tipoDocu in DocumentoSoporte.DefaultIfEmpty()
+                                      join tc in _context.TipoCuentaXPagar on pl.TipoCuentaXPagarId equals tc.TipoCuentaXPagarId into CuentaPorPagar
+                                      from tiCu in CuentaPorPagar.DefaultIfEmpty()
+                                      select new ParametroLiquidacionTerceroDto()
+                                      {
+                                          IdentificacionTercero = t.NumeroIdentificacion,
+                                          NombreTercero = t.Nombre,
+                                          ModalidadContratoDescripcion = tmc.Nombre,
+                                          TipoDocumentoSoporteDescripcion = pl.TipoDocumentoSoporteId > 0 ? tipoDocu.Nombre : string.Empty,
+                                          TipoCuentaPorPagarDescripcion = pl.TipoCuentaXPagarId > 0 ? tiCu.Nombre : string.Empty,
+
+                                          HonorarioSinIva = pl.HonorarioSinIva,
+                                          BaseAporteSalud = pl.BaseAporteSalud,
+                                          AporteSalud = pl.AporteSalud,
+                                          AportePension = pl.AportePension,
+                                          RiesgoLaboral = pl.RiesgoLaboral,
+                                          FondoSolidaridad = pl.FondoSolidaridad,
+
+                                          PensionVoluntaria = pl.PensionVoluntaria,
+                                          Dependiente = pl.Dependiente,
+                                          Afc = pl.Afc,
+                                          MedicinaPrepagada = pl.MedicinaPrepagada,
+                                          InteresVivienda = pl.InteresVivienda,
+                                          FechaInicioDescuentoInteresVivienda = pl.FechaInicioDescuentoInteresVivienda,
+                                          FechaFinalDescuentoInteresVivienda = pl.FechaFinalDescuentoInteresVivienda,
+                                          TarifaIva = pl.TarifaIva,
+
+                                          FacturaElectronicaDescripcion = pl.FacturaElectronica ? "SI" : "NO"
+                                      })
+                          .Distinct()
+                          .OrderBy(c => c.NombreTercero)
+                          .ToListAsync();
+
+
+            return listaInicial;
+        }
+
+        public async Task<ICollection<TerceroDeduccionDto>> ObtenerListaTerceroDeduccionTotal()
+        {
+            var lista = (from td in _context.TerceroDeducciones
+                         join t in _context.Tercero on td.TerceroId equals t.TerceroId
+                         join d in _context.Deduccion on td.DeduccionId equals d.DeduccionId
+                         join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
+                         select new TerceroDeduccionDto()
+                         {
+                             Tercero = new ValorSeleccion()
+                             {
+                                 Codigo = t.NumeroIdentificacion,
+                                 Nombre = t.Nombre,
+                             },
+                             ActividadEconomica = new ValorSeleccion()
+                             {
+                                 Codigo = ae.Codigo,
+                                 Nombre = ae.Nombre,
+                             },
+                             Deduccion = new DeduccionDto()
+                             {
+                                 Codigo = d.Codigo,
+                                 Nombre = d.Nombre,
+                                 Tarifa = d.Tarifa,
+                             }
+                         })
+                         .Distinct()
+                        .OrderBy(t => t.Tercero.Nombre);
+
+            return await lista.ToListAsync();
         }
 
         #endregion Parametrización de Liquidación Tercero

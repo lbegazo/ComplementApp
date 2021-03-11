@@ -19,8 +19,8 @@ export interface ParametroLiquidacionTercero {
   fechaFinalDescuentoInteresVivienda: Date;
   tarifaIva: number;
   tipoIva: number;
-  tipoCuentaPorPagar: number;
-  tipoDocumentoSoporte: number;
+  tipoCuentaXPagarId: number;
+  tipoDocumentoSoporteId: number;
   debito: string;
   credito: string;
   numeroCuenta: string;

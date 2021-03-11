@@ -1,4 +1,9 @@
-import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpParams,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/Operators';
@@ -85,9 +90,7 @@ export class TerceroService {
     return this.http.request(
       new HttpRequest(
         'GET',
-        `${
-          this.baseUrl + 'DescargarListaTercero'
-        }`,
+        `${this.baseUrl + 'DescargarListaTercero'}`,
         null,
         {
           reportProgress: true,
@@ -198,6 +201,26 @@ export class TerceroService {
   ObteneListaDeducciones(): Observable<TerceroDeduccionDto[]> {
     const path = 'ObteneListaDeducciones';
     return this.http.get<TerceroDeduccionDto[]>(this.baseUrl + path);
+  }
+
+  public DescargarListaParametroLiquidacionTerceroTotal(
+    tipoArchivo: number
+  ): Observable<HttpEvent<Blob>> {
+    let params = new HttpParams();
+    params = params.append('tipoArchivo', tipoArchivo.toString());
+
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarListaParametroLiquidacionTerceroTotal'}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+          params,
+        }
+      )
+    );
   }
 
   //#endregion Parametro Liquidacion Tercero

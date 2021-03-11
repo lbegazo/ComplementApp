@@ -25,6 +25,7 @@ namespace ComplementApp.API.Interfaces
         Task<ICollection<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> listaTerceroId);
         Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId);
         Task<ICollection<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> listaTerceroId);
-
+        Task<ICollection<ParametroLiquidacionTerceroDto>> ObtenerListaParametroLiquidacionTerceroTotal();
+        Task<ICollection<TerceroDeduccionDto>> ObtenerListaTerceroDeduccionTotal();
     }
 }

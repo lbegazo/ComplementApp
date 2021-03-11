@@ -30,7 +30,7 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.Crp);
                 sbBody.Append("|");
-                sbBody.Append(item.TipoCuentaPagar);
+                sbBody.Append(item.TipoCuentaXPagarCodigo);
                 sbBody.Append("|");
                 sbBody.Append(item.TotalACancelar.ToString().Replace(".", ","));
                 sbBody.Append("|");
@@ -40,7 +40,7 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.TextoComprobanteContable);
                 sbBody.Append("|");
-                sbBody.Append(item.TipoDocumentoSoporte);
+                sbBody.Append(item.TipoDocumentoSoporteCodigo);
                 sbBody.Append("|");
                 sbBody.Append(item.NumeroFactura);
                 sbBody.Append("|");
@@ -68,7 +68,7 @@ namespace ComplementApp.API.Services
             {
                 sbBody.Append(consecutivo);
                 sbBody.Append("|");
-                sbBody.Append(item.TipoDocumentoSoporte);
+                sbBody.Append(item.TipoDocumentoSoporteCodigo);
                 sbBody.Append(Environment.NewLine);
                 consecutivo++;
             }
@@ -98,11 +98,11 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.Dip);
                 sbBody.Append("|");
-                sbBody.Append(item.TipoCuentaPagarCodigo.PadLeft(2, '0'));
+                sbBody.Append(item.TipoCuentaXPagarCodigo);
                 sbBody.Append("|");
                 sbBody.Append(item.ValorIva.ToString().Replace(".", ","));
                 sbBody.Append("|");
-                sbBody.Append(item.TipoDocumentoSoporte);
+                sbBody.Append(item.TipoDocumentoSoporteCodigo);
                 sbBody.Append("|");
                 sbBody.Append(item.NumeroFactura);
                 sbBody.Append("|");

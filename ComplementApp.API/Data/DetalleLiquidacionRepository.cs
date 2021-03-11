@@ -228,6 +228,11 @@ namespace ComplementApp.API.Data
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
+                               join tc in _context.TipoCuentaXPagar on pl.TipoCuentaXPagarId equals tc.TipoCuentaXPagarId into CuentaPorPagar
+                               from tiCu in CuentaPorPagar.DefaultIfEmpty()
+                               join tds in _context.TipoDocumentoSoporte on pl.TipoDocumentoSoporteId equals
+                                                                                  tds.TipoDocumentoSoporteId into DocumentoSoporte
+                               from tipoDocu in DocumentoSoporte.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (dl.Procesado == false)
                                select new DetalleLiquidacionParaArchivo()
@@ -237,11 +242,11 @@ namespace ComplementApp.API.Data
                                    TipoIdentificacion = t.TipoIdentificacion,
                                    NumeroIdentificacion = t.NumeroIdentificacion,
                                    Crp = dl.Crp,
-                                   TipoCuentaPagar = pl.TipoCuentaPorPagar.HasValue ? pl.TipoCuentaPorPagar.Value : 0,
+                                   TipoCuentaXPagarCodigo = pl.TipoCuentaXPagarId > 0 ? tiCu.Codigo : string.Empty,
                                    TotalACancelar = decimal.Round(dl.TotalACancelar, 2, MidpointRounding.AwayFromZero),
                                    ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
                                    TextoComprobanteContable = dl.TextoComprobanteContable,
-                                   TipoDocumentoSoporte = pl.TipoDocumentoSoporte,
+                                   TipoDocumentoSoporteCodigo = pl.TipoDocumentoSoporteId > 0 ? tipoDocu.Codigo : string.Empty,
                                    NumeroFactura = dl.NumeroFactura,
                                    ConstanteNumero = "16",
                                    NombreSupervisor = dl.NombreSupervisor,
@@ -402,6 +407,10 @@ namespace ComplementApp.API.Data
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
+                               join tc in _context.TipoCuentaXPagar on pl.TipoCuentaXPagarId equals tc.TipoCuentaXPagarId into CuentaPorPagar
+                               from tiCu in CuentaPorPagar.DefaultIfEmpty()
+                               join td in _context.TipoDocumentoSoporte on pl.TipoDocumentoSoporteId equals td.TipoDocumentoSoporteId into TipoDocumento
+                               from tiDo in TipoDocumento.DefaultIfEmpty()
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                select new DetalleLiquidacionParaArchivo()
                                {
@@ -409,9 +418,9 @@ namespace ComplementApp.API.Data
                                    PCI = identificacionPCI,
                                    Crp = dl.Crp,
                                    Dip = "NO",
-                                   TipoCuentaPagarCodigo = pl.TipoCuentaPorPagar.HasValue ? pl.TipoCuentaPorPagar.Value.ToString() : string.Empty,
+                                   TipoCuentaXPagarCodigo = pl.TipoCuentaXPagarId > 0 ? tiCu.Codigo : string.Empty,
                                    ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
-                                   TipoDocumentoSoporte = pl.TipoDocumentoSoporte,
+                                   TipoDocumentoSoporteCodigo = pl.TipoDocumentoSoporteId > 0 ? tiDo.Codigo : string.Empty,
                                    NumeroFactura = dl.NumeroFactura,
                                    ConstanteExpedidor = "11",
                                    ConstanteCargo = "SUPERVISOR",

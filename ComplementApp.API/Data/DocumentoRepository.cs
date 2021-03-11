@@ -573,8 +573,8 @@ namespace ComplementApp.API.Data
                 nuevoItem.PensionVoluntaria = item.PensionVoluntaria;
                 nuevoItem.RiesgoLaboral = item.RiesgoLaboral;
                 nuevoItem.TarifaIva = item.TarifaIva;
-                nuevoItem.TipoCuentaPorPagar = item.TipoCuentaPorPagar;
-                nuevoItem.TipoDocumentoSoporte = item.TipoDocumentoSoporte;
+                nuevoItem.TipoCuentaXPagarId = item.TipoCuentaXPagarId;
+                nuevoItem.TipoDocumentoSoporteId = item.TipoDocumentoSoporteId;
                 nuevoItem.TipoIva = item.TipoIva;
                 nuevoItem.TipoPago = item.TipoPago;
 

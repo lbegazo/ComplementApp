@@ -12,6 +12,7 @@ namespace ComplementApp.API.Dtos
         public string IdentificacionTercero { get; set; }
         public string NombreTercero { get; set; }
         public int ModalidadContrato { get; set; }
+        public string ModalidadContratoDescripcion { get; set; }
         public int TipoPago { get; set; }
         public decimal? HonorarioSinIva { get; set; }
         public decimal BaseAporteSalud { get; set; }
@@ -33,14 +34,17 @@ namespace ComplementApp.API.Dtos
         public DateTime? FechaFinalOtrosDescuentos { get; set; }
         public decimal TarifaIva { get; set; }
         public int? TipoIva { get; set; }
-        public int? TipoCuentaPorPagar { get; set; }
-        public int TipoDocumentoSoporte { get; set; }
+        public int TipoCuentaXPagarId { get; set; }
+        public string TipoCuentaPorPagarCodigo { get; set; }
+        public string TipoCuentaPorPagarDescripcion { get; set; }
+        public int TipoDocumentoSoporteId { get; set; }
+        public string TipoDocumentoSoporteDescripcion { get; set; }
         public string Debito { get; set; }
         public string Credito { get; set; }
         public string NumeroCuenta { get; set; }
-        public string TipoCuenta { get; set; }
         public int? ConvenioFontic { get; set; }
         public int? FacturaElectronicaId { get; set; }
+        public string FacturaElectronicaDescripcion { get; set; }
         public int? SubcontrataId { get; set; }
         public int? TipoAdminPilaId { get; set; }
         public bool NotaLegal1 { get; set; }

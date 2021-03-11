@@ -173,7 +173,7 @@ namespace ComplementApp.API.Data
                         lista = await (from m in _context.TipoCuentaXPagar
                                        select new ValorSeleccion()
                                        {
-                                           Id = Int32.Parse(m.Codigo),
+                                           Id = m.TipoCuentaXPagarId,
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
                                        })
@@ -208,7 +208,7 @@ namespace ComplementApp.API.Data
                         lista = await (from m in _context.TipoDocumentoSoporte
                                        select new ValorSeleccion()
                                        {
-                                           Id = Int32.Parse(m.Codigo),
+                                           Id = m.TipoDocumentoSoporteId,
                                            Codigo = m.Codigo,
                                            Nombre = m.Nombre,
                                        })

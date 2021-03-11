@@ -196,6 +196,95 @@ namespace ComplementApp.API.Services
             return dt;
         }
 
+        public DataTable ObtenerTablaDeListaParametroLiquidacionTercero(List<ParametroLiquidacionTerceroDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("IDENTIFICACION_CONTRATISTA", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_CONTRATISTA", typeof(string)));
+            dt.Columns.Add(new DataColumn("MODALIDAD_CONTRATO", typeof(string)));
+            dt.Columns.Add(new DataColumn("TIPO_CUENTA_PAGAR", typeof(string)));
+            dt.Columns.Add(new DataColumn("TIPO_DOCUMENTO_SOPORTE", typeof(string)));
+            dt.Columns.Add(new DataColumn("HonorarioSinIva", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("BaseAporteSalud", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("AporteSalud", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("AportePension", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("RiesgoLaboral", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("FondoSolidaridad", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("PensionVoluntaria", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("Dependiente", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("Afc", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("MedicinaPrepagada", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("TarifaIva", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("FacturaElectronica", typeof(string)));
+            dt.Columns.Add(new DataColumn("InteresVivienda", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("FechaInicioDescuentoInteresVivienda", typeof(string)));
+            dt.Columns.Add(new DataColumn("FechaFinalDescuentoInteresVivienda", typeof(string)));
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["IDENTIFICACION_CONTRATISTA"] = item.IdentificacionTercero;
+                dr["NOMBRE_CONTRATISTA"] = item.NombreTercero;
+                dr["MODALIDAD_CONTRATO"] = item.ModalidadContratoDescripcion;
+                dr["TIPO_CUENTA_PAGAR"] = item.TipoCuentaPorPagarDescripcion;
+                dr["TIPO_DOCUMENTO_SOPORTE"] = item.TipoDocumentoSoporteDescripcion;
+                dr["HonorarioSinIva"] = item.HonorarioSinIva;
+                dr["BaseAporteSalud"] = item.BaseAporteSalud;
+                dr["AporteSalud"] = item.AporteSalud;
+                dr["AportePension"] = item.AportePension;
+                dr["RiesgoLaboral"] = item.RiesgoLaboral;
+                dr["FondoSolidaridad"] = item.FondoSolidaridad;
+                dr["PensionVoluntaria"] = item.PensionVoluntaria;
+                dr["Dependiente"] = item.Dependiente;
+                dr["Afc"] = item.Afc;
+                dr["MedicinaPrepagada"] = item.MedicinaPrepagada;
+                dr["FacturaElectronica"] = item.FacturaElectronicaDescripcion;
+                dr["TarifaIva"] = item.TarifaIva;
+                dr["InteresVivienda"] = item.InteresVivienda;
+                dr["FechaInicioDescuentoInteresVivienda"] = item.FechaInicioDescuentoInteresVivienda.HasValue ? item.FechaInicioDescuentoInteresVivienda.Value.ToString("yyyy-MM-dd") : string.Empty;
+                dr["FechaFinalDescuentoInteresVivienda"] = item.FechaFinalDescuentoInteresVivienda.HasValue ? item.FechaFinalDescuentoInteresVivienda.Value.ToString("yyyy-MM-dd") : string.Empty;
+
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
+        public DataTable ObtenerTablaDeListaTerceroDeduccion(List<TerceroDeduccionDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("IDENTIFICACION_TERCERO", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_TERCERO", typeof(string)));
+            dt.Columns.Add(new DataColumn("CODIGO", typeof(string)));
+            dt.Columns.Add(new DataColumn("ACTIVIDAD_ECONOMICA", typeof(string)));
+            dt.Columns.Add(new DataColumn("CODIGO_DEDUCCION", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE_DEDUCCION", typeof(string)));
+            dt.Columns.Add(new DataColumn("TARIFA", typeof(decimal)));
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["IDENTIFICACION_TERCERO"] = item.Tercero.Codigo;
+                dr["NOMBRE_TERCERO"] = item.Tercero.Nombre;
+                dr["CODIGO"] = item.ActividadEconomica.Codigo;
+                dr["ACTIVIDAD_ECONOMICA"] = item.ActividadEconomica.Nombre;
+                dr["CODIGO_DEDUCCION"] = item.Deduccion.Codigo;
+                dr["NOMBRE_DEDUCCION"] = item.Deduccion.Nombre;
+                dr["TARIFA"] = item.Deduccion.Tarifa;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {
             var memoryStream = new MemoryStream();
