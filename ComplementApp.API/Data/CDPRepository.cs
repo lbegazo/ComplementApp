@@ -237,7 +237,9 @@ namespace ComplementApp.API.Data
                                   join c in _context.CDP on d.Cdp equals c.Cdp
                                   join u in _context.Usuario on d.UsuarioId equals u.UsuarioId
                                   join ag in _context.ActividadGeneral on new { d.ActividadGeneralId } equals new { ag.ActividadGeneralId } into ActividadGeneralDetalle
-                                  from ag in ActividadGeneralDetalle.DefaultIfEmpty()
+                                  from acGe in ActividadGeneralDetalle.DefaultIfEmpty()
+                                  join rp in _context.RubroPresupuestal on acGe.RubroPresupuestalId equals rp.RubroPresupuestalId into RubroActividadGeneral
+                                  from ruAG in RubroActividadGeneral.DefaultIfEmpty()
                                   join ae in _context.ActividadEspecifica on new { d.ActividadEspecificaId } equals new { ae.ActividadEspecificaId } into ActividadEspecificaDetalle
                                   from ae in ActividadEspecificaDetalle.DefaultIfEmpty()
                                   join de in _context.Dependencia on new { d.DependenciaId } equals new { de.DependenciaId } into DependenciaDetalle
@@ -256,7 +258,7 @@ namespace ComplementApp.API.Data
                                       Cdp = d.Cdp,
                                       Proy = d.Proy,
                                       Prod = d.Prod,
-                                      Proyecto = ag.Nombre,
+                                      Proyecto = ruAG.Nombre,
                                       ActividadBpin = ae.Nombre,
                                       PlanDeCompras = d.PlanDeCompras,
                                       Responsable = u.Nombres + ' ' + u.Apellidos,
@@ -294,7 +296,9 @@ namespace ComplementApp.API.Data
                                   join r in _context.RubroPresupuestal on d.RubroPresupuestalId equals r.RubroPresupuestalId
                                   join dec in _context.RubroPresupuestal on d.DecretoId equals dec.RubroPresupuestalId
                                   join ag in _context.ActividadGeneral on new { d.ActividadGeneralId } equals new { ag.ActividadGeneralId } into ActividadGeneralDetalle
-                                  from ag in ActividadGeneralDetalle.DefaultIfEmpty()
+                                  from acGe in ActividadGeneralDetalle.DefaultIfEmpty()
+                                  join rp in _context.RubroPresupuestal on acGe.RubroPresupuestalId equals rp.RubroPresupuestalId into RubroActividadGeneral
+                                  from rpAG in RubroActividadGeneral.DefaultIfEmpty()
                                   join ae in _context.ActividadEspecifica on new { d.ActividadEspecificaId } equals new { ae.ActividadEspecificaId } into ActividadEspecificaDetalle
                                   from ae in ActividadEspecificaDetalle.DefaultIfEmpty()
                                   join de in _context.Dependencia on new { d.DependenciaId } equals new { de.DependenciaId } into DependenciaDetalle
@@ -312,7 +316,7 @@ namespace ComplementApp.API.Data
                                       Cdp = d.Cdp,
                                       Proy = d.Proy,
                                       Prod = d.Prod,
-                                      Proyecto = ag.Nombre,
+                                      Proyecto = rpAG.Nombre,
                                       ActividadBpin = ae.Nombre,
                                       PlanDeCompras = d.PlanDeCompras,
                                       Responsable = u.Nombres + " " + u.Apellidos,

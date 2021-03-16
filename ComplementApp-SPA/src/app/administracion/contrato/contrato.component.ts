@@ -294,8 +294,7 @@ export class ContratoComponent implements OnInit {
               },
               (error) => {
                 this.alertify.error(error);
-              },
-              () => {}
+              }
             );
         }
       } else {

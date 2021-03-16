@@ -146,7 +146,7 @@ export class PlanPagoService {
 
 
   ActualizarPlanPago(factura: PlanPago): Observable<boolean> {
-    this.http.put(this.baseUrl, factura).subscribe(() => {});
+    this.http.put(this.baseUrl, factura);
     return observableOf(true);
   }
 
@@ -303,7 +303,7 @@ export class PlanPagoService {
     formaPagoCompromiso: FormaPagoCompromiso
   ): Observable<boolean> {
     const path = 'ActualizarFormaPagoCompromiso';
-    this.http.put(this.baseUrl + path, formaPagoCompromiso).subscribe(() => {});
+    this.http.put(this.baseUrl + path, formaPagoCompromiso);
     return observableOf(true);
   }
 }

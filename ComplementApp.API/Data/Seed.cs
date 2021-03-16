@@ -1030,7 +1030,11 @@ namespace ComplementApp.API.Data
 
         private static ActividadGeneral obtenerActividadGeneral(DataContext context, string nombre)
         {
-            return context.ActividadGeneral.Where(x => x.Nombre == nombre).FirstOrDefault();
+            var actividad = (from ag in context.ActividadGeneral
+                             join rp in context.RubroPresupuestal on ag.RubroPresupuestalId equals rp.RubroPresupuestalId
+                             where (rp.Nombre.Trim().ToUpper() == nombre.Trim().ToUpper())
+                             select ag).FirstOrDefault();
+            return actividad;
         }
 
         private static RubroPresupuestal obtenerRubroPresupuestal(DataContext context, string Identificacion)

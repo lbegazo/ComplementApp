@@ -304,6 +304,10 @@ export class ClavePresupuestalContableComponent implements OnInit {
             ) {
               this.terceroId = this.listaClavePresupuestalContable[0].tercero.id;
               this.mostrarCabecera = false;
+            } else {
+              this.alertify.warning(
+                'No se pudo obtener información para la clave presupuestal contable.'
+              );
             }
           }
         },

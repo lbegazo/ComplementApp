@@ -366,11 +366,14 @@ namespace ComplementApp.API.Data
                 //Actividad General
                 if (!string.IsNullOrEmpty(item.Proyecto))
                 {
-                    var actividad = listaActividadGeneral
-                                        .Where(c => c.Nombre.ToUpper() == item.Proyecto.ToUpper())
-                                        .FirstOrDefault();
+                    var actividad = (from ag in listaActividadGeneral
+                                     join rp in listaRubrosPresupuestales on ag.RubroPresupuestalId equals rp.RubroPresupuestalId
+                                     where (rp.Nombre.Trim().ToUpper() == item.Proyecto.Trim().ToUpper())
+                                     select ag).FirstOrDefault();
                     if (actividad != null)
+                    {
                         cdp.ActividadGeneralId = actividad.ActividadGeneralId;
+                    }
                 }
 
                 //Actividad Especifica
@@ -490,7 +493,7 @@ namespace ComplementApp.API.Data
                 if (!string.IsNullOrEmpty(item.Observaciones))
                     cdp.Observaciones = item.Observaciones;
                 if (item.FechaFactura != DateTime.MinValue)
-                    cdp.FechaFactura = item.FechaFactura;                
+                    cdp.FechaFactura = item.FechaFactura;
 
                 //Tercero
                 if (item.TipoIdentificacionTercero > 0 &&

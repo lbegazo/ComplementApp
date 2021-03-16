@@ -119,6 +119,7 @@ import { ContratoEditComponent } from './administracion/contrato/contrato-edit/c
 import { ContratoComponent } from './administracion/contrato/contrato.component';
 import { SpecialCharacterDirective } from './_directives/special-character.directive';
 import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
+import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-edit.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -195,6 +196,7 @@ export function tokenGetter() {
     TerceroEditComponent,
     ContratoEditComponent,
     ContratoComponent,
+    DecretoEditComponent,
   ],
   imports: [
     BrowserModule,

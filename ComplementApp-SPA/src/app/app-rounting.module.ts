@@ -44,6 +44,7 @@ import { TerceroComponent } from './administracion/tercero/tercero.component';
 import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocumentoIdentidad.resolver';
 import { ContratoComponent } from './administracion/contrato/contrato.component';
 import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
+import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-edit.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -144,6 +145,14 @@ export const routes: Routes = [
     component: ArchivoMainComponent,
     resolve: { transaccion: TransaccionResolver },
   },
+  {
+    path: 'PLAN_REGISTRARDECRETO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: DecretoEditComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+
   {
     path: 'SOLICITUDES_CERTIFICADO',
     canActivate: [AuthGuard],

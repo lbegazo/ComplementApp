@@ -33,6 +33,7 @@ namespace ComplementApp.API.Extensions
             services.AddScoped<IProcesoCreacionArchivo, ProcesoCreacionArchivo>();
             services.AddScoped<IProcesoCreacionArchivoExcel, ProcesoCreacionArchivoExcel>();
             services.AddScoped<IContratoRepository, ContratoRepository>();
+            services.AddScoped<IActividadGeneralRepository, ActividadGeneralRepository>();
 
             services.AddDbContext<DataContext>();
 

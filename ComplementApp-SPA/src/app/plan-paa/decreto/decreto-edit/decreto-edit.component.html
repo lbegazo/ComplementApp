@@ -1,0 +1,173 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 20%" class="inner center">
+                  <label class="col-form-label-md">Identificación</label>
+                </div>
+                <div style="width: 54%" class="inner center">
+                  <label class="col-form-label-md">Nombre</label>
+                </div>
+                <div style="width: 13%" class="inner center">
+                  <label class="col-form-label-md">Aprop. Vigente</label>
+                </div>
+                <div style="width: 13%" class="inner center">
+                  <label class="col-form-label-md">Aprop. Disponible</label>
+                </div>
+              </div>
+              <div *ngIf="listaActividadGeneral">
+                <div
+                  formArrayName="rubrosControles"
+                  class="form-row"
+                  *ngFor="let item of listaActividadGeneral; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 20%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.rubroPresupuestal.identificacion }}
+                      </p>
+                    </div>
+                    <div style="width: 54%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.rubroPresupuestal.nombre }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="text"
+                        style="text-align: right; height: 30px"
+                        class="form-control col-form-label"
+                        formControlName="rubroControlVigente"
+                        appDecimalMask
+                        placeholder="Aprop. vigente"
+                        value="{{ item?.apropiacionVigente }}"
+                        (blur)="actualizarValoresTotales()"
+                      />
+                      <div
+                        class="error col-form-label-sm"
+                        *ngIf="
+                          rubrosControles.controls[i]
+                            .get('rubroControlVigente')
+                            ?.hasError('required') &&
+                          rubrosControles.controls[i].get('rubroControlVigente')
+                            ?.touched
+                        "
+                      >
+                        <small>Registre apropiación vigente</small>
+                      </div>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="text"
+                        style="text-align: right; height: 30px"
+                        class="form-control col-form-label"
+                        formControlName="rubroControlDisponible"
+                        appDecimalMask
+                        placeholder="Aprop. disponible"
+                        value="{{ item?.apropiacionDisponible }}"
+                        (blur)="actualizarValoresTotales()"
+                      />
+                      <div
+                        class="error col-form-label-sm"
+                        *ngIf="
+                          rubrosControles.controls[i]
+                            .get('rubroControlDisponible')
+                            ?.hasError('required') &&
+                          rubrosControles.controls[i].get(
+                            'rubroControlDisponible'
+                          )?.touched
+                        "
+                      >
+                        <small>Registre apropiación disponible</small>
+                      </div>
+                      <div
+                        class="error col-form-label-sm"
+                        *ngIf="
+                          rubrosControles.controls[i]
+                            .get('rubroControlDisponible')
+                            ?.hasError('valorIncorrecto') &&
+                          rubrosControles.controls[i].get('rubroControlDisponible')
+                            ?.touched
+                        "
+                      >
+                        <small>Debe ser igual o inferior al valor de la apropiación vigente del rubro.</small>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <!--Valores Totales-->
+              <div class="form-row mt-2">
+                <div style="width: 20%" class="inner center"></div>
+                <div style="width: 54%" class="inner center"></div>
+                <div style="width: 13%" class="inner right">
+                  <p class="paragraph">
+                    {{ valorTotalVigente | number: "1.2-2" }}
+                  </p>
+                </div>
+                <div style="width: 13%" class="inner right">
+                  <p class="paragraph">
+                    {{ valorTotalDisponible | number: "1.2-2" }}
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row mt-2">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onGuardar()"
+                    [disabled]="!facturaHeaderForm.valid"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>

@@ -6,16 +6,17 @@ namespace ComplementApp.API.Models
     [Table("TActividadGeneral")]
     public class ActividadGeneral
     {
-        public int ActividadGeneralId { get; set; }
-
-        [Required]
-        [Column(TypeName = "VARCHAR(250)")]
-        public string Nombre { get; set; }
+        public int ActividadGeneralId { get; set; }        
 
         [Column(TypeName = "decimal(30,8)")]
-        public decimal ValorApropiacion { get; set; }
+        public decimal ApropiacionVigente { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
-        public decimal SaldoActual { get; set; }
+        public decimal ApropiacionDisponible { get; set; }    
+        public int?  RubroPresupuestalId { get; set; }
+        public RubroPresupuestal RubroPresupuestal { get; set; }
+        
+        [NotMapped]
+        public int EstadoModificacion { get; set; }
     }
 }

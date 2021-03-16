@@ -152,6 +152,15 @@
     "CodigoPadreTransaccion": "PLAN"
   },
   {
+    "Codigo": "PLAN_REGISTRARDECRETO",
+    "Nombre": "Registrar Decreto",
+    "Descripcion": "Registrar Decreto",
+    "Icono": "attach_file",
+    "Ruta": "PLAN_REGISTRARDECRETO",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+
+  {
     "Codigo": "SOLICITUDES_CERTIFICADO",
     "Nombre": "Solicitud de Certificado de Disponibilidad Presupuestal",
     "Descripcion": "Solicitud de Certificado de Disponibilidad Presupuestal",
