@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210319161532_TPci_Creation")]
+    partial class TPci_Creation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1244,11 +1246,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<bool>("Estado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Identificacion")
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
@@ -1256,6 +1253,10 @@ namespace ComplementApp.API.Migrations
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("VARCHAR(250)");
+
+                    b.Property<int?>("PadrePciId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.HasKey("PciId");
 
@@ -2082,9 +2083,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TerceroId")
                         .HasColumnType("int");
 
@@ -2097,8 +2095,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("AreaId");
 
                     b.HasIndex("CargoId");
-
-                    b.HasIndex("PciId");
 
                     b.HasIndex("TerceroId");
 
@@ -2551,10 +2547,6 @@ namespace ComplementApp.API.Migrations
                         .WithMany()
                         .HasForeignKey("CargoId");
 
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
                     b.HasOne("ComplementApp.API.Models.Tercero", "Tercero")
                         .WithMany()
                         .HasForeignKey("TerceroId");
@@ -2562,8 +2554,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Cargo");
-
-                    b.Navigation("Pci");
 
                     b.Navigation("Tercero");
                 });

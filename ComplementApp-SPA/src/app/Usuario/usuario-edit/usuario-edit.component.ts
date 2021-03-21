@@ -21,6 +21,7 @@ import { Area } from 'src/app/_models/area';
 import { Cargo } from 'src/app/_models/cargo';
 import { ListaService } from 'src/app/_services/lista.service';
 import { Perfil } from 'src/app/_models/perfil';
+import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 
 @Component({
   selector: 'app-usuario-edit',
@@ -47,18 +48,23 @@ export class UsuarioEditComponent implements OnInit {
     fechaUltimoAcceso: new Date(),
     nombreCompleto: '',
     perfiles: [],
+    pciId: 0,
   };
   registerForm = new FormGroup({});
   arrayControls = new FormArray([]);
 
   areas: Area[] = [];
   cargos: Cargo[] = [];
+  listaPci: ValorSeleccion[] = [];
   perfiles: Perfil[];
   areaSelected?: number;
   cargoSelected?: number;
+  pciSelected?: number;
   arrayRubro: number[] = [];
+
   areaSeleccionada: Area = null;
   cargoSeleccionado: Cargo = null;
+  pciSeleccionado: ValorSeleccion = null;
 
   isDataLoaded = false;
 
@@ -80,6 +86,10 @@ export class UsuarioEditComponent implements OnInit {
 
     this.route.data.subscribe((data) => {
       this.cargos = data['cargos'];
+    });
+
+    this.route.data.subscribe((data) => {
+      this.listaPci = data['pcis'];
     });
 
     this.route.params.subscribe((params: Params) => {
@@ -106,6 +116,7 @@ export class UsuarioEditComponent implements OnInit {
         apellidoCtrl: ['', Validators.required],
         areaControl: [0, Validators.required],
         cargoControl: [0, Validators.required],
+        pciControl: [0, Validators.required],
         perfilesControles: this.arrayControls,
         passwordCtrl: [
           '',
@@ -150,6 +161,7 @@ export class UsuarioEditComponent implements OnInit {
 
     this.areaSelected = this.user.areaId;
     this.cargoSelected = this.user.cargoId;
+    this.pciSelected = this.user.pciId;
 
     this.areaSeleccionada = this.areas.filter(
       (x) => x.areaId === this.areaSelected
@@ -157,6 +169,10 @@ export class UsuarioEditComponent implements OnInit {
 
     this.cargoSeleccionado = this.cargos.filter(
       (x) => x.cargoId === this.cargoSelected
+    )[0];
+
+    this.pciSeleccionado = this.listaPci.filter(
+      (x) => x.id === this.pciSelected
     )[0];
 
     if (this.perfiles) {
@@ -182,6 +198,7 @@ export class UsuarioEditComponent implements OnInit {
       apellidoCtrl: apellidosC,
       areaControl: this.areaSeleccionada,
       cargoControl: this.cargoSeleccionado,
+      pciControl: this.pciSeleccionado,
     });
 
     this.registerForm.setControl('perfilesControles', this.arrayControls);
@@ -210,6 +227,7 @@ export class UsuarioEditComponent implements OnInit {
         this.user.password = formValues.passwordCtrl;
         this.user.areaId = this.areaSelected;
         this.user.cargoId = this.cargoSelected;
+        this.user.pciId = this.pciSelected;
         this.setearPerfilesAUsuario(formValues);
         this.usuarioService.RegistrarUsuario(this.user).subscribe(
           () => {
@@ -228,6 +246,7 @@ export class UsuarioEditComponent implements OnInit {
         this.user.apellidos = formValues.apellidoCtrl.toUpperCase().trim();
         this.user.areaId = this.areaSelected;
         this.user.cargoId = this.areaSelected;
+        this.user.pciId = this.pciSelected;
         this.setearPerfilesAUsuario(formValues);
 
         this.usuarioService
@@ -266,6 +285,15 @@ export class UsuarioEditComponent implements OnInit {
   onSelectCargo() {
     this.cargoSeleccionado = this.cargoControl.value as Cargo;
     this.cargoSelected = this.cargoSeleccionado.cargoId;
+  }
+
+  onSelectPci() {
+    this.pciSeleccionado = this.pciControl.value as ValorSeleccion;
+    this.pciSelected = this.pciSeleccionado.id;
+  }
+
+  get pciControl() {
+    return this.registerForm.get('pciControl');
   }
 
   get cargoControl() {

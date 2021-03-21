@@ -168,6 +168,7 @@ namespace ComplementApp.API.Data
             string responsable = string.Empty;
 
             var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
+            var listaPci = _context.Pci.ToList();
             var listaTerceros = _context.Tercero.ToList();
 
             foreach (var item in listaCdp)
@@ -207,7 +208,24 @@ namespace ComplementApp.API.Data
                 cdp.Detalle9 = item.Detalle9;
                 cdp.Detalle10 = item.Detalle10;
 
-                //Rubro Presupuestal
+                #region PCI
+
+                if (!string.IsNullOrEmpty(item.IdentificacionRubro))
+                {
+                    var pci = listaPci
+                                    .Where(c => c.Identificacion.ToUpper() == item.Pci.ToUpper())
+                                    .FirstOrDefault();
+                    if (pci != null)
+                    {
+                        cdp.Pci = pci;
+                        cdp.PciId = pci.PciId;
+                    }
+                }
+
+                #endregion PCI
+
+                #region Rubro Presupuestal
+
                 if (!string.IsNullOrEmpty(item.IdentificacionRubro))
                 {
                     var rubro = listaRubrosPresupuestales
@@ -219,6 +237,8 @@ namespace ComplementApp.API.Data
                         cdp.RubroPresupuestalId = rubro.RubroPresupuestalId;
                     }
                 }
+
+                #endregion Rubro Presupuestal
 
                 #region Tercero
 

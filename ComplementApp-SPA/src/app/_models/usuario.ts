@@ -15,4 +15,5 @@ export interface Usuario {
   areaNombre: string;
   numeroIdentificacion: string;
   perfiles?: Perfil[];
+  pciId: number;
 }

@@ -106,6 +106,7 @@ namespace ComplementApp.API.Data
         public DbSet<TipoAdminPila> TipoAdminPila { get; set; }
         public DbSet<Numeracion> Numeracion { get; set; }
         public DbSet<TipoContrato> TipoContrato { get; set; }
+        public DbSet<Pci> Pci { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
@@ -180,6 +181,10 @@ namespace ComplementApp.API.Data
 
             modelBuilder.Entity<Numeracion>()
                 .Property(b => b.Utilizado)
+                .HasDefaultValue(0);
+
+            modelBuilder.Entity<Pci>()
+                .Property(b => b.Estado)
                 .HasDefaultValue(0);
         }
 

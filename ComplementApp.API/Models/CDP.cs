@@ -7,17 +7,11 @@ namespace ComplementApp.API.Models
     public class CDP
     {
         public int CdpId { get; set; }
-
         public int Instancia { get; set; }
-
         public long Cdp { get; set; }
-
         public long Crp { get; set; }
-
         public long Obligacion { get; set; }
-
         public long OrdenPago { get; set; }
-
         public DateTime Fecha { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]
@@ -61,12 +55,12 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(250)")]
         public string Detalle10 { get; set; }
-
         public int RubroPresupuestalId { get; set; }
         public RubroPresupuestal RubroPresupuestal { get; set; }
         public int TerceroId { get; set; }
-
         public Tercero Tercero { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
 
     }
 }

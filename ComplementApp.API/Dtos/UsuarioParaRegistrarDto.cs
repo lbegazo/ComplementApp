@@ -36,6 +36,9 @@ namespace ComplementApp.API.Dtos
 
         [Required]
         public int AreaId { get; set; }
+        
+        [Required]
+        public int PciId { get; set; }
 
         [Required]
         public ICollection<Perfil> Perfiles { get; set; }

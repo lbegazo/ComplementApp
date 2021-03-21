@@ -21,7 +21,7 @@ namespace ComplementApp.API.Services
         private readonly IDocumentoRepository _repo;
         private readonly DataContext _dataContext;
 
-        const int numeroColumnasCabecera = 26;
+        const int numeroColumnasCabecera = 27;
         const int numeroColumnasDetalle = 25;
         const int numeroColumnasPlanPago = 29;
 
@@ -134,7 +134,6 @@ namespace ComplementApp.API.Services
                                 dtCabecera1.Rows.Remove(row);
                                 break;
                             }
-
                         }
                     }
 
@@ -315,7 +314,10 @@ namespace ComplementApp.API.Services
                 documento.Detalle7 = (row as DataRow).ItemArray[22].ToString();
                 documento.Detalle8 = (row as DataRow).ItemArray[23].ToString();
                 documento.Detalle9 = (row as DataRow).ItemArray[24].ToString();
+                documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();                
                 documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();
+                //PCI
+                documento.Pci = (row as DataRow).ItemArray[26].ToString();
 
                 listaDocumento.Add(documento);
             }

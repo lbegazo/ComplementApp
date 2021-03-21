@@ -217,6 +217,35 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <select
+            *ngIf="listaPci"
+            formControlName="pciControl"
+            (change)="onSelectPci()"
+            class="form-control list"
+            [ngClass]="{
+              'is-invalid':
+                registerForm.get('pciControl').touched &&
+                registerForm.get('pciControl').hasError('required')
+            }"
+            style="padding: 0px"
+          >
+            <option [ngValue]="null" disabled>Selecciona Pci</option>
+            <option *ngFor="let prf of listaPci" [ngValue]="prf">
+              {{ prf.nombre }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('pciControl').touched &&
+              registerForm.get('pciControl').hasError('required')
+            "
+          >
+            La Pci es requerida
+          </div>
+        </div>
+
         <div class="row" style="padding-left: 15px; padding-right: 15px">
           <div class="col-1 inner">
             <label class="col-form-label-md">Sel.</label>

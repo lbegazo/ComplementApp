@@ -255,6 +255,19 @@ namespace ComplementApp.API.Data
                                         .ToListAsync();
                         break;
                     }
+                case TipoLista.Pci:
+                    {
+                        lista = await (from m in _context.Pci
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.PciId,
+                                           Codigo = m.Identificacion,
+                                           Nombre = m.Nombre,
+                                       })
+                                        .OrderBy(m => m.Nombre)
+                                        .ToListAsync();
+                        break;
+                    }
                 default: break;
             }
 

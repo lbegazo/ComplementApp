@@ -45,6 +45,7 @@ import { ListaTipoDocumentoIdentidadResolver } from './_resolvers/lista-TipoDocu
 import { ContratoComponent } from './administracion/contrato/contrato.component';
 import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
 import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-edit.component';
+import { ListaPciResolver } from './_resolvers/lista-Pci.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -63,7 +64,11 @@ export const routes: Routes = [
       {
         path: 'new',
         component: UsuarioEditComponent,
-        resolve: { areas: ListaAreasResolver, cargos: ListaCargosResolver },
+        resolve: {
+          areas: ListaAreasResolver,
+          cargos: ListaCargosResolver,
+          pcis: ListaPciResolver,
+        },
       },
       {
         path: ':id',
@@ -73,7 +78,11 @@ export const routes: Routes = [
       {
         path: ':id/edit',
         component: UsuarioEditComponent,
-        resolve: { areas: ListaAreasResolver, cargos: ListaCargosResolver },
+        resolve: {
+          areas: ListaAreasResolver,
+          cargos: ListaCargosResolver,
+          pcis: ListaPciResolver,
+        },
 
         // canDeactivate: [PreventUnsavedChangesUsuario],
       },

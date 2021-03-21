@@ -88,6 +88,7 @@ namespace ComplementApp.API.Models
         TipoAdminPila = 6,
         TipoDocumentoIdentidad = 7,
         TipoContrato = 8,
+        Pci = 9,
     }
 
     public enum TipoOperacionTransaccion

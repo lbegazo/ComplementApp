@@ -15,6 +15,8 @@ namespace ComplementApp.API.Data
     {
         public static void CargarDataInicial(DataContext context)
         {
+            SeedPci(context);
+
             SeedTipoContrato(context);
             SeedRubroPresupuestal(context);
             SeedCargo(context);
@@ -59,6 +61,36 @@ namespace ComplementApp.API.Data
             SeedTipoAdminPila(context);
         }
 
+        private static void SeedPci(DataContext context)
+        {
+            Pci itemNuevo = null;
+
+            if (!context.Pci.Any())
+            {
+                if (File.Exists("Data/SeedFiles/_Pci.json"))
+                {
+                    var data = File.ReadAllText("Data/SeedFiles/_Pci.json");
+                    var items = JsonConvert.DeserializeObject<List<Pci>>(data);
+                    foreach (var item in items)
+                    {
+                        var itemBd = obtenerPci(context, item.Identificacion);
+
+                        if (itemBd == null)
+                        {
+                            itemNuevo = new Pci();
+                            itemNuevo.Nombre = item.Nombre;
+                            itemNuevo.Identificacion = item.Identificacion;
+                            itemNuevo.Estado = true;
+
+                            context.Pci.Add(itemNuevo);
+                            context.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
+
+
         private static void SeedTipoContrato(DataContext context)
         {
             TipoContrato valor = null;
@@ -82,7 +114,6 @@ namespace ComplementApp.API.Data
             }
         }
 
-
         private static void SeedTipoAdminPila(DataContext context)
         {
             TipoAdminPila valor = null;
@@ -105,6 +136,7 @@ namespace ComplementApp.API.Data
                 }
             }
         }
+
         private static void SeedTipoDocumentoIdentidad(DataContext context)
         {
             TipoDocumentoIdentidad valor = null;
@@ -982,7 +1014,6 @@ namespace ComplementApp.API.Data
             }
         }
 
-
         private static void SeedUsuarioPerfil(DataContext context)
         {
             UsuarioPerfil nuevo = null;
@@ -1018,7 +1049,6 @@ namespace ComplementApp.API.Data
             }
         }
 
-
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -1040,6 +1070,11 @@ namespace ComplementApp.API.Data
         private static RubroPresupuestal obtenerRubroPresupuestal(DataContext context, string Identificacion)
         {
             return context.RubroPresupuestal.Where(x => x.Identificacion == Identificacion).FirstOrDefault();
+        }
+
+        private static Pci obtenerPci(DataContext context, string Identificacion)
+        {
+            return context.Pci.Where(x => x.Identificacion == Identificacion).FirstOrDefault();
         }
 
         private static ActividadEconomica obtenerActividadEconomica(DataContext context, string codigo)

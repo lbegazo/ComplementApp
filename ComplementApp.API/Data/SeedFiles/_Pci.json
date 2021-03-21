@@ -1,0 +1,54 @@
+[
+  {
+    "Identificacion": "23-09-00",
+    "Nombre": "ANE"
+  },
+  {
+    "Identificacion": "16-01-02-000",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR BOGOTA"
+  },
+  {
+    "Identificacion": "16-01-02-001",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR CALI"
+  },
+  {
+    "Identificacion": "16-01-02-002",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR MEDELLIN"
+  },
+  {
+    "Identificacion": "16-01-02-003",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR CARTAGENA"
+  },
+  {
+    "Identificacion": "16-01-02-004",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR PAIPA"
+  },
+  {
+    "Identificacion": "16-01-02-005",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR POPAYAN"
+  },
+  {
+    "Identificacion": "16-01-02-006",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR TOLIMA"
+  },
+  {
+    "Identificacion": "16-01-02-007",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR MANIZALES"
+  },
+  {
+    "Identificacion": "16-01-02-008",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR CUCUTA"
+  },
+  {
+    "Identificacion": "16-01-02-009",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR SAN ANDRES"
+  },
+  {
+    "Identificacion": "16-01-02-010",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR COTA"
+  },
+  {
+    "Identificacion": "16-01-02-011",
+    "Nombre": "DIRECCION DE SANIDAD MILITAR MAGDALENA"
+  }
+]
