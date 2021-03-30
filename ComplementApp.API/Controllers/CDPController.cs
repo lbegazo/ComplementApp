@@ -23,6 +23,8 @@ namespace ComplementApp.API.Controllers
         #region Variable
 
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
 
         #endregion 
 
@@ -238,7 +240,12 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerRubrosPresupuestalesPorCompromiso(int crp)
         {
-            var rubros = await _repo.ObtenerRubrosPresupuestalesPorCompromiso(crp);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            var rubros = await _repo.ObtenerRubrosPresupuestalesPorCompromiso(crp, pciId);
             return Ok(rubros);
         }
 

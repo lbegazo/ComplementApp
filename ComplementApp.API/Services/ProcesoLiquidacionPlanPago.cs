@@ -67,11 +67,13 @@ namespace ComplementApp.API.Services
 
         #region Liquidación Normal
         public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId,
+                                                                                                     int pciId,
                                                                                                      decimal valorBaseGravable,
                                                                                                      int? actividadEconomicaId)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
             PlanPagoDto planPagoDto2 = new PlanPagoDto();
+
             try
             {
                 var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
@@ -80,13 +82,13 @@ namespace ComplementApp.API.Services
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
                 var parametros = parametroGenerales.ToList();
 
-                ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
+                ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId, pciId);
 
                 //Podría ser nulo la solicitud de pago
                 FormatoSolicitudPago solicitudPago = await _solicitudPagoRepository.ObtenerSolicitudPagoXPlanPagoId(planPagoId);
                 actividadEconomicaId = solicitudPago.ActividadEconomicaId;
 
-                ICollection<Deduccion> listaDeducciones = await _terceroRepository.ObtenerDeduccionesXTercero(planPagoDto.TerceroId, actividadEconomicaId);
+                ICollection<Deduccion> listaDeducciones = await _terceroRepository.ObtenerDeduccionesXTercero(planPagoDto.TerceroId, pciId, actividadEconomicaId);
                 var listaDeduccionesDto = _mapper.Map<ICollection<DeduccionDto>>(listaDeducciones);
 
                 ICollection<CriterioCalculoReteFuente> listaCriterioReteFuente = await _repoLista.ObtenerListaCriterioCalculoReteFuente();
@@ -459,14 +461,14 @@ namespace ComplementApp.API.Services
 
             #region Viaticos y Aporte Salud Anterior
 
-            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId);
+            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId, parametroLiquidacion.PciId.Value);
 
             if (listaDetalleLiquidacionViaticos != null && listaDetalleLiquidacionViaticos.Count > 0)
             {
                 viaticosPagados = ObtenerValorViaticosAnteriores(listaDetalleLiquidacionViaticos.ToList());
             }
 
-            var detalleLiquidacionAnterior = await _repo.ObtenerDetalleLiquidacionAnterior(planPago.TerceroId);
+            var detalleLiquidacionAnterior = await _repo.ObtenerDetalleLiquidacionAnterior(planPago.TerceroId, parametroLiquidacion.PciId.Value);
 
             if (detalleLiquidacionAnterior != null)
             {
@@ -751,7 +753,7 @@ namespace ComplementApp.API.Services
 
             #region Viaticos y Aporte Salud Anterior
 
-            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId);
+            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId, parametroLiquidacion.PciId.Value);
 
             if (listaDetalleLiquidacionViaticos != null && listaDetalleLiquidacionViaticos.Count > 0)
             {
@@ -1284,8 +1286,10 @@ namespace ComplementApp.API.Services
 
         #region Liquidación Masiva
 
-        public async Task<bool> RegistrarListaDetalleLiquidacion(int usuarioId, string listaPlanPagoId, List<int> listIds,
-                                                                    bool esSeleccionarTodo, int? terceroId)
+        public async Task<bool> RegistrarListaDetalleLiquidacion(int usuarioId, int pciId,
+                                                                string listaPlanPagoId,
+                                                                List<int> listIds,
+                                                                bool esSeleccionarTodo, int? terceroId)
         {
             #region Variables 
 
@@ -1310,6 +1314,7 @@ namespace ComplementApp.API.Services
                 UserParams userParams = new UserParams();
                 userParams.PageSize = 500;
                 userParams.PageNumber = 1;
+                userParams.PciId = pciId;
 
                 var pagedList = await _planPagoRepository.ObtenerListaPlanPago(terceroId, listIds, userParams);
 
@@ -1324,7 +1329,7 @@ namespace ComplementApp.API.Services
                     //Filtrar lista de planes de pago
                     //listaPlanPago = FiltrarListaPlanesPago(lista);
 
-                    await ProcesarLiquidacionMasiva(usuarioId, lista.ToList());
+                    await ProcesarLiquidacionMasiva(usuarioId, pciId, lista.ToList());
                 }
 
                 #endregion esSeleccionarTodo
@@ -1341,7 +1346,7 @@ namespace ComplementApp.API.Services
                     //Filtrar lista de planes de pago
                     //listaPlanPago = FiltrarListaPlanesPago(lista);
 
-                    await ProcesarLiquidacionMasiva(usuarioId, lista);
+                    await ProcesarLiquidacionMasiva(usuarioId, pciId, lista);
                 }
 
                 #endregion Procesar por lista de ids
@@ -2238,7 +2243,7 @@ namespace ComplementApp.API.Services
 
         #region Liquidación Masiva
 
-        private async Task ProcesarLiquidacionMasiva(int usuarioId, List<PlanPago> listaPlanPago)
+        private async Task ProcesarLiquidacionMasiva(int usuarioId, int pciId, List<PlanPago> listaPlanPago)
         {
             List<FormatoSolicitudPago> listaSolicitudPago = null;
             List<ParametroLiquidacionTercero> listaParametroLiquidacionTercero = null;
@@ -2260,24 +2265,24 @@ namespace ComplementApp.API.Services
             listaDetallePlanPago = await ObtenerListaDetallePlanPagoXIds(planPagoIds);
 
             compromisos = listaDetallePlanPago.Select(x => x.Crp).ToHashSet().ToList();
-            listaCantidadMaximaXPlanPago = await ObtenerListaCantidadMaximaPlanPago(compromisos);
+            listaCantidadMaximaXPlanPago = await ObtenerListaCantidadMaximaPlanPago(compromisos, pciId);
             ActualizarListaDetallePlanPago(listaDetallePlanPago, listaCantidadMaximaXPlanPago);
 
             var terceroIds = listaPlanPago.Select(x => x.TerceroId).ToHashSet().ToList();
             //Obtener lista de parametros de liquidacion de terceros
-            listaParametroLiquidacionTercero = await ObtenerListaParametroLiquidacionTerceroXIds(terceroIds);
+            listaParametroLiquidacionTercero = await ObtenerListaParametroLiquidacionTerceroXIds(terceroIds, pciId);
 
             //Obtener lista de solicitudes de pago
             listaSolicitudPago = await ObtenerListaSolicitudPagoXPlanPagoIds(planPagoIds);
 
             //Obtener dededucciones de terceros
-            listaDeduccionesXTercero = await ObtenerListaDeduccionesXTerceroIds(terceroIds);
+            listaDeduccionesXTercero = await ObtenerListaDeduccionesXTerceroIds(terceroIds, pciId);
 
             //Obtener lista de detalle liquidacion mes anterior viaticos SI
-            listaDetalleLiquidacionMesAnteriorViatico = await ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(terceroIds);
+            listaDetalleLiquidacionMesAnteriorViatico = await ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(terceroIds, pciId);
 
             //Obtener lista de detalle liquidacion mes anterior viaticos NO
-            listaDetalleLiquidacionMesAnterior = ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(terceroIds);
+            listaDetalleLiquidacionMesAnterior = ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(terceroIds, pciId);
 
             #endregion Obtener listas secundarias
 
@@ -2379,21 +2384,21 @@ namespace ComplementApp.API.Services
             return lista;
         }
 
-        private async Task<List<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos)
+        private async Task<List<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos, int pciId)
         {
-            var lista = await _planPagoRepository.ObtenerListaCantidadMaximaPlanPago(compromisos);
+            var lista = await _planPagoRepository.ObtenerListaCantidadMaximaPlanPago(compromisos, pciId);
             return lista.ToList();
         }
 
-        private async Task<List<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> terceroIds)
+        private async Task<List<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> terceroIds, int pciId)
         {
-            var listaParametroLiquidacion = await _terceroRepository.ObtenerListaParametroLiquidacionTerceroXIds(terceroIds);
+            var listaParametroLiquidacion = await _terceroRepository.ObtenerListaParametroLiquidacionTerceroXIds(terceroIds, pciId);
             return listaParametroLiquidacion.ToList();
         }
 
-        private async Task<List<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> terceroIds)
+        private async Task<List<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> terceroIds, int pciId)
         {
-            var listaDeducciones = await _terceroRepository.ObtenerListaDeduccionesXTerceroIds(terceroIds);
+            var listaDeducciones = await _terceroRepository.ObtenerListaDeduccionesXTerceroIds(terceroIds, pciId);
             return listaDeducciones.ToList();
         }
 
@@ -2403,15 +2408,15 @@ namespace ComplementApp.API.Services
             return lista.ToList();
         }
 
-        private async Task<List<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> terceroIds)
+        private async Task<List<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> terceroIds, int pciId)
         {
-            var lista = await _repo.ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(terceroIds);
+            var lista = await _repo.ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(terceroIds, pciId);
             return lista.ToList();
         }
 
-        private List<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> terceroIds)
+        private List<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> terceroIds, int pciId)
         {
-            var lista = _repo.ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(terceroIds);
+            var lista = _repo.ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(terceroIds, pciId);
             return lista.ToList();
         }
 

@@ -17,25 +17,25 @@ namespace ComplementApp.API.Interfaces
                 List<int> listaEstadoId,
                 bool? procesado, UserParams userParams);
 
-        Task<List<int>> ObtenerListaDetalleLiquidacionTotal(int? terceroId, List<int> listaEstadoId, bool? procesado);
+        Task<List<int>> ObtenerListaDetalleLiquidacionTotal(int pcidId, int? terceroId, List<int> listaEstadoId, bool? procesado);
 
         Task<DetalleLiquidacion> ObtenerDetalleLiquidacionBase(int detalleLiquidacion);
 
-        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId);
+        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId, int pciId);
 
-        Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId);
+        Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId, int pciId);
 
-        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId);
+        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId, int pciId);
 
-        ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId);
+        ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId, int pciId);
 
-        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId);
+        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId, int pciId);
 
         bool RegistrarArchivoDetalleLiquidacion(ArchivoDetalleLiquidacion archivo);
 
         bool RegistrarDetalleArchivoLiquidacion(List<DetalleArchivoLiquidacion> listaDetalle);
 
-        int ObtenerUltimoConsecutivoArchivoLiquidacion();
+        int ObtenerUltimoConsecutivoArchivoLiquidacion(int pciId);
 
         #region Liquidación Masiva
 
@@ -55,7 +55,7 @@ namespace ComplementApp.API.Interfaces
                                                                     List<int> listaEstadoId,
                                                                     bool? procesado);
 
-        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId);
+        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId);
 
         Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId);
 

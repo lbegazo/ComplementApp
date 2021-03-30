@@ -262,7 +262,7 @@ namespace ComplementApp.API.Data
                                        {
                                            Id = m.PciId,
                                            Codigo = m.Identificacion,
-                                           Nombre = m.Nombre,
+                                           Nombre = m.Identificacion + " " + m.Nombre,
                                        })
                                         .OrderBy(m => m.Nombre)
                                         .ToListAsync();
@@ -318,6 +318,13 @@ namespace ComplementApp.API.Data
             return await _context.ActividadEconomica
                             .Where(t => t.Codigo.Contains(codigo))
                             .ToListAsync();
+        }
+
+        public async Task<Pci> ObtenerPci(int pciId)
+        {
+            return await _context.Pci
+                        .Where(x => x.PciId == pciId)
+                        .FirstOrDefaultAsync();
         }
     }
 }

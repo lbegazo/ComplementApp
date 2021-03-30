@@ -22,27 +22,27 @@ namespace ComplementApp.API.Interfaces
 
         Task<PlanPago> ObtenerPlanPagoDetallado(int planPagoId);
 
-        int ObtenerCantidadMaximaPlanPago(long crp);
+        int ObtenerCantidadMaximaPlanPago(long crp, int pciId);
 
-        Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos);
+        Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos, int pciId);
 
         Task RegistrarPlanPago(PlanPago plan);
 
         void ActualizarPlanPago(PlanPago plan);
 
-        Task<ICollection<RadicadoDto>> ObtenerListaRadicado(int mes, int? terceroId, List<int> listaEstadoId);
+        Task<ICollection<RadicadoDto>> ObtenerListaRadicado(int pciId, int mes, int? terceroId, List<int> listaEstadoId);
 
-        Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams);
+        Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int pciId, int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams);
 
         Task<List<PlanPago>> ObtenerListaPlanPagoXIds(List<int> listaPlanPagoId);
         
-        Task<ICollection<PlanPagoDto>> ObtenerListaPlanPagoTotal();
+        Task<ICollection<PlanPagoDto>> ObtenerListaPlanPagoTotal(int pciId);
 
         #region Forma Pago Compromiso
         Task<PagedList<CDPDto>> ObtenerCompromisosSinPlanPago(int? terceroId, int? numeroCrp, UserParams userParams);
         Task<PagedList<CDPDto>> ObtenerCompromisosConPlanPago(int? terceroId, int? numeroCrp, UserParams userParams);
-        Task<ICollection<LineaPlanPagoDto>> ObtenerLineasPlanPagoXCompromiso(int numeroCrp);
-        Task<PlanPago> ObtenerUltimoPlanPagoDeCompromisoXMes(int crp, int MesId);
+        Task<ICollection<LineaPlanPagoDto>> ObtenerLineasPlanPagoXCompromiso(int numeroCrp, int pci);
+        //Task<PlanPago> ObtenerUltimoPlanPagoDeCompromisoXMes(int crp, int MesId);
 
         #endregion Forma Pago Compromiso
     }

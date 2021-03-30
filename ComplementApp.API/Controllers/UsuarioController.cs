@@ -19,12 +19,22 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        #region Variable
+        int pciId = 0;
+        string valorPciId = string.Empty;
+        
+        #endregion 
+
+        #region Dependency injection
+
         private readonly IUsuarioRepository _repo;
         private readonly ITransaccionRepository _transaccionRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly DataContext _dataContext;
-        public UsuarioController(IUnitOfWork unitOfWork, IUsuarioRepository repo, 
+
+        #endregion Dependency injection
+        public UsuarioController(IUnitOfWork unitOfWork, IUsuarioRepository repo,
                                 ITransaccionRepository transaccionRepository,
                                 IMapper mapper, DataContext dataContext)
         {
@@ -169,12 +179,17 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
-    
+
         [Route("[action]/{perfilId}")]
         [HttpGet]
         public async Task<IActionResult> ObtenerListaUsuarioXPerfil(int perfilId)
         {
-            var lista = await _repo.ObtenerListaUsuarioXPerfil(perfilId);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            var lista = await _repo.ObtenerListaUsuarioXPerfil(perfilId, pciId);
             return Ok(lista);
         }
 

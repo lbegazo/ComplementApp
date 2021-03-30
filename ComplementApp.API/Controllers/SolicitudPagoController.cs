@@ -22,6 +22,8 @@ namespace ComplementApp.API.Controllers
         #region Variable
 
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
 
         #endregion
 
@@ -61,12 +63,20 @@ namespace ComplementApp.API.Controllers
         [HttpPut]
         public async Task<IActionResult> ActualizarFormatoSolicitudPago(FormatoSolicitudPagoDto formatoDto)
         {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             DetalleFormatoSolicitudPago detalleSolicitud = null;
+
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 if (formatoDto != null)
                 {
 
@@ -81,7 +91,7 @@ namespace ComplementApp.API.Controllers
 
                     if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Rechazado)
                     {
-                        var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.Tercero.TerceroId);
+                        var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.Tercero.TerceroId, pciId);
 
                         if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
                         {
@@ -148,7 +158,7 @@ namespace ComplementApp.API.Controllers
 
                     if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Rechazado)
                     {
-                        var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.Tercero.TerceroId);
+                        var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.Tercero.TerceroId, pciId);
 
                         if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
                         {
@@ -179,8 +189,6 @@ namespace ComplementApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarFormatoSolicitudPago(FormatoSolicitudPagoParaGuardarDto formatoDto)
         {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
             FormatoSolicitudPago formato = null;
             RespuestaSolicitudPago respuestaSolicitud = new RespuestaSolicitudPago();
@@ -188,6 +196,13 @@ namespace ComplementApp.API.Controllers
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 if (formatoDto != null)
                 {
                     #region Mapear datos 
@@ -196,17 +211,18 @@ namespace ComplementApp.API.Controllers
                     formato.ActividadEconomicaId = formatoDto.ActividadEconomicaId;
                     formato.EstadoId = (int)EstadoSolicitudPago.Generado;
                     formato.UsuarioIdRegistro = usuarioId;
+                    formato.PciId = pciId;
                     formato.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
 
                     #endregion Mapear datos 
 
                     #region Numeracion Disponible
 
-                    var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.TerceroId);
+                    var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.TerceroId, pciId);
 
                     if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
                     {
-                        numeracionDisponible = await _repo.ObtenerUltimaNumeracionDisponible();
+                        numeracionDisponible = await _repo.ObtenerUltimaNumeracionDisponible(pciId);
                         if (numeracionDisponible != null)
                         {
                             formato.NumeroFactura = numeracionDisponible.NumeroConsecutivo;
@@ -271,6 +287,13 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
+
                 var pagedList = await _repo.ObtenerCompromisosParaSolicitudRegistroPago(usuarioId, perfilId, terceroId, userParams);
                 var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
 
@@ -295,6 +318,12 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
                 var pagedList = await _repo.ObtenerSolicitudesPagoParaAprobar(usuarioId, terceroId, userParams);
                 var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
 
@@ -319,15 +348,20 @@ namespace ComplementApp.API.Controllers
 
             try
             {
-                formato = await _repo.ObtenerFormatoSolicitudPago(crp);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                formato = await _repo.ObtenerFormatoSolicitudPago(crp, pciId);
                 if (formato != null)
                 {
-                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp);
+                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp, pciId);
 
                     formato.CantidadMaxima = CantidadMaxima;
                     formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
 
-                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp);
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp, pciId);
                     if (pagosRealizados != null)
                     {
                         formato.NumeroPagoFechaActual = pagosRealizados.Count;
@@ -352,21 +386,26 @@ namespace ComplementApp.API.Controllers
 
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
                 formato = await _repo.ObtenerFormatoSolicitudPagoXId(formatoSolicitudPagoId);
                 if (formato != null)
                 {
-                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp);
+                    var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp, pciId);
 
                     formato.CantidadMaxima = CantidadMaxima;
                     formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
 
-                    FormatoCausacionyLiquidacionPagos formatoCausacion = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(formato.PlanPagoId, formato.BaseCotizacion, formato.ActividadEconomica.Id);
+                    FormatoCausacionyLiquidacionPagos formatoCausacion = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(formato.PlanPagoId, pciId, formato.BaseCotizacion, formato.ActividadEconomica.Id);
                     formato.AportePension = formatoCausacion.AportePension;
                     formato.AporteSalud = formatoCausacion.AporteSalud;
                     formato.RiesgoLaboral = formatoCausacion.RiesgoLaboral;
                     formato.FondoSolidaridad = formatoCausacion.FondoSolidaridad;
 
-                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp);
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp, pciId);
                     if (pagosRealizados != null)
                     {
                         formato.NumeroPagoFechaActual = pagosRealizados.Count;
@@ -393,8 +432,12 @@ namespace ComplementApp.API.Controllers
             FormatoCausacionyLiquidacionPagos formato = null;
             try
             {
-
-                formato = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(planPagoId, valorBaseCotizacion, actividadEconomicaId);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                formato = await _procesoLiquidacion.ObtenerFormatoSolicitudPago(planPagoId, pciId, valorBaseCotizacion, actividadEconomicaId);
             }
             catch (Exception)
             {
@@ -405,7 +448,6 @@ namespace ComplementApp.API.Controllers
 
 
         #endregion Registro de Solicitud de Pago
-
 
     }
 }

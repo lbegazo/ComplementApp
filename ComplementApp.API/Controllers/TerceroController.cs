@@ -24,6 +24,8 @@ namespace ComplementApp.API.Controllers
         #region Variable
 
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
 
         #endregion 
 
@@ -239,6 +241,12 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
                 var pagedList = await _repo.ObtenerTercerosParaParametrizacionLiquidacion(tipo, terceroId, userParams);
                 var listaDto = _mapper.Map<IEnumerable<TerceroDto>>(pagedList);
 
@@ -261,12 +269,18 @@ namespace ComplementApp.API.Controllers
         public async Task<ActionResult> ObtenerParametrizacionLiquidacionXTercero([FromQuery(Name = "terceroId")] int terceroId)
         {
             ICollection<TerceroDeduccionDto> lista = null;
+
             try
             {
-                var item = await _repo.ObtenerParametrizacionLiquidacionXTercero(terceroId);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                var item = await _repo.ObtenerParametrizacionLiquidacionXTercero(terceroId, pciId);
                 if (item != null)
                 {
-                    lista = await _repo.ObtenerDeduccionesXTercero(terceroId);
+                    lista = await _repo.ObtenerDeduccionesXTercero(item.ParametroLiquidacionTerceroId);
                     item.TerceroDeducciones = lista;
                 }
                 return Ok(item);
@@ -284,7 +298,7 @@ namespace ComplementApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarParametroLiquidacionTercero(ParametroLiquidacionTerceroDto parametroDto)
         {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             ParametroLiquidacionTercero parametro = new ParametroLiquidacionTercero();
             var listaTerceroDeduccion = new List<TerceroDeduccion>();
             TerceroDeduccion itemTerceroDeduccion = null;
@@ -293,6 +307,13 @@ namespace ComplementApp.API.Controllers
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 if (parametroDto != null)
                 {
                     #region Mapear datos Parametro Liquidacion Tercero
@@ -302,6 +323,7 @@ namespace ComplementApp.API.Controllers
                     parametro.Subcontrata = parametroDto.SubcontrataId == 1 ? true : false;
                     parametro.FacturaElectronica = parametroDto.FacturaElectronicaId == 1 ? true : false;
                     parametro.UsuarioIdRegistro = usuarioId;
+                    parametro.PciId = pciId;
                     parametro.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
 
                     #endregion Mapear datos Parametro Liquidacion Tercero
@@ -311,7 +333,7 @@ namespace ComplementApp.API.Controllers
                     await _dataContext.SaveChangesAsync();
 
                     //Eliminar Tercero deducciones
-                    await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId);
+                    await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId, pciId);
                     await _dataContext.SaveChangesAsync();
 
                     //Registrar Tercero deducciones
@@ -320,6 +342,7 @@ namespace ComplementApp.API.Controllers
                         foreach (var item in parametroDto.TerceroDeducciones)
                         {
                             itemTerceroDeduccion = new TerceroDeduccion();
+                            itemTerceroDeduccion.ParametroLiquidacionTerceroId = parametro.ParametroLiquidacionTerceroId;
                             itemTerceroDeduccion.TerceroId = item.Tercero.Id;
                             itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
 
@@ -361,6 +384,11 @@ namespace ComplementApp.API.Controllers
 
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
                 //Registrar Parametro liquidación Tercero
                 var parametroBD = await _repo.ObtenerParametrizacionLiquidacionTerceroBase(parametroDto.ParametroLiquidacionTerceroId);
                 _mapper.Map(parametroDto, parametroBD);
@@ -371,7 +399,7 @@ namespace ComplementApp.API.Controllers
                 parametroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
 
                 //Eliminar Tercero deducciones
-                await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId);
+                await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId, pciId);
                 await _dataContext.SaveChangesAsync();
 
                 //Registrar nueva lista de Tercero deducciones
@@ -381,6 +409,7 @@ namespace ComplementApp.API.Controllers
                     {
                         itemTerceroDeduccion = new TerceroDeduccion();
                         itemTerceroDeduccion.TerceroId = item.Tercero.Id;
+                        itemTerceroDeduccion.ParametroLiquidacionTerceroId = parametroBD.ParametroLiquidacionTerceroId;
                         itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
 
                         if (item.Deduccion.DeduccionId > 0)
@@ -416,7 +445,12 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
-                var lista = await _repo.ObtenerDeduccionesXTercero(terceroId);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                var lista = await _repo.ObtenerDeduccionesXTercero(terceroId, pciId, null);
                 return Ok(lista);
             }
             catch (Exception)
@@ -456,10 +490,15 @@ namespace ComplementApp.API.Controllers
             ICollection<TerceroDeduccionDto> listaDeducciones = null;
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
                 if (tipoArchivo == 1)
                 {
                     nombreArchivo = "SIGPAA_ParametroLiquidacionTercero.xlsx";
-                    listaParametroLiquidacion = await _repo.ObtenerListaParametroLiquidacionTerceroTotal();
+                    listaParametroLiquidacion = await _repo.ObtenerListaParametroLiquidacionTerceroTotal(pciId);
 
                     if (listaParametroLiquidacion != null)
                     {
@@ -470,7 +509,7 @@ namespace ComplementApp.API.Controllers
                 else
                 {
                     nombreArchivo = "SIGPAA_Deducciones.xlsx";
-                    listaDeducciones = await _repo.ObtenerListaTerceroDeduccionTotal();
+                    listaDeducciones = await _repo.ObtenerListaTerceroDeduccionTotal(pciId);
 
                     if (listaDeducciones != null)
                     {

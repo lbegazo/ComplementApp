@@ -8,18 +8,18 @@ import { AlertifyService } from '../_services/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/Operators';
 import { ListaService } from '../_services/lista.service';
-import { Cargo } from '../_models/cargo';
+import { Perfil } from '../_models/perfil';
 
 @Injectable()
-export class ListaCargosResolver implements Resolve<Cargo[]> {
+export class ListaPerfilesResolver implements Resolve<Perfil[]> {
   constructor(
     private listaService: ListaService,
     private alertify: AlertifyService
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Cargo[]> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Perfil[]> {
 
-    return this.listaService.ObtenerCargos().pipe(
+    return this.listaService.ObtenerListaPerfiles().pipe(
       catchError((error) => {
         this.alertify.error('Ocurrió un problema al cargar la información');
         return of(null);

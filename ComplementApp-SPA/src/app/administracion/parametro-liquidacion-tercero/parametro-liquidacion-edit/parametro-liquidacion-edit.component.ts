@@ -134,7 +134,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     private terceroService: TerceroService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private usuarioService: UsuarioService,
     private route: ActivatedRoute
   ) {}
 
@@ -386,18 +385,22 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       riesgoLaboralC = +this.listaParametrosGeneral[3].valor;
       tarifaIvaC = +this.listaParametrosGeneral[4].valor;
       dependientesC = +this.listaParametrosGeneral[5].valor;
-    }
 
-    this.editForm.patchValue({
-      tarifaIvaCtrl: GeneralService.obtenerFormatoLongMoney(tarifaIvaC),
-      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
-        baseAporteSaludC
-      ),
-      aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
-      aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(aportePensionC),
-      riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
-      dependienteCtrl: GeneralService.obtenerFormatoLongMoney(dependientesC),
-    });
+      this.editForm.patchValue({
+        tarifaIvaCtrl: GeneralService.obtenerFormatoLongMoney(tarifaIvaC),
+        baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
+          baseAporteSaludC
+        ),
+        aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
+        aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(
+          aportePensionC
+        ),
+        riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(
+          riesgoLaboralC
+        ),
+        dependienteCtrl: GeneralService.obtenerFormatoLongMoney(dependientesC),
+      });
+    }
   }
 
   createFullForm() {
@@ -900,6 +903,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       if (this.listaTerceroDeducciones.length === 0) {
         this.alertify.error('Debe ingresar al menos una deducción');
         return;
+      } else {
+        if (!this.ValidarTerceroDeDeduccion()) {
+          this.alertify.error(
+            'Debe vincularse un tercero a las posiciones de deducción seleccionadas'
+          );
+          return;
+        }
       }
     }
 
@@ -1211,6 +1221,19 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     }
   }
 
+  ValidarTerceroDeDeduccion(): boolean {
+    let resultado = true;
+    for (const x of this.listaTerceroDeducciones) {
+      if (x.terceroDeDeduccion === null || x.terceroDeDeduccion.id === 0) {
+        resultado = false;
+
+        if (!resultado) {
+          break;
+        }
+      }
+    }
+    return resultado;
+  }
   onCancelar() {
     this.parametroLiquidacionSeleccionado = null;
     this.esCancelado.emit(true);

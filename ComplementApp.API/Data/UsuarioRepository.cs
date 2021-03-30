@@ -71,12 +71,13 @@ namespace ComplementApp.API.Data
             return false;
         }
 
-        public async Task<ICollection<ValorSeleccion>> ObtenerListaUsuarioXPerfil(int perfilId)
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaUsuarioXPerfil(int perfilId, int pciId)
         {
             List<ValorSeleccion> lista = new List<ValorSeleccion>();
 
             var lista1 = (from u in _context.Usuario
                           join pu in _context.UsuarioPerfil on u.UsuarioId equals pu.UsuarioId
+                          where u.PciId == pciId
                           where pu.PerfilId == perfilId
                           select new ValorSeleccion()
                           {

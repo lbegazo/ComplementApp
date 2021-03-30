@@ -18,9 +18,9 @@ namespace ComplementApp.API.Models
 
         [Required]
         public bool MarcaAusteridad { get; set; }
-
-        public int? RubroPresupuestalId { get; set; }
-    
+        public int? RubroPresupuestalId { get; set; }    
         public RubroPresupuestal RubroPresupuestal { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

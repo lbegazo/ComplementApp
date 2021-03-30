@@ -121,6 +121,7 @@ import { SpecialCharacterDirective } from './_directives/special-character.direc
 import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
 import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-edit.component';
 import { ListaPciResolver } from './_resolvers/lista-Pci.resolver';
+import { ListaPerfilesResolver } from './_resolvers/lista-perfiles.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -257,6 +258,7 @@ export function tokenGetter() {
     ListaTipoDocumentoIdentidadResolver,
     ListaTipoContratoResolver,
     ListaPciResolver,
+    ListaPerfilesResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

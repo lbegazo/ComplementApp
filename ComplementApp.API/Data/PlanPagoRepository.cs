@@ -32,6 +32,9 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where c.PciId == pl.PciId
+                         where c.PciId == userParams.PciId
+                         where pl.PciId == userParams.PciId
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          select new PlanPago()
@@ -64,7 +67,7 @@ namespace ComplementApp.API.Data
             return await PagedList<PlanPago>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<ICollection<PlanPagoDto>> ObtenerListaPlanPagoTotal()
+        public async Task<ICollection<PlanPagoDto>> ObtenerListaPlanPagoTotal(int pciId)
         {
             var lista = (from pp in _context.PlanPago
                          join c in _context.CDP on pp.Crp equals c.Crp
@@ -72,6 +75,7 @@ namespace ComplementApp.API.Data
                          where pp.Cdp == c.Cdp
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where pp.EstadoPlanPagoId == (int)EstadoPlanPago.PorPagar
+                         where pp.PciId == pciId
                          select new PlanPagoDto()
                          {
                              Cdp = pp.Cdp,
@@ -97,6 +101,7 @@ namespace ComplementApp.API.Data
                           join t in _context.Tercero on c.TerceroId equals t.TerceroId
                           join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                           from pl in parametroLiquidacion.DefaultIfEmpty()
+                          where c.PciId == pl.PciId
                           where (listaPlanPagoId.Contains(c.PlanPagoId))
                           select new PlanPago()
                           {
@@ -127,15 +132,20 @@ namespace ComplementApp.API.Data
                         .ToListAsync();
         }
 
-        public async Task<PagedList<PlanPago>> ObtenerListaPlanPagoXCompromiso(long crp, List<int> listaEstadoId, UserParams userParams)
+        public async Task<PagedList<PlanPago>> ObtenerListaPlanPagoXCompromiso(long crp,
+                                                                                List<int> listaEstadoId,
+                                                                                UserParams userParams)
         {
             var lista = (from c in _context.PlanPago
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
-                         where (c.Crp == crp)
-                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         where c.PciId == pl.PciId
+                         where c.Crp == crp
+                         where c.PciId == userParams.PciId
+                         where pl.PciId == userParams.PciId
+                         where listaEstadoId.Contains(c.EstadoPlanPagoId.Value)
                          select new PlanPago()
                          {
                              PlanPagoId = c.PlanPagoId,
@@ -189,6 +199,13 @@ namespace ComplementApp.API.Data
                           from contra in Contrato.DefaultIfEmpty()
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
+
+                          where pp.PciId == c.PciId
+                          where pp.PciId == sol.PciId
+                          where pp.PciId == pt.PciId
+                          where pp.PciId == us.PciId
+                          where pp.PciId == contra.PciId
+                          where contra.PciId == super.PciId
 
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
@@ -250,6 +267,12 @@ namespace ComplementApp.API.Data
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
 
+                          where pp.PciId == c.PciId
+                          where pp.PciId == pt.PciId
+                          where pp.PciId == us.PciId
+                          where pp.PciId == contra.PciId
+                          where pp.PciId == contra.PciId
+                          where contra.PciId == super.PciId
 
                           where pp.PlanPagoId == planPagoId
                           where c.Instancia == (int)TipoDocumento.Compromiso
@@ -306,6 +329,13 @@ namespace ComplementApp.API.Data
                           from contra in Contrato.DefaultIfEmpty()
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
+
+                          where pp.PciId == c.PciId
+                          where pp.PciId == sp.PciId
+                          where pp.PciId == pt.PciId
+                          where pp.PciId == us.PciId
+                          where pp.PciId == contra.PciId
+                          where contra.PciId == super.PciId
 
                           where listaPlanPagoId.Contains(pp.PlanPagoId)
                           where c.Instancia == (int)TipoDocumento.Compromiso
@@ -378,16 +408,20 @@ namespace ComplementApp.API.Data
             return planPago;
         }
 
-        public int ObtenerCantidadMaximaPlanPago(long crp)
+        public int ObtenerCantidadMaximaPlanPago(long crp, int pciId)
         {
-            var cantidad = _context.PlanPago.Where(pp => pp.Crp == crp).Max(x => x.NumeroPago);
+            var cantidad = (from pp in _context.PlanPago
+                            where pp.Crp == crp
+                            where pp.PciId == pciId
+                            select pp).Max(x => x.NumeroPago);
             return cantidad;
         }
 
-        public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos)
+        public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaCantidadMaximaPlanPago(List<long> compromisos, int pciId)
         {
             var query = await (from t in _context.PlanPago
                                where compromisos.Contains(t.Crp)
+                               where t.PciId == pciId
                                group t by new { t.Crp }
                          into grp
                                select new DetallePlanPagoDto()
@@ -411,7 +445,7 @@ namespace ComplementApp.API.Data
             _context.PlanPago.Update(plan);
         }
 
-        public async Task<ICollection<RadicadoDto>> ObtenerListaRadicado(int mes, int? terceroId, List<int> listaEstadoId)
+        public async Task<ICollection<RadicadoDto>> ObtenerListaRadicado(int pciId, int mes, int? terceroId, List<int> listaEstadoId)
         {
             int anio = _generalInterface.ObtenerFechaHoraActual().Year;
             var lista = (from c in _context.PlanPago
@@ -419,6 +453,8 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join d in _context.DetalleLiquidacion on c.PlanPagoId equals d.PlanPagoId into liquidacion
                          from li in liquidacion.DefaultIfEmpty()
+                         where c.PciId == li.PciId
+                         where c.PciId == pciId
                          where (c.FechaRadicadoSupervisor.Value.Month == mes)
                          where (c.FechaRadicadoSupervisor.Value.Year == anio)
                          where (c.TerceroId == terceroId || terceroId == null)
@@ -446,13 +482,15 @@ namespace ComplementApp.API.Data
 
             return await lista.ToListAsync();
         }
-        public async Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams)
+        public async Task<PagedList<RadicadoDto>> ObtenerListaRadicadoPaginado(int pciId, int mes, int? terceroId, List<int> listaEstadoId, UserParams userParams)
         {
             var lista = (from c in _context.PlanPago
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join d in _context.DetalleLiquidacion on c.PlanPagoId equals d.PlanPagoId into liquidacion
                          from li in liquidacion.DefaultIfEmpty()
+                         where c.PciId == li.PciId
+                         where c.PciId == pciId
                          where (c.FechaRadicadoSupervisor.Value.Month == mes)
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
@@ -485,12 +523,14 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDPDto>> ObtenerCompromisosSinPlanPago(int? terceroId, int? numeroCrp, UserParams userParams)
         {
-            var listaCompromisos = _context.PlanPago.Select(x => x.Crp).ToHashSet();
-            var notFoundItems = _context.CDP.Where(item => !listaCompromisos.Contains(item.Crp)).Select(x => x.Crp).ToHashSet();
+            var listaCompromisos = (from pp in _context.PlanPago
+                                    where pp.PciId == userParams.PciId
+                                    select pp.Crp).ToHashSet();
 
             var lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where notFoundItems.Contains(c.Crp)
+                         where !listaCompromisos.Contains(c.Crp)
+                         where c.PciId == userParams.PciId
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.Crp == numeroCrp || numeroCrp == null
@@ -531,7 +571,11 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDPDto>> ObtenerCompromisosConPlanPago(int? terceroId, int? numeroCrp, UserParams userParams)
         {
-            var listaCompromisos = _context.PlanPago.Select(x => x.Crp).ToHashSet();
+            //var listaCompromisos = _context.PlanPago.Select(x => x.Crp).ToHashSet();
+            var listaCompromisos = (from pp in _context.PlanPago
+                                    where pp.PciId == userParams.PciId
+                                    select pp.Crp).ToHashSet();
+
 
             var lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
@@ -540,6 +584,7 @@ namespace ComplementApp.API.Data
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.Crp == numeroCrp || numeroCrp == null
                          where c.TerceroId == terceroId || terceroId == null
+                         where c.PciId == userParams.PciId
                          select new CDPDto()
                          {
                              Crp = c.Crp,
@@ -583,22 +628,22 @@ namespace ComplementApp.API.Data
             return await PagedList<CDPDto>.CreateAsync(lista1, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<ICollection<LineaPlanPagoDto>> ObtenerLineasPlanPagoXCompromiso(int numeroCrp)
+        public async Task<ICollection<LineaPlanPagoDto>> ObtenerLineasPlanPagoXCompromiso(int numeroCrp, int pciId)
         {
 
             var lista = await (from pp in _context.PlanPago
                                join c in _context.CDP on pp.Crp equals c.Crp
                                where pp.TerceroId == c.TerceroId
+                               where pp.PciId == pciId
+                               where pp.Crp == numeroCrp
                                where c.Instancia == (int)TipoDocumento.Compromiso
-                               where c.SaldoActual > 0 //Saldo Disponible
-                               where c.Crp == numeroCrp
+                               where c.SaldoActual > 0 //Saldo Disponible                                                             
                                select new LineaPlanPagoDto()
                                {
                                    PlanPagoId = pp.PlanPagoId,
                                    MesId = pp.MesPago,
                                    Valor = pp.ValorInicial,
                                    Viaticos = pp.Viaticos,
-
                                })
                          .Distinct()
                          .ToListAsync();

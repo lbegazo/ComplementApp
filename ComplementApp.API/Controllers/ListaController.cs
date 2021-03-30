@@ -14,6 +14,8 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class ListaController : ControllerBase
     {
+        
+
         private readonly IListaRepository _repo;
 
         public ListaController(IListaRepository repo)

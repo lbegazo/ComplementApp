@@ -123,15 +123,18 @@ namespace ComplementApp.API.Data
 
             if (tipo == (int)TipoOperacionTransaccion.Creacion)
             {
-                var terceroConParametrizacionIds = _context.ParametroLiquidacionTercero.Select(x => x.TerceroId).ToHashSet();
+                var terceroConParametrizacionIds = (from plt in _context.ParametroLiquidacionTercero
+                                                    where plt.PciId == userParams.PciId
+                                                    select plt.TerceroId).ToHashSet();
 
                 lista = (from t in _context.Tercero
                          join c in _context.CDP on t.TerceroId equals c.TerceroId
                          join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
                          where !terceroConParametrizacionIds.Contains(t.TerceroId)
+                         where c.PciId == userParams.PciId
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
-                         where c.TerceroId == terceroId || terceroId == null
+                         where c.TerceroId == terceroId || terceroId == null                         
                          select new TerceroDto()
                          {
                              TerceroId = t.TerceroId,
@@ -145,10 +148,11 @@ namespace ComplementApp.API.Data
             }
             else
             {
-                lista = (from t in _context.Tercero
-                         join tpl in _context.ParametroLiquidacionTercero on t.TerceroId equals tpl.TerceroId
+                lista = (from tpl in _context.ParametroLiquidacionTercero
+                         join t in _context.Tercero on tpl.TerceroId equals t.TerceroId
                          join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
                          where t.TerceroId == terceroId || terceroId == null
+                         where tpl.PciId == userParams.PciId
                          select new TerceroDto()
                          {
                              TerceroId = t.TerceroId,
@@ -165,60 +169,61 @@ namespace ComplementApp.API.Data
 
         }
 
-        public async Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId)
+        public async Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId, int pciId)
         {
-            var lista = await (from plt in _context.ParametroLiquidacionTercero
-                               join t in _context.Tercero on plt.TerceroId equals t.TerceroId
-                               join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
-                               where plt.TerceroId == terceroId
-                               select new ParametroLiquidacionTerceroDto()
-                               {
-                                   ParametroLiquidacionTerceroId = plt.ParametroLiquidacionTerceroId,
+            var item = await (from plt in _context.ParametroLiquidacionTercero
+                              join t in _context.Tercero on plt.TerceroId equals t.TerceroId
+                              join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
+                              where plt.TerceroId == terceroId
+                              where plt.PciId == pciId
+                              select new ParametroLiquidacionTerceroDto()
+                              {
+                                  ParametroLiquidacionTerceroId = plt.ParametroLiquidacionTerceroId,
 
-                                   TerceroId = t.TerceroId,
-                                   TipoDocumentoIdentidadId = t.TipoIdentificacion,
-                                   TipoDocumentoIdentidad = ti.Nombre,
-                                   IdentificacionTercero = t.NumeroIdentificacion,
-                                   NombreTercero = t.Nombre,
+                                  TerceroId = t.TerceroId,
+                                  TipoDocumentoIdentidadId = t.TipoIdentificacion,
+                                  TipoDocumentoIdentidad = ti.Nombre,
+                                  IdentificacionTercero = t.NumeroIdentificacion,
+                                  NombreTercero = t.Nombre,
 
-                                   ModalidadContrato = plt.ModalidadContrato,
-                                   TipoPago = plt.TipoPago,
-                                   HonorarioSinIva = plt.HonorarioSinIva,
-                                   TarifaIva = plt.TarifaIva,
-                                   TipoIva = plt.TipoIva,
-                                   TipoCuentaXPagarId = plt.TipoCuentaXPagarId,
-                                   TipoDocumentoSoporteId = plt.TipoDocumentoSoporteId,
+                                  ModalidadContrato = plt.ModalidadContrato,
+                                  TipoPago = plt.TipoPago,
+                                  HonorarioSinIva = plt.HonorarioSinIva,
+                                  TarifaIva = plt.TarifaIva,
+                                  TipoIva = plt.TipoIva,
+                                  TipoCuentaXPagarId = plt.TipoCuentaXPagarId,
+                                  TipoDocumentoSoporteId = plt.TipoDocumentoSoporteId,
 
-                                   BaseAporteSalud = plt.BaseAporteSalud,
-                                   AporteSalud = plt.AporteSalud,
-                                   AportePension = plt.AportePension,
-                                   RiesgoLaboral = plt.RiesgoLaboral,
-                                   FondoSolidaridad = plt.FondoSolidaridad,
+                                  BaseAporteSalud = plt.BaseAporteSalud,
+                                  AporteSalud = plt.AporteSalud,
+                                  AportePension = plt.AportePension,
+                                  RiesgoLaboral = plt.RiesgoLaboral,
+                                  FondoSolidaridad = plt.FondoSolidaridad,
 
-                                   PensionVoluntaria = plt.PensionVoluntaria,
-                                   Dependiente = plt.Dependiente,
-                                   Afc = plt.Afc,
-                                   MedicinaPrepagada = plt.MedicinaPrepagada,
-                                   InteresVivienda = plt.InteresVivienda,
-                                   FechaInicioDescuentoInteresVivienda = plt.FechaInicioDescuentoInteresVivienda,
-                                   FechaFinalDescuentoInteresVivienda = plt.FechaFinalDescuentoInteresVivienda,
+                                  PensionVoluntaria = plt.PensionVoluntaria,
+                                  Dependiente = plt.Dependiente,
+                                  Afc = plt.Afc,
+                                  MedicinaPrepagada = plt.MedicinaPrepagada,
+                                  InteresVivienda = plt.InteresVivienda,
+                                  FechaInicioDescuentoInteresVivienda = plt.FechaInicioDescuentoInteresVivienda,
+                                  FechaFinalDescuentoInteresVivienda = plt.FechaFinalDescuentoInteresVivienda,
 
-                                   FacturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
-                                   SubcontrataId = plt.Subcontrata ? 1 : 0,
-                                   OtrosDescuentos = plt.OtrosDescuentos,
-                                   FechaInicioOtrosDescuentos = plt.FechaInicioOtrosDescuentos,
-                                   FechaFinalOtrosDescuentos = plt.FechaFinalOtrosDescuentos,
+                                  FacturaElectronicaId = plt.FacturaElectronica ? 1 : 0,
+                                  SubcontrataId = plt.Subcontrata ? 1 : 0,
+                                  OtrosDescuentos = plt.OtrosDescuentos,
+                                  FechaInicioOtrosDescuentos = plt.FechaInicioOtrosDescuentos,
+                                  FechaFinalOtrosDescuentos = plt.FechaFinalOtrosDescuentos,
 
-                                   TipoAdminPilaId = plt.TipoAdminPilaId,
-                                   NotaLegal1 = plt.NotaLegal1,
-                                   NotaLegal2 = plt.NotaLegal2,
-                                   NotaLegal3 = plt.NotaLegal3,
-                                   NotaLegal4 = plt.NotaLegal4,
-                                   NotaLegal5 = plt.NotaLegal5,
-                                   NotaLegal6 = plt.NotaLegal6,
-                               }).FirstOrDefaultAsync();
+                                  TipoAdminPilaId = plt.TipoAdminPilaId,
+                                  NotaLegal1 = plt.NotaLegal1,
+                                  NotaLegal2 = plt.NotaLegal2,
+                                  NotaLegal3 = plt.NotaLegal3,
+                                  NotaLegal4 = plt.NotaLegal4,
+                                  NotaLegal5 = plt.NotaLegal5,
+                                  NotaLegal6 = plt.NotaLegal6,
+                              }).FirstOrDefaultAsync();
 
-            return lista;
+            return item;
         }
 
         public async Task<ParametroLiquidacionTercero> ObtenerParametrizacionLiquidacionTerceroBase(int parametroLiquidacionTerceroId)
@@ -227,8 +232,9 @@ namespace ComplementApp.API.Data
                         .FirstOrDefaultAsync(u => u.ParametroLiquidacionTerceroId == parametroLiquidacionTerceroId);
         }
 
-        public async Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int terceroId)
+        public async Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int parametroLiquidacionId)
         {
+
             var lista = await (from td in _context.TerceroDeducciones
                                join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId into ActividadEconomica
                                from acteco in ActividadEconomica.DefaultIfEmpty()
@@ -238,7 +244,7 @@ namespace ComplementApp.API.Data
                                from ter1 in TerceroDeducciones1.DefaultIfEmpty()
                                join td2 in _context.Tercero on td.TerceroDeDeduccionId equals td2.TerceroId into TerceroDeducciones2
                                from ter2 in TerceroDeducciones2.DefaultIfEmpty()
-                               where (td.TerceroId == terceroId)
+                               where (td.ParametroLiquidacionTerceroId == parametroLiquidacionId)
                                select new TerceroDeduccionDto()
                                {
                                    TerceroDeduccionId = td.TerceroDeduccionId,
@@ -294,18 +300,29 @@ namespace ComplementApp.API.Data
 
         }
 
-        public async Task<bool> EliminarTerceroDeduccionesXTercero(int terceroId)
+        public async Task<bool> EliminarTerceroDeduccionesXTercero(int terceroId, int pciId)
         {
-            var listaExistente = await _context.TerceroDeducciones.Where(x => x.TerceroId == terceroId).ToListAsync();
+            var id = await (from plt in _context.ParametroLiquidacionTercero
+                            where plt.PciId == pciId
+                            where plt.TerceroId == terceroId
+                            select plt.ParametroLiquidacionTerceroId).FirstOrDefaultAsync();
+
+            var listaExistente = await _context.TerceroDeducciones
+                                      .Where(x => x.ParametroLiquidacionTerceroId == id).ToListAsync();
             _context.TerceroDeducciones.RemoveRange(listaExistente);
             return true;
         }
 
-        public async Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId)
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId, int pciId)
         {
+            var id = await (from plt in _context.ParametroLiquidacionTercero
+                            where plt.PciId == pciId
+                            where plt.TerceroId == terceroId
+                            select plt.ParametroLiquidacionTerceroId).FirstOrDefaultAsync();
+
             var lista = await (from ae in _context.ActividadEconomica
                                join td in _context.TerceroDeducciones on ae.ActividadEconomicaId equals td.ActividadEconomicaId
-                               where td.TerceroId == terceroId
+                               where td.ParametroLiquidacionTerceroId == id
                                select new ValorSeleccion()
                                {
                                    Id = ae.ActividadEconomicaId,
@@ -314,7 +331,6 @@ namespace ComplementApp.API.Data
                                })
                                 .Distinct()
                                 .ToListAsync();
-
             return lista;
         }
 
@@ -353,24 +369,33 @@ namespace ComplementApp.API.Data
             return terceros;
         }
 
-        public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId)
+        public async Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId, int pciId)
         {
-            return await _context.ParametroLiquidacionTercero
-                        .Where(x => x.TerceroId == terceroId).FirstOrDefaultAsync();
+            return await (from plt in _context.ParametroLiquidacionTercero
+                          where plt.PciId == pciId
+                          where plt.TerceroId == terceroId
+                          select plt)
+                         .FirstOrDefaultAsync();
         }
 
-        public async Task<ICollection<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> listaTerceroId)
+        public async Task<ICollection<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> listaTerceroId, int pciId)
         {
             return await (from p in _context.ParametroLiquidacionTercero
+                          where p.PciId == pciId
                           where listaTerceroId.Contains(p.TerceroId)
                           select p).ToListAsync();
         }
 
-        public async Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId)
+        public async Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int pciId, int? actividadEconomicaId)
         {
+            var parametroLiquidacionId = await (from plt in _context.ParametroLiquidacionTercero
+                                                where plt.TerceroId == terceroId
+                                                where plt.PciId == pciId
+                                                select plt.ParametroLiquidacionTerceroId).FirstOrDefaultAsync();
+
             var query = (from d in _context.Deduccion
                          join td in _context.TerceroDeducciones on d.DeduccionId equals td.DeduccionId
-                         where (td.TerceroId == terceroId)
+                         where (td.ParametroLiquidacionTerceroId == parametroLiquidacionId)
                          where (td.ActividadEconomicaId == actividadEconomicaId || actividadEconomicaId == null)
                          where (d.estado == true)
                          select d);
@@ -378,11 +403,16 @@ namespace ComplementApp.API.Data
             return await query.ToListAsync();
         }
 
-        public async Task<ICollection<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> listaTerceroId)
+        public async Task<ICollection<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> listaTerceroId, int pciId)
         {
+            var listaParametroId = await (from plt in _context.ParametroLiquidacionTercero
+                                          where listaTerceroId.Contains(plt.TerceroId)
+                                          where plt.PciId == pciId
+                                          select plt.ParametroLiquidacionTerceroId).ToListAsync();
+
             return await (from td in _context.TerceroDeducciones
                           join d in _context.Deduccion on td.DeduccionId equals d.DeduccionId
-                          where listaTerceroId.Contains(td.TerceroId)
+                          where listaParametroId.Contains(td.ParametroLiquidacionTerceroId.Value)
                           where (d.estado == true)
                           select new TerceroDeduccion()
                           {
@@ -393,7 +423,7 @@ namespace ComplementApp.API.Data
         }
 
 
-        public async Task<ICollection<ParametroLiquidacionTerceroDto>> ObtenerListaParametroLiquidacionTerceroTotal()
+        public async Task<ICollection<ParametroLiquidacionTerceroDto>> ObtenerListaParametroLiquidacionTerceroTotal(int pciId)
         {
             var listaInicial = await (from pl in _context.ParametroLiquidacionTercero
                                       join t in _context.Tercero on pl.TerceroId equals t.TerceroId
@@ -403,6 +433,7 @@ namespace ComplementApp.API.Data
                                       from tipoDocu in DocumentoSoporte.DefaultIfEmpty()
                                       join tc in _context.TipoCuentaXPagar on pl.TipoCuentaXPagarId equals tc.TipoCuentaXPagarId into CuentaPorPagar
                                       from tiCu in CuentaPorPagar.DefaultIfEmpty()
+                                      where pl.PciId == pciId
                                       select new ParametroLiquidacionTerceroDto()
                                       {
                                           IdentificacionTercero = t.NumeroIdentificacion,
@@ -437,12 +468,17 @@ namespace ComplementApp.API.Data
             return listaInicial;
         }
 
-        public async Task<ICollection<TerceroDeduccionDto>> ObtenerListaTerceroDeduccionTotal()
+        public async Task<ICollection<TerceroDeduccionDto>> ObtenerListaTerceroDeduccionTotal(int pciId)
         {
+            var listaParametroId = await (from plt in _context.ParametroLiquidacionTercero
+                                          where plt.PciId == pciId
+                                          select plt.ParametroLiquidacionTerceroId).ToListAsync();
+
             var lista = (from td in _context.TerceroDeducciones
                          join t in _context.Tercero on td.TerceroId equals t.TerceroId
                          join d in _context.Deduccion on td.DeduccionId equals d.DeduccionId
                          join ae in _context.ActividadEconomica on td.ActividadEconomicaId equals ae.ActividadEconomicaId
+                         where listaParametroId.Contains(td.ParametroLiquidacionTerceroId.Value)
                          select new TerceroDeduccionDto()
                          {
                              Tercero = new ValorSeleccion()

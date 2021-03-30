@@ -14,7 +14,6 @@ import { ListaService } from '../_services/lista.service';
 export class ListaAreasResolver implements Resolve<Area[]> {
   constructor(
     private listaService: ListaService,
-    private router: Router,
     private alertify: AlertifyService
   ) {}
 

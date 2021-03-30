@@ -12,5 +12,6 @@ namespace ComplementApp.API.Helpers
             set { pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
         }
 
+        public int PciId { get; set; } = 0;
     }
 }

@@ -35,7 +35,7 @@ namespace ComplementApp.API.Services
             this._terceroRepository = terceroRepository;
             this._generalInterface = generalInterface;
         }
-        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId,
+        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId, int pciId,
                                                                                         decimal valorBaseCotizacion,
                                                                                         int? actividadEconomicaId)
         {
@@ -47,7 +47,7 @@ namespace ComplementApp.API.Services
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
                 var parametros = parametroGenerales.ToList();
 
-                ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId);
+                ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId, pciId);
 
                 if (parametroGenerales != null && parametroLiquidacion != null)
                 {

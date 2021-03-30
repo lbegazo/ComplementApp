@@ -25,8 +25,9 @@ namespace ComplementApp.API.Controllers
     public class PlanPagoController : ControllerBase
     {
         #region Variable
-
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
 
         #endregion 
 
@@ -65,6 +66,13 @@ namespace ComplementApp.API.Controllers
                                                               [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                               [FromQuery] UserParams userParams)
         {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
 
             var pagedList = await _repo.ObtenerListaPlanPago(terceroId, listIds, userParams);
@@ -82,6 +90,12 @@ namespace ComplementApp.API.Controllers
                                                                 [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                                 [FromQuery] UserParams userParams)
         {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
 
             var pagedList = await _repo.ObtenerListaPlanPagoXCompromiso(crp, listIds, userParams);
@@ -116,10 +130,15 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> ObtenerDetallePlanPago([FromQuery(Name = "planPagoId")] int planPagoId)
         {
             var planPagoBD = await _repo.ObtenerDetallePlanPago(planPagoId);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
 
             if (planPagoBD != null)
             {
-                var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp);
+                var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp, pciId);
                 planPagoBD.CantidadPago = cantidad;
             }
             return base.Ok(planPagoBD);
@@ -133,7 +152,12 @@ namespace ComplementApp.API.Controllers
 
             if (planPagoBD != null)
             {
-                var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp, pciId);
                 planPagoBD.CantidadPago = cantidad;
             }
             return base.Ok(planPagoBD);
@@ -189,8 +213,13 @@ namespace ComplementApp.API.Controllers
         {
             int i = (userParams.PageNumber - 1) * userParams.PageSize + 1;
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
 
-            var pagedList = await _repo.ObtenerListaRadicadoPaginado(mes, terceroId, listIds, userParams);
+            var pagedList = await _repo.ObtenerListaRadicadoPaginado(pciId, mes, terceroId, listIds, userParams);
             var listaDto = _mapper.Map<IEnumerable<RadicadoDto>>(pagedList);
 
             foreach (var item in listaDto)
@@ -216,8 +245,14 @@ namespace ComplementApp.API.Controllers
             int? terceroIdTemp = null;
             string mesDescripcion = string.Empty;
             string nombreArchivo = "Radicados.xlsx";
+
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
                 if (mes > 0 && mes < 13)
                 {
                     mesDescripcion = _generalInterface.UppercaseFirst(DateTimeFormatInfo.CurrentInfo.GetMonthName(mes));
@@ -233,7 +268,7 @@ namespace ComplementApp.API.Controllers
                     listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
                 }
 
-                var lista = await _repo.ObtenerListaRadicado(mes, terceroIdTemp, listIds);
+                var lista = await _repo.ObtenerListaRadicado(pciId, mes, terceroIdTemp, listIds);
                 if (lista != null)
                 {
                     DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaRadicado(lista.ToList());
@@ -254,7 +289,12 @@ namespace ComplementApp.API.Controllers
             string nombreArchivo = "ListaPlanPago.xlsx";
             try
             {
-                var lista = await _repo.ObtenerListaPlanPagoTotal();
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                var lista = await _repo.ObtenerListaPlanPagoTotal(pciId);
                 if (lista != null)
                 {
                     DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaPlanPago(lista.ToList());
@@ -275,6 +315,11 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> RegistrarFormaPagoCompromiso([FromQuery(Name = "tipo")] int tipo, FormaPagoCompromisoDto forma)
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             if (forma != null)
@@ -307,9 +352,16 @@ namespace ComplementApp.API.Controllers
                                                                         [FromQuery(Name = "numeroCrp")] int? numeroCrp,
                                                                         [FromQuery] UserParams userParams)
         {
+
             try
             {
                 PagedList<CDPDto> pagedList = null;
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
 
                 if (tipo == 1)
                 {
@@ -340,7 +392,12 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
-                var lista = await _repo.ObtenerLineasPlanPagoXCompromiso(crp);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                var lista = await _repo.ObtenerLineasPlanPagoXCompromiso(crp, pciId);
                 return Ok(lista);
             }
             catch (Exception)
@@ -355,6 +412,11 @@ namespace ComplementApp.API.Controllers
         #endregion Forma Pago Compromiso
         private async Task RegistrarListaPlanPago(CDPDto cdp, List<LineaPlanPagoDto> lista)
         {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
             List<PlanPago> listaPlanPago = new List<PlanPago>();
             PlanPago planPago = null;
             int numeroPagos = 1;
@@ -366,7 +428,7 @@ namespace ComplementApp.API.Controllers
                 foreach (var item in lista)
                 {
                     planPago = MapearPlanPago(cdp, fechaActual.Year, item.MesId, item.Valor, numeroPagos, item.Viaticos);
-
+                    planPago.PciId = pciId;
                     listaPlanPago.Add(planPago);
                     mesAnterior = item.MesId;
                     numeroPagos++;
@@ -379,6 +441,11 @@ namespace ComplementApp.API.Controllers
 
         private async Task ActualizarListaPlanPago(CDPDto cdp, List<LineaPlanPagoDto> listaTotal)
         {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
             int numeroPagos = 1;
             List<PlanPago> listaPlanPago = new List<PlanPago>();
             PlanPago planPago = null;
@@ -393,7 +460,7 @@ namespace ComplementApp.API.Controllers
 
             if (listaNueva != null && listaNueva.Count > 0)
             {
-                var listaActualXCompromiso = await _repo.ObtenerLineasPlanPagoXCompromiso((int)cdp.Crp);
+                var listaActualXCompromiso = await _repo.ObtenerLineasPlanPagoXCompromiso((int)cdp.Crp, pciId);
 
                 foreach (var item in listaNueva)
                 {
@@ -467,6 +534,7 @@ namespace ComplementApp.API.Controllers
             planPago.Viaticos = viaticos;
             planPago.TerceroId = cdp.TerceroId;
             planPago.NumeroPago = numeroPago;
+            planPago.PciId = pciId;
 
             planPago.UsuarioIdRegistro = usuarioId;
             planPago.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();

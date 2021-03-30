@@ -60,6 +60,7 @@ namespace ComplementApp.API.Models
 
          [Column(TypeName = "VARCHAR(250)")]
         public string MotivoRechazo { get; set; }
-
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

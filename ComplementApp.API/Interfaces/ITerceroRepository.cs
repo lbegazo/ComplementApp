@@ -14,18 +14,18 @@ namespace ComplementApp.API.Interfaces
         Task<bool> ValidarExistenciaTercero(int TipoIdentificacion, string numeroIdentificacion);
         Task<ICollection<TerceroDto>> ObtenerListaTercero();
         Task<PagedList<TerceroDto>> ObtenerTercerosParaParametrizacionLiquidacion(int tipo, int? terceroId, UserParams userParams);
-        Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId);
+        Task<ParametroLiquidacionTerceroDto> ObtenerParametrizacionLiquidacionXTercero(int terceroId, int pciId);
         Task<ParametroLiquidacionTercero> ObtenerParametrizacionLiquidacionTerceroBase(int parametroLiquidacionTerceroId);
-        Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int terceroId);
+        Task<ICollection<TerceroDeduccionDto>> ObtenerDeduccionesXTercero(int parametroLiquidacionId);
         Task<PagedList<DeduccionDto>> ObteneListaDeducciones(UserParams userParams);
-        Task<bool> EliminarTerceroDeduccionesXTercero(int terceroId);
-        Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId);
+        Task<bool> EliminarTerceroDeduccionesXTercero(int terceroId, int pciId);
+        Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId, int pciId);
         List<int> ObtenerTercerosConMasDeUnaActividadEconomica();
-        Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId);
-        Task<ICollection<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> listaTerceroId);
-        Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId, int? actividadEconomicaId);
-        Task<ICollection<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> listaTerceroId);
-        Task<ICollection<ParametroLiquidacionTerceroDto>> ObtenerListaParametroLiquidacionTerceroTotal();
-        Task<ICollection<TerceroDeduccionDto>> ObtenerListaTerceroDeduccionTotal();
+        Task<ParametroLiquidacionTercero> ObtenerParametroLiquidacionXTercero(int terceroId, int pciId);
+        Task<ICollection<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> listaTerceroId, int pciId);
+        Task<ICollection<Deduccion>> ObtenerDeduccionesXTercero(int terceroId,  int pciId, int? actividadEconomicaId);
+        Task<ICollection<TerceroDeduccion>> ObtenerListaDeduccionesXTerceroIds(List<int> listaTerceroId, int pciId);
+        Task<ICollection<ParametroLiquidacionTerceroDto>> ObtenerListaParametroLiquidacionTerceroTotal(int pciId);
+        Task<ICollection<TerceroDeduccionDto>> ObtenerListaTerceroDeduccionTotal(int pciId);
     }
 }

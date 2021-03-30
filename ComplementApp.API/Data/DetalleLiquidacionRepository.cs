@@ -11,17 +11,23 @@ using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ComplementApp.API.Data
 {
     public class DetalleLiquidacionRepository : IDetalleLiquidacionRepository
     {
+
+        #region Dependency Injection
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IGeneralInterface _generalInterface;
         private readonly IListaRepository _listaRepository;
 
-        public DetalleLiquidacionRepository(DataContext context, IMapper mapper, IGeneralInterface generalInterface, IListaRepository listaRepository)
+        #endregion Dependency Injection
+
+        public DetalleLiquidacionRepository(DataContext context, IMapper mapper,
+                                            IGeneralInterface generalInterface, IListaRepository listaRepository)
         {
             _mapper = mapper;
             _context = context;
@@ -41,6 +47,7 @@ namespace ComplementApp.API.Data
             var detalleLiquidacion = await (from dl in _context.DetalleLiquidacion
                                             join pp in _context.PlanPago on dl.PlanPagoId equals pp.PlanPagoId
                                             where dl.DetalleLiquidacionId == detalleLiquidacionId
+                                            where dl.PciId == pp.PciId
                                             select new FormatoCausacionyLiquidacionPagos()
                                             {
                                                 //Plan de pago
@@ -151,8 +158,11 @@ namespace ComplementApp.API.Data
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
                          where (dl.Crp == c.Crp)
-                         where (c.TerceroId == terceroId || terceroId == null)
+                         where dl.PciId == c.PciId
+                         where dl.PciId == pl.PciId
+                         where dl.PciId == userParams.PciId
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         where (c.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
                          {
@@ -180,10 +190,11 @@ namespace ComplementApp.API.Data
             return await _context.DetalleLiquidacion.FirstOrDefaultAsync(u => u.DetalleLiquidacionId == detalleLiquidacion);
         }
 
-        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId)
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId, int pciId)
         {
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    where dl.PciId == pciId
                                                     where dl.TerceroId == terceroId
                                                     where dl.FechaOrdenPago.Value.Month == mesAnterior
                                                     where dl.Viaticos == "SI"
@@ -193,13 +204,14 @@ namespace ComplementApp.API.Data
             return detalleLiquidacionAnterior;
         }
 
-        public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId)
+        public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId, int pciId)
         {
             DetalleLiquidacion liquidacion = null;
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
 
             var lista = await (from dl in _context.DetalleLiquidacion
                                where dl.TerceroId == terceroId
+                               where dl.PciId == pciId
                                where dl.FechaRegistro.Value.Month == mesAnterior
                                where dl.Viaticos == "NO"
                                select dl).ToListAsync();
@@ -208,20 +220,19 @@ namespace ComplementApp.API.Data
             {
                 liquidacion = lista.OrderBy(x => x.DetalleLiquidacionId).Last();
             }
-
             return liquidacion;
         }
 
         #region Archivo Cuenta Por Pagar
-        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId)
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerListaDetalleLiquidacionParaArchivo(List<int> listaLiquidacionId, int pciId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
             string identificacionPCI = string.Empty;
-            ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
+            var pci = await _listaRepository.ObtenerPci(pciId);
 
-            if (parametroPCI != null)
+            if (pci != null)
             {
-                identificacionPCI = parametroPCI.Valor;
+                identificacionPCI = pci.Identificacion;
             }
 
             var lista = await (from dl in _context.DetalleLiquidacion
@@ -233,7 +244,9 @@ namespace ComplementApp.API.Data
                                join tds in _context.TipoDocumentoSoporte on pl.TipoDocumentoSoporteId equals
                                                                                   tds.TipoDocumentoSoporteId into DocumentoSoporte
                                from tipoDocu in DocumentoSoporte.DefaultIfEmpty()
+                               where dl.PciId == pl.PciId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               where dl.PciId == pciId
                                where (dl.Procesado == false)
                                select new DetalleLiquidacionParaArchivo()
                                {
@@ -263,7 +276,7 @@ namespace ComplementApp.API.Data
             return listaFinal;
         }
 
-        public async Task<List<int>> ObtenerListaDetalleLiquidacionTotal(int? terceroId, List<int> listaEstadoId, bool? procesado)
+        public async Task<List<int>> ObtenerListaDetalleLiquidacionTotal(int pciId, int? terceroId, List<int> listaEstadoId, bool? procesado)
         {
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
@@ -271,6 +284,9 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where dl.PciId == pciId
+                         where dl.PciId == c.PciId
+                         where dl.PciId == pl.PciId
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          where (dl.Procesado == procesado || procesado == null)
@@ -291,11 +307,14 @@ namespace ComplementApp.API.Data
             return true;
         }
 
-        public int ObtenerUltimoConsecutivoArchivoLiquidacion()
+        public int ObtenerUltimoConsecutivoArchivoLiquidacion(int pciId)
         {
             var fechaActual = _generalInterface.ObtenerFechaHoraActual();
-            var listaArchivo = _context.ArchivoDetalleLiquidacion
-                            .Where(x => x.FechaGeneracion.Date == fechaActual.Date).ToList();
+            var listaArchivo = (from adl in _context.ArchivoDetalleLiquidacion
+                                where adl.FechaGeneracion.Date == fechaActual.Date
+                                where adl.PciId == pciId
+                                select adl)
+                               .ToList();
 
             if (listaArchivo == null || (listaArchivo != null && listaArchivo.Count == 0))
             {
@@ -327,9 +346,12 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where dl.PciId == c.PciId
+                         where dl.PciId == pl.PciId
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                         where (dl.TerceroId == terceroId || terceroId == null)
+                         where dl.PciId == userParams.PciId                         
                          where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
+                         where (dl.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
                          {
@@ -361,10 +383,13 @@ namespace ComplementApp.API.Data
                                join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
+                               where dl.PciId == c.PciId
+                               where dl.PciId == pl.PciId
                                where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                               where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)                               
                                where (dl.TerceroId == terceroId || terceroId == null)
                                where (dl.Procesado == procesado || procesado == null)
-                               where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
+
                                select dl.DetalleLiquidacionId).ToListAsync();
             return lista;
         }
@@ -378,10 +403,13 @@ namespace ComplementApp.API.Data
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
-                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
-                               where (sp.PlanPagoId == dl.PlanPagoId)
-                               where (sp.Crp == cp.Crp)
-                               where (sp.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                               where sp.PciId == dl.PciId
+                               where sp.PciId == cp.PciId
+                               where sp.PciId == up.PciId
+                               where listaLiquidacionId.Contains(dl.DetalleLiquidacionId)
+                               where sp.PlanPagoId == dl.PlanPagoId
+                               where sp.Crp == cp.Crp
+                               where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado                               
                                select dl.DetalleLiquidacionId)
 
                                .Distinct()
@@ -391,15 +419,15 @@ namespace ComplementApp.API.Data
         }
 
 
-        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId)
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
             string identificacionPCI = string.Empty;
-            ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
+            var pci = await _listaRepository.ObtenerPci(pciId);
 
-            if (parametroPCI != null)
+            if (pci != null)
             {
-                identificacionPCI = parametroPCI.Valor;
+                identificacionPCI = pci.Identificacion;
             }
 
 
@@ -411,6 +439,7 @@ namespace ComplementApp.API.Data
                                from tiCu in CuentaPorPagar.DefaultIfEmpty()
                                join td in _context.TipoDocumentoSoporte on pl.TipoDocumentoSoporteId equals td.TipoDocumentoSoporteId into TipoDocumento
                                from tiDo in TipoDocumento.DefaultIfEmpty()
+                               where dl.PciId == pl.PciId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                select new DetalleLiquidacionParaArchivo()
                                {
@@ -454,9 +483,13 @@ namespace ComplementApp.API.Data
                                join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
                                join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into tipoGasto
                                from tga in tipoGasto.DefaultIfEmpty()
+                               where sp.PciId == dl.PciId
+                               where sp.PciId == cp.PciId
+                               where sp.PciId == rc.PciId
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
+                               where sp.PciId == dl.PciId
                                select new ClavePresupuestalContableParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
@@ -515,6 +548,9 @@ namespace ComplementApp.API.Data
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
                                join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
+                               where (sp.PciId == dl.PciId)
+                               where (sp.PciId == cp.PciId)
+                               where (sp.PciId == up.PciId)
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
@@ -556,11 +592,12 @@ namespace ComplementApp.API.Data
             }
         }
 
-        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId)
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId, int pcidId)
         {
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
 
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    where dl.PciId == pcidId
                                                     where listaTerceroId.Contains(dl.TerceroId)
                                                     where dl.FechaOrdenPago.Value.Month == mesAnterior
                                                     where dl.Viaticos == "SI"
@@ -569,12 +606,13 @@ namespace ComplementApp.API.Data
             return detalleLiquidacionAnterior;
         }
 
-        public ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId)
+        public ICollection<DetalleLiquidacion> ObtenerListaDetalleLiquidacionMesAnteriorXTerceroIds(List<int> listaTerceroId, int pciId)
         {
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
             List<DetalleLiquidacion> lista = new List<DetalleLiquidacion>();
 
             var query1 = (from dl in _context.DetalleLiquidacion
+                          where dl.PciId == pciId
                           where listaTerceroId.Contains(dl.TerceroId)
                           where dl.FechaRegistro.Value.Month == mesAnterior
                           where dl.Viaticos == "NO"

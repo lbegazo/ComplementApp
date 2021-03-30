@@ -75,7 +75,7 @@ namespace ComplementApp.API.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.UsuarioId.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username),
-                //new Claim(ClaimTypes.Role, role.ToString()),
+                new Claim(ClaimTypes.Role, userFromRepo.PciId.ToString()),
                 new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos)
             };
 

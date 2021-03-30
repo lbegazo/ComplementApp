@@ -24,17 +24,18 @@ namespace ComplementApp.API.Data
 
         #region Registro de Solicitud de Pago
 
-        public async Task<PagedList<CDPDto>> ObtenerCompromisosParaSolicitudRegistroPago(int usuarioId, int perfilId, int? terceroId, UserParams userParams)
+        public async Task<PagedList<CDPDto>> ObtenerCompromisosParaSolicitudRegistroPago(int usuarioId, int perfilId,
+                                                                                         int? terceroId, UserParams userParams)
         {
             IQueryable<CDPDto> lista = null;
             var usuario = await _context.Usuario.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
-
 
             if (perfilId == (int)PerfilUsuario.Administrador || perfilId == (int)PerfilUsuario.CoordinadorFinanciero)
             {
                 lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.PciId == userParams.PciId
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
@@ -54,8 +55,11 @@ namespace ComplementApp.API.Data
                          join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
                          from pt in ParametroTercero.DefaultIfEmpty()
                          join con in _context.Contrato on c.Crp equals con.ContratoId into Contrato
-                         from contra in Contrato.DefaultIfEmpty()                         
+                         from contra in Contrato.DefaultIfEmpty()
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.PciId == pt.PciId
+                         where c.PciId == contra.PciId
+                         where c.PciId == userParams.PciId
                          where c.SaldoActual > 0 //Saldo Disponible
                          where contra.Supervisor1Id == usuarioId
                          where c.TerceroId == terceroId || terceroId == null
@@ -77,6 +81,7 @@ namespace ComplementApp.API.Data
                 lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.PciId == userParams.PciId
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.TerceroId == terceroId
                          select new CDPDto()
@@ -89,7 +94,6 @@ namespace ComplementApp.API.Data
                         .Distinct()
                         .OrderBy(x => x.Crp);
             }
-
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -111,6 +115,8 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where s.EstadoId == (int)EstadoSolicitudPago.Generado
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.PciId == userParams.PciId
+                         where s.PciId == c.PciId
                          where c.SaldoActual > 0 //Saldo Disponible                     
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
@@ -133,6 +139,8 @@ namespace ComplementApp.API.Data
                          where s.SupervisorId == usuarioId
                          where s.EstadoId == (int)EstadoSolicitudPago.Generado
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.PciId == userParams.PciId
+                         where s.PciId == c.PciId
                          where c.SaldoActual > 0 //Saldo Disponible                     
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
@@ -156,11 +164,12 @@ namespace ComplementApp.API.Data
             return await _context.FormatoSolicitudPago.FirstOrDefaultAsync(u => u.FormatoSolicitudPagoId == formatoSolicitudPagoId);
         }
 
-        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp)
+        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp, int pciId)
         {
             var lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where c.Crp == crp
+                         where c.PciId == pciId
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          select new CDPDto()
                          {
@@ -226,6 +235,8 @@ namespace ComplementApp.API.Data
                                  from cargoSuper2 in Cargo2.DefaultIfEmpty()
                                  join tercSup2 in _context.Tercero on super2.TerceroId equals tercSup2.TerceroId into TerceroSupervisor2
                                  from tercSuper2 in TerceroSupervisor2.DefaultIfEmpty()
+                                 where pt.PciId == pciId
+                                 where co.PciId == pciId
 
                                  select new FormatoSolicitudPagoDto()
                                  {
@@ -301,6 +312,7 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where s.PciId == c.PciId
                          select new CDPDto()
                          {
                              Cdp = c.Cdp,
@@ -370,6 +382,9 @@ namespace ComplementApp.API.Data
                                  from tercSuper2 in TerceroSupervisor2.DefaultIfEmpty()
 
                                  where s.FormatoSolicitudPagoId == formatoSolicitudPagoId
+                                 where s.PciId == pp.PciId
+                                 where s.PciId == co.PciId
+                                 where s.PciId == par.PciId
                                  select new FormatoSolicitudPagoDto()
                                  {
                                      FormatoSolicitudPagoId = s.FormatoSolicitudPagoId,
@@ -458,10 +473,11 @@ namespace ComplementApp.API.Data
             return formato;
         }
 
-        public async Task<ICollection<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp)
+        public async Task<ICollection<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId)
         {
             var lista = await (from c in _context.CDP
                                where c.Instancia == (int)TipoDocumento.OrdenPago
+                               where c.PciId == pciId
                                where c.Crp == crp
                                select new CDPDto()
                                {
@@ -482,10 +498,11 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<Numeracion> ObtenerUltimaNumeracionDisponible()
+        public async Task<Numeracion> ObtenerUltimaNumeracionDisponible(int pciId)
         {
             Numeracion numeracion = new Numeracion();
             var lista = await (from c in _context.Numeracion
+                               where c.PciId == pciId
                                where c.Utilizado == false
                                select c)
                               .ToListAsync();

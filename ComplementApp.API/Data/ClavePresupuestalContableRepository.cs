@@ -23,14 +23,18 @@ namespace ComplementApp.API.Data
         public async Task<PagedList<CDPDto>> ObtenerCompromisosParaClavePresupuestalContable(int tipo, int? terceroId, UserParams userParams)
         {
             IOrderedQueryable<CDPDto> lista = null;
-            var listaCompromisos = _context.ClavePresupuestalContable.Select(x => x.Crp).ToHashSet();
             //var notFoundItems = _context.CDP.Where(item => !listaCompromisos.Contains(item.Crp)).Select(x => x.Crp).ToHashSet();
+
+            var listaCompromisos = (from pp in _context.ClavePresupuestalContable
+                                    where pp.PciId == userParams.PciId
+                                    select pp.Crp).ToHashSet();
 
             if (tipo == (int)TipoOperacionTransaccion.Creacion)
             {
                 lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where !listaCompromisos.Contains(c.Crp)
+                         where c.PciId == userParams.PciId
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
@@ -49,7 +53,9 @@ namespace ComplementApp.API.Data
                 lista = (from cla in _context.ClavePresupuestalContable
                          join c in _context.CDP on cla.Crp equals c.Crp
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where cla.PciId == c.PciId
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where cla.PciId == userParams.PciId
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
@@ -61,13 +67,12 @@ namespace ComplementApp.API.Data
                          })
                             .Distinct()
                             .OrderBy(x => x.Crp);
-
             }
 
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerListaClavePresupuestalContable()
+        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerListaClavePresupuestalContable(int pciId)
         {
             var lista = (from cla in _context.ClavePresupuestalContable
                          join c in _context.CDP on cla.Crp equals c.Crp
@@ -83,6 +88,10 @@ namespace ComplementApp.API.Data
                          join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
                          from usoPre in UsoPresupuestal.DefaultIfEmpty()
                          where c.Instancia == (int)TipoDocumento.Compromiso
+                         where cla.PciId == c.PciId
+                         where cla.PciId == rc.PciId
+                         where cla.PciId == usoPre.PciId
+                         where cla.PciId == pciId                         
                          where rp.RubroPresupuestalId == c.RubroPresupuestalId
                          select new ClavePresupuestalContableDto()
                          {
@@ -128,7 +137,7 @@ namespace ComplementApp.API.Data
             return await lista.ToListAsync();
         }
 
-        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerRubrosPresupuestalesXCompromiso(int crp)
+        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerRubrosPresupuestalesXCompromiso(int crp, int pciId)
         {
 
             var detalles = await (from rp in _context.RubroPresupuestal
@@ -139,6 +148,7 @@ namespace ComplementApp.API.Data
                                   join r in _context.RecursoPresupuestal on c.Detalle10 equals r.Codigo
                                   where c.Crp == crp
                                   where c.Instancia == (int)TipoDocumento.Compromiso
+                                  where c.PciId == pciId
                                   select new ClavePresupuestalContableDto()
                                   {
                                       CdpId = c.CdpId,
@@ -179,7 +189,7 @@ namespace ComplementApp.API.Data
             return detalles;
         }
 
-        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerClavesPresupuestalContableXCompromiso(int crp)
+        public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerClavesPresupuestalContableXCompromiso(int crp, int pciId)
         {
 
             var detalles = await (from cla in _context.ClavePresupuestalContable
@@ -195,8 +205,13 @@ namespace ComplementApp.API.Data
                                   join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
                                   from usoPre in UsoPresupuestal.DefaultIfEmpty()
                                   where rp.RubroPresupuestalId == c.RubroPresupuestalId
-                                  where c.Crp == crp
+                                  where cla.PciId == c.PciId
+                                  where cla.PciId == rc.PciId
+                                  where cla.PciId == usoPre.PciId
+                                  where cla.Crp == crp
+                                  where cla.PciId == pciId                                  
                                   where c.Instancia == (int)TipoDocumento.Compromiso
+                                  
                                   select new ClavePresupuestalContableDto()
                                   {
                                       ClavePresupuestalContableId = cla.ClavePresupuestalContableId,
@@ -247,7 +262,7 @@ namespace ComplementApp.API.Data
             return detalles;
         }
 
-        public async Task<ICollection<RelacionContableDto>> ObtenerRelacionesContableXRubroPresupuestal(int rubroPresupuestalId)
+        public async Task<ICollection<RelacionContableDto>> ObtenerRelacionesContableXRubroPresupuestal(int rubroPresupuestalId, int pciId)
         {
             var lista = await (from rc in _context.RelacionContable
                                join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
@@ -255,6 +270,7 @@ namespace ComplementApp.API.Data
                                join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into tipoGasto
                                from t in tipoGasto.DefaultIfEmpty()
                                where rc.RubroPresupuestalId == rubroPresupuestalId
+                               where rc.PciId == pciId
                                select new RelacionContableDto()
                                {
                                    RelacionContableId = rc.RelacionContableId,

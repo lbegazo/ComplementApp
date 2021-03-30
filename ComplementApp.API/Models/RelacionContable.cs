@@ -24,5 +24,7 @@ namespace ComplementApp.API.Models
 
         public int? TipoOperacion { get; set; }
         public int? UsoContable { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

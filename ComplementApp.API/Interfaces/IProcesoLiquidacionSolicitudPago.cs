@@ -5,7 +5,7 @@ namespace ComplementApp.API.Interfaces
 {
     public interface IProcesoLiquidacionSolicitudPago
     {
-         Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId, decimal valorBaseCotizacion, int? actividadEconomicaId);
+        Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoSolicitudPago(int planPagoId, int pciId, decimal valorBaseCotizacion, int? actividadEconomicaId);
 
     }
 }

@@ -46,6 +46,7 @@ import { ContratoComponent } from './administracion/contrato/contrato.component'
 import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resolver';
 import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-edit.component';
 import { ListaPciResolver } from './_resolvers/lista-Pci.resolver';
+import { ListaPerfilesResolver } from './_resolvers/lista-perfiles.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -68,6 +69,7 @@ export const routes: Routes = [
           areas: ListaAreasResolver,
           cargos: ListaCargosResolver,
           pcis: ListaPciResolver,
+          perfiles: ListaPerfilesResolver,
         },
       },
       {
@@ -82,6 +84,7 @@ export const routes: Routes = [
           areas: ListaAreasResolver,
           cargos: ListaCargosResolver,
           pcis: ListaPciResolver,
+          perfiles: ListaPerfilesResolver,
         },
 
         // canDeactivate: [PreventUnsavedChangesUsuario],
@@ -109,13 +112,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: ClavePresupuestalContableComponent,
-    resolve: { transaccion: TransaccionResolver },
-  },
-  {
-    path: 'ADMINISTRACION_RELACIONCONTABLE',
-    canActivate: [AuthGuard],
-    runGuardsAndResolvers: 'always',
-    component: RelacionContableComponent,
     resolve: { transaccion: TransaccionResolver },
   },
   {

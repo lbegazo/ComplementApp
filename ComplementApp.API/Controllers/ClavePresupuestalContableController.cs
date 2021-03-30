@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Data;
@@ -20,6 +21,11 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class ClavePresupuestalContableController : ControllerBase
     {
+        #region Variable
+        int pciId = 0;
+        string valorPciId = string.Empty;
+        #endregion 
+
         #region Dependency Injection
         private readonly DataContext _dataContext;
         private readonly IUnitOfWork _unitOfWork;
@@ -52,8 +58,16 @@ namespace ComplementApp.API.Controllers
                                                                                         [FromQuery(Name = "terceroId")] int? terceroId,
                                                                                         [FromQuery] UserParams userParams)
         {
+
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
+
                 var pagedList = await _repo.ObtenerCompromisosParaClavePresupuestalContable(tipo, terceroId, userParams);
                 var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
 
@@ -77,15 +91,20 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
-                string identificacionPCI = string.Empty;
-
-                ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
-                if (parametroPCI != null)
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
                 {
-                    identificacionPCI = parametroPCI.Valor;
+                    pciId = int.Parse(valorPciId);
                 }
 
-                var lista = await _repo.ObtenerRubrosPresupuestalesXCompromiso(crp);
+                string identificacionPCI = string.Empty;
+                var pci = await _listaRepository.ObtenerPci(pciId);
+                if (pci != null)
+                {
+                    identificacionPCI = pci.Identificacion;
+                }
+
+                var lista = await _repo.ObtenerRubrosPresupuestalesXCompromiso(crp, pciId);
 
                 foreach (var item in lista)
                 {
@@ -109,14 +128,19 @@ namespace ComplementApp.API.Controllers
             try
             {
                 string identificacionPCI = string.Empty;
-
-                ValorSeleccion parametroPCI = await _listaRepository.ObtenerParametroGeneralXNombre("Pci-ANE");
-                if (parametroPCI != null)
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
                 {
-                    identificacionPCI = parametroPCI.Valor;
+                    pciId = int.Parse(valorPciId);
                 }
 
-                var lista = await _repo.ObtenerClavesPresupuestalContableXCompromiso(crp);
+                var pci = await _listaRepository.ObtenerPci(pciId);
+                if (pci != null)
+                {
+                    identificacionPCI = pci.Identificacion;
+                }
+
+                var lista = await _repo.ObtenerClavesPresupuestalContableXCompromiso(crp, pciId);
 
                 foreach (var item in lista)
                 {
@@ -139,7 +163,13 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
-                var lista = await _repo.ObtenerRelacionesContableXRubroPresupuestal(rubroPresupuestalId);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
+                var lista = await _repo.ObtenerRelacionesContableXRubroPresupuestal(rubroPresupuestalId, pciId);
                 return Ok(lista);
             }
             catch (Exception)
@@ -200,9 +230,16 @@ namespace ComplementApp.API.Controllers
             ClavePresupuestalContable clavePresupuestalContable = null;
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 foreach (var item in lista)
                 {
                     clavePresupuestalContable = new ClavePresupuestalContable();
+                    clavePresupuestalContable.PciId = pciId;
                     clavePresupuestalContable.Pci = item.Pci;
                     clavePresupuestalContable.Crp = item.Crp;
                     clavePresupuestalContable.Dependencia = item.Dependencia;
@@ -267,7 +304,13 @@ namespace ComplementApp.API.Controllers
             string nombreArchivo = "ClavePresupuestalContable.xlsx";
             try
             {
-                var lista = await _repo.ObtenerListaClavePresupuestalContable();
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
+                var lista = await _repo.ObtenerListaClavePresupuestalContable(pciId);
                 if (lista != null)
                 {
                     DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaClavePresupuestalContable(lista.ToList());

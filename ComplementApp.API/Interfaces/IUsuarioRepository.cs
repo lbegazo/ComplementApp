@@ -18,6 +18,6 @@ namespace ComplementApp.API.Interfaces
 
         Task<bool> EliminarUsuario(int id);
 
-        Task<ICollection<ValorSeleccion>> ObtenerListaUsuarioXPerfil(int perfilId);
+        Task<ICollection<ValorSeleccion>> ObtenerListaUsuarioXPerfil(int perfilId, int pci);
     }
 }

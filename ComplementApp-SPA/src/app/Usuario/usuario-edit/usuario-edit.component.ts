@@ -32,6 +32,7 @@ export class UsuarioEditComponent implements OnInit {
   @ViewChild('editForm', { static: true }) editForm: NgForm;
   idUsuario = 0;
   editMode = false;
+  nombreBoton = 'Registrar';
   @Output() cancelRegisterEvent = new EventEmitter();
   user: Usuario = {
     usuarioId: 0,
@@ -80,6 +81,29 @@ export class UsuarioEditComponent implements OnInit {
   ngOnInit() {
     this.createEmptyForm();
 
+    this.cargarListasResolver();
+
+    this.route.params.subscribe((params: Params) => {
+      this.idUsuario = +params['id'];
+      this.editMode = params['id'] != null;
+      this.initForm();
+    });
+
+    if (!this.editMode) {
+      this.nombreBoton = 'Registrar';
+      this.cargarPerfiles();
+    } else {
+      this.nombreBoton = 'Modificar';
+    }
+  }
+
+  private initForm() {
+    if (this.editMode) {
+      this.obtenerUsuario();
+    }
+  }
+
+  cargarListasResolver() {
     this.route.data.subscribe((data) => {
       this.areas = data['areas'];
     });
@@ -92,20 +116,9 @@ export class UsuarioEditComponent implements OnInit {
       this.listaPci = data['pcis'];
     });
 
-    this.route.params.subscribe((params: Params) => {
-      this.idUsuario = +params['id'];
-      this.editMode = params['id'] != null;
-      this.initForm();
+    this.route.data.subscribe((data) => {
+      this.perfiles = data['perfiles'];
     });
-
-    // Cargar datos de controles
-    this.cargarPerfiles();
-  }
-
-  private initForm() {
-    if (this.editMode) {
-      this.obtenerUsuario();
-    }
   }
 
   createEmptyForm() {
@@ -146,12 +159,6 @@ export class UsuarioEditComponent implements OnInit {
         this.cargarInformacionUsuario();
       }
     );
-  }
-
-  private cargarListas() {
-    this.cargarCargos();
-    this.cargarAreas();
-    this.cargarPerfiles();
   }
 
   cargarInformacionUsuario() {
@@ -207,7 +214,7 @@ export class UsuarioEditComponent implements OnInit {
       this.usernameControl.disable();
       this.passwordControl.disable();
       this.confirmPasswordControl.disable();
-      document.getElementById('btnGuardar').innerHTML = 'Guardar';
+      //document.getElementById('btnGuardar').innerHTML = 'Guardar';
     }
   }
 
@@ -316,48 +323,12 @@ export class UsuarioEditComponent implements OnInit {
     return (this.registerForm.get('perfilesControles') as FormArray).controls;
   }
 
-  cargarCargos() {
-    this.listaService.ObtenerCargos().subscribe(
-      (cargos: Cargo[]) => {
-        this.cargos = cargos;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
-  }
-
-  cargarAreas() {
-    this.listaService.ObtenerAreas().subscribe(
-      (result: Area[]) => {
-        this.areas = result;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
-  }
-
   cargarPerfiles() {
-    this.listaService.ObtenerListaPerfiles().subscribe(
-      (result: Perfil[]) => {
-        this.perfiles = result;
-
-        if (!this.editMode) {
-          if (this.perfiles) {
-            for (const perfil of this.perfiles) {
-              this.arrayControls.push(new FormControl(false));
-            }
-          }
-        }
-      },
-      (error) => {
-        this.alertify.error(error);
-      },
-      () => {
-        this.createEmptyForm();
+    if (this.perfiles && this.perfiles.length > 0) {
+      for (const perfil of this.perfiles) {
+        this.arrayControls.push(new FormControl(false));
       }
-    );
+    }
   }
 
   createPerfilesControles() {

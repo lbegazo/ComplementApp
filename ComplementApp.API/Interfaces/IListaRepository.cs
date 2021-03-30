@@ -40,6 +40,6 @@ namespace ComplementApp.API.Interfaces
 
         Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo);
 
-        
+        Task<Pci> ObtenerPci(int pciId);
     }
 }

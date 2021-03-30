@@ -15,5 +15,7 @@ namespace ComplementApp.API.Models
         public int? FormatoSolicitudPagoId { get; set; }
         public FormatoSolicitudPago FormatoSolicitudPago { get; set; }
         public bool Utilizado { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

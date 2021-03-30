@@ -77,7 +77,7 @@ namespace ComplementApp.API.Data
                                       join a in _context.Area on u.AreaId equals a.AreaId
                                       join to in _context.TipoOperacion on s.TipoOperacionId equals to.TipoOperacionId
                                       join td in _context.TipoDetalleModificacion on s.TipoDetalleCDPId equals td.TipoDetalleCDPId into TipoDetalleCDP
-                                      from td in TipoDetalleCDP.DefaultIfEmpty()
+                                      from td in TipoDetalleCDP.DefaultIfEmpty()                                      
                                       where (s.SolicitudCDPId == solicitudCDPId)
                                       select new SolicitudCDPDto()
                                       {
@@ -191,11 +191,12 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp)
+        public async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId)
         {
             var detalles = await (from d in _context.CDP
                                   join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
                                   where d.Instancia == (int)TipoDocumento.Compromiso
+                                  where d.PciId == pciId
                                   where d.Crp == crp
                                   select new DetalleCDPDto()
                                   {
@@ -246,6 +247,7 @@ namespace ComplementApp.API.Data
                                   from de in DependenciaDetalle.DefaultIfEmpty()
                                   join a in _context.Area on new { d.AreaId } equals new { a.AreaId } into AreaDetalle
                                   from a in AreaDetalle.DefaultIfEmpty()
+                                  where c.PciId == u.PciId
                                   where d.RubroPresupuestalId == c.RubroPresupuestalId
                                   where c.Instancia == (int)TipoDocumento.Cdp
                                   where d.UsuarioId == usuarioId

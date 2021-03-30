@@ -52,6 +52,6 @@ namespace ComplementApp.API.Models
         public int RelacionContableId { get; set; }
 
         public RelacionContable RelacionContable { get; set; }
-
+        public int? PciId { get; set; }  
     }
 }

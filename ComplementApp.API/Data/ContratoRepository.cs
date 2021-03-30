@@ -47,17 +47,17 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDPDto>> ObtenerCompromisosSinContrato(int? terceroId, UserParams userParams)
         {
-            var listaCompromisosConContrato = _context.Contrato.Select(x => x.Crp).ToHashSet();
-            var listaCompromisosSinContrato = _context.CDP
-                                                .Where(item => !listaCompromisosConContrato.Contains(item.Crp))
-                                                .Select(x => x.Crp).ToHashSet();
+            var listaCompromisosConContrato = (from c in _context.Contrato
+                                               where c.PciId == userParams.PciId
+                                               select c.Crp).ToHashSet();
 
-            var lista = (from c in _context.CDP
+             var lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where listaCompromisosSinContrato.Contains(c.Crp)
+                         where !listaCompromisosConContrato.Contains(c.Crp)
                          where c.TerceroId == terceroId || terceroId == null
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0
+                         where c.PciId == userParams.PciId
                          select new CDPDto()
                          {
                              Crp = c.Crp,
@@ -74,7 +74,9 @@ namespace ComplementApp.API.Data
                        .OrderBy(t => t.Crp);
 
             var lista1 = (from i in lista
-                          group i by new { i.Crp, i.Cdp, i.Detalle4, i.NumeroIdentificacionTercero, i.NombreTercero, i.Objeto, i.TerceroId }
+                          group i by new { i.Crp, i.Cdp, i.Detalle4, 
+                                           i.NumeroIdentificacionTercero, 
+                                           i.NombreTercero, i.Objeto, i.TerceroId }
                                       into grp
                           select new CDPDto()
                           {
@@ -95,12 +97,13 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDPDto>> ObtenerCompromisosConContrato(int? terceroId, UserParams userParams)
         {
-            var lista = (from c in _context.CDP
+            var lista = (from con in _context.Contrato
+                         join c in _context.CDP on con.Crp equals c.Crp
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         join con in _context.Contrato on c.Crp equals con.Crp
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
+                         where con.PciId == userParams.PciId
                          select new CDPDto()
                          {
                              Crp = c.Crp,
@@ -147,7 +150,7 @@ namespace ComplementApp.API.Data
             return await PagedList<CDPDto>.CreateAsync(lista1, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<ICollection<ContratoDto>> ObtenerListaContratoTotal()
+        public async Task<ICollection<ContratoDto>> ObtenerListaContratoTotal(int pciId)
         {
             var lista = (from c in _context.Contrato
                          join tc in _context.TipoContrato on c.TipoContratoId equals tc.TipoContratoId
@@ -155,6 +158,7 @@ namespace ComplementApp.API.Data
                          from super1 in Supervisor1.DefaultIfEmpty()
                          join sup2 in _context.Usuario on c.Supervisor2Id equals sup2.UsuarioId into Supervisor2
                          from super2 in Supervisor2.DefaultIfEmpty()
+                         where c.PciId == pciId
                          select new ContratoDto()
                          {
                              NumeroContrato = c.NumeroContrato,

@@ -28,6 +28,8 @@ namespace ComplementApp.API.Controllers
         #region Variable
 
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
 
         #endregion 
 
@@ -77,6 +79,12 @@ namespace ComplementApp.API.Controllers
             List<int> lista = null;
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
                 bool? esProcesado = null;
 
@@ -85,7 +93,7 @@ namespace ComplementApp.API.Controllers
                     esProcesado = (procesado.Value == 1) ? (true) : (false);
                 }
 
-                lista = await _repo.ObtenerListaDetalleLiquidacionTotal(terceroId, listIds, esProcesado);
+                lista = await _repo.ObtenerListaDetalleLiquidacionTotal(pciId, terceroId, listIds, esProcesado);
             }
             catch (Exception)
             {
@@ -101,8 +109,14 @@ namespace ComplementApp.API.Controllers
                                                               [FromQuery(Name = "procesado")] int? procesado,
                                                               [FromQuery] UserParams userParams)
         {
-            List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool? esProcesado = null;
+            List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
 
             if (procesado.HasValue)
             {
@@ -125,10 +139,15 @@ namespace ComplementApp.API.Controllers
                                                                                     [FromQuery(Name = "actividadEconomicaId")] int? actividadEconomicaId)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
+
             try
             {
-
-                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(planPagoId, valorBaseGravable, actividadEconomicaId);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(planPagoId, pciId, valorBaseGravable, actividadEconomicaId);
             }
             catch (Exception)
             {
@@ -162,6 +181,7 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> RegistrarDetalleLiquidacion(FormatoCausacionyLiquidacionPagos formato)
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             DetalleLiquidacion detalleLiquidacion = new DetalleLiquidacion();
             LiquidacionDeduccion liquidacionDeduccion = null;
             DetalleLiquidacion detalleLiquidacionAnterior = null;
@@ -170,6 +190,11 @@ namespace ComplementApp.API.Controllers
 
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
                 if (formato != null)
                 {
                     var detallePlanPago = await _planPagoRepository.ObtenerDetallePlanPago(formato.PlanPagoId);
@@ -183,6 +208,7 @@ namespace ComplementApp.API.Controllers
                     detalleLiquidacion.UsuarioIdRegistro = usuarioId;
                     detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     detalleLiquidacion.BaseImpuestos = false;
+                    detalleLiquidacion.PciId = pciId;
 
                     #endregion Mapear datos 
 
@@ -216,7 +242,7 @@ namespace ComplementApp.API.Controllers
                     await _dataContext.SaveChangesAsync();
 
                     //Actualizar lista de liquidaciones anteriores(Viaticos pagados)
-                    var listaDetalleLiquidacionAnterior = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(detallePlanPago.TerceroId);
+                    var listaDetalleLiquidacionAnterior = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(detallePlanPago.TerceroId, pciId);
 
                     if (listaDetalleLiquidacionAnterior != null && listaDetalleLiquidacionAnterior.Count > 0)
                     {
@@ -259,10 +285,16 @@ namespace ComplementApp.API.Controllers
                                                                             )
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
 
-            await _procesoLiquidacion.RegistrarListaDetalleLiquidacion(usuarioId, listaPlanPagoId, listIds, esSeleccionarTodo, terceroId);
+            await _procesoLiquidacion.RegistrarListaDetalleLiquidacion(usuarioId, pciId, listaPlanPagoId, listIds, esSeleccionarTodo, terceroId);
 
             return Ok(1);
 
@@ -333,17 +365,23 @@ namespace ComplementApp.API.Controllers
             int consecutivo = 0;
             string nombreArchivo = string.Empty;
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 if (!string.IsNullOrEmpty(listaLiquidacionId))
                 {
                     List<int> listIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
                     List<int> listDistinct = listIds.Distinct().ToList();
 
-                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listDistinct);
+                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listDistinct, pciId);
 
                     if (listaLiquidacion != null && listaLiquidacion.Count > 0)
                     {
@@ -351,13 +389,13 @@ namespace ComplementApp.API.Controllers
                         cadena = _procesoCreacionArchivo.ObtenerInformacionMaestroLiquidacion_ArchivoCuentaPagar(listaLiquidacion.ToList());
 
                         //Obtener nombre del archivo detalle
-                        consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
+                        consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId) + 1;
                         nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                             (int)TipoDocumentoArchivo.CuentaPorPagar,
                                                             (int)TipoArchivoCuentaPorPagar.Cabecera);
 
                         //Registrar archivo y sus detalles
-                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, listDistinct,
+                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, listDistinct,
                                                                                                 nombreArchivo, consecutivo,
                                                                                                 (int)TipoDocumentoArchivo.CuentaPorPagar);
                         _dataContext.SaveChanges();
@@ -396,22 +434,27 @@ namespace ComplementApp.API.Controllers
         [Route("DescargarDetalleLiquidacion_ArchivoCuentaPorPagar")]
         public async Task<IActionResult> DescargarDetalleLiquidacion_ArchivoCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
         {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             string cadena = string.Empty;
             string nombreArchivo = string.Empty;
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
             int consecutivo = 0;
-
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 if (!string.IsNullOrEmpty(listaLiquidacionId))
                 {
                     List<int> listIds = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
                     List<int> listDistinct = listIds.Distinct().ToList();
 
-                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listDistinct);
+                    var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionParaArchivo(listDistinct, pciId);
 
                     //Actualizar el estado de las liquidaciones procesadas
                     await ActualizarEstadoDetalleLiquidacion(usuarioId, listDistinct);
@@ -421,7 +464,7 @@ namespace ComplementApp.API.Controllers
                     cadena = _procesoCreacionArchivo.ObtenerInformacionDetalleLiquidacion_ArchivoCuentaPagar(listaLiquidacion.ToList());
 
                     //Obtener nombre del archivo detalle
-                    consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                    consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
                     nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                         (int)TipoDocumentoArchivo.CuentaPorPagar,
                                                         (int)TipoArchivoCuentaPorPagar.Detalle);
@@ -455,7 +498,12 @@ namespace ComplementApp.API.Controllers
         [Route("[action]")]
         public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)
         {
-            var lista = await _terceroRepository.ObtenerListaActividadesEconomicaXTercero(terceroId);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            var lista = await _terceroRepository.ObtenerListaActividadesEconomicaXTercero(terceroId, pciId);
             return base.Ok(lista);
         }
 
@@ -468,6 +516,12 @@ namespace ComplementApp.API.Controllers
                                                              [FromQuery(Name = "procesado")] int? procesado,
                                                              [FromQuery] UserParams userParams)
         {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool? esProcesado = null;
 
@@ -496,8 +550,7 @@ namespace ComplementApp.API.Controllers
                                                                                 [FromQuery(Name = "tipoArchivoObligacionId")] int? tipoArchivoObligacionId,
                                                                                 [FromQuery(Name = "conUsoPresupuestal")] int? conUsoPresupuestal
                                                                                )
-        {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        {            
             List<int> listaEstadoIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
             bool esUsoPresupuestal = conUsoPresupuestal > 0 ? true : false;
@@ -512,6 +565,13 @@ namespace ComplementApp.API.Controllers
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 #region Obtener lista de liquidaciones a procesar
 
                 if (esSeleccionarTodo)
@@ -562,10 +622,10 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Cabecera
 
-                            var listaLiquidacion = await _repo.ObtenerCabeceraParaArchivoObligacion(liquidacionIds);
+                            var listaLiquidacion = await _repo.ObtenerCabeceraParaArchivoObligacion(liquidacionIds, pciId);
 
                             //Obtener nombre del archivo detalle
-                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion() + 1;
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId) + 1;
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Cabecera
@@ -577,7 +637,7 @@ namespace ComplementApp.API.Controllers
                                 cadena = _procesoCreacionArchivo.ObtenerInformacionCabeceraLiquidacion_ArchivoObligacion(listaLiquidacion.ToList());
 
                                 //Registrar archivo y sus detalles
-                                ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, liquidacionIds,
+                                ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, liquidacionIds,
                                                                                                         nombreArchivo, consecutivo,
                                                                                                         (int)TipoDocumentoArchivo.Obligacion);
                                 _dataContext.SaveChanges();
@@ -618,7 +678,7 @@ namespace ComplementApp.API.Controllers
                             var lista = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
-                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Item);
@@ -662,7 +722,7 @@ namespace ComplementApp.API.Controllers
                             var lista = await _repo.ObtenerDeduccionesLiquidacionParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
-                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Deducciones);
@@ -712,7 +772,7 @@ namespace ComplementApp.API.Controllers
                             var listaRubros = await _repo.ObtenerItemsLiquidacionParaArchivoObligacion(liquidacionIds);
 
                             //Obtener nombre del archivo detalle
-                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion();
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Uso);
@@ -887,7 +947,7 @@ namespace ComplementApp.API.Controllers
             return true;
         }
 
-        private ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, List<int> listIds,
+        private ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, int pciId, List<int> listIds,
                                                                                 string nombreArchivo, int consecutivo,
                                                                                 int tipoDocumentoArchivo)
         {
@@ -903,6 +963,7 @@ namespace ComplementApp.API.Controllers
                 archivo.CantidadRegistro = listIds.Count;
                 archivo.Consecutivo = consecutivo;
                 archivo.TipoDocumentoArchivo = tipoDocumentoArchivo;
+                archivo.PciId = pciId;
                 _dataContext.ArchivoDetalleLiquidacion.Add(archivo);
             }
             catch (Exception)

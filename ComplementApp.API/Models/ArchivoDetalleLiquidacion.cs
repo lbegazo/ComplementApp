@@ -35,5 +35,7 @@ namespace ComplementApp.API.Models
         public int TipoDocumentoArchivo { get; set; }
 
         public ICollection<DetalleArchivoLiquidacion> DetalleArchivo { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

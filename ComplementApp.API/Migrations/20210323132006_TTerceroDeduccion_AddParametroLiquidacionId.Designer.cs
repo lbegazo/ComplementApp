@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210323132006_TTerceroDeduccion_AddParametroLiquidacionId")]
+    partial class TTerceroDeduccion_AddParametroLiquidacionId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,9 +119,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TipoDocumentoArchivo")
                         .HasColumnType("int");
 
@@ -130,8 +129,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ArchivoDetalleLiquidacionId");
-
-                    b.HasIndex("PciId");
 
                     b.ToTable("TArchivoDetalleLiquidacion");
                 });
@@ -1081,9 +1078,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(10)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Utilizado")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1092,8 +1086,6 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("NumeracionId");
 
                     b.HasIndex("FormatoSolicitudPagoId");
-
-                    b.HasIndex("PciId");
 
                     b.ToTable("TNumeracion");
                 });
@@ -2084,15 +2076,10 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(250)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("RubroPresupuestalId")
                         .HasColumnType("int");
 
                     b.HasKey("UsoPresupuestalId");
-
-                    b.HasIndex("PciId");
 
                     b.HasIndex("RubroPresupuestalId");
 
@@ -2212,15 +2199,6 @@ namespace ComplementApp.API.Migrations
                         .HasForeignKey("RubroPresupuestalId");
 
                     b.Navigation("RubroPresupuestal");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.ArchivoDetalleLiquidacion", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
-                    b.Navigation("Pci");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.CDP", b =>
@@ -2477,13 +2455,7 @@ namespace ComplementApp.API.Migrations
                         .WithMany()
                         .HasForeignKey("FormatoSolicitudPagoId");
 
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
                     b.Navigation("FormatoSolicitudPago");
-
-                    b.Navigation("Pci");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.ParametroLiquidacionTercero", b =>
@@ -2647,15 +2619,9 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.UsoPresupuestal", b =>
                 {
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
                     b.HasOne("ComplementApp.API.Models.RubroPresupuestal", "RubroPresupuestal")
                         .WithMany()
                         .HasForeignKey("RubroPresupuestalId");
-
-                    b.Navigation("Pci");
 
                     b.Navigation("RubroPresupuestal");
                 });

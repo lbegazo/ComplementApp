@@ -23,6 +23,8 @@ namespace ComplementApp.API.Controllers
     {
         #region Variable
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
 
         #endregion 
 
@@ -39,7 +41,7 @@ namespace ComplementApp.API.Controllers
 
         public ContratoController(IContratoRepository repo, IMapper mapper, ICDPRepository cdpRepo,
                             DataContext dataContext, IGeneralInterface generalInterface,
-                            IProcesoCreacionArchivoExcel procesoCreacionExcelInterface )
+                            IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
         {
             _mapper = mapper;
             _repo = repo;
@@ -59,15 +61,22 @@ namespace ComplementApp.API.Controllers
             try
             {
                 PagedList<CDPDto> pagedList = null;
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
 
-                //Registrar contratos
                 if (tipo == 1)
                 {
+                    //Registrar contratos
                     pagedList = await _repo.ObtenerCompromisosSinContrato(terceroId, userParams);
                 }
                 else
                 {
                     //Modificar contratos
+
                     pagedList = await _repo.ObtenerCompromisosConContrato(terceroId, userParams);
                 }
                 var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
@@ -105,13 +114,18 @@ namespace ComplementApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarContrato(ContratoDto contratoDto)
         {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Contrato contrato = new Contrato();
-
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 if (contratoDto != null)
                 {
                     var cdp = await _cdpRepo.ObtenerCDPPorCompromiso(contratoDto.Crp);
@@ -129,6 +143,7 @@ namespace ComplementApp.API.Controllers
                     contrato.Supervisor2Id = contratoDto.Supervisor2Id.HasValue ? contratoDto.Supervisor2Id.Value : null;
 
                     contrato.UsuarioIdRegistro = usuarioId;
+                    contrato.PciId = pciId;
                     contrato.FechaInsercion = _generalInterface.ObtenerFechaHoraActual();
 
                     #endregion Mapear datos Contrato
@@ -191,9 +206,16 @@ namespace ComplementApp.API.Controllers
         public async Task<IActionResult> DescargarListaContratoTotal()
         {
             string nombreArchivo = "Contrato.xlsx";
+
             try
             {
-                var lista = await _repo.ObtenerListaContratoTotal();
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                
+                var lista = await _repo.ObtenerListaContratoTotal(pciId);
                 if (lista != null)
                 {
                     DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaContrato(lista.ToList());

@@ -6,8 +6,8 @@ namespace ComplementApp.API.Interfaces
 {
     public interface IProcesoLiquidacionPlanPago
     {
-        Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId, decimal valorBaseGravable, int? actividadEconomicaId);
+        Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId, int pciId, decimal valorBaseGravable, int? actividadEconomicaId);
 
-        Task<bool> RegistrarListaDetalleLiquidacion(int usuarioId, string listaPlanPagoId, List<int> listIds, bool esSeleccionarTodo, int? terceroId);
+        Task<bool> RegistrarListaDetalleLiquidacion(int usuarioId, int pciId, string listaPlanPagoId, List<int> listIds, bool esSeleccionarTodo, int? terceroId);
     }
 }

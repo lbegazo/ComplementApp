@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210325195316_TArchivoDetalleLiquidacion_TNumeracion_AddPciId")]
+    partial class TArchivoDetalleLiquidacion_TNumeracion_AddPciId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2084,15 +2086,10 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(250)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("RubroPresupuestalId")
                         .HasColumnType("int");
 
                     b.HasKey("UsoPresupuestalId");
-
-                    b.HasIndex("PciId");
 
                     b.HasIndex("RubroPresupuestalId");
 
@@ -2647,15 +2644,9 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.UsoPresupuestal", b =>
                 {
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
                     b.HasOne("ComplementApp.API.Models.RubroPresupuestal", "RubroPresupuestal")
                         .WithMany()
                         .HasForeignKey("RubroPresupuestalId");
-
-                    b.Navigation("Pci");
 
                     b.Navigation("RubroPresupuestal");
                 });

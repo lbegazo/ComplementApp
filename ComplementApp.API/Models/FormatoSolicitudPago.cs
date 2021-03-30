@@ -72,5 +72,7 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorIva { get; set; }
         public ICollection<DetalleFormatoSolicitudPago> DetallesFormatoSolicitudPago { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

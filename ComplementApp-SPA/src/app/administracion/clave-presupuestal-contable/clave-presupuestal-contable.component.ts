@@ -232,7 +232,7 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   pageChanged(event: any): void {
-    console.log(event);
+    //console.log(event);
     this.pagination.currentPage = event.page;
     this.onBuscarFactura();
   }
@@ -337,8 +337,15 @@ export class ClavePresupuestalContableComponent implements OnInit {
         },
         (error) => {
           this.alertify.error(
-            'Hubo un error al obtener el formato de liquidación.'
+            'Hubo un error al obtener información de la clave presupuestal.'
           );
+        },
+        () => {
+          if (this.listaClavePresupuestalContable.length === 0) {
+            this.alertify.warning(
+              'No se pudo obtener información de las claves presupuestales contables'
+            );
+          }
         }
       );
   }

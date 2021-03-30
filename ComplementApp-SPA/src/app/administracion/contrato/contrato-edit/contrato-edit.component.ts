@@ -75,8 +75,8 @@ export class ContratoEditComponent implements OnInit {
   }
 
   createFullForm() {
-    console.log(this.contratoSeleccionado);
-    console.log(this.listaSupervisor);
+    //console.log(this.contratoSeleccionado);
+    //console.log(this.listaSupervisor);
     let numeroContrato = 0;
     let fechaInicio = null;
     let fechaFinal = null;
