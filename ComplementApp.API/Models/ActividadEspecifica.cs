@@ -25,5 +25,10 @@ namespace ComplementApp.API.Models
         public int ActividadGeneralId { get; set; }
 
         public ActividadGeneral ActividadGeneral { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
+
+        [NotMapped]
+        public int EstadoModificacion { get; set; }
     }
 }

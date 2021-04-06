@@ -34,7 +34,7 @@ export class DecretoEditComponent implements OnInit {
 
   valorTotalVigente = 0;
   valorTotalDisponible = 0;
-  idTipoOperacion = 2;
+  validacionDisponibleMenorVigente = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -90,41 +90,45 @@ export class DecretoEditComponent implements OnInit {
   onGuardar() {
     const actividadGeneralPrincipal: ActividadGeneralPrincipalDto = new ActividadGeneralPrincipalDto();
 
-    if (this.facturaHeaderForm.valid) {
-      let respuesta = 0;
-      const arrayControles = this.facturaHeaderForm.get(
-        'rubrosControles'
-      ) as FormArray;
-      if (arrayControles && arrayControles.length > 0) {
-        this.actualizarValoresTotales();
+    if (!this.validarValoresIngresados) {
+      if (this.facturaHeaderForm.valid) {
+        let respuesta = 0;
+        const arrayControles = this.facturaHeaderForm.get(
+          'rubrosControles'
+        ) as FormArray;
+        if (arrayControles && arrayControles.length > 0) {
+          actividadGeneralPrincipal.listaActividadGeneral = this.listaActividadGeneral;
 
-        actividadGeneralPrincipal.listaActividadGeneral = this.listaActividadGeneral;
+          this.actividadGeneralService
+            .RegistrarActividadesGenerales(actividadGeneralPrincipal)
+            .subscribe(
+              (response: any) => {
+                if (!isNaN(response)) {
+                  respuesta = +response;
+                  this.alertify.success(
+                    'Se registraron los valores de las apropiaciones asignadas a la entidad a nivel de decreto'
+                  );
+                } else {
+                  this.alertify.error(
+                    'No se pudo registrar los valores de las apropiaciones asignadas a la entidad'
+                  );
+                }
+              },
 
-        this.actividadGeneralService
-          .RegistrarActividadesGenerales(actividadGeneralPrincipal)
-          .subscribe(
-            (response: any) => {
-              if (!isNaN(response)) {
-                respuesta = +response;
-                this.alertify.success(
-                  'Se registraron los valores de las apropiaciones asignadas a la entidad a nivel de decreto'
-                );
-              } else {
+              (error) => {
                 this.alertify.error(
-                  'No se pudo registrar los valores de las apropiaciones asignadas a la entidad'
+                  'Hubó un error al registrar los valores de las apropiaciones asignadas a la entidad ' +
+                    error
                 );
-              }
-            },
-
-            (error) => {
-              this.alertify.error(
-                'Hubó un error al registrar los valores de las apropiaciones asignadas a la entidad ' +
-                  error
-              );
-            },
-            () => {}
-          );
+              },
+              () => {}
+            );
+        }
       }
+    } else {
+      this.alertify.error(
+        'El valor de la apropiación disponible debe ser igual o inferior al valor de la apropiación vigente del rubro.'
+      );
     }
   }
 
@@ -138,25 +142,39 @@ export class DecretoEditComponent implements OnInit {
           new FormGroup({
             rubroControlVigente: new FormControl(
               GeneralService.obtenerFormatoLongMoney(valorVigente),
-              [
-                Validators.required
-              ]
+              [Validators.required]
             ),
             rubroControlDisponible: new FormControl(
               GeneralService.obtenerFormatoLongMoney(valorDisponible),
               [
                 Validators.required,
-                ValidarValorIngresado.valorIncorrecto(
-                  this.idTipoOperacion,
-                  0,
-                  valorVigente
-                ),
+                //ValidarValorIngresado.validacionValorIngresado(valorVigente),
               ]
             ),
           })
         );
       }
       this.actualizarValoresTotales();
+    }
+  }
+
+  get validarValoresIngresados() {
+    let respuesta = false;
+    if (this.listaActividadGeneral && this.listaActividadGeneral.length > 0) {
+      for (const detalle of this.listaActividadGeneral) {
+        const valorVigente = +GeneralService.obtenerValorAbsoluto(
+          detalle.apropiacionVigente
+        );
+        const valorDisponible = +GeneralService.obtenerValorAbsoluto(
+          detalle.apropiacionDisponible
+        );
+
+        if (valorDisponible > valorVigente) {
+          respuesta = true;
+          return respuesta;
+        }
+      }
+      return respuesta;
     }
   }
 
@@ -167,17 +185,15 @@ export class DecretoEditComponent implements OnInit {
     if (arrayControles && arrayControles.length > 0) {
       for (let index = 0; index < arrayControles.length; index++) {
         const item = arrayControles.at(index);
-        if (
-          item.value.rubroControlDisponible <= item.value.rubroControlVigente
-        ) {
-          const itemDetalle = this.listaActividadGeneral[index];
-          itemDetalle.apropiacionVigente = GeneralService.obtenerValorAbsoluto(
-            item.value.rubroControlVigente
-          );
-          itemDetalle.apropiacionDisponible = GeneralService.obtenerValorAbsoluto(
-            item.value.rubroControlDisponible
-          );
-        }
+        //if ( item.value.rubroControlDisponible <= item.value.rubroControlVigente) {
+        const itemDetalle = this.listaActividadGeneral[index];
+        itemDetalle.apropiacionVigente = GeneralService.obtenerValorAbsoluto(
+          item.value.rubroControlVigente
+        );
+        itemDetalle.apropiacionDisponible = GeneralService.obtenerValorAbsoluto(
+          item.value.rubroControlDisponible
+        );
+        //}
       }
     }
 

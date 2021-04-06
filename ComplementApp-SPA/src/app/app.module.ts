@@ -122,6 +122,8 @@ import { ListaTipoContratoResolver } from './_resolvers/lista-TipoContrato.resol
 import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-edit.component';
 import { ListaPciResolver } from './_resolvers/lista-Pci.resolver';
 import { ListaPerfilesResolver } from './_resolvers/lista-perfiles.resolver';
+import { EjecucionPresupuestalComponent } from './plan-paa/ejecucion-presupuestal/ejecucion-presupuestal.component';
+import { PopupRubroDecretoComponent } from './plan-paa/ejecucion-presupuestal/popup-rubro-decreto/popup-rubro-decreto.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -199,6 +201,8 @@ export function tokenGetter() {
     ContratoEditComponent,
     ContratoComponent,
     DecretoEditComponent,
+    EjecucionPresupuestalComponent,
+    PopupRubroDecretoComponent,
   ],
   imports: [
     BrowserModule,

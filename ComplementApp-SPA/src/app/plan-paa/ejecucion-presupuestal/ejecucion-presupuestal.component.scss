@@ -1,0 +1,89 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.addPaddingLeft {
+  padding-left: 5px;
+}
+
+.addPaddingRight {
+  padding-right: 5px;
+}
+
+.aplicaBackground {
+  background-color: white;
+}
+
+.inner {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+#tablaContenedor {
+  background-color: gainsboro;
+}
+
+input[type="text"] {
+  background-color: white;
+  height: 25px;
+}
+
+#inputNumeroTercero {
+  background-color: white;
+}
+
+.form-inline .form-group {
+  vertical-align: bottom;
+}
+
+.paragraph {
+  background-color: white;
+  height: 30px;
+  display: flex;
+  width: 100%;
+  margin: auto;
+  align-items: center;
+  justify-content: left;
+  padding-left: 5px;
+}
+
+.btn-warning {
+  padding: 5px 5px;
+}
+
+.paragraphNumber {
+  background-color: white;
+  height: 30px;
+  display: flex;
+  width: 100%;
+  margin: auto;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+parent {
+  position: relative;
+}
+.child {
+  position: absolute;
+  top: 70%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+}

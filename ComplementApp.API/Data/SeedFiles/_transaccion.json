@@ -159,6 +159,15 @@
     "Ruta": "PLAN_REGISTRARDECRETO",
     "CodigoPadreTransaccion": "PLAN"
   },
+  {
+    "Codigo": "PLAN_EJECUCIONPRESUPUESTAL",
+    "Nombre": "Registrar Indicadores",
+    "Descripcion": "Registrar Indicadores",
+    "Icono": "attach_file",
+    "Ruta": "PLAN_EJECUCIONPRESUPUESTAL",
+    "CodigoPadreTransaccion": "PLAN"
+  },
+
 
   {
     "Codigo": "SOLICITUDES_CERTIFICADO",

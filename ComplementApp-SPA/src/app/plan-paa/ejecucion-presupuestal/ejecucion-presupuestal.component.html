@@ -1,0 +1,279 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-3">
+                <!--Identificación-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md">Identificación</label>
+                  <p class="paragraph" style="font-size: 12px">
+                    {{
+                      actividadGeneralSeleccionado?.rubroPresupuestal
+                        ?.identificacion
+                    }}
+                  </p>
+                </div>
+                <!--Rubro Presupuestal-->
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label class="col-form-label-md">Rubro Presupuestal</label>
+                  <p class="paragraph" style="font-size: 11px">
+                    {{
+                      actividadGeneralSeleccionado?.rubroPresupuestal?.nombre
+                    }}
+                  </p>
+                </div>
+                <!--Apropiación disponible-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md center"
+                    >Apropiación Disponible</label
+                  >
+                  <p class="paragraphNumber">
+                    {{
+                      actividadGeneralSeleccionado?.apropiacionDisponible
+                        | number: "1.2-2"
+                    }}
+                  </p>
+                </div>
+                <div
+                  class="form-group col-md-2 parent"
+                  style="margin: 0px; padding: 0px"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-warning child"
+                    style="height: 35px"
+                    (click)="abrirPopup()"
+                    [disabled]="!habilitarBotonPopup"
+                  >
+                    Seleccionar rubro
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-3">
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label for="descripcionIndicador" class="col-form-label-md"
+                    >Descripcion Indicador</label
+                  >
+                  <input
+                    type="text"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('nombreCtrl') !== null &&
+                        facturaHeaderForm.get('nombreCtrl').errors &&
+                        facturaHeaderForm.get('nombreCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control addPaddingLeft"
+                    placeholder="Descripción indicador"
+                    formControlName="nombreCtrl"
+                    style="text-align: left; height: 30px"
+                    id="descripcionIndicador"
+                  />
+                  <div class="invalid-feedback">
+                    Debe ingresar la descripción del indicador
+                  </div>
+                </div>
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputValor" class="col-form-label-md"
+                    >Valor</label
+                  >
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('valorCtrl').errors &&
+                        facturaHeaderForm.get('valorCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control addPaddingRight"
+                    placeholder="Ingresar el valor"
+                    formControlName="valorCtrl"
+                    style="text-align: right; height: 30px"
+                    id="inputValor"
+                    appDecimalMask
+                    (blur)="validarValor()"
+                  />
+                  <div class="invalid-feedback">Debe ingresar el valor</div>
+                </div>
+
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputSaldo" class="col-form-label-md"
+                    >Saldo</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control addPaddingRight"
+                    formControlName="saldoCtrl"
+                    style="text-align: right; height: 30px"
+                    id="inputValor"
+                    appDecimalMask
+                    readonly
+                  />
+                </div>
+                
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--AGREGAR NUEVO ITEM-->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding: 0px">
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onAgregar()"
+                          [disabled]="!facturaHeaderForm.valid"
+                        >
+                          {{ nombreBoton }}
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-success ml-2"
+                          (click)="onLimpiar()"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 2%"></div>
+                <div style="width: 20%" class="inner center">
+                  <label class="col-form-label-md">Nombre</label>
+                </div>
+                <div style="width: 13%" class="inner center">
+                  <label class="col-form-label-md">Código</label>
+                </div>
+                <div style="width: 40%" class="inner center">
+                  <label class="col-form-label-md">Rubro Presupuestal</label>
+                </div>
+                <div style="width: 13%" class="inner center">
+                  <label class="col-form-label-md">Aprop. Vigente</label>
+                </div>
+                <div style="width: 12%" class="inner center">
+                  <label class="col-form-label-md">Saldo Por Prog.</label>
+                </div>
+              </div>
+              <div *ngIf="listaActividad && listaActividad.length > 0">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaActividad; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 2%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="radio"
+                        [value]="item?.actividadEspecificaId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                    </div>
+                    <div style="width: 20%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.nombre }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.rubroPresupuestal.identificacion }}
+                      </p>
+                    </div>
+                    <div style="width: 40%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.rubroPresupuestal.nombre }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.valorApropiacionVigente | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 12%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.saldoPorProgramar | number: "1.2-2" }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-12 withoutPadding right">
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              type="submit"
+              class="btn btn-primary mr-2"
+              (click)="onRegistrar()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onCancelar()"
+            >
+              Cancelar
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <p>Form value: {{ facturaHeaderForm.value | json }}</p>
+<p>Form status: {{ facturaHeaderForm.status | json }}</p> -->

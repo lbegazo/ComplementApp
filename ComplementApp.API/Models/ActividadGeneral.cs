@@ -15,8 +15,7 @@ namespace ComplementApp.API.Models
         public decimal ApropiacionDisponible { get; set; }    
         public int?  RubroPresupuestalId { get; set; }
         public RubroPresupuestal RubroPresupuestal { get; set; }
-        
-        [NotMapped]
-        public int EstadoModificacion { get; set; }
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

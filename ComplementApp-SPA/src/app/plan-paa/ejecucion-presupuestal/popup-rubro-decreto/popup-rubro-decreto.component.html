@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
+            <div class="row">
+              <div class="col-3 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Identificación</strong></label
+                >
+              </div>
+              <div class="col-5 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Rubro Presupuestal</strong></label
+                >
+              </div>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Aprop. Vigente</strong></label
+                >
+              </div>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Aprop. Disp.</strong></label
+                >
+              </div>
+            </div>
+            <div *ngIf="listaActividadGeneral">
+              <div
+                formArrayName="planPagoControles"
+                class="row"
+                *ngFor="let item of listaActividadGeneral; let i = index"
+              >
+                <ng-container [formGroupName]="i">
+                  <div class="col-3 inner left">
+                    <p class="medium">
+                      <input
+                        type="radio"
+                        [value]="item?.actividadGeneralId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                      {{ item?.rubroPresupuestal.identificacion }}
+                    </p>
+                  </div>
+                  <div class="col-5 inner center">
+                    <p class="medium">
+                      {{ item?.rubroPresupuestal.nombre }}
+                    </p>
+                  </div>
+                  <div class="col-2 inner center">
+                    <p class="medium">
+                      {{ item?.apropiacionVigente | number: "1.2-2" }}
+                    </p>
+                  </div>
+                  <div class="col-2 inner center">
+                    <p class="medium">
+                      {{ item?.apropiacionDisponible | number: "1.2-2" }}
+                    </p>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </form>
+          <div style="height: 10px"></div>
+
+          <div class="row">
+            <div class="col-12 right withoutPadding">
+              <button
+                type="button"
+                class="btn btn-warning"
+                (click)="onAceptar()"
+              >
+                {{ closeBtnName }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

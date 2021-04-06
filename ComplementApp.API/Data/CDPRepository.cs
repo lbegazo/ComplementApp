@@ -242,11 +242,13 @@ namespace ComplementApp.API.Data
                                   join rp in _context.RubroPresupuestal on acGe.RubroPresupuestalId equals rp.RubroPresupuestalId into RubroActividadGeneral
                                   from ruAG in RubroActividadGeneral.DefaultIfEmpty()
                                   join ae in _context.ActividadEspecifica on new { d.ActividadEspecificaId } equals new { ae.ActividadEspecificaId } into ActividadEspecificaDetalle
-                                  from ae in ActividadEspecificaDetalle.DefaultIfEmpty()
+                                  from acEs in ActividadEspecificaDetalle.DefaultIfEmpty()
                                   join de in _context.Dependencia on new { d.DependenciaId } equals new { de.DependenciaId } into DependenciaDetalle
                                   from de in DependenciaDetalle.DefaultIfEmpty()
                                   join a in _context.Area on new { d.AreaId } equals new { a.AreaId } into AreaDetalle
                                   from a in AreaDetalle.DefaultIfEmpty()
+                                  where c.PciId == acGe.PciId
+                                  where c.PciId == acEs.PciId
                                   where c.PciId == u.PciId
                                   where d.RubroPresupuestalId == c.RubroPresupuestalId
                                   where c.Instancia == (int)TipoDocumento.Cdp
@@ -261,7 +263,7 @@ namespace ComplementApp.API.Data
                                       Proy = d.Proy,
                                       Prod = d.Prod,
                                       Proyecto = ruAG.Nombre,
-                                      ActividadBpin = ae.Nombre,
+                                      ActividadBpin = acEs.Nombre,
                                       PlanDeCompras = d.PlanDeCompras,
                                       Responsable = u.Nombres + ' ' + u.Apellidos,
                                       Dependencia = de.Nombre,
@@ -302,11 +304,12 @@ namespace ComplementApp.API.Data
                                   join rp in _context.RubroPresupuestal on acGe.RubroPresupuestalId equals rp.RubroPresupuestalId into RubroActividadGeneral
                                   from rpAG in RubroActividadGeneral.DefaultIfEmpty()
                                   join ae in _context.ActividadEspecifica on new { d.ActividadEspecificaId } equals new { ae.ActividadEspecificaId } into ActividadEspecificaDetalle
-                                  from ae in ActividadEspecificaDetalle.DefaultIfEmpty()
+                                  from acEs in ActividadEspecificaDetalle.DefaultIfEmpty()
                                   join de in _context.Dependencia on new { d.DependenciaId } equals new { de.DependenciaId } into DependenciaDetalle
                                   from de in DependenciaDetalle.DefaultIfEmpty()
                                   join a in _context.Area on new { d.AreaId } equals new { a.AreaId } into AreaDetalle
                                   from a in AreaDetalle.DefaultIfEmpty()
+                                  where acGe.PciId == acEs.PciId
                                   where d.UsuarioId == usuarioId
                                   where d.Cdp == numeroCDP
 
@@ -319,7 +322,7 @@ namespace ComplementApp.API.Data
                                       Proy = d.Proy,
                                       Prod = d.Prod,
                                       Proyecto = rpAG.Nombre,
-                                      ActividadBpin = ae.Nombre,
+                                      ActividadBpin = acEs.Nombre,
                                       PlanDeCompras = d.PlanDeCompras,
                                       Responsable = u.Nombres + " " + u.Apellidos,
                                       Dependencia = de.Nombre,

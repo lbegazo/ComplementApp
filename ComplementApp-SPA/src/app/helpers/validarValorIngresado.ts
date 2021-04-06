@@ -37,6 +37,22 @@ export class ValidarValorIngresado {
     };
   }
 
+  static validacionValorIngresado(valorValidar: number): ValidatorFn {
+    let valor = 0;
+
+    return (c: AbstractControl): { [key: string]: boolean } | null => {
+      if (c.value || c.value === 0) {
+        valor = GeneralService.obtenerValorAbsoluto(c.value);
+
+        if ((valor || valor === 0) && (isNaN(valor) || valor > valorValidar)) {
+          // Reducción
+          return { valorIncorrecto: true };
+        }
+      }
+      return null;
+    };
+  }
+
   static range(min: number, max: number): ValidatorFn {
     return (c: AbstractControl): { [key: string]: boolean } | null => {
       if (

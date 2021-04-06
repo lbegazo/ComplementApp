@@ -1356,7 +1356,7 @@ namespace ComplementApp.API.Services
         }
 
 
-        public List<DetalleLiquidacion> ObtenerListaDetalleLiquidacionARegistrar(int usuarioId,
+        public List<DetalleLiquidacion> ObtenerListaDetalleLiquidacionARegistrar(int usuarioId, int pciId,
                                                                                     List<PlanPago> listaPlanPago,
                                                                                     List<FormatoSolicitudPago> listaSolicitudPago,
                                                                                     List<DetallePlanPagoDto> listaDetallePlanPago,
@@ -1488,6 +1488,7 @@ namespace ComplementApp.API.Services
                                 detalleLiquidacion.ModalidadContrato = planPago.Tercero.ModalidadContrato;
                                 detalleLiquidacion.UsuarioIdRegistro = usuarioId;
                                 detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                                detalleLiquidacion.PciId = pciId;
 
                                 MapearLiquidacionDeducciones(formato, detalleLiquidacion);
 
@@ -2287,7 +2288,7 @@ namespace ComplementApp.API.Services
             #endregion Obtener listas secundarias
 
             //Proceso de obtención de detalles de liquidación
-            listaDetalleLiquidacionARegistrar = ObtenerListaDetalleLiquidacionARegistrar(usuarioId,
+            listaDetalleLiquidacionARegistrar = ObtenerListaDetalleLiquidacionARegistrar(usuarioId, pciId,
                                                                                 listaPlanPago,
                                                                                 listaSolicitudPago,
                                                                                 listaDetallePlanPago,
