@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ComplementApp.API.Helpers;
-using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -96,6 +96,47 @@ namespace ComplementApp.API.Data
 
             return lista;
         }
+
+        public async Task<PagedList<ActividadEspecifica>> ObtenerListaActividadEspecifica(UserParams userParams)
+        {
+            var lista = ((from ae in _context.ActividadEspecifica
+                          join ag in _context.ActividadGeneral on ae.ActividadGeneralId equals ag.ActividadGeneralId
+                          join rp in _context.RubroPresupuestal on ae.RubroPresupuestalId equals rp.RubroPresupuestalId
+                          where ae.PciId == ag.PciId
+                          where ae.PciId == userParams.PciId
+                          where ae.SaldoPorProgramar > 0
+                          select new ActividadEspecifica()
+                          {
+                              ActividadEspecificaId = ae.ActividadEspecificaId,
+                              Nombre = ae.Nombre,
+                              ValorApropiacionVigente = ae.ValorApropiacionVigente,
+                              SaldoPorProgramar = ae.SaldoPorProgramar,
+                              RubroPresupuestal = new RubroPresupuestal()
+                              {
+                                  RubroPresupuestalId = rp.RubroPresupuestalId,
+                                  Identificacion = rp.Identificacion,
+                                  Nombre = rp.Nombre.Length > 100 ? rp.Nombre.Substring(0, 100) + "..." : rp.Nombre,
+                                  PadreRubroId = 0,
+                              },
+                              ActividadGeneral = new ActividadGeneral()
+                              {
+                                  ActividadGeneralId = ag.ActividadGeneralId,
+                                  ApropiacionDisponible = ag.ApropiacionDisponible,
+                                  ApropiacionVigente = ag.ApropiacionVigente,
+                                  RubroPresupuestal = new RubroPresupuestal()
+                                  {
+                                      RubroPresupuestalId = rp.RubroPresupuestalId,
+                                      Identificacion = rp.Identificacion,
+                                      Nombre = rp.Nombre.Length > 100 ? rp.Nombre.Substring(0, 100) + "..." : rp.Nombre,
+                                      PadreRubroId = 0,
+                                  },
+                              }
+                          }).Distinct()
+                            .OrderBy(t => t.RubroPresupuestal.Identificacion));
+
+            return await PagedList<ActividadEspecifica>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
 
         #endregion Tercero
     }

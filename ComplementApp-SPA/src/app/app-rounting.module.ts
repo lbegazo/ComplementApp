@@ -48,6 +48,9 @@ import { DecretoEditComponent } from './plan-paa/decreto/decreto-edit/decreto-ed
 import { ListaPciResolver } from './_resolvers/lista-Pci.resolver';
 import { ListaPerfilesResolver } from './_resolvers/lista-perfiles.resolver';
 import { EjecucionPresupuestalComponent } from './plan-paa/ejecucion-presupuestal/ejecucion-presupuestal.component';
+import { PlanAdquisicionComponent } from './plan-paa/plan-adquisicion/plan-adquisicion.component';
+import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
+import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -144,7 +147,6 @@ export const routes: Routes = [
     },
   },
 
-
   {
     path: 'PLAN_CARGAMASIVA',
     canActivate: [AuthGuard],
@@ -166,7 +168,17 @@ export const routes: Routes = [
     component: EjecucionPresupuestalComponent,
     resolve: { transaccion: TransaccionResolver },
   },
-
+  {
+    path: 'PLAN_ADQUISICIONANUAL',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: PlanAdquisicionComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      responsable: ListaUsuarioResolver,
+      dependencia: ListaDependenciaResolver,
+    },
+  },
 
   {
     path: 'SOLICITUDES_CERTIFICADO',

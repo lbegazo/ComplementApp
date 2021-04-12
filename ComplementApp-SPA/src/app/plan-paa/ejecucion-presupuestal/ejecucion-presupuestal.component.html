@@ -90,6 +90,7 @@
                     formControlName="nombreCtrl"
                     style="text-align: left; height: 30px"
                     id="descripcionIndicador"
+                    maxlength="250"
                   />
                   <div class="invalid-feedback">
                     Debe ingresar la descripción del indicador
@@ -255,13 +256,6 @@
       <table style="width: 90%; margin-left: auto; margin-right: auto">
         <tr>
           <td>
-            <button
-              type="submit"
-              class="btn btn-primary mr-2"
-              (click)="onRegistrar()"
-            >
-              Guardar
-            </button>
             <button
               type="button"
               class="btn btn-default"

@@ -15,5 +15,7 @@ namespace ComplementApp.API.Models
         public int AreaId { get; set; }
 
         public Area Area { get; set; } 
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

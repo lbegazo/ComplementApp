@@ -164,7 +164,12 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
+                    b.Property<int?>("PciId")
+                        .HasColumnType("int");
+
                     b.HasKey("AreaId");
+
+                    b.HasIndex("PciId");
 
                     b.ToTable("TArea");
                 });
@@ -514,9 +519,14 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(250)");
 
+                    b.Property<int?>("PciId")
+                        .HasColumnType("int");
+
                     b.HasKey("DependenciaId");
 
                     b.HasIndex("AreaId");
+
+                    b.HasIndex("PciId");
 
                     b.ToTable("TDependencia");
                 });
@@ -549,8 +559,8 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("ActividadGeneralId")
                         .HasColumnType("int");
 
-                    b.Property<string>("AplicaContrato")
-                        .HasColumnType("VARCHAR(10)");
+                    b.Property<bool>("AplicaContrato")
+                        .HasColumnType("bit");
 
                     b.Property<int>("AreaId")
                         .HasColumnType("int");
@@ -561,6 +571,9 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("Convenio")
                         .HasColumnType("int");
 
+                    b.Property<long>("Crp")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("DecretoId")
                         .HasColumnType("int");
 
@@ -568,6 +581,9 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("IdArchivo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PciId")
                         .HasColumnType("int");
 
                     b.Property<string>("PcpId")
@@ -580,9 +596,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Proy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rp")
                         .HasColumnType("int");
 
                     b.Property<int>("RubroPresupuestalId")
@@ -619,6 +632,8 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("decimal(30,8)");
 
                     b.HasKey("DetalleCdpId");
+
+                    b.HasIndex("PciId");
 
                     b.HasIndex("UsuarioId");
 
@@ -2245,6 +2260,15 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Pci");
                 });
 
+            modelBuilder.Entity("ComplementApp.API.Models.Area", b =>
+                {
+                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
+                        .WithMany()
+                        .HasForeignKey("PciId");
+
+                    b.Navigation("Pci");
+                });
+
             modelBuilder.Entity("ComplementApp.API.Models.CDP", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.Pci", "Pci")
@@ -2361,7 +2385,13 @@ namespace ComplementApp.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
+                        .WithMany()
+                        .HasForeignKey("PciId");
+
                     b.Navigation("Area");
+
+                    b.Navigation("Pci");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleArchivoLiquidacion", b =>
@@ -2385,11 +2415,19 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleCDP", b =>
                 {
+                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
+                        .WithMany()
+                        .HasForeignKey("PciId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ComplementApp.API.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Pci");
 
                     b.Navigation("Usuario");
                 });

@@ -167,6 +167,14 @@
     "Ruta": "PLAN_EJECUCIONPRESUPUESTAL",
     "CodigoPadreTransaccion": "PLAN"
   },
+  {
+    "Codigo": "PLAN_ADQUISICIONANUAL",
+    "Nombre": "Registrar actividades Plan Anual de Adquisiciones",
+    "Descripcion": "Registrar actividades Plan Anual de Adquisiciones",
+    "Icono": "attach_file",
+    "Ruta": "PLAN_ADQUISICIONANUAL",
+    "CodigoPadreTransaccion": "PLAN"
+  },
 
 
   {

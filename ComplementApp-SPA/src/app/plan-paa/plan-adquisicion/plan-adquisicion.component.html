@@ -1,0 +1,415 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 15px">
+              <!--ACTIVIDAD ESPECIFICA-->
+              <div class="form-row mt-3">
+                <!--Identificación-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md">Identificación</label>
+                  <p class="paragraph" style="font-size: 12px">
+                    {{
+                      actividadEspecificaSeleccionado?.rubroPresupuestal
+                        ?.identificacion
+                    }}
+                  </p>
+                </div>
+                <!--Actividad Especifica-->
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label class="col-form-label-md">Indicador</label>
+                  <p class="paragraph" style="font-size: 11px">
+                    {{ actividadEspecificaSeleccionado?.nombre }}
+                  </p>
+                </div>
+                <!--Saldo-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md center">Saldo</label>
+                  <p class="paragraphNumber">
+                    {{
+                      actividadEspecificaSeleccionado?.saldoPorProgramar
+                        | number: "1.2-2"
+                    }}
+                  </p>
+                </div>
+                <div
+                  class="form-group col-md-2 parent"
+                  style="margin: 0px; padding: 0px"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-warning child"
+                    (click)="abrirPopupActividadEspecifica()"
+                    [disabled]="!habilitarBotonPopupActividadEspecifica"
+                  >
+                    Seleccionar Indicador
+                  </button>
+                </div>
+              </div>
+              <!--RUBRO PRESUPUESTAL-->
+              <div class="form-row mt-3">
+                <!--Identificación-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md">Identificación</label>
+                  <p class="paragraph" style="font-size: 12px">
+                    {{ rubroPresupuestalSeleccionado?.identificacion }}
+                  </p>
+                </div>
+                <!--Rubro Presupuestal-->
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label class="col-form-label-md">Rubro Presupuestal</label>
+                  <p class="paragraph" style="font-size: 11px">
+                    {{ rubroPresupuestalSeleccionado?.nombre }}
+                  </p>
+                </div>
+                <div
+                  class="form-group col-md-2 parent"
+                  style="margin: 0px; padding: 0px"
+                >
+                  <div class="child">
+                    <button
+                      type="submit"
+                      class="btn btn-warning"
+                      style="width: 150px;"
+                      (click)="abrirPopupRubroPresupuestal()"
+                      [disabled]="!habilitarBotonPopupRubroPresupuestal"
+                    >
+                      Seleccionar Rubro
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!--COMPROMISO-->
+              <div class="form-row mt-3" *ngIf="!accion">
+                <!--CRP-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md">Num. Compromiso</label>
+                  <p class="paragraph" style="font-size: 12px">
+                    {{ cdpSeleccionado?.crp }}
+                  </p>
+                </div>
+                <!--DETALLE CRP-->
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label class="col-form-label-md">Detalle</label>
+                  <p class="paragraph" style="font-size: 11px">
+                    {{ cdpSeleccionado?.detalle4 }}
+                  </p>
+                </div>
+                <!--SALDO ACTUAL-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md center">Saldo</label>
+                  <p class="paragraphNumber">
+                    {{ cdpSeleccionado?.saldoActual | number: "1.2-2" }}
+                  </p>
+                </div>
+                <div
+                  class="form-group col-md-2 parent"
+                  style="margin: 0px; padding: 0px"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-warning child ml-2"
+                    (click)="abrirPopupCompromiso()"
+                    [disabled]="!habilitarBotonPopupCompromiso"
+                  >
+                    Seleccionar Compromiso
+                  </button>
+                </div>
+              </div>
+              <!--PLAN DE ADQUISICION-->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-12" style="margin: 0px">
+                  <label for="descripcionIndicador" class="col-form-label-md"
+                    >Nombre del Plan de Compras</label
+                  >
+                  <input
+                    type="text"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('nombreCtrl') !== null &&
+                        facturaHeaderForm.get('nombreCtrl').errors &&
+                        facturaHeaderForm.get('nombreCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control addPaddingLeft"
+                    placeholder="Descripción indicador"
+                    formControlName="nombreCtrl"
+                    style="text-align: left; height: 30px"
+                    id="descripcionIndicador"
+                    maxlength="250"
+                  />
+                  <div class="invalid-feedback left">
+                    Debe registrar el plan de compras
+                  </div>
+                </div>
+              </div>
+              <div class="form-row mt-3">
+                <!--RESPONSABLE-->
+                <div class="form-group col-md-3 left" style="margin: 0px">
+                  <label for="selectSupervisor1" class="col-form-label-md"
+                    >Responsable</label
+                  >
+                  <select
+                    formControlName="responsableCtrl"
+                    (change)="onSeleccionarResponsable()"
+                    class="form-control withoutPadding"
+                    style="height: 33px; padding-left: 5px"
+                    id="selectSupervisor1"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('responsableCtrl').touched &&
+                        facturaHeaderForm
+                          .get('responsableCtrl')
+                          .hasError('required')
+                    }"
+                  >
+                    <option disabled [ngValue]="null">RESPONSABLE</option>
+                    <option
+                      *ngFor="let item of listaResponsable"
+                      [ngValue]="item"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('responsableCtrl').touched &&
+                      facturaHeaderForm
+                        .get('responsableCtrl')
+                        .hasError('required')
+                    "
+                  >
+                    Debe seleccionar el responsable
+                  </div>
+                </div>
+                <!--DEPENDENCIA-->
+                <div class="form-group col-md-3 left" style="margin: 0px">
+                  <label for="selectSupervisor2" class="col-form-label-md"
+                    >Dependencia</label
+                  >
+                  <select
+                    formControlName="dependenciaCtrl"
+                    (change)="onSeleccionarDependencia()"
+                    class="form-control withoutPadding"
+                    style="height: 33px; padding-left: 5px"
+                    id="selectSupervisor2"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('dependenciaCtrl').touched &&
+                        facturaHeaderForm
+                          .get('dependenciaCtrl')
+                          .hasError('required')
+                    }"
+                  >
+                    <option disabled [ngValue]="null">DEPENDENCIA</option>
+                    <option
+                      *ngFor="let item of listaDependencia"
+                      [ngValue]="item"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('dependenciaCtrl').touched &&
+                      facturaHeaderForm
+                        .get('dependenciaCtrl')
+                        .hasError('required')
+                    "
+                  >
+                    Debe seleccionar la dependencia
+                  </div>
+                </div>
+                <!--VALOR-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputValor" class="col-form-label-md"
+                    >Valor Actividad</label
+                  >
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('valorCtrl').errors &&
+                        facturaHeaderForm.get('valorCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control addPaddingRight"
+                    placeholder="Ingresar el valor"
+                    formControlName="valorCtrl"
+                    style="text-align: right; height: 30px"
+                    id="inputValor"
+                    appDecimalMask
+                    (blur)="validarValor()"
+                  />
+                  <div class="invalid-feedback">Debe ingresar el valor</div>
+                </div>
+                <!--APLICA CONTRATO-->
+                <div class="form-group col-md-2 parent" style="margin: 0px">
+                  <div class="aplicaBackground child" style="padding: 4px 8px">
+                    <label class="col-form-label-md">
+                      <input
+                        type="checkbox"
+                        formControlName="aplicaContratoCtrl"
+                      />
+                      Aplica contrato
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--AGREGAR NUEVO ITEM-->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding: 0px">
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onAgregar()"
+                          [disabled]="!facturaHeaderForm.valid"
+                        >
+                          {{ nombreBoton }}
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-success ml-2"
+                          (click)="onLimpiar()"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 2%"></div>
+                <div style="width: 20%" class="inner center">
+                  <label class="col-form-label-md">Plan de Compras</label>
+                </div>
+                <div style="width: 13%" class="inner center">
+                  <label class="col-form-label-md">Identificación</label>
+                </div>
+                <div style="width: 40%" class="inner center">
+                  <label class="col-form-label-md">Rubro Presupuestal</label>
+                </div>
+                <div style="width: 13%" class="inner center">
+                  <label class="col-form-label-md">Valor</label>
+                </div>
+                <div style="width: 12%" class="inner center">
+                  <label class="col-form-label-md">Saldo</label>
+                </div>
+              </div>
+              <div
+                *ngIf="listaPlanAdquisicion && listaPlanAdquisicion.length > 0"
+              >
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaPlanAdquisicion; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 2%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="radio"
+                        [value]="item?.detalleCdpId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                    </div>
+                    <div style="width: 20%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.planDeCompras }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.rubroPresupuestal.identificacion }}
+                      </p>
+                    </div>
+                    <div style="width: 40%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.rubroPresupuestal.nombre }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.valorAct | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 12%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.saldoAct | number: "1.2-2" }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-12 withoutPadding right">
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onCancelar()"
+            >
+              Cancelar
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <p>Form value: {{ facturaHeaderForm.value | json }}</p>
+<p>Form status: {{ facturaHeaderForm.status | json }}</p> -->

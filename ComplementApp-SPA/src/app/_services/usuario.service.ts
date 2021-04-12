@@ -102,4 +102,9 @@ export class UsuarioService {
       this.usuarioChanged.next(this.usuarios);
     });
   }
+
+  ObtenerListaUsuario(): Observable<ValorSeleccion[]> {
+    const path = this.baseUrl + 'ObtenerListaUsuario/';
+    return this.http.get<ValorSeleccion[]>(path);
+  }
 }

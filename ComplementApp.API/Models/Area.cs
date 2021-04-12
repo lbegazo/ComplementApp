@@ -15,8 +15,8 @@ namespace ComplementApp.API.Models
         [Required]
         [Column(TypeName = "VARCHAR(100)")]
         public string Nombre { get; set; }
-
         public bool Estado { get; set; }
-
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

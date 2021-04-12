@@ -55,17 +55,17 @@
                       {{ item?.rubroPresupuestal.identificacion }}
                     </p>
                   </div>
-                  <div class="col-5 inner center">
+                  <div class="col-5 inner left">
                     <p class="medium">
                       {{ item?.rubroPresupuestal.nombre }}
                     </p>
                   </div>
-                  <div class="col-2 inner center">
+                  <div class="col-2 inner right">
                     <p class="medium">
                       {{ item?.apropiacionVigente | number: "1.2-2" }}
                     </p>
                   </div>
-                  <div class="col-2 inner center">
+                  <div class="col-2 inner right">
                     <p class="medium">
                       {{ item?.apropiacionDisponible | number: "1.2-2" }}
                     </p>
@@ -83,7 +83,7 @@
                 class="btn btn-warning"
                 (click)="onAceptar()"
               >
-                {{ closeBtnName }}
+                Aceptar
               </button>
             </div>
           </div>

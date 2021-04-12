@@ -40,7 +40,6 @@ export class ContratoEditComponent implements OnInit {
   supervisor2Seleccionado: ValorSeleccion = null;
 
   constructor(
-    private listaService: ListaService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
     private contratoService: ContratoService,

@@ -6,6 +6,7 @@ using System.Linq;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Dtos;
 using System;
+using ComplementApp.API.Helpers;
 
 namespace ComplementApp.API.Data
 {
@@ -274,6 +275,40 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaXTipoyPci(int pciId, TipoLista tipo)
+        {
+            List<ValorSeleccion> lista = new List<ValorSeleccion>();
+
+            switch (tipo)
+            {
+                case TipoLista.Dependencia:
+                    {
+                        lista = await (from m in _context.Dependencia
+                                       where m.PciId == pciId
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.DependenciaId,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.Usuario:
+                    {
+                        lista = await (from m in _context.Usuario
+                                       where m.PciId == pciId
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.UsuarioId,
+                                           Nombre = m.Nombres + ' ' + m.Apellidos,
+                                       }).ToListAsync();
+                        break;
+                    }
+                default: break;
+            }
+
+            return lista;
+        }
+
         public async Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo, string descripcion)
         {
             IQueryable<Deduccion> listaFiltrada = null;
@@ -325,6 +360,17 @@ namespace ComplementApp.API.Data
             return await _context.Pci
                         .Where(x => x.PciId == pciId)
                         .FirstOrDefaultAsync();
+        }
+
+        public async Task<PagedList<RubroPresupuestal>> ObtenerListaRubroPresupuestalPorPapa(int rubroPresupuestalId, UserParams userParams)
+        {
+            var lista = (from rp in _context.RubroPresupuestal
+                         where rp.PadreRubroId == rubroPresupuestalId
+                         select rp)
+                        .Distinct()
+                        .OrderBy(t => t.Identificacion);
+
+            return await PagedList<RubroPresupuestal>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
     }
 }

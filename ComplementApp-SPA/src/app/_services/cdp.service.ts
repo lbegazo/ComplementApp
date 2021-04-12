@@ -17,6 +17,39 @@ export class CdpService {
 
   constructor(private http: HttpClient) {}
 
+  ObtenerListaCompromiso(page?, pagesize?): Observable<PaginatedResult<Cdp[]>> {
+    let params = new HttpParams();
+    const path = 'ObtenerListaCompromiso';
+    const paginatedResult: PaginatedResult<Cdp[]> = new PaginatedResult<
+      Cdp[]
+    >();
+
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Cdp[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
   ObtenerListaCDP(): Observable<Cdp[]> {
     const path = 'ObtenerListaCDP/';
     return this.http.get<Cdp[]>(this.baseUrl + path);
@@ -104,7 +137,9 @@ export class CdpService {
     return this.http.get<SolicitudCDP>(this.baseUrl + path, { params });
   }
 
-  ObtenerRubrosPresupuestalesPorCompromiso(crp: number): Observable<DetalleCDP[]> {
+  ObtenerRubrosPresupuestalesPorCompromiso(
+    crp: number
+  ): Observable<DetalleCDP[]> {
     const path = 'ObtenerRubrosPresupuestalesPorCompromiso/';
     return this.http.get<DetalleCDP[]>(this.baseUrl + path + crp);
   }

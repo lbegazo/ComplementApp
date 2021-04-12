@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Dtos;
-using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Helpers;
 using System;
 
@@ -18,6 +18,7 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
+
         public async Task<IEnumerable<CDP>> ObtenerListaCDP(int usuarioId)
         {
 
@@ -37,6 +38,29 @@ namespace ComplementApp.API.Data
                               }).Distinct()
                               .ToListAsync();
             return cdps;
+        }
+
+        public async Task<PagedList<CDP>> ObtenerListaCompromiso(UserParams userParams)
+        {
+            var listaCompromisos = (from pp in _context.DetalleCDP
+                                    where pp.PciId == userParams.PciId
+                                    select pp.Crp).ToHashSet();
+
+            var lista = (from c in _context.CDP
+                         where c.PciId == userParams.PciId
+                         where !listaCompromisos.Contains(c.Crp)
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         select new CDP()
+                         {
+                             Crp = c.Crp,
+                             Detalle4 = c.Detalle4,
+                             SaldoActual = c.SaldoActual,
+                         })
+                         .Distinct()
+                         .OrderBy(c => c.Crp);
+
+            return await PagedList<CDP>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+
         }
 
         public async Task<CDPDto> ObtenerCDP(int usuarioId, int numeroCDP)
@@ -77,7 +101,7 @@ namespace ComplementApp.API.Data
                                       join a in _context.Area on u.AreaId equals a.AreaId
                                       join to in _context.TipoOperacion on s.TipoOperacionId equals to.TipoOperacionId
                                       join td in _context.TipoDetalleModificacion on s.TipoDetalleCDPId equals td.TipoDetalleCDPId into TipoDetalleCDP
-                                      from td in TipoDetalleCDP.DefaultIfEmpty()                                      
+                                      from td in TipoDetalleCDP.DefaultIfEmpty()
                                       where (s.SolicitudCDPId == solicitudCDPId)
                                       select new SolicitudCDPDto()
                                       {
@@ -256,7 +280,7 @@ namespace ComplementApp.API.Data
                                   where d.Cdp == numeroCDP
                                   select new DetalleCDPDto()
                                   {
-                                      Id = d.DetalleCdpId,
+                                      DetalleCdpId = d.DetalleCdpId,
                                       PcpId = d.PcpId,
                                       IdArchivo = d.IdArchivo,
                                       Cdp = d.Cdp,
@@ -277,7 +301,7 @@ namespace ComplementApp.API.Data
                                       ValorRP = d.ValorRP,
                                       ValorOB = d.ValorOB,
                                       ValorOP = d.ValorOP,
-                                      AplicaContrato = d.AplicaContrato,
+                                      AplicaContratoDescripcion = d.AplicaContrato ? "SI" : "NO",
                                       SaldoTotal = d.SaldoTotal,
                                       SaldoDisponible = d.SaldoDisponible,
                                       Area = a.Nombre,
@@ -315,7 +339,7 @@ namespace ComplementApp.API.Data
 
                                   select new DetalleCDPDto()
                                   {
-                                      Id = d.DetalleCdpId,
+                                      DetalleCdpId = d.DetalleCdpId,
                                       PcpId = d.PcpId,
                                       IdArchivo = d.IdArchivo,
                                       Cdp = d.Cdp,
@@ -334,10 +358,10 @@ namespace ComplementApp.API.Data
                                       ValorRP = d.ValorRP,
                                       ValorOB = d.ValorOB,
                                       ValorOP = d.ValorOP,
-                                      AplicaContrato = d.AplicaContrato,
+                                      AplicaContratoDescripcion = d.AplicaContrato ? "SI" : "NO",
                                       SaldoTotal = d.SaldoTotal,
                                       SaldoDisponible = d.SaldoDisponible,
-                                      Rp = d.Rp,
+                                      Crp = d.Crp,
                                       Area = a.Nombre,
                                       Valor_Convenio = d.Valor_Convenio,
                                       Convenio = d.Convenio,

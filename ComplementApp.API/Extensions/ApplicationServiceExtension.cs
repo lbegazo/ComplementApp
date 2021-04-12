@@ -4,6 +4,8 @@ using ComplementApp.API.Settings;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Services;
 using ComplementApp.API.Data;
+using ComplementApp.API.Interfaces.Repository;
+using ComplementApp.API.Interfaces.Service;
 
 namespace ComplementApp.API.Extensions
 {
@@ -34,6 +36,8 @@ namespace ComplementApp.API.Extensions
             services.AddScoped<IProcesoCreacionArchivoExcel, ProcesoCreacionArchivoExcel>();
             services.AddScoped<IContratoRepository, ContratoRepository>();
             services.AddScoped<IActividadGeneralRepository, ActividadGeneralRepository>();
+            services.AddScoped<IPlanAdquisicionRepository, PlanAdquisicionRepository>();
+            services.AddScoped<IActividadGeneralService, ActividadGeneralService>();
 
             services.AddDbContext<DataContext>();
 

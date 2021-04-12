@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +17,19 @@ namespace ComplementApp.API.Controllers
     [ApiController]
     public class ListaController : ControllerBase
     {
-        
+        #region Variable
+        int pciId = 0;
+        string valorPciId = string.Empty;
+
+        #endregion 
 
         private readonly IListaRepository _repo;
+        private readonly IMapper _mapper;
 
-        public ListaController(IListaRepository repo)
+        public ListaController(IListaRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         //[AllowAnonymous]
@@ -135,6 +144,21 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<IActionResult> ObtenerListaXTipoyPci([FromQuery(Name = "listaId")] int listaId)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+
+            TipoLista tipoLista = (TipoLista)listaId;
+            var lista = await _repo.ObtenerListaXTipoyPci(pciId, tipoLista);
+            return Ok(lista);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<IActionResult> ObtenerListaDeducciones([FromQuery(Name = "codigo")] string codigo, [FromQuery(Name = "nombre")] string nombre)
         {
             var datos = await _repo.ObtenerListaDeducciones(codigo, nombre);
@@ -159,6 +183,20 @@ namespace ComplementApp.API.Controllers
             lista.Add(new ValorSeleccion() { Id = 1, Nombre = "SI" });
             return Ok(lista);
         }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaRubroPresupuestalPorPapa([FromQuery] int rubroPresupuestalId, [FromQuery] UserParams userParams)
+        {
+            var pagedList = await _repo.ObtenerListaRubroPresupuestalPorPapa(rubroPresupuestalId, userParams);
+            var listaDto = _mapper.Map<IEnumerable<RubroPresupuestal>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                   pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
+
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

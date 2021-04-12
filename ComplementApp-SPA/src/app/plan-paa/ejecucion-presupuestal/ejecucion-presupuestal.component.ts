@@ -124,6 +124,8 @@ export class EjecucionPresupuestalComponent implements OnInit {
             })
           );
 
+          this.onRegistrar(actividadEspecificaNuevo);
+
           //#endregion Agregar
         } else {
           //#region Modificar
@@ -137,6 +139,8 @@ export class EjecucionPresupuestalComponent implements OnInit {
           this.actividadSeleccionado.saldoPorProgramar = GeneralService.obtenerValorAbsoluto(
             this.valorCtrl.value
           );
+
+          this.onRegistrar(this.actividadSeleccionado);
 
           //#endregion Modificar
         }
@@ -267,21 +271,18 @@ export class EjecucionPresupuestalComponent implements OnInit {
     }
   }
 
-  onRegistrar() {
-    const actividadGeneralPrincipal: ActividadGeneralPrincipalDto = new ActividadGeneralPrincipalDto();
-
+  onRegistrar(actividad: ActividadEspecifica) {
     let respuesta = 0;
 
-    if (this.listaActividad && this.listaActividad.length > 0) {
-      actividadGeneralPrincipal.listaActividadEspecifica = this.listaActividad;
+    if (actividad) {
 
       this.actividadService
-        .RegistrarActividadesEspecificas(actividadGeneralPrincipal)
+        .RegistrarActividadesEspecificas(actividad)
         .subscribe(
           (response: any) => {
             if (!isNaN(response)) {
               respuesta = +response;
-              this.alertify.success('Criterios de indicadores registrados');
+              this.alertify.success('Criterio de indicador registrado');
             } else {
               this.alertify.error(
                 'No se pudo registrar los valores de las apropiaciones asignadas a la entidad'
@@ -295,7 +296,9 @@ export class EjecucionPresupuestalComponent implements OnInit {
                 error
             );
           },
-          () => {}
+          () => {
+            this.onBuscarActividadesEspecificas();
+          }
         );
     }
   }

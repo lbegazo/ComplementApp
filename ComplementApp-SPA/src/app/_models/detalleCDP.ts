@@ -1,5 +1,9 @@
-export interface DetalleCDP {
-  id: number;
+import { ActividadEspecifica } from './actividadEspecifica';
+import { Cdp } from './cdp';
+import { RubroPresupuestal } from './rubroPresupuestal';
+
+export class DetalleCDP {
+  detalleCdpId: number;
   pcpId: number;
   idArchivo: number;
   cdp: number;
@@ -10,9 +14,9 @@ export interface DetalleCDP {
   planDeCompras: string;
   responsable: string;
   dependencia: string;
-  rubroPresupuestalId: number;
-  identificacionRubro: string;
-  rubroNombre: string;
+  // rubroPresupuestalId: number;
+  // identificacionRubro: string;
+  // rubroNombre: string;
   valorAct: number;
   saldoAct: number;
   valorCDP: number;
@@ -20,13 +24,20 @@ export interface DetalleCDP {
   valorRP: number;
   valorOB: number;
   valorOP: number;
-  aplicaContrato: string;
+  aplicaContrato: boolean;
+  aplicaContratoDescripcion: boolean;
   saldoTotal: number;
   saldoDisponible: number;
   area: string;
-  rp: number;
-  valor_Convenio: number;
+  crp: number;
+  valorConvenio: number;
   convenio: number;
   decreto: string;
   valorSolicitud: number;
+  estadoModificacion: number;
+  actividadEspecifica: ActividadEspecifica;
+  usuarioId: number;
+  dependenciaId: number;
+  rubroPresupuestal: RubroPresupuestal;
+  cdpDocumento: Cdp;
 }

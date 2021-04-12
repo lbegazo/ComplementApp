@@ -1,0 +1,91 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
+            <div class="row">
+              <div class="col-4 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Identificación</strong></label
+                >
+              </div>
+              <div class="col-8 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Nombre</strong></label
+                >
+              </div>
+            </div>
+            <div *ngIf="listaRubroPresupuestal">
+              <div
+                formArrayName="planPagoControles"
+                class="row"
+                *ngFor="let item of listaRubroPresupuestal; let i = index"
+              >
+                <ng-container [formGroupName]="i">
+                  <div class="col-4 inner left">
+                    <p class="medium">
+                      <input
+                        type="radio"
+                        [value]="item?.rubroPresupuestalId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                      {{ item?.identificacion }}
+                    </p>
+                  </div>
+                  <div class="col-8 inner left">
+                    <p class="medium">
+                      {{ item?.nombre }}
+                    </p>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </form>
+          <div style="height: 10px"></div>
+          <div class="d-flex justify-content-center">
+            <pagination
+              [boundaryLinks]="true"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage"
+              [(ngModel)]="pagination.currentPage"
+              (pageChanged)="pageChanged($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+              [ngModelOptions]="{ standalone: true }"
+              [maxSize]="pagination.maxSize"
+            ></pagination>
+          </div>
+
+          <div style="height: 10px"></div>
+
+          <div class="row">
+            <div class="col-12 right withoutPadding">
+              <button
+                type="button"
+                class="btn btn-warning"
+                (click)="onAceptar()"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

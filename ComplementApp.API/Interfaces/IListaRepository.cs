@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Interfaces
@@ -35,11 +36,14 @@ namespace ComplementApp.API.Interfaces
         Task<IEnumerable<UsoPresupuestal>> ObtenerListaUsoPresupuestalXRubro(int rubroPresupuestalId);
 
         Task<ICollection<ValorSeleccion>> ObtenerListaXTipo(TipoLista tipo);
+        Task<ICollection<ValorSeleccion>> ObtenerListaXTipoyPci(int pciId, TipoLista tipo);
 
         Task<IEnumerable<Deduccion>> ObtenerListaDeducciones(string codigo, string descripcion);
 
         Task<IEnumerable<ActividadEconomica>> ObtenerListaActividadesEconomicas(string codigo);
 
         Task<Pci> ObtenerPci(int pciId);
+
+        Task<PagedList<RubroPresupuestal>> ObtenerListaRubroPresupuestalPorPapa(int rubroPresupuestalId, UserParams userParams);
     }
 }

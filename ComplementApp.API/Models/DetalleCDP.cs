@@ -40,37 +40,44 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorOP { get; set; }
 
-        [Column(TypeName = "VARCHAR(10)")]
-        public string AplicaContrato { get; set; }
+        public bool AplicaContrato { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoTotal { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal SaldoDisponible { get; set; }
-
-        public int Rp { get; set; }
+        public long Crp { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal Valor_Convenio { get; set; }
 
         public int Convenio { get; set; }
-
         public int ActividadGeneralId { get; set; }
 
+        [NotMapped]
+        public ActividadGeneral ActividadGeneral { get; set; }
         public int ActividadEspecificaId { get; set; }
-
+        [NotMapped]
+        public ActividadEspecifica ActividadEspecifica { get; set; }
         public int UsuarioId { get; set; }
-
         public Usuario Usuario { get; set; }
-
         public int DependenciaId { get; set; }
-
         public int AreaId { get; set; }
-
         public int RubroPresupuestalId { get; set; }
+        [NotMapped]
+        public RubroPresupuestal RubroPresupuestal { get; set; }
+        
+        [NotMapped]
+        public CDP CdpDocumento { get; set; }
 
         public int DecretoId { get; set; }
+
+        [NotMapped]
+        public int EstadoModificacion { get; set; }
+
+        public int PciId { get; set; }
+        public Pci Pci { get; set; }
 
     }
 }

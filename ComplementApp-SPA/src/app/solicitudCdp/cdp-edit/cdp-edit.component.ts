@@ -241,7 +241,7 @@ export class CdpEditComponent implements OnInit {
       solicitudCDP.numeroActividad = this.itemCdp.idArchivo;
 
       solicitudCDP.aplicaContrato =
-        this.itemCdp.aplicaContrato === 'SI' ? true : false;
+        this.itemCdp.aplicaContrato;
 
       solicitudCDP.nombreBienServicio = this.itemCdp.planDeCompras;
       solicitudCDP.proyectoInversion = this.itemCdp.proyecto;
@@ -268,7 +268,7 @@ export class CdpEditComponent implements OnInit {
 
         item.rubroPresupuestal = new RubroPresupuestal();
         item.rubroPresupuestal.rubroPresupuestalId =
-          element.rubroPresupuestalId;
+          element.rubroPresupuestal.rubroPresupuestalId;
         item.rubroPresupuestal.nombre = 'test';
         item.rubroPresupuestal.identificacion = 'test';
         item.rubroPresupuestal.padreRubroId = 1;
@@ -386,7 +386,7 @@ export class CdpEditComponent implements OnInit {
   }
 
   get esAplicaContrato() {
-    return this.itemCdp?.aplicaContrato.toUpperCase() === 'SI' ? true : false;
+    return this.itemCdp?.aplicaContrato;
   }
 
   get mostrarTerceraFirma() {

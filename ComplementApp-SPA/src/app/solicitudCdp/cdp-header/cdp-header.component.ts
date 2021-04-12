@@ -197,7 +197,7 @@ export class CdpHeaderComponent implements OnInit {
         const rubroPre = this.rubroPresupuestalSinCdp[index];
 
         this.arrRubroPresupuestalSeleccionado.forEach((elem: number) => {
-          if ((this.rubroPresupuestalSinCdp[index] as DetalleCDP).id === elem) {
+          if ((this.rubroPresupuestalSinCdp[index] as DetalleCDP).detalleCdpId === elem) {
             this.rubroPresupuestalSinCdpSeleccionado.push(
               this.rubroPresupuestalSinCdp[index] as DetalleCDP
             );

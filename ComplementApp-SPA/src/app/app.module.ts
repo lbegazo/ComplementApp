@@ -124,6 +124,12 @@ import { ListaPciResolver } from './_resolvers/lista-Pci.resolver';
 import { ListaPerfilesResolver } from './_resolvers/lista-perfiles.resolver';
 import { EjecucionPresupuestalComponent } from './plan-paa/ejecucion-presupuestal/ejecucion-presupuestal.component';
 import { PopupRubroDecretoComponent } from './plan-paa/ejecucion-presupuestal/popup-rubro-decreto/popup-rubro-decreto.component';
+import { PlanAdquisicionComponent } from './plan-paa/plan-adquisicion/plan-adquisicion.component';
+import { PopupActividadEspecificaComponent } from './plan-paa/plan-adquisicion/popup-actividad-especifica/popup-actividad-especifica.component';
+import { PopupRubroPresupuestalComponent } from './plan-paa/plan-adquisicion/popup-rubro-presupuestal/popup-rubro-presupuestal.component';
+import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
+import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
+import { PopupCompromisoComponent } from './plan-paa/plan-adquisicion/popup-compromiso/popup-compromiso.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -203,6 +209,10 @@ export function tokenGetter() {
     DecretoEditComponent,
     EjecucionPresupuestalComponent,
     PopupRubroDecretoComponent,
+    PlanAdquisicionComponent,
+    PopupActividadEspecificaComponent,
+    PopupRubroPresupuestalComponent,
+    PopupCompromisoComponent,
   ],
   imports: [
     BrowserModule,
@@ -263,6 +273,8 @@ export function tokenGetter() {
     ListaTipoContratoResolver,
     ListaPciResolver,
     ListaPerfilesResolver,
+    ListaUsuarioResolver,
+    ListaDependenciaResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

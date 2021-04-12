@@ -5,12 +5,12 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using System;
 
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Repository
 {
     public interface ICDPRepository
     {
+        Task<PagedList<CDP>> ObtenerListaCompromiso(UserParams userParams);
         Task<IEnumerable<CDP>> ObtenerListaCDP(int usuarioId);
-
         Task<CDPDto> ObtenerCDP(int usuarioId, int numeroCDP);
 
         Task<IEnumerable<DetalleCDPDto>> ObtenerDetalleDeCDP(int usuarioId, int numeroCDP);

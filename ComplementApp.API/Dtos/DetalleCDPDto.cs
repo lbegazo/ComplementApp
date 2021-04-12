@@ -2,7 +2,7 @@ namespace ComplementApp.API.Dtos
 {
     public class DetalleCDPDto
     {
-        public int Id { get; set; }
+        public int DetalleCdpId { get; set; }
 
         public string PcpId { get; set; }
 
@@ -44,27 +44,23 @@ namespace ComplementApp.API.Dtos
         //Cabecera
         public decimal SaldoCDP { get; set; }
 
-
         public decimal ValorRP { get; set; }
-
 
         public decimal ValorOB { get; set; }
 
-
         public decimal ValorOP { get; set; }
 
-
-        public string AplicaContrato { get; set; }
-
+        public string AplicaContratoDescripcion { get; set; }
+        
+        public bool AplicaContrato { get; set; }
 
         public decimal SaldoTotal { get; set; }
-
 
         public decimal SaldoDisponible { get; set; }        
 
         public string Area { get; set; }
 
-        public int Rp { get; set; }
+        public long Crp { get; set; }
 
         public decimal Valor_Convenio { get; set; }
 

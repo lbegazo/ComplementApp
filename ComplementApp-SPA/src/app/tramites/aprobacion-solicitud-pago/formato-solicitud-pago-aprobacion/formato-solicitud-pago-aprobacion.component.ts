@@ -206,9 +206,9 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
               if (element.valorSolicitud > 0) {
                 const rubro = new ValorSeleccion();
 
-                rubro.id = element.rubroPresupuestalId;
-                rubro.codigo = element.identificacionRubro;
-                rubro.nombre = element.rubroNombre;
+                rubro.id = element.rubroPresupuestal.rubroPresupuestalId;
+                rubro.codigo = element.rubroPresupuestal.identificacion;
+                rubro.nombre = element.rubroPresupuestal.nombre;
 
                 const item: DetalleFormatoSolicitudPagoDto = {
                   detalleFormatoSolicitudPagoId: 0,

@@ -18,9 +18,6 @@ import { ActividadGeneral } from 'src/app/_models/actividadGeneral';
 })
 export class PopupRubroDecretoComponent implements OnInit {
   title: string;
-  radicarFactura: boolean;
-  closeBtnName = 'Aceptar';
-  list: any[] = [];
   listaActividadGeneral: ActividadGeneral[];
   actividadGeneralSeleccionado: ActividadGeneral;
   arrayControls = new FormArray([]);

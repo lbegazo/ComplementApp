@@ -17,7 +17,7 @@ namespace ComplementApp.API.Services
     public class ProcesoDocumentoExcel : IProcesoDocumentoExcel
     {
         #region Propiedades
-        
+
         private readonly IDocumentoRepository _repo;
         private readonly DataContext _dataContext;
 
@@ -314,7 +314,7 @@ namespace ComplementApp.API.Services
                 documento.Detalle7 = (row as DataRow).ItemArray[22].ToString();
                 documento.Detalle8 = (row as DataRow).ItemArray[23].ToString();
                 documento.Detalle9 = (row as DataRow).ItemArray[24].ToString();
-                documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();                
+                documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();
                 documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();
                 //PCI
                 documento.Pci = (row as DataRow).ItemArray[26].ToString();
@@ -331,9 +331,11 @@ namespace ComplementApp.API.Services
             List<DetalleCDPDto> listaDocumento = new List<DetalleCDPDto>();
             int numValue = 0;
             decimal value = 0;
+            bool aplicaContrato = false;
 
             foreach (var row in dtDetalle.Rows)
             {
+                aplicaContrato = false;
                 detalle = new DetalleCDPDto();
 
                 detalle.PcpId = (row as DataRow).ItemArray[0].ToString();
@@ -385,7 +387,12 @@ namespace ComplementApp.API.Services
                     if (decimal.TryParse((row as DataRow).ItemArray[16].ToString(), out value))
                         detalle.ValorOP = value;
 
-                detalle.AplicaContrato = (row as DataRow).ItemArray[17].ToString();
+                if ((row as DataRow).ItemArray[17].ToString() == "SI")
+                {
+                    aplicaContrato = true;
+                }
+
+                detalle.AplicaContrato = aplicaContrato;
 
                 if (!(row as DataRow).ItemArray[18].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[18].ToString(), out value))
@@ -399,7 +406,7 @@ namespace ComplementApp.API.Services
 
                 if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[21].ToString(), out numValue))
-                        detalle.Rp = Convert.ToInt32((row as DataRow).ItemArray[21].ToString());
+                        detalle.Crp = Convert.ToInt32((row as DataRow).ItemArray[21].ToString());
 
                 if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[22].ToString(), out value))
@@ -567,6 +574,6 @@ namespace ComplementApp.API.Services
             return resultado;
         }
 
-        
+
     }
 }

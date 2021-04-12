@@ -8,6 +8,7 @@ using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,27 @@ namespace ComplementApp.API.Controllers
             var cdps = await _repo.ObtenerListaCDP(usuarioId);
             return base.Ok(cdps);
         }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaCompromiso([FromQuery] UserParams userParams)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
+            var pagedList = await _repo.ObtenerListaCompromiso(userParams);
+            var listaDto = _mapper.Map<IEnumerable<CDP>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
+
 
         [Route("[action]/{numeroCDP}")]
         [HttpGet]

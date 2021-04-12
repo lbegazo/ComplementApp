@@ -13,28 +13,31 @@ import { Estado } from '../_models/estado';
 import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { UsoPresupuestal } from '../_dto/usoPresupuestal';
 import { Deduccion } from '../_models/deduccion';
+import { PaginatedResult } from '../_models/pagination';
+import { RubroPresupuestal } from '../_models/rubroPresupuestal';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ListaService {
-  baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl + 'lista/';
 
   constructor(private http: HttpClient) {}
 
   //#region CDP
 
   ObtenerAreas(): Observable<Area[]> {
-    return this.http.get<Area[]>(this.baseUrl + 'lista/ObtenerAreas');
+    return this.http.get<Area[]>(this.baseUrl + 'ObtenerAreas');
   }
 
   ObtenerCargos(): Observable<Cargo[]> {
-    return this.http.get<Cargo[]>(this.baseUrl + 'lista/ObtenerCargos');
+    return this.http.get<Cargo[]>(this.baseUrl + 'ObtenerCargos');
   }
 
   ObtenerListaTipoOperacion(): Observable<TipoOperacion[]> {
     return this.http.get<TipoOperacion[]>(
-      this.baseUrl + 'lista/ObtenerListaTipoOperacion'
+      this.baseUrl + 'ObtenerListaTipoOperacion'
     );
   }
 
@@ -45,14 +48,14 @@ export class ListaService {
     }
 
     return this.http.get<Estado[]>(
-      this.baseUrl + 'lista/ObtenerListaEstadoSolicitudCDP',
+      this.baseUrl + 'ObtenerListaEstadoSolicitudCDP',
       { params }
     );
   }
 
   ObtenerListaTipoDetalle(): Observable<TipoDetalleCDP[]> {
     return this.http.get<TipoDetalleCDP[]>(
-      this.baseUrl + 'lista/ObtenerListaTipoDetalleModificacion'
+      this.baseUrl + 'ObtenerListaTipoDetalleModificacion'
     );
   }
 
@@ -76,14 +79,14 @@ export class ListaService {
   }
 
   ObtenerListaPerfiles(): Observable<Perfil[]> {
-    return this.http.get<Perfil[]>(this.baseUrl + 'lista/ObtenerListaPerfiles');
+    return this.http.get<Perfil[]>(this.baseUrl + 'ObtenerListaPerfiles');
   }
 
   //#endregion
 
   ObtenerListaMeses(): Observable<ValorSeleccion[]> {
     return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'lista/ObtenerListaMeses'
+      this.baseUrl + 'ObtenerListaMeses'
     );
   }
 
@@ -94,7 +97,7 @@ export class ListaService {
       params = params.append('nombre', nombre);
     }
     return this.http.get<ValorSeleccion>(
-      this.baseUrl + 'lista/ObtenerParametroGeneralXNombre',
+      this.baseUrl + 'ObtenerParametroGeneralXNombre',
       { params }
     );
   }
@@ -111,7 +114,7 @@ export class ListaService {
       );
     }
     return this.http.get<UsoPresupuestal[]>(
-      this.baseUrl + 'lista/ObtenerListaUsoPresupuestalXRubro',
+      this.baseUrl + 'ObtenerListaUsoPresupuestalXRubro',
       { params }
     );
   }
@@ -123,14 +126,26 @@ export class ListaService {
       params = params.append('listaId', listaId.toString());
     }
     return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'lista/ObtenerListaXTipo',
+      this.baseUrl + 'ObtenerListaXTipo',
+      { params }
+    );
+  }
+
+  ObtenerListaXTipoyPci(listaId: number): Observable<ValorSeleccion[]> {
+    let params = new HttpParams();
+
+    if (listaId > 0) {
+      params = params.append('listaId', listaId.toString());
+    }
+    return this.http.get<ValorSeleccion[]>(
+      this.baseUrl + 'ObtenerListaXTipoyPci',
       { params }
     );
   }
 
   ObtenerListaSIoNO(): Observable<ValorSeleccion[]> {
     return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'lista/ObtenerListaSIoNO'
+      this.baseUrl + 'ObtenerListaSIoNO'
     );
   }
 
@@ -140,8 +155,48 @@ export class ListaService {
     params = params.append('tipo', tipo);
 
     return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'lista/ObtenerParametrosGeneralesXTipo',
+      this.baseUrl + 'ObtenerParametrosGeneralesXTipo',
       { params }
     );
+  }
+
+  ObtenerListaRubroPresupuestalPorPapa(
+    rubroPresupuestalId,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<RubroPresupuestal[]>> {
+    let params = new HttpParams();
+    const path = 'ObtenerListaRubroPresupuestalPorPapa';
+    const paginatedResult: PaginatedResult<
+      RubroPresupuestal[]
+    > = new PaginatedResult<RubroPresupuestal[]>();
+
+    if (rubroPresupuestalId != null) {
+      params = params.append('rubroPresupuestalId', rubroPresupuestalId);
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<RubroPresupuestal[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
   }
 }
