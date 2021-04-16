@@ -271,7 +271,6 @@ namespace ComplementApp.API.Data
                           where pp.PciId == pt.PciId
                           where pp.PciId == us.PciId
                           where pp.PciId == contra.PciId
-                          where pp.PciId == contra.PciId
                           where contra.PciId == super.PciId
 
                           where pp.PlanPagoId == planPagoId

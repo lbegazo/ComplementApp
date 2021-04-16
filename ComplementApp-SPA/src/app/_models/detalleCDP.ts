@@ -14,9 +14,6 @@ export class DetalleCDP {
   planDeCompras: string;
   responsable: string;
   dependencia: string;
-  // rubroPresupuestalId: number;
-  // identificacionRubro: string;
-  // rubroNombre: string;
   valorAct: number;
   saldoAct: number;
   valorCDP: number;

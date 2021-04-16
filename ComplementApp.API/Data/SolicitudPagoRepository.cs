@@ -208,7 +208,7 @@ namespace ComplementApp.API.Data
                                      Detalle4 = grp.Key.Detalle4,
                                      Detalle7 = grp.Key.Detalle7,
                                      TerceroId = grp.Key.TerceroId,
-                                     ValorInicial = grp.Sum(i => i.SaldoActual),
+                                     ValorInicial = grp.Sum(i => i.ValorInicial),
                                      Operacion = grp.Sum(i => i.Operacion),
                                      ValorTotal = grp.Sum(i => i.ValorTotal),
                                      SaldoActual = grp.Sum(i => i.SaldoActual)
@@ -350,7 +350,7 @@ namespace ComplementApp.API.Data
                                      Detalle4 = grp.Key.Detalle4,
                                      TerceroId = grp.Key.TerceroId,
                                      Detalle7 = grp.Key.Detalle7,
-                                     ValorInicial = grp.Sum(i => i.SaldoActual),
+                                     ValorInicial = grp.Sum(i => i.ValorInicial),
                                      Operacion = grp.Sum(i => i.Operacion),
                                      ValorTotal = grp.Sum(i => i.ValorTotal),
                                      SaldoActual = grp.Sum(i => i.SaldoActual)

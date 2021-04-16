@@ -215,25 +215,28 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId)
+        public async Task<ICollection<DetalleCDP>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId)
         {
             var detalles = await (from d in _context.CDP
                                   join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
                                   where d.Instancia == (int)TipoDocumento.Compromiso
                                   where d.PciId == pciId
                                   where d.Crp == crp
-                                  select new DetalleCDPDto()
+                                  select new DetalleCDP()
                                   {
-                                      RubroPresupuestalId = i.RubroPresupuestalId,
-                                      IdentificacionRubro = i.Identificacion,
-                                      RubroNombre = i.Nombre,
                                       ValorCDP = d.ValorInicial,
-                                      SaldoCDP = d.Operacion,
-                                      ValorOP = d.ValorTotal,
-                                      SaldoAct = d.SaldoActual
+                                      ValorOP = d.Operacion,
+                                      //ValorOP = d.ValorTotal,
+                                      SaldoAct = d.SaldoActual,
+                                      RubroPresupuestal = new RubroPresupuestal()
+                                      {
+                                          RubroPresupuestalId = i.RubroPresupuestalId,
+                                          Identificacion = i.Identificacion,
+                                          Nombre = i.Nombre,
+                                      }
                                   })
                                  .Distinct()
-                                 .OrderBy(x => x.IdentificacionRubro)
+                                 .OrderBy(x => x.RubroPresupuestal.Identificacion)
                                  .ToListAsync();
             return detalles;
         }
