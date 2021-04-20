@@ -255,6 +255,7 @@ namespace ComplementApp.API.Controllers
                             {
                                 numeracionBase.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
                                 numeracionBase.Utilizado = true;
+                                numeracionBase.PciId = pciId;
                                 await _dataContext.SaveChangesAsync();
                             }
                         }
@@ -375,7 +376,7 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
 
-            throw new Exception($"No se pudo obtener la lista de relaciones contables");
+            throw new Exception($"No se pudo obtener información de la solicitud de pago");
         }
 
         [Route("[action]")]

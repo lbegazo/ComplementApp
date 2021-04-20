@@ -314,24 +314,24 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaPlanPagoId)
         {
             return await (from pp in _context.PlanPago
-                          join c in _context.CDP on pp.Crp equals c.Crp
+                          join c in _context.CDP on new { pp.Crp, pp.PciId } equals new { c.Crp, c.PciId }
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
-                          join sp in _context.FormatoSolicitudPago on pp.PlanPagoId equals sp.PlanPagoId
+                          join sp in _context.FormatoSolicitudPago on new { pp.PlanPagoId, pp.PciId } equals new { sp.PlanPagoId, sp.PciId }
 
-                          join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
+                          join p in _context.ParametroLiquidacionTercero on new { pp.TerceroId, pp.PciId } equals new { p.TerceroId, p.PciId } into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
 
                           join u in _context.Usuario on pp.UsuarioIdRegistro equals u.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
-                          join con in _context.Contrato on pp.Crp equals con.Crp into Contrato
+                          join con in _context.Contrato on new { pp.Crp, pp.PciId } equals new { con.Crp, con.PciId } into Contrato
                           from contra in Contrato.DefaultIfEmpty()
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
 
-                          where pp.PciId == c.PciId
-                          where pp.PciId == sp.PciId
-                          where pp.PciId == pt.PciId
+                              //where pp.PciId == c.PciId
+                              //where pp.PciId == sp.PciId
+                              //where pp.PciId == pt.PciId
                           where pp.PciId == us.PciId
                           where pp.PciId == contra.PciId
                           where contra.PciId == super.PciId

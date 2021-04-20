@@ -44,18 +44,25 @@ namespace ComplementApp.API.Services
             { 
                 var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPagoParaSolicitudPago(planPagoId);
 
-                IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
-                var parametros = parametroGenerales.ToList();
-
-                ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId, pciId);
-
-                if (parametroGenerales != null && parametroLiquidacion != null)
+                if(planPagoDto!=null)
                 {
-                    if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
+                    IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
+                    var parametros = parametroGenerales.ToList();
+
+                    ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId, pciId);
+
+                    if (parametroGenerales != null && parametroLiquidacion != null)
                     {
-                        formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, valorBaseCotizacion);
+                        if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
+                        {
+                            formato = ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion, parametros, valorBaseCotizacion);
+                        }
+                        formato.PlanPagoId = planPagoId;
                     }
-                    formato.PlanPagoId = planPagoId;
+                }
+                else
+                {
+                    throw new Exception($"No se pudo obtener información del plan de pago");
                 }
             }
             catch (Exception)
