@@ -21,6 +21,7 @@ namespace ComplementApp.API.Services
         private readonly IDocumentoRepository _repo;
         private readonly DataContext _dataContext;
 
+        const int maxLongitudDetalle = 250;
         const int numeroColumnasCabecera = 27;
         const int numeroColumnasDetalle = 25;
         const int numeroColumnasPlanPago = 29;
@@ -278,7 +279,7 @@ namespace ComplementApp.API.Services
                     if (DateTime.TryParse((row as DataRow).ItemArray[5].ToString(), out fecha))
                         documento.Fecha = fecha;
 
-                documento.Detalle1 = (row as DataRow).ItemArray[7].ToString();
+                documento.Detalle1 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), maxLongitudDetalle);
 
                 //Rubro
                 documento.IdentificacionRubro = (row as DataRow).ItemArray[8].ToString().Trim();
@@ -299,9 +300,9 @@ namespace ComplementApp.API.Services
                     if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
                         documento.SaldoActual = value;
 
-                documento.Detalle2 = (row as DataRow).ItemArray[13].ToString();
-                documento.Detalle3 = (row as DataRow).ItemArray[14].ToString();
-                documento.Detalle4 = (row as DataRow).ItemArray[16].ToString();
+                documento.Detalle2 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[13].ToString(), maxLongitudDetalle);
+                documento.Detalle3 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[14].ToString(), maxLongitudDetalle);
+                documento.Detalle4 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 4000);
 
                 if (!(row as DataRow).ItemArray[17].ToString().Equals(string.Empty))
                     if (Int32.TryParse((row as DataRow).ItemArray[17].ToString(), out numValue))
@@ -309,13 +310,12 @@ namespace ComplementApp.API.Services
 
                 documento.NumeroIdentificacionTercero = (row as DataRow).ItemArray[18].ToString();
 
-                documento.Detalle5 = (row as DataRow).ItemArray[20].ToString();
-                documento.Detalle6 = (row as DataRow).ItemArray[21].ToString();
-                documento.Detalle7 = (row as DataRow).ItemArray[22].ToString();
-                documento.Detalle8 = (row as DataRow).ItemArray[23].ToString();
-                documento.Detalle9 = (row as DataRow).ItemArray[24].ToString();
-                documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();
-                documento.Detalle10 = (row as DataRow).ItemArray[25].ToString();
+                documento.Detalle5 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[20].ToString(), maxLongitudDetalle);
+                documento.Detalle6 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[21].ToString(), maxLongitudDetalle);
+                documento.Detalle7 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[22].ToString(), maxLongitudDetalle);
+                documento.Detalle8 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[23].ToString(), maxLongitudDetalle);
+                documento.Detalle9 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), maxLongitudDetalle);
+                documento.Detalle10 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), maxLongitudDetalle);
                 //PCI
                 documento.Pci = (row as DataRow).ItemArray[26].ToString();
 
@@ -574,6 +574,17 @@ namespace ComplementApp.API.Services
             return resultado;
         }
 
-
+        private string ObtenerCadenaLimitada(string cadena, int limite)
+        {
+            if (!string.IsNullOrEmpty(cadena))
+            {
+                if (cadena.Length > limite)
+                {
+                    return cadena.Substring(0, limite - 1);
+                }
+                return cadena;
+            }
+            return string.Empty;
+        }
     }
 }
