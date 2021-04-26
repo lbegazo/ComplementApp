@@ -8,5 +8,6 @@ namespace ComplementApp.API.Interfaces
          Task<Usuario> Register(Usuario user, string password);
          Task<Usuario> Login(string username, string password);
          Task<bool> UserExists(string username);
+         Task<bool> ValidateDate();
     }
 }

@@ -66,6 +66,11 @@ namespace ComplementApp.API.Controllers
                     return BadRequest("El usuario no existe");
             }
 
+            var result = await _repo.ValidateDate();
+
+            if (!result)
+                return BadRequest("El sistema no se encuentra activo");
+
 
             /**************************Create the token************************************/
             //var role = userFromRepo.EsAdministrador ? 1 : 0;

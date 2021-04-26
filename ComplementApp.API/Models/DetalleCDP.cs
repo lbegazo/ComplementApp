@@ -79,5 +79,8 @@ namespace ComplementApp.API.Models
         public int PciId { get; set; }
         public Pci Pci { get; set; }
 
+        [NotMapped]
+        public string Dependencia { get; set; }
+
     }
 }

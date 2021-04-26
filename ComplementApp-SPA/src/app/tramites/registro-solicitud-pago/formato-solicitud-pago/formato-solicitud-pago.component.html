@@ -824,37 +824,43 @@
                                     <!--Titulo de Columnas-->
                                     <div class="row borderTop">
                                       <div
-                                        style="width: 15%"
+                                        style="width: 13%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong>CODIGO</strong>
                                       </div>
                                       <div
-                                        style="width: 45%"
+                                        style="width: 30%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong>NOMBRE RUBRO</strong>
                                       </div>
                                       <div
-                                        style="width: 10%"
+                                        style="width: 25%"
+                                        class="borderBottonRight aplicaBackground fontSmaller"
+                                      >
+                                        <strong>DEPENDENCIA</strong>
+                                      </div>
+                                      <div
+                                        style="width: 8%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong>VALOR INICIAL</strong>
                                       </div>
                                       <div
-                                        style="width: 10%"
+                                        style="width: 8%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <strong>VALOR OPERACION</strong>
+                                        <strong>VALOR OPER.</strong>
                                       </div>
                                       <div
-                                        style="width: 10%"
+                                        style="width: 8%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong> VALOR ACTUAL</strong>
                                       </div>
                                       <div
-                                        style="width: 10%"
+                                        style="width: 8%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
                                         <strong>SALDO ACTUAL</strong>
@@ -874,19 +880,25 @@
                                           >
                                             <ng-container [formGroupName]="i">
                                               <div
-                                                style="width: 15%"
+                                                style="width: 13%"
                                                 class="borderBottonRight centerAlign fontSmaller"
                                               >
-                                                {{ item?.identificacionRubro }}
+                                                {{ item?.rubroPresupuestal?.identificacion }}
                                               </div>
                                               <div
-                                                style="width: 45%"
+                                                style="width: 30%"
                                                 class="borderBottonRight left addPaddingLeft5 addPaddingRight5 fontSmaller"
                                               >
-                                                {{ item?.rubroNombre }}
+                                                {{ item?.rubroPresupuestal?.nombre }}
                                               </div>
                                               <div
-                                                style="width: 10%"
+                                                style="width: 25%"
+                                                class="borderBottonRight left addPaddingLeft5 addPaddingRight5 fontSmaller"
+                                              >
+                                                {{ item?.dependencia }}
+                                              </div>
+                                              <div
+                                                style="width: 8%"
                                                 class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
                                                 {{
@@ -895,7 +907,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 10%"
+                                                style="width: 8%"
                                                 class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
                                                 {{
@@ -904,7 +916,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 10%"
+                                                style="width: 8%"
                                                 class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
                                                 {{
@@ -913,7 +925,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 10%"
+                                                style="width: 8%"
                                                 class="borderBottonRight right addPaddingRight fontSmaller"
                                               >
                                                 {{

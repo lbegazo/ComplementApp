@@ -91,7 +91,7 @@ namespace ComplementApp.API.Data
                          where cla.PciId == c.PciId
                          where cla.PciId == rc.PciId
                          where cla.PciId == usoPre.PciId
-                         where cla.PciId == pciId                         
+                         where cla.PciId == pciId
                          where rp.RubroPresupuestalId == c.RubroPresupuestalId
                          select new ClavePresupuestalContableDto()
                          {
@@ -153,7 +153,7 @@ namespace ComplementApp.API.Data
                                   {
                                       CdpId = c.CdpId,
                                       Crp = c.Crp,
-                                      Dependencia = c.Detalle2,
+                                      Dependencia = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
                                       RubroPresupuestal = new ValorSeleccion()
                                       {
                                           Id = rp.RubroPresupuestalId,
@@ -209,9 +209,9 @@ namespace ComplementApp.API.Data
                                   where cla.PciId == rc.PciId
                                   where cla.PciId == usoPre.PciId
                                   where cla.Crp == crp
-                                  where cla.PciId == pciId                                  
+                                  where cla.PciId == pciId
                                   where c.Instancia == (int)TipoDocumento.Compromiso
-                                  
+
                                   select new ClavePresupuestalContableDto()
                                   {
                                       ClavePresupuestalContableId = cla.ClavePresupuestalContableId,

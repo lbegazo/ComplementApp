@@ -107,6 +107,7 @@ namespace ComplementApp.API.Data
         public DbSet<Numeracion> Numeracion { get; set; }
         public DbSet<TipoContrato> TipoContrato { get; set; }
         public DbSet<Pci> Pci { get; set; }
+        public DbSet<ParametroSistema> ParametroSistema { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()
