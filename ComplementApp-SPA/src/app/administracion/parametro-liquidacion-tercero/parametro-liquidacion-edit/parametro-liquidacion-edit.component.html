@@ -1044,6 +1044,7 @@
                               formControlName="actividadCtrl"
                               id="inputActividadEconomica"
                               value="{{ actividadEconomica?.nombre }}"
+                              placeholder="Actividad Económica"
                               readonly
                             />
                           </div>
@@ -1111,14 +1112,14 @@
                                     (click)="onAgregarDeduccion()"
                                     [disabled]="!habilitarBotonAgregar"
                                   >
-                                    Agregar</button
+                                    {{nombreBotonAgregar}}</button
                                   >&nbsp;
                                   <button
                                     type="submit"
                                     class="btn btn-danger"
                                     (click)="onEliminarDeduccion()"
                                     [disabled]="
-                                      listaTerceroDeducciones.length === 0
+                                      terceroDeduccionSeleccionadoId===0
                                     "
                                   >
                                     Eliminar</button
@@ -1137,10 +1138,11 @@
                         </div>
                         <!--Grilla-->
                         <div class="form-row mt-2">
+                          <div style="width: 2%"></div>
                           <div style="width: 3%" class="inner center">
                             <label class="col-form-label-md">Cod.</label>
                           </div>
-                          <div style="width: 25%" class="inner center">
+                          <div style="width: 24%" class="inner center">
                             <label class="col-form-label-md"
                               >Actividad Económica</label
                             >
@@ -1148,7 +1150,7 @@
                           <div style="width: 12%" class="inner center">
                             <label class="col-form-label-md">Código</label>
                           </div>
-                          <div style="width: 28%" class="inner center">
+                          <div style="width: 27%" class="inner center">
                             <label class="col-form-label-md">Deducción</label>
                           </div>
                           <div style="width: 5%" class="inner center">
@@ -1172,6 +1174,17 @@
                           >
                             <ng-container [formGroupName]="i">
                               <div
+                              style="width: 2%"
+                              class="inner center aplicaBackground"
+                            >
+                              <input
+                                type="radio"
+                                [value]="item?.terceroDeduccionId"
+                                (change)="onCheckChange($event)"
+                                name="inlineDefaultRadiosExample"
+                              />
+                            </div>
+                              <div
                                 style="width: 3%"
                                 class="inner center aplicaBackground"
                               >
@@ -1180,7 +1193,7 @@
                                 </p>
                               </div>
                               <div
-                                style="width: 25%"
+                                style="width: 24%"
                                 class="inner left aplicaBackground"
                               >
                                 <p style="font-size: 12px">
@@ -1196,7 +1209,7 @@
                                 </p>
                               </div>
                               <div
-                                style="width: 28%"
+                                style="width: 27%"
                                 class="inner left aplicaBackground"
                               >
                                 <p style="font-size: 12px">
@@ -1404,8 +1417,8 @@
     </div>
   </div>
 </div>
-<!-- 
-<p>Form status: {{ editForm.status | json }}</p>
+
+<!-- <p>Form status: {{ editForm.status | json }}</p>
 
   <p>Form value: {{ editForm.value | json }}</p>
 

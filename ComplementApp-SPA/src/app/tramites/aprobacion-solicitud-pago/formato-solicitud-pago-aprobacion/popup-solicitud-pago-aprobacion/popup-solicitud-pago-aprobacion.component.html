@@ -160,11 +160,14 @@
             <!--RUBROS PRESUPUESTALES TITULO-->
             <div class="form-row">
               <div class="col-1"></div>
-              <div class="col-3 inner center">
+              <div class="col-2 inner center">
                 <small><strong>CODIGO</strong></small>
               </div>
-              <div class="col-6 inner center">
+              <div class="col-4 inner center">
                 <small><strong>DESCRIPCION</strong></small>
+              </div>
+              <div class="col-3 inner center">
+                <small><strong>DEPENDENCIA</strong></small>
               </div>
               <div class="col-2 inner center">
                 <small><strong>VALOR SOLICITUD</strong></small>
@@ -187,11 +190,14 @@
                         Elim.
                       </button>
                     </div>
-                    <div class="col-3 inner center aplicaBackground">
-                      <small>{{ item?.rubroPresupuestal.Identificacion }}</small>
+                    <div class="col-2 inner center aplicaBackground">
+                      <small>{{ item?.rubroPresupuestal.identificacion }}</small>
                     </div>
-                    <div class="col-6 inner left aplicaBackground">
+                    <div class="col-4 inner left aplicaBackground">
                       <small>{{ item?.rubroPresupuestal.nombre }}</small>
+                    </div>
+                    <div class="col-3 inner left aplicaBackground">
+                      <small>{{ item?.dependencia }}</small>
                     </div>
                     <div class="col-2 inner center aplicaBackground">
                       <input

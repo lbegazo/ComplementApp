@@ -134,7 +134,7 @@ namespace ComplementApp.API.Data
                          where c.PciId == userParams.PciId
                          where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoActual > 0 //Saldo Disponible
-                         where c.TerceroId == terceroId || terceroId == null                         
+                         where c.TerceroId == terceroId || terceroId == null
                          select new TerceroDto()
                          {
                              TerceroId = t.TerceroId,
@@ -311,6 +311,24 @@ namespace ComplementApp.API.Data
                                       .Where(x => x.ParametroLiquidacionTerceroId == id).ToListAsync();
             _context.TerceroDeducciones.RemoveRange(listaExistente);
             return true;
+        }
+
+        public async Task<bool> EliminarTerceroDeduccion(int terceroDeduccionId)
+        {
+            var terceroDeduccion = await _context.TerceroDeducciones
+                                      .Where(x => x.TerceroDeduccionId == terceroDeduccionId).FirstOrDefaultAsync();
+
+            if (terceroDeduccion != null)
+            {
+                _context.TerceroDeducciones.Remove(terceroDeduccion);
+            }
+            return true;
+        }
+
+        public async Task<TerceroDeduccion> ObtenerTerceroDeduccionBase(int terceroDeduccionId)
+        {
+            return await _context.TerceroDeducciones
+                        .Where(x => x.TerceroDeduccionId == terceroDeduccionId).FirstOrDefaultAsync();
         }
 
         public async Task<ICollection<ValorSeleccion>> ObtenerListaActividadesEconomicaXTercero(int terceroId, int pciId)

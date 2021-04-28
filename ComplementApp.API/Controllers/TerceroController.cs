@@ -398,34 +398,86 @@ namespace ComplementApp.API.Controllers
                 parametroBD.UsuarioIdModificacion = usuarioId;
                 parametroBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
 
-                //Eliminar Tercero deducciones
-                await _repo.EliminarTerceroDeduccionesXTercero(parametroDto.TerceroId, pciId);
-                await _dataContext.SaveChangesAsync();
-
                 //Registrar nueva lista de Tercero deducciones
                 if (parametroDto.TerceroDeducciones != null && parametroDto.TerceroDeducciones.Count > 0)
                 {
-                    foreach (var item in parametroDto.TerceroDeducciones)
-                    {
-                        itemTerceroDeduccion = new TerceroDeduccion();
-                        itemTerceroDeduccion.TerceroId = item.Tercero.Id;
-                        itemTerceroDeduccion.ParametroLiquidacionTerceroId = parametroBD.ParametroLiquidacionTerceroId;
-                        itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
+                    #region Eliminar Tercero Deducción
 
-                        if (item.Deduccion.DeduccionId > 0)
+                    var listaTerceroDeduccionEliminar = parametroDto.TerceroDeducciones.Where(x => x.EstadoModificacion == (int)EstadoModificacion.Eliminado).ToList();
+
+                    if (listaTerceroDeduccionEliminar != null && listaTerceroDeduccionEliminar.Count > 0)
+                    {
+                        foreach (var item in listaTerceroDeduccionEliminar)
                         {
-                            itemTerceroDeduccion.DeduccionId = item.Deduccion.DeduccionId;
-                            itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                            await _repo.EliminarTerceroDeduccion(item.TerceroDeduccionId);
                         }
-                        else
-                        {
-                            itemTerceroDeduccion.DeduccionId = null;
-                            itemTerceroDeduccion.TerceroDeDeduccionId = null;
-                        }
-                        listaTerceroDeduccion.Add(itemTerceroDeduccion);
                     }
-                    _dataContext.TerceroDeducciones.AddRange(listaTerceroDeduccion);
-                    await _dataContext.SaveChangesAsync();
+
+                    #endregion Eliminar Tercero Deducción
+
+                    #region Insertar Tercero Deducción
+
+                    var listaTerceroDeduccionNuevo = parametroDto.TerceroDeducciones.Where(x => x.EstadoModificacion == (int)EstadoModificacion.Insertado).ToList();
+
+                    if (listaTerceroDeduccionNuevo != null && listaTerceroDeduccionNuevo.Count > 0)
+                    {
+                        foreach (var item in listaTerceroDeduccionNuevo)
+                        {
+                            itemTerceroDeduccion = new TerceroDeduccion();
+                            itemTerceroDeduccion.TerceroId = item.Tercero.Id;
+                            itemTerceroDeduccion.ParametroLiquidacionTerceroId = parametroBD.ParametroLiquidacionTerceroId;
+                            itemTerceroDeduccion.ActividadEconomicaId = item.ActividadEconomica.Id;
+
+                            if (item.Deduccion.DeduccionId > 0)
+                            {
+                                itemTerceroDeduccion.DeduccionId = item.Deduccion.DeduccionId;
+                                itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                            }
+                            else
+                            {
+                                itemTerceroDeduccion.DeduccionId = null;
+                                itemTerceroDeduccion.TerceroDeDeduccionId = null;
+                            }
+                            listaTerceroDeduccion.Add(itemTerceroDeduccion);
+                        }
+                        _dataContext.TerceroDeducciones.AddRange(listaTerceroDeduccion);
+                        await _dataContext.SaveChangesAsync();
+                    }
+
+                    #endregion Insertar Tercero Deducción
+
+                    #region Modificar Tercero Deducción
+
+                    var listaTerceroDeduccionModificar = parametroDto.TerceroDeducciones.Where(x => x.EstadoModificacion == (int)EstadoModificacion.Modificado).ToList();
+
+                    if (listaTerceroDeduccionModificar != null && listaTerceroDeduccionModificar.Count > 0)
+                    {
+                        foreach (var item in listaTerceroDeduccionModificar)
+                        {
+                            var terceroDeduccionBD = await _repo.ObtenerTerceroDeduccionBase(item.TerceroDeduccionId);
+
+                            if (terceroDeduccionBD != null)
+                            {
+                                terceroDeduccionBD.TerceroId = item.Tercero.Id;
+                                terceroDeduccionBD.ActividadEconomicaId = item.ActividadEconomica.Id;
+
+                                if (item.Deduccion.DeduccionId > 0)
+                                {
+                                    terceroDeduccionBD.DeduccionId = item.Deduccion.DeduccionId;
+                                    terceroDeduccionBD.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                                }
+                                else
+                                {
+                                    terceroDeduccionBD.DeduccionId = null;
+                                    terceroDeduccionBD.TerceroDeDeduccionId = null;
+                                }
+                            }
+                            await _dataContext.SaveChangesAsync();
+                        }
+                    }
+
+                    #endregion Modificar Tercero Deducción
+
                 }
 
                 await _dataContext.SaveChangesAsync();
