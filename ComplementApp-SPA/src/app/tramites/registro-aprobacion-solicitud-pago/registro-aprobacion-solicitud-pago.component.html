@@ -1,0 +1,229 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--TERCERO-->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-3" style="margin: 0px">
+                  <label for="inputNumeroTercero" class="col-form-label-md"
+                    >Número de identificación</label
+                  >
+                  <input
+                    [(ngModel)]="search"
+                    typeaheadOptionField="numeroIdentificacion"
+                    [typeahead]="suggestions$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    placeholder="Ingrese el número tercero"
+                    formControlName="terceroCtrl"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    style="height: 20px"
+                    id="inputNumeroTercero"
+                    value="{{ tercero?.numeroIdentificacion }}"
+                  />
+                  <div
+                    class="alert alert-danger"
+                    role="alert"
+                    *ngIf="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
+                </div>
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label for="inputTercero" class="col-form-label-md"
+                    >Nombre del tercero</label
+                  >
+                  <input
+                    [(ngModel)]="searchNombre"
+                    typeaheadOptionField="nombre"
+                    [typeahead]="suggestionsXNombre$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelectXNombre($event)"
+                    class="form-control border addPaddingLeft"
+                    style="height: 20px; background-color: white"
+                    maxlength="50"
+                    formControlName="terceroDescripcionCtrl"
+                    id="inputTercero"
+                    value="{{ tercero?.nombre }}"
+                    placeholder="Ingrese el nombre del tercero"
+                  />
+                </div>
+
+                <div class="form-group col-md-3" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        &nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                          style="width: 80px"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarFactura()"
+                          style="width: 80px"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 2%"></div>
+                <div style="width: 6%" class="inner center">
+                  <label class="col-form-label-md">CRP</label>
+                </div>
+                <div style="width: 8%" class="inner center">
+                  <label class="col-form-label-md">Núm. Tercero</label>
+                </div>
+                <div style="width: 37%" class="inner center">
+                  <label class="col-form-label-md">Tercero</label>
+                </div>
+                <div style="width: 47%" class="inner center">
+                  <label class="col-form-label-md">Objeto</label>
+                </div>
+              </div>
+              <div *ngIf="listaPlanPago">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaPlanPago; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 2%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="radio"
+                        [value]="item?.crp"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                    </div>
+                    <div
+                      style="width: 6%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.crp }}</p>
+                    </div>
+                    <div
+                      style="width: 8%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.numeroIdentificacionTercero }}
+                      </p>
+                    </div>
+                    <div style="width: 37%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.nombreTercero }}
+                      </p>
+                    </div>
+                    <div style="width: 47%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.detalle4 }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onRegistrarSolicitud()"
+                    [disabled]="crp === 0"
+                  >
+                    Registrar Solicitud
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="container-fluid mt-2">
+  <div class="row no-gutters center">
+    <div
+      class="col-12"
+      *ngIf="formatoSolicitudPago && parametroLiquidacionSeleccionado"
+    >
+      <app-formato-solicitud-pago-edit
+        [formatoSolicitudPago]="formatoSolicitudPago"
+        [parametroLiquidacionSeleccionado]="parametroLiquidacionSeleccionado"
+        [listaNotasLegales]="listaNotasLegales"
+        (esCancelado)="HabilitarCabecera($event)"
+      >
+      </app-formato-solicitud-pago-edit>
+    </div>
+  </div>
+</div>

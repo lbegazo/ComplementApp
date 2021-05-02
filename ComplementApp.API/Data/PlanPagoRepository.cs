@@ -146,6 +146,7 @@ namespace ComplementApp.API.Data
                          where c.PciId == userParams.PciId
                          where pl.PciId == userParams.PciId
                          where listaEstadoId.Contains(c.EstadoPlanPagoId.Value)
+                         where c.SaldoDisponible > 0
                          select new PlanPago()
                          {
                              PlanPagoId = c.PlanPagoId,
@@ -154,6 +155,7 @@ namespace ComplementApp.API.Data
                              AnioPago = c.AnioPago,
                              MesPago = c.MesPago,
                              ValorAPagar = c.ValorAPagar,
+                             SaldoDisponible= c.SaldoDisponible.Value,
                              Viaticos = c.Viaticos,
                              NumeroPago = c.NumeroPago,
                              EstadoPlanPagoId = c.EstadoPlanPagoId,

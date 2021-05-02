@@ -8,7 +8,7 @@ export interface PlanPago {
   valorInicial: number;
   valorAdicion: number;
   valorAPagar: number;
-  valorPagado: number;
+  saldoDisponible: number;
   viaticos: boolean;
   viaticosDescripcion: string;
   numeroPago: number;

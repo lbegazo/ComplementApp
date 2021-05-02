@@ -51,6 +51,7 @@ import { EjecucionPresupuestalComponent } from './plan-paa/ejecucion-presupuesta
 import { PlanAdquisicionComponent } from './plan-paa/plan-adquisicion/plan-adquisicion.component';
 import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
 import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
+import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -216,6 +217,16 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: AprobacionSolicitudPagoComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },
+  {
+    path: 'TRAMITE_REGISTRARAPROBAR',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: RegistroAprobacionSolicitudPagoComponent,
     resolve: {
       transaccion: TransaccionResolver,
       usuarioLogueado: UsuarioDetalleResolver,

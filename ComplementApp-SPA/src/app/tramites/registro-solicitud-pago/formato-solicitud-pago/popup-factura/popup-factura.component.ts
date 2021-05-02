@@ -56,7 +56,8 @@ export class PopupFacturaComponent implements OnInit {
   }
 
   cargarPlanesPago() {
-    this.listaEstadoId = this.estadoPlanPagoPorPagar.toString(); // Por pagar
+    this.listaEstadoId =
+      this.estadoPlanPagoPorPagar.toString() + ',' + this.estadoPlanPagoPorObligar.toString(); // Por pagar
 
     this.facturaService
       .ObtenerListaPlanPagoXCompromiso(this.crp, this.listaEstadoId)
@@ -97,9 +98,12 @@ export class PopupFacturaComponent implements OnInit {
 
   cargarListaPlanPago() {
     this.facturaService
-      .ObtenerListaPlanPagoXCompromiso(this.crp, this.listaEstadoId,
+      .ObtenerListaPlanPagoXCompromiso(
+        this.crp,
+        this.listaEstadoId,
         this.pagination.currentPage,
-        this.pagination.itemsPerPage)
+        this.pagination.itemsPerPage
+      )
       .subscribe(
         (documentos: PaginatedResult<PlanPago[]>) => {
           this.listaPlanPago = documentos.result;

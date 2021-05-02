@@ -149,6 +149,13 @@ export class SolicitudPagoService {
     return this.http.post<RespuestaSolicitudPago>(this.baseUrl + path, formato);
   }
 
+  RegistraryAprobarSolicitudPago(
+    formato: FormatoSolicitudPago
+  ): Observable<RespuestaSolicitudPago> {
+    const path = 'RegistraryAprobarSolicitudPago';
+    return this.http.post<RespuestaSolicitudPago>(this.baseUrl + path, formato);
+  }
+
   ObtenerSeguridadSocialParaSolicitudPago(
     planPagoId: number,
     valorBaseCotizacion: number,

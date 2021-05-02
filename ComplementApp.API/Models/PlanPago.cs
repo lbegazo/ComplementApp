@@ -26,7 +26,7 @@ namespace ComplementApp.API.Models
         public decimal ValorAPagar { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
-        public decimal? ValorPagado { get; set; }
+        public decimal? SaldoDisponible { get; set; }
         public bool Viaticos { get; set; }
         public int NumeroPago { get; set; }
 

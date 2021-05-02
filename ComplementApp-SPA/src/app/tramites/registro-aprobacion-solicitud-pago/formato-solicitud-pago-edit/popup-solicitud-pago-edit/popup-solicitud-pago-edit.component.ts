@@ -1,9 +1,17 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { DetalleFormatoSolicitudPagoDto } from 'src/app/_dto/detalleFormatoSolicitudPagoDto';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
+import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { ModalidadContrato, TipoIva, TipoPago } from 'src/app/_models/enum';
 import { FormatoSolicitudPago } from 'src/app/_models/formatoSolicitudPago';
 import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacionTercero';
@@ -12,17 +20,19 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({
-  selector: 'app-popup-solicitud-pago',
-  templateUrl: './popup-solicitud-pago.component.html',
-  styleUrls: ['./popup-solicitud-pago.component.scss'],
+  selector: 'app-popup-solicitud-pago-edit',
+  templateUrl: './popup-solicitud-pago-edit.component.html',
+  styleUrls: ['./popup-solicitud-pago-edit.component.css'],
 })
-export class PopupSolicitudPagoComponent implements OnInit {
+export class PopupSolicitudPagoEditComponent implements OnInit {
+  // Datos de ingreso
   listaActividadEconomica: ValorSeleccion[];
   listaMeses: ValorSeleccion[];
   formatoSolicitudPagoEdit: FormatoSolicitudPago;
   title: string;
   parametroLiquidacionTercero: ParametroLiquidacionTercero;
   planPagoSeleccionada: PlanPago;
+  rubrosPresupuestales: DetalleCDP[];
 
   formatoSolicitudPago: FormatoSolicitudPago = null;
   dateObj = new Date();
@@ -34,6 +44,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
   idActividadEconomicaSelecionada: number;
 
   popupForm = new FormGroup({});
+  arrayControls = new FormArray([]);
   bsConfig: Partial<BsDaterangepickerConfig>;
 
   constructor(
@@ -103,6 +114,10 @@ export class PopupSolicitudPagoComponent implements OnInit {
         this.numeroFacturaCtrl.enable();
       }
     }
+
+    this.crearControlesRubros(0);
+
+    this.popupForm.setControl('rubrosControles', this.arrayControls);
   }
 
   createEmptyForm() {
@@ -118,6 +133,7 @@ export class PopupSolicitudPagoComponent implements OnInit {
       numeroPlanillaCtrl: ['', Validators.required],
       mesCtrl: ['', Validators.required],
       baseCotizacionCtrl: ['', Validators.required],
+      rubrosControles: this.arrayControls,
     });
     this.popupForm.reset();
 
@@ -176,6 +192,30 @@ export class PopupSolicitudPagoComponent implements OnInit {
     });
   }
 
+  crearControlesRubros(valor: number) {
+    if (this.rubrosPresupuestales) {
+      for (const detalle of this.rubrosPresupuestales) {
+        this.arrayControls.push(
+          new FormGroup({
+            rubroControl: new FormControl(
+              GeneralService.obtenerFormatoLongMoney(valor),
+              [Validators.required]
+            ),
+          })
+        );
+      }
+    }
+  }
+
+  EliminarRubroPresupuestal(index: number) {
+    if (this.rubrosPresupuestales.length > 1) {
+      this.rubrosPresupuestales.splice(index, 1);
+      this.arrayControls.removeAt(index);
+    } else {
+      this.alertify.warning('Debe existir por lo menos un rubro presupuestal');
+    }
+  }
+
   onSelectMes() {
     this.mesSeleccionado = this.mesControl.value as ValorSeleccion;
     this.idMesSelecionado = this.mesSeleccionado.id;
@@ -195,9 +235,9 @@ export class PopupSolicitudPagoComponent implements OnInit {
         formValues.valorFacturaCtrl
       );
 
-      if (!this.validarValorIngresado(valorIngresado)) {
+      if (!this.validarValorFacturado(valorIngresado)) {
         this.alertify.warning(
-          'El Valor Facturado no puede ser superior al Valor a Pagar'
+          'El valor facturado no puede ser superior al Valor a Pagar'
         );
         return;
       }
@@ -226,6 +266,30 @@ export class PopupSolicitudPagoComponent implements OnInit {
       }
 
       //#endregion Read dates
+
+      //#region Read Rubros Presupuestales
+
+      const arrayControles = this.rubrosControles as FormArray;
+      if (arrayControles && arrayControles.length > 0) {
+        for (let index = 0; index < arrayControles.length; index++) {
+          const item = arrayControles.at(index);
+          const itemDetalle = this.rubrosPresupuestales[index];
+          itemDetalle.valorSolicitud = GeneralService.obtenerValorAbsoluto(
+            item.value.rubroControl
+          );
+        }
+      }
+
+      if (!this.validarValorRubroPresupuestal(valorIngresado)) {
+        this.alertify.warning(
+          'Los valores registrados en los Rubros Presupuestales no es igual al valor facturado del Plan de Pago.'
+        );
+        return;
+      }
+
+      const listaDetalle = this.leerRubrosPresupuestales();
+
+      //#endregion Read Rubros Presupuestales
 
       // Se inserta la actividad económica como primer elemento
       this.formatoSolicitudPago = {
@@ -263,19 +327,82 @@ export class PopupSolicitudPagoComponent implements OnInit {
           formValues.baseCotizacionCtrl
         ),
         supervisorId: 0,
-        detallesFormatoSolicitudPago: [],
+        detallesFormatoSolicitudPago: listaDetalle,
       };
 
       this.bsModalRef.hide();
     }
   }
 
-  validarValorIngresado(valor: number): boolean {
+  replicarValorFacturado() {
+    const formValues = Object.assign({}, this.popupForm.value);
+
+    const valorFacturado = +GeneralService.obtenerValorAbsoluto(
+      formValues.valorFacturaCtrl
+    );
+
+    if (this.rubrosPresupuestales && this.rubrosPresupuestales.length === 1) {
+      const rubroPresupuestal = this.rubrosPresupuestales[0];
+      rubroPresupuestal.valorSolicitud = valorFacturado;
+
+      this.arrayControls.clear();
+      this.crearControlesRubros(valorFacturado);
+
+      this.popupForm.setControl('rubrosControles', this.arrayControls);
+    }
+  }
+
+  leerRubrosPresupuestales() {
+    const listaDetalle: DetalleFormatoSolicitudPagoDto[] = [];
+
+    this.rubrosPresupuestales.forEach((element) => {
+      if (element.valorSolicitud > 0) {
+        const rubro = new ValorSeleccion();
+
+        rubro.id = element.rubroPresupuestal.rubroPresupuestalId;
+        rubro.codigo = element.rubroPresupuestal.identificacion;
+        rubro.nombre = element.rubroPresupuestal.nombre;
+
+        const item: DetalleFormatoSolicitudPagoDto = {
+          detalleFormatoSolicitudPagoId: 0,
+          formatoSolicitudPagoId: 0,
+          valorAPagar: element.valorSolicitud,
+          rubroPresupuestal: rubro,
+        };
+
+        listaDetalle.push(item);
+      }
+    });
+
+    return listaDetalle;
+  }
+
+  validarValorFacturado(valor: number): boolean {
     const valorAPagar = this.planPagoSeleccionada.valorAPagar;
     if (valor > valorAPagar) {
       return false;
     }
     return true;
+  }
+
+  validarValorRubroPresupuestal(valor: number): boolean {
+    let valorTotalRubro = 0;
+    this.rubrosPresupuestales.forEach((element) => {
+      if (element.valorSolicitud > 0) {
+        valorTotalRubro = valorTotalRubro + +element.valorSolicitud;
+      }
+    });
+
+    if (valor !== valorTotalRubro) {
+      return false;
+    }
+    return true;
+  }
+
+  //#region Controles
+
+  get rubrosControles() {
+    return this.popupForm.get('rubrosControles') as FormArray;
   }
 
   get numeroFacturaCtrl() {
@@ -309,4 +436,6 @@ export class PopupSolicitudPagoComponent implements OnInit {
   get baseCotizacionCtrl() {
     return this.popupForm.get('baseCotizacionCtrl');
   }
+
+  //#endregion Controles
 }

@@ -491,8 +491,8 @@ namespace ComplementApp.API.Data
                     cdp.ValorInicial = item.ValorInicial;
                 if (item.ValorAPagar > 0)
                     cdp.ValorAPagar = item.ValorAPagar;
-                if (item.ValorPagado > 0)
-                    cdp.ValorPagado = item.ValorPagado;
+                if (item.SaldoDisponible > 0)
+                    cdp.SaldoDisponible = item.SaldoDisponible;
 
                 cdp.Viaticos = item.ViaticosDescripcion == "NO" ? false : true;
 

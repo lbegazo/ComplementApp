@@ -22,7 +22,7 @@ namespace ComplementApp.API.Dtos
 
         public decimal ValorAPagar { get; set; }
 
-        public decimal ValorPagado { get; set; }
+        public decimal SaldoDisponible { get; set; }
 
         public bool Viaticos { get; set; }
 

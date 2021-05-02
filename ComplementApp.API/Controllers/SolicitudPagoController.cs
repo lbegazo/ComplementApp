@@ -57,7 +57,7 @@ namespace ComplementApp.API.Controllers
             _terceroRepository = terceroRepository;
         }
 
-        #region Registro de Solicitud de Pago
+        #region Solicitud de Pago
 
         [Route("[action]")]
         [HttpPut]
@@ -107,9 +107,9 @@ namespace ComplementApp.API.Controllers
 
                     if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
                     {
-                        if (formatoDto.detallesFormatoSolicitudPago != null && formatoDto.detallesFormatoSolicitudPago.Count > 0)
+                        if (formatoDto.DetallesFormatoSolicitudPago != null && formatoDto.DetallesFormatoSolicitudPago.Count > 0)
                         {
-                            foreach (var item in formatoDto.detallesFormatoSolicitudPago)
+                            foreach (var item in formatoDto.DetallesFormatoSolicitudPago)
                             {
                                 if (item.ValorAPagar > 0)
                                 {
@@ -447,8 +447,151 @@ namespace ComplementApp.API.Controllers
             return base.Ok(formato);
         }
 
+        #endregion Solicitud de Pago
 
-        #endregion Registro de Solicitud de Pago
+        #region Registrar y Aprobar Solicitud de Pago
+
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> RegistraryAprobarSolicitudPago(FormatoSolicitudPagoParaGuardarDto formatoDto)
+        {
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+            FormatoSolicitudPago formato = null;
+            RespuestaSolicitudPago respuestaSolicitud = new RespuestaSolicitudPago();
+            Numeracion numeracionDisponible = null;
+            DetalleFormatoSolicitudPago detalleSolicitud = null;
+
+            try
+            {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
+                if (formatoDto != null)
+                {
+                    #region Mapear datos 
+
+                    formato = new FormatoSolicitudPago();
+                    formato.TerceroId = formatoDto.TerceroId;
+                    formato.PlanPagoId = formatoDto.PlanPagoId;
+                    formato.Crp = formatoDto.Crp;
+                    formato.NumeroFactura = formatoDto.NumeroFactura;
+                    formato.valorFacturado = formatoDto.valorFacturado;
+                    formato.ActividadEconomicaId = formatoDto.ActividadEconomicaId;
+                    formato.FechaInicio = formatoDto.FechaInicio;
+                    formato.FechaFinal = formatoDto.FechaFinal;
+                    formato.Observaciones = formatoDto.Observaciones;
+                    formato.ValorBaseGravableRenta = formatoDto.ValorBaseGravableRenta;
+                    formato.ValorIva = formatoDto.ValorIva;
+                    formato.NumeroPlanilla = formatoDto.NumeroPlanilla;
+                    formato.MesId = formatoDto.MesId;
+                    formato.BaseCotizacion = formatoDto.BaseCotizacion;
+                    formato.SupervisorId = formatoDto.SupervisorId;
+                    formato.ObservacionesModificacion = formatoDto.Observaciones;
+                    formato.PciId = pciId;
+                    formato.EstadoId = (int)EstadoSolicitudPago.Aprobado;
+
+                    formato.UsuarioIdRegistro = usuarioId;
+                    formato.UsuarioIdModificacion = usuarioId;
+                    formato.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                    formato.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+
+                    #endregion Mapear datos 
+
+                    #region Numeracion Disponible
+
+                    var parametroLiquidacionTercero = await _terceroRepository.ObtenerParametrizacionLiquidacionXTercero(formatoDto.TerceroId, pciId);
+
+                    if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
+                    {
+                        numeracionDisponible = await _repo.ObtenerUltimaNumeracionDisponible(pciId);
+                        if (numeracionDisponible != null)
+                        {
+                            formato.NumeroFactura = numeracionDisponible.NumeroConsecutivo;
+                        }
+                    }
+
+                    #endregion Numeracion Disponible
+
+                    _dataContext.FormatoSolicitudPago.Add(formato);
+                    await _dataContext.SaveChangesAsync();
+
+                    #region Registrar Rubros Presupuestales
+
+                    if (formato.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                    {
+                        if (formatoDto.DetallesFormatoSolicitudPago != null &&
+                            formatoDto.DetallesFormatoSolicitudPago.Count > 0)
+                        {
+                            foreach (var item in formatoDto.DetallesFormatoSolicitudPago)
+                            {
+                                if (item.ValorAPagar > 0)
+                                {
+                                    detalleSolicitud = new DetalleFormatoSolicitudPago();
+                                    detalleSolicitud.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
+                                    detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
+                                    detalleSolicitud.ValorAPagar = item.ValorAPagar;
+                                    _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
+                                }
+                            }
+                        }
+                        await _dataContext.SaveChangesAsync();
+                    }
+
+                    #endregion Registrar Rubros Presupuestales                  
+
+                    #region Actualizar el plan de pago
+
+                    var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
+                    planPagoBD.NumeroRadicadoProveedor = formato.FormatoSolicitudPagoId.ToString();
+                    planPagoBD.FechaRadicadoProveedor = _generalInterface.ObtenerFechaHoraActual();
+                    planPagoBD.ValorFacturado = formatoDto.valorFacturado;
+                    planPagoBD.UsuarioIdModificacion = usuarioId;
+                    planPagoBD.SaldoDisponible = planPagoBD.SaldoDisponible.Value - formatoDto.valorFacturado;
+                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                    await _dataContext.SaveChangesAsync();
+
+                    #endregion Actualizar el plan de pago
+
+                    #region Actualizar Numeracion Utilizada
+
+                    if (parametroLiquidacionTercero != null && parametroLiquidacionTercero.FacturaElectronicaId == 0)
+                    {
+                        if (numeracionDisponible != null)
+                        {
+                            var numeracionBase = await _repo.ObtenerNumeracionBase(numeracionDisponible.NumeracionId);
+                            if (numeracionBase != null)
+                            {
+                                numeracionBase.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
+                                numeracionBase.Utilizado = true;
+                                numeracionBase.PciId = pciId;
+                                await _dataContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+
+                    #endregion Actualizar Numeracion Utilizada
+
+                    await transaction.CommitAsync();
+
+                    respuestaSolicitud.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
+                    respuestaSolicitud.NumeroFactura = formato.NumeroFactura;
+
+                    return Ok(respuestaSolicitud);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
+        #endregion Registrar y Aprobar Solicitud de Pago
 
     }
 }

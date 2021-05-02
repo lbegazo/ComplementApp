@@ -16,10 +16,10 @@
         <div class="modal-body" style="padding-top: 0px">
           <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
             <div class="row">
-              <div class="col-2 inner aplicaBackground center">
+              <div class="col-1 inner aplicaBackground center">
                 <label class="col-form-label"><strong>Cdp</strong></label>
               </div>
-              <div class="col-2 inner aplicaBackground center">
+              <div class="col-1 inner aplicaBackground center">
                 <label class="col-form-label"><strong>Crp</strong></label>
               </div>
               <div class="col-2 inner aplicaBackground center">
@@ -28,6 +28,11 @@
               <div class="col-2 inner aplicaBackground center">
                 <label class="col-form-label"
                   ><strong>Valor a pagar</strong></label
+                >
+              </div>
+              <div class="col-2 inner aplicaBackground center">
+                <label class="col-form-label"
+                  ><strong>Saldo disp.</strong></label
                 >
               </div>
               <div class="col-2 inner aplicaBackground center">
@@ -46,7 +51,7 @@
                 *ngFor="let item of listaPlanPago; let i = index"
               >
                 <ng-container [formGroupName]="i">
-                  <div class="col-2 inner left">
+                  <div class="col-1 inner left">
                     <p class="medium">
                       <input
                         type="radio"
@@ -57,7 +62,7 @@
                       {{ item?.cdp }}
                     </p>
                   </div>
-                  <div class="col-2 inner center">
+                  <div class="col-1 inner center">
                     <p class="medium">{{ item?.crp }}</p>
                   </div>
                   <div class="col-2 inner center">
@@ -68,6 +73,11 @@
                   <div class="col-2 inner right">
                     <p class="medium">
                       {{ item?.valorAPagar | number: "1.2-2" }}
+                    </p>
+                  </div>
+                  <div class="col-2 inner right">
+                    <p class="medium">
+                      {{ item?.saldoDisponible | number: "1.2-2" }}
                     </p>
                   </div>
                   <div class="col-2 inner center">

@@ -222,7 +222,7 @@
     "Nombre": "Registrar solicitud de pago",
     "Descripcion": "Registrar solicitud de pago",
     "Icono": "analytics",
-    "Ruta": "",
+    "Ruta": "TRAMITE_REGISTRAR",
     "CodigoPadreTransaccion": "TRAMITE"
   },
   {
@@ -230,7 +230,15 @@
     "Nombre": "Aprobar solicitud de pago",
     "Descripcion": "Aprobar solicitud de pago",
     "Icono": "analytics",
-    "Ruta": "",
+    "Ruta": "TRAMITE_APROBAR",
+    "CodigoPadreTransaccion": "TRAMITE"
+  },
+  {
+    "Codigo": "TRAMITE_REGISTRARAPROBAR",
+    "Nombre": "Registrar solicitud de pago",
+    "Descripcion": "Registrar solicitud de pago",
+    "Icono": "analytics",
+    "Ruta": "TRAMITE_REGISTRARAPROBAR",
     "CodigoPadreTransaccion": "TRAMITE"
   },
   {

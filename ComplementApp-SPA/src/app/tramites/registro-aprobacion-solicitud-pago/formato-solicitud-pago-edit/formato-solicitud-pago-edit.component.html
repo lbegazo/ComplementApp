@@ -29,7 +29,7 @@
                               </td>
                               <td
                                 style="width: 70%; height: 60px"
-                                class="center fontLarge"
+                                class="center fontLarge stronger"
                               >
                                 <STRONG
                                   >FORMATO DE CAUSACION Y PAGO A
@@ -104,9 +104,7 @@
                             </tr>
                             <tr>
                               <td style="width: 7%" class="center fontSmaller">
-                                <strong>{{
-                                  formatoSolicitudPago.formatoSolicitudPagoId
-                                }}</strong>
+                                <strong>{{ formatoSolicitudPagoId }}</strong>
                               </td>
                               <td style="width: 8%" class="center fontSmaller">
                                 {{
@@ -343,7 +341,7 @@
                                 VALOR INICIAL
                               </td>
                               <td
-                                style="width: 10%"
+                                style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
                                 VALOR ADI./RED.
@@ -370,13 +368,13 @@
                                 style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
-                                NUM. PAGOS A LA FECHA
+                                NUM PAGOS A LA FECHA
                               </td>
                               <td
-                                style="width: 15%"
+                                style="width: 10%"
                                 class="center fontSmaller stronger"
                               >
-                                NUM. TOTAL PAGOS REAL.
+                                PAGOS A REALIZAR
                               </td>
                             </tr>
                             <tr style="width: 100%">
@@ -386,7 +384,7 @@
                                     | number: "1.0-0"
                                 }}
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
+                              <td style="width: 15%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago.cdp.operacion
                                     | number: "1.0-0"
@@ -413,7 +411,7 @@
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ formatoSolicitudPago.numeroPagoFechaActual }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 10%" class="center fontSmaller">
                                 {{ formatoSolicitudPago.cantidadMaxima }}
                               </td>
                             </tr>
@@ -637,44 +635,40 @@
                             </tr>
                             <tr style="width: 100%">
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ formatoSolicitudPago?.planPago.numeroPago }}
+                                {{ planPagoSeleccionada?.numeroPago }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.valorFacturado
+                                  planPagoSeleccionada?.valorAPagar
+                                    | number: "1.2-2"
+                                }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                {{ planPagoSeleccionada?.viaticosDescripcion }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPagoPopup?.numeroFactura }}
+                              </td>
+                              <td style="width: 15%" class="center fontSmaller">
+                                {{
+                                  formatoSolicitudPagoPopup?.valorFacturado
                                     | number: "1.2-2"
                                 }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.planPago
-                                    .viaticosDescripcion
-                                }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{ formatoSolicitudPago?.numeroFactura }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago?.valorFacturado
-                                    | number: "1.2-2"
-                                }}
-                              </td>
-                              <td style="width: 10%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago?.actividadEconomica
-                                    .codigo
+                                  formatoSolicitudPagoPopup?.actividadEconomicaDescripcion
                                 }}
                               </td>
                               <td style="width: 12%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.fechaInicio
+                                  formatoSolicitudPagoPopup?.fechaInicio
                                     | date: "dd/MM/yyyy"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.fechaFinal
+                                  formatoSolicitudPagoPopup?.fechaFinal
                                     | date: "dd/MM/yyyy"
                                 }}
                               </td>
@@ -696,7 +690,7 @@
                                 style="width: 75%"
                                 class="left fontSmaller addPaddingLeft"
                               >
-                                {{ formatoSolicitudPago?.observaciones }}
+                                {{ formatoSolicitudPagoPopup?.observaciones }}
                               </td>
                             </tr>
                           </table>
@@ -704,7 +698,8 @@
                       </tr>
                       <tr
                         *ngIf="
-                          formatoSolicitudPago.tercero.modalidadContrato === 1
+                          parametroLiquidacionSeleccionado?.modalidadContrato ===
+                          1
                         "
                       >
                         <td class="withoutPadding">
@@ -761,38 +756,38 @@
                             </tr>
                             <tr style="width: 100%">
                               <td style="width: 10%" class="center fontSmaller">
-                                {{ formatoSolicitudPago?.numeroPlanilla }}
+                                {{ formatoSolicitudPagoPopup?.numeroPlanilla }}
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
-                                {{ formatoSolicitudPago?.mesDescripcion }}
+                                {{ formatoSolicitudPagoPopup?.mes }}
                               </td>
                               <td style="width: 12%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.baseCotizacion
+                                  formatoSolicitudPagoPopup?.baseCotizacion
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 12%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.aporteSalud
+                                  formatoCausacionyLiquidacionPago?.aporteSalud
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.aportePension
+                                  formatoCausacionyLiquidacionPago?.aportePension
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 10%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.riesgoLaboral
+                                  formatoCausacionyLiquidacionPago?.riesgoLaboral
                                     | number: "1.0-0"
                                 }}
                               </td>
                               <td style="width: 13%" class="center fontSmaller">
                                 {{
-                                  formatoSolicitudPago?.fondoSolidaridad
+                                  formatoCausacionyLiquidacionPago?.fondoSolidaridad
                                     | number: "1.0-0"
                                 }}
                               </td>
@@ -856,7 +851,7 @@
                                         style="width: 8%"
                                         class="borderBottonRight aplicaBackground fontSmaller"
                                       >
-                                        <strong>VALOR OPERACION</strong>
+                                        <strong>VALOR OPER.</strong>
                                       </div>
                                       <div
                                         style="width: 8%"
@@ -888,13 +883,13 @@
                                                 style="width: 13%"
                                                 class="borderBottonRight centerAlign fontSmaller"
                                               >
-                                                {{ item?.rubroPresupuestal.identificacion }}
+                                                {{ item?.rubroPresupuestal?.identificacion }}
                                               </div>
                                               <div
                                                 style="width: 30%"
                                                 class="borderBottonRight left addPaddingLeft5 addPaddingRight5 fontSmaller"
                                               >
-                                                {{ item?.rubroPresupuestal.nombre }}
+                                                {{ item?.rubroPresupuestal?.nombre }}
                                               </div>
                                               <div
                                                 style="width: 25%"
@@ -1372,32 +1367,605 @@
     </div>
   </div>
 </form>
+<!--DOCUMENTO SOPORTE-->
+<div
+  class="container-fluid"
+  style="color: black"
+  *ngIf="parametroLiquidacionSeleccionado.facturaElectronicaId === 0"
+>
+  <div class="row">
+    <div
+      class="col-12"
+      id="content2"
+      #content2
+      class="addPadding"
+      style="width: 100%"
+    >
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12" style="padding: 0px">
+            <table style="width: 100%; margin-left: auto; margin-right: auto">
+              <tr>
+                <td class="withoutPadding">
+                  <table>
+                    <!--Formato-->
+                    <tr>
+                      <td class="withoutPadding">
+                        <table>
+                          <tr>
+                            <td
+                              style="width: 12%; height: 60px"
+                              class="center fontSmaller stronger"
+                            >
+                              VERSION: 2
+                            </td>
+                            <td style="width: 76%; height: 80px" class="center">
+                              <p class="fontLargeMedium">
+                                <STRONG
+                                  >DOCUMENTO SOPORTE, EN ADQUISICION DE BIENES
+                                  Y/O SERVICIOS SUJETOS NO OBLIGADOS A FACTURAR
+                                </STRONG>
+                              </p>
+                              <p style="height: 15px">
+                                Articulo 1 del decreto 358 de 2020 reglamentado
+                                por la resolución 042 del 05 de Mayo de 2020
+                              </p>
+                            </td>
+                            <td
+                              style="width: 12%; height: 60px"
+                              class="center fontSmaller stronger"
+                            >
+                              CODIGO TRD: 130.131.41..
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style="height: 40px"
+                        class="center stronger fontMedium"
+                      >
+                        ADQUIRENTE: AGENCIA NACIONAL DEL ESPECTRO-ANE NIT:
+                        900.334.265-3
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="center stronger fontMedium"
+                        style="height: 40px"
+                      >
+                        <strong>I. INFORMACION DEL CONTRATISTA</strong>
+                      </td>
+                    </tr>
+                    <!--NUM-->
+                    <tr>
+                      <td class="withoutPadding">
+                        <table>
+                          <tr class="aplicaBackground">
+                            <td
+                              style="width: 7%"
+                              class="center fontSmaller stronger"
+                            >
+                              NUM.
+                            </td>
+                            <td
+                              style="width: 8%"
+                              class="center fontSmaller stronger"
+                            >
+                              FECHA
+                            </td>
+                            <td
+                              style="width: 10%"
+                              class="center fontSmaller stronger"
+                            >
+                              NUM. DOCUMENTO
+                            </td>
+                            <td
+                              style="width: 25%"
+                              class="center fontSmaller stronger"
+                            >
+                              NOMBRE DEL CONTRATISTA/PROVEEDOR
+                            </td>
+                            <td
+                              style="width: 18%"
+                              class="center fontSmaller stronger"
+                            >
+                              CORREO ELECTRONICO
+                            </td>
+                            <td
+                              style="width: 8%"
+                              class="center fontSmaller stronger"
+                            >
+                              TELEFONO
+                            </td>
+                            <td
+                              style="width: 24%"
+                              class="center fontSmaller stronger"
+                            >
+                              DIRECCION CONTRACTUAL
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="width: 7%" class="center fontSmaller">
+                              <strong>{{ numeroFactura }}</strong>
+                            </td>
+                            <td style="width: 8%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.fechaSistema
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                            <td style="width: 10%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.tercero
+                                  .numeroIdentificacion
+                              }}
+                            </td>
+                            <td style="width: 25%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.tercero.nombre }}
+                            </td>
+                            <td style="width: 18%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.tercero.email }}
+                            </td>
+                            <td style="width: 8%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.tercero.telefono }}
+                            </td>
+                            <td style="width: 24%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.tercero.direccion }}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <!--FECHA EXP. DOCUMENTO-->
+                    <tr>
+                      <td class="withoutPadding">
+                        <table>
+                          <tr class="aplicaBackground">
+                            <td style="width: 15%" class="center fontSmaller">
+                              <span class="stronger">FECHA EXP. DOCUMENTO</span>
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              <span class="stronger">REGIMEN TRIBUTARIO</span>
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              <span class="stronger">DECLARANTE RENTA</span>
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              <span class="stronger"
+                                >FACTURADOR ELECTRONICO</span
+                              >
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              <span class="stronger">NUM. CDP</span>
+                            </td>
+                            <td style="width: 10%" class="center fontSmaller">
+                              <span class="stronger">NUM. COMPROMISO</span>
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              <span class="stronger"
+                                >FECHA REG. COMPROMISO</span
+                              >
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.tercero
+                                  .fechaExpedicionDocumento | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.tercero.regimenTributario
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.tercero
+                                  .declaranteRentaDescripcion
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.tercero
+                                  .facturadorElectronicoDescripcion
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.cdp.cdp }}
+                            </td>
+                            <td style="width: 10%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.cdp.crp }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.cdp.fecha
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <!--MODALIDAD DE CONTRATO-->
+                    <tr>
+                      <td class="withoutPadding">
+                        <table>
+                          <tr style="width: 100%" class="aplicaBackground">
+                            <td
+                              style="width: 30%"
+                              class="center fontSmaller stronger"
+                            >
+                              MODALIDAD DE CONTRATO
+                            </td>
+                            <td
+                              style="width: 13%"
+                              class="center fontSmaller stronger"
+                            >
+                              NUMERO DE CONTRATO
+                            </td>
+                            <td
+                              style="width: 12%"
+                              class="center fontSmaller stronger"
+                            >
+                              FECHA CONTRATO
+                            </td>
+                            <td
+                              style="width: 15%"
+                              class="center fontSmaller stronger"
+                            >
+                              FECHA EXP. POLIZA
+                            </td>
+                            <td
+                              style="width: 15%"
+                              class="center fontSmaller stronger"
+                            >
+                              FECHA ACTA INICIO CONTRATO
+                            </td>
+                            <td
+                              style="width: 15%"
+                              class="center fontSmaller stronger"
+                            >
+                              FECHA FIN CONTRATO
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="width: 30%" class="center fontSmaller">
+                              {{ formatoSolicitudPago?.cdp.detalle7 }}
+                            </td>
+                            <td style="width: 13%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.contrato.numeroContrato
+                              }}
+                            </td>
+                            <td style="width: 12%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.contrato.fechaRegistro
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.contrato
+                                  .fechaExpedicionPoliza | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.contrato.fechaInicio
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPago?.contrato.fechaFinal
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <!--OBJETO DE COMPROMISO PRESUPUESTAL-->
+                    <tr>
+                      <td
+                        class="center stronger fontMedium"
+                        style="height: 40px"
+                      >
+                        <strong
+                          >II. CONCEPTO DEL COBRO Y OBJETO CONTRACTUAL</strong
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="center fontSmaller">
+                        <p class="withoutMarginBottom">
+                          {{ formatoSolicitudPago.cdp.detalle4 }}
+                        </p>
+                      </td>
+                    </tr>
+                    <!--DETALLE SOLICITUD DE PAGO ACTUAL-->
+                    <tr>
+                      <td class="withoutPadding">
+                        <table>
+                          <tr style="width: 100%" class="aplicaBackground">
+                            <td
+                              style="width: 10%"
+                              class="center fontSmaller stronger"
+                            >
+                              NUM. PAGO
+                            </td>
+                            <td
+                              style="width: 15%"
+                              class="center fontSmaller stronger"
+                            >
+                              VALOR A PAGAR
+                            </td>
+                            <td
+                              style="width: 10%"
+                              class="center fontSmaller stronger"
+                            >
+                              VIATICOS
+                            </td>
+                            <td
+                              style="width: 15%"
+                              class="center fontSmaller stronger"
+                            >
+                              NUMERO FACTURA
+                            </td>
+                            <td
+                              style="width: 15%"
+                              class="center fontSmaller stronger"
+                            >
+                              VALOR FACTURADO
+                            </td>
+                            <td
+                              style="width: 10%"
+                              class="center fontSmaller stronger"
+                            >
+                              ACT. ECONOMICA
+                            </td>
+                            <td
+                              style="width: 12%"
+                              class="center fontSmaller stronger"
+                            >
+                              PERIODO COBRO INICIO
+                            </td>
+                            <td
+                              style="width: 13%"
+                              class="center fontSmaller stronger"
+                            >
+                              PERIODO COBRO FIN
+                            </td>
+                          </tr>
+                          <tr style="width: 100%">
+                            <td style="width: 10%" class="center fontSmaller">
+                              {{ planPagoSeleccionada?.numeroPago }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                planPagoSeleccionada?.valorAPagar
+                                  | number: "1.2-2"
+                              }}
+                            </td>
+                            <td style="width: 10%" class="center fontSmaller">
+                              {{ planPagoSeleccionada?.viaticosDescripcion }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{ formatoSolicitudPagoPopup?.numeroFactura }}
+                            </td>
+                            <td style="width: 15%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPagoPopup?.valorFacturado
+                                  | number: "1.2-2"
+                              }}
+                            </td>
+                            <td style="width: 10%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPagoPopup?.actividadEconomicaDescripcion
+                              }}
+                            </td>
+                            <td style="width: 12%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPagoPopup?.fechaInicio
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                            <td style="width: 13%" class="center fontSmaller">
+                              {{
+                                formatoSolicitudPagoPopup?.fechaFinal
+                                  | date: "dd/MM/yyyy"
+                              }}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style="height: 40px"
+                        class="center stronger fontMedium"
+                      >
+                        <strong
+                          >III. CONDICION DE CONFORMIDAD CON EL ART. 7 DE LA
+                          RESOLUCION 042 DE 2020, POR LA CUAL NO ESTA OBLIGADO A
+                          FACTURAR
+                        </strong>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="notaLegal6 !== ''">
+                      <td>
+                        <p
+                          class="left fontSmaller withoutMargin addPaddingLeft5"
+                        >
+                          {{ notaLegal6 }}
+                        </p>
+                      </td>
+                    </tr>
+                    <!--Firmas-->
+                    <tr>
+                      <td class="withoutPadding">
+                        <table style="width: 100%" class="withoutPadding">
+                          <tr>
+                            <td style="width: 50%" class="withoutPadding">
+                              <table style="width: 100%; height: 100%">
+                                <tr class="withoutPadding">
+                                  <td>
+                                    <table style="width: 100%">
+                                      <tr>
+                                        <td
+                                          class="left fontSmaller addPaddingLeft5 addHeight"
+                                          style="width: 40%"
+                                        >
+                                          NOMBRES:
+                                        </td>
+                                        <td
+                                          class="left fontSmaller addPaddingLeft5"
+                                          style="width: 60%"
+                                        >
+                                          {{
+                                            formatoSolicitudPago?.tercero.nombre
+                                          }}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td
+                                          class="left fontSmaller addPaddingLeft5 addHeight"
+                                          style="width: 40%"
+                                        >
+                                          NUM. IDENTIFICACION:
+                                        </td>
+                                        <td
+                                          class="left fontSmaller addPaddingLeft5"
+                                          style="width: 60%"
+                                        >
+                                          {{
+                                            formatoSolicitudPago?.tercero
+                                              .numeroIdentificacion
+                                          }}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td
+                                          class="left fontSmaller addPaddingLeft5 addHeight"
+                                          style="width: 40%"
+                                        >
+                                          CARGO:
+                                        </td>
+                                        <td
+                                          class="left fontSmaller addPaddingLeft5"
+                                          style="width: 60%"
+                                        >
+                                          CONTRATISTA
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="width: 50%" class="withoutPadding">
+                              <table style="width: 100%; height: 105px">
+                                <tr class="withoutPadding">
+                                  <td
+                                    class="center fontSmaller withoutPadding"
+                                    style="vertical-align: bottom"
+                                  >
+                                    FIRMA DEL CONTRATISTA
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <!--Nota Legal-->
+                    <tr>
+                      <td class="center fontSmaller">
+                        Rango de Numeración autorizada por la DIAN, mediante
+                        formulario 18764004562328 del 22 de septiembre de 2020 /
+                        Vigencia desde 22 de septiembre de 2020 hasta el 21 de
+                        septiembre de 2021
+                      </td>
+                    </tr>
+                    <!--Nota Legal-->
+                    <tr *ngIf="notaLegal">
+                      <td class="center fontSmaller">
+                        {{ notaLegal?.valor }}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Botones-->
 <div class="container-fluid">
-  <!--Botones-->
   <div class="row">
     <div class="col-12" style="padding-right: 15px">
       <div
         style="width: 100%; margin-left: auto; margin-right: auto"
         class="right"
       >
-        <!--Aprobar-->
+        <!--Plan Pago-->
+        <button
+          type="submit"
+          class="btn btn-info mr-2"
+          (click)="abrirPopupPlanPago()"
+          [disabled]="habilitaDatosRegistrados || solicitudRegistrada"
+        >
+          Plan de Pago
+        </button>
+
+        <!--Seguridad Social-->
+        <button
+          type="submit"
+          class="btn btn-warning mr-2"
+          (click)="abrirPopupDatosAdicionales()"
+          [disabled]="
+            !habilitaPlanDePagoSeleccionado ||
+            habilitaArchivosCargados ||
+            solicitudRegistrada
+          "
+        >
+          Registrar datos
+        </button>
+
+        <!--Cargar archivos-->
+        <button
+          type="submit"
+          class="btn btn-light mr-2"
+          (click)="abrirPopupCargaArchivo()"
+          [disabled]="!habilitaDatosRegistrados || solicitudRegistrada"
+        >
+          Cargar archivos
+        </button>
+        <!-- <button
+          type="submit"
+          class="btn btn-light mr-2"
+          (click)="cargarArchivos()"
+          [disabled]="true"
+        >
+          Cargar archivos
+        </button> -->
+
+        <!--Guardar-->
         <button
           type="submit"
           class="btn btn-success mr-2"
-          (click)="abrirPopupAprobacion(25)"
-          [disabled]="solicitudActualizada"
+          (click)="registrarSolicitudPago()"
+          [disabled]="!habilitaArchivosCargados || solicitudRegistrada"
         >
-          Aprobar
-        </button>
-
-        <!--Rechazar-->
-        <button
-          type="submit"
-          class="btn btn-danger mr-2"
-          (click)="abrirPopupRechazo(26)"
-          [disabled]="solicitudActualizada"
-        >
-          Rechazar
+          Guardar
         </button>
 
         <!--Exportar PDF-->
@@ -1405,6 +1973,7 @@
           type="submit"
           class="btn btn-primary mr-2"
           (click)="exportarPDF()"
+          [disabled]="!solicitudRegistrada"
         >
           Exportar PDF
         </button>
@@ -1417,6 +1986,6 @@
     </div>
   </div>
 </div>
-<!-- <p>Form value: {{ formatoSolicitudPago | json }}</p>
+<!-- <p>Form value: {{ formatoSolicitudPagoPopup | json }}</p>
 <p>Form value: {{ formatoForm.value | json }}</p>
 <p>Form status: {{ formatoForm.status | json }}</p> -->

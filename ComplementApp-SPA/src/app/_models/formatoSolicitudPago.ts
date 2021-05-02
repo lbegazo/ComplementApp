@@ -1,3 +1,5 @@
+import { DetalleFormatoSolicitudPagoDto } from '../_dto/detalleFormatoSolicitudPagoDto';
+
 export interface FormatoSolicitudPago {
   formatoSolicitudPagoId: number;
   terceroId: number;
@@ -17,4 +19,5 @@ export interface FormatoSolicitudPago {
   mes: string;
   baseCotizacion: number;
   supervisorId: number;
+  detallesFormatoSolicitudPago: DetalleFormatoSolicitudPagoDto[];
 }

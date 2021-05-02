@@ -479,7 +479,7 @@ namespace ComplementApp.API.Services
                 if (!(row as DataRow).ItemArray[8].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[8].ToString(), out value))
                         if (value > 0)
-                            documento.ValorPagado = value;
+                            documento.SaldoDisponible = value;
 
                 documento.EstadoPlanPago = (row as DataRow).ItemArray[9].ToString();
                 documento.ViaticosDescripcion = (row as DataRow).ItemArray[10].ToString();

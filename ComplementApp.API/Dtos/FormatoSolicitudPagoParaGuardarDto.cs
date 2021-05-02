@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ComplementApp.API.Dtos
 {
@@ -21,5 +22,6 @@ namespace ComplementApp.API.Dtos
         public decimal ValorBaseGravableRenta { get; set; }
         public decimal ValorIva { get; set; }
         public int? SupervisorId { get; set; }
+        public ICollection<DetalleFormatoSolicitudPagoDto> DetallesFormatoSolicitudPago { get; set; }
     }
 }

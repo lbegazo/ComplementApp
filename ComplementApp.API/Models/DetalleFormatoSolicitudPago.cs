@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
+    
     [Table("TDetalleFormatoSolicitudPago")]
     public class DetalleFormatoSolicitudPago
     {

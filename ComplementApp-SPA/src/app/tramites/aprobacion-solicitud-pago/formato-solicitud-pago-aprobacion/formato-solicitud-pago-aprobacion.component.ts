@@ -154,7 +154,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
       );
   }
 
-  abrirPopup(tipo: number) {
+  abrirPopupAprobacion(tipo: number) {
     const initialState = {
       title: 'REGISTRAR DATOS ADICIONALES',
       rubrosPresupuestales: this.rubrosPresupuestales,

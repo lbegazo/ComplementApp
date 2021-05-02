@@ -130,6 +130,9 @@ import { PopupRubroPresupuestalComponent } from './plan-paa/plan-adquisicion/pop
 import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
 import { PopupCompromisoComponent } from './plan-paa/plan-adquisicion/popup-compromiso/popup-compromiso.component';
+import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
+import { FormatoSolicitudPagoEditComponent } from './tramites/registro-aprobacion-solicitud-pago/formato-solicitud-pago-edit/formato-solicitud-pago-edit.component';
+import { PopupSolicitudPagoEditComponent } from './tramites/registro-aprobacion-solicitud-pago/formato-solicitud-pago-edit/popup-solicitud-pago-edit/popup-solicitud-pago-edit.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -192,7 +195,6 @@ export function tokenGetter() {
     PopupParametroLiquidacionTerceroComponent,
     RegistroSolicitudPagoComponent,
     FormatoSolicitudPagoComponent,
-    PopupSolicitudPagoComponent,
     PopupFacturaComponent,
     PopupCargarArchivosComponent,
     AprobacionSolicitudPagoComponent,
@@ -213,6 +215,10 @@ export function tokenGetter() {
     PopupActividadEspecificaComponent,
     PopupRubroPresupuestalComponent,
     PopupCompromisoComponent,
+    RegistroAprobacionSolicitudPagoComponent,
+    FormatoSolicitudPagoEditComponent,
+    PopupSolicitudPagoComponent,
+    PopupSolicitudPagoEditComponent,
   ],
   imports: [
     BrowserModule,
