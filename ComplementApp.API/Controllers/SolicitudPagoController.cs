@@ -549,6 +549,8 @@ namespace ComplementApp.API.Controllers
                     planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
                     planPagoBD.NumeroRadicadoProveedor = formato.FormatoSolicitudPagoId.ToString();
                     planPagoBD.FechaRadicadoProveedor = _generalInterface.ObtenerFechaHoraActual();
+                    planPagoBD.NumeroRadicadoSupervisor = formato.FormatoSolicitudPagoId.ToString();
+                    planPagoBD.FechaRadicadoSupervisor = _generalInterface.ObtenerFechaHoraActual();
                     planPagoBD.ValorFacturado = formatoDto.valorFacturado;
                     planPagoBD.UsuarioIdModificacion = usuarioId;
                     planPagoBD.SaldoDisponible = planPagoBD.SaldoDisponible.Value - formatoDto.valorFacturado;
