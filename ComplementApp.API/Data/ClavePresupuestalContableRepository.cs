@@ -217,7 +217,7 @@ namespace ComplementApp.API.Data
                                       ClavePresupuestalContableId = cla.ClavePresupuestalContableId,
                                       CdpId = c.CdpId,
                                       Crp = c.Crp,
-                                      Dependencia = c.Detalle2,
+                                      Dependencia = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
                                       RubroPresupuestal = new ValorSeleccion()
                                       {
                                           Id = rp.RubroPresupuestalId,

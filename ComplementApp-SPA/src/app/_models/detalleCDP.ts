@@ -21,6 +21,7 @@ export class DetalleCDP {
   valorRP: number;
   valorOB: number;
   valorOP: number;
+  valorTotal: number;
   aplicaContrato: boolean;
   aplicaContratoDescripcion: boolean;
   saldoTotal: number;

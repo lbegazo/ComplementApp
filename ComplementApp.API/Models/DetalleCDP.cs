@@ -82,5 +82,8 @@ namespace ComplementApp.API.Models
         [NotMapped]
         public string Dependencia { get; set; }
 
+        [NotMapped]
+        public decimal ValorTotal { get; set; }
+
     }
 }

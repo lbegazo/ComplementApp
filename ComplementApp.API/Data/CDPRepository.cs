@@ -226,6 +226,7 @@ namespace ComplementApp.API.Data
                                   {
                                       ValorCDP = d.ValorInicial,
                                       ValorOP = d.Operacion,
+                                      ValorTotal = d.ValorTotal,
                                       SaldoAct = d.SaldoActual,
                                       Dependencia = d.Detalle2 + " " + (d.Detalle3.Length > 100 ? d.Detalle3.Substring(0, 100) + "..." : d.Detalle3),
                                       RubroPresupuestal = new RubroPresupuestal()

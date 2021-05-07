@@ -59,7 +59,7 @@
                   appDecimalMask
                   placeholder="Ingrese valor de la factura"
                   id="inputValorFacturado"
-                  
+                  (blur)="replicarValorFacturado()"
                 />
                 <div
                   class="invalid-feedback"
@@ -393,9 +393,14 @@
                 <small><strong>VALOR SOLICITUD</strong></small>
               </div>
             </div>
-            <!--RUBROS PRESUPUESTALES GRILLA-->
+            <!--RUBROS PRESUPUESTALES GRILLA MAYOR A 1-->
             <div class="form-row">
-              <div *ngIf="rubrosPresupuestales" class="form-group col-12">
+              <div
+                *ngIf="
+                  rubrosPresupuestales && rubrosPresupuestales.length !== 1
+                "
+                class="form-group col-12"
+              >
                 <div
                   formArrayName="rubrosControles"
                   class="form-row"
@@ -411,7 +416,9 @@
                       </button>
                     </div>
                     <div class="col-2 inner center aplicaBackground">
-                      <small>{{ item?.rubroPresupuestal.identificacion }}</small>
+                      <small>{{
+                        item?.rubroPresupuestal.identificacion
+                      }}</small>
                     </div>
                     <div class="col-4 inner left aplicaBackground">
                       <small>{{ item?.rubroPresupuestal.nombre }}</small>
@@ -446,6 +453,49 @@
                 </div>
               </div>
             </div>
+            <!--RUBROS PRESUPUESTALES GRILLA MAYOR A 1-->
+            <div class="form-row">
+              <div
+                *ngIf="
+                  rubrosPresupuestales && rubrosPresupuestales.length === 1
+                "
+                class="form-group col-12"
+              >
+                <div
+                  formArrayName="rubrosControles"
+                  class="form-row"
+                  *ngFor="let item of rubrosPresupuestales; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div class="col-1 inner center aplicaBackground parent">
+                      <button
+                        class="btn btn-danger btn-sm child"
+                        (click)="EliminarRubroPresupuestal(i)"
+                        disabled
+                      >
+                        Elim.
+                      </button>
+                    </div>
+                    <div class="col-2 inner center aplicaBackground">
+                      <small>{{
+                        item?.rubroPresupuestal.identificacion
+                      }}</small>
+                    </div>
+                    <div class="col-4 inner left aplicaBackground">
+                      <small>{{ item?.rubroPresupuestal.nombre }}</small>
+                    </div>
+                    <div class="col-3 inner left aplicaBackground">
+                      <small>{{ item?.dependencia }}</small>
+                    </div>
+                    <div class="col-2 inner center aplicaBackground">
+                      <label class="col-form-label-sm">{{
+                        item?.valorSolicitud | number: "1.2-2"
+                      }}</label>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
           </form>
 
           <div class="form-group right" style="margin: 0px">
@@ -463,4 +513,3 @@
     </div>
   </div>
 </div>
-

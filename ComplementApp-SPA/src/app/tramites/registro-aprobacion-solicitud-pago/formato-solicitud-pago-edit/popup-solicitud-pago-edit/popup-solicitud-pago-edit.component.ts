@@ -33,6 +33,7 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
   parametroLiquidacionTercero: ParametroLiquidacionTercero;
   planPagoSeleccionada: PlanPago;
   rubrosPresupuestales: DetalleCDP[];
+  rubroPresupuestalTemporal: DetalleCDP;
 
   formatoSolicitudPago: FormatoSolicitudPago = null;
   dateObj = new Date();
@@ -115,7 +116,7 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
       }
     }
 
-    this.crearControlesRubros(0);
+    this.crearControlesRubros();
 
     this.popupForm.setControl('rubrosControles', this.arrayControls);
   }
@@ -192,13 +193,13 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
     });
   }
 
-  crearControlesRubros(valor: number) {
+  crearControlesRubros() {
     if (this.rubrosPresupuestales) {
       for (const detalle of this.rubrosPresupuestales) {
         this.arrayControls.push(
           new FormGroup({
             rubroControl: new FormControl(
-              GeneralService.obtenerFormatoLongMoney(valor),
+              GeneralService.obtenerFormatoLongMoney(detalle.valorSolicitud),
               [Validators.required]
             ),
           })
@@ -335,18 +336,21 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
   }
 
   replicarValorFacturado() {
-    const formValues = Object.assign({}, this.popupForm.value);
-
-    const valorFacturado = +GeneralService.obtenerValorAbsoluto(
-      formValues.valorFacturaCtrl
-    );
-
     if (this.rubrosPresupuestales && this.rubrosPresupuestales.length === 1) {
-      const rubroPresupuestal = this.rubrosPresupuestales[0];
-      rubroPresupuestal.valorSolicitud = valorFacturado;
+      const formValues = Object.assign({}, this.popupForm.value);
 
+      const valorFacturado = +GeneralService.obtenerValorAbsoluto(
+        formValues.valorFacturaCtrl
+      );
+
+      this.rubroPresupuestalTemporal = this.rubrosPresupuestales[0];
+      this.rubroPresupuestalTemporal.valorSolicitud = valorFacturado;
+
+      this.rubrosPresupuestales = [];
       this.arrayControls.clear();
-      this.crearControlesRubros(valorFacturado);
+
+      this.rubrosPresupuestales.push(this.rubroPresupuestalTemporal);
+      this.crearControlesRubros();
 
       this.popupForm.setControl('rubrosControles', this.arrayControls);
     }
