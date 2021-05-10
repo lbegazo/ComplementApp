@@ -155,7 +155,7 @@ namespace ComplementApp.API.Data
                              AnioPago = c.AnioPago,
                              MesPago = c.MesPago,
                              ValorAPagar = c.ValorAPagar,
-                             SaldoDisponible= c.SaldoDisponible.Value,
+                             SaldoDisponible = c.SaldoDisponible.Value,
                              Viaticos = c.Viaticos,
                              NumeroPago = c.NumeroPago,
                              EstadoPlanPagoId = c.EstadoPlanPagoId,
@@ -185,8 +185,54 @@ namespace ComplementApp.API.Data
         //Utilizado para mostrar la cabecera de la liquidación
         public async Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId)
         {
+            var listaCdp = (from c in _context.CDP
+                            join pp in _context.PlanPago on c.Crp equals pp.Crp
+                            where pp.PlanPagoId == planPagoId
+                            where c.Instancia == (int)TipoDocumento.Compromiso
+                            where pp.PciId == c.PciId
+                            select new CDPDto
+                            {
+                                Crp = c.Crp,
+                                Cdp = c.Cdp,
+                                PciId = c.PciId.Value,
+                                Detalle4 = c.Detalle4,
+                                Detalle6 = c.Detalle6,
+                                Detalle7 = c.Detalle7,
+                                Fecha = c.Fecha,
+                                Operacion = c.Operacion,
+                                SaldoActual = c.SaldoActual,
+                                ValorTotal = c.ValorTotal,
+                            });
+
+
+            var cdpAgrupado = (from i in listaCdp
+                               group i by new
+                               {
+                                   i.Crp,
+                                   i.Cdp,
+                                   i.PciId,
+                                   i.Detalle4,
+                                   i.Detalle6,
+                                   i.Detalle7,
+                                   i.Fecha
+                               }
+                                      into grp
+                               select new CDPDto()
+                               {
+                                   Crp = grp.Key.Crp,
+                                   Cdp = grp.Key.Cdp,
+                                   PciId = grp.Key.PciId,
+                                   Detalle4 = grp.Key.Detalle4,
+                                   Detalle6 = grp.Key.Detalle6,
+                                   Detalle7 = grp.Key.Detalle7,
+                                   Fecha = grp.Key.Fecha,
+                                   Operacion = grp.Sum(i => i.Operacion),
+                                   SaldoActual = grp.Sum(i => i.SaldoActual),
+                                   ValorTotal = grp.Sum(i => i.ValorTotal),
+                               });
+
             return await (from pp in _context.PlanPago
-                          join c in _context.CDP on pp.Crp equals c.Crp
+                          join c in cdpAgrupado on pp.Crp equals c.Crp
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
                           join sp in _context.FormatoSolicitudPago on pp.PlanPagoId equals sp.PlanPagoId into SolicitudPago
                           from sol in SolicitudPago.DefaultIfEmpty()
@@ -202,7 +248,6 @@ namespace ComplementApp.API.Data
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
 
-                          where pp.PciId == c.PciId
                           where pp.PciId == sol.PciId
                           where pp.PciId == pt.PciId
                           where pp.PciId == us.PciId
@@ -210,7 +255,6 @@ namespace ComplementApp.API.Data
                           where contra.PciId == super.PciId
 
                           where pp.PlanPagoId == planPagoId
-                          where c.Instancia == (int)TipoDocumento.Compromiso
                           where sol.EstadoId == (int)EstadoSolicitudPago.Aprobado
                           select new DetallePlanPagoDto()
                           {

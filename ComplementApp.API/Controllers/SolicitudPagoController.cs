@@ -117,6 +117,7 @@ namespace ComplementApp.API.Controllers
                                     detalleSolicitud.FormatoSolicitudPagoId = formatoBD.FormatoSolicitudPagoId;
                                     detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
                                     detalleSolicitud.ValorAPagar = item.ValorAPagar;
+                                    detalleSolicitud.Dependencia = item.Dependencia;
                                     _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
                                 }
                             }
@@ -534,6 +535,7 @@ namespace ComplementApp.API.Controllers
                                     detalleSolicitud.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
                                     detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
                                     detalleSolicitud.ValorAPagar = item.ValorAPagar;
+                                    detalleSolicitud.Dependencia = item.Dependencia;
                                     _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
                                 }
                             }

@@ -372,6 +372,7 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
           formatoSolicitudPagoId: 0,
           valorAPagar: element.valorSolicitud,
           rubroPresupuestal: rubro,
+          dependencia: element.dependencia,
         };
 
         listaDetalle.push(item);

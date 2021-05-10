@@ -5,4 +5,5 @@ export interface DetalleFormatoSolicitudPagoDto {
   formatoSolicitudPagoId: number;
   rubroPresupuestal: ValorSeleccion;
   valorAPagar: number;
+  dependencia: string;
 }

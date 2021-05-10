@@ -153,7 +153,8 @@ namespace ComplementApp.API.Data
                                   {
                                       CdpId = c.CdpId,
                                       Crp = c.Crp,
-                                      Dependencia = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
+                                      Dependencia = c.Detalle2,
+                                      DependenciaDescripcion = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
                                       RubroPresupuestal = new ValorSeleccion()
                                       {
                                           Id = rp.RubroPresupuestalId,
@@ -205,19 +206,21 @@ namespace ComplementApp.API.Data
                                   join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
                                   from usoPre in UsoPresupuestal.DefaultIfEmpty()
                                   where rp.RubroPresupuestalId == c.RubroPresupuestalId
+                                  where c.Instancia == (int)TipoDocumento.Compromiso
+                                  where cla.Crp == crp
+                                  where cla.Dependencia == c.Detalle2
                                   where cla.PciId == c.PciId
                                   where cla.PciId == rc.PciId
                                   where cla.PciId == usoPre.PciId
-                                  where cla.Crp == crp
                                   where cla.PciId == pciId
-                                  where c.Instancia == (int)TipoDocumento.Compromiso
 
                                   select new ClavePresupuestalContableDto()
                                   {
                                       ClavePresupuestalContableId = cla.ClavePresupuestalContableId,
                                       CdpId = c.CdpId,
                                       Crp = c.Crp,
-                                      Dependencia = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
+                                      Dependencia = c.Detalle2,
+                                      DependenciaDescripcion = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
                                       RubroPresupuestal = new ValorSeleccion()
                                       {
                                           Id = rp.RubroPresupuestalId,
@@ -248,10 +251,12 @@ namespace ComplementApp.API.Data
                                       },
                                       RelacionContable = new ValorSeleccion()
                                       {
-                                          Codigo = cuCo.NumeroCuenta
+                                          Id = cla.RelacionContableId > 0 ? cla.RelacionContableId : 0,
+                                          Codigo = cuCo.NumeroCuenta,
                                       },
                                       UsoPresupuestal = new ValorSeleccion()
                                       {
+                                          Id = cla.UsoPresupuestalId.HasValue ? cla.UsoPresupuestalId.Value : 0,
                                           Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
                                           Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
                                       },

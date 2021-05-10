@@ -6,6 +6,7 @@ export interface ClavePresupuestalContableDto {
   crp: number;
   pci: string;
   dependencia: string;
+  dependenciaDescripcion: string;
   rubroPresupuestal: ValorSeleccion;
   tercero: ValorSeleccion;
   situacionFondo: ValorSeleccion;

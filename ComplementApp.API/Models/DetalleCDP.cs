@@ -67,7 +67,7 @@ namespace ComplementApp.API.Models
         public int RubroPresupuestalId { get; set; }
         [NotMapped]
         public RubroPresupuestal RubroPresupuestal { get; set; }
-        
+
         [NotMapped]
         public CDP CdpDocumento { get; set; }
 
@@ -81,6 +81,9 @@ namespace ComplementApp.API.Models
 
         [NotMapped]
         public string Dependencia { get; set; }
+
+        [NotMapped]
+        public string DependenciaDescripcion { get; set; }
 
         [NotMapped]
         public decimal ValorTotal { get; set; }

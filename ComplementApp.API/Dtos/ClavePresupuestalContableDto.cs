@@ -9,6 +9,7 @@ namespace ComplementApp.API.Dtos
         public long Crp { get; set; }
         public string Pci { get; set; }
         public string Dependencia { get; set; }
+        public string DependenciaDescripcion { get; set; }
         public string Detalle4 { get; set; }
         public ValorSeleccion RubroPresupuestal { get; set; }
         public ValorSeleccion Tercero { get; set; }

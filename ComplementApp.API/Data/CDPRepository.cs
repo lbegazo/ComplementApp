@@ -222,13 +222,15 @@ namespace ComplementApp.API.Data
                                   where d.Instancia == (int)TipoDocumento.Compromiso
                                   where d.PciId == pciId
                                   where d.Crp == crp
+                                  where d.SaldoActual > 0
                                   select new DetalleCDP()
                                   {
                                       ValorCDP = d.ValorInicial,
                                       ValorOP = d.Operacion,
                                       ValorTotal = d.ValorTotal,
                                       SaldoAct = d.SaldoActual,
-                                      Dependencia = d.Detalle2 + " " + (d.Detalle3.Length > 100 ? d.Detalle3.Substring(0, 100) + "..." : d.Detalle3),
+                                      Dependencia = d.Detalle2,
+                                      DependenciaDescripcion = d.Detalle2 + " " + (d.Detalle3.Length > 100 ? d.Detalle3.Substring(0, 100) + "..." : d.Detalle3),
                                       RubroPresupuestal = new RubroPresupuestal()
                                       {
                                           RubroPresupuestalId = i.RubroPresupuestalId,

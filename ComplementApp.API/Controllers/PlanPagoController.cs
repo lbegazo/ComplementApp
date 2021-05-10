@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,8 +13,6 @@ using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OfficeOpenXml;
-
 namespace ComplementApp.API.Controllers
 {
     [ServiceFilter(typeof(LogActividadUsuario))]

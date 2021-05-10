@@ -36,5 +36,6 @@ namespace ComplementApp.API.Dtos
         public string Objeto { get; set; }
         public int? SupervisorId { get; set; }
         public int? ContratoId { get; set; }
+        public int PciId { get; set; }
     }
 }

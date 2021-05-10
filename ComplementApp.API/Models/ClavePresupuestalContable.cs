@@ -16,7 +16,7 @@ namespace ComplementApp.API.Models
         public string Pci { get; set; }
 
         [Required]
-        [Column(TypeName = "VARCHAR(10)")]
+        [Column(TypeName = "VARCHAR(15)")]
         public string Dependencia { get; set; }
 
         [Required]

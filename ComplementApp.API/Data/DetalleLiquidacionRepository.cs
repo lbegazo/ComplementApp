@@ -409,7 +409,8 @@ namespace ComplementApp.API.Data
                                where listaLiquidacionId.Contains(dl.DetalleLiquidacionId)
                                where sp.PlanPagoId == dl.PlanPagoId
                                where sp.Crp == cp.Crp
-                               where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado                               
+                               where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
+                               where cpc.Dependencia == cp.Dependencia                               
                                select dl.DetalleLiquidacionId)
 
                                .Distinct()
@@ -490,6 +491,7 @@ namespace ComplementApp.API.Data
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
                                where sp.PciId == dl.PciId
+                               where cpc.Dependencia == cp.Dependencia
                                select new ClavePresupuestalContableParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
@@ -554,6 +556,7 @@ namespace ComplementApp.API.Data
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
+                               where cpc.Dependencia == cp.Dependencia
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,

@@ -279,7 +279,7 @@ namespace ComplementApp.API.Controllers
                 foreach (var item in lista)
                 {
                     var claveBD = await _repo.ObtenerClavePresupuestalContableBase(item.ClavePresupuestalContableId);
-                    if (item.UsoPresupuestal != null)
+                    if (item.UsoPresupuestal != null && item.UsoPresupuestal.Id > 0)
                     {
                         claveBD.UsoPresupuestalId = item.UsoPresupuestal.Id;
                     }

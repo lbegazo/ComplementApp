@@ -216,12 +216,14 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
                     .formatoSolicitudPagoId,
                   valorAPagar: element.valorSolicitud,
                   rubroPresupuestal: rubro,
+                  dependencia: element.dependencia,
                 };
 
                 listaDetalle.push(item);
               }
             });
           }
+
           this.formatoSolicitudPago.detallesFormatoSolicitudPago = listaDetalle;
           this.actualizarSolicitudPago();
         }

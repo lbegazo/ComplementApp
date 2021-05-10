@@ -6,5 +6,6 @@ namespace ComplementApp.API.Dtos
         public int FormatoSolicitudPagoId { get; set; }
         public ValorSeleccion RubroPresupuestal { get; set; }
         public decimal ValorAPagar { get; set; }
+        public string Dependencia { get; set; }
     }
 }
