@@ -146,11 +146,15 @@ namespace ComplementApp.API.Data
             return detalleLiquidacion;
         }
 
-        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(
+        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerLiquidacionesParaCuentaPorPagarArchivo(
                     int? terceroId,
                     List<int> listaEstadoId,
                     bool? procesado, UserParams userParams)
         {
+            var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
+                                           where pp.PciId == userParams.PciId
+                                           select pp.Crp).ToHashSet();
+                                           
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
@@ -173,7 +177,7 @@ namespace ComplementApp.API.Data
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
                              FechaRadicadoSupervisor = dl.FechaRegistro.HasValue ? dl.FechaRegistro.Value : _generalInterface.ObtenerFechaHoraActual(),
                              ValorTotal = c.ValorFacturado.HasValue ? c.ValorFacturado.Value : 0,
-
+                             TieneClavePresupuestalContable = listaCompromisoConClave.Contains(c.Crp)
                          }).
                          Distinct();
 
@@ -340,6 +344,10 @@ namespace ComplementApp.API.Data
             //int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
             //int estadoPlanPago_ConLiquidacionDeducciones = (int)EstadoPlanPago.ConLiquidacionDeducciones;
 
+            var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
+                                           where pp.PciId == userParams.PciId
+                                           select pp.Crp).ToHashSet();
+
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
@@ -349,7 +357,7 @@ namespace ComplementApp.API.Data
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
                          where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                         where dl.PciId == userParams.PciId                         
+                         where dl.PciId == userParams.PciId
                          where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                          where (dl.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
@@ -361,7 +369,8 @@ namespace ComplementApp.API.Data
                              NombreTercero = dl.Nombre,
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
                              FechaRadicadoSupervisor = dl.FechaRadicado,
-                             ValorTotal = c.ValorFacturado.Value
+                             ValorTotal = c.ValorFacturado.Value,
+                             TieneClavePresupuestalContable = listaCompromisoConClave.Contains(c.Crp),
                          });
 
             if (lista != null)
@@ -370,6 +379,26 @@ namespace ComplementApp.API.Data
             }
 
             return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<List<int>> ObtenerLiquidacionesConClaveParaArchivoObligacion(int pciId, List<int> listaLiquidacionId)
+        {
+            var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
+                                           where pp.PciId == pciId
+                                           select pp.Crp).ToHashSet();
+
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
+                               where dl.PciId == c.PciId
+                               where listaLiquidacionId.Contains(dl.DetalleLiquidacionId)
+                               where listaCompromisoConClave.Contains(c.Crp)
+                               select dl.DetalleLiquidacionId
+
+                         )
+                         .Distinct()
+                         .ToListAsync();
+
+            return lista;
         }
 
 
@@ -386,7 +415,7 @@ namespace ComplementApp.API.Data
                                where dl.PciId == c.PciId
                                where dl.PciId == pl.PciId
                                where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                               where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)                               
+                               where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                                where (dl.TerceroId == terceroId || terceroId == null)
                                where (dl.Procesado == procesado || procesado == null)
 
@@ -410,7 +439,7 @@ namespace ComplementApp.API.Data
                                where sp.PlanPagoId == dl.PlanPagoId
                                where sp.Crp == cp.Crp
                                where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
-                               where cpc.Dependencia == cp.Dependencia                               
+                               where cpc.Dependencia == cp.Dependencia
                                select dl.DetalleLiquidacionId)
 
                                .Distinct()
@@ -471,6 +500,7 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)
         {
+
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId

@@ -122,7 +122,7 @@ export class CuentaPorPagarComponent implements OnInit {
     this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
 
     this.liquidacionService
-      .ObtenerListaDetalleLiquidacion(
+      .ObtenerLiquidacionesParaCuentaPorPagarArchivo(
         this.listaEstadoId,
         this.terceroId,
         0,

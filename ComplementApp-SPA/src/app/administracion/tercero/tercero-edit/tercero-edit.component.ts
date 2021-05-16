@@ -7,7 +7,6 @@ import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { Tercero } from 'src/app/_models/tercero';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
-import { ListaService } from 'src/app/_services/lista.service';
 import { TerceroService } from 'src/app/_services/tercero.service';
 
 @Component({
@@ -31,7 +30,6 @@ export class TerceroEditComponent implements OnInit {
   terceroExiste = false;
 
   constructor(
-    private listaService: ListaService,
     private alertify: AlertifyService,
     private fb: FormBuilder,
     private terceroService: TerceroService,

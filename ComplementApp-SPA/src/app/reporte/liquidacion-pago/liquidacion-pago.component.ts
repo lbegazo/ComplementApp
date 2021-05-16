@@ -158,7 +158,7 @@ export class LiquidacionPagoComponent implements OnInit {
       EstadoPlanPago.ConOrdenPago.value.toString();
 
     this.liquidacionService
-      .ObtenerListaDetalleLiquidacion(
+      .ObtenerLiquidacionesParaCuentaPorPagarArchivo(
         this.listaEstadoId,
         this.terceroId,
         null,

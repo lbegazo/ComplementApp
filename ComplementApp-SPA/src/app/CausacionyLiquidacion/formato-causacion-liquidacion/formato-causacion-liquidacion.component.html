@@ -262,7 +262,7 @@
                             class="withoutMarginBottom"
                             #textoComprobanteContableElement
                           >
-                            {{
+                            <!-- {{
                               this.detallePlanPago?.detalle6 +
                                 " FACTURA: " +
                                 detallePlanPago?.numeroFactura +  
@@ -278,6 +278,27 @@
                                 detallePlanPago?.fechaRadicadoSupervisorFormato +
                                 " APRUEBA: " +
                                 detallePlanPago?.detalle5
+                            }} -->
+                            {{
+                              " OBSERVACIONES: " +
+                                detallePlanPago?.observaciones +
+                                " " +
+                                detallePlanPago.detalle7 +
+                                " " +
+                                this.detallePlanPago?.detalle6 +
+                                " FACT. " +
+                                detallePlanPago?.numeroFactura +
+                                " PAGO. " +
+                                detallePlanPago?.numeroPago
+                                 +
+                                " PER. " +
+                                detallePlanPago?.fechaInicioSolicitudPagoFormato +
+                                " A " +
+                                detallePlanPago?.fechaFinalSolicitudPagoFormato +
+                                " " +
+                                detallePlanPago?.detalle4 +
+                                " SUP. " +
+                                detallePlanPago?.usuario
                             }}
                           </p>
                         </td>
@@ -762,7 +783,11 @@
                                       <ng-container [formGroupName]="i">
                                         <div
                                           style="width: 15%"
-                                          class="borderBottonRight centerAlign small"
+                                          class="
+                                            borderBottonRight
+                                            centerAlign
+                                            small
+                                          "
                                         >
                                           <small>{{ item?.codigo }}</small>
                                         </div>

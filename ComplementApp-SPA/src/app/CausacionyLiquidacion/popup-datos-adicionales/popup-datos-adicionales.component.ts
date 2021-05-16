@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 import { GeneralService } from 'src/app/_services/general.service';
 
 @Component({

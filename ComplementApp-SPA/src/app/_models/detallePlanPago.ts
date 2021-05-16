@@ -29,4 +29,7 @@ export interface DetallePlanPago {
   tipoPago: number;
   fechaRadicadoSupervisorFormato: string;
   fechaRadicadoProveedorFormato: string;
+  fechaInicioSolicitudPagoFormato: string;
+  fechaFinalSolicitudPagoFormato: string;
+  usuario: string;
 }

@@ -13,7 +13,7 @@ namespace ComplementApp.API.Interfaces
 
         Task<FormatoCausacionyLiquidacionPagos> ObtenerDetalleFormatoCausacionyLiquidacionPago(long detalleLiquidacionId);
 
-        Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerListaDetalleLiquidacion(int? terceroId,
+        Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerLiquidacionesParaCuentaPorPagarArchivo(int? terceroId,
                 List<int> listaEstadoId,
                 bool? procesado, UserParams userParams);
 
@@ -54,6 +54,7 @@ namespace ComplementApp.API.Interfaces
         Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion(int? terceroId,
                                                                     List<int> listaEstadoId,
                                                                     bool? procesado);
+        Task<List<int>> ObtenerLiquidacionesConClaveParaArchivoObligacion(int pciId, List<int> listaLiquidacionId);
 
         Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId);
 

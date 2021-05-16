@@ -260,7 +260,7 @@ namespace ComplementApp.API.Data
                           {
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
-                              Detalle4 = CortarTexto(c.Detalle4, 50),
+                              Detalle4 = CortarTexto(c.Detalle4, 100),
                               Detalle5 = super.Nombres + ' ' + super.Apellidos,
                               Detalle6 = c.Detalle6,
                               Detalle7 = ResumirDetalle7(c.Detalle7),
@@ -284,7 +284,8 @@ namespace ComplementApp.API.Data
                               NumeroRadicadoProveedor = pp.NumeroRadicadoProveedor,
                               FechaRadicadoProveedor = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value : null,
                               FechaRadicadoProveedorFormato = pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value.ToString("yyyy-MM-dd") : string.Empty,
-
+                              FechaInicioSolicitudPagoFormato = sol.FechaInicio.ToString("yyyy-MM-dd"),
+                              FechaFinalSolicitudPagoFormato = sol.FechaFinal.ToString("yyyy-MM-dd"),
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
 
@@ -417,6 +418,25 @@ namespace ComplementApp.API.Data
 
                               Usuario = us.Nombres + ' ' + us.Apellidos,
                               Email = us.Email,
+                              TextoComprobanteContable = " OBSERVACIONES: " +
+                                                         (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
+                                                         " " +
+                                                         c.Detalle7 +
+                                                          " " +
+                                                          c.Detalle6 +
+                                                          " FACT. " +
+                                                          sp.NumeroFactura +
+                                                          " PAGO. " +
+                                                          pp.NumeroPago.ToString() +
+                                                           " PER. " +
+                                                           sp.FechaInicio.ToString("yyyy-MM-dd") +
+                                                           " A " +
+                                                           sp.FechaFinal.ToString("yyyy-MM-dd") +
+                                                           " " +
+                                                           c.Detalle4 +
+                                                           " SUP. " +
+                                                           super.Nombres + ' ' + super.Apellidos,
+                              /*
                               TextoComprobanteContable = c.Detalle6 +
                                 " FACTURA: " +
                                 sp.NumeroFactura +
@@ -432,6 +452,7 @@ namespace ComplementApp.API.Data
                                 (pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty) +
                                 " APRUEBA: " +
                                 super.Nombres + ' ' + super.Apellidos
+                                */
                           })
                     .ToListAsync();
         }

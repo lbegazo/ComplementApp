@@ -104,7 +104,7 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
+        public async Task<IActionResult> ObtenerLiquidacionesParaCuentaPorPagarArchivo([FromQuery(Name = "terceroId")] int? terceroId,
                                                               [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                               [FromQuery(Name = "procesado")] int? procesado,
                                                               [FromQuery] UserParams userParams)
@@ -123,7 +123,7 @@ namespace ComplementApp.API.Controllers
                 esProcesado = (procesado.Value == 1) ? (true) : (false);
             }
 
-            var pagedList = await _repo.ObtenerListaDetalleLiquidacion(terceroId, listIds, esProcesado, userParams);
+            var pagedList = await _repo.ObtenerLiquidacionesParaCuentaPorPagarArchivo(terceroId, listIds, esProcesado, userParams);
             var listaDto = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
 
             Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
@@ -355,6 +355,19 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            var lista = await _terceroRepository.ObtenerListaActividadesEconomicaXTercero(terceroId, pciId);
+            return base.Ok(lista);
+        }
+
         #region Archivo Cuenta Por Pagar
 
         [HttpGet]
@@ -494,19 +507,6 @@ namespace ComplementApp.API.Controllers
 
         #endregion Archivo Cuenta Por Pagar
 
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)
-        {
-            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
-            if (!string.IsNullOrEmpty(valorPciId))
-            {
-                pciId = int.Parse(valorPciId);
-            }
-            var lista = await _terceroRepository.ObtenerListaActividadesEconomicaXTercero(terceroId, pciId);
-            return base.Ok(lista);
-        }
-
         #region Archivo Obligacion Presupuestal
 
         [Route("[action]")]
@@ -550,7 +550,7 @@ namespace ComplementApp.API.Controllers
                                                                                 [FromQuery(Name = "tipoArchivoObligacionId")] int? tipoArchivoObligacionId,
                                                                                 [FromQuery(Name = "conUsoPresupuestal")] int? conUsoPresupuestal
                                                                                )
-        {            
+        {
             List<int> listaEstadoIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
             bool esUsoPresupuestal = conUsoPresupuestal > 0 ? true : false;
@@ -584,6 +584,8 @@ namespace ComplementApp.API.Controllers
                 }
                 else
                 {
+                    #region Selección manual
+
                     if (!string.IsNullOrEmpty(listaLiquidacionId))
                     {
                         #region Procesar por lista de ids
@@ -592,9 +594,12 @@ namespace ComplementApp.API.Controllers
 
                         #endregion Procesar por lista de ids
                     }
+
+                    #endregion Selección manual
                 }
 
-                List<int> listaIdsTotal = liquidacionIdsTotal.Distinct().ToList();
+                //Filtrar solo liquidaciones con clave presupuestal contable
+                List<int> listaIdsTotal = await _repo.ObtenerLiquidacionesConClaveParaArchivoObligacion(pciId, liquidacionIdsTotal);
 
                 #endregion Obtener lista de liquidaciones a procesar
 
@@ -670,7 +675,6 @@ namespace ComplementApp.API.Controllers
                             }
                             #endregion Cabecera
                         };
-
                     case (int)TipoArchivoObligacion.Item:
                         {
                             #region Items

@@ -21,7 +21,6 @@ import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EstadoPlanPago, ModalidadContrato, TipoPago } from '../_models/enum';
 import { DetallePlanPago } from '../_models/detallePlanPago';
-import { ListaService } from '../_services/lista.service';
 import { PaginatedResult, Pagination } from '../_models/pagination';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { Transaccion } from '../_models/transaccion';

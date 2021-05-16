@@ -49,7 +49,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   constructor(
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private liquidacionService: DetalleLiquidacionService,
+    private liquidacionService: DetalleLiquidacionService
   ) {}
 
   ngOnInit() {
@@ -85,8 +85,10 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   registrarLiquidacion() {
     if (this.formatoForm.valid) {
       let detalleLiquidacionId = 0;
-      this.formatoCausacionyLiquidacionPago.textoComprobanteContable = this.textoComprobanteContable;
-      this.formatoCausacionyLiquidacionPago.modalidadContrato = this.detallePlanPago.modalidadContrato;
+      this.formatoCausacionyLiquidacionPago.textoComprobanteContable =
+        this.textoComprobanteContable;
+      this.formatoCausacionyLiquidacionPago.modalidadContrato =
+        this.detallePlanPago.modalidadContrato;
 
       this.liquidacionService
         .RegistrarDetalleLiquidacion(this.formatoCausacionyLiquidacionPago)
@@ -205,10 +207,12 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
 
   onSeleccionarMesActual() {
     if (this.tOperacionControl) {
-      this.formatoCausacionyLiquidacionPago.numeroMesSaludActual = (this
-        .tOperacionControl.value as TipoOperacion).tipoOperacionId;
-      this.mesSaludActual = (this.tOperacionControl
-        .value as TipoOperacion).nombre.toUpperCase();
+      this.formatoCausacionyLiquidacionPago.numeroMesSaludActual = (
+        this.tOperacionControl.value as TipoOperacion
+      ).tipoOperacionId;
+      this.mesSaludActual = (
+        this.tOperacionControl.value as TipoOperacion
+      ).nombre.toUpperCase();
     }
   }
 

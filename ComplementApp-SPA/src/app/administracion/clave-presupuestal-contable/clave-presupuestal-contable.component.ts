@@ -232,7 +232,6 @@ export class ClavePresupuestalContableComponent implements OnInit {
   }
 
   pageChanged(event: any): void {
-    //console.log(event);
     this.pagination.currentPage = event.page;
     this.onBuscarFactura();
   }

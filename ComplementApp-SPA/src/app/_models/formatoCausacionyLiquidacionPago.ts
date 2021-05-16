@@ -27,6 +27,7 @@ export interface FormatoCausacionyLiquidacionPago {
   numeroFactura: string;
   textoComprobanteContable: string;
   viaticosPagados: number;
+  tieneClavePresupuestalContable: boolean;
 
   honorario: number;
   honorarioUvt: number;

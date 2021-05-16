@@ -272,6 +272,9 @@ export class ObligacionPresupuestalComponent implements OnInit {
   public DescargarArchivoDetalleLiquidacion() {
     let fileName = '';
     let listaIds: number[] = [];
+
+
+    
     const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
     let listaCadenaIds = '';
     this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();

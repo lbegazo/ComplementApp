@@ -33,17 +33,14 @@ namespace ComplementApp.API.Dtos
 
         public int ModalidadContrato { get; set; }
         public int TipoPago { get; set; }
-
         public string NumeroRadicadoProveedor { get; set; }
-
         public DateTime? FechaRadicadoProveedor { get; set; }
         public string FechaRadicadoProveedorFormato { get; set; }
         public string Email { get; set; }
-
         public string Usuario { get; set; }
-
         public string FechaRadicadoSupervisorFormato { get; set; }
-
-        public string  TextoComprobanteContable { get; set; }
+        public string FechaInicioSolicitudPagoFormato { get; set; }
+        public string FechaFinalSolicitudPagoFormato { get; set; }
+        public string TextoComprobanteContable { get; set; }
     }
 }

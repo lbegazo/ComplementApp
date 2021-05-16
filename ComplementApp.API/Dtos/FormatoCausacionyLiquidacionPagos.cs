@@ -10,6 +10,7 @@ namespace ComplementApp.API.Dtos
         public int TerceroId { get; set; }
 
         #region Plan de Pago
+
         public string IdentificacionTercero { get; set; }
         public string NombreTercero { get; set; }
         public string Contrato { get; set; }
@@ -36,10 +37,12 @@ namespace ComplementApp.API.Dtos
         public int NumeroMesSaludActual { get; set; }
         public string MesSaludAnterior { get; set; }
         public string MesSaludActual { get; set; }
+        public bool TieneClavePresupuestalContable {get; set;}
 
         #endregion Plan de Pago
 
         #region Formato de liquidación
+
         public decimal Honorario { get; set; }
         public int HonorarioUvt { get; set; }
         public decimal ValorIva { get; set; }

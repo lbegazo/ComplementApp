@@ -114,7 +114,7 @@
                 <div style="width: 10%" class="inner center">
                   <label class="col-form-label-md">Identificación</label>
                 </div>
-                <div style="width: 40%" class="inner center">
+                <div style="width: 30%" class="inner center">
                   <label class="col-form-label-md">Tercero</label>
                 </div>
                 <div style="width: 15%" class="inner center">
@@ -125,6 +125,9 @@
                 </div>
                 <div style="width: 15%" class="inner right">
                   <label class="col-form-label-md">Valor Facturado</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Clave Presup.</label>
                 </div>
               </div>
               <div *ngIf="listaPlanPago">
@@ -157,7 +160,7 @@
                       <p>{{ item?.identificacionTercero }}</p>
                     </div>
                     <div
-                      style="width: 40%"
+                      style="width: 30%"
                       class="inner center aplicaBackground"
                     >
                       <p>{{ item?.nombreTercero }}</p>
@@ -184,6 +187,14 @@
                     >
                       <p>
                         {{ item?.valorTotal | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.tieneClavePresupuestalContable ? "SI" : "" }}
                       </p>
                     </div>
                   </ng-container>

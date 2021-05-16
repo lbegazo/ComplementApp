@@ -20,14 +20,14 @@ export class DetalleLiquidacionService {
 
   constructor(private http: HttpClient) {}
 
-  ObtenerListaDetalleLiquidacion(
+  ObtenerLiquidacionesParaCuentaPorPagarArchivo(
     listaEstadoId: string,
     terceroId?: number,
     procesado?: number,
     page?,
     pagesize?
   ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
-    const path = 'ObtenerListaDetalleLiquidacion';
+    const path = 'ObtenerLiquidacionesParaCuentaPorPagarArchivo';
     const paginatedResult: PaginatedResult<
       FormatoCausacionyLiquidacionPago[]
     > = new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
