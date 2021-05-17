@@ -418,8 +418,7 @@ namespace ComplementApp.API.Data
 
                               Usuario = us.Nombres + ' ' + us.Apellidos,
                               Email = us.Email,
-                              TextoComprobanteContable = " OBSERVACIONES: " +
-                                                         (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
+                              TextoComprobanteContable = (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
                                                          " " +
                                                          c.Detalle7 +
                                                           " " +
@@ -432,8 +431,6 @@ namespace ComplementApp.API.Data
                                                            sp.FechaInicio.ToString("yyyy-MM-dd") +
                                                            " A " +
                                                            sp.FechaFinal.ToString("yyyy-MM-dd") +
-                                                           " " +
-                                                           c.Detalle4 +
                                                            " SUP. " +
                                                            super.Nombres + ' ' + super.Apellidos,
                               /*
@@ -801,6 +798,9 @@ namespace ComplementApp.API.Data
                     break;
                 case "RECIBOS OFICIALES DE PAGO":
                     resultado = "ROP";
+                    break;
+                case "CONTRATO":
+                    resultado = "CTO";
                     break;
                 default: break;
             }

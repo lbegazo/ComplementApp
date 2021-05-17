@@ -262,7 +262,7 @@ namespace ComplementApp.API.Data
                                    TipoCuentaXPagarCodigo = pl.TipoCuentaXPagarId > 0 ? tiCu.Codigo : string.Empty,
                                    TotalACancelar = decimal.Round(dl.TotalACancelar, 2, MidpointRounding.AwayFromZero),
                                    ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
-                                   TextoComprobanteContable = dl.TextoComprobanteContable,
+                                   TextoComprobanteContable = dl.TextoComprobanteContable.Length > 240 ? dl.TextoComprobanteContable.Substring(0, 240) : dl.TextoComprobanteContable,
                                    TipoDocumentoSoporteCodigo = pl.TipoDocumentoSoporteId > 0 ? tipoDocu.Codigo : string.Empty,
                                    NumeroFactura = dl.NumeroFactura,
                                    ConstanteNumero = "16",
@@ -485,7 +485,7 @@ namespace ComplementApp.API.Data
                                    ConstanteCargo = "SUPERVISOR",
                                    NombreSupervisor = dl.NombreSupervisor,
                                    TextoComprobanteContable =
-                                   dl.TextoComprobanteContable.Length > 220 ? dl.TextoComprobanteContable.Substring(0, 220) : dl.TextoComprobanteContable,
+                                   dl.TextoComprobanteContable.Length > 240 ? dl.TextoComprobanteContable.Substring(0, 240) : dl.TextoComprobanteContable,
                                    ValorTotal = decimal.Round(dl.ValorTotal, 2, MidpointRounding.AwayFromZero),
                                    FechaRegistro = dl.FechaRegistro.Value
                                })
