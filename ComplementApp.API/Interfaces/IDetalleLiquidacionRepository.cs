@@ -51,7 +51,8 @@ namespace ComplementApp.API.Interfaces
                     bool? procesado,
                     UserParams userParams);
 
-        Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion(int? terceroId,
+        Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion( int pciId,
+                                                                    int? terceroId,
                                                                     List<int> listaEstadoId,
                                                                     bool? procesado);
         Task<List<int>> ObtenerLiquidacionesConClaveParaArchivoObligacion(int pciId, List<int> listaLiquidacionId);
@@ -63,7 +64,7 @@ namespace ComplementApp.API.Interfaces
         Task<ICollection<DeduccionDetalleLiquidacionParaArchivo>> ObtenerDeduccionesLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId);
 
         Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerUsosParaArchivoObligacion(List<int> listaLiquidacionId);
-
+        Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerFacturaParaArchivoObligacion(List<int> listaLiquidacionId, int pciId);
         Task<List<int>> ObtenerLiquidacionIdsConUsosPresupuestales(List<int> listaLiquidacionId);
 
         #endregion Archivo Obligacion Presupuestal

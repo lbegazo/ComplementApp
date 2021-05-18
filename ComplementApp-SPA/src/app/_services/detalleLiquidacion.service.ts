@@ -165,14 +165,14 @@ export class DetalleLiquidacionService {
 
   //#region Creación Archivo Cuenta Por Pagar
 
-  public DescargarMaestroLiquidacion_ArchivoCuentaPorPagar(
+  public DescargarCabeceraArchivoLiquidacionCuentaPorPagar(
     listaLiquidacionId: string
   ): Observable<HttpEvent<Blob>> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${
-          this.baseUrl + 'DescargarMaestroLiquidacion_ArchivoCuentaPorPagar'
+          this.baseUrl + 'DescargarCabeceraArchivoLiquidacionCuentaPorPagar'
         }?listaLiquidacionId=${listaLiquidacionId}`,
         null,
         {
@@ -183,14 +183,14 @@ export class DetalleLiquidacionService {
     );
   }
 
-  public DescargarDetalleLiquidacion_ArchivoCuentaPorPagar(
+  public DescargarDetalleArchivoLiquidacionCuentaPorPagar(
     listaLiquidacionId: string
   ): Observable<HttpEvent<Blob>> {
     return this.http.request(
       new HttpRequest(
         'GET',
         `${
-          this.baseUrl + 'DescargarDetalleLiquidacion_ArchivoCuentaPorPagar'
+          this.baseUrl + 'DescargarDetalleArchivoLiquidacionCuentaPorPagar'
         }?listaLiquidacionId=${listaLiquidacionId}`,
         null,
         {

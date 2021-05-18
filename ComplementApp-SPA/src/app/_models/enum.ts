@@ -77,6 +77,7 @@ export class TipoArchivoObligacion extends Enum<number> {
   public static readonly Deducciones = new Enum(2);
   public static readonly Item = new Enum(3);
   public static readonly Usos = new Enum(4);
+  public static readonly Factura = new Enum(5);
 }
 
 export enum Mes {

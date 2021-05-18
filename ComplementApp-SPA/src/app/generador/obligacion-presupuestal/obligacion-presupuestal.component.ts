@@ -113,7 +113,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
+    this.listaEstadoId =
+      EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
 
     this.liquidacionService
       .ObtenerLiquidacionesParaArchivoObligacion(
@@ -273,11 +274,10 @@ export class ObligacionPresupuestalComponent implements OnInit {
     let fileName = '';
     let listaIds: number[] = [];
 
-
-    
     const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
     let listaCadenaIds = '';
-    this.listaEstadoId = EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
+    this.listaEstadoId =
+      EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
     let tipoArchivoObligacion = 0;
     let conUsoPresupuestal = 0;
 
@@ -298,7 +298,7 @@ export class ObligacionPresupuestalComponent implements OnInit {
 
       //#endregion Obtener lista de ids
 
-      //#region Descargar archivo CABECERA
+      //#region Descargar archivo CABECERA CON USO PRESUPUESTAL
 
       tipoArchivoObligacion = TipoArchivoObligacion.Cabecera.value;
       conUsoPresupuestal = 1;
@@ -409,9 +409,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
                               type: response.body.type,
                             });
 
-                            const nombreArchivo = response.headers.get(
-                              'filename'
-                            );
+                            const nombreArchivo =
+                              response.headers.get('filename');
 
                             if (
                               nombreArchivo != null &&
@@ -462,9 +461,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                     }
                                   );
 
-                                  const nombreArchivo = response.headers.get(
-                                    'filename'
-                                  );
+                                  const nombreArchivo =
+                                    response.headers.get('filename');
 
                                   if (
                                     nombreArchivo != null &&
@@ -490,11 +488,10 @@ export class ObligacionPresupuestalComponent implements OnInit {
                               this.alertify.warning(error);
                             },
                             () => {
-                              //#region Descargar archivo CABECERA
+                              //#region Descargar archivo FACTURA
 
                               tipoArchivoObligacion =
-                                TipoArchivoObligacion.Cabecera.value;
-                              conUsoPresupuestal = 0;
+                                TipoArchivoObligacion.Factura.value;
 
                               this.liquidacionService
                                 .DescargarArchivoLiquidacionObligacion(
@@ -516,9 +513,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                           }
                                         );
 
-                                        const nombreArchivo = response.headers.get(
-                                          'filename'
-                                        );
+                                        const nombreArchivo =
+                                          response.headers.get('filename');
 
                                         if (
                                           nombreArchivo != null &&
@@ -536,9 +532,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                         );
                                         document.body.appendChild(a);
                                         a.download = fileName;
-                                        a.href = URL.createObjectURL(
-                                          downloadedFile
-                                        );
+                                        a.href =
+                                          URL.createObjectURL(downloadedFile);
                                         a.target = '_blank';
                                         a.click();
                                         document.body.removeChild(a);
@@ -549,10 +544,11 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                     this.alertify.warning(error);
                                   },
                                   () => {
-                                    //#region Descargar archivo ITEM
+                                    //#region Descargar archivo CABECERA Y NO USO PRESUPUESTAL
 
                                     tipoArchivoObligacion =
-                                      TipoArchivoObligacion.Item.value;
+                                      TipoArchivoObligacion.Cabecera.value;
+                                    conUsoPresupuestal = 0;
 
                                     this.liquidacionService
                                       .DescargarArchivoLiquidacionObligacion(
@@ -574,9 +570,10 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                 }
                                               );
 
-                                              const nombreArchivo = response.headers.get(
-                                                'filename'
-                                              );
+                                              const nombreArchivo =
+                                                response.headers.get(
+                                                  'filename'
+                                                );
 
                                               if (
                                                 nombreArchivo != null &&
@@ -585,21 +582,21 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                 fileName =
                                                   nombreArchivo + '.txt';
                                               } else {
-                                                fileName = 'SIGPAA_Items.txt';
+                                                fileName = 'SIGPAA_Maestro.txt';
                                               }
 
-                                              const a = document.createElement(
-                                                'a'
-                                              );
+                                              const a =
+                                                document.createElement('a');
                                               a.setAttribute(
                                                 'style',
                                                 'display:none;'
                                               );
                                               document.body.appendChild(a);
                                               a.download = fileName;
-                                              a.href = URL.createObjectURL(
-                                                downloadedFile
-                                              );
+                                              a.href =
+                                                URL.createObjectURL(
+                                                  downloadedFile
+                                                );
                                               a.target = '_blank';
                                               a.click();
                                               document.body.removeChild(a);
@@ -610,11 +607,10 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                           this.alertify.warning(error);
                                         },
                                         () => {
-                                          //#region Descargar archivo DEDUCCIONES
+                                          //#region Descargar archivo ITEM
 
                                           tipoArchivoObligacion =
-                                            TipoArchivoObligacion.Deducciones
-                                              .value;
+                                            TipoArchivoObligacion.Item.value;
 
                                           this.liquidacionService
                                             .DescargarArchivoLiquidacionObligacion(
@@ -629,17 +625,19 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                               (response) => {
                                                 switch (response.type) {
                                                   case HttpEventType.Response:
-                                                    const downloadedFile = new Blob(
-                                                      [response.body],
-                                                      {
-                                                        type:
-                                                          response.body.type,
-                                                      }
-                                                    );
+                                                    const downloadedFile =
+                                                      new Blob(
+                                                        [response.body],
+                                                        {
+                                                          type: response.body
+                                                            .type,
+                                                        }
+                                                      );
 
-                                                    const nombreArchivo = response.headers.get(
-                                                      'filename'
-                                                    );
+                                                    const nombreArchivo =
+                                                      response.headers.get(
+                                                        'filename'
+                                                      );
 
                                                     if (
                                                       nombreArchivo != null &&
@@ -649,12 +647,13 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                         nombreArchivo + '.txt';
                                                     } else {
                                                       fileName =
-                                                        'SIGPAA_Maestro.txt';
+                                                        'SIGPAA_Items.txt';
                                                     }
 
-                                                    const a = document.createElement(
-                                                      'a'
-                                                    );
+                                                    const a =
+                                                      document.createElement(
+                                                        'a'
+                                                      );
                                                     a.setAttribute(
                                                       'style',
                                                       'display:none;'
@@ -663,9 +662,10 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                       a
                                                     );
                                                     a.download = fileName;
-                                                    a.href = URL.createObjectURL(
-                                                      downloadedFile
-                                                    );
+                                                    a.href =
+                                                      URL.createObjectURL(
+                                                        downloadedFile
+                                                      );
                                                     a.target = '_blank';
                                                     a.click();
                                                     document.body.removeChild(
@@ -678,22 +678,193 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                 this.alertify.warning(error);
                                               },
                                               () => {
-                                                this.onLimpiarFactura();
-                                                this.router.navigate([
-                                                  '/GENERADOR_OBLIGACIONES',
-                                                ]);
+                                                //#region Descargar archivo DEDUCCIONES
+
+                                                tipoArchivoObligacion =
+                                                  TipoArchivoObligacion
+                                                    .Deducciones.value;
+
+                                                this.liquidacionService
+                                                  .DescargarArchivoLiquidacionObligacion(
+                                                    listaCadenaIds,
+                                                    this.listaEstadoId,
+                                                    esSeleccionarTodas,
+                                                    this.terceroId,
+                                                    tipoArchivoObligacion,
+                                                    conUsoPresupuestal
+                                                  )
+                                                  .subscribe(
+                                                    (response) => {
+                                                      switch (response.type) {
+                                                        case HttpEventType.Response:
+                                                          const downloadedFile =
+                                                            new Blob(
+                                                              [response.body],
+                                                              {
+                                                                type: response
+                                                                  .body.type,
+                                                              }
+                                                            );
+
+                                                          const nombreArchivo =
+                                                            response.headers.get(
+                                                              'filename'
+                                                            );
+
+                                                          if (
+                                                            nombreArchivo !=
+                                                              null &&
+                                                            nombreArchivo.length >
+                                                              0
+                                                          ) {
+                                                            fileName =
+                                                              nombreArchivo +
+                                                              '.txt';
+                                                          } else {
+                                                            fileName =
+                                                              'SIGPAA_Maestro.txt';
+                                                          }
+
+                                                          const a =
+                                                            document.createElement(
+                                                              'a'
+                                                            );
+                                                          a.setAttribute(
+                                                            'style',
+                                                            'display:none;'
+                                                          );
+                                                          document.body.appendChild(
+                                                            a
+                                                          );
+                                                          a.download = fileName;
+                                                          a.href =
+                                                            URL.createObjectURL(
+                                                              downloadedFile
+                                                            );
+                                                          a.target = '_blank';
+                                                          a.click();
+                                                          document.body.removeChild(
+                                                            a
+                                                          );
+                                                          break;
+                                                      }
+                                                    },
+                                                    (error) => {
+                                                      this.alertify.warning(
+                                                        error
+                                                      );
+                                                    },
+                                                    () => {
+                                                      //#region Descargar archivo FACTURA
+
+                                                      tipoArchivoObligacion =
+                                                        TipoArchivoObligacion
+                                                          .Factura.value;
+
+                                                      this.liquidacionService
+                                                        .DescargarArchivoLiquidacionObligacion(
+                                                          listaCadenaIds,
+                                                          this.listaEstadoId,
+                                                          esSeleccionarTodas,
+                                                          this.terceroId,
+                                                          tipoArchivoObligacion,
+                                                          conUsoPresupuestal
+                                                        )
+                                                        .subscribe(
+                                                          (response) => {
+                                                            switch (
+                                                              response.type
+                                                            ) {
+                                                              case HttpEventType.Response:
+                                                                const downloadedFile =
+                                                                  new Blob(
+                                                                    [
+                                                                      response.body,
+                                                                    ],
+                                                                    {
+                                                                      type: response
+                                                                        .body
+                                                                        .type,
+                                                                    }
+                                                                  );
+
+                                                                const nombreArchivo =
+                                                                  response.headers.get(
+                                                                    'filename'
+                                                                  );
+
+                                                                if (
+                                                                  nombreArchivo !=
+                                                                    null &&
+                                                                  nombreArchivo.length >
+                                                                    0
+                                                                ) {
+                                                                  fileName =
+                                                                    nombreArchivo +
+                                                                    '.txt';
+                                                                } else {
+                                                                  fileName =
+                                                                    'SIGPAA_Maestro.txt';
+                                                                }
+
+                                                                const a =
+                                                                  document.createElement(
+                                                                    'a'
+                                                                  );
+                                                                a.setAttribute(
+                                                                  'style',
+                                                                  'display:none;'
+                                                                );
+                                                                document.body.appendChild(
+                                                                  a
+                                                                );
+                                                                a.download =
+                                                                  fileName;
+                                                                a.href =
+                                                                  URL.createObjectURL(
+                                                                    downloadedFile
+                                                                  );
+                                                                a.target =
+                                                                  '_blank';
+                                                                a.click();
+                                                                document.body.removeChild(
+                                                                  a
+                                                                );
+                                                                break;
+                                                            }
+                                                          },
+                                                          (error) => {
+                                                            this.alertify.warning(
+                                                              error
+                                                            );
+                                                          },
+                                                          () => {
+                                                            this.onLimpiarFactura();
+                                                            this.router.navigate(
+                                                              [
+                                                                '/GENERADOR_OBLIGACIONES',
+                                                              ]
+                                                            );
+                                                          }
+                                                        );
+
+                                                      //#endregion Descargar archivo FACTURA
+                                                    }
+                                                  );
+
+                                                //#endregion Descargar archivo DEDUCCIONES
                                               }
                                             );
 
-                                          //#endregion Descargar archivo DEDUCCIONES
+                                          //#endregion Descargar archivo ITEM
                                         }
                                       );
 
-                                    //#endregion Descargar archivo ITEM
+                                    //#endregion Descargar archivo CABECERA
                                   }
                                 );
 
-                              //#endregion Descargar archivo CABECERA
+                              //#endregion  Descargar archivo FACTURA
                             }
                           );
 

@@ -118,6 +118,7 @@ namespace ComplementApp.API.Models
         Deducciones = 2,
         Item = 3,
         Uso = 4,
+        Factura = 5,
     }
 
     public enum TipoArchivoCuentaPorPagar

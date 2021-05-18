@@ -154,7 +154,7 @@ namespace ComplementApp.API.Data
             var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
                                            where pp.PciId == userParams.PciId
                                            select pp.Crp).ToHashSet();
-                                           
+
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
@@ -262,7 +262,7 @@ namespace ComplementApp.API.Data
                                    TipoCuentaXPagarCodigo = pl.TipoCuentaXPagarId > 0 ? tiCu.Codigo : string.Empty,
                                    TotalACancelar = decimal.Round(dl.TotalACancelar, 2, MidpointRounding.AwayFromZero),
                                    ValorIva = decimal.Round(dl.ValorIva, 2, MidpointRounding.AwayFromZero),
-                                   TextoComprobanteContable = dl.TextoComprobanteContable.Length > 240 ? dl.TextoComprobanteContable.Substring(0, 240) : dl.TextoComprobanteContable,
+                                   TextoComprobanteContable = dl.TextoComprobanteContable.Length > 220 ? dl.TextoComprobanteContable.Substring(0, 220) : dl.TextoComprobanteContable,
                                    TipoDocumentoSoporteCodigo = pl.TipoDocumentoSoporteId > 0 ? tipoDocu.Codigo : string.Empty,
                                    NumeroFactura = dl.NumeroFactura,
                                    ConstanteNumero = "16",
@@ -402,7 +402,7 @@ namespace ComplementApp.API.Data
         }
 
 
-        public async Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion(int? terceroId,
+        public async Task<List<int>> ObtenerLiquidacionIdsParaArchivoObligacion(int pciId, int? terceroId,
                                                                                         List<int> listaEstadoId,
                                                                                         bool? procesado)
         {
@@ -414,6 +414,7 @@ namespace ComplementApp.API.Data
                                from pl in parametroLiquidacion.DefaultIfEmpty()
                                where dl.PciId == c.PciId
                                where dl.PciId == pl.PciId
+                               where dl.PciId == pciId
                                where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                                where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                                where (dl.TerceroId == terceroId || terceroId == null)
@@ -460,7 +461,6 @@ namespace ComplementApp.API.Data
                 identificacionPCI = pci.Identificacion;
             }
 
-
             var lista = await (from dl in _context.DetalleLiquidacion
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
@@ -485,9 +485,9 @@ namespace ComplementApp.API.Data
                                    ConstanteCargo = "SUPERVISOR",
                                    NombreSupervisor = dl.NombreSupervisor,
                                    TextoComprobanteContable =
-                                   dl.TextoComprobanteContable.Length > 240 ? dl.TextoComprobanteContable.Substring(0, 240) : dl.TextoComprobanteContable,
+                                   dl.TextoComprobanteContable.Length > 220 ? dl.TextoComprobanteContable.Substring(0, 220) : dl.TextoComprobanteContable,
                                    ValorTotal = decimal.Round(dl.ValorTotal, 2, MidpointRounding.AwayFromZero),
-                                   FechaRegistro = dl.FechaRegistro.Value
+                                   FechaRegistro = dl.FechaRegistro.Value,
                                })
                     .ToListAsync();
 
@@ -500,7 +500,6 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)
         {
-
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
@@ -520,7 +519,6 @@ namespace ComplementApp.API.Data
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
-                               where sp.PciId == dl.PciId
                                where cpc.Dependencia == cp.Dependencia
                                select new ClavePresupuestalContableParaArchivo()
                                {
@@ -607,6 +605,33 @@ namespace ComplementApp.API.Data
             return listaFinal;
         }
 
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerFacturaParaArchivoObligacion(List<int> listaLiquidacionId, int pciId)
+        {
+            List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
+
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               join t in _context.Tercero on dl.TerceroId equals t.TerceroId
+                               join sp in _context.FormatoSolicitudPago on dl.Crp equals sp.Crp
+                               join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
+                               from pl in parametroLiquidacion.DefaultIfEmpty()
+                               where dl.PciId == pl.PciId
+                               where sp.PciId == dl.PciId
+                               where sp.PlanPagoId == dl.PlanPagoId
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               select new DetalleLiquidacionParaArchivo()
+                               {
+                                   DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                   NumeroFactura = sp.NumeroFactura,
+                                   EsFacturaElectronica = pl.FacturaElectronica ? true : false,
+                               })
+                    .ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                listaFinal = lista.OrderBy(x => x.FechaRegistro).ToList();
+            }
+            return listaFinal;
+        }
 
         #endregion Archivo Obligacion Presupuestal
 

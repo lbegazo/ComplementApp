@@ -179,7 +179,6 @@ namespace ComplementApp.API.Services
             return sbBody.ToString();
         }
 
-
         public string ObtenerInformacionDeduccionesLiquidacion_ArchivoObligacion(List<int> liquidacionIds, List<DeduccionDetalleLiquidacionParaArchivo> listaTotal)
         {
             List<DeduccionDetalleLiquidacionParaArchivo> lista = null;
@@ -202,7 +201,7 @@ namespace ComplementApp.API.Services
                 lista = listaTotal.Where(x => x.DetalleLiquidacionId == liquidacionId).ToList();
 
                 if (lista != null && lista.Count > 0)
-                {                    
+                {
                     foreach (var itemInterno in lista)
                     {
                         sbBody.Append(consecutivoCabecera);
@@ -223,7 +222,7 @@ namespace ComplementApp.API.Services
                         sbBody.Append(Environment.NewLine);
 
                         consecutivoInterno++;
-                    }                    
+                    }
                 }
                 consecutivoCabecera++;
             }
@@ -279,7 +278,32 @@ namespace ComplementApp.API.Services
         }
 
 
+        public string ObtenerInformacionFacturaLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> listaTotal)
+        {
+            int consecutivoCabecera = 1;
+            int consecutivoInterno = 1;
+            StringBuilder sbBody = new StringBuilder();
+
+            foreach (var item in listaTotal)
+            {
+                if (item.EsFacturaElectronica)
+                {
+                    sbBody.Append(consecutivoCabecera);
+                    sbBody.Append("|");
+                    sbBody.Append(consecutivoInterno);
+                    sbBody.Append("|");
+                    sbBody.Append(item.NumeroFactura);
+                    sbBody.Append(Environment.NewLine);
+
+                    consecutivoInterno++;
+                }
+                consecutivoCabecera++;
+            }
+            return sbBody.ToString();
+        }
+
+
         #endregion Obligacion
-    
+
     }
 }

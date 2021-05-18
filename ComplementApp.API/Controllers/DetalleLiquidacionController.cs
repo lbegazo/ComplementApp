@@ -371,8 +371,8 @@ namespace ComplementApp.API.Controllers
         #region Archivo Cuenta Por Pagar
 
         [HttpGet]
-        [Route("DescargarMaestroLiquidacion_ArchivoCuentaPorPagar")]
-        public async Task<IActionResult> DescargarMaestroLiquidacion_ArchivoCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
+        [Route("DescargarCabeceraArchivoLiquidacionCuentaPorPagar")]
+        public async Task<IActionResult> DescargarCabeceraArchivoLiquidacionCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
         {
             string cadena = string.Empty;
             int consecutivo = 0;
@@ -444,8 +444,8 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpGet]
-        [Route("DescargarDetalleLiquidacion_ArchivoCuentaPorPagar")]
-        public async Task<IActionResult> DescargarDetalleLiquidacion_ArchivoCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
+        [Route("DescargarDetalleArchivoLiquidacionCuentaPorPagar")]
+        public async Task<IActionResult> DescargarDetalleArchivoLiquidacionCuentaPorPagar([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId)
         {
             string cadena = string.Empty;
             string nombreArchivo = string.Empty;
@@ -578,7 +578,7 @@ namespace ComplementApp.API.Controllers
                 {
                     #region esSeleccionarTodo
 
-                    liquidacionIdsTotal = await _repo.ObtenerLiquidacionIdsParaArchivoObligacion(terceroId, listaEstadoIds, false);
+                    liquidacionIdsTotal = await _repo.ObtenerLiquidacionIdsParaArchivoObligacion(pciId, terceroId, listaEstadoIds, false);
 
                     #endregion esSeleccionarTodo
                 }
@@ -599,22 +599,25 @@ namespace ComplementApp.API.Controllers
                 }
 
                 //Filtrar solo liquidaciones con clave presupuestal contable
-                List<int> listaIdsTotal = await _repo.ObtenerLiquidacionesConClaveParaArchivoObligacion(pciId, liquidacionIdsTotal);
+                List<int> listaIdsConClavePresup = await _repo.ObtenerLiquidacionesConClaveParaArchivoObligacion(pciId, liquidacionIdsTotal);
 
                 #endregion Obtener lista de liquidaciones a procesar
 
                 #region Filtrar lista de liquidaciones por Usos Presupuestales
 
-                liquidacionIdsConUsoPresupuestal = await _repo.ObtenerLiquidacionIdsConUsosPresupuestales(listaIdsTotal);
+                if (listaIdsConClavePresup.Count > 0)
+                {
+                    liquidacionIdsConUsoPresupuestal = await _repo.ObtenerLiquidacionIdsConUsosPresupuestales(listaIdsConClavePresup);
 
-                if (esUsoPresupuestal)
-                {
-                    liquidacionIds = liquidacionIdsConUsoPresupuestal;
-                }
-                else
-                {
-                    liquidacionIdsSinUsoPresupuestal = liquidacionIdsTotal.Except(liquidacionIdsConUsoPresupuestal).ToList();
-                    liquidacionIds = liquidacionIdsSinUsoPresupuestal;
+                    if (esUsoPresupuestal)
+                    {
+                        liquidacionIds = liquidacionIdsConUsoPresupuestal;
+                    }
+                    else
+                    {
+                        liquidacionIdsSinUsoPresupuestal = liquidacionIdsTotal.Except(liquidacionIdsConUsoPresupuestal).ToList();
+                        liquidacionIds = liquidacionIdsSinUsoPresupuestal;
+                    }
                 }
 
                 #endregion Filtrar lista de liquidaciones por Usos Presupuestales
@@ -819,6 +822,54 @@ namespace ComplementApp.API.Controllers
 
                             #endregion Usos
                         };
+                    case (int)TipoArchivoObligacion.Factura:
+                        {
+                            #region Factura
+
+                            var listaLiquidacion = await _repo.ObtenerFacturaParaArchivoObligacion(liquidacionIds, pciId);
+
+                            //Obtener nombre del archivo detalle
+                            consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
+                            nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                                                (int)TipoDocumentoArchivo.Obligacion,
+                                                                (int)TipoArchivoObligacion.Factura
+                                                                );
+
+                            var listaIdFactura = (from l in listaLiquidacion
+                                                  where l.EsFacturaElectronica == true
+                                                  select l
+                                            ).ToList();
+
+                            if (listaIdFactura != null && listaIdFactura.Count > 0)
+                            {
+                                //Obtener información para el archivo
+                                cadena = _procesoCreacionArchivo.ObtenerInformacionFacturaLiquidacion_ArchivoObligacion(listaLiquidacion.ToList());
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                await transaction.CommitAsync();
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            else
+                            {
+                                nombreArchivo = "SIGPAA Factura sin registros";
+                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream == null)
+                                    return NotFound();
+
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            #endregion Factura
+                        };
                     default: break;
                 }
 
@@ -830,7 +881,6 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
-
 
         #endregion Archivo Obligacion Presupuestal
 
@@ -1012,6 +1062,11 @@ namespace ComplementApp.API.Controllers
                             case (int)TipoArchivoObligacion.Uso:
                                 {
                                     nombreIntermedio = "Usos ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Factura:
+                                {
+                                    nombreIntermedio = "Factura ";
                                 }
                                 break;
 

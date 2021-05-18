@@ -26,5 +26,7 @@ namespace ComplementApp.API.Dtos
         public string UsoPresupuestalCodigo { get; set; }
         public int? UsoPresupuestalId { get; set; }
         public int RubroPresupuestalId { get; set; }
+        public bool EsFacturaElectronica { get; set; }
+
     }
 }
