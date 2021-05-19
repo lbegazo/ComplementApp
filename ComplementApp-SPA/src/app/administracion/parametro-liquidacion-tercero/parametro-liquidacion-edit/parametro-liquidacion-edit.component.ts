@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
@@ -15,7 +15,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
@@ -144,7 +144,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     private terceroService: TerceroService,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -1513,6 +1514,47 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       subscription.unsubscribe();
     });
     this.subscriptions = [];
+  }
+
+  exportarExcel() {
+    let fileName = '';
+
+    this.terceroService
+      .DescargarListaActividadEconomica()
+      .subscribe(
+        (response) => {
+          switch (response.type) {
+            case HttpEventType.Response:
+              const downloadedFile = new Blob([response.body], {
+                type: response.body.type,
+              });
+
+              const nombreArchivo = response.headers.get('filename');
+
+              if (nombreArchivo != null && nombreArchivo.length > 0) {
+                fileName = nombreArchivo;
+              } else {
+                fileName = 'ActividadEconomica.xlsx';
+              }
+
+              const a = document.createElement('a');
+              a.setAttribute('style', 'display:none;');
+              document.body.appendChild(a);
+              a.download = fileName;
+              a.href = URL.createObjectURL(downloadedFile);
+              a.target = '_blank';
+              a.click();
+              document.body.removeChild(a);
+              break;
+          }
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          this.router.navigate(['/ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO']);
+        }
+      );
   }
 
   //#region Controles

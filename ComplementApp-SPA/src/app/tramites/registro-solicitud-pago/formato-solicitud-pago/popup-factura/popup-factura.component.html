@@ -16,31 +16,31 @@
         <div class="modal-body" style="padding-top: 0px">
           <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
             <div class="row">
-              <div class="col-1 inner aplicaBackground center">
+              <div style="width: 13%" class="inner aplicaBackground center">
                 <label class="col-form-label"><strong>Cdp</strong></label>
               </div>
-              <div class="col-1 inner aplicaBackground center">
+              <div style="width: 13%" class="inner aplicaBackground center">
                 <label class="col-form-label"><strong>Crp</strong></label>
               </div>
-              <div class="col-2 inner aplicaBackground center">
+              <div style="width: 15%" class="inner aplicaBackground center">
                 <label class="col-form-label"><strong>Mes</strong></label>
               </div>
-              <div class="col-2 inner aplicaBackground center">
+              <div style="width: 20%" class="inner aplicaBackground center">
                 <label class="col-form-label"
                   ><strong>Valor a pagar</strong></label
                 >
               </div>
-              <div class="col-2 inner aplicaBackground center">
+              <div style="width: 20%" class="inner aplicaBackground center">
                 <label class="col-form-label"
                   ><strong>Saldo disp.</strong></label
                 >
               </div>
-              <div class="col-2 inner aplicaBackground center">
-                <label class="col-form-label"><strong>Viáticos</strong></label>
+              <div style="width: 9%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Viát.</strong></label>
               </div>
-              <div class="col-2 inner aplicaBackground center">
+              <div style="width: 10%" class="inner aplicaBackground center">
                 <label class="col-form-label"
-                  ><strong>Número pago</strong></label
+                  ><strong>Núm. Pago</strong></label
                 >
               </div>
             </div>
@@ -51,7 +51,7 @@
                 *ngFor="let item of listaPlanPago; let i = index"
               >
                 <ng-container [formGroupName]="i">
-                  <div class="col-1 inner left">
+                  <div style="width: 13%" class="inner left">
                     <p class="medium">
                       <input
                         type="radio"
@@ -62,30 +62,30 @@
                       {{ item?.cdp }}
                     </p>
                   </div>
-                  <div class="col-1 inner center">
+                  <div style="width: 13%" class="inner center">
                     <p class="medium">{{ item?.crp }}</p>
                   </div>
-                  <div class="col-2 inner center">
+                  <div style="width: 15%" class="inner center">
                     <p class="medium">
                       {{ item?.mesPagoDescripcion }}
                     </p>
                   </div>
-                  <div class="col-2 inner right">
+                  <div style="width: 20%" class="inner right">
                     <p class="medium">
                       {{ item?.valorAPagar | number: "1.2-2" }}
                     </p>
                   </div>
-                  <div class="col-2 inner right">
+                  <div style="width: 20%" class="inner right">
                     <p class="medium">
                       {{ item?.saldoDisponible | number: "1.2-2" }}
                     </p>
                   </div>
-                  <div class="col-2 inner center">
+                  <div style="width: 9%" class="inner center">
                     <p class="medium">
                       {{ item?.viaticosDescripcion }}
                     </p>
                   </div>
-                  <div class="col-2 inner center">
+                  <div style="width: 10%" class="inner center">
                     <p class="medium">
                       {{ item?.numeroPago }}
                     </p>

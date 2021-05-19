@@ -16,5 +16,6 @@ namespace ComplementApp.API.Interfaces
         FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo);
         DataTable ObtenerTablaDeListaTerceroDeduccion(List<TerceroDeduccionDto> lista);
         DataTable ObtenerTablaDeListaParametroLiquidacionTercero(List<ParametroLiquidacionTerceroDto> lista);
+        DataTable ObtenerTablaDeListaActividadEconomica(List<ValorSeleccion> lista);
     }
 }

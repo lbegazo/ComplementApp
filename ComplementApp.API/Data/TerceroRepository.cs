@@ -522,6 +522,19 @@ namespace ComplementApp.API.Data
             return await lista.ToListAsync();
         }
 
+         public async Task<ICollection<ValorSeleccion>> DescargarListaActividadEconomica()
+        {
+            var lista = (from t in _context.ActividadEconomica
+                         select new ValorSeleccion()
+                         {
+                             Codigo = t.Codigo,
+                             Nombre = t.Nombre,
+                         })
+                        .OrderBy(c => c.Codigo);
+
+            return await lista.ToListAsync();
+        }
+
         #endregion Parametrización de Liquidación Tercero
     }
 }

@@ -85,6 +85,27 @@ namespace ComplementApp.API.Services
             return dt;
         }
 
+        public DataTable ObtenerTablaDeListaActividadEconomica(List<ValorSeleccion> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("CODIGO", typeof(string)));
+            dt.Columns.Add(new DataColumn("NOMBRE", typeof(string)));
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["CODIGO"] = item.Codigo;
+                dr["NOMBRE"] = item.Nombre;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
         public DataTable ObtenerTablaDeListaPlanPago(List<PlanPagoDto> lista)
         {
             int consecutivo = 1;

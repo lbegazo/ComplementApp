@@ -223,5 +223,19 @@ export class TerceroService {
     );
   }
 
+  public DescargarListaActividadEconomica(): Observable<HttpEvent<Blob>> {
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarListaActividadEconomica'}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
+  }
+
   //#endregion Parametro Liquidacion Tercero
 }

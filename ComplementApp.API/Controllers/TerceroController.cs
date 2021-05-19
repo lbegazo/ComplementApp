@@ -577,6 +577,27 @@ namespace ComplementApp.API.Controllers
             return BadRequest();
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaActividadEconomica()
+        {
+            string nombreArchivo = "ActividadEconomica.xlsx";
+            try
+            {
+                var lista = await _repo.DescargarListaActividadEconomica();
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaActividadEconomica(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
+        }
+
         #endregion Parametrizacion Liquidacion Tercero
     }
 }
