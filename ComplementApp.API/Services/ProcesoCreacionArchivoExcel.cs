@@ -195,6 +195,7 @@ namespace ComplementApp.API.Services
             dt.Columns.Add(new DataColumn("FECHA_ACTA_INICIO", typeof(string)));
             dt.Columns.Add(new DataColumn("FECHA_FINAL", typeof(string)));
             dt.Columns.Add(new DataColumn("FECHA_APROBAR_POLIZA", typeof(string)));
+            dt.Columns.Add(new DataColumn("PAGO_MENSUAL", typeof(decimal)));
             dt.Columns.Add(new DataColumn("SUPERVISOR_1", typeof(string)));
             dt.Columns.Add(new DataColumn("SUPERVISOR_2", typeof(string)));
 
@@ -209,6 +210,7 @@ namespace ComplementApp.API.Services
                 dr["FECHA_ACTA_INICIO"] = item.FechaInicio.ToString("yyyy-MM-dd");
                 dr["FECHA_FINAL"] = item.FechaFinal.ToString("yyyy-MM-dd");
                 dr["FECHA_APROBAR_POLIZA"] = item.FechaExpedicionPoliza.ToString("yyyy-MM-dd");
+                dr["PAGO_MENSUAL"] = item.ValorPagoMensual;
                 dr["SUPERVISOR_1"] = item.Supervisor1.NombreCompleto;
                 dr["SUPERVISOR_2"] = item.Supervisor2.NombreCompleto;
                 dt.Rows.Add(dr);

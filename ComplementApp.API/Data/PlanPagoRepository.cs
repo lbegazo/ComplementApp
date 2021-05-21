@@ -289,8 +289,8 @@ namespace ComplementApp.API.Data
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
 
-                              Usuario = us.Nombres + ' ' + us.Apellidos,
-                              Email = us.Email,
+                              Usuario = super.Nombres + ' ' + super.Apellidos,
+                              Email = super.Email,
                           })
                     .FirstOrDefaultAsync();
         }
@@ -416,8 +416,8 @@ namespace ComplementApp.API.Data
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
 
-                              Usuario = us.Nombres + ' ' + us.Apellidos,
-                              Email = us.Email,
+                              Usuario = super.Nombres + ' ' + super.Apellidos,
+                              Email = super.Email,
                               TextoComprobanteContable = (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
                                                          " " +
                                                          c.Detalle7 +
@@ -760,7 +760,7 @@ namespace ComplementApp.API.Data
             string resultado = string.Empty;
             switch (texto)
             {
-                case "'CONTRATO DE PRESTACION DE SERVICIOS - PROFESIONALES":
+                case "CONTRATO DE PRESTACION DE SERVICIOS - PROFESIONALES":
                     resultado = "CPSP";
                     break;
                 case "CONTRATO DE PRESTACION DE SERVICIOS":

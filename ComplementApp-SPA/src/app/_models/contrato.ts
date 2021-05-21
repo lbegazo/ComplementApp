@@ -13,4 +13,5 @@ export interface Contrato {
   supervisor2Id?: number;
   supervisor1?: Usuario;
   supervisor2?: Usuario;
+  valorPagoMensual: number;
 }

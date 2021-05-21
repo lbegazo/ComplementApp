@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -615,7 +616,7 @@ namespace ComplementApp.API.Controllers
                     }
                     else
                     {
-                        liquidacionIdsSinUsoPresupuestal = liquidacionIdsTotal.Except(liquidacionIdsConUsoPresupuestal).ToList();
+                        liquidacionIdsSinUsoPresupuestal = listaIdsConClavePresup.Except(liquidacionIdsConUsoPresupuestal).ToList();
                         liquidacionIds = liquidacionIdsSinUsoPresupuestal;
                     }
                 }
@@ -666,15 +667,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
-                                nombreArchivo = "SIGPAA Cabecera sin registros";
-                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return NotFound();
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
+                                return new NoContentResult();
                             }
                             #endregion Cabecera
                         };
@@ -709,15 +702,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
-                                nombreArchivo = "SIGPAA Items sin registros";
-                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return NotFound();
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
+                                return new NoContentResult();
                             }
 
                             #endregion Items
@@ -733,14 +718,6 @@ namespace ComplementApp.API.Controllers
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Deducciones);
-
-                            if (!esUsoPresupuestal)
-                            {
-                                //Actualizar el estado de las liquidaciones procesadas
-                                await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
-                                await _dataContext.SaveChangesAsync();
-                                await transaction.CommitAsync();
-                            }
 
                             if (lista != null && lista.Count > 0)
                             {
@@ -759,15 +736,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
-                                nombreArchivo = "SIGPAA Deducciones sin registros";
-                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return NotFound();
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
+                                return new NoContentResult();
                             }
                             #endregion Deducciones
                         };
@@ -782,15 +751,7 @@ namespace ComplementApp.API.Controllers
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
-                                                                (int)TipoArchivoObligacion.Uso);
-
-                            if (esUsoPresupuestal)
-                            {
-                                //Actualizar el estado de las liquidaciones procesadas
-                                await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
-                                await _dataContext.SaveChangesAsync();
-                                await transaction.CommitAsync();
-                            }
+                                                                (int)TipoArchivoObligacion.Uso);                           
 
                             if (listaUso != null && listaUso.Count > 0)
                             {
@@ -809,15 +770,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
-                                nombreArchivo = "SIGPAA Usos sin registros";
-                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return NotFound();
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
+                                return new NoContentResult();
                             }
 
                             #endregion Usos
@@ -834,6 +787,10 @@ namespace ComplementApp.API.Controllers
                                                                 (int)TipoDocumentoArchivo.Obligacion,
                                                                 (int)TipoArchivoObligacion.Factura
                                                                 );
+
+                            //Actualizar el estado de las liquidaciones procesadas
+                            await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
+                            await _dataContext.SaveChangesAsync();
 
                             var listaIdFactura = (from l in listaLiquidacion
                                                   where l.EsFacturaElectronica == true
@@ -858,15 +815,7 @@ namespace ComplementApp.API.Controllers
                             }
                             else
                             {
-                                nombreArchivo = "SIGPAA Factura sin registros";
-                                byte[] byteArray = Encoding.UTF8.GetBytes(string.Empty);
-                                MemoryStream stream = new MemoryStream(byteArray);
-
-                                if (stream == null)
-                                    return NotFound();
-
-                                Response.AddFileName(nombreArchivo);
-                                return File(stream, "application/octet-stream", nombreArchivo);
+                                return new NoContentResult();
                             }
                             #endregion Factura
                         };

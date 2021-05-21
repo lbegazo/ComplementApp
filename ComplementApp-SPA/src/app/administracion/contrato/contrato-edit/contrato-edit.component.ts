@@ -68,18 +68,18 @@ export class ContratoEditComponent implements OnInit {
       fechaInicioCtrl: [null, Validators.required],
       fechaFinalCtrl: [null, Validators.required],
       fechaExpedicionPolizaCtrl: [null, Validators.required],
+      valorPagoMensualCtrl: ['', Validators.required],
       supervisor1Ctrl: [null, Validators.required],
       supervisor2Ctrl: [null],
     });
   }
 
   createFullForm() {
-    //console.log(this.contratoSeleccionado);
-    //console.log(this.listaSupervisor);
     let numeroContrato = 0;
     let fechaInicio = null;
     let fechaFinal = null;
     let fechaExpedicionPoliza = null;
+    let valorPagoMensual = 0;
 
     this.idTipoContratoSeleccionado =
       this.contratoSeleccionado.tipoContratoId > 0
@@ -115,10 +115,12 @@ export class ContratoEditComponent implements OnInit {
     fechaInicio = this.contratoSeleccionado.fechaInicio;
     fechaFinal = this.contratoSeleccionado.fechaFinal;
     fechaExpedicionPoliza = this.contratoSeleccionado.fechaExpedicionPoliza;
+    valorPagoMensual = this.contratoSeleccionado.valorPagoMensual;
 
     this.editForm.patchValue({
       tipoModalidadContratoCtrl: this.tipoContratoSeleccionado,
       numeroContratoCtrl: numeroContrato,
+      valorPagoMensualCtrl: GeneralService.obtenerFormatoMoney(valorPagoMensual),
       supervisor1Ctrl: this.supervisor1Seleccionado,
       supervisor2Ctrl: this.supervisor2Seleccionado,
       fechaInicioCtrl:
@@ -215,6 +217,9 @@ export class ContratoEditComponent implements OnInit {
           fechaFinal: dateFechaFinal,
           fechaExpedicionPoliza: dateFechaExpedicionPoliza,
           crp: this.cdpSeleccionado.crp,
+          valorPagoMensual: GeneralService.obtenerValorAbsoluto(
+            formValues.valorPagoMensualCtrl
+          ),
         };
 
         this.contratoService.RegistrarContrato(contratoNuevo).subscribe(
@@ -249,6 +254,9 @@ export class ContratoEditComponent implements OnInit {
           this.idSupervisor2Seleccionado !== null
             ? this.idSupervisor2Seleccionado
             : null;
+        this.contratoSeleccionado.valorPagoMensual =  GeneralService.obtenerValorAbsoluto(
+          formValues.valorPagoMensualCtrl
+        ),
 
         this.contratoService
           .ActualizarContrato(this.contratoSeleccionado)

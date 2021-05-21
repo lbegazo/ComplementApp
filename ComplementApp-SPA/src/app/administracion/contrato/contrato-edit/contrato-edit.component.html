@@ -287,6 +287,37 @@
                           </div>
                         </div>
                         <div class="form-row mt-3">
+                          <!--PAGO MENSUAL-->
+                          <div
+                          class="form-group col-md-2"
+                          style="margin: 0px"
+                        >
+                          <label
+                            for="inputValorPagoMensual"
+                            class="col-form-label-md"
+                            >Honor. sin iva</label
+                          >
+                          <input
+                            [ngClass]="{
+                              'is-invalid':
+                                editForm.get('valorPagoMensualCtrl')
+                                  .errors &&
+                                editForm.get('valorPagoMensualCtrl')
+                                  .touched
+                            }"
+                            type="text"
+                            class="form-control"
+                            placeholder="Honorario sin Iva"
+                            formControlName="valorPagoMensualCtrl"
+                            style="text-align: right; height: 30px"
+                            id="inputValorPagoMensual"
+                            matInput
+                            appDecimalMask
+                          />
+                          <div class="invalid-feedback">
+                            Debe ingresar el pago mensual
+                          </div>
+                        </div>
                           <!--SUPERVISOR 1-->
                           <div
                             class="form-group col-md-3 left"

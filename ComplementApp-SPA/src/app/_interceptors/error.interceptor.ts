@@ -39,7 +39,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
             case 401:
               // this.alertify.error(error.statusText + ' ' + error.status);
-              //console.log(error);
+              // console.log(error);
               this.alertify.error(error.error);
               break;
             case 404:

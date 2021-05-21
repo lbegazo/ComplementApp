@@ -39,5 +39,8 @@ namespace ComplementApp.API.Models
         public DateTime? FechaModificacion { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+
+        [Column(TypeName = "decimal(30,8)")]
+        public decimal ValorPagoMensual { get; set; }
     }
 }

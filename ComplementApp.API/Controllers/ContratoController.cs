@@ -140,6 +140,7 @@ namespace ComplementApp.API.Controllers
                     contrato.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
                     contrato.FechaInicio = contratoDto.FechaInicio;
                     contrato.FechaFinal = contratoDto.FechaFinal;
+                    contrato.ValorPagoMensual = contratoDto.ValorPagoMensual;
                     contrato.Supervisor1Id = contratoDto.Supervisor1Id;
                     contrato.Supervisor2Id = contratoDto.Supervisor2Id.HasValue ? contratoDto.Supervisor2Id.Value : null;
 
@@ -183,6 +184,7 @@ namespace ComplementApp.API.Controllers
                 contratoBD.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
                 contratoBD.FechaInicio = contratoDto.FechaInicio;
                 contratoBD.FechaFinal = contratoDto.FechaFinal;
+                contratoBD.ValorPagoMensual = contratoDto.ValorPagoMensual;
                 contratoBD.Supervisor1Id = contratoDto.Supervisor1Id;
                 contratoBD.Supervisor2Id = contratoDto.Supervisor2Id;
 

@@ -216,7 +216,7 @@ export class DetalleLiquidacionService {
     return this.http.get<ValorSeleccion[]>(this.baseUrl + path, { params });
   }
 
-  //#region Creacio Archivo Obligacion
+  //#region Creacion Archivo Obligacion
 
   ObtenerLiquidacionesParaArchivoObligacion(
     listaEstadoId: string,
@@ -307,5 +307,5 @@ export class DetalleLiquidacionService {
     );
   }
 
-  //#region Creacio Archivo Obligacion
+  //#region Creacion Archivo Obligacion
 }

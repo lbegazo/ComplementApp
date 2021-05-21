@@ -40,6 +40,7 @@ namespace ComplementApp.API.Data
                                    FechaExpedicionPoliza = t.FechaExpedicionPoliza,
                                    Supervisor1Id = t.Supervisor1Id,
                                    Supervisor2Id = t.Supervisor2Id.HasValue ? t.Supervisor2Id.Value : null,
+                                   ValorPagoMensual = t.ValorPagoMensual,
                                }).FirstOrDefaultAsync();
 
             return lista;
@@ -182,7 +183,8 @@ namespace ComplementApp.API.Data
                                  Nombres = super2.Nombres,
                                  Apellidos = super2.Apellidos,
                                  NombreCompleto = c.Supervisor2Id > 0 ? super2.Nombres + " " + super2.Apellidos : string.Empty,
-                             }
+                             },
+                             ValorPagoMensual = c.ValorPagoMensual,
                          })
                         .Distinct()
                         .OrderBy(c => c.NumeroContrato);
