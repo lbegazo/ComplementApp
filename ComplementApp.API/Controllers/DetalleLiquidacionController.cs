@@ -621,9 +621,7 @@ namespace ComplementApp.API.Controllers
                     }
                 }
 
-                #endregion Filtrar lista de liquidaciones por Usos Presupuestales
-
-                await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+                #endregion Filtrar lista de liquidaciones por Usos Presupuestales                
 
                 switch (tipoArchivoObligacionId)
                 {
@@ -661,7 +659,6 @@ namespace ComplementApp.API.Controllers
                                 if (stream == null)
                                     return NotFound();
 
-                                await transaction.CommitAsync();
                                 Response.AddFileName(archivo.Nombre);
                                 return File(stream, "application/octet-stream", archivo.Nombre);
                             }
@@ -694,8 +691,6 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-
-                                await transaction.CommitAsync();
 
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
@@ -730,7 +725,7 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-
+                                
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
@@ -751,7 +746,7 @@ namespace ComplementApp.API.Controllers
                             consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
                             nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
                                                                 (int)TipoDocumentoArchivo.Obligacion,
-                                                                (int)TipoArchivoObligacion.Uso);                           
+                                                                (int)TipoArchivoObligacion.Uso);
 
                             if (listaUso != null && listaUso.Count > 0)
                             {
@@ -764,7 +759,7 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-
+                                
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
@@ -777,7 +772,7 @@ namespace ComplementApp.API.Controllers
                         };
                     case (int)TipoArchivoObligacion.Factura:
                         {
-                            #region Factura
+                            #region Factura                            
 
                             var listaLiquidacion = await _repo.ObtenerFacturaParaArchivoObligacion(liquidacionIds, pciId);
 
@@ -789,8 +784,12 @@ namespace ComplementApp.API.Controllers
                                                                 );
 
                             //Actualizar el estado de las liquidaciones procesadas
+                            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
                             await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
                             await _dataContext.SaveChangesAsync();
+                            
+                            await transaction.CommitAsync();
 
                             var listaIdFactura = (from l in listaLiquidacion
                                                   where l.EsFacturaElectronica == true
@@ -808,8 +807,7 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-
-                                await transaction.CommitAsync();
+                                
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
