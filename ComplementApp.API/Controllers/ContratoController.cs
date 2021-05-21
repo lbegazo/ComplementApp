@@ -208,7 +208,7 @@ namespace ComplementApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> DescargarListaContratoTotal()
         {
-            string nombreArchivo = "Contrato.xlsx";
+            string nombreArchivo = "ListaContrato.xlsx";
 
             try
             {
