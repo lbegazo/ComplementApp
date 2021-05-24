@@ -187,6 +187,10 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<Pci>()
                 .Property(b => b.Estado)
                 .HasDefaultValue(0);
+
+            modelBuilder.Entity<Contrato>()
+            .Property(b => b.EsPagoMensual)
+            .HasDefaultValue(0);
         }
 
     }

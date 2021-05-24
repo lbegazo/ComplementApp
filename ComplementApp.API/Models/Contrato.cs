@@ -42,5 +42,6 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorPagoMensual { get; set; }
+        public bool EsPagoMensual { get; set; }
     }
 }

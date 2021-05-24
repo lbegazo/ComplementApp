@@ -17,6 +17,7 @@ namespace ComplementApp.API.Dtos
         public int? Supervisor2Id { get; set; }
         public UsuarioParaDetalleDto Supervisor1 { get; set; }
         public UsuarioParaDetalleDto Supervisor2 { get; set; }
-        public decimal ValorPagoMensual {get; set;}
+        public bool EsPagoMensual { get; set; }
+        public decimal ValorPagoMensual { get; set; }
     }
 }

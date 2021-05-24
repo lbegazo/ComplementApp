@@ -140,7 +140,8 @@ namespace ComplementApp.API.Controllers
                     contrato.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
                     contrato.FechaInicio = contratoDto.FechaInicio;
                     contrato.FechaFinal = contratoDto.FechaFinal;
-                    contrato.ValorPagoMensual = contratoDto.ValorPagoMensual;
+                    contrato.EsPagoMensual = contratoDto.EsPagoMensual;
+                    contrato.ValorPagoMensual = contratoDto.EsPagoMensual ? contratoDto.ValorPagoMensual : 0;
                     contrato.Supervisor1Id = contratoDto.Supervisor1Id;
                     contrato.Supervisor2Id = contratoDto.Supervisor2Id.HasValue ? contratoDto.Supervisor2Id.Value : null;
 
@@ -184,7 +185,8 @@ namespace ComplementApp.API.Controllers
                 contratoBD.FechaExpedicionPoliza = contratoDto.FechaExpedicionPoliza;
                 contratoBD.FechaInicio = contratoDto.FechaInicio;
                 contratoBD.FechaFinal = contratoDto.FechaFinal;
-                contratoBD.ValorPagoMensual = contratoDto.ValorPagoMensual;
+                contratoBD.EsPagoMensual = contratoDto.EsPagoMensual;
+                contratoBD.ValorPagoMensual = contratoDto.EsPagoMensual ? contratoDto.ValorPagoMensual : 0;
                 contratoBD.Supervisor1Id = contratoDto.Supervisor1Id;
                 contratoBD.Supervisor2Id = contratoDto.Supervisor2Id;
 
@@ -217,7 +219,7 @@ namespace ComplementApp.API.Controllers
                 {
                     pciId = int.Parse(valorPciId);
                 }
-                
+
                 var lista = await _repo.ObtenerListaContratoTotal(pciId);
                 if (lista != null)
                 {

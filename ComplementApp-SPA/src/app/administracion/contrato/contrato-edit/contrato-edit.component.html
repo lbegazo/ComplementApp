@@ -287,37 +287,67 @@
                           </div>
                         </div>
                         <div class="form-row mt-3">
-                          <!--PAGO MENSUAL-->
+                          <!--¿ES PAGO MENSUAL?-->
                           <div
-                          class="form-group col-md-2"
-                          style="margin: 0px"
-                        >
-                          <label
-                            for="inputValorPagoMensual"
-                            class="col-form-label-md"
-                            >Honorario Mensual sin IVA</label
+                            class="form-group col-md-2"
+                            style="padding: 0px; margin: 0px"
                           >
-                          <input
-                            [ngClass]="{
-                              'is-invalid':
-                                editForm.get('valorPagoMensualCtrl')
-                                  .errors &&
-                                editForm.get('valorPagoMensualCtrl')
-                                  .touched
-                            }"
-                            type="text"
-                            class="form-control"
-                            placeholder="Honorario sin Iva"
-                            formControlName="valorPagoMensualCtrl"
-                            style="text-align: right; height: 30px"
-                            id="inputValorPagoMensual"
-                            matInput
-                            appDecimalMask
-                          />
-                          <div class="invalid-feedback">
-                            Debe ingresar el pago mensual
+                            <table>
+                              <tr>
+                                <td
+                                  style="
+                                    padding-top: 27px;
+                                    padding-left: 5px;
+                                    padding-right: 5px;
+                                  "
+                                >
+                                  <label
+                                    class="col-form-label-md aplicaBackground"                                    
+                                    style="
+                                      padding-left: 5px;
+                                      padding-top: 6px;
+                                      padding-bottom: 6px;
+                                      margin: 0px;
+                                      width: 100%;
+                                    "
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      formControlName="pagoMensualCtrl"
+                                      (click)="onPagoMensual($event)"
+                                    />
+                                    Pago fijo mensual
+                                  </label>
+                                </td>
+                              </tr>
+                            </table>
                           </div>
-                        </div>
+                          <!--PAGO MENSUAL-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label
+                              for="inputValorPagoMensual"
+                              class="col-form-label-md"
+                              >Honorario Mensual sin IVA</label
+                            >
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                  editForm.get('valorPagoMensualCtrl').errors &&
+                                  editForm.get('valorPagoMensualCtrl').touched
+                              }"
+                              type="text"
+                              class="form-control"
+                              placeholder="Honorario sin Iva"
+                              formControlName="valorPagoMensualCtrl"
+                              style="text-align: right; height: 30px"
+                              id="inputValorPagoMensual"
+                              matInput
+                              appDecimalMask
+                            />
+                            <div class="invalid-feedback">
+                              Debe ingresar el pago mensual
+                            </div>
+                          </div>
                           <!--SUPERVISOR 1-->
                           <div
                             class="form-group col-md-3 left"

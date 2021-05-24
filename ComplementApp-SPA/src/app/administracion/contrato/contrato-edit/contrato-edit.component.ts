@@ -68,6 +68,7 @@ export class ContratoEditComponent implements OnInit {
       fechaInicioCtrl: [null, Validators.required],
       fechaFinalCtrl: [null, Validators.required],
       fechaExpedicionPolizaCtrl: [null, Validators.required],
+      pagoMensualCtrl: [''],
       valorPagoMensualCtrl: ['', Validators.required],
       supervisor1Ctrl: [null, Validators.required],
       supervisor2Ctrl: [null],
@@ -80,6 +81,7 @@ export class ContratoEditComponent implements OnInit {
     let fechaFinal = null;
     let fechaExpedicionPoliza = null;
     let valorPagoMensual = 0;
+    let esPagoMensual = false;
 
     this.idTipoContratoSeleccionado =
       this.contratoSeleccionado.tipoContratoId > 0
@@ -115,12 +117,15 @@ export class ContratoEditComponent implements OnInit {
     fechaInicio = this.contratoSeleccionado.fechaInicio;
     fechaFinal = this.contratoSeleccionado.fechaFinal;
     fechaExpedicionPoliza = this.contratoSeleccionado.fechaExpedicionPoliza;
+    esPagoMensual = this.contratoSeleccionado.esPagoMensual;
     valorPagoMensual = this.contratoSeleccionado.valorPagoMensual;
 
     this.editForm.patchValue({
       tipoModalidadContratoCtrl: this.tipoContratoSeleccionado,
       numeroContratoCtrl: numeroContrato,
-      valorPagoMensualCtrl: GeneralService.obtenerFormatoMoney(valorPagoMensual),
+      pagoMensualCtrl: esPagoMensual,
+      valorPagoMensualCtrl:
+        GeneralService.obtenerFormatoMoney(valorPagoMensual),
       supervisor1Ctrl: this.supervisor1Seleccionado,
       supervisor2Ctrl: this.supervisor2Seleccionado,
       fechaInicioCtrl:
@@ -132,6 +137,12 @@ export class ContratoEditComponent implements OnInit {
           ? formatDate(fechaExpedicionPoliza, 'dd-MM-yyyy', 'en')
           : '',
     });
+
+    if (esPagoMensual) {
+      this.valorPagoMensualCtrl.enable();
+    } else {
+      this.valorPagoMensualCtrl.disable();
+    }
   }
 
   cargarListasResolver() {
@@ -146,8 +157,7 @@ export class ContratoEditComponent implements OnInit {
   onModalidadContrato() {
     this.tipoContratoSeleccionado = this.tipoModalidadContratoCtrl
       .value as ValorSeleccion;
-    this.idTipoContratoSeleccionado = +this
-      .tipoContratoSeleccionado.id;
+    this.idTipoContratoSeleccionado = +this.tipoContratoSeleccionado.id;
   }
 
   onSupervisor1() {
@@ -160,9 +170,30 @@ export class ContratoEditComponent implements OnInit {
     this.idSupervisor2Seleccionado = +this.supervisor2Seleccionado.id;
   }
 
+  onPagoMensual(event) {
+    if (event.target.checked) {
+      this.valorPagoMensualCtrl.enable();
+    } else {
+      this.valorPagoMensualCtrl.disable();
+      this.valorPagoMensualCtrl.patchValue(0);
+    }
+  }
+
   onGuardar() {
+    let esPagoMensual = false;
+
     if (this.editForm.valid) {
       const formValues = Object.assign({}, this.editForm.value);
+
+      esPagoMensual = formValues.pagoMensualCtrl === '' ? false : true;
+
+      if (esPagoMensual) {
+        const valor = formValues.valorPagoMensualCtrl;
+        if (valor === 0 || valor === '0') {
+          this.alertify.warning('Debe ingresar el pago mensual');
+          return;
+        }
+      }
 
       //#region Read dates
 
@@ -195,9 +226,8 @@ export class ContratoEditComponent implements OnInit {
         dateFechaExpedicionPoliza = valueFecha;
       } else {
         if (valueFecha && valueFecha.indexOf('-') > -1) {
-          dateFechaExpedicionPoliza = GeneralService.dateString2Date(
-            valueFecha
-          );
+          dateFechaExpedicionPoliza =
+            GeneralService.dateString2Date(valueFecha);
         }
       }
 
@@ -217,6 +247,7 @@ export class ContratoEditComponent implements OnInit {
           fechaFinal: dateFechaFinal,
           fechaExpedicionPoliza: dateFechaExpedicionPoliza,
           crp: this.cdpSeleccionado.crp,
+          esPagoMensual: formValues.pagoMensualCtrl === '' ? false : true,
           valorPagoMensual: GeneralService.obtenerValorAbsoluto(
             formValues.valorPagoMensualCtrl
           ),
@@ -243,20 +274,30 @@ export class ContratoEditComponent implements OnInit {
           }
         );
       } else {
-        this.contratoSeleccionado.tipoContratoId = this.idTipoContratoSeleccionado;
+        this.contratoSeleccionado.tipoContratoId =
+          this.idTipoContratoSeleccionado;
         this.contratoSeleccionado.numeroContrato =
           formValues.numeroContratoCtrl;
         this.contratoSeleccionado.fechaInicio = dateFechaInicio;
         this.contratoSeleccionado.fechaFinal = dateFechaFinal;
-        this.contratoSeleccionado.fechaExpedicionPoliza = dateFechaExpedicionPoliza;
-        this.contratoSeleccionado.supervisor1Id = this.idSupervisor1Seleccionado;
+        this.contratoSeleccionado.fechaExpedicionPoliza =
+          dateFechaExpedicionPoliza;
+        this.contratoSeleccionado.supervisor1Id =
+          this.idSupervisor1Seleccionado;
         this.contratoSeleccionado.supervisor2Id =
           this.idSupervisor2Seleccionado !== null
             ? this.idSupervisor2Seleccionado
             : null;
-        this.contratoSeleccionado.valorPagoMensual =  GeneralService.obtenerValorAbsoluto(
-          formValues.valorPagoMensualCtrl
-        ),
+
+        this.contratoSeleccionado.esPagoMensual = formValues.pagoMensualCtrl;
+        if (this.contratoSeleccionado.esPagoMensual) {
+          this.contratoSeleccionado.valorPagoMensual =
+            GeneralService.obtenerValorAbsoluto(
+              formValues.valorPagoMensualCtrl
+            );
+        } else {
+          this.contratoSeleccionado.valorPagoMensual = 0;
+        }
 
         this.contratoService
           .ActualizarContrato(this.contratoSeleccionado)
@@ -295,6 +336,10 @@ export class ContratoEditComponent implements OnInit {
   }
 
   //#region Controles
+
+  get valorPagoMensualCtrl() {
+    return this.editForm.get('valorPagoMensualCtrl');
+  }
 
   get tipoModalidadContratoCtrl() {
     return this.editForm.get('tipoModalidadContratoCtrl');
