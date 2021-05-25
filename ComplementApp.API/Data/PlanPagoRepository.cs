@@ -260,7 +260,7 @@ namespace ComplementApp.API.Data
                           {
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
-                              Detalle4 = CortarTexto(c.Detalle4, 100),
+                              Detalle4 = CortarTexto(c.Detalle4, 50),
                               Detalle5 = super.Nombres + ' ' + super.Apellidos,
                               Detalle6 = c.Detalle6,
                               Detalle7 = ResumirDetalle7(c.Detalle7),
@@ -432,7 +432,9 @@ namespace ComplementApp.API.Data
                                                            " A " +
                                                            sp.FechaFinal.ToString("yyyy-MM-dd") +
                                                            " SUP. " +
-                                                           super.Nombres + ' ' + super.Apellidos,
+                                                           super.Nombres + ' ' + super.Apellidos +
+                                                           " " +
+                                                           c.Detalle4,
                               /*
                               TextoComprobanteContable = c.Detalle6 +
                                 " FACTURA: " +
