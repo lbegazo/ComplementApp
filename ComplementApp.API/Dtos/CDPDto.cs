@@ -37,5 +37,9 @@ namespace ComplementApp.API.Dtos
         public int? SupervisorId { get; set; }
         public int? ContratoId { get; set; }
         public int PciId { get; set; }
+        public int PlanPagoId { get; set; }
+        public decimal ValorFacturado { get; set; }
+        public string NumeroRadicadoSupervisor { get; set; }
+        public DateTime? FechaRadicadoSupervisor { get; set; }
     }
 }

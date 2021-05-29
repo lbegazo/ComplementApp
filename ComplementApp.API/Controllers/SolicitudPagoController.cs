@@ -7,6 +7,7 @@ using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -129,29 +130,35 @@ namespace ComplementApp.API.Controllers
 
                     #region Actualizar el plan de pago
 
-                    if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                    var cantidadPlanPagoxCompromiso = await _planPagoRepository.CantidadPlanPagoParaCompromiso(formatoBD.Crp, pciId);
+
+                    if (cantidadPlanPagoxCompromiso > 1)
                     {
-                        var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
-                        planPagoBD.NumeroFactura = formatoDto.NumeroFactura;
-                        planPagoBD.ValorFacturado = formatoDto.ValorFacturado;
-                        planPagoBD.Observaciones = formatoDto.Observaciones;
-                        planPagoBD.NumeroRadicadoProveedor = formatoDto.NumeroRadicadoProveedor;
-                        planPagoBD.FechaRadicadoProveedor = formatoDto.FechaRadicadoProveedor;
-                        planPagoBD.NumeroRadicadoSupervisor = formatoDto.NumeroRadicadoSupervisor;
-                        planPagoBD.FechaRadicadoSupervisor = formatoDto.FechaRadicadoSupervisor;
-                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
-                        planPagoBD.UsuarioIdModificacion = usuarioId;
-                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-                        await _dataContext.SaveChangesAsync();
+                        if (formatoDto.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                        {
+                            var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                            planPagoBD.NumeroFactura = formatoDto.NumeroFactura;
+                            planPagoBD.ValorFacturado = formatoDto.ValorFacturado;
+                            planPagoBD.Observaciones = formatoDto.Observaciones;
+                            planPagoBD.NumeroRadicadoProveedor = formatoDto.NumeroRadicadoProveedor;
+                            planPagoBD.FechaRadicadoProveedor = formatoDto.FechaRadicadoProveedor;
+                            planPagoBD.NumeroRadicadoSupervisor = formatoDto.NumeroRadicadoSupervisor;
+                            planPagoBD.FechaRadicadoSupervisor = formatoDto.FechaRadicadoSupervisor;
+                            planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
+                            planPagoBD.UsuarioIdModificacion = usuarioId;
+                            planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                            await _dataContext.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                            planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
+                            planPagoBD.UsuarioIdModificacion = usuarioId;
+                            planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        }
+
+                        await transaction.CommitAsync();
                     }
-                    else
-                    {
-                        var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
-                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
-                        planPagoBD.UsuarioIdModificacion = usuarioId;
-                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-                    }
-                    await transaction.CommitAsync();
 
                     #endregion Actualizar el plan de pago
 
@@ -237,11 +244,16 @@ namespace ComplementApp.API.Controllers
 
                     #region Actualizar el plan de pago
 
-                    var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
-                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConSolicitudPago;
-                    planPagoBD.UsuarioIdModificacion = usuarioId;
-                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-                    await _dataContext.SaveChangesAsync();
+                    var cantidadPlanPagoxCompromiso = await _planPagoRepository.CantidadPlanPagoParaCompromiso(formatoDto.Crp, pciId);
+
+                    if (cantidadPlanPagoxCompromiso > 1)
+                    {
+                        var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConSolicitudPago;
+                        planPagoBD.UsuarioIdModificacion = usuarioId;
+                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        await _dataContext.SaveChangesAsync();
+                    }
 
                     #endregion Actualizar el plan de pago
 
@@ -340,6 +352,36 @@ namespace ComplementApp.API.Controllers
             }
 
             throw new Exception($"No se pudo obtener la lista de Solicitudes de Pago");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerListaSolicitudPagoAprobada([FromQuery(Name = "usuarioId")] int usuarioId,
+                                                                            [FromQuery(Name = "terceroId")] int? terceroId,
+                                                                            [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
+                var pagedList = await _repo.ObtenerListaSolicitudPagoAprobada(terceroId, userParams);
+                var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
+
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                        pagedList.TotalCount, pagedList.TotalPages);
+
+                return Ok(listaDto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de Solicitudes de Pago Aprobadas");
         }
 
         [Route("[action]")]
@@ -480,7 +522,7 @@ namespace ComplementApp.API.Controllers
                     formato.PlanPagoId = formatoDto.PlanPagoId;
                     formato.Crp = formatoDto.Crp;
                     formato.NumeroFactura = formatoDto.NumeroFactura;
-                    formato.valorFacturado = formatoDto.valorFacturado;
+                    formato.ValorFacturado = formatoDto.valorFacturado;
                     formato.ActividadEconomicaId = formatoDto.ActividadEconomicaId;
                     formato.FechaInicio = formatoDto.FechaInicio;
                     formato.FechaFinal = formatoDto.FechaFinal;
@@ -547,8 +589,14 @@ namespace ComplementApp.API.Controllers
 
                     #region Actualizar el plan de pago
 
+                    var cantidadPlanPagoxCompromiso = await _planPagoRepository.CantidadPlanPagoParaCompromiso(formatoDto.Crp, pciId);
+
+
                     var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formatoDto.PlanPagoId);
-                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
+                    if (cantidadPlanPagoxCompromiso > 1)
+                    {
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorObligar;
+                    }
                     planPagoBD.NumeroRadicadoProveedor = formato.FormatoSolicitudPagoId.ToString();
                     planPagoBD.FechaRadicadoProveedor = _generalInterface.ObtenerFechaHoraActual();
                     planPagoBD.NumeroRadicadoSupervisor = formato.FormatoSolicitudPagoId.ToString();

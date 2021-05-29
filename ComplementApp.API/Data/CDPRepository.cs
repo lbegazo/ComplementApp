@@ -297,9 +297,6 @@ namespace ComplementApp.API.Data
                                       PlanDeCompras = d.PlanDeCompras,
                                       Responsable = u.Nombres + ' ' + u.Apellidos,
                                       Dependencia = de.Nombre,
-                                      RubroPresupuestalId = i.RubroPresupuestalId,
-                                      IdentificacionRubro = i.Identificacion,
-                                      RubroNombre = i.Nombre,
                                       ValorCDP = c.ValorTotal,
                                       SaldoCDP = c.SaldoActual,
                                       ValorAct = d.ValorAct,
@@ -313,10 +310,16 @@ namespace ComplementApp.API.Data
                                       Area = a.Nombre,
                                       Valor_Convenio = d.Valor_Convenio,
                                       Convenio = d.Convenio,
-                                      Decreto = dec.Identificacion
+                                      Decreto = dec.Identificacion,
+                                      RubroPresupuestal = new RubroPresupuestalDto()
+                                      {
+                                          RubroPresupuestalId = i.RubroPresupuestalId,
+                                          Identificacion = i.Identificacion,
+                                          Nombre = i.Nombre,
+                                      }
                                   })
                                  .Distinct()
-                                 .OrderBy(x => x.IdentificacionRubro)
+                                 .OrderBy(x => x.RubroPresupuestal.Identificacion)
                                  .ToListAsync();
 
             return detalles;
@@ -339,7 +342,10 @@ namespace ComplementApp.API.Data
                                   from de in DependenciaDetalle.DefaultIfEmpty()
                                   join a in _context.Area on new { d.AreaId } equals new { a.AreaId } into AreaDetalle
                                   from a in AreaDetalle.DefaultIfEmpty()
-                                  where acGe.PciId == acEs.PciId
+                                  where d.PciId == u.PciId
+                                  where d.PciId == acGe.PciId
+                                  where d.PciId == acEs.PciId
+                                  where d.PciId == a.PciId
                                   where d.UsuarioId == usuarioId
                                   where d.Cdp == numeroCDP
 
@@ -356,9 +362,6 @@ namespace ComplementApp.API.Data
                                       PlanDeCompras = d.PlanDeCompras,
                                       Responsable = u.Nombres + " " + u.Apellidos,
                                       Dependencia = de.Nombre,
-                                      RubroPresupuestalId = r.RubroPresupuestalId,
-                                      IdentificacionRubro = r.Identificacion,
-                                      RubroNombre = r.Nombre,
                                       ValorAct = d.ValorAct,
                                       SaldoAct = d.SaldoAct,
                                       ValorRP = d.ValorRP,
@@ -371,10 +374,16 @@ namespace ComplementApp.API.Data
                                       Area = a.Nombre,
                                       Valor_Convenio = d.Valor_Convenio,
                                       Convenio = d.Convenio,
-                                      Decreto = dec.Identificacion
+                                      Decreto = dec.Identificacion,
+                                      RubroPresupuestal = new RubroPresupuestalDto()
+                                      {
+                                          RubroPresupuestalId = r.RubroPresupuestalId,
+                                          Identificacion = r.Identificacion,
+                                          Nombre = r.Nombre,
+                                      }
                                   })
                                  .Distinct()
-                                 .OrderBy(x => x.IdentificacionRubro)
+                                 .OrderBy(x => x.RubroPresupuestal.Identificacion)
                                  .ToListAsync()
                                  ;
             return detalles;

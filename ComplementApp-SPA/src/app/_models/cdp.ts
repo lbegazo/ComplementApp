@@ -12,6 +12,7 @@ export interface Cdp {
   detalle5: string; // Supervisor
   detalle7: string; // ModalidadContrato
   supervisorId: number;
+  terceroId: number;
 
   valorInicial: number;
   operacion: number;
@@ -22,5 +23,8 @@ export interface Cdp {
   nombreTercero: string;
 
   formatoSolicitudPagoId: number;
+  planPagoId: number;
   contratoId?: number;
+  esSeleccionada: boolean;
+  valorFacturado: number;
 }

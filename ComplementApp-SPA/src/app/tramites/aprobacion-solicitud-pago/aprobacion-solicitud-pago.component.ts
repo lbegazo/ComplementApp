@@ -99,7 +99,7 @@ export class AprobacionSolicitudPagoComponent implements OnInit {
 
     this.cargarBusquedaTerceroXCodigo();
 
-    this.cargarBusquedaTerceroXNombre();    
+    this.cargarBusquedaTerceroXNombre();
   }
 
   createForm() {

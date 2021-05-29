@@ -57,7 +57,7 @@ export class PopupFacturaComponent implements OnInit {
 
   cargarPlanesPago() {
     this.listaEstadoId =
-      this.estadoPlanPagoPorPagar.toString() + ',' + this.estadoPlanPagoPorObligar.toString(); // Por pagar
+      this.estadoPlanPagoPorPagar.toString(); // Por pagar
 
     this.facturaService
       .ObtenerListaPlanPagoXCompromiso(this.crp, this.listaEstadoId)

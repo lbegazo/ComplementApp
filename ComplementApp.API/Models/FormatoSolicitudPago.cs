@@ -28,7 +28,7 @@ namespace ComplementApp.API.Models
 
         [Required]
         [Column(TypeName = "decimal(30,8)")]
-        public decimal valorFacturado { get; set; }
+        public decimal ValorFacturado { get; set; }
 
         [Required]
         public int MesId { get; set; }

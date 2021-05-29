@@ -264,6 +264,7 @@ export class CdpEditComponent implements OnInit {
       ).value;
 
       this.detalleCdp.forEach((element) => {
+        console.log(element);
         const item: DetalleSolicitudCDP = new DetalleSolicitudCDP();
 
         item.rubroPresupuestal = new RubroPresupuestal();

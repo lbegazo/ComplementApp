@@ -361,7 +361,8 @@ namespace ComplementApp.API.Services
                 detalle.PlanDeCompras = (row as DataRow).ItemArray[7].ToString();
                 detalle.Responsable = (row as DataRow).ItemArray[8].ToString().Trim();
                 detalle.Dependencia = (row as DataRow).ItemArray[9].ToString();
-                detalle.IdentificacionRubro = (row as DataRow).ItemArray[10].ToString().Trim();
+                detalle.RubroPresupuestal = new RubroPresupuestalDto();
+                detalle.RubroPresupuestal.Identificacion = (row as DataRow).ItemArray[10].ToString().Trim();
 
                 if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
                     if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))

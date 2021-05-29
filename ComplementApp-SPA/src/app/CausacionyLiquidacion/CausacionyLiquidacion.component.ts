@@ -15,7 +15,6 @@ import { environment } from 'src/environments/environment';
 
 import { Tercero } from 'src/app/_models/tercero';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
-import { PlanPago } from 'src/app/_models/planPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -28,6 +27,8 @@ import { DetalleLiquidacionService } from '../_services/detalleLiquidacion.servi
 import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PopupDatosAdicionalesComponent } from './popup-datos-adicionales/popup-datos-adicionales.component';
+import { SolicitudPagoService } from '../_services/solicitudPago.service';
+import { Cdp } from '../_models/cdp';
 
 @Component({
   selector: 'app-causacionyliquidacion',
@@ -52,10 +53,10 @@ export class CausacionyLiquidacionComponent implements OnInit {
   modalidadContrato = 0;
   tipoPago = 0;
 
-  listaPlanPago: PlanPago[] = [];
-  planPagoIdSeleccionado = 0;
+  listaSolicitudPago: Cdp[] = [];
+  solicitudPagoIdSeleccionado = 0;
   detallePlanPago: DetallePlanPago;
-  planPagoSeleccionado: PlanPago;
+  solicitudPagoSeleccionado: Cdp;
   tercero: Tercero;
 
   listaActividadEconomica: ValorSeleccion[];
@@ -76,7 +77,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
   bsModalRef: BsModalRef;
   actividadEconomicaId = 0;
 
-  listaPlanPagoSeleccionada: number[] = [];
+  listaSolicitudPagoSeleccionada: number[] = [];
   seleccionaTodas = false;
   liquidacionRegistrada = false;
 
@@ -85,6 +86,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private facturaService: PlanPagoService,
+    private solicitudPagoService: SolicitudPagoService,
     private liquidacionService: DetalleLiquidacionService,
     private fb: FormBuilder,
     private modalService: BsModalService,
@@ -117,31 +119,41 @@ export class CausacionyLiquidacionComponent implements OnInit {
   }
 
   crearControlesDeArray() {
-    if (this.listaPlanPago && this.listaPlanPago.length > 0) {
+    if (this.listaSolicitudPago && this.listaSolicitudPago.length > 0) {
       if (this.seleccionaTodas) {
-        this.listaPlanPago.forEach((item) => {
+        this.listaSolicitudPago.forEach((item) => {
           item.esSeleccionada = this.seleccionaTodas;
         });
 
-        this.listaPlanPago.forEach((val: PlanPago) => {
-          if (this.listaPlanPagoSeleccionada?.indexOf(val.planPagoId) === -1) {
-            this.listaPlanPagoSeleccionada.push(val.planPagoId);
+        this.listaSolicitudPago.forEach((val: Cdp) => {
+          if (
+            this.listaSolicitudPagoSeleccionada?.indexOf(
+              val.formatoSolicitudPagoId
+            ) === -1
+          ) {
+            this.listaSolicitudPagoSeleccionada.push(
+              val.formatoSolicitudPagoId
+            );
           }
         });
       } else {
         if (
-          this.listaPlanPagoSeleccionada &&
-          this.listaPlanPagoSeleccionada.length > 0
+          this.listaSolicitudPagoSeleccionada &&
+          this.listaSolicitudPagoSeleccionada.length > 0
         ) {
-          this.listaPlanPago.forEach((val: PlanPago) => {
-            if (this.listaPlanPagoSeleccionada?.indexOf(val.planPagoId) > -1) {
+          this.listaSolicitudPago.forEach((val: Cdp) => {
+            if (
+              this.listaSolicitudPagoSeleccionada?.indexOf(
+                val.formatoSolicitudPagoId
+              ) > -1
+            ) {
               val.esSeleccionada = true;
             }
           });
         }
       }
 
-      for (const detalle of this.listaPlanPago) {
+      for (const detalle of this.listaSolicitudPago) {
         this.arrayControls.push(
           new FormGroup({
             rubroControl: new FormControl(''),
@@ -227,16 +239,15 @@ export class CausacionyLiquidacionComponent implements OnInit {
   onBuscarFactura() {
     this.listaEstadoId = this.estadoPlanPagoPorObligar.toString(); // Por obligar
 
-    this.facturaService
-      .ObtenerListaPlanPago(
-        this.listaEstadoId,
+    this.solicitudPagoService
+      .ObtenerListaSolicitudPagoAprobada(
         this.terceroId,
         this.pagination.currentPage,
         this.pagination.itemsPerPage
       )
       .subscribe(
-        (documentos: PaginatedResult<PlanPago[]>) => {
-          this.listaPlanPago = documentos.result;
+        (documentos: PaginatedResult<Cdp[]>) => {
+          this.listaSolicitudPago = documentos.result;
           this.pagination = documentos.pagination;
 
           this.crearControlesDeArray();
@@ -251,10 +262,11 @@ export class CausacionyLiquidacionComponent implements OnInit {
             planPagoControles: this.arrayControls,
           });
 
-          if (!this.listaPlanPago || this.listaPlanPago.length === 0) {
-            this.alertify.warning(
-              'No existen Facturas en estado por “ConLiquidacionDeducciones”'
-            );
+          if (
+            !this.listaSolicitudPago ||
+            this.listaSolicitudPago.length === 0
+          ) {
+            this.alertify.warning('No existen Solicitudes de Pago Aprobadas');
           }
         }
       );
@@ -266,9 +278,9 @@ export class CausacionyLiquidacionComponent implements OnInit {
   }
 
   onLimpiarFactura() {
-    this.listaPlanPago = [];
-    this.listaPlanPagoSeleccionada = [];
-    this.planPagoIdSeleccionado = 0;
+    this.listaSolicitudPago = [];
+    this.listaSolicitudPagoSeleccionada = [];
+    this.solicitudPagoIdSeleccionado = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
@@ -294,15 +306,15 @@ export class CausacionyLiquidacionComponent implements OnInit {
       // Add a new control in the arrayForm
       valor = +event.target.value;
 
-      if (this.listaPlanPagoSeleccionada?.indexOf(valor) === -1) {
-        this.listaPlanPagoSeleccionada?.push(+valor);
+      if (this.listaSolicitudPagoSeleccionada?.indexOf(valor) === -1) {
+        this.listaSolicitudPagoSeleccionada?.push(+valor);
       }
     } else {
       /* unselected */
       valor = +event.target.value;
       let index = 0;
       let i = 0;
-      this.listaPlanPagoSeleccionada.forEach((val: number) => {
+      this.listaSolicitudPagoSeleccionada.forEach((val: number) => {
         if (val === valor) {
           index = i;
         }
@@ -310,13 +322,14 @@ export class CausacionyLiquidacionComponent implements OnInit {
       });
 
       if (index !== -1) {
-        this.listaPlanPagoSeleccionada.splice(index, 1);
+        this.listaSolicitudPagoSeleccionada.splice(index, 1);
       }
     }
 
     if (this.pagination) {
       if (
-        this.pagination.totalItems === this.listaPlanPagoSeleccionada.length
+        this.pagination.totalItems ===
+        this.listaSolicitudPagoSeleccionada.length
       ) {
         this.seleccionaTodas = true;
       } else {
@@ -329,34 +342,38 @@ export class CausacionyLiquidacionComponent implements OnInit {
     const checked = event.target.checked;
     if (checked) {
       this.seleccionaTodas = true;
-      this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
-      this.listaPlanPagoSeleccionada = [];
+      this.listaSolicitudPago.forEach(
+        (item) => (item.esSeleccionada = checked)
+      );
+      this.listaSolicitudPagoSeleccionada = [];
 
-      this.listaPlanPago.forEach((val: PlanPago) => {
-        this.listaPlanPagoSeleccionada.push(val.planPagoId);
+      this.listaSolicitudPago.forEach((val: Cdp) => {
+        this.listaSolicitudPagoSeleccionada.push(val.formatoSolicitudPagoId);
       });
     } else {
       this.seleccionaTodas = false;
-      this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
-      this.listaPlanPagoSeleccionada = [];
+      this.listaSolicitudPago.forEach(
+        (item) => (item.esSeleccionada = checked)
+      );
+      this.listaSolicitudPagoSeleccionada = [];
     }
   }
 
   onLiquidar() {
     if (this.liquidacionForm.valid) {
-      let listaPlanPagoId: number[] = [];
+      let listaSolicitudPagoId: number[] = [];
       const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
-      let listaPlanPagoCadenaId = '';
+      let listaSolicitudPagoCadenaId = '';
 
       if (!this.seleccionaTodas) {
         if (
-          this.listaPlanPagoSeleccionada &&
-          this.listaPlanPagoSeleccionada.length > 0
+          this.listaSolicitudPagoSeleccionada &&
+          this.listaSolicitudPagoSeleccionada.length > 0
         ) {
-          listaPlanPagoId = this.listaPlanPagoSeleccionada.filter(
-            (v, i) => this.listaPlanPagoSeleccionada.indexOf(v) === i
+          listaSolicitudPagoId = this.listaSolicitudPagoSeleccionada.filter(
+            (v, i) => this.listaSolicitudPagoSeleccionada.indexOf(v) === i
           );
-          listaPlanPagoCadenaId = listaPlanPagoId.join();
+          listaSolicitudPagoCadenaId = listaSolicitudPagoId.join();
         }
       }
 
@@ -366,7 +383,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
         () => {
           this.liquidacionService
             .RegistrarListaDetalleLiquidacion(
-              listaPlanPagoCadenaId,
+              listaSolicitudPagoCadenaId,
               this.listaEstadoId,
               esSeleccionarTodas,
               this.terceroId
@@ -401,16 +418,16 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
   verLiquidacion() {
     if (
-      this.listaPlanPago &&
-      this.listaPlanPago.length > 0 &&
-      this.listaPlanPagoSeleccionada.length === 1
+      this.listaSolicitudPago &&
+      this.listaSolicitudPago.length > 0 &&
+      this.listaSolicitudPagoSeleccionada.length === 1
     ) {
-      this.planPagoIdSeleccionado = this.listaPlanPagoSeleccionada[0];
-      this.planPagoSeleccionado = this.listaPlanPago.filter(
-        (x) => x.planPagoId === this.planPagoIdSeleccionado
+      this.solicitudPagoIdSeleccionado = this.listaSolicitudPagoSeleccionada[0];
+      this.solicitudPagoSeleccionado = this.listaSolicitudPago.filter(
+        (x) => x.formatoSolicitudPagoId === this.solicitudPagoIdSeleccionado
       )[0];
 
-      if (this.planPagoSeleccionado) {
+      if (this.solicitudPagoSeleccionado) {
         this.obtenerDetallePlanPago(0);
       }
     }
@@ -419,7 +436,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
   cargarListaActividadEconomicaXTercero() {
     this.liquidacionService
       .ObtenerListaActividadesEconomicaXTercero(
-        this.planPagoSeleccionado.terceroId
+        this.solicitudPagoSeleccionado.terceroId
       )
       .subscribe(
         (lista: ValorSeleccion[]) => {
@@ -432,38 +449,38 @@ export class CausacionyLiquidacionComponent implements OnInit {
       );
   }
 
-  get esAbrirPopup() {
-    const resultado = false;
-    this.mostrarValorIngresado = false;
-    this.mostrarActividadEconomica = false;
+  // get esAbrirPopup() {
+  //   const resultado = false;
+  //   this.mostrarValorIngresado = false;
+  //   this.mostrarActividadEconomica = false;
 
-    if (this.planPagoSeleccionado) {
-      this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
-      this.tipoPago = this.planPagoSeleccionado.tipoPago;
-      this.terceroId = this.planPagoSeleccionado.terceroId;
+  //   if (this.planPagoSeleccionado) {
+  //     this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
+  //     this.tipoPago = this.planPagoSeleccionado.tipoPago;
+  //     this.terceroId = this.planPagoSeleccionado.terceroId;
 
-      if (
-        this.modalidadContrato ===
-          ModalidadContrato.ProveedorConDescuento.value &&
-        this.tipoPago === TipoPago.Variable.value
-      ) {
-        this.mostrarValorIngresado = true;
-      }
+  //     if (
+  //       this.modalidadContrato ===
+  //         ModalidadContrato.ProveedorConDescuento.value &&
+  //       this.tipoPago === TipoPago.Variable.value
+  //     ) {
+  //       this.mostrarValorIngresado = true;
+  //     }
 
-      if (
-        this.listaActividadEconomica &&
-        this.listaActividadEconomica.length > 1
-      ) {
-        this.mostrarActividadEconomica = true;
-      }
+  //     if (
+  //       this.listaActividadEconomica &&
+  //       this.listaActividadEconomica.length > 1
+  //     ) {
+  //       this.mostrarActividadEconomica = true;
+  //     }
 
-      if (this.mostrarValorIngresado || this.mostrarActividadEconomica) {
-        return true;
-      }
+  //     if (this.mostrarValorIngresado || this.mostrarActividadEconomica) {
+  //       return true;
+  //     }
 
-      return resultado;
-    }
-  }
+  //     return resultado;
+  //   }
+  // }
 
   abrirPopup() {
     let valor = 0;
@@ -472,7 +489,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
       terId: this.terceroId,
       mostrarActividad: this.mostrarActividadEconomica,
       mostrarValor: this.mostrarValorIngresado,
-      valorFacturado: this.planPagoSeleccionado.valorFacturado,
+      valorFacturado: this.solicitudPagoSeleccionado.valorFacturado,
       listaActividades: this.listaActividadEconomica,
     };
 
@@ -524,7 +541,7 @@ export class CausacionyLiquidacionComponent implements OnInit {
 
   obtenerDetallePlanPago(valorIngresado: number) {
     this.facturaService
-      .ObtenerDetallePlanPago(this.planPagoIdSeleccionado)
+      .ObtenerDetallePlanPago(this.solicitudPagoSeleccionado.planPagoId)
       .subscribe(
         (response: DetallePlanPago) => {
           if (response) {
@@ -545,7 +562,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
           } else {
             this.liquidacionService
               .ObtenerFormatoCausacionyLiquidacionPago(
-                this.planPagoIdSeleccionado,
+                this.solicitudPagoIdSeleccionado,
+                this.solicitudPagoSeleccionado.planPagoId,
                 valorIngresado,
                 this.actividadEconomicaId
               )
@@ -553,7 +571,8 @@ export class CausacionyLiquidacionComponent implements OnInit {
                 (response: FormatoCausacionyLiquidacionPago) => {
                   if (response !== null && this.detallePlanPago) {
                     this.formatoCausacionyLiquidacionPago = response;
-                    this.formatoCausacionyLiquidacionPago.cantidadPago = this.detallePlanPago.cantidadPago;
+                    this.formatoCausacionyLiquidacionPago.cantidadPago =
+                      this.detallePlanPago.cantidadPago;
                   } else {
                     this.alertify.error(
                       'El tercero no tiene parametros de liquidación definidos'

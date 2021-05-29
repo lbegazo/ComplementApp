@@ -12,6 +12,7 @@ using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,7 @@ namespace ComplementApp.API.Controllers
         private readonly IListaRepository _repoLista;
         private readonly ITerceroRepository _terceroRepository;
         private readonly IProcesoCreacionArchivo _procesoCreacionArchivo;
+        private readonly ISolicitudPagoRepository _solicitudPagoRepository;
         #endregion Dependency Injection
 
         public DetalleLiquidacionController(IUnitOfWork unitOfWork, IDetalleLiquidacionRepository repo,
@@ -56,7 +58,8 @@ namespace ComplementApp.API.Controllers
                                     IGeneralInterface generalInterface,
                                     IListaRepository listaRepository,
                                     ITerceroRepository terceroRepository,
-                                    IProcesoCreacionArchivo procesoCreacionArchivo)
+                                    IProcesoCreacionArchivo procesoCreacionArchivo,
+                                    ISolicitudPagoRepository solicitudPagoRepository)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -69,6 +72,7 @@ namespace ComplementApp.API.Controllers
             this._terceroRepository = terceroRepository;
             this._repoLista = listaRepository;
             this._procesoCreacionArchivo = procesoCreacionArchivo;
+            this._solicitudPagoRepository = solicitudPagoRepository;
         }
 
         [Route("[action]")]
@@ -135,7 +139,8 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "planPagoId")] int planPagoId,
+        public async Task<IActionResult> ObtenerFormatoCausacionyLiquidacionPago([FromQuery(Name = "solicitudPagoId")] int solicitudPagoId,
+                                                                                    [FromQuery(Name = "planPagoId")] int planPagoId,
                                                                                     [FromQuery(Name = "valorBaseGravable")] decimal valorBaseGravable,
                                                                                     [FromQuery(Name = "actividadEconomicaId")] int? actividadEconomicaId)
         {
@@ -148,7 +153,7 @@ namespace ComplementApp.API.Controllers
                 {
                     pciId = int.Parse(valorPciId);
                 }
-                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(planPagoId, pciId, valorBaseGravable, actividadEconomicaId);
+                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(solicitudPagoId, planPagoId, pciId, valorBaseGravable, actividadEconomicaId);
             }
             catch (Exception)
             {
@@ -213,6 +218,8 @@ namespace ComplementApp.API.Controllers
 
                     #endregion Mapear datos 
 
+                    #region Registrar Detalle de Liquidacion
+
                     //Registrar detalle de liquidación
                     _dataContext.DetalleLiquidacion.Add(detalleLiquidacion);
                     await _dataContext.SaveChangesAsync();
@@ -235,12 +242,22 @@ namespace ComplementApp.API.Controllers
                     }
                     await _dataContext.SaveChangesAsync();
 
-                    //Actualizar el estado al plan de pago
-                    var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formato.PlanPagoId);
-                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
-                    planPagoBD.UsuarioIdModificacion = usuarioId;
-                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-                    await _dataContext.SaveChangesAsync();
+                    #endregion Registrar Detalle de Liquidacion
+
+                    #region Actualizar el estado al plan de pago
+
+                    var cantidadPlanPagoxCompromiso = await _planPagoRepository.CantidadPlanPagoParaCompromiso(detallePlanPago.Crp, pciId);
+
+                    if (cantidadPlanPagoxCompromiso > 1)
+                    {
+                        var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(formato.PlanPagoId);
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.ConLiquidacionDeducciones;
+                        planPagoBD.UsuarioIdModificacion = usuarioId;
+                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        await _dataContext.SaveChangesAsync();
+                    }
+
+                    #endregion Actualizar el estado al plan de pago
 
                     //Actualizar lista de liquidaciones anteriores(Viaticos pagados)
                     var listaDetalleLiquidacionAnterior = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(detallePlanPago.TerceroId, pciId);
@@ -263,6 +280,16 @@ namespace ComplementApp.API.Controllers
                     }
                     await _dataContext.SaveChangesAsync();
 
+                    #region Actualización Solicitud de Pago
+
+                    var solicitudPago = await _solicitudPagoRepository.ObtenerFormatoSolicitudPagoBase(formato.FormatoSolicitudPagoId);
+                    solicitudPago.EstadoId = (int)EstadoSolicitudPago.ConLiquidacionDeducciones;
+                    solicitudPago.UsuarioIdModificacion = usuarioId;
+                    solicitudPago.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                    await _dataContext.SaveChangesAsync();
+
+                    #endregion Actualización Solicitud de Pago
+
                     await transaction.CommitAsync();
 
                     return Ok(detalleLiquidacion.DetalleLiquidacionId);
@@ -279,7 +306,7 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> RegistrarListaDetalleLiquidacion([FromQuery(Name = "listaPlanPagoId")] string listaPlanPagoId,
+        public async Task<IActionResult> RegistrarListaDetalleLiquidacion([FromQuery(Name = "listaSolicitudPagoId")] string listaSolicitudPagoId,
                                                                             [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                                             [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
                                                                             [FromQuery(Name = "terceroId")] int? terceroId
@@ -295,7 +322,7 @@ namespace ComplementApp.API.Controllers
             List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
             bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
 
-            await _procesoLiquidacion.RegistrarListaDetalleLiquidacion(usuarioId, pciId, listaPlanPagoId, listIds, esSeleccionarTodo, terceroId);
+            await _procesoLiquidacion.RegistrarListaDetalleLiquidacion(usuarioId, pciId, listaSolicitudPagoId, listIds, esSeleccionarTodo, terceroId);
 
             return Ok(1);
 
@@ -321,8 +348,6 @@ namespace ComplementApp.API.Controllers
                     planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                     planPagoBD.UsuarioIdModificacion = usuarioId;
                     await _dataContext.SaveChangesAsync();
-                    //_unitOfWork.PlanPagoRepository.ActualizarPlanPago(planPagoBD);
-                    //await _unitOfWork.CompleteAsync();
 
                     //Crear nuevo plan de pago en estado rechazado
                     planNuevo = planPagoBD;
@@ -333,7 +358,6 @@ namespace ComplementApp.API.Controllers
                     planNuevo.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     await _dataContext.PlanPago.AddAsync(planNuevo);
                     await _dataContext.SaveChangesAsync();
-                    //await _unitOfWork.PlanPagoRepository.RegistrarPlanPago(planNuevo);                    
 
                     //Enviar email
                     var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
@@ -341,7 +365,6 @@ namespace ComplementApp.API.Controllers
 
                     await transaction.CommitAsync();
 
-                    //await _unitOfWork.CompleteAsync();
 
                     return Ok(planNuevo.PlanPagoId);
                 }
@@ -725,7 +748,7 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-                                
+
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
@@ -759,7 +782,7 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-                                
+
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
@@ -788,7 +811,7 @@ namespace ComplementApp.API.Controllers
 
                             await ActualizarEstadoDetalleLiquidacion(usuarioId, liquidacionIds);
                             await _dataContext.SaveChangesAsync();
-                            
+
                             await transaction.CommitAsync();
 
                             var listaIdFactura = (from l in listaLiquidacion
@@ -807,7 +830,7 @@ namespace ComplementApp.API.Controllers
 
                                 if (stream == null)
                                     return NotFound();
-                                
+
                                 Response.AddFileName(nombreArchivo);
                                 return File(stream, "application/octet-stream", nombreArchivo);
                             }
@@ -928,6 +951,7 @@ namespace ComplementApp.API.Controllers
             detalleLiquidacion.ModalidadContrato = formato.ModalidadContrato;
             detalleLiquidacion.MesSaludAnterior = formato.NumeroMesSaludAnterior;
             detalleLiquidacion.MesSaludActual = formato.NumeroMesSaludActual;
+            detalleLiquidacion.FormatoSolicitudPagoId = formato.FormatoSolicitudPagoId;
         }
 
         private async Task<bool> ActualizarEstadoDetalleLiquidacion(int usuarioId, List<int> listIds)

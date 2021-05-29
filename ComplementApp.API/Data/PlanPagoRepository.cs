@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Dtos;
 using Microsoft.Data.SqlClient;
 using ComplementApp.API.Helpers;
-using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using AutoMapper;
 using System.Globalization;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Data
 {
@@ -94,43 +95,7 @@ namespace ComplementApp.API.Data
             return await lista.ToListAsync();
         }
 
-        public async Task<List<PlanPago>> ObtenerListaPlanPagoXIds(List<int> listaPlanPagoId)
-        {
-            return await (from c in _context.PlanPago
-                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
-                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
-                          from pl in parametroLiquidacion.DefaultIfEmpty()
-                          where c.PciId == pl.PciId
-                          where (listaPlanPagoId.Contains(c.PlanPagoId))
-                          select new PlanPago()
-                          {
-                              PlanPagoId = c.PlanPagoId,
-                              Cdp = c.Cdp,
-                              Crp = c.Crp,
-                              AnioPago = c.AnioPago,
-                              MesPago = c.MesPago,
-                              ValorAPagar = c.ValorAPagar,
-                              Viaticos = c.Viaticos,
-                              NumeroPago = c.NumeroPago,
-                              EstadoPlanPagoId = c.EstadoPlanPagoId,
-                              NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
-                              FechaRadicadoSupervisor = c.FechaRadicadoSupervisor,
-                              ValorFacturado = c.ValorFacturado,
-                              TerceroId = c.TerceroId,
-                              Tercero = new Tercero()
-                              {
-                                  TerceroId = c.TerceroId,
-                                  NumeroIdentificacion = t.NumeroIdentificacion,
-                                  Nombre = t.Nombre,
-                                  ModalidadContrato = pl.ModalidadContrato,
-                                  TipoPago = pl.TipoPago,
-                                  TipoIva = pl.TipoIva.HasValue ? pl.TipoIva.Value : 0,
-                              }
-                          })
-                        .OrderBy(c => c.FechaRadicadoSupervisor)
-                        .ToListAsync();
-        }
+
 
         public async Task<PagedList<PlanPago>> ObtenerListaPlanPagoXCompromiso(long crp,
                                                                                 List<int> listaEstadoId,
@@ -358,12 +323,12 @@ namespace ComplementApp.API.Data
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaPlanPagoId)
+        public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaSolicitudPagoIds)
         {
-            return await (from pp in _context.PlanPago
-                          join c in _context.CDP on new { pp.Crp, pp.PciId } equals new { c.Crp, c.PciId }
-                          join t in _context.Tercero on pp.TerceroId equals t.TerceroId
-                          join sp in _context.FormatoSolicitudPago on new { pp.PlanPagoId, pp.PciId } equals new { sp.PlanPagoId, sp.PciId }
+            return await (from sp in _context.FormatoSolicitudPago
+                          join c in _context.CDP on new { sp.Crp, sp.PciId } equals new { c.Crp, c.PciId }
+                          join t in _context.Tercero on sp.TerceroId equals t.TerceroId
+                          join pp in _context.PlanPago on new { sp.PlanPagoId, sp.PciId } equals new { pp.PlanPagoId, pp.PciId }
 
                           join p in _context.ParametroLiquidacionTercero on new { pp.TerceroId, pp.PciId } equals new { p.TerceroId, p.PciId } into ParametroTercero
                           from pt in ParametroTercero.DefaultIfEmpty()
@@ -376,17 +341,15 @@ namespace ComplementApp.API.Data
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
                           from super in Supervisor.DefaultIfEmpty()
 
-                              //where pp.PciId == c.PciId
-                              //where pp.PciId == sp.PciId
-                              //where pp.PciId == pt.PciId
                           where pp.PciId == us.PciId
                           where pp.PciId == contra.PciId
                           where contra.PciId == super.PciId
 
-                          where listaPlanPagoId.Contains(pp.PlanPagoId)
+                          where listaSolicitudPagoIds.Contains(sp.FormatoSolicitudPagoId)
                           where c.Instancia == (int)TipoDocumento.Compromiso
                           select new DetallePlanPagoDto()
                           {
+                              FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId,
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
                               Detalle4 = CortarTexto(c.Detalle4, 50),
@@ -434,24 +397,7 @@ namespace ComplementApp.API.Data
                                                            " SUP. " +
                                                            super.Nombres + ' ' + super.Apellidos +
                                                            " " +
-                                                           c.Detalle4,
-                              /*
-                              TextoComprobanteContable = c.Detalle6 +
-                                " FACTURA: " +
-                                sp.NumeroFactura +
-                                " OBSERVACIONES: " +
-                                (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
-                                " RAD_PROV: " +
-                                pp.NumeroRadicadoProveedor +
-                                " FECHA: " +
-                                (pp.FechaRadicadoProveedor.HasValue ? pp.FechaRadicadoProveedor.Value.ToString("yyyy-MM-dd") : string.Empty) +
-                                " RAD_SUP: " +
-                                pp.NumeroRadicadoSupervisor +
-                                " FECHA: " +
-                                (pp.FechaRadicadoSupervisor.HasValue ? pp.FechaRadicadoSupervisor.Value.ToString("yyyy-MM-dd") : string.Empty) +
-                                " APRUEBA: " +
-                                super.Nombres + ' ' + super.Apellidos
-                                */
+                                                           c.Detalle4
                           })
                     .ToListAsync();
         }
@@ -583,6 +529,51 @@ namespace ComplementApp.API.Data
             return await PagedList<RadicadoDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize); ;
         }
 
+        public async Task<int> CantidadPlanPagoParaCompromiso(long crp, int pcidId)
+        {
+            var cantidad = await (from pp in _context.PlanPago
+                                  where pp.Crp == crp
+                                  where pp.PciId == pcidId
+                                  select pp
+                          ).CountAsync();
+
+            return cantidad;
+        }
+
+        public List<int> ObtenerListaPlanPagoParaCompromiso(List<long> listaCrp, int pcidId)
+        {
+            List<int> lista = null;
+
+            var query1 = (from pp in _context.PlanPago
+                          where listaCrp.Contains(pp.Crp)
+                          where pp.PciId == pcidId
+                          group pp by new { pp.PlanPagoId }
+                         into grp
+                          select new
+                          {
+                              grp.Key.PlanPagoId
+                          });
+
+            var query2 = (from p in query1
+                          group p by new { p.PlanPagoId } into g
+                          where g.Count() > 0
+                          select new
+                          {
+                              g.Key.PlanPagoId,
+                              Count = g.Count()
+                          });
+
+            var query3 = (from p in query2
+                          where p.Count > 1
+                          select new
+                          {
+                              p.PlanPagoId
+                          });
+
+            lista = query3.Select(s => s.PlanPagoId).ToList();
+
+            return lista;
+        }
 
         #region Forma Pago Compromiso
 

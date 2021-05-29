@@ -42,5 +42,6 @@ namespace ComplementApp.API.Dtos
         public string FechaInicioSolicitudPagoFormato { get; set; }
         public string FechaFinalSolicitudPagoFormato { get; set; }
         public string TextoComprobanteContable { get; set; }
+        public int FormatoSolicitudPagoId { get; set; }
     }
 }

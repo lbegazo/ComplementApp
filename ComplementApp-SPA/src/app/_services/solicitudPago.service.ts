@@ -64,6 +64,44 @@ export class SolicitudPagoService {
       );
   }
 
+  ObtenerListaSolicitudPagoAprobada(
+    terceroId: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<Cdp[]>> {
+    const paginatedResult: PaginatedResult<Cdp[]> = new PaginatedResult<
+      Cdp[]
+    >();
+
+    const path = 'ObtenerListaSolicitudPagoAprobada';
+
+    let params = new HttpParams();
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Cdp[]>(this.baseUrl + path, { observe: 'response', params })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
   ObtenerSolicitudesPagoParaAprobar(
     usuarioId: number,
     terceroId: number,

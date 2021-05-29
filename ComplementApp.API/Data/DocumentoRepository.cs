@@ -417,13 +417,15 @@ namespace ComplementApp.API.Data
                 }
 
                 //Rubro Presupuestal
-                if (!string.IsNullOrEmpty(item.IdentificacionRubro))
+                if (!string.IsNullOrEmpty(item.RubroPresupuestal.Identificacion))
                 {
                     var rubro = listaRubrosPresupuestales
-                                .Where(c => c.Identificacion.ToUpper() == item.IdentificacionRubro.ToUpper())
+                                .Where(c => c.Identificacion.ToUpper() == item.RubroPresupuestal.Identificacion.ToUpper())
                                 .FirstOrDefault();
                     if (rubro != null)
+                    {
                         cdp.RubroPresupuestalId = rubro.RubroPresupuestalId;
+                    }
                 }
 
                 //Decreto

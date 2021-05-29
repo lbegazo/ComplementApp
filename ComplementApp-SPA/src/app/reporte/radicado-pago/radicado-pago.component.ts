@@ -11,20 +11,20 @@ import { ActivatedRoute } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
+import { Cdp } from 'src/app/_models/cdp';
 import { DetallePlanPago } from 'src/app/_models/detallePlanPago';
 import {
-  EstadoPlanPago,
-  ModalidadContrato,
-  TipoPago,
+  EstadoPlanPago
 } from 'src/app/_models/enum';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { PlanPago } from 'src/app/_models/planPago';
+
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
+import { SolicitudPagoService } from 'src/app/_services/solicitudPago.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -46,10 +46,10 @@ export class RadicadoPagoComponent implements OnInit {
   modalidadContrato = 0;
   tipoPago = 0;
 
-  listaPlanPago: PlanPago[] = [];
-  planPagoIdSeleccionado = 0;
+  listaSolicitudPago: Cdp[] = [];
+  solicitudPagoIdSeleccionado = 0;
   detallePlanPago: DetallePlanPago;
-  planPagoSeleccionado: PlanPago;
+  solicitudPagoSeleccionado: Cdp;
   tercero: Tercero;
   //  = {
   //   terceroId: 0,
@@ -75,6 +75,7 @@ export class RadicadoPagoComponent implements OnInit {
     private http: HttpClient,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
+    private solicitudService: SolicitudPagoService,
     private facturaService: PlanPagoService,
     private fb: FormBuilder,
     private liquidacionService: DetalleLiquidacionService
@@ -127,8 +128,8 @@ export class RadicadoPagoComponent implements OnInit {
   }
 
   crearControlesDeArray() {
-    if (this.listaPlanPago && this.listaPlanPago.length > 0) {
-      for (const detalle of this.listaPlanPago) {
+    if (this.listaSolicitudPago && this.listaSolicitudPago.length > 0) {
+      for (const detalle of this.listaSolicitudPago) {
         this.arrayControls.push(
           new FormGroup({
             rubroControl: new FormControl('', [Validators.required]),
@@ -151,18 +152,16 @@ export class RadicadoPagoComponent implements OnInit {
   }
 
   onBuscarFactura() {
-    this.listaEstadoId = this.estadoPlanPagoPorObligar.toString(); // Por obligar
 
-    this.facturaService
-      .ObtenerListaPlanPago(
-        this.listaEstadoId,
+    this.solicitudService
+      .ObtenerListaSolicitudPagoAprobada(
         this.terceroId,
         this.pagination.currentPage,
         this.pagination.itemsPerPage
       )
       .subscribe(
-        (documentos: PaginatedResult<PlanPago[]>) => {
-          this.listaPlanPago = documentos.result;
+        (documentos: PaginatedResult<Cdp[]>) => {
+          this.listaSolicitudPago = documentos.result;
           this.pagination = documentos.pagination;
 
           this.crearControlesDeArray();
@@ -186,8 +185,8 @@ export class RadicadoPagoComponent implements OnInit {
   }
 
   onLimpiarFactura() {
-    this.listaPlanPago = [];
-    this.planPagoIdSeleccionado = 0;
+    this.listaSolicitudPago = [];
+    this.solicitudPagoIdSeleccionado = 0;
     this.tercero = null;
     this.search = '';
     this.terceroId = null;
@@ -206,16 +205,16 @@ export class RadicadoPagoComponent implements OnInit {
 
   onCheckChange(event) {
     /* Selected */
-    this.planPagoIdSeleccionado = 0;
+    this.solicitudPagoIdSeleccionado = 0;
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.planPagoIdSeleccionado = +event.target.value;
+      this.solicitudPagoIdSeleccionado = +event.target.value;
     }
   }
 
   obtenerDetallePlanPago(valorIngresado: number) {
     this.facturaService
-      .ObtenerDetallePlanPago(this.planPagoIdSeleccionado)
+      .ObtenerDetallePlanPago(this.solicitudPagoIdSeleccionado)
       .subscribe(
         (response: DetallePlanPago) => {
           if (response) {
@@ -236,7 +235,8 @@ export class RadicadoPagoComponent implements OnInit {
           } else {
             this.liquidacionService
               .ObtenerFormatoCausacionyLiquidacionPago(
-                this.planPagoIdSeleccionado,
+                this.solicitudPagoIdSeleccionado,
+                this.solicitudPagoSeleccionado.planPagoId,
                 valorIngresado,
                 0
               )

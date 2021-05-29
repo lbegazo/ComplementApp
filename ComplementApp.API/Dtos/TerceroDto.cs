@@ -24,15 +24,17 @@ namespace ComplementApp.API.Dtos
 
         public string DeclaranteRentaDescripcion { get; set; }
 
-        public bool FacturadorElectronico{ get; set; }  
+        public bool FacturadorElectronico { get; set; }
 
-        public string FacturadorElectronicoDescripcion { get; set; }      
+        public string FacturadorElectronicoDescripcion { get; set; }
 
         public string RegimenTributario { get; set; }
 
-        public DateTime? FechaExpedicionDocumento { get; set; }  
+        public DateTime? FechaExpedicionDocumento { get; set; }
 
         public int ModalidadContrato { get; set; }
-        
+        public int TipoPago { get; set; }
+        public int TipoIva { get; set; }
+
     }
 }

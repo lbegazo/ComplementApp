@@ -174,13 +174,13 @@ namespace ComplementApp.API.Models
 
         public int ModalidadContrato { get; set; }
 
-        public int UsuarioIdRegistro { get; set; }  
+        public int UsuarioIdRegistro { get; set; }
 
-        public DateTime? FechaRegistro { get; set; }   
+        public DateTime? FechaRegistro { get; set; }
 
-        public int UsuarioIdModificacion { get; set; }  
+        public int UsuarioIdModificacion { get; set; }
 
-        public DateTime? FechaModificacion { get; set; }        
+        public DateTime? FechaModificacion { get; set; }
 
         public ICollection<LiquidacionDeduccion> Deducciones { get; set; }
 
@@ -208,5 +208,7 @@ namespace ComplementApp.API.Models
         public ICollection<DetalleArchivoLiquidacion> DetalleArchivo { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+        public int? FormatoSolicitudPagoId { get; set; }
+        public FormatoSolicitudPago FormatoSolicitudPago { get; set; }
     }
 }

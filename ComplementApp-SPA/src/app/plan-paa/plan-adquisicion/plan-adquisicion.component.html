@@ -50,12 +50,12 @@
                   </p>
                 </div>
                 <div
-                  class="form-group col-md-2 parent"
-                  style="margin: 0px; padding: 0px"
+                  class="form-group col-md-2"
+                  style="margin: 0px; padding-top: 27px"
                 >
                   <button
                     type="submit"
-                    class="btn btn-warning child"
+                    class="btn btn-warning"
                     (click)="abrirPopupActividadEspecifica()"
                     [disabled]="!habilitarBotonPopupActividadEspecifica"
                   >
@@ -73,27 +73,24 @@
                   </p>
                 </div>
                 <!--Rubro Presupuestal-->
-                <div class="form-group col-md-6" style="margin: 0px">
+                <div class="form-group col-md-8" style="margin: 0px">
                   <label class="col-form-label-md">Rubro Presupuestal</label>
                   <p class="paragraph" style="font-size: 11px">
                     {{ rubroPresupuestalSeleccionado?.nombre }}
                   </p>
                 </div>
                 <div
-                  class="form-group col-md-2 parent"
-                  style="margin: 0px; padding: 0px"
+                  class="form-group col-md-2"
+                  style="margin: 0px; padding-top: 27px"
                 >
-                  <div class="child">
                     <button
                       type="submit"
                       class="btn btn-warning"
-                      style="width: 150px;"
                       (click)="abrirPopupRubroPresupuestal()"
                       [disabled]="!habilitarBotonPopupRubroPresupuestal"
                     >
                       Seleccionar Rubro
                     </button>
-                  </div>
                 </div>
               </div>
               <!--COMPROMISO-->

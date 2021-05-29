@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using EFCore.BulkExtensions;
 
 namespace ComplementApp.API.Data

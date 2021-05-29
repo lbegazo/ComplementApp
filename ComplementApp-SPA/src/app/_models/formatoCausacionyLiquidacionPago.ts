@@ -65,4 +65,5 @@ export interface FormatoCausacionyLiquidacionPago {
 
   esSeleccionada: boolean;
   tipoAdminPila: string;
+  formatoSolicitudPagoId: number;
 }

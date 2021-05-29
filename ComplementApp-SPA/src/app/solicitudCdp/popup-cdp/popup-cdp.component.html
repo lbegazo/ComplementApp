@@ -50,10 +50,10 @@
                     <label class="col-form-label-sm">
                       <input
                         type="checkbox"
-                        [value]="item?.id"
+                        [value]="item?.detalleCdpId"
                         (change)="onCheckChange($event)"
                       />
-                      {{ item?.identificacionRubro }}
+                      {{ item?.rubroPresupuestal.identificacion }}
                     </label>
                   </div>
                   <div class="col-6 inner left">

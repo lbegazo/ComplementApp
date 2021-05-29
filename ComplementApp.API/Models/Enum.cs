@@ -104,6 +104,7 @@ namespace ComplementApp.API.Models
         Generado = 24,
         Aprobado = 25,
         Rechazado = 26,
+        ConLiquidacionDeducciones = 27,
     }
 
     public enum TipoDocumentoArchivo

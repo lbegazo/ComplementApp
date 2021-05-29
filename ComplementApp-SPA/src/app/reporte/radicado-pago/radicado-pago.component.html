@@ -72,7 +72,7 @@
                           class="btn btn-primary"
                           (click)="onBuscarFactura()"
                           style="width: 80px"
-                          [disabled]="planPagoIdSeleccionado > 0"
+                          [disabled]="solicitudPagoIdSeleccionado > 0"
                         >
                           Buscar</button
                         >&nbsp;
@@ -112,11 +112,11 @@
                   <label class="col-form-label-md">Valor Facturado</label>
                 </div>
               </div>
-              <div *ngIf="listaPlanPago">
+              <div *ngIf="listaSolicitudPago">
                 <div
                   formArrayName="planPagoControles"
                   class="form-row"
-                  *ngFor="let item of listaPlanPago; let i = index"
+                  *ngFor="let item of listaSolicitudPago; let i = index"
                 >
                   <ng-container [formGroupName]="i">
                     <div style="width: 2%" class="inner left aplicaBackground">

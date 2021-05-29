@@ -245,7 +245,6 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     component: CausacionyLiquidacionComponent,
     resolve: {
-      planPagoResolver: PlanPagoResolver,
       transaccion: TransaccionResolver,
     },
   },

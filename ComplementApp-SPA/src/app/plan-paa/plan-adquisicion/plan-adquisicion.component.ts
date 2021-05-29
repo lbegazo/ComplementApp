@@ -138,10 +138,11 @@ export class PlanAdquisicionComponent implements OnInit {
           planAdquisicionNuevo.detalleCdpId = this.inicioPlanAdquisicionId;
           planAdquisicionNuevo.planDeCompras = this.nombreCtrl.value;
           planAdquisicionNuevo.rubroPresupuestal = new RubroPresupuestal();
-          planAdquisicionNuevo.rubroPresupuestal.rubroPresupuestalId = this.rubroPresupuestalSeleccionado.rubroPresupuestalId;
-          planAdquisicionNuevo.rubroPresupuestal.identificacion = 'a';
-          planAdquisicionNuevo.rubroPresupuestal.nombre = 'a';
-          planAdquisicionNuevo.rubroPresupuestal.padreRubroId = 1;
+          planAdquisicionNuevo.rubroPresupuestal.rubroPresupuestalId =
+            this.rubroPresupuestalSeleccionado.rubroPresupuestalId;
+          planAdquisicionNuevo.rubroPresupuestal.identificacion = this.rubroPresupuestalSeleccionado.identificacion;
+          planAdquisicionNuevo.rubroPresupuestal.nombre = this.rubroPresupuestalSeleccionado.nombre;
+          planAdquisicionNuevo.rubroPresupuestal.padreRubroId = this.rubroPresupuestalSeleccionado.padreRubroId;
           (planAdquisicionNuevo.aplicaContrato =
             this.aplicaContratoCtrl.value === null ||
             this.aplicaContratoCtrl.value === false
@@ -152,7 +153,8 @@ export class PlanAdquisicionComponent implements OnInit {
           planAdquisicionNuevo.valorAct = GeneralService.obtenerValorAbsoluto(
             this.valorCtrl.value
           );
-          planAdquisicionNuevo.actividadEspecifica = this.actividadEspecificaSeleccionado;
+          planAdquisicionNuevo.actividadEspecifica =
+            this.actividadEspecificaSeleccionado;
           planAdquisicionNuevo.estadoModificacion =
             EstadoModificacion.Insertado;
           this.listaPlanAdquisicion.push(planAdquisicionNuevo);
@@ -162,17 +164,19 @@ export class PlanAdquisicionComponent implements OnInit {
           //#endregion Agregar
         } else {
           //#region Modificar
-          this.planAdquisicionSeleccionado.planDeCompras = this.nombreCtrl.value;
+          this.planAdquisicionSeleccionado.planDeCompras =
+            this.nombreCtrl.value;
           (this.planAdquisicionSeleccionado.aplicaContrato =
             this.aplicaContratoCtrl.value === null ||
             this.aplicaContratoCtrl.value === false
               ? false
               : true),
-            (this.planAdquisicionSeleccionado.usuarioId = this.idResponsableSeleccionado);
-          this.planAdquisicionSeleccionado.dependenciaId = this.idDependenciaSeleccionado;
-          this.planAdquisicionSeleccionado.valorAct = GeneralService.obtenerValorAbsoluto(
-            this.valorCtrl.value
-          );
+            (this.planAdquisicionSeleccionado.usuarioId =
+              this.idResponsableSeleccionado);
+          this.planAdquisicionSeleccionado.dependenciaId =
+            this.idDependenciaSeleccionado;
+          this.planAdquisicionSeleccionado.valorAct =
+            GeneralService.obtenerValorAbsoluto(this.valorCtrl.value);
           this.planAdquisicionSeleccionado.crp = this.cdpSeleccionado.crp;
           this.planAdquisicionSeleccionado.estadoModificacion =
             EstadoModificacion.Modificado;
@@ -233,8 +237,9 @@ export class PlanAdquisicionComponent implements OnInit {
 
     const initialState = {
       title: 'Rubro Presupuestal',
-      rubroPapaId: this.actividadEspecificaSeleccionado.rubroPresupuestal
-        .rubroPresupuestalId,
+      rubroPapaId:
+        this.actividadEspecificaSeleccionado.rubroPresupuestal
+          .rubroPresupuestalId,
     };
 
     this.bsModalRef = this.modalService.show(
@@ -397,8 +402,10 @@ export class PlanAdquisicionComponent implements OnInit {
         }
         const aplicaContrato = this.planAdquisicionSeleccionado.aplicaContrato;
 
-        this.actividadEspecificaSeleccionado = this.planAdquisicionSeleccionado.actividadEspecifica;
-        this.rubroPresupuestalSeleccionado = this.planAdquisicionSeleccionado.rubroPresupuestal;
+        this.actividadEspecificaSeleccionado =
+          this.planAdquisicionSeleccionado.actividadEspecifica;
+        this.rubroPresupuestalSeleccionado =
+          this.planAdquisicionSeleccionado.rubroPresupuestal;
         this.cdpSeleccionado = this.planAdquisicionSeleccionado.cdpDocumento;
 
         this.valor = this.planAdquisicionSeleccionado.saldoAct;
@@ -460,15 +467,16 @@ export class PlanAdquisicionComponent implements OnInit {
       this.actividadEspecificaSeleccionado !== undefined &&
       this.actividadEspecificaSeleccionado.actividadEspecificaId > 0
     ) {
-      const valorDisponible = +this.actividadEspecificaSeleccionado
-        .saldoPorProgramar;
+      const valorDisponible =
+        +this.actividadEspecificaSeleccionado.saldoPorProgramar;
       const valorIngresado = +GeneralService.obtenerValorAbsoluto(
         this.valorCtrl.value
       );
-      const valorExistente = this.planAdquisicionSeleccionado.valorAct;
 
       // Modificacion
       if (!this.accion) {
+        const valorExistente = this.planAdquisicionSeleccionado.valorAct;
+
         // No se hizo modificaciones al valor
         if (valorExistente === valorIngresado) {
           respuesta = true;

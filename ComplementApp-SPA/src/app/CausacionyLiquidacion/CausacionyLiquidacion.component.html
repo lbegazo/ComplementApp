@@ -77,7 +77,7 @@
                           class="btn btn-primary"
                           (click)="onBuscarFactura()"
                           style="width: 80px"
-                          [disabled]="planPagoIdSeleccionado > 0"
+                          [disabled]="solicitudPagoIdSeleccionado > 0"
                         >
                           Buscar</button
                         >&nbsp;
@@ -114,10 +114,16 @@
             <td style="padding: 0px 15px">
               <div class="form-row mt-2">
                 <div style="width: 2%"></div>
-                <div style="width: 10%" class="inner center">
-                  <label class="col-form-label-md">Identificación</label>
+                <div style="width: 6%" class="inner center">
+                  <label class="col-form-label-md">Num.</label>
                 </div>
-                <div style="width: 48%" class="inner center">
+                <div style="width: 6%" class="inner center">
+                  <label class="col-form-label-md">CRP</label>
+                </div>
+                <div style="width: 8%" class="inner center">
+                  <label class="col-form-label-md">Núm. Tercero</label>
+                </div>
+                <div style="width: 37%" class="inner center">
                   <label class="col-form-label-md">Tercero</label>
                 </div>
                 <div style="width: 15%" class="inner center">
@@ -126,33 +132,45 @@
                 <div style="width: 10%" class="inner center">
                   <label class="col-form-label-md">Fecha Radicado</label>
                 </div>
-                <div style="width: 15%" class="inner right">
+                <div style="width: 16%" class="inner right">
                   <label class="col-form-label-md">Valor Facturado</label>
                 </div>
               </div>
-              <div *ngIf="listaPlanPago">
+              <div *ngIf="listaSolicitudPago">
                 <div
                   formArrayName="planPagoControles"
                   class="form-row"
-                  *ngFor="let item of listaPlanPago; let i = index"
+                  *ngFor="let item of listaSolicitudPago; let i = index"
                 >
                   <ng-container [formGroupName]="i">
                     <div style="width: 2%" class="inner left aplicaBackground">
                       <input
                         type="checkbox"
                         [checked]="item.esSeleccionada"
-                        [value]="item?.planPagoId"
+                        [value]="item?.formatoSolicitudPagoId"
                         (change)="onCheckChange($event)"
                       />
                     </div>
                     <div
-                      style="width: 10%"
+                      style="width: 6%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.formatoSolicitudPagoId }}</p>
+                    </div>
+                    <div
+                      style="width: 6%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.crp }}</p>
+                    </div>
+                    <div
+                      style="width: 8%"
                       class="inner center aplicaBackground"
                     >
                       <p class="medium">{{ item?.identificacionTercero }}</p>
                     </div>
                     <div
-                      style="width: 48%"
+                      style="width: 37%"
                       class="inner center aplicaBackground"
                     >
                       <p class="medium">{{ item?.nombreTercero }}</p>
@@ -174,7 +192,7 @@
                       </p>
                     </div>
                     <div
-                      style="width: 15%"
+                      style="width: 16%"
                       class="inner right aplicaBackground"
                     >
                       <p class="medium">
@@ -224,7 +242,7 @@
                     class="btn btn-primary mr-2"
                     (click)="onLiquidar()"
                     [disabled]="
-                      listaPlanPagoSeleccionada.length <= 1 ||
+                      listaSolicitudPagoSeleccionada.length <= 1 ||
                       liquidacionRegistrada
                     "
                   >
@@ -234,7 +252,7 @@
                     type="button"
                     class="btn btn-success"
                     (click)="verLiquidacion()"
-                    [disabled]="listaPlanPagoSeleccionada.length !== 1"
+                    [disabled]="listaSolicitudPagoSeleccionada.length !== 1"
                   >
                     Liquidación Manual
                   </button>
@@ -267,4 +285,4 @@
 <!-- <p>detallePlanPago: {{ detallePlanPago | json }}</p> -->
 <!-- 
 <p>planPagoIdSeleccionado: {{ planPagoIdSeleccionado | json }}</p>
-<p>listaPlanPagoSeleccionada: {{ listaPlanPagoSeleccionada | json }}</p> -->
+<p>listaSolicitudPagoSeleccionada: {{ listaSolicitudPagoSeleccionada | json }}</p> -->

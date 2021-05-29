@@ -73,6 +73,7 @@ export class PopupCdpComponent implements OnInit {
   }
 
   cargarDetalleCDP() {
+    
     this.cdpService.ObtenerDetalleDeCDP(0).subscribe(
       (documento: DetalleCDP[]) => {
         this.detalleCdp = documento;

@@ -140,6 +140,7 @@ namespace ComplementApp.API.Controllers
                 if (planAdquisicion.RubroPresupuestal != null)
                 {
                     planAdquisicionNuevo.RubroPresupuestalId = planAdquisicion.RubroPresupuestal.RubroPresupuestalId;
+                    planAdquisicionNuevo.DecretoId = planAdquisicion.RubroPresupuestal.PadreRubroId.Value;
                 }
 
                 actividadEspecificaBD = await _repoActividad.ObtenerActividadEspecificaBase(planAdquisicion.ActividadEspecifica.ActividadEspecificaId);

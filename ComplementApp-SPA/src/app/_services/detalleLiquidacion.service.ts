@@ -95,7 +95,7 @@ export class DetalleLiquidacionService {
   }
 
   RegistrarListaDetalleLiquidacion(
-    listaPlanPagoId: string,
+    listaSolicitudPagoId: string,
     listaEstadoId: string,
     seleccionarTodo: number,
     terceroId?: number
@@ -109,7 +109,7 @@ export class DetalleLiquidacionService {
     if (terceroId > 0) {
       params = params.append('terceroId', terceroId.toString());
     }
-    params = params.append('listaPlanPagoId', listaPlanPagoId);
+    params = params.append('listaSolicitudPagoId', listaSolicitudPagoId);
     params = params.append('listaEstadoId', listaEstadoId);
 
     return this.http.get(this.baseUrl + path, { params });
@@ -126,6 +126,7 @@ export class DetalleLiquidacionService {
   }
 
   ObtenerFormatoCausacionyLiquidacionPago(
+    solicitudPagoId: number,
     planPagoId: number,
     valorBaseGravable: number,
     actividadEconomicaId: number
@@ -133,7 +134,9 @@ export class DetalleLiquidacionService {
     const path = 'ObtenerFormatoCausacionyLiquidacionPago';
 
     let params = new HttpParams();
-
+    if (solicitudPagoId > 0) {
+      params = params.append('solicitudPagoId', solicitudPagoId.toString());
+    }
     if (planPagoId > 0) {
       params = params.append('planPagoId', planPagoId.toString());
     }

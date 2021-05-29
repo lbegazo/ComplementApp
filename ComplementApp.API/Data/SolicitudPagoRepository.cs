@@ -159,6 +159,41 @@ namespace ComplementApp.API.Data
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
+        public async Task<PagedList<CDPDto>> ObtenerListaSolicitudPagoAprobada(int? terceroId, UserParams userParams)
+        {
+            IQueryable<CDPDto> lista = null;
+
+            lista = (from s in _context.FormatoSolicitudPago
+                     join c in _context.CDP on s.Crp equals c.Crp
+                     join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                     join pp in _context.PlanPago on s.PlanPagoId equals pp.PlanPagoId
+                     where s.EstadoId == (int)EstadoSolicitudPago.Aprobado
+                     where c.Instancia == (int)TipoDocumento.Compromiso
+                     where c.PciId == userParams.PciId
+                     where s.PciId == c.PciId
+                     where s.PciId == pp.PciId
+                     where c.TerceroId == terceroId || terceroId == null
+                     select new CDPDto()
+                     {
+                         CdpId = s.FormatoSolicitudPagoId,
+                         Crp = c.Crp,
+                         Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                         TerceroId = s.TerceroId,
+                         NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                         NombreTercero = t.Nombre,
+                         FormatoSolicitudPagoId = s.FormatoSolicitudPagoId,
+                         PlanPagoId = s.PlanPagoId,
+                         ValorFacturado = s.ValorFacturado,
+                         NumeroRadicadoSupervisor = pp.NumeroRadicadoSupervisor,
+                         FechaRadicadoSupervisor = pp.FechaRadicadoSupervisor,
+                     })
+                    .Distinct()
+                    .OrderBy(x => x.CdpId);
+
+            return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+
         public async Task<FormatoSolicitudPago> ObtenerFormatoSolicitudPagoBase(int formatoSolicitudPagoId)
         {
             return await _context.FormatoSolicitudPago.FirstOrDefaultAsync(u => u.FormatoSolicitudPagoId == formatoSolicitudPagoId);
@@ -392,7 +427,7 @@ namespace ComplementApp.API.Data
                                      FechaInicio = s.FechaInicio,
                                      FechaFinal = s.FechaFinal,
                                      FechaSistema = s.FechaRegistro.Value,
-                                     ValorFacturado = s.valorFacturado,
+                                     ValorFacturado = s.ValorFacturado,
                                      MesId = s.MesId,
                                      MesDescripcion = DateTimeFormatInfo.CurrentInfo.GetMonthName(s.MesId).ToUpper(),
                                      NumeroPlanilla = s.NumeroPlanilla,
@@ -537,22 +572,111 @@ namespace ComplementApp.API.Data
 
 
         #endregion Registro de Solicitud de Pago
-        public async Task<ICollection<FormatoSolicitudPago>> ObtenerListaSolicitudPagoXPlanPagoIds(List<int> planPagoIds)
+
+        #region Proceso Liquidación Masiva
+        public async Task<List<FormatoSolicitudPagoDto>> ObtenerListaSolicitudPagoXId(List<int> listaSolicitudPagoId)
         {
             return await (from sp in _context.FormatoSolicitudPago
-                          where planPagoIds.Contains(sp.PlanPagoId)
-                          where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
-                          select sp
-                          ).ToListAsync();
+                          join c in _context.PlanPago on new { sp.PlanPagoId, sp.PciId } equals new { c.PlanPagoId, c.PciId }
+                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                          where c.PciId == pl.PciId
+                          where (listaSolicitudPagoId.Contains(sp.FormatoSolicitudPagoId))
+                          where (sp.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                          select new FormatoSolicitudPagoDto()
+                          {
+                              PlanPagoId = c.PlanPagoId,
+                              FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId,
+                              //   Cdp = c.Cdp,
+                              //   Crp = c.Crp,
+                              //   AnioPago = c.AnioPago,
+                              //   MesPago = c.MesPago,
+                              //   ValorAPagar = c.ValorAPagar,
+                              //   NumeroPago = c.NumeroPago,
+                              //   EstadoPlanPagoId = c.EstadoPlanPagoId,
+                              //   NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
+                              FechaRadicadoSupervisor = c.FechaRadicadoSupervisor.Value,
+                              //   ValorFacturado = c.ValorFacturado,
+                              Tercero = new TerceroDto()
+                              {
+                                  TerceroId = c.TerceroId,
+                                  NumeroIdentificacion = t.NumeroIdentificacion,
+                                  Nombre = t.Nombre,
+                                  ModalidadContrato = pl.ModalidadContrato,
+                                  TipoPago = pl.TipoPago,
+                                  TipoIva = pl.TipoIva.HasValue ? pl.TipoIva.Value : 0,
+                              },
+                              PlanPago = new PlanPagoDto()
+                              {
+                                  PlanPagoId = c.PlanPagoId,
+                                  Viaticos = c.Viaticos,
+                              }
+                          })
+                        .OrderBy(c => c.FechaRadicadoSupervisor)
+                        .ToListAsync();
         }
-        public async Task<FormatoSolicitudPago> ObtenerSolicitudPagoXPlanPagoId(int planPagoId)
+
+        public async Task<PagedList<FormatoSolicitudPagoDto>> ObtenerListaSolicitudPagoPaginada(int? terceroId, List<int> listaEstadoId, UserParams userParams)
         {
-            return await (from sp in _context.FormatoSolicitudPago
-                          where sp.PlanPagoId == planPagoId
-                          where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
-                          select sp
-                          ).FirstOrDefaultAsync();
+            var lista = (from sp in _context.FormatoSolicitudPago
+                         join c in _context.PlanPago on new { sp.PlanPagoId, sp.PciId } equals new { c.PlanPagoId, c.PciId }
+                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
+                         from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where c.PciId == pl.PciId
+                         where c.PciId == userParams.PciId
+                         where pl.PciId == userParams.PciId
+                         where (sp.TerceroId == terceroId || terceroId == null)
+                         where (sp.EstadoId == (int)EstadoSolicitudPago.Aprobado)
+                         //where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
+                         select new FormatoSolicitudPagoDto()
+                         {
+                             PlanPagoId = c.PlanPagoId,
+                             FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId,
+                             //  Cdp = c.Cdp,
+                             //  AnioPago = c.AnioPago,
+                             //  MesPago = c.MesPago,
+                             //  ValorAPagar = c.ValorAPagar,
+                             //  Viaticos = c.Viaticos,
+                             //  NumeroPago = c.NumeroPago,
+                             //  EstadoPlanPagoId = c.EstadoPlanPagoId,
+                             //  NumeroRadicadoSupervisor = c.NumeroRadicadoSupervisor,
+                             FechaRadicadoSupervisor = c.FechaRadicadoSupervisor.Value,
+                             //  ValorFacturado = c.ValorFacturado,
+                             Tercero = new TerceroDto()
+                             {
+                                 TerceroId = c.TerceroId,
+                                 NumeroIdentificacion = t.NumeroIdentificacion,
+                                 Nombre = t.Nombre,
+                                 ModalidadContrato = pl.ModalidadContrato,
+                                 TipoPago = pl.TipoPago,
+                                 TipoIva = pl.TipoIva.HasValue ? pl.TipoIva.Value : 0,
+                             },
+                             PlanPago = new PlanPagoDto()
+                             {
+                                 PlanPagoId = c.PlanPagoId,
+                                 Viaticos = c.Viaticos
+                             }
+                         })
+                         .Distinct()
+                        .OrderBy(c => c.FechaRadicadoSupervisor);
+
+            return await PagedList<FormatoSolicitudPagoDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
+
+        public async Task<ICollection<FormatoSolicitudPago>> ObtenerListaFormatoSolicitudPagoBase(List<int> listaSolicitudPagoId)
+        {
+            return await (from s in _context.FormatoSolicitudPago
+                          where listaSolicitudPagoId.Contains(s.FormatoSolicitudPagoId)
+                          where s.EstadoId == (int)EstadoSolicitudPago.Aprobado
+                          select s)
+                         .ToListAsync();
+        }
+        #endregion Proceso Liquidación Masiva
+
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

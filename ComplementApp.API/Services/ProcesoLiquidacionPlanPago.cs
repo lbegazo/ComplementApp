@@ -11,6 +11,7 @@ using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Models;
 using ComplementApp.API.Data;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Services
 {
@@ -66,26 +67,24 @@ namespace ComplementApp.API.Services
         }
 
         #region Liquidación Normal
-        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int planPagoId,
+        public async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacionyLiquidacionPago(int solicitudPagoId,
+                                                                                                     int planPagoId,
                                                                                                      int pciId,
                                                                                                      decimal valorBaseGravable,
                                                                                                      int? actividadEconomicaId)
         {
             FormatoCausacionyLiquidacionPagos formato = null;
-            PlanPagoDto planPagoDto2 = new PlanPagoDto();
 
             try
             {
                 var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
-                planPagoDto2.ValorFacturado = planPagoDto.ValorFacturado.Value;
 
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
                 var parametros = parametroGenerales.ToList();
 
                 ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId, pciId);
 
-                //Podría ser nulo la solicitud de pago
-                FormatoSolicitudPago solicitudPago = await _solicitudPagoRepository.ObtenerSolicitudPagoXPlanPagoId(planPagoId);
+                FormatoSolicitudPago solicitudPago = await _solicitudPagoRepository.ObtenerFormatoSolicitudPagoBase(solicitudPagoId);
                 actividadEconomicaId = solicitudPago.ActividadEconomicaId;
 
                 ICollection<Deduccion> listaDeducciones = await _terceroRepository.ObtenerDeduccionesXTercero(planPagoDto.TerceroId, pciId, actividadEconomicaId);
@@ -101,20 +100,20 @@ namespace ComplementApp.API.Services
                         {
                             if (!planPagoDto.Viaticos)
                             {
-                                formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(planPagoDto, parametroLiquidacion,
+                                formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(solicitudPago, parametroLiquidacion,
                                                                             parametros, listaCriterioReteFuente.ToList(),
                                                                             listaDeduccionesDto.ToList());
                             }
                             else
                             {
                                 //Contratistas con viaticos liquida de otra manera
-                                formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto2, parametroLiquidacion,
+                                formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacion,
                                                                                             parametros, listaCriterioReteFuente.ToList());
                             }
                         }
                         else
                         {
-                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoDto2, parametroLiquidacion,
+                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacion,
                                                                                                     parametros, listaCriterioReteFuente.ToList(),
                                                                                                     listaDeduccionesDto.ToList());
                         }
@@ -123,7 +122,7 @@ namespace ComplementApp.API.Services
                     {
                         if (parametroLiquidacion.TipoPago == (int)TipoPago.Fijo)
                         {
-                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoDto2, parametroLiquidacion,
+                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacion,
                                                                                                     parametros, listaCriterioReteFuente.ToList(),
                                                                                                     listaDeduccionesDto.ToList());
                         }
@@ -131,7 +130,7 @@ namespace ComplementApp.API.Services
                         {
                             valorBaseGravable = solicitudPago.ValorBaseGravableRenta;
 
-                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(planPagoDto2, solicitudPago,
+                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(solicitudPago,
                                                                         parametroLiquidacion,
                                                                         parametros, listaCriterioReteFuente.ToList(),
                                                                         listaDeduccionesDto.ToList(), valorBaseGravable);
@@ -140,11 +139,12 @@ namespace ComplementApp.API.Services
                     }
                     else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorSinDescuento)
                     {
-                        formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto2, parametroLiquidacion,
+                        formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacion,
                                                                                   parametros, listaCriterioReteFuente.ToList());
                     }
 
                     formato.PlanPagoId = planPagoId;
+                    formato.FormatoSolicitudPagoId = solicitudPago.FormatoSolicitudPagoId;
                 }
             }
             catch (Exception)
@@ -156,7 +156,8 @@ namespace ComplementApp.API.Services
 
         #region Contrato Prestación de Servicio
 
-        private async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacion_ContratoPrestacionServicio(DetallePlanPagoDto planPago,
+        private async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacion_ContratoPrestacionServicio(
+                                            FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
                                             List<CriterioCalculoReteFuente> listaCriterioReteFuente,
@@ -180,7 +181,7 @@ namespace ComplementApp.API.Services
 
             #region Parametros de liquidación de tercero
 
-            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, solicitudPago.ValorFacturado);
 
             var tarifaIva = parametroLiquidacion.TarifaIva;
             var GmfAfc = parametroLiquidacion.GmfAfc;
@@ -208,7 +209,7 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIva > 0)
             {
-                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIvaParametro);
+                valor = (((solicitudPago.ValorFacturado / (1 + tarifaIva)) * 30) / PL17HonorarioSinIvaParametro);
                 C32NumeroDiaLaborados = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                 factorCalculo = ((decimal)C32NumeroDiaLaborados / (decimal)30);
             }
@@ -217,8 +218,8 @@ namespace ComplementApp.API.Services
 
             #region Calcular valores y obtener formato
 
-            formatoIgual = await CalcularValoresFormatoContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30, factorCalculo);
-            formatoIgual30 = await CalcularValoresBaseGravableParaContratoPrestacionServicio(planPago, parametroLiquidacion, parametroGenerales);
+            formatoIgual = await CalcularValoresFormatoContratoPrestacionServicio(solicitudPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30, factorCalculo);
+            formatoIgual30 = await CalcularValoresBaseGravableParaContratoPrestacionServicio(solicitudPago, parametroLiquidacion, parametroGenerales);
 
             formato = formatoIgual;
             baseGravableUvtCalculada = formatoIgual30.BaseGravableUvtCalculada;
@@ -381,7 +382,7 @@ namespace ComplementApp.API.Services
         }
 
         private async Task<FormatoCausacionyLiquidacionPagos> CalcularValoresFormatoContratoPrestacionServicio(
-                                            DetallePlanPagoDto planPago,
+                                            FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
                                             int numeroDiasLaborados,
@@ -429,7 +430,7 @@ namespace ComplementApp.API.Services
             PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
             PL14Afc = parametroLiquidacion.Afc;
             PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
-            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, solicitudPago.ValorFacturado);
             PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
 
             if (factorCalculo == 1)
@@ -461,14 +462,14 @@ namespace ComplementApp.API.Services
 
             #region Viaticos y Aporte Salud Anterior
 
-            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId, parametroLiquidacion.PciId.Value);
+            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(solicitudPago.TerceroId, parametroLiquidacion.PciId.Value);
 
             if (listaDetalleLiquidacionViaticos != null && listaDetalleLiquidacionViaticos.Count > 0)
             {
                 viaticosPagados = ObtenerValorViaticosAnteriores(listaDetalleLiquidacionViaticos.ToList());
             }
 
-            var detalleLiquidacionAnterior = await _repo.ObtenerDetalleLiquidacionAnterior(planPago.TerceroId, parametroLiquidacion.PciId.Value);
+            var detalleLiquidacionAnterior = await _repo.ObtenerDetalleLiquidacionAnterior(solicitudPago.TerceroId, parametroLiquidacion.PciId.Value);
 
             if (detalleLiquidacionAnterior != null)
             {
@@ -652,7 +653,7 @@ namespace ComplementApp.API.Services
             formato.Honorario = C1honorario;
             formato.HonorarioUvt = C2honorarioUvtFinal;
             formato.ValorIva = C3valorIva;
-            formato.ValorTotal = planPago.ValorFacturado.Value;
+            formato.ValorTotal = solicitudPago.ValorFacturado;
             formato.BaseSalud = C7baseAporteSalud;
             formato.AporteSalud = C8aporteASalud;
             formato.AportePension = C9aporteAPension;
@@ -682,7 +683,7 @@ namespace ComplementApp.API.Services
         }
 
         private async Task<FormatoCausacionyLiquidacionPagos> CalcularValoresBaseGravableParaContratoPrestacionServicio(
-                                                 DetallePlanPagoDto planPago,
+                                                 FormatoSolicitudPago solicitudPago,
                                                  ParametroLiquidacionTercero parametroLiquidacion,
                                                  List<ParametroGeneral> parametroGenerales)
         {
@@ -753,7 +754,7 @@ namespace ComplementApp.API.Services
 
             #region Viaticos y Aporte Salud Anterior
 
-            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(planPago.TerceroId, parametroLiquidacion.PciId.Value);
+            var listaDetalleLiquidacionViaticos = await _repo.ObtenerListaDetalleLiquidacionViaticosAnterior(solicitudPago.TerceroId, parametroLiquidacion.PciId.Value);
 
             if (listaDetalleLiquidacionViaticos != null && listaDetalleLiquidacionViaticos.Count > 0)
             {
@@ -943,7 +944,7 @@ namespace ComplementApp.API.Services
 
         #region Proveedores con deducción
 
-        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(PlanPagoDto planPago,
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(FormatoSolicitudPago solicitudPago,
                                                     ParametroLiquidacionTercero parametroLiquidacion,
                                                     List<ParametroGeneral> parametroGenerales,
                                                     List<CriterioCalculoReteFuente> listaCriterioReteFuente,
@@ -993,9 +994,9 @@ namespace ComplementApp.API.Services
             formato.TotalRentaExenta = 0;
             formato.DiferencialRenta = 0;
 
-            C31Honorario = planPago.ValorFacturado / (1 + PLTarifaIva);
+            C31Honorario = solicitudPago.ValorFacturado / (1 + PLTarifaIva);
 
-            C30ValorIva = planPago.ValorFacturado - C31Honorario;
+            C30ValorIva = solicitudPago.ValorFacturado - C31Honorario;
 
             C31HonorarioUvt = C31Honorario / valorUvt;
             honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
@@ -1009,7 +1010,7 @@ namespace ComplementApp.API.Services
             formato.ValorIva = C30ValorIva;
             formato.Honorario = C31Honorario;
             formato.HonorarioUvt = honorarioUvt;
-            formato.ValorTotal = planPago.ValorFacturado;
+            formato.ValorTotal = solicitudPago.ValorFacturado;
             formato.BaseGravableUvtCalculada = baseGravableUvtCalculada;
 
             #endregion Calcular valores y obtener formato
@@ -1072,7 +1073,7 @@ namespace ComplementApp.API.Services
         }
 
 
-        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(PlanPagoDto planPago,
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(
                                             FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
@@ -1132,7 +1133,7 @@ namespace ComplementApp.API.Services
                 C30ValorIva = solicitudPago.ValorIva;
             }
 
-            C31Honorario = planPago.ValorFacturado - C30ValorIva;
+            C31Honorario = solicitudPago.ValorFacturado - C30ValorIva;
             C31HonorarioUvt = C31Honorario / valorUvt;
             honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
 
@@ -1145,7 +1146,7 @@ namespace ComplementApp.API.Services
             formato.ValorIva = C30ValorIva;
             formato.Honorario = C31Honorario;
             formato.HonorarioUvt = honorarioUvt;
-            formato.ValorTotal = planPago.ValorFacturado;
+            formato.ValorTotal = solicitudPago.ValorFacturado;
 
             #endregion Calcular valores y obtener formato
 
@@ -1210,7 +1211,7 @@ namespace ComplementApp.API.Services
 
         #region Proveeedores sin Deducción
 
-        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresSinDeduccion(PlanPagoDto planPago,
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ProveedoresSinDeduccion(FormatoSolicitudPago solicitudPago,
                                                           ParametroLiquidacionTercero parametroLiquidacion,
                                                           List<ParametroGeneral> parametroGenerales,
                                                           List<CriterioCalculoReteFuente> listaCriterioReteFuente)
@@ -1254,8 +1255,8 @@ namespace ComplementApp.API.Services
             formato.TotalRentaExenta = 0;
             formato.DiferencialRenta = 0;
 
-            C31Honorario = (planPago.ValorFacturado) / (1 + PLTarifaIva);
-            C30ValorIva = planPago.ValorFacturado - C31Honorario;
+            C31Honorario = (solicitudPago.ValorFacturado) / (1 + PLTarifaIva);
+            C30ValorIva = solicitudPago.ValorFacturado - C31Honorario;
 
             C31HonorarioUvt = C31Honorario / valorUvt;
             honorarioUvt = (int)Math.Round(C31HonorarioUvt, 0, MidpointRounding.AwayFromZero);
@@ -1269,7 +1270,7 @@ namespace ComplementApp.API.Services
             formato.ValorIva = C30ValorIva;
             formato.Honorario = C31Honorario;
             formato.HonorarioUvt = honorarioUvt;
-            formato.ValorTotal = planPago.ValorFacturado;
+            formato.ValorTotal = solicitudPago.ValorFacturado;
 
             #endregion Calcular valores y obtener formato
 
@@ -1287,7 +1288,7 @@ namespace ComplementApp.API.Services
         #region Liquidación Masiva
 
         public async Task<bool> RegistrarListaDetalleLiquidacion(int usuarioId, int pciId,
-                                                                string listaPlanPagoId,
+                                                                string listaSolicitudPagoId,
                                                                 List<int> listIds,
                                                                 bool esSeleccionarTodo, int? terceroId)
         {
@@ -1316,15 +1317,15 @@ namespace ComplementApp.API.Services
                 userParams.PageNumber = 1;
                 userParams.PciId = pciId;
 
-                var pagedList = await _planPagoRepository.ObtenerListaPlanPago(terceroId, listIds, userParams);
+                var pagedList = await _solicitudPagoRepository.ObtenerListaSolicitudPagoPaginada(terceroId, listIds, userParams);
 
                 for (int i = 1; i <= pagedList.TotalPages; i++)
                 {
                     userParams.PageNumber = i;
 
                     //Obtener lista de planes de pagos a procesar: 500 items x Lote
-                    var paginacion = await _planPagoRepository.ObtenerListaPlanPago(terceroId, listIds, userParams);
-                    var lista = _mapper.Map<IEnumerable<PlanPago>>(paginacion);
+                    var paginacion = await _solicitudPagoRepository.ObtenerListaSolicitudPagoPaginada(terceroId, listIds, userParams);
+                    var lista = _mapper.Map<IEnumerable<FormatoSolicitudPagoDto>>(paginacion);
 
                     //Filtrar lista de planes de pago
                     //listaPlanPago = FiltrarListaPlanesPago(lista);
@@ -1338,13 +1339,10 @@ namespace ComplementApp.API.Services
             {
                 #region Procesar por lista de ids
 
-                if (!string.IsNullOrEmpty(listaPlanPagoId))
+                if (!string.IsNullOrEmpty(listaSolicitudPagoId))
                 {
-                    List<int> listaPlanPagoIds = listaPlanPagoId.Split(',').Select(int.Parse).ToList();
-                    var lista = await _planPagoRepository.ObtenerListaPlanPagoXIds(listaPlanPagoIds);
-
-                    //Filtrar lista de planes de pago
-                    //listaPlanPago = FiltrarListaPlanesPago(lista);
+                    List<int> listaIds = listaSolicitudPagoId.Split(',').Select(int.Parse).ToList();
+                    var lista = await _solicitudPagoRepository.ObtenerListaSolicitudPagoXId(listaIds);
 
                     await ProcesarLiquidacionMasiva(usuarioId, pciId, lista);
                 }
@@ -1357,7 +1355,7 @@ namespace ComplementApp.API.Services
 
 
         public List<DetalleLiquidacion> ObtenerListaDetalleLiquidacionARegistrar(int usuarioId, int pciId,
-                                                                                    List<PlanPago> listaPlanPago,
+                                                                                    List<FormatoSolicitudPagoDto> listaSolicitud,
                                                                                     List<FormatoSolicitudPago> listaSolicitudPago,
                                                                                     List<DetallePlanPagoDto> listaDetallePlanPago,
                                                                                     List<ParametroLiquidacionTercero> listaParametroLiquidacionTercero,
@@ -1369,33 +1367,30 @@ namespace ComplementApp.API.Services
             List<DetalleLiquidacion> listaDetalleLiquidacion = new List<DetalleLiquidacion>();
 
             FormatoCausacionyLiquidacionPagos formato = null;
+            FormatoSolicitudPago solicitudPago = null;
             List<DeduccionDto> listaDeduccionesDto = null;
             ParametroLiquidacionTercero parametroLiquidacionTercero = null;
             DetallePlanPagoDto detallePlanPago = null;
             DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
             DetalleLiquidacion detalleLiquidacionMesAnterior = null;
             List<DetalleLiquidacion> listaLiquidacionMesAnteriorViaticoXTercero = null;
-            FormatoSolicitudPago solicitudPago = null;
             List<TerceroDeduccion> listaDeduccionesXTerceroyActividadEconomica = null;
             decimal valorBaseGravable = 0;
-            PlanPagoDto planPagoDto = null;
 
             try
             {
-                if (listaPlanPago != null && listaPlanPago.Count > 0)
+
+                if (listaSolicitud != null && listaSolicitud.Count > 0)
                 {
-                    foreach (var planPago in listaPlanPago)
+                    foreach (var solicitud in listaSolicitud)
                     {
                         try
                         {
                             detalleLiquidacion = new DetalleLiquidacion();
 
-                            planPagoDto = new PlanPagoDto();
-                            planPagoDto.ValorFacturado = planPago.ValorFacturado.Value;
-
-                            parametroLiquidacionTercero = listaParametroLiquidacionTercero.Where(x => x.TerceroId == planPago.TerceroId).FirstOrDefault();
-                            detallePlanPago = listaDetallePlanPago.Where(x => x.PlanPagoId == planPago.PlanPagoId).FirstOrDefault();
-                            solicitudPago = listaSolicitudPago.Where(x => x.PlanPagoId == planPago.PlanPagoId).FirstOrDefault();
+                            parametroLiquidacionTercero = listaParametroLiquidacionTercero.Where(x => x.TerceroId == solicitud.Tercero.TerceroId).FirstOrDefault();
+                            detallePlanPago = listaDetallePlanPago.Where(x => x.FormatoSolicitudPagoId == solicitud.FormatoSolicitudPagoId).FirstOrDefault();
+                            solicitudPago = listaSolicitudPago.Where(x => x.FormatoSolicitudPagoId == solicitud.FormatoSolicitudPagoId).FirstOrDefault();
 
                             if (detallePlanPago != null)
                             {
@@ -1403,33 +1398,33 @@ namespace ComplementApp.API.Services
                                 listaDeduccionesXTerceroyActividadEconomica = FiltrarListaDeduccionesXTerceroyActividadEconomica(listaDeduccionesXTercero, solicitudPago);
 
                                 var listaDeduccion = listaDeduccionesXTerceroyActividadEconomica
-                                                    .Where(x => x.TerceroId == planPago.TerceroId)
+                                                    .Where(x => x.TerceroId == solicitud.Tercero.TerceroId)
                                                     .Select(x => x.Deduccion)
                                                     .ToList();
 
                                 var lista = _mapper.Map<ICollection<DeduccionDto>>(listaDeduccion);
                                 listaDeduccionesDto = lista.ToList();
 
-                                if (planPago.Tercero.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
+                                if (solicitud.Tercero.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                                 {
                                     if (!parametroLiquidacionTercero.Subcontrata)
                                     {
-                                        if (!planPago.Viaticos)
+                                        if (!solicitud.PlanPago.Viaticos)
                                         {
                                             if (listaDetalleLiquidacionMesAnterior != null && listaDetalleLiquidacionMesAnterior.Count > 0)
                                             {
                                                 detalleLiquidacionMesAnterior = listaDetalleLiquidacionMesAnterior
-                                                                                .Where(x => x.TerceroId == planPago.TerceroId)
+                                                                                .Where(x => x.TerceroId == solicitudPago.TerceroId)
                                                                                 .FirstOrDefault();
                                             }
                                             if (listaDetalleLiquidacionMesAnteriorViatico != null && listaDetalleLiquidacionMesAnteriorViatico.Count > 0)
                                             {
                                                 listaLiquidacionMesAnteriorViaticoXTercero = listaDetalleLiquidacionMesAnteriorViatico
-                                                                                            .Where(x => x.TerceroId == planPago.TerceroId)
+                                                                                            .Where(x => x.TerceroId == solicitudPago.TerceroId)
                                                                                             .ToList();
                                             }
 
-                                            formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(planPago, parametroLiquidacionTercero,
+                                            formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacionTercero,
                                                                                         listaParametrosGenerales, listaCriterioCalculoReteFuente,
                                                                                         listaDeduccionesDto.ToList(),
                                                                                         listaLiquidacionMesAnteriorViaticoXTercero,
@@ -1438,24 +1433,24 @@ namespace ComplementApp.API.Services
                                         else
                                         {
                                             //Contratistas con viaticos liquida de otra manera
-                                            formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto, parametroLiquidacionTercero,
+                                            formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacionTercero,
                                                                                                         listaParametrosGenerales, listaCriterioCalculoReteFuente);
                                         }
                                     }
                                     else
                                     {
-                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoDto, parametroLiquidacionTercero,
+                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacionTercero,
                                                                                                         listaParametrosGenerales,
                                                                                                         listaCriterioCalculoReteFuente,
                                                                                                         listaDeduccionesDto.ToList());
                                     }
                                 }
-                                else if (planPago.Tercero.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
+                                else if (solicitud.Tercero.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
                                 {
 
-                                    if (planPago.Tercero.TipoPago == (int)TipoPago.Fijo)
+                                    if (solicitud.Tercero.TipoPago == (int)TipoPago.Fijo)
                                     {
-                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(planPagoDto, parametroLiquidacionTercero,
+                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacionTercero,
                                                                                                         listaParametrosGenerales,
                                                                                                         listaCriterioCalculoReteFuente,
                                                                                                         listaDeduccionesDto.ToList());
@@ -1464,15 +1459,15 @@ namespace ComplementApp.API.Services
                                     {
                                         valorBaseGravable = solicitudPago.ValorBaseGravableRenta;
 
-                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(planPagoDto, solicitudPago, parametroLiquidacionTercero,
+                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(solicitudPago, parametroLiquidacionTercero,
                                                                                     listaParametrosGenerales, listaCriterioCalculoReteFuente,
                                                                                     listaDeduccionesDto.ToList(), valorBaseGravable);
                                     }
 
                                 }
-                                else if (planPago.Tercero.ModalidadContrato == (int)ModalidadContrato.ProveedorSinDescuento)
+                                else if (solicitud.Tercero.ModalidadContrato == (int)ModalidadContrato.ProveedorSinDescuento)
                                 {
-                                    formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(planPagoDto, parametroLiquidacionTercero,
+                                    formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacionTercero,
                                                                                               listaParametrosGenerales,
                                                                                               listaCriterioCalculoReteFuente);
                                 }
@@ -1483,9 +1478,10 @@ namespace ComplementApp.API.Services
                                 formato.TextoComprobanteContable = detallePlanPago.TextoComprobanteContable;
                                 MapearFormatoLiquidacion(formato, detalleLiquidacion);
 
+                                detalleLiquidacion.FormatoSolicitudPagoId = solicitud.FormatoSolicitudPagoId;
                                 detalleLiquidacion.MesSaludActual = fechaActual.Month;
                                 detalleLiquidacion.MesPagoActual = fechaActual.Month;
-                                detalleLiquidacion.ModalidadContrato = planPago.Tercero.ModalidadContrato;
+                                detalleLiquidacion.ModalidadContrato = solicitud.Tercero.ModalidadContrato;
                                 detalleLiquidacion.UsuarioIdRegistro = usuarioId;
                                 detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                                 detalleLiquidacion.PciId = pciId;
@@ -1514,7 +1510,7 @@ namespace ComplementApp.API.Services
 
         #region Contrato Prestación de Servicio
 
-        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(PlanPago planPago,
+        private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
                                             List<CriterioCalculoReteFuente> listaCriterioReteFuente,
@@ -1539,7 +1535,7 @@ namespace ComplementApp.API.Services
 
             #region Parametros de liquidación de tercero
 
-            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, solicitudPago.ValorFacturado);
             PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
 
             var tarifaIva = parametroLiquidacion.TarifaIva;
@@ -1567,7 +1563,7 @@ namespace ComplementApp.API.Services
 
             if (PL17HonorarioSinIva > 0)
             {
-                valor = (((planPago.ValorFacturado.Value / (1 + tarifaIva)) * 30) / PL17HonorarioSinIvaParametro);
+                valor = (((solicitudPago.ValorFacturado / (1 + tarifaIva)) * 30) / PL17HonorarioSinIvaParametro);
                 C32NumeroDiaLaborados = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                 factorCalculo = ((decimal)C32NumeroDiaLaborados / (decimal)30);
             }
@@ -1576,13 +1572,15 @@ namespace ComplementApp.API.Services
 
             #region Calcular valores y obtener formato
 
-            formatoIgual = CalcularValoresFormatoContratoPrestacionServicioMasivo(planPago, parametroLiquidacion,
+            formatoIgual = CalcularValoresFormatoContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacion,
                                                                                 parametroGenerales, numeroDiasLaborados: 30,
                                                                                 listaDetalleLiquidacionMesAnteriorViatico,
                                                                                 detalleLiquidacionMesAnterior,
                                                                                 factorCalculo);
 
-            formatoIgual30 = CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(planPago, parametroLiquidacion, parametroGenerales, listaDetalleLiquidacionMesAnteriorViatico);
+            formatoIgual30 = CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacion,
+                                                                                                parametroGenerales,
+                                                                                                listaDetalleLiquidacionMesAnteriorViatico);
 
             formato = formatoIgual;
             baseGravableUvtCalculada = formatoIgual30.BaseGravableUvtCalculada;
@@ -1685,7 +1683,7 @@ namespace ComplementApp.API.Services
 
 
         private FormatoCausacionyLiquidacionPagos CalcularValoresFormatoContratoPrestacionServicioMasivo(
-                                            PlanPago planPago,
+                                            FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
                                             int numeroDiasLaborados,
@@ -1736,7 +1734,7 @@ namespace ComplementApp.API.Services
             PLfondoSolidaridad = parametroLiquidacion.FondoSolidaridad;
             PL14Afc = parametroLiquidacion.Afc;
             PL16MedicinaPrepagada = parametroLiquidacion.MedicinaPrepagada;
-            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, planPago.ValorFacturado.Value);
+            PL17HonorarioSinIva = ObtenerHonorarioSinIva(parametroLiquidacion, solicitudPago.ValorFacturado);
             PL17HonorarioSinIvaParametro = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
             PL17DescuentoDependiente = parametroLiquidacion.Dependiente;
             PL18InteresVivienda = parametroLiquidacion.InteresVivienda;
@@ -1952,7 +1950,7 @@ namespace ComplementApp.API.Services
             formato.Honorario = C1honorario;
             formato.HonorarioUvt = C2honorarioUvtFinal;
             formato.ValorIva = C3valorIva;
-            formato.ValorTotal = planPago.ValorFacturado.Value;
+            formato.ValorTotal = solicitudPago.ValorFacturado;
             formato.BaseSalud = C7baseAporteSalud;
             formato.AporteSalud = C8aporteASalud;
             formato.AportePension = C9aporteAPension;
@@ -1982,7 +1980,7 @@ namespace ComplementApp.API.Services
         }
 
         private FormatoCausacionyLiquidacionPagos CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(
-                                                          PlanPago planPago,
+                                                          FormatoSolicitudPago solicitudPago,
                                                           ParametroLiquidacionTercero parametroLiquidacion,
                                                           List<ParametroGeneral> parametroGenerales,
                                                           List<DetalleLiquidacion> listaDetalleLiquidacionMesAnteriorViatico)
@@ -2244,7 +2242,7 @@ namespace ComplementApp.API.Services
 
         #region Liquidación Masiva
 
-        private async Task ProcesarLiquidacionMasiva(int usuarioId, int pciId, List<PlanPago> listaPlanPago)
+        private async Task ProcesarLiquidacionMasiva(int usuarioId, int pciId, List<FormatoSolicitudPagoDto> listaSolicitud)
         {
             List<FormatoSolicitudPago> listaSolicitudPago = null;
             List<ParametroLiquidacionTercero> listaParametroLiquidacionTercero = null;
@@ -2257,24 +2255,26 @@ namespace ComplementApp.API.Services
             List<LiquidacionDeduccion> listaLiquidacionDeduccionARegistrar = new List<LiquidacionDeduccion>();
             List<long> compromisos = new List<long>();
             int planPagoEstado_ConLiquidacionDeducciones = (int)EstadoPlanPago.ConLiquidacionDeducciones;
+            int solicitudPago_ConLiquidacionDeducciones = (int)EstadoSolicitudPago.ConLiquidacionDeducciones;
 
             #region Obtener listas secundarias
 
-            var planPagoIds = listaPlanPago.Select(x => x.PlanPagoId).ToHashSet().ToList();
+            var planPagoIds = listaSolicitud.Select(x => x.PlanPagoId).ToHashSet().ToList();
+            var solicitudPagoIds = listaSolicitud.Select(x => x.FormatoSolicitudPagoId).ToHashSet().ToList();
 
             //Obtener lista de detalle de plan de pago            
-            listaDetallePlanPago = await ObtenerListaDetallePlanPagoXIds(planPagoIds);
+            listaDetallePlanPago = await ObtenerListaDetallePlanPagoXIds(solicitudPagoIds);
 
             compromisos = listaDetallePlanPago.Select(x => x.Crp).ToHashSet().ToList();
             listaCantidadMaximaXPlanPago = await ObtenerListaCantidadMaximaPlanPago(compromisos, pciId);
             ActualizarListaDetallePlanPago(listaDetallePlanPago, listaCantidadMaximaXPlanPago);
 
-            var terceroIds = listaPlanPago.Select(x => x.TerceroId).ToHashSet().ToList();
+            var terceroIds = listaSolicitud.Select(x => x.Tercero.TerceroId).ToHashSet().ToList();
             //Obtener lista de parametros de liquidacion de terceros
             listaParametroLiquidacionTercero = await ObtenerListaParametroLiquidacionTerceroXIds(terceroIds, pciId);
 
             //Obtener lista de solicitudes de pago
-            listaSolicitudPago = await ObtenerListaSolicitudPagoXPlanPagoIds(planPagoIds);
+            listaSolicitudPago = await ObtenerListaFormatoSolicitudPagoBase(solicitudPagoIds);
 
             //Obtener dededucciones de terceros
             listaDeduccionesXTercero = await ObtenerListaDeduccionesXTerceroIds(terceroIds, pciId);
@@ -2289,7 +2289,7 @@ namespace ComplementApp.API.Services
 
             //Proceso de obtención de detalles de liquidación
             listaDetalleLiquidacionARegistrar = ObtenerListaDetalleLiquidacionARegistrar(usuarioId, pciId,
-                                                                                listaPlanPago,
+                                                                                listaSolicitud,
                                                                                 listaSolicitudPago,
                                                                                 listaDetallePlanPago,
                                                                                 listaParametroLiquidacionTercero,
@@ -2300,6 +2300,8 @@ namespace ComplementApp.API.Services
             #region Proceso de Actualización de BD
 
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            #region Registrar Detalle de Liquidacion
 
             var bulkConfig = new BulkConfig { PreserveInsertOrder = true, SetOutputIdentity = true };
 
@@ -2329,18 +2331,41 @@ namespace ComplementApp.API.Services
 
             await _dataContext.BulkInsertAsync(listaLiquidacionDeduccionARegistrar);
 
-            //Actualización de Plan
-            var q = from pp in _dataContext.PlanPago
-                    where planPagoIds.Contains(pp.PlanPagoId)
-                    select pp;
+            #endregion Registrar Detalle de Liquidacion
 
-            int affected = q.BatchUpdate(new PlanPago
+            #region Actualización Solicitud de Pago
+
+            var listaSolicitudPagoBase = from pp in _dataContext.FormatoSolicitudPago
+                                         where solicitudPagoIds.Contains(pp.FormatoSolicitudPagoId)
+                                         select pp;
+
+            listaSolicitudPagoBase.BatchUpdate(new FormatoSolicitudPago
+            {
+                EstadoId = solicitudPago_ConLiquidacionDeducciones,
+                UsuarioIdModificacion = usuarioId,
+                FechaModificacion = _generalInterface.ObtenerFechaHoraActual(),
+            });
+            _dataContext.SaveChanges();
+
+            #endregion Actualización Solicitud de Pago
+
+            #region Actualización de Plan de Pago
+
+            var listaPlanPagoParaCompromisoIds = ObtenerListaPlanPagoParaCompromiso(compromisos, pciId);
+
+            var listaPlanPagoBase = from pp in _dataContext.PlanPago
+                                    where listaPlanPagoParaCompromisoIds.Contains(pp.PlanPagoId)
+                                    select pp;
+
+            listaPlanPagoBase.BatchUpdate(new PlanPago
             {
                 EstadoPlanPagoId = planPagoEstado_ConLiquidacionDeducciones,
                 UsuarioIdModificacion = usuarioId,
                 FechaModificacion = _generalInterface.ObtenerFechaHoraActual(),
             });
             _dataContext.SaveChanges();
+
+            #endregion Actualización de Plan de Pago
 
             await transaction.CommitAsync();
 
@@ -2391,6 +2416,12 @@ namespace ComplementApp.API.Services
             return lista.ToList();
         }
 
+        private List<int> ObtenerListaPlanPagoParaCompromiso(List<long> compromisos, int pciId)
+        {
+            var lista = _planPagoRepository.ObtenerListaPlanPagoParaCompromiso(compromisos, pciId);
+            return lista;
+        }
+
         private async Task<List<ParametroLiquidacionTercero>> ObtenerListaParametroLiquidacionTerceroXIds(List<int> terceroIds, int pciId)
         {
             var listaParametroLiquidacion = await _terceroRepository.ObtenerListaParametroLiquidacionTerceroXIds(terceroIds, pciId);
@@ -2403,9 +2434,9 @@ namespace ComplementApp.API.Services
             return listaDeducciones.ToList();
         }
 
-        private async Task<List<FormatoSolicitudPago>> ObtenerListaSolicitudPagoXPlanPagoIds(List<int> planPagoIds)
+        private async Task<List<FormatoSolicitudPago>> ObtenerListaFormatoSolicitudPagoBase(List<int> listaIds)
         {
-            var lista = await _solicitudPagoRepository.ObtenerListaSolicitudPagoXPlanPagoIds(planPagoIds);
+            var lista = await _solicitudPagoRepository.ObtenerListaFormatoSolicitudPagoBase(listaIds);
             return lista.ToList();
         }
 
@@ -2421,9 +2452,9 @@ namespace ComplementApp.API.Services
             return lista.ToList();
         }
 
-        private async Task<List<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaPlanPagoIds)
+        private async Task<List<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaSolicitudPagoIds)
         {
-            var lista = await _planPagoRepository.ObtenerListaDetallePlanPagoXIds(listaPlanPagoIds);
+            var lista = await _planPagoRepository.ObtenerListaDetallePlanPagoXIds(listaSolicitudPagoIds);
             return lista.ToList();
         }
 
