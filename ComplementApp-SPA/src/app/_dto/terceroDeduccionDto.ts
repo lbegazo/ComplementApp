@@ -11,4 +11,6 @@ export interface TerceroDeduccionDto {
   actividadEconomica: ValorSeleccion;
   terceroDeDeduccion: ValorSeleccion;
   estadoModificacion: number;
+  esValorFijo: boolean;
+  valorFijo: number;
 }

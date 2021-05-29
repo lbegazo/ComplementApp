@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210529171334_TDeduccion_AddValorFijo")]
+    partial class TDeduccion_AddValorFijo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -663,9 +665,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("ClavePresupuestalContableId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Dependencia")
                         .HasColumnType("VARCHAR(15)");
 
@@ -679,8 +678,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("decimal(30,8)");
 
                     b.HasKey("DetalleFormatoSolicitudPagoId");
-
-                    b.HasIndex("ClavePresupuestalContableId");
 
                     b.HasIndex("FormatoSolicitudPagoId");
 
@@ -2486,10 +2483,6 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
                 {
-                    b.HasOne("ComplementApp.API.Models.ClavePresupuestalContable", "ClavePresupuestalContable")
-                        .WithMany()
-                        .HasForeignKey("ClavePresupuestalContableId");
-
                     b.HasOne("ComplementApp.API.Models.FormatoSolicitudPago", "FormatoSolicitudPago")
                         .WithMany("DetallesFormatoSolicitudPago")
                         .HasForeignKey("FormatoSolicitudPagoId")
@@ -2501,8 +2494,6 @@ namespace ComplementApp.API.Migrations
                         .HasForeignKey("RubroPresupuestalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ClavePresupuestalContable");
 
                     b.Navigation("FormatoSolicitudPago");
 

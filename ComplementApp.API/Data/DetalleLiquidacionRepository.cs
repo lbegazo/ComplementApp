@@ -157,7 +157,6 @@ namespace ComplementApp.API.Data
 
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
-                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
@@ -165,7 +164,6 @@ namespace ComplementApp.API.Data
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
                          where dl.PciId == userParams.PciId
-                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          where (c.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
@@ -284,7 +282,6 @@ namespace ComplementApp.API.Data
         {
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
-                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
@@ -292,7 +289,6 @@ namespace ComplementApp.API.Data
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
                          where (c.TerceroId == terceroId || terceroId == null)
-                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          where (dl.Procesado == procesado || procesado == null)
                          select dl.DetalleLiquidacionId);
 
@@ -350,15 +346,12 @@ namespace ComplementApp.API.Data
 
             var lista = (from dl in _context.DetalleLiquidacion
                          join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
-                         join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
-                         where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
                          where dl.PciId == userParams.PciId
-                         where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                          where (dl.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
                          select new FormatoCausacionyLiquidacionPagos()
@@ -408,15 +401,12 @@ namespace ComplementApp.API.Data
         {
             var lista = await (from dl in _context.DetalleLiquidacion
                                join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
-                               join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                                join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
                                where dl.PciId == c.PciId
                                where dl.PciId == pl.PciId
                                where dl.PciId == pciId
-                               where (listaEstadoId.Contains(c.EstadoPlanPagoId.Value))
-                               where (c.EstadoPlanPagoId == (int)EstadoPlanPago.ConLiquidacionDeducciones)
                                where (dl.TerceroId == terceroId || terceroId == null)
                                where (dl.Procesado == procesado || procesado == null)
 
@@ -430,8 +420,7 @@ namespace ComplementApp.API.Data
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
-                               join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
-                               join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
+                               join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where sp.PciId == dl.PciId
                                where sp.PciId == cp.PciId
@@ -439,8 +428,7 @@ namespace ComplementApp.API.Data
                                where listaLiquidacionId.Contains(dl.DetalleLiquidacionId)
                                where sp.PlanPagoId == dl.PlanPagoId
                                where sp.Crp == cp.Crp
-                               where sp.EstadoId == (int)EstadoSolicitudPago.Aprobado
-                               where cpc.Dependencia == cp.Dependencia
+                               where sp.EstadoId == (int)EstadoSolicitudPago.ConLiquidacionDeducciones
                                select dl.DetalleLiquidacionId)
 
                                .Distinct()
@@ -504,7 +492,7 @@ namespace ComplementApp.API.Data
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
-                               join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
+                               join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join rc in _context.RelacionContable on cp.RelacionContableId equals rc.RelacionContableId
                                join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
                                join sf in _context.SituacionFondo on cp.SituacionFondoId equals sf.SituacionFondoId
@@ -519,7 +507,6 @@ namespace ComplementApp.API.Data
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
-                               where cpc.Dependencia == cp.Dependencia
                                select new ClavePresupuestalContableParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,
@@ -576,7 +563,7 @@ namespace ComplementApp.API.Data
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
                                join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
-                               join cp in _context.ClavePresupuestalContable on rp.RubroPresupuestalId equals cp.RubroPresupuestalId
+                               join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where (sp.PciId == dl.PciId)
                                where (sp.PciId == cp.PciId)
@@ -584,7 +571,6 @@ namespace ComplementApp.API.Data
                                where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
                                where (sp.PlanPagoId == dl.PlanPagoId)
                                where (sp.Crp == cp.Crp)
-                               where cpc.Dependencia == cp.Dependencia
                                select new DetalleLiquidacionParaArchivo()
                                {
                                    DetalleLiquidacionId = dl.DetalleLiquidacionId,

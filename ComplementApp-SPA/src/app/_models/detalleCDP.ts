@@ -39,4 +39,5 @@ export class DetalleCDP {
   dependenciaId: number;
   rubroPresupuestal: RubroPresupuestal;
   cdpDocumento: Cdp;
+  clavePresupuestalContableId: number;
 }

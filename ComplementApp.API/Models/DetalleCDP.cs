@@ -87,6 +87,8 @@ namespace ComplementApp.API.Models
 
         [NotMapped]
         public decimal ValorTotal { get; set; }
+        [NotMapped]
+        public int? ClavePresupuestalContableId { get; set; }
 
     }
 }

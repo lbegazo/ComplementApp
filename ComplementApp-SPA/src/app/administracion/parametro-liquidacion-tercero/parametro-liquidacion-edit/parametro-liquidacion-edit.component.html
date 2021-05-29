@@ -1052,20 +1052,17 @@
                               readonly
                             />
                           </div>
-                          <div class="form-group col-md-1">
-                            <table>
-                              <tr style="vertical-align: bottom">
-                                <td style="padding-top: 15px">
-                                  <button
-                                    type="submit"
-                                    class="btn btn-warning mr-2"
-                                    (click)="exportarExcel()"
-                                  >
-                                    Reporte
-                                  </button>
-                                </td>
-                              </tr>
-                            </table>
+                          <div
+                            class="form-group col-md-1"
+                            style="padding-top: 20px"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-warning mr-2"
+                              (click)="exportarExcel()"
+                            >
+                              Reporte
+                            </button>
                           </div>
                         </div>
                         <div class="form-row">
@@ -1100,7 +1097,7 @@
                               {{ errorMessage }}
                             </div>
                           </div>
-                          <div class="form-group col-md-8">
+                          <div class="form-group col-md-7">
                             <label
                               for="inputDeduccion"
                               class="col-form-label-md"
@@ -1122,6 +1119,29 @@
                               id="inputDeduccion"
                               value="{{ deduccion?.nombre }}"
                             />
+                          </div>
+                          <!--VALOR-->
+                          <div class="form-group col-md-2" style="margin: 0px">
+                            <label for="inputValor" class="col-form-label-md"
+                              >Valor Fijo</label
+                            >
+                            <input
+                              [ngClass]="{
+                                'is-invalid':
+                                editForm.get('valorFijoCtrl').errors &&
+                                editForm.get('valorFijoCtrl').touched
+                              }"
+                              type="text"
+                              class="form-control addPaddingRight"
+                              placeholder="Ingresar el valor"
+                              formControlName="valorFijoCtrl"
+                              style="text-align: right; height: 30px"
+                              id="inputValor"
+                              appLongDecimalMask
+                            />
+                            <div class="invalid-feedback">
+                              Debe ingresar el valor
+                            </div>
                           </div>
                         </div>
                         <div class="form-row">
@@ -1173,18 +1193,22 @@
                           <div style="width: 12%" class="inner center">
                             <label class="col-form-label-md">Código</label>
                           </div>
-                          <div style="width: 27%" class="inner center">
+                          <div style="width: 24%" class="inner center">
                             <label class="col-form-label-md">Deducción</label>
                           </div>
                           <div style="width: 5%" class="inner center">
                             <label class="col-form-label-md">Tarifa</label>
                           </div>
-                          <div style="width: 23%" class="inner center">
+                          <div style="width: 20%" class="inner center">
                             <label class="col-form-label-md">Tercero</label>
+                          </div>
+                          <div style="width: 6%" class="inner center">
+                            <label class="col-form-label-md">Valor Fijo</label>
                           </div>
                           <div style="width: 4%" class="inner center">
                             <label class="col-form-label-md">Sel.</label>
                           </div>
+                          
                         </div>
                         <div *ngIf="listaTerceroDeducciones">
                           <div
@@ -1232,7 +1256,7 @@
                                 </p>
                               </div>
                               <div
-                                style="width: 27%"
+                                style="width: 24%"
                                 class="inner left aplicaBackground"
                               >
                                 <p style="font-size: 12px">
@@ -1248,13 +1272,21 @@
                                 </p>
                               </div>
                               <div
-                                style="width: 23%"
+                                style="width: 20%"
                                 class="inner left aplicaBackground"
                               >
                                 <p style="font-size: 12px">
                                   {{ item?.terceroDeDeduccion.nombre }}
                                 </p>
                               </div>
+                              <div
+                              style="width: 6%"
+                              class="inner left aplicaBackground"
+                            >
+                              <p style="font-size: 12px">
+                                {{ item?.valorFijo }}
+                              </p>
+                            </div>
                               <div
                                 style="width: 4%"
                                 class="inner aplicaBackground parent"

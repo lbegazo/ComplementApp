@@ -191,6 +191,10 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<Contrato>()
             .Property(b => b.EsPagoMensual)
             .HasDefaultValue(0);
+
+            modelBuilder.Entity<Deduccion>()
+            .Property(b => b.EsValorFijo)
+            .HasDefaultValue(0);
         }
 
     }

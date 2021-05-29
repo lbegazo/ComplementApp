@@ -65,7 +65,8 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
       this.listaActividadEconomica.length === 1
     ) {
       this.actividadEconomicaSeleccionada = this.listaActividadEconomica[0];
-      this.idActividadEconomicaSelecionada = this.actividadEconomicaSeleccionada.id;
+      this.idActividadEconomicaSelecionada =
+        this.actividadEconomicaSeleccionada.id;
     }
 
     this.createEmptyForm();
@@ -173,7 +174,8 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
     );
 
     this.idMesSelecionado = this.formatoSolicitudPagoEdit.mesId;
-    this.idActividadEconomicaSelecionada = this.formatoSolicitudPagoEdit.actividadEconomicaId;
+    this.idActividadEconomicaSelecionada =
+      this.formatoSolicitudPagoEdit.actividadEconomicaId;
 
     fechaInicio = this.formatoSolicitudPagoEdit.fechaInicio;
     fechaFinal = this.formatoSolicitudPagoEdit.fechaFinal;
@@ -225,7 +227,8 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
   onSelectActividadEconomica() {
     this.actividadEconomicaSeleccionada = this.actividadEconomicaCtrl
       .value as ValorSeleccion;
-    this.idActividadEconomicaSelecionada = this.actividadEconomicaSeleccionada.id;
+    this.idActividadEconomicaSelecionada =
+      this.actividadEconomicaSeleccionada.id;
   }
 
   onAceptar() {
@@ -306,8 +309,8 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
           formValues.valorFacturaCtrl
         ),
         actividadEconomicaId: this.idActividadEconomicaSelecionada,
-        actividadEconomicaDescripcion: this.actividadEconomicaSeleccionada
-          .codigo,
+        actividadEconomicaDescripcion:
+          this.actividadEconomicaSeleccionada.codigo,
         fechaInicio: dateFechaInicio,
         fechaFinal: dateFechaFin,
         observaciones:
@@ -373,6 +376,7 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
           valorAPagar: element.valorSolicitud,
           rubroPresupuestal: rubro,
           dependencia: element.dependencia,
+          clavePresupuestalContableId: element.clavePresupuestalContableId,
         };
 
         listaDetalle.push(item);

@@ -322,6 +322,8 @@ namespace ComplementApp.API.Data
                              Codigo = d.Codigo,
                              Nombre = d.Nombre,
                              Tarifa = d.Tarifa,
+                             EsValorFijo = d.EsValorFijo,
+                             ValorFijo = d.EsValorFijo ? d.ValorFijo.Value : 0,
                              Tercero = new Tercero()
                              {
                                  TerceroId = d.TerceroId > 0 ? ded.TerceroId : 0,

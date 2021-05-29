@@ -217,6 +217,7 @@ export class FormatoSolicitudPagoAprobacionComponent implements OnInit {
                   valorAPagar: element.valorSolicitud,
                   rubroPresupuestal: rubro,
                   dependencia: element.dependencia,
+                  clavePresupuestalContableId: element.clavePresupuestalContableId,
                 };
 
                 listaDetalle.push(item);

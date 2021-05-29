@@ -119,6 +119,7 @@ namespace ComplementApp.API.Controllers
                                     detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
                                     detalleSolicitud.ValorAPagar = item.ValorAPagar;
                                     detalleSolicitud.Dependencia = item.Dependencia;
+                                    detalleSolicitud.ClavePresupuestalContableId = item.ClavePresupuestalContableId;
                                     _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
                                 }
                             }
@@ -578,6 +579,7 @@ namespace ComplementApp.API.Controllers
                                     detalleSolicitud.RubroPresupuestalId = item.RubroPresupuestal.Id;
                                     detalleSolicitud.ValorAPagar = item.ValorAPagar;
                                     detalleSolicitud.Dependencia = item.Dependencia;
+                                    detalleSolicitud.ClavePresupuestalContableId = item.ClavePresupuestalContableId;
                                     _dataContext.DetalleFormatoSolicitudPago.Add(detalleSolicitud);
                                 }
                             }

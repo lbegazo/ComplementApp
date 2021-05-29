@@ -6,4 +6,5 @@ export interface DetalleFormatoSolicitudPagoDto {
   rubroPresupuestal: ValorSeleccion;
   valorAPagar: number;
   dependencia: string;
+  clavePresupuestalContableId: number;
 }

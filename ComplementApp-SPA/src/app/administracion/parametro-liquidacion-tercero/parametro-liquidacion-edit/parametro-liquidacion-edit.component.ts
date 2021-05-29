@@ -54,12 +54,18 @@ import { PopupParametroLiquidacionTerceroComponent } from './popup-parametro-liq
   styleUrls: ['./parametro-liquidacion-edit.component.scss'],
 })
 export class ParametroLiquidacionEditComponent implements OnInit {
+  //#region Inputs and outputs
+
   @Input() esCreacion: boolean;
   @Input() tercero: Tercero;
   @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   @Input() listaNotasLegales: ValorSeleccion[];
   @Output() esCancelado = new EventEmitter<boolean>();
   // @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
+
+  //#endregion Inputs and outputs
+
+  //#region Variables
 
   searchCodigoDeduccion: string;
   searchNombreDeduccion: string;
@@ -135,6 +141,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   notaLegal4Descripcion = '';
   notaLegal5Descripcion = '';
   notaLegal6Descripcion = '';
+
+  //#endregion Variables
 
   constructor(
     private http: HttpClient,
@@ -375,6 +383,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
       codigoDeduccionCtrl: [''],
       deduccionCtrl: [''],
+      valorFijoCtrl: [''],
       codigoActividadCtrl: [''],
       actividadCtrl: [''],
       planPagoControles: this.arrayControls,
@@ -399,16 +408,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
       this.editForm.patchValue({
         tarifaIvaCtrl: GeneralService.obtenerFormatoLongMoney(tarifaIvaC),
-        baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
-          baseAporteSaludC
-        ),
+        baseAporteSaludCtrl:
+          GeneralService.obtenerFormatoLongMoney(baseAporteSaludC),
         aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
-        aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(
-          aportePensionC
-        ),
-        riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(
-          riesgoLaboralC
-        ),
+        aportePensionCtrl:
+          GeneralService.obtenerFormatoLongMoney(aportePensionC),
+        riesgoLaboralCtrl:
+          GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
         dependienteCtrl: GeneralService.obtenerFormatoLongMoney(dependientesC),
       });
     }
@@ -472,21 +478,24 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       )[0];
     }
 
-    this.idFacturaElectronicaSeleccionado = this.parametroLiquidacionSeleccionado.facturaElectronicaId;
+    this.idFacturaElectronicaSeleccionado =
+      this.parametroLiquidacionSeleccionado.facturaElectronicaId;
     if (this.idFacturaElectronicaSeleccionado !== null) {
       this.facturaElectronicaSeleccionado = this.listaFacturaElectronica.filter(
         (x) => x.id === this.idFacturaElectronicaSeleccionado
       )[0];
     }
 
-    this.idSubcontrataSeleccionado = this.parametroLiquidacionSeleccionado.subcontrataId;
+    this.idSubcontrataSeleccionado =
+      this.parametroLiquidacionSeleccionado.subcontrataId;
     if (this.idSubcontrataSeleccionado !== null) {
       this.subcontrataSeleccionado = this.listaSubcontrata.filter(
         (x) => x.id === this.idSubcontrataSeleccionado
       )[0];
     }
 
-    this.idTipoAdminPila = this.parametroLiquidacionSeleccionado.tipoAdminPilaId;
+    this.idTipoAdminPila =
+      this.parametroLiquidacionSeleccionado.tipoAdminPilaId;
     if (this.idTipoAdminPila !== null) {
       this.tipoAdminPilaSeleccionado = this.listaAdminPila.filter(
         (x) => x.id === this.idTipoAdminPila
@@ -508,9 +517,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         ? this.parametroLiquidacionSeleccionado.tipoDocumentoSoporteId
         : null;
     if (this.idTipoDocumentoSoporteSelecionado !== null) {
-      this.tipoDocumentoSoporteSeleccionado = this.listaTipoDocumentoSoporte.filter(
-        (x) => x.id === this.idTipoDocumentoSoporteSelecionado
-      )[0];
+      this.tipoDocumentoSoporteSeleccionado =
+        this.listaTipoDocumentoSoporte.filter(
+          (x) => x.id === this.idTipoDocumentoSoporteSelecionado
+        )[0];
     }
 
     honorarioSinIvaC = this.parametroLiquidacionSeleccionado?.honorarioSinIva;
@@ -522,24 +532,24 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     riesgoLaboralC = this.parametroLiquidacionSeleccionado?.riesgoLaboral;
     fondoSolidaridadC = this.parametroLiquidacionSeleccionado?.fondoSolidaridad;
 
-    pensionVoluntariaC = this.parametroLiquidacionSeleccionado
-      ?.pensionVoluntaria;
+    pensionVoluntariaC =
+      this.parametroLiquidacionSeleccionado?.pensionVoluntaria;
     dependienteC = this.parametroLiquidacionSeleccionado?.dependiente;
     afcC = this.parametroLiquidacionSeleccionado?.afc;
-    medicinaPrepagadaC = this.parametroLiquidacionSeleccionado
-      ?.medicinaPrepagada;
+    medicinaPrepagadaC =
+      this.parametroLiquidacionSeleccionado?.medicinaPrepagada;
 
     otrosDescuentosC = this.parametroLiquidacionSeleccionado?.otrosDescuentos;
-    fechaInicioOtrosDescuentos = this.parametroLiquidacionSeleccionado
-      .fechaInicioOtrosDescuentos;
-    fechaFinalOtrosDescuentos = this.parametroLiquidacionSeleccionado
-      .fechaFinalOtrosDescuentos;
+    fechaInicioOtrosDescuentos =
+      this.parametroLiquidacionSeleccionado.fechaInicioOtrosDescuentos;
+    fechaFinalOtrosDescuentos =
+      this.parametroLiquidacionSeleccionado.fechaFinalOtrosDescuentos;
 
     interesesViviendaC = this.parametroLiquidacionSeleccionado?.interesVivienda;
-    fechaInicio = this.parametroLiquidacionSeleccionado
-      .fechaInicioDescuentoInteresVivienda;
-    fechaFinal = this.parametroLiquidacionSeleccionado
-      .fechaFinalDescuentoInteresVivienda;
+    fechaInicio =
+      this.parametroLiquidacionSeleccionado.fechaInicioDescuentoInteresVivienda;
+    fechaFinal =
+      this.parametroLiquidacionSeleccionado.fechaFinalDescuentoInteresVivienda;
 
     notaLegal1 = this.parametroLiquidacionSeleccionado.notaLegal1;
     notaLegal2 = this.parametroLiquidacionSeleccionado.notaLegal2;
@@ -581,28 +591,23 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       subcontrataCtrl: this.subcontrataSeleccionado,
       adminPilaCtrl: this.tipoAdminPilaSeleccionado,
 
-      baseAporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(
-        baseAporteSaludC
-      ),
+      baseAporteSaludCtrl:
+        GeneralService.obtenerFormatoLongMoney(baseAporteSaludC),
       aporteSaludCtrl: GeneralService.obtenerFormatoLongMoney(aporteSaludC),
       aportePensionCtrl: GeneralService.obtenerFormatoLongMoney(aportePensionC),
       riesgoLaboralCtrl: GeneralService.obtenerFormatoLongMoney(riesgoLaboralC),
-      fondoSolidaridadCtrl: GeneralService.obtenerFormatoMoney(
-        fondoSolidaridadC
-      ),
+      fondoSolidaridadCtrl:
+        GeneralService.obtenerFormatoMoney(fondoSolidaridadC),
 
-      pensionVoluntariaCtrl: GeneralService.obtenerFormatoMoney(
-        pensionVoluntariaC
-      ),
+      pensionVoluntariaCtrl:
+        GeneralService.obtenerFormatoMoney(pensionVoluntariaC),
       dependienteCtrl: GeneralService.obtenerFormatoLongMoney(dependienteC),
       afcCtrl: GeneralService.obtenerFormatoMoney(afcC),
-      medicinaPrepagadaCtrl: GeneralService.obtenerFormatoMoney(
-        medicinaPrepagadaC
-      ),
+      medicinaPrepagadaCtrl:
+        GeneralService.obtenerFormatoMoney(medicinaPrepagadaC),
 
-      interesesViviendaCtrl: GeneralService.obtenerFormatoMoney(
-        interesesViviendaC
-      ),
+      interesesViviendaCtrl:
+        GeneralService.obtenerFormatoMoney(interesesViviendaC),
       fechaInicioCtrl: formatDate(fechaInicio, 'dd-MM-yyyy', 'en'),
       fechaFinalCtrl: formatDate(fechaFinal, 'dd-MM-yyyy', 'en'),
 
@@ -636,8 +641,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onModalidadContrato() {
     this.modalidadContratoSeleccionado = this.modalidadContratoCtrl
       .value as ValorSeleccion;
-    this.idModalidadContratoSelecionado = +this.modalidadContratoSeleccionado
-      .id;
+    this.idModalidadContratoSelecionado =
+      +this.modalidadContratoSeleccionado.id;
 
     this.ocultarControlesFormulario();
   }
@@ -730,15 +735,15 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onTipoDocumentoSoporte() {
     this.tipoDocumentoSoporteSeleccionado = this.tipoDocumentoSoporteCtrl
       .value as ValorSeleccion;
-    this.idTipoDocumentoSoporteSelecionado = +this
-      .tipoDocumentoSoporteSeleccionado.id;
+    this.idTipoDocumentoSoporteSelecionado =
+      +this.tipoDocumentoSoporteSeleccionado.id;
   }
 
   onFacturaElectronica() {
     this.facturaElectronicaSeleccionado = this.facturaElectronicaCtrl
       .value as ValorSeleccion;
-    this.idFacturaElectronicaSeleccionado = +this.facturaElectronicaSeleccionado
-      .id;
+    this.idFacturaElectronicaSeleccionado =
+      +this.facturaElectronicaSeleccionado.id;
   }
 
   onSubcontrata() {
@@ -791,6 +796,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             tipoIdentificacion: 0,
             identificacionTercero: '',
             codigo: '',
+            valorFijo: 0,
+            esValorFijo: false,
             estadoModificacion: EstadoModificacion.Insertado,
           };
 
@@ -841,7 +848,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           const terceroDeDeduccionT = new ValorSeleccion();
           if (this.deduccion.tercero && this.deduccion.tercero.terceroId > 0) {
             terceroDeDeduccionT.id = this.deduccion.tercero.terceroId;
-            terceroDeDeduccionT.codigo = this.deduccion.tercero.numeroIdentificacion;
+            terceroDeDeduccionT.codigo =
+              this.deduccion.tercero.numeroIdentificacion;
             terceroDeDeduccionT.nombre = this.deduccion.tercero.nombre;
             terceroDeDeduccionT.valor = 'SI';
           } else {
@@ -863,6 +871,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             tipoIdentificacion: 0,
             identificacionTercero: '',
             codigo: '',
+            valorFijo: 0,
+            esValorFijo: false,
             estadoModificacion: EstadoModificacion.Insertado,
           };
 
@@ -968,7 +978,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
                 this.deduccion.tercero.terceroId > 0
               ) {
                 terceroDeDeduccionT.id = this.deduccion.tercero.terceroId;
-                terceroDeDeduccionT.codigo = this.deduccion.tercero.numeroIdentificacion;
+                terceroDeDeduccionT.codigo =
+                  this.deduccion.tercero.numeroIdentificacion;
                 terceroDeDeduccionT.nombre = this.deduccion.tercero.nombre;
                 terceroDeDeduccionT.valor = 'SI';
               } else {
@@ -980,7 +991,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
               const terceroT = new ValorSeleccion();
               terceroT.id = this.tercero.terceroId;
-              this.terceroDeduccionSeleccionado.terceroDeDeduccion = terceroDeDeduccionT;
+              this.terceroDeduccionSeleccionado.terceroDeDeduccion =
+                terceroDeDeduccionT;
             }
 
             if (
@@ -1286,23 +1298,26 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             }
           );
       } else {
-        this.parametroLiquidacionSeleccionado.modalidadContrato = this.idModalidadContratoSelecionado;
+        this.parametroLiquidacionSeleccionado.modalidadContrato =
+          this.idModalidadContratoSelecionado;
 
         this.parametroLiquidacionSeleccionado.tipoIva =
           this.idTipoIvaSelecionado !== null ? this.idTipoIvaSelecionado : 0;
         this.parametroLiquidacionSeleccionado.tipoPago =
           this.idTipoPagoSelecionado !== null ? this.idTipoPagoSelecionado : 0;
 
-        this.parametroLiquidacionSeleccionado.tipoCuentaXPagarId = this.idTipoCuentaXPagarSelecionado;
-        this.parametroLiquidacionSeleccionado.facturaElectronicaId = this.idFacturaElectronicaSeleccionado;
-        this.parametroLiquidacionSeleccionado.subcontrataId = this.idSubcontrataSeleccionado;
-        this.parametroLiquidacionSeleccionado.tipoDocumentoSoporteId = this.idTipoDocumentoSoporteSelecionado;
-        this.parametroLiquidacionSeleccionado.honorarioSinIva = GeneralService.obtenerValorAbsoluto(
-          formValues.honorarioSinIvaCtrl
-        );
-        this.parametroLiquidacionSeleccionado.tarifaIva = GeneralService.obtenerValorAbsoluto(
-          formValues.tarifaIvaCtrl
-        );
+        this.parametroLiquidacionSeleccionado.tipoCuentaXPagarId =
+          this.idTipoCuentaXPagarSelecionado;
+        this.parametroLiquidacionSeleccionado.facturaElectronicaId =
+          this.idFacturaElectronicaSeleccionado;
+        this.parametroLiquidacionSeleccionado.subcontrataId =
+          this.idSubcontrataSeleccionado;
+        this.parametroLiquidacionSeleccionado.tipoDocumentoSoporteId =
+          this.idTipoDocumentoSoporteSelecionado;
+        this.parametroLiquidacionSeleccionado.honorarioSinIva =
+          GeneralService.obtenerValorAbsoluto(formValues.honorarioSinIvaCtrl);
+        this.parametroLiquidacionSeleccionado.tarifaIva =
+          GeneralService.obtenerValorAbsoluto(formValues.tarifaIvaCtrl);
 
         this.parametroLiquidacionSeleccionado.baseAporteSalud =
           formValues.baseAporteSaludCtrl === undefined
@@ -1355,8 +1370,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             : GeneralService.obtenerValorAbsoluto(
                 formValues.interesesViviendaCtrl
               );
-        this.parametroLiquidacionSeleccionado.fechaInicioDescuentoInteresVivienda = dateFechaInicio;
-        this.parametroLiquidacionSeleccionado.fechaFinalDescuentoInteresVivienda = dateFechaFinal;
+        this.parametroLiquidacionSeleccionado.fechaInicioDescuentoInteresVivienda =
+          dateFechaInicio;
+        this.parametroLiquidacionSeleccionado.fechaFinalDescuentoInteresVivienda =
+          dateFechaFinal;
 
         this.parametroLiquidacionSeleccionado.otrosDescuentos =
           formValues.otrosDescuentosCtrl === undefined
@@ -1364,10 +1381,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             : GeneralService.obtenerValorAbsoluto(
                 formValues.otrosDescuentosCtrl
               );
-        this.parametroLiquidacionSeleccionado.fechaInicioOtrosDescuentos = dateFechaInicioOtrosDescuentos;
-        this.parametroLiquidacionSeleccionado.fechaFinalOtrosDescuentos = dateFechaFinalOtrosDescuentos;
+        this.parametroLiquidacionSeleccionado.fechaInicioOtrosDescuentos =
+          dateFechaInicioOtrosDescuentos;
+        this.parametroLiquidacionSeleccionado.fechaFinalOtrosDescuentos =
+          dateFechaFinalOtrosDescuentos;
 
-        this.parametroLiquidacionSeleccionado.terceroDeducciones = this.listaTerceroDeducciones;
+        this.parametroLiquidacionSeleccionado.terceroDeducciones =
+          this.listaTerceroDeducciones;
 
         this.parametroLiquidacionSeleccionado.notaLegal1 =
           formValues.notaLegal1Ctrl;
@@ -1382,7 +1402,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         this.parametroLiquidacionSeleccionado.notaLegal6 =
           formValues.notaLegal6Ctrl;
 
-        this.parametroLiquidacionSeleccionado.tipoAdminPilaId = this.idTipoAdminPila;
+        this.parametroLiquidacionSeleccionado.tipoAdminPilaId =
+          this.idTipoAdminPila;
 
         this.terceroService
           .ActualizarParametroLiquidacionTercero(
@@ -1445,9 +1466,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
 
       //#region Cargar información del popup (OnHidden event)
 
-      const combine = combineLatest([
-        this.modalService.onHidden,
-      ]).subscribe(() => this.changeDetection.markForCheck());
+      const combine = combineLatest([this.modalService.onHidden]).subscribe(
+        () => this.changeDetection.markForCheck()
+      );
 
       this.subscriptions.push(
         this.modalService.onHidden.subscribe((reason: string) => {
@@ -1492,19 +1513,21 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   cargarTerceroDeduccion() {
     if (this.terceroDeduccionSeleccionado) {
       this.editForm.patchValue({
-        codigoActividadCtrl: this.terceroDeduccionSeleccionado
-          .actividadEconomica.codigo,
-        actividadCtrl: this.terceroDeduccionSeleccionado.actividadEconomica
-          .nombre,
+        codigoActividadCtrl:
+          this.terceroDeduccionSeleccionado.actividadEconomica.codigo,
+        actividadCtrl:
+          this.terceroDeduccionSeleccionado.actividadEconomica.nombre,
         codigoDeduccionCtrl: this.terceroDeduccionSeleccionado.deduccion.codigo,
         deduccionCtrl: this.terceroDeduccionSeleccionado.deduccion.nombre,
       });
 
       if (this.terceroDeduccionSeleccionado.deduccion) {
-        this.deduccionId = this.terceroDeduccionSeleccionado.deduccion.deduccionId;
+        this.deduccionId =
+          this.terceroDeduccionSeleccionado.deduccion.deduccionId;
       }
       if (this.terceroDeduccionSeleccionado.actividadEconomica) {
-        this.actividadEconomicaId = this.terceroDeduccionSeleccionado.actividadEconomica.id;
+        this.actividadEconomicaId =
+          this.terceroDeduccionSeleccionado.actividadEconomica.id;
       }
     }
   }
@@ -1519,42 +1542,40 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   exportarExcel() {
     let fileName = '';
 
-    this.terceroService
-      .DescargarListaActividadEconomica()
-      .subscribe(
-        (response) => {
-          switch (response.type) {
-            case HttpEventType.Response:
-              const downloadedFile = new Blob([response.body], {
-                type: response.body.type,
-              });
+    this.terceroService.DescargarListaActividadEconomica().subscribe(
+      (response) => {
+        switch (response.type) {
+          case HttpEventType.Response:
+            const downloadedFile = new Blob([response.body], {
+              type: response.body.type,
+            });
 
-              const nombreArchivo = response.headers.get('filename');
+            const nombreArchivo = response.headers.get('filename');
 
-              if (nombreArchivo != null && nombreArchivo.length > 0) {
-                fileName = nombreArchivo;
-              } else {
-                fileName = 'ActividadEconomica.xlsx';
-              }
+            if (nombreArchivo != null && nombreArchivo.length > 0) {
+              fileName = nombreArchivo;
+            } else {
+              fileName = 'ActividadEconomica.xlsx';
+            }
 
-              const a = document.createElement('a');
-              a.setAttribute('style', 'display:none;');
-              document.body.appendChild(a);
-              a.download = fileName;
-              a.href = URL.createObjectURL(downloadedFile);
-              a.target = '_blank';
-              a.click();
-              document.body.removeChild(a);
-              break;
-          }
-        },
-        (error) => {
-          this.alertify.warning(error);
-        },
-        () => {
-          this.router.navigate(['/ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO']);
+            const a = document.createElement('a');
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            a.download = fileName;
+            a.href = URL.createObjectURL(downloadedFile);
+            a.target = '_blank';
+            a.click();
+            document.body.removeChild(a);
+            break;
         }
-      );
+      },
+      (error) => {
+        this.alertify.warning(error);
+      },
+      () => {
+        this.router.navigate(['/ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO']);
+      }
+    );
   }
 
   //#region Controles

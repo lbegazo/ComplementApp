@@ -17,6 +17,8 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorAPagar { get; set; }
+        public int? ClavePresupuestalContableId { get; set; }
+        public ClavePresupuestalContable ClavePresupuestalContable { get; set; }
 
     }
 }
