@@ -256,8 +256,7 @@ namespace ComplementApp.API.Services
                 foreach (var rubro in listaRubroFiltrada)
                 {
                     var uso = listaUsoFiltrada
-                                .Where(x => x.UsoPresupuestalId == rubro.UsoPresupuestalId
-                                            && x.RubroPresupuestalId == rubro.RubroPresupuestalId).FirstOrDefault();
+                                .Where(x => x.ClavePresupuestalContableId == rubro.ClavePresupuestalContableId).FirstOrDefault();
 
                     if (uso != null)
                     {

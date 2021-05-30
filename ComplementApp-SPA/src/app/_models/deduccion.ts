@@ -8,4 +8,6 @@ export interface Deduccion {
   base: number;
   valor: number;
   tercero: Tercero;
+  esValorFijo: boolean;
+  valorFijo: number;
 }

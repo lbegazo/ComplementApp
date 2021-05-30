@@ -31,8 +31,6 @@ namespace ComplementApp.API.Models
         public int? TerceroId { get; set; }
         public Tercero Tercero { get; set; }
         public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
-        public bool EsValorFijo { get; set; }
-        [Column(TypeName = "decimal(30,8)")]
-        public decimal? ValorFijo { get; set; }
+        public bool EsValorFijo { get; set; }        
     }
 }

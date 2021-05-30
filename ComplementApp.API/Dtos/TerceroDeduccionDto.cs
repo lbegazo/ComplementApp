@@ -11,5 +11,6 @@ namespace ComplementApp.API.Dtos
         public ValorSeleccion ActividadEconomica { get; set; }
         public ValorSeleccion TerceroDeDeduccion { get; set; }
         public int EstadoModificacion { get; set; }
+        public decimal ValorFijo { get; set; }
     }
 }

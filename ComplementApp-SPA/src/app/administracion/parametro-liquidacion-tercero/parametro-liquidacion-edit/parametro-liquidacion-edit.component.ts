@@ -264,6 +264,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             this.actividadEconomica.actividadEconomicaId > 0
           ) {
             this.habilitarBotonAgregar = true;
+            this.habilitarValorFijoControl(this.deduccion.esValorFijo);
           }
         }
       }
@@ -285,6 +286,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             this.actividadEconomica.actividadEconomicaId > 0
           ) {
             this.habilitarBotonAgregar = true;
+            this.habilitarValorFijoControl(this.deduccion.esValorFijo);
           }
         }
       }
@@ -772,7 +774,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           )[0];
 
           if (filtro) {
-            this.alertify.error('La actividad económica ya fue agregada');
+            this.alertify.warning('La actividad económica ya fue agregada');
             return;
           }
 
@@ -796,9 +798,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             tipoIdentificacion: 0,
             identificacionTercero: '',
             codigo: '',
-            valorFijo: 0,
-            esValorFijo: false,
             estadoModificacion: EstadoModificacion.Insertado,
+            valorFijo: 0,
           };
 
           this.listaTerceroDeducciones.push(terceroDeduccion);
@@ -820,6 +821,9 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         ) {
           //#region Descuento y Actividad Economica
 
+          const formValues = Object.assign({}, this.editForm.value);
+          let valorFijoDeduccion = 0;
+
           const filtro = this.listaTerceroDeducciones.filter(
             (x) =>
               x.deduccion.deduccionId === this.deduccion.deduccionId &&
@@ -827,7 +831,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           )[0];
 
           if (filtro) {
-            this.alertify.error(
+            this.alertify.warning(
               'Ya existe la combinación deducción-actividad económica'
             );
             return;
@@ -843,6 +847,20 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           deduccionT.codigo = this.deduccion.codigo;
           deduccionT.nombre = this.deduccion.nombre;
           deduccionT.tarifa = this.deduccion.tarifa;
+          deduccionT.esValorFijo = this.deduccion.esValorFijo;
+
+          if (this.deduccion.esValorFijo) {
+            const valorFijo =
+              formValues.valorFijoCtrl === '' ? 0 : formValues.valorFijoCtrl;
+
+            if (valorFijo === 0 || valorFijo === '0') {
+              this.alertify.warning('Debe registrar el valor fijo');
+              return;
+            }
+
+            valorFijoDeduccion = GeneralService.obtenerValorAbsoluto(valorFijo);
+          }
+
           this.inicioId = this.inicioId + 1;
 
           const terceroDeDeduccionT = new ValorSeleccion();
@@ -871,9 +889,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             tipoIdentificacion: 0,
             identificacionTercero: '',
             codigo: '',
-            valorFijo: 0,
-            esValorFijo: false,
             estadoModificacion: EstadoModificacion.Insertado,
+            valorFijo: valorFijoDeduccion,
           };
 
           this.listaTerceroDeducciones.push(terceroDeduccion);
@@ -910,7 +927,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             )[0];
 
             if (filtro) {
-              this.alertify.error('La actividad económica ya fue agregada');
+              this.alertify.warning('La actividad económica ya fue agregada');
               return;
             }
 
@@ -940,6 +957,8 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           if (this.deduccionId > 0 && this.actividadEconomicaId > 0) {
             //#region Descuento y Actividad Economica
 
+            const formValues = Object.assign({}, this.editForm.value);
+
             const filtro = this.listaTerceroDeducciones.filter(
               (x) =>
                 x.deduccion.deduccionId === this.deduccionId &&
@@ -948,7 +967,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             )[0];
 
             if (filtro) {
-              this.alertify.error(
+              this.alertify.warning(
                 'Ya existe la combinación deducción-actividad económica'
               );
               return;
@@ -964,11 +983,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
             }
 
             if (this.deduccion) {
+              //#region Selecciono deducción
               const deduccionT = new DeduccionDto();
               deduccionT.deduccionId = this.deduccionId;
               deduccionT.codigo = this.deduccion.codigo;
               deduccionT.nombre = this.deduccion.nombre;
               deduccionT.tarifa = this.deduccion.tarifa;
+              deduccionT.esValorFijo = this.deduccion.esValorFijo;
 
               this.terceroDeduccionSeleccionado.deduccion = deduccionT;
 
@@ -993,6 +1014,21 @@ export class ParametroLiquidacionEditComponent implements OnInit {
               terceroT.id = this.tercero.terceroId;
               this.terceroDeduccionSeleccionado.terceroDeDeduccion =
                 terceroDeDeduccionT;
+
+              //#endregion Selecciono deducción
+            }
+
+            if (this.terceroDeduccionSeleccionado.deduccion.esValorFijo) {
+              let valorFijo =
+                formValues.valorFijoCtrl === '' ? 0 : formValues.valorFijoCtrl;
+
+              if (valorFijo === 0 || valorFijo === '0') {
+                this.alertify.warning('Debe registrar el valor fijo');
+                return;
+              }
+
+              valorFijo = GeneralService.obtenerValorAbsoluto(valorFijo);
+              this.terceroDeduccionSeleccionado.valorFijo = valorFijo;
             }
 
             if (
@@ -1066,6 +1102,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
     this.nombreBotonAgregar = 'Agregar';
     this.accionAgregarDeduccion = true;
     this.actividadCtrl.patchValue('');
+    this.valorFijoCtrl.patchValue('');
   }
 
   onLimpiarForm() {
@@ -1093,11 +1130,11 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         ModalidadContrato.ProveedorConDescuento.value
     ) {
       if (this.listaTerceroDeducciones.length === 0) {
-        this.alertify.error('Debe ingresar al menos una deducción');
+        this.alertify.warning('Debe ingresar al menos una deducción');
         return;
       } else {
         if (!this.ValidarTerceroDeDeduccion()) {
-          this.alertify.error(
+          this.alertify.warning(
             'Debe vincularse un tercero a las posiciones de deducción seleccionadas'
           );
           return;
@@ -1519,16 +1556,30 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           this.terceroDeduccionSeleccionado.actividadEconomica.nombre,
         codigoDeduccionCtrl: this.terceroDeduccionSeleccionado.deduccion.codigo,
         deduccionCtrl: this.terceroDeduccionSeleccionado.deduccion.nombre,
+        valorFijoCtrl: GeneralService.obtenerFormatoMoney(
+          this.terceroDeduccionSeleccionado.valorFijo
+        ),
       });
 
       if (this.terceroDeduccionSeleccionado.deduccion) {
         this.deduccionId =
           this.terceroDeduccionSeleccionado.deduccion.deduccionId;
+        this.habilitarValorFijoControl(
+          this.terceroDeduccionSeleccionado.deduccion.esValorFijo
+        );
       }
       if (this.terceroDeduccionSeleccionado.actividadEconomica) {
         this.actividadEconomicaId =
           this.terceroDeduccionSeleccionado.actividadEconomica.id;
       }
+    }
+  }
+
+  habilitarValorFijoControl(valor: boolean) {
+    if (valor) {
+      this.valorFijoCtrl.enable();
+    } else {
+      this.valorFijoCtrl.disable();
     }
   }
 
@@ -1570,7 +1621,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
         }
       },
       (error) => {
-        this.alertify.warning(error);
+        this.alertify.error(error);
       },
       () => {
         this.router.navigate(['/ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO']);
@@ -1579,6 +1630,10 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   }
 
   //#region Controles
+
+  get valorFijoCtrl() {
+    return this.editForm.get('valorFijoCtrl');
+  }
 
   get modalidadContratoCtrl() {
     return this.editForm.get('modalidadContratoCtrl');

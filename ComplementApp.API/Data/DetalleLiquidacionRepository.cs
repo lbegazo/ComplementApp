@@ -522,7 +522,8 @@ namespace ComplementApp.API.Data
                                    TipoGastoCodigo = tga.Codigo,
                                    UsoContable = rc.UsoContable.ToString(),
                                    TipoOperacion = rc.TipoOperacion.ToString(),
-                                   NumeroCuenta = cc.NumeroCuenta
+                                   NumeroCuenta = cc.NumeroCuenta,
+                                   ClavePresupuestalContableId = cpc.ClavePresupuestalContableId.Value,
                                })
                                 .Distinct()
                                 .ToListAsync();
@@ -579,6 +580,7 @@ namespace ComplementApp.API.Data
                                    UsoPresupuestalCodigo = up.UsoPresupuestalId > 0 ? up.Identificacion : string.Empty,
                                    ValorTotal = cpc.ValorAPagar,
                                    FechaRegistro = dl.FechaRegistro.Value,
+                                   ClavePresupuestalContableId = cpc.ClavePresupuestalContableId.Value,
                                })
                                .Distinct()
                                .ToListAsync();

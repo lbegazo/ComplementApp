@@ -350,6 +350,11 @@ namespace ComplementApp.API.Controllers
                             {
                                 itemTerceroDeduccion.DeduccionId = item.Deduccion.DeduccionId;
                                 itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+
+                                if (item.Deduccion.EsValorFijo)
+                                {
+                                    itemTerceroDeduccion.ValorFijo = item.ValorFijo;
+                                }
                             }
                             else
                             {
@@ -432,6 +437,10 @@ namespace ComplementApp.API.Controllers
                             {
                                 itemTerceroDeduccion.DeduccionId = item.Deduccion.DeduccionId;
                                 itemTerceroDeduccion.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                                if (item.Deduccion.EsValorFijo)
+                                {
+                                    itemTerceroDeduccion.ValorFijo = item.ValorFijo;
+                                }
                             }
                             else
                             {
@@ -465,6 +474,10 @@ namespace ComplementApp.API.Controllers
                                 {
                                     terceroDeduccionBD.DeduccionId = item.Deduccion.DeduccionId;
                                     terceroDeduccionBD.TerceroDeDeduccionId = item.TerceroDeDeduccion.Id;
+                                    if (item.Deduccion.EsValorFijo)
+                                    {
+                                        terceroDeduccionBD.ValorFijo = item.ValorFijo;
+                                    }
                                 }
                                 else
                                 {

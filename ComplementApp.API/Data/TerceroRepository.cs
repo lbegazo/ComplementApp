@@ -249,6 +249,7 @@ namespace ComplementApp.API.Data
                                {
                                    TerceroDeduccionId = td.TerceroDeduccionId,
                                    Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
+                                   ValorFijo = td.ValorFijo.HasValue? td.ValorFijo.Value: 0,
                                    Tercero = new ValorSeleccion()
                                    {
                                        Id = td.TerceroId
@@ -265,6 +266,7 @@ namespace ComplementApp.API.Data
                                        Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
                                        Nombre = ded.DeduccionId > 0 ? ded.Nombre : string.Empty,
                                        Tarifa = ded.DeduccionId > 0 ? ded.Tarifa : 0,
+                                       EsValorFijo = ded.EsValorFijo,
                                    },
                                    TerceroDeDeduccion = new ValorSeleccion()
                                    {

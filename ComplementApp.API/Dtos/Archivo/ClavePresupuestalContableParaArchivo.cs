@@ -16,5 +16,6 @@ namespace ComplementApp.API.Dtos.Archivo
         public string TipoOperacion { get; set; }
         public string UsoContable { get; set; }
         public string NumeroCuenta { get; set; }
+        public int ClavePresupuestalContableId { get; set; }
     }
 }
