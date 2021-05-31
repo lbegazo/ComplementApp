@@ -222,15 +222,12 @@ namespace ComplementApp.API.Data
                                   join sf in _context.SituacionFondo on d.Detalle9.ToUpper() equals sf.Nombre.ToUpper()
                                   join ff in _context.FuenteFinanciacion on d.Detalle8.ToUpper() equals ff.Nombre.ToUpper()
                                   join rp in _context.RecursoPresupuestal on d.Detalle10.ToUpper() equals rp.Codigo.ToUpper()
-                                  join cp in _context.ClavePresupuestalContable on d.Crp equals cp.Crp
+                                  join cp in _context.ClavePresupuestalContable on new { d.Crp, d.RubroPresupuestalId, sf.SituacionFondoId, ff.FuenteFinanciacionId, rp.RecursoPresupuestalId } equals
+                                                                                    new { cp.Crp, cp.RubroPresupuestalId, cp.SituacionFondoId, cp.FuenteFinanciacionId, cp.RecursoPresupuestalId } into ClavePresupuestal
+                                  from clave in ClavePresupuestal.DefaultIfEmpty()
                                   where d.Instancia == (int)TipoDocumento.Compromiso
                                   where d.PciId == pciId
                                   where d.Crp == crp
-                                  where d.Detalle2 == cp.Dependencia
-                                  where d.RubroPresupuestalId == cp.RubroPresupuestalId
-                                  where sf.SituacionFondoId == cp.SituacionFondoId
-                                  where ff.FuenteFinanciacionId == cp.FuenteFinanciacionId
-                                  where rp.RecursoPresupuestalId == cp.RecursoPresupuestalId
                                   where d.SaldoActual > 0
                                   select new DetalleCDP()
                                   {
@@ -240,7 +237,7 @@ namespace ComplementApp.API.Data
                                       SaldoAct = d.SaldoActual,
                                       Dependencia = d.Detalle2,
                                       DependenciaDescripcion = d.Detalle2 + " " + (d.Detalle3.Length > 100 ? d.Detalle3.Substring(0, 100) + "..." : d.Detalle3),
-                                      ClavePresupuestalContableId = cp.ClavePresupuestalContableId,
+                                      ClavePresupuestalContableId = clave.ClavePresupuestalContableId,
                                       RubroPresupuestal = new RubroPresupuestal()
                                       {
                                           RubroPresupuestalId = i.RubroPresupuestalId,

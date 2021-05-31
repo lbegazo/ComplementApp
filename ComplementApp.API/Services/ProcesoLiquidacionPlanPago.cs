@@ -250,42 +250,52 @@ namespace ComplementApp.API.Services
             {
                 foreach (var deduccion in listaDeducciones)
                 {
-                    if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
+                    deduccion.Nombre = deduccion.Nombre.Length > 130 ? deduccion.Nombre.Substring(0, 130) + "..." : deduccion.Nombre;
+                    if (!deduccion.EsValorFijo)
                     {
-                        deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                        + factorIncremento) * valorUvt) * factorCalculo;
-                        deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
-
-                        if (deduccion.Base > 0)
+                        if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                         {
-                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                            deduccion.Base = baseGravableFinal;
+                            var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
+                                                            + factorIncremento) * valorUvt) * factorCalculo;
+                            deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
+
+                            if (deduccion.Base > 0)
+                            {
+                                deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                            }
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
+                        {
+                            deduccion.Base = C30ValorIva;
+                            valor = deduccion.Tarifa * C30ValorIva;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
+                        {
+                            deduccion.Base = formato.Afc;
+                            valor = deduccion.Tarifa * deduccion.Base;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
+                        {
+                            deduccion.Base = formato.PensionVoluntaria;
+                            valor = deduccion.Tarifa * deduccion.Base;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        }
+                        else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                        {
+                            deduccion.Base = formato.SubTotal1;
+                            valor = deduccion.Tarifa * formato.SubTotal1;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                         }
                     }
-                    else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
+                    else
                     {
-                        deduccion.Base = C30ValorIva;
-                        valor = deduccion.Tarifa * C30ValorIva;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-
-                    }
-                    else if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
-                    {
-                        deduccion.Base = formato.Afc;
-                        valor = deduccion.Tarifa * deduccion.Base;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                    }
-                    else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
-                    {
-                        deduccion.Base = formato.PensionVoluntaria;
-                        valor = deduccion.Tarifa * deduccion.Base;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                    }
-                    else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
-                    {
-                        deduccion.Base = formato.SubTotal1;
-                        valor = deduccion.Tarifa * formato.SubTotal1;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        deduccion.Tarifa = 0;
+                        deduccion.Base = deduccion.ValorFijo;
+                        deduccion.Valor = deduccion.ValorFijo;
                     }
                 }
             }
@@ -314,6 +324,7 @@ namespace ComplementApp.API.Services
             #endregion Obtener lista de deducciones          
 
             formato.TotalRetenciones = obtenerSumatoriaRetenciones(listaDeducciones);
+            var valorRetencionSinValorFijo = obtenerSumatoriaRetencionesSinValorFijo(listaDeducciones);
             formato.TotalAGirar = formato.ValorTotal - formato.TotalRetenciones;
 
             return formato;
@@ -376,6 +387,17 @@ namespace ComplementApp.API.Services
             decimal valor = 0;
 
             valor = listaDeducciones
+                    .Sum(x => x.Valor);
+
+            return valor;
+        }
+
+        private decimal obtenerSumatoriaRetencionesSinValorFijo(List<DeduccionDto> listaDeducciones)
+        {
+            decimal valor = 0;
+
+            valor = listaDeducciones
+                    .Where(x => x.EsValorFijo == false)
                     .Sum(x => x.Valor);
 
             return valor;
@@ -1024,6 +1046,7 @@ namespace ComplementApp.API.Services
             {
                 foreach (var deduccion in listaDeducciones)
                 {
+                    deduccion.Nombre = deduccion.Nombre.Length > 130 ? deduccion.Nombre.Substring(0, 130) + "..." : deduccion.Nombre;
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;
@@ -1159,6 +1182,7 @@ namespace ComplementApp.API.Services
             {
                 foreach (var deduccion in listaDeducciones)
                 {
+                    deduccion.Nombre = deduccion.Nombre.Length > 130 ? deduccion.Nombre.Substring(0, 130) + "..." : deduccion.Nombre;
                     if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                     {
                         deduccion.Base = baseGravableFinal;

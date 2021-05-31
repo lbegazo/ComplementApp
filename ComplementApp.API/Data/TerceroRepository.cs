@@ -249,7 +249,7 @@ namespace ComplementApp.API.Data
                                {
                                    TerceroDeduccionId = td.TerceroDeduccionId,
                                    Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
-                                   ValorFijo = td.ValorFijo.HasValue? td.ValorFijo.Value: 0,
+                                   ValorFijo = td.ValorFijo.HasValue ? td.ValorFijo.Value : 0,
                                    Tercero = new ValorSeleccion()
                                    {
                                        Id = td.TerceroId
@@ -418,7 +418,19 @@ namespace ComplementApp.API.Data
                          where (td.ParametroLiquidacionTerceroId == parametroLiquidacionId)
                          where (td.ActividadEconomicaId == actividadEconomicaId || actividadEconomicaId == null)
                          where (d.estado == true)
-                         select d);
+                         select new Deduccion()
+                         {
+                             DeduccionId = d.DeduccionId,
+                             Nombre = d.Nombre,
+                             Codigo = d.Codigo,
+                             Tarifa = d.Tarifa,
+                             Gmf = d.Gmf,
+                             estado = d.estado,
+                             TipoBaseDeduccionId = d.TipoBaseDeduccionId,
+                             TerceroId = d.TerceroId,
+                             EsValorFijo = d.EsValorFijo,
+                             ValorFijo = td.ValorFijo.HasValue ? td.ValorFijo.Value : 0,
+                         });
 
             return await query.ToListAsync();
         }
@@ -524,7 +536,7 @@ namespace ComplementApp.API.Data
             return await lista.ToListAsync();
         }
 
-         public async Task<ICollection<ValorSeleccion>> DescargarListaActividadEconomica()
+        public async Task<ICollection<ValorSeleccion>> DescargarListaActividadEconomica()
         {
             var lista = (from t in _context.ActividadEconomica
                          select new ValorSeleccion()

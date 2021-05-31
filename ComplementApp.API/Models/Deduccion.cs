@@ -31,6 +31,9 @@ namespace ComplementApp.API.Models
         public int? TerceroId { get; set; }
         public Tercero Tercero { get; set; }
         public ICollection<TerceroDeduccion> DeduccionesXTercero { get; set; }
-        public bool EsValorFijo { get; set; }        
+        public bool EsValorFijo { get; set; }
+
+        [NotMapped]
+        public decimal ValorFijo { get; set; }
     }
 }

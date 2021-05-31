@@ -7,6 +7,6 @@ namespace ComplementApp.API.Dtos
         public ValorSeleccion RubroPresupuestal { get; set; }
         public decimal ValorAPagar { get; set; }
         public string Dependencia { get; set; }
-        public int ClavePresupuestalContableId { get; set; }
+        public int? ClavePresupuestalContableId { get; set; }
     }
 }

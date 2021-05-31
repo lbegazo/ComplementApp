@@ -12,8 +12,8 @@ namespace ComplementApp.API.Dtos
         public string TipoBase { get; set; }
         public decimal Base { get; set; }
         public decimal Valor { get; set; }
-        public int TipoBaseDeduccionId { get; set; } 
+        public int TipoBaseDeduccionId { get; set; }
         public bool EsValorFijo { get; set; }
-
+        public decimal ValorFijo { get; set; }
     }
 }
