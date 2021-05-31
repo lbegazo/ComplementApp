@@ -100,9 +100,19 @@ namespace ComplementApp.API.Services
                         {
                             if (!planPagoDto.Viaticos)
                             {
-                                formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(solicitudPago, parametroLiquidacion,
-                                                                            parametros, listaCriterioReteFuente.ToList(),
-                                                                            listaDeduccionesDto.ToList());
+                                var HonorarioSinIva = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
+
+                                if (HonorarioSinIva > 0)
+                                {
+
+                                    formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(solicitudPago, parametroLiquidacion,
+                                                                                parametros, listaCriterioReteFuente.ToList(),
+                                                                                listaDeduccionesDto.ToList());
+                                }
+                                else
+                                {
+                                    throw new Exception($"Debe registrar el valor del honorario para el tercero");
+                                }
                             }
                             else
                             {
@@ -324,7 +334,6 @@ namespace ComplementApp.API.Services
             #endregion Obtener lista de deducciones          
 
             formato.TotalRetenciones = obtenerSumatoriaRetenciones(listaDeducciones);
-            var valorRetencionSinValorFijo = obtenerSumatoriaRetencionesSinValorFijo(listaDeducciones);
             formato.TotalAGirar = formato.ValorTotal - formato.TotalRetenciones;
 
             return formato;
@@ -387,17 +396,6 @@ namespace ComplementApp.API.Services
             decimal valor = 0;
 
             valor = listaDeducciones
-                    .Sum(x => x.Valor);
-
-            return valor;
-        }
-
-        private decimal obtenerSumatoriaRetencionesSinValorFijo(List<DeduccionDto> listaDeducciones)
-        {
-            decimal valor = 0;
-
-            valor = listaDeducciones
-                    .Where(x => x.EsValorFijo == false)
                     .Sum(x => x.Valor);
 
             return valor;
@@ -1448,11 +1446,20 @@ namespace ComplementApp.API.Services
                                                                                             .ToList();
                                             }
 
-                                            formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacionTercero,
-                                                                                        listaParametrosGenerales, listaCriterioCalculoReteFuente,
-                                                                                        listaDeduccionesDto.ToList(),
-                                                                                        listaLiquidacionMesAnteriorViaticoXTercero,
-                                                                                        detalleLiquidacionMesAnterior);
+                                            var HonorarioSinIva = parametroLiquidacionTercero.HonorarioSinIva.HasValue ? parametroLiquidacionTercero.HonorarioSinIva.Value : 0;
+
+                                            if (HonorarioSinIva > 0)
+                                            {
+                                                formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacionTercero,
+                                                                                            listaParametrosGenerales, listaCriterioCalculoReteFuente,
+                                                                                            listaDeduccionesDto.ToList(),
+                                                                                            listaLiquidacionMesAnteriorViaticoXTercero,
+                                                                                            detalleLiquidacionMesAnterior);
+                                            }
+                                            else
+                                            {
+                                                throw new Exception($"Debe registrar el valor del honorario para el tercero");
+                                            }
                                         }
                                         else
                                         {
@@ -1635,42 +1642,52 @@ namespace ComplementApp.API.Services
             {
                 foreach (var deduccion in listaDeducciones)
                 {
-                    if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
+                    if (!deduccion.EsValorFijo)
                     {
-                        deduccion.Base = baseGravableFinal;
-                        var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                        + factorIncremento) * valorUvt) * factorCalculo;
-                        deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
-
-                        if (deduccion.Base > 0)
+                        deduccion.Nombre = deduccion.Nombre.Length > 130 ? deduccion.Nombre.Substring(0, 130) + "..." : deduccion.Nombre;
+                        if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                         {
-                            deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                            deduccion.Base = baseGravableFinal;
+                            var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
+                                                            + factorIncremento) * valorUvt) * factorCalculo;
+                            deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
+
+                            if (deduccion.Base > 0)
+                            {
+                                deduccion.Tarifa = deduccion.Valor / deduccion.Base;
+                            }
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
+                        {
+                            deduccion.Base = C30ValorIva;
+                            valor = deduccion.Tarifa * C30ValorIva;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
+                        {
+                            deduccion.Base = formato.Afc;
+                            valor = deduccion.Tarifa * deduccion.Base;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
+                        {
+                            deduccion.Base = formato.PensionVoluntaria;
+                            valor = deduccion.Tarifa * deduccion.Base;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        }
+                        else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
+                        {
+                            deduccion.Base = formato.SubTotal1;
+                            valor = deduccion.Tarifa * formato.SubTotal1;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                         }
                     }
-                    else if (DeduccionEsParametroGeneral(parametrosCodigoIva, deduccion.Codigo))
+                    else
                     {
-                        deduccion.Base = C30ValorIva;
-                        valor = deduccion.Tarifa * C30ValorIva;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-
-                    }
-                    else if (DeduccionEsParametroGeneral(parametrosCodigoAFC, deduccion.Codigo))
-                    {
-                        deduccion.Base = formato.Afc;
-                        valor = deduccion.Tarifa * deduccion.Base;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                    }
-                    else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
-                    {
-                        deduccion.Base = formato.PensionVoluntaria;
-                        valor = deduccion.Tarifa * deduccion.Base;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
-                    }
-                    else if ((deduccion.TipoBaseDeduccionId != (int)TipoBaseDeducciones.OTRAS))
-                    {
-                        deduccion.Base = formato.SubTotal1;
-                        valor = deduccion.Tarifa * formato.SubTotal1;
-                        deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        deduccion.Tarifa = 0;
+                        deduccion.Base = deduccion.ValorFijo;
+                        deduccion.Valor = deduccion.ValorFijo;
                     }
                 }
             }
@@ -2312,6 +2329,7 @@ namespace ComplementApp.API.Services
             #endregion Obtener listas secundarias
 
             //Proceso de obtención de detalles de liquidación
+            //No necesariamente devolvera la misma cantidad de registros enviados
             listaDetalleLiquidacionARegistrar = ObtenerListaDetalleLiquidacionARegistrar(usuarioId, pciId,
                                                                                 listaSolicitud,
                                                                                 listaSolicitudPago,
@@ -2343,12 +2361,13 @@ namespace ComplementApp.API.Services
             //Insertar liquidación 
             await _dataContext.BulkInsertAsync(listaDetalleLiquidacionARegistrar, bulkConfig);
 
-            //Inserta deducciones de liquidación
+            //Insertar deducciones de liquidación
             foreach (var detalleLiquidacion in listaDetalleLiquidacionARegistrar)
             {
                 foreach (var deduccion in detalleLiquidacion.Deducciones)
                 {
-                    deduccion.DetalleLiquidacionId = detalleLiquidacion.DetalleLiquidacionId; // setting FK to match its linked PK that was generated in DB
+                    // setting FK to match its linked PK that was generated in DB
+                    deduccion.DetalleLiquidacionId = detalleLiquidacion.DetalleLiquidacionId;
                 }
                 listaLiquidacionDeduccionARegistrar.AddRange(detalleLiquidacion.Deducciones);
             }
@@ -2359,8 +2378,10 @@ namespace ComplementApp.API.Services
 
             #region Actualización Solicitud de Pago
 
+            var listaSolicitudPagoLiquidadaIds = listaDetalleLiquidacionARegistrar.Select(x => x.FormatoSolicitudPagoId).ToHashSet().ToList();
+
             var listaSolicitudPagoBase = from pp in _dataContext.FormatoSolicitudPago
-                                         where solicitudPagoIds.Contains(pp.FormatoSolicitudPagoId)
+                                         where listaSolicitudPagoLiquidadaIds.Contains(pp.FormatoSolicitudPagoId)
                                          select pp;
 
             listaSolicitudPagoBase.BatchUpdate(new FormatoSolicitudPago
@@ -2375,7 +2396,8 @@ namespace ComplementApp.API.Services
 
             #region Actualización de Plan de Pago
 
-            var listaPlanPagoParaCompromisoIds = ObtenerListaPlanPagoParaCompromiso(compromisos, pciId);
+            var listaCompromisoLiquidadoIds = listaDetalleLiquidacionARegistrar.Select(x => x.Crp).ToHashSet().ToList();
+            var listaPlanPagoParaCompromisoIds = ObtenerListaPlanPagoParaCompromiso(listaCompromisoLiquidadoIds, pciId);
 
             var listaPlanPagoBase = from pp in _dataContext.PlanPago
                                     where listaPlanPagoParaCompromisoIds.Contains(pp.PlanPagoId)

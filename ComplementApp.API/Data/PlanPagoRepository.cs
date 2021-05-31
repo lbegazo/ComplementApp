@@ -540,6 +540,8 @@ namespace ComplementApp.API.Data
             return cantidad;
         }
 
+        //Basado en la lista de compromisos 
+        // Obtener la lista de planes de pago donde haya mas de un plan de pago para cada compromiso
         public List<int> ObtenerListaPlanPagoParaCompromiso(List<long> listaCrp, int pcidId)
         {
             List<int> lista = null;

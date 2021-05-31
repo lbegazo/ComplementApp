@@ -450,7 +450,8 @@ namespace ComplementApp.API.Data
                           {
                               TerceroId = td.TerceroId,
                               ActividadEconomicaId = td.ActividadEconomicaId,
-                              Deduccion = d,
+                              ValorFijo = td.ValorFijo,
+                              Deduccion = d,                              
                           }).ToListAsync();
         }
 
