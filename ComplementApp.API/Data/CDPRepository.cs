@@ -222,8 +222,24 @@ namespace ComplementApp.API.Data
                                   join sf in _context.SituacionFondo on d.Detalle9.ToUpper() equals sf.Nombre.ToUpper()
                                   join ff in _context.FuenteFinanciacion on d.Detalle8.ToUpper() equals ff.Nombre.ToUpper()
                                   join rp in _context.RecursoPresupuestal on d.Detalle10.ToUpper() equals rp.Codigo.ToUpper()
-                                  join cp in _context.ClavePresupuestalContable on new { d.Crp, d.RubroPresupuestalId, sf.SituacionFondoId, ff.FuenteFinanciacionId, rp.RecursoPresupuestalId } equals
-                                                                                    new { cp.Crp, cp.RubroPresupuestalId, cp.SituacionFondoId, cp.FuenteFinanciacionId, cp.RecursoPresupuestalId } into ClavePresupuestal
+                                  join cp in _context.ClavePresupuestalContable on new
+                                  {
+                                      d.Crp,
+                                      d.RubroPresupuestalId,
+                                      sf.SituacionFondoId,
+                                      ff.FuenteFinanciacionId,
+                                      rp.RecursoPresupuestalId,
+                                      Dependencia = d.Detalle2
+                                  } equals
+                                    new
+                                    {
+                                        cp.Crp,
+                                        cp.RubroPresupuestalId,
+                                        cp.SituacionFondoId,
+                                        cp.FuenteFinanciacionId,
+                                        cp.RecursoPresupuestalId,
+                                        Dependencia = cp.Dependencia
+                                    } into ClavePresupuestal
                                   from clave in ClavePresupuestal.DefaultIfEmpty()
                                   where d.Instancia == (int)TipoDocumento.Compromiso
                                   where d.PciId == pciId
@@ -243,6 +259,12 @@ namespace ComplementApp.API.Data
                                           RubroPresupuestalId = i.RubroPresupuestalId,
                                           Identificacion = i.Identificacion,
                                           Nombre = i.Nombre,
+                                      },
+                                      CdpDocumento = new CDP()
+                                      {
+                                          Detalle8 = d.Detalle8,
+                                          Detalle9 = d.Detalle9,
+                                          Detalle10 = d.Detalle10,
                                       }
                                   })
                                  .Distinct()

@@ -508,12 +508,13 @@ namespace ComplementApp.API.Data
             return formato;
         }
 
-        public async Task<ICollection<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId)
+        public async Task<List<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId)
         {
             var lista = await (from c in _context.CDP
                                where c.Instancia == (int)TipoDocumento.OrdenPago
                                where c.PciId == pciId
                                where c.Crp == crp
+                               where c.Detalle1.ToUpper() == "PAGADA"
                                select new CDPDto()
                                {
                                    Cdp = c.Cdp,
@@ -530,6 +531,7 @@ namespace ComplementApp.API.Data
                                  .Distinct()
                                  .OrderBy(c => c.OrdenPago)
                                  .ToListAsync();
+
             return lista;
         }
 

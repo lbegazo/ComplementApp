@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -409,7 +410,14 @@ namespace ComplementApp.API.Controllers
                     var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp, pciId);
                     if (pagosRealizados != null)
                     {
-                        formato.NumeroPagoFechaActual = pagosRealizados.Count;
+                        var listaOrdenPago = from pr in pagosRealizados
+                                             group pr by pr.OrdenPago into g
+                                             select new
+                                             {
+                                                 name = g.Key
+                                             };
+
+                        formato.NumeroPagoFechaActual = listaOrdenPago.Count();
                         formato.PagosRealizados = pagosRealizados;
                     }
                 }
@@ -453,7 +461,14 @@ namespace ComplementApp.API.Controllers
                     var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp, pciId);
                     if (pagosRealizados != null)
                     {
-                        formato.NumeroPagoFechaActual = pagosRealizados.Count;
+                        var listaOrdenPago = from pr in pagosRealizados
+                                             group pr by pr.OrdenPago into g
+                                             select new
+                                             {
+                                                 name = g.Key
+                                             };
+
+                        formato.NumeroPagoFechaActual = listaOrdenPago.Count();
                         formato.PagosRealizados = pagosRealizados;
                     }
                 }

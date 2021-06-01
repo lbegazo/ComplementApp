@@ -379,17 +379,26 @@
             </div>
             <!--RUBROS PRESUPUESTALES TITULO-->
             <div class="form-row">
-              <div class="col-1"></div>
-              <div class="col-2 inner center">
+              <div style="width: 8%;"></div>
+              <div style="width: 15%;" class="inner center">
                 <small><strong>CODIGO</strong></small>
               </div>
-              <div class="col-4 inner center">
+              <div style="width: 30%;"  class="inner center">
                 <small><strong>DESCRIPCION</strong></small>
               </div>
-              <div class="col-3 inner center">
+              <div style="width: 15%;"  class="inner center">
                 <small><strong>DEPENDENCIA</strong></small>
               </div>
-              <div class="col-2 inner center">
+              <div style="width: 7%;"  class="inner center">
+                <small><strong>FTE</strong></small>
+              </div>
+              <div style="width: 5%;"  class="inner center">
+                <small><strong>SIT</strong></small>
+              </div>
+              <div style="width: 5%;"  class="inner center">
+                <small><strong>REC</strong></small>
+              </div>
+              <div style="width: 15%;" class="inner center">
                 <small><strong>VALOR SOLICITUD</strong></small>
               </div>
             </div>
@@ -407,7 +416,7 @@
                   *ngFor="let item of rubrosPresupuestales; let i = index"
                 >
                   <ng-container [formGroupName]="i">
-                    <div class="col-1 inner center aplicaBackground parent">
+                    <div style="width: 8%;" class="inner center aplicaBackground parent">
                       <button
                         class="btn btn-danger btn-sm child"
                         (click)="EliminarRubroPresupuestal(i)"
@@ -415,18 +424,27 @@
                         Elim.
                       </button>
                     </div>
-                    <div class="col-2 inner center aplicaBackground">
+                    <div style="width: 15%;" class="inner center aplicaBackground">
                       <small>{{
                         item?.rubroPresupuestal.identificacion
                       }}</small>
                     </div>
-                    <div class="col-4 inner left aplicaBackground">
+                    <div style="width: 30%;" class="inner left aplicaBackground">
                       <small>{{ item?.rubroPresupuestal.nombre }}</small>
                     </div>
-                    <div class="col-3 inner left aplicaBackground">
+                    <div style="width:15%;" class="inner left aplicaBackground">
                       <small>{{ item?.dependenciaDescripcion }}</small>
                     </div>
-                    <div class="col-2 inner center aplicaBackground">
+                    <div style="width: 7%;" class="inner center aplicaBackground">
+                      <small>{{ item?.cdpDocumento.detalle8 }}</small>
+                    </div>
+                    <div style="width: 5%;" class="inner center aplicaBackground">
+                      <small>{{ item?.cdpDocumento.detalle9 }}</small>
+                    </div>
+                    <div style="width: 5%;" class="inner center aplicaBackground">
+                      <small>{{ item?.cdpDocumento.detalle10 }}</small>
+                    </div>
+                    <div style="width: 15%;" class="inner center aplicaBackground">
                       <input
                         type="text"
                         style="text-align: right; height: 30px"
@@ -453,7 +471,7 @@
                 </div>
               </div>
             </div>
-            <!--RUBROS PRESUPUESTALES GRILLA MAYOR A 1-->
+            <!--RUBROS PRESUPUESTALES GRILLA IGUAL A 1-->
             <div class="form-row">
               <div
                 *ngIf="
@@ -467,7 +485,7 @@
                   *ngFor="let item of rubrosPresupuestales; let i = index"
                 >
                   <ng-container [formGroupName]="i">
-                    <div class="col-1 inner center aplicaBackground parent">
+                    <div style="width: 8%;" class="inner center aplicaBackground parent">
                       <button
                         class="btn btn-danger btn-sm child"
                         (click)="EliminarRubroPresupuestal(i)"
@@ -476,18 +494,27 @@
                         Elim.
                       </button>
                     </div>
-                    <div class="col-2 inner center aplicaBackground">
+                    <div  style="width: 15%;" class="inner center aplicaBackground">
                       <small>{{
                         item?.rubroPresupuestal.identificacion
                       }}</small>
                     </div>
-                    <div class="col-4 inner left aplicaBackground">
+                    <div style="width: 30%;" class="inner left aplicaBackground">
                       <small>{{ item?.rubroPresupuestal.nombre }}</small>
                     </div>
-                    <div class="col-3 inner left aplicaBackground">
+                    <div style="width: 15%;" class="inner left aplicaBackground">
                       <small>{{ item?.dependenciaDescripcion }}</small>
                     </div>
-                    <div class="col-2 inner center aplicaBackground">
+                    <div style="width: 7%;" class="inner center aplicaBackground">
+                      <small>{{ item?.cdpDocumento.detalle8 }}</small>
+                    </div>
+                    <div style="width: 5%;" class="inner center aplicaBackground">
+                      <small>{{ item?.cdpDocumento.detalle9 }}</small>
+                    </div>
+                    <div style="width: 5%;" class="inner center aplicaBackground">
+                      <small>{{ item?.cdpDocumento.detalle10 }}</small>
+                    </div>
+                    <div style="width: 15%;" class="inner center aplicaBackground">
                       <label class="col-form-label-sm">{{
                         item?.valorSolicitud | number: "1.2-2"
                       }}</label>

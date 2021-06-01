@@ -386,10 +386,6 @@ namespace ComplementApp.API.Data
                                                          c.Detalle7 +
                                                           " " +
                                                           c.Detalle6 +
-                                                          " FACT. " +
-                                                          sp.NumeroFactura +
-                                                          " PAGO. " +
-                                                          pp.NumeroPago.ToString() +
                                                            " PER. " +
                                                            sp.FechaInicio.ToString("yyyy-MM-dd") +
                                                            " A " +

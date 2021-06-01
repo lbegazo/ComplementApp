@@ -330,16 +330,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.actividadEconomicaId = this.actividadEconomica.actividadEconomicaId;
 
       if (this.actividadEconomicaId > 0) {
-        if (
-          this.idModalidadContratoSelecionado ===
-          ModalidadContrato.ProveedorSinDescuento.value
-        ) {
-          this.habilitarBotonAgregar = true;
-        } else {
-          if (this.deduccion && this.deduccion.deduccionId > 0) {
-            this.habilitarBotonAgregar = true;
-          }
-        }
+        this.habilitarBotonAgregar = true;
       }
     }
   }
@@ -761,16 +752,15 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onAgregarDeduccion() {
     if (this.accionAgregarDeduccion) {
       //#region Agregar Deducción Actividad Economica
-
-      if (
-        this.idModalidadContratoSelecionado ===
-        ModalidadContrato.ProveedorSinDescuento.value
-      ) {
-        //#region ProveedorSinDescuento
+      console.log(this.deduccion);
+      if (this.deduccion === undefined || this.deduccion === null) {
+        //#region Solo Actividad Economica
 
         if (this.actividadEconomica && this.actividadEconomicaId > 0) {
           const filtro = this.listaTerceroDeducciones.filter(
-            (x) => x.actividadEconomica.id === this.actividadEconomicaId
+            (x) =>
+              x.actividadEconomica.id === this.actividadEconomicaId &&
+              x.deduccion.deduccionId === 0
           )[0];
 
           if (filtro) {
@@ -784,6 +774,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           actividadT.nombre = this.actividadEconomica.nombre;
 
           const deduccionT = new DeduccionDto();
+          deduccionT.deduccionId = 0;
           const terceroDeDeduccionT = new ValorSeleccion();
           const terceroT = new ValorSeleccion();
           terceroT.id = this.tercero.terceroId;
@@ -811,7 +802,7 @@ export class ParametroLiquidacionEditComponent implements OnInit {
           );
         }
 
-        //#endregion ProveedorSinDescuento
+        //#endregion Solo Actividad Economica
       } else {
         if (
           this.deduccion &&

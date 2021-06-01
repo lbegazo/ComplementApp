@@ -11,6 +11,9 @@ export interface Cdp {
   objeto: string; // Objeto del bien completo
   detalle5: string; // Supervisor
   detalle7: string; // ModalidadContrato
+  detalle8: string; // Fuente Financiacion FTE
+  detalle9: string; // Situacion Fondo SIT
+  detalle10: string; // Recurso Presupuestal REC
   supervisorId: number;
   terceroId: number;
 

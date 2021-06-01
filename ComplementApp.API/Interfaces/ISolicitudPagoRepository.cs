@@ -10,7 +10,7 @@ namespace ComplementApp.API.Interfaces
     {
         Task<PagedList<CDPDto>> ObtenerCompromisosParaSolicitudRegistroPago(int usuarioId, int perfilId, int? terceroId, UserParams userParams);
         Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp, int pciId);
-        Task<ICollection<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId);
+        Task<List<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId);
         Task<PagedList<CDPDto>> ObtenerSolicitudesPagoParaAprobar(int usuarioId, int? terceroId, UserParams userParams);
         Task<PagedList<CDPDto>> ObtenerListaSolicitudPagoAprobada(int? terceroId, UserParams userParams);
         Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPagoXId(int formatoSolicitudPagoId);
