@@ -254,7 +254,7 @@ namespace ComplementApp.API.Data
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
 
-                              Usuario = super.Nombres + ' ' + super.Apellidos,
+                              Usuario = (super.Nombres + ' ' + super.Apellidos).Length > 20 ? (super.Nombres + ' ' + super.Apellidos).Substring(0, 20) : (super.Nombres + ' ' + super.Apellidos),
                               Email = super.Email,
                           })
                     .FirstOrDefaultAsync();

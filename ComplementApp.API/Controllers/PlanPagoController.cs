@@ -135,7 +135,7 @@ namespace ComplementApp.API.Controllers
             }
 
             if (planPagoBD != null)
-            {
+            {                
                 var cantidad = _repo.ObtenerCantidadMaximaPlanPago(planPagoBD.Crp, pciId);
                 planPagoBD.CantidadPago = cantidad;
             }

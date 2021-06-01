@@ -81,7 +81,8 @@ namespace ComplementApp.API.Controllers
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.UsuarioId.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username),
                 new Claim(ClaimTypes.Role, userFromRepo.PciId.ToString()),
-                new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos)
+                new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos),
+                new Claim(ClaimTypes.GivenName,  userFromRepo.Nombres),
             };
 
             //The server has to sign the token(To have a valid token)

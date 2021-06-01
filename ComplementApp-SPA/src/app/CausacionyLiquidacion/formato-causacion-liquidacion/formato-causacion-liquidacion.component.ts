@@ -23,6 +23,7 @@ import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausaci
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { TipoOperacion } from 'src/app/_models/tipoOperacion';
 import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-formato-causacion-liquidacion',
@@ -49,7 +50,8 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
   constructor(
     private alertify: AlertifyService,
     private fb: FormBuilder,
-    private liquidacionService: DetalleLiquidacionService
+    private liquidacionService: DetalleLiquidacionService,
+    public authService: AuthService,
   ) {}
 
   ngOnInit() {
