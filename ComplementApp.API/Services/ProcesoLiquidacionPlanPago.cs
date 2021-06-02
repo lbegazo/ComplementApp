@@ -32,6 +32,7 @@ namespace ComplementApp.API.Services
         const string salarioMinimo = "SalarioMinimo";
         const string codigoPensionVoluntaria = "CodigoPensionVoluntaria";
         const string codigoAFC = "CodigoAFC";
+        const string codigoBaseLiqValorBruto = "BaseLiqValorBruto";
 
         #endregion Constantes
 
@@ -208,6 +209,7 @@ namespace ComplementApp.API.Services
             var parametrosCodigoIva = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoIva);
             var parametrosCodigoPensionVoluntaria = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoPensionVoluntaria);
             var parametrosCodigoAFC = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoAFC);
+            var parametrosLiqValorBruto = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoBaseLiqValorBruto);
 
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
@@ -291,6 +293,12 @@ namespace ComplementApp.API.Services
                         else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
                         {
                             deduccion.Base = formato.PensionVoluntaria;
+                            valor = deduccion.Tarifa * deduccion.Base;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosLiqValorBruto, deduccion.Codigo))
+                        {
+                            deduccion.Base = formato.ValorTotal;
                             valor = deduccion.Tarifa * deduccion.Base;
                             deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                         }
@@ -1583,6 +1591,7 @@ namespace ComplementApp.API.Services
             var parametrosCodigoIva = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoIva);
             var parametrosCodigoPensionVoluntaria = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoPensionVoluntaria);
             var parametrosCodigoAFC = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoAFC);
+            var parametrosLiqValorBruto = obtenerParametrosGeneralesXTipo(parametroGenerales, codigoBaseLiqValorBruto);
 
             parametroUvt = parametroUvt.Replace(",", "");
             parametroSMLV = parametroSMLV.Replace(",", "");
@@ -1673,6 +1682,12 @@ namespace ComplementApp.API.Services
                         else if (DeduccionEsParametroGeneral(parametrosCodigoPensionVoluntaria, deduccion.Codigo))
                         {
                             deduccion.Base = formato.PensionVoluntaria;
+                            valor = deduccion.Tarifa * deduccion.Base;
+                            deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
+                        }
+                        else if (DeduccionEsParametroGeneral(parametrosLiqValorBruto, deduccion.Codigo))
+                        {
+                            deduccion.Base = formato.ValorTotal;
                             valor = deduccion.Tarifa * deduccion.Base;
                             deduccion.Valor = (int)Math.Round(valor, 0, MidpointRounding.AwayFromZero);
                         }
