@@ -316,26 +316,28 @@ export class ObligacionPresupuestalComponent implements OnInit {
           (response) => {
             switch (response.type) {
               case HttpEventType.Response:
-                const downloadedFile = new Blob([response.body], {
-                  type: response.body.type,
-                });
+                if (response.body !== null) {
+                  const downloadedFile = new Blob([response.body], {
+                    type: response.body.type,
+                  });
 
-                const nombreArchivo = response.headers.get('filename');
+                  const nombreArchivo = response.headers.get('filename');
 
-                if (nombreArchivo != null && nombreArchivo.length > 0) {
-                  fileName = nombreArchivo + '.txt';
-                } else {
-                  fileName = 'SIGPAA_Maestro.txt';
+                  if (nombreArchivo != null && nombreArchivo.length > 0) {
+                    fileName = nombreArchivo + '.txt';
+                  } else {
+                    fileName = 'SIGPAA_Maestro.txt';
+                  }
+
+                  const a = document.createElement('a');
+                  a.setAttribute('style', 'display:none;');
+                  document.body.appendChild(a);
+                  a.download = fileName;
+                  a.href = URL.createObjectURL(downloadedFile);
+                  a.target = '_blank';
+                  a.click();
+                  document.body.removeChild(a);
                 }
-
-                const a = document.createElement('a');
-                a.setAttribute('style', 'display:none;');
-                document.body.appendChild(a);
-                a.download = fileName;
-                a.href = URL.createObjectURL(downloadedFile);
-                a.target = '_blank';
-                a.click();
-                document.body.removeChild(a);
                 break;
             }
           },
@@ -360,26 +362,28 @@ export class ObligacionPresupuestalComponent implements OnInit {
                 (response) => {
                   switch (response.type) {
                     case HttpEventType.Response:
-                      const downloadedFile = new Blob([response.body], {
-                        type: response.body.type,
-                      });
+                      if (response.body !== null) {
+                        const downloadedFile = new Blob([response.body], {
+                          type: response.body.type,
+                        });
 
-                      const nombreArchivo = response.headers.get('filename');
+                        const nombreArchivo = response.headers.get('filename');
 
-                      if (nombreArchivo != null && nombreArchivo.length > 0) {
-                        fileName = nombreArchivo + '.txt';
-                      } else {
-                        fileName = 'SIGPAA_Items.txt';
+                        if (nombreArchivo != null && nombreArchivo.length > 0) {
+                          fileName = nombreArchivo + '.txt';
+                        } else {
+                          fileName = 'SIGPAA_Items.txt';
+                        }
+
+                        const a = document.createElement('a');
+                        a.setAttribute('style', 'display:none;');
+                        document.body.appendChild(a);
+                        a.download = fileName;
+                        a.href = URL.createObjectURL(downloadedFile);
+                        a.target = '_blank';
+                        a.click();
+                        document.body.removeChild(a);
                       }
-
-                      const a = document.createElement('a');
-                      a.setAttribute('style', 'display:none;');
-                      document.body.appendChild(a);
-                      a.download = fileName;
-                      a.href = URL.createObjectURL(downloadedFile);
-                      a.target = '_blank';
-                      a.click();
-                      document.body.removeChild(a);
                       break;
                   }
                 },
@@ -405,30 +409,32 @@ export class ObligacionPresupuestalComponent implements OnInit {
                       (response) => {
                         switch (response.type) {
                           case HttpEventType.Response:
-                            const downloadedFile = new Blob([response.body], {
-                              type: response.body.type,
-                            });
+                            if (response.body !== null) {
+                              const downloadedFile = new Blob([response.body], {
+                                type: response.body.type,
+                              });
 
-                            const nombreArchivo =
-                              response.headers.get('filename');
+                              const nombreArchivo =
+                                response.headers.get('filename');
 
-                            if (
-                              nombreArchivo != null &&
-                              nombreArchivo.length > 0
-                            ) {
-                              fileName = nombreArchivo + '.txt';
-                            } else {
-                              fileName = 'SIGPAA_Maestro.txt';
+                              if (
+                                nombreArchivo != null &&
+                                nombreArchivo.length > 0
+                              ) {
+                                fileName = nombreArchivo + '.txt';
+                              } else {
+                                fileName = 'SIGPAA_Maestro.txt';
+                              }
+
+                              const a = document.createElement('a');
+                              a.setAttribute('style', 'display:none;');
+                              document.body.appendChild(a);
+                              a.download = fileName;
+                              a.href = URL.createObjectURL(downloadedFile);
+                              a.target = '_blank';
+                              a.click();
+                              document.body.removeChild(a);
                             }
-
-                            const a = document.createElement('a');
-                            a.setAttribute('style', 'display:none;');
-                            document.body.appendChild(a);
-                            a.download = fileName;
-                            a.href = URL.createObjectURL(downloadedFile);
-                            a.target = '_blank';
-                            a.click();
-                            document.body.removeChild(a);
                             break;
                         }
                       },
@@ -454,33 +460,36 @@ export class ObligacionPresupuestalComponent implements OnInit {
                             (response) => {
                               switch (response.type) {
                                 case HttpEventType.Response:
-                                  const downloadedFile = new Blob(
-                                    [response.body],
-                                    {
-                                      type: response.body.type,
+                                  if (response.body !== null) {
+                                    const downloadedFile = new Blob(
+                                      [response.body],
+                                      {
+                                        type: response.body.type,
+                                      }
+                                    );
+
+                                    const nombreArchivo =
+                                      response.headers.get('filename');
+
+                                    if (
+                                      nombreArchivo != null &&
+                                      nombreArchivo.length > 0
+                                    ) {
+                                      fileName = nombreArchivo + '.txt';
+                                    } else {
+                                      fileName = 'SIGPAA_Maestro.txt';
                                     }
-                                  );
 
-                                  const nombreArchivo =
-                                    response.headers.get('filename');
-
-                                  if (
-                                    nombreArchivo != null &&
-                                    nombreArchivo.length > 0
-                                  ) {
-                                    fileName = nombreArchivo + '.txt';
-                                  } else {
-                                    fileName = 'SIGPAA_Maestro.txt';
+                                    const a = document.createElement('a');
+                                    a.setAttribute('style', 'display:none;');
+                                    document.body.appendChild(a);
+                                    a.download = fileName;
+                                    a.href =
+                                      URL.createObjectURL(downloadedFile);
+                                    a.target = '_blank';
+                                    a.click();
+                                    document.body.removeChild(a);
                                   }
-
-                                  const a = document.createElement('a');
-                                  a.setAttribute('style', 'display:none;');
-                                  document.body.appendChild(a);
-                                  a.download = fileName;
-                                  a.href = URL.createObjectURL(downloadedFile);
-                                  a.target = '_blank';
-                                  a.click();
-                                  document.body.removeChild(a);
                                   break;
                               }
                             },

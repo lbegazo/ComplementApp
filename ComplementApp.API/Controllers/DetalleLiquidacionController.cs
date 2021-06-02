@@ -819,6 +819,9 @@ namespace ComplementApp.API.Controllers
                                                   select l
                                             ).ToList();
 
+                            //Para que no Imprima el archivo de factura
+                            listaIdFactura.Clear();
+
                             if (listaIdFactura != null && listaIdFactura.Count > 0)
                             {
                                 //Obtener información para el archivo
