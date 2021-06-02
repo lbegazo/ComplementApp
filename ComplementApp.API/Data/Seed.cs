@@ -603,25 +603,28 @@ namespace ComplementApp.API.Data
         {
             ParametroGeneral nuevoItem = null;
             List<ParametroGeneral> lista = new List<ParametroGeneral>();
-            if (File.Exists("Data/SeedFiles/_ParametroGeneral.json"))
+            if (!context.ParametroGeneral.Any())
             {
-                var data = File.ReadAllText("Data/SeedFiles/_ParametroGeneral.json");
-                var items = JsonConvert.DeserializeObject<List<ParametroGeneral>>(data);
-                foreach (var item in items)
+                if (File.Exists("Data/SeedFiles/_ParametroGeneral.json"))
                 {
-                    var itemBD = obtenerParametroGeneral(context, item.Nombre);
-                    if (itemBD == null)
+                    var data = File.ReadAllText("Data/SeedFiles/_ParametroGeneral.json");
+                    var items = JsonConvert.DeserializeObject<List<ParametroGeneral>>(data);
+                    foreach (var item in items)
                     {
-                        nuevoItem = new ParametroGeneral();
-                        nuevoItem.Nombre = item.Nombre;
-                        nuevoItem.Descripcion = item.Descripcion;
-                        nuevoItem.Valor = item.Valor;
-                        nuevoItem.Tipo = item.Tipo;
-                        lista.Add(nuevoItem);
+                        var itemBD = obtenerParametroGeneral(context, item.Nombre);
+                        if (itemBD == null)
+                        {
+                            nuevoItem = new ParametroGeneral();
+                            nuevoItem.Nombre = item.Nombre;
+                            nuevoItem.Descripcion = item.Descripcion;
+                            nuevoItem.Valor = item.Valor;
+                            nuevoItem.Tipo = item.Tipo;
+                            lista.Add(nuevoItem);
+                        }
                     }
+                    context.ParametroGeneral.AddRange(lista);
+                    context.SaveChanges();
                 }
-                context.ParametroGeneral.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -651,11 +654,11 @@ namespace ComplementApp.API.Data
 
         private static void SeedUsuario(DataContext context)
         {
-            if (!context.Usuario.Any())
+            //if (!context.Usuario.Any())
             {
-                if (File.Exists("Data/SeedFiles/_UsuarioSeed.json"))
+                if (File.Exists("Data/SeedFiles/_Usuario.json"))
                 {
-                    var data = File.ReadAllText("Data/SeedFiles/_UsuarioSeed.json");
+                    var data = File.ReadAllText("Data/SeedFiles/_Usuario.json");
                     var users = JsonConvert.DeserializeObject<List<Usuario>>(data);
                     foreach (var user in users)
                     {
@@ -671,8 +674,17 @@ namespace ComplementApp.API.Data
                             user.PasswordSalt = passwordSalt;
                             context.Usuario.Add(user);
                         }
+                        else
+                        {
+                            byte[] passwordHash, passwordSalt;
+                            CreatePasswordHash(user.Password, out passwordHash, out passwordSalt);
+
+                            usuario.PasswordHash = passwordHash;
+                            usuario.PasswordSalt = passwordSalt;
+                        }
+                        context.SaveChanges();
                     }
-                    context.SaveChanges();
+
                 }
             }
         }
@@ -801,24 +813,27 @@ namespace ComplementApp.API.Data
         {
             Estado nuevoEstado = null;
             List<Estado> lista = new List<Estado>();
-            if (File.Exists("Data/SeedFiles/_Estado.json"))
+            if (!context.Estado.Any())
             {
-                var data = File.ReadAllText("Data/SeedFiles/_Estado.json");
-                var items = JsonConvert.DeserializeObject<List<Estado>>(data);
-                foreach (var item in items)
+                if (File.Exists("Data/SeedFiles/_Estado.json"))
                 {
-                    var estado = obtenerEstado(context, item.Nombre, item.TipoDocumento);
-                    if (estado == null)
+                    var data = File.ReadAllText("Data/SeedFiles/_Estado.json");
+                    var items = JsonConvert.DeserializeObject<List<Estado>>(data);
+                    foreach (var item in items)
                     {
-                        nuevoEstado = new Estado();
-                        nuevoEstado.Nombre = item.Nombre;
-                        nuevoEstado.Descripcion = item.Descripcion;
-                        nuevoEstado.TipoDocumento = item.TipoDocumento;
-                        lista.Add(nuevoEstado);
+                        var estado = obtenerEstado(context, item.Nombre, item.TipoDocumento);
+                        if (estado == null)
+                        {
+                            nuevoEstado = new Estado();
+                            nuevoEstado.Nombre = item.Nombre;
+                            nuevoEstado.Descripcion = item.Descripcion;
+                            nuevoEstado.TipoDocumento = item.TipoDocumento;
+                            lista.Add(nuevoEstado);
+                        }
                     }
+                    context.Estado.AddRange(lista);
+                    context.SaveChanges();
                 }
-                context.Estado.AddRange(lista);
-                context.SaveChanges();
             }
         }
 
@@ -973,33 +988,37 @@ namespace ComplementApp.API.Data
         {
             Transaccion tran = null;
             Transaccion tranPapa = null;
-            if (File.Exists("Data/SeedFiles/_Transaccion.json"))
+            
+            if (!context.Transaccion.Any())
             {
-                var data = File.ReadAllText("Data/SeedFiles/_Transaccion.json");
-                var items = JsonConvert.DeserializeObject<List<TransaccionDto>>(data);
-                foreach (var item in items)
+                if (File.Exists("Data/SeedFiles/_Transaccion.json"))
                 {
-                    var tranBD = obtenerTransaccion(context, item.Codigo);
-                    if (tranBD == null)
+                    var data = File.ReadAllText("Data/SeedFiles/_Transaccion.json");
+                    var items = JsonConvert.DeserializeObject<List<TransaccionDto>>(data);
+                    foreach (var item in items)
                     {
-                        tran = new Transaccion();
-                        tran.Codigo = item.Codigo;
-                        tran.Nombre = item.Nombre;
-                        tran.Descripcion = item.Descripcion;
-                        tran.Icono = item.Icono;
-                        tran.Ruta = item.Ruta;
-                        tran.Estado = true;
-                        if (string.IsNullOrEmpty(item.CodigoPadreTransaccion))
+                        var tranBD = obtenerTransaccion(context, item.Codigo);
+                        if (tranBD == null)
                         {
-                            tran.PadreTransaccionId = 0;
+                            tran = new Transaccion();
+                            tran.Codigo = item.Codigo;
+                            tran.Nombre = item.Nombre;
+                            tran.Descripcion = item.Descripcion;
+                            tran.Icono = item.Icono;
+                            tran.Ruta = item.Ruta;
+                            tran.Estado = true;
+                            if (string.IsNullOrEmpty(item.CodigoPadreTransaccion))
+                            {
+                                tran.PadreTransaccionId = 0;
+                            }
+                            else
+                            {
+                                tranPapa = obtenerTransaccion(context, item.CodigoPadreTransaccion);
+                                tran.PadreTransaccionId = tranPapa.TransaccionId;
+                            }
+                            context.Transaccion.Add(tran);
+                            context.SaveChanges();
                         }
-                        else
-                        {
-                            tranPapa = obtenerTransaccion(context, item.CodigoPadreTransaccion);
-                            tran.PadreTransaccionId = tranPapa.TransaccionId;
-                        }
-                        context.Transaccion.Add(tran);
-                        context.SaveChanges();
                     }
                 }
             }
@@ -1187,7 +1206,7 @@ namespace ComplementApp.API.Data
             return clearText;
         }
 
-        
+
 
     }
 }

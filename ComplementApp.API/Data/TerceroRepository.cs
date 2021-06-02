@@ -266,7 +266,7 @@ namespace ComplementApp.API.Data
                                        Codigo = ded.DeduccionId > 0 ? ded.Codigo : string.Empty,
                                        Nombre = ded.DeduccionId > 0 ? ded.Nombre : string.Empty,
                                        Tarifa = ded.DeduccionId > 0 ? ded.Tarifa : 0,
-                                       EsValorFijo = ded.EsValorFijo,
+                                       EsValorFijo = ded.DeduccionId > 0 ? ded.EsValorFijo : false,
                                    },
                                    TerceroDeDeduccion = new ValorSeleccion()
                                    {
@@ -451,7 +451,7 @@ namespace ComplementApp.API.Data
                               TerceroId = td.TerceroId,
                               ActividadEconomicaId = td.ActividadEconomicaId,
                               ValorFijo = td.ValorFijo,
-                              Deduccion = d,                              
+                              Deduccion = d,
                           }).ToListAsync();
         }
 
