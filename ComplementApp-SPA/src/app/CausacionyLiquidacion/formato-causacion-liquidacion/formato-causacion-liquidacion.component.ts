@@ -51,11 +51,10 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
     private alertify: AlertifyService,
     private fb: FormBuilder,
     private liquidacionService: DetalleLiquidacionService,
-    public authService: AuthService,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.cargarMesesAnio();
     this.createForm();
   }
 
@@ -72,16 +71,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
 
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
-      tOperacionControl: ['', Validators.required],
     });
-
-    if (
-      this.detallePlanPago.modalidadContrato !== 1 ||
-      (this.detallePlanPago.modalidadContrato === 1 &&
-        this.detallePlanPago.viaticos)
-    ) {
-      this.tOperacionControl.disable();
-    }
   }
 
   registrarLiquidacion() {
@@ -205,71 +195,5 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
 
   get textoComprobanteContable() {
     return this.textoComprobanteContableEl.nativeElement.innerHTML;
-  }
-
-  onSeleccionarMesActual() {
-    if (this.tOperacionControl) {
-      this.formatoCausacionyLiquidacionPago.numeroMesSaludActual = (
-        this.tOperacionControl.value as TipoOperacion
-      ).tipoOperacionId;
-      this.mesSaludActual = (
-        this.tOperacionControl.value as TipoOperacion
-      ).nombre.toUpperCase();
-    }
-  }
-
-  get tOperacionControl() {
-    return this.formatoForm.get('tOperacionControl');
-  }
-
-  cargarMesesAnio() {
-    let mes: TipoOperacion = { tipoOperacionId: 0, codigo: '', nombre: '' };
-
-    for (let index = 1; index <= 12; index++) {
-      mes = { tipoOperacionId: 0, codigo: '', nombre: '' };
-      mes.tipoOperacionId = index;
-
-      switch (index) {
-        case 1:
-          mes.nombre = 'Enero';
-          break;
-        case 2:
-          mes.nombre = 'Febrero';
-          break;
-        case 3:
-          mes.nombre = 'Marzo';
-          break;
-        case 4:
-          mes.nombre = 'Abril';
-          break;
-        case 5:
-          mes.nombre = 'Mayo';
-          break;
-        case 6:
-          mes.nombre = 'Junio';
-          break;
-        case 7:
-          mes.nombre = 'Julio';
-          break;
-        case 8:
-          mes.nombre = 'Agosto';
-          break;
-        case 9:
-          mes.nombre = 'Septiembre';
-          break;
-        case 10:
-          mes.nombre = 'Octubre';
-          break;
-        case 11:
-          mes.nombre = 'Noviembre';
-          break;
-        case 12:
-          mes.nombre = 'Diciembre';
-          break;
-        default:
-          break;
-      }
-      this.listaMeses.push(mes);
-    }
   }
 }

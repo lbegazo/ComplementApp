@@ -218,6 +218,7 @@ namespace ComplementApp.API.Controllers
                     #region Mapear datos 
 
                     formato = _mapper.Map<FormatoSolicitudPago>(formatoDto);
+                    formato.EsSaludVencida = (formatoDto.FechaInicio.Month != formatoDto.MesId) ? true : false;
                     formato.ActividadEconomicaId = formatoDto.ActividadEconomicaId;
                     formato.EstadoId = (int)EstadoSolicitudPago.Generado;
                     formato.UsuarioIdRegistro = usuarioId;
@@ -557,6 +558,7 @@ namespace ComplementApp.API.Controllers
                     formato.UsuarioIdModificacion = usuarioId;
                     formato.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     formato.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                    formato.EsSaludVencida = (formatoDto.FechaInicio.Month != formatoDto.MesId) ? true : false;
 
                     #endregion Mapear datos 
 

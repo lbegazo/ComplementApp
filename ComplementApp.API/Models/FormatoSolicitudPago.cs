@@ -74,5 +74,6 @@ namespace ComplementApp.API.Models
         public ICollection<DetalleFormatoSolicitudPago> DetallesFormatoSolicitudPago { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+        public bool EsSaludVencida { get; set; }
     }
 }

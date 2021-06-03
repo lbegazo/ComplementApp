@@ -195,6 +195,10 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<Deduccion>()
             .Property(b => b.EsValorFijo)
             .HasDefaultValue(0);
+
+            modelBuilder.Entity<FormatoSolicitudPago>()
+            .Property(b => b.EsSaludVencida)
+            .HasDefaultValue(0);
         }
 
     }
