@@ -108,5 +108,15 @@
     "Nombre": "ConSolicitudPago",
     "Descripcion": "ConSolicitudPago",
     "TipoDocumento": "PlanDePagos"
+  },
+  {
+    "Nombre": "Generado",
+    "Descripcion": "Generado",
+    "TipoDocumento": "EstadoPlanAdquisicion"
+  },
+  {
+    "Nombre": "ConCDP",
+    "Descripcion": "ConCDP",
+    "TipoDocumento": "EstadoPlanAdquisicion"
   }
 ]

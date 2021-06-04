@@ -96,5 +96,11 @@
     "Descripcion": "NotaLegal6",
     "Valor": "Nota Legal 8 por el representante legal o revisor fiscal o contador de la empresa, los cuales se presentaron de acuerdo con lo establecido en la Ley 789 de 2002 y Decreto 1703 de 2002. Igualmente certifico que conforme a lo establecido en el artículo 18 del Decreto 723 de 2013, el certificado de examen médico preocupacional se encuentra vigente 3 (tres años). Por lo tanto, autorizo el pago.",
     "Tipo": "NotaLegal"
+  },
+  {
+    "Nombre": "BaseLiqValorBruto",
+    "Descripcion": "BaseLiqValorBruto",
+    "Valor": "2-03-80-01",
+    "Tipo": null
   }
 ]

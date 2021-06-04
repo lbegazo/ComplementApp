@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Dtos
 {
@@ -34,6 +35,10 @@ namespace ComplementApp.API.Dtos
         public decimal Valor_Convenio { get; set; }
         public int Convenio { get; set; }
         public string Decreto { get; set; }
-        public RubroPresupuestalDto RubroPresupuestal { get; set; }
+        public RubroPresupuestal RubroPresupuestal { get; set; }
+        public CDP CdpDocumento { get; set; }
+        public string DependenciaDescripcion { get; set; }
+        public decimal ValorTotal { get; set; }
+        public int? ClavePresupuestalContableId { get; set; }
     }
 }

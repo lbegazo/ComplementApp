@@ -22,7 +22,7 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<PagedList<SolicitudCDPParaPrincipalDto>> ObtenerListaSolicitudCDP(int? solicitudId, int? tipoOperacion,
                                                                     int? usuarioId, DateTime? fechaRegistro,
                                                                     int? estadoSolicitudId, UserParams userParams);
-        Task<ICollection<DetalleCDP>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId);        
+        Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId);        
 
         Task<CDPDto> ObtenerCDPPorCompromiso(long crp);
     }

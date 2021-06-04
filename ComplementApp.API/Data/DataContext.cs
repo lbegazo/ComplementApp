@@ -62,7 +62,7 @@ namespace ComplementApp.API.Data
         public DbSet<RubroPresupuestal> RubroPresupuestal { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<CDP> CDP { get; set; }
-        public DbSet<DetalleCDP> DetalleCDP { get; set; }
+        public DbSet<PlanAdquisicion> PlanAdquisicion { get; set; }
         public DbSet<TipoDetalleCDP> TipoDetalleModificacion { get; set; }
         public DbSet<UsoPresupuestal> UsoPresupuestal { get; set; }
         public DbSet<PlanPago> PlanPago { get; set; }

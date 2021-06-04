@@ -15,7 +15,7 @@ namespace ComplementApp.API.Data
             _context = context;
         }
         
-        public async Task<ICollection<DetalleCDP>> ObtenerListaPlanAnualAdquisicion(int pciId)
+        public async Task<ICollection<PlanAdquisicion>> ObtenerListaPlanAnualAdquisicion(int pciId)
         {
             var listaCdp = (from c in _context.CDP
                             where c.PciId == pciId
@@ -33,7 +33,7 @@ namespace ComplementApp.API.Data
                                 SaldoActual = g.Key.SaldoActual,
                             }).OrderBy(t => t.Crp); ;
 
-            var lista = await ((from d in _context.DetalleCDP
+            var lista = await ((from d in _context.PlanAdquisicion
                                 join rp in _context.RubroPresupuestal on d.RubroPresupuestalId equals rp.RubroPresupuestalId
                                 join ag in _context.ActividadGeneral on d.ActividadGeneralId equals ag.ActividadGeneralId
                                 join ae in _context.ActividadEspecifica on d.ActividadEspecificaId equals ae.ActividadEspecificaId
@@ -45,9 +45,9 @@ namespace ComplementApp.API.Data
                                 where ag.ActividadGeneralId == ae.ActividadGeneralId
                                 where ag.PciId == ae.PciId
                                 where ae.PciId == pciId
-                                select new DetalleCDP()
+                                select new PlanAdquisicion()
                                 {
-                                    DetalleCdpId = d.DetalleCdpId,
+                                    PlanAdquisicionId = d.PlanAdquisicionId,
                                     PlanDeCompras = d.PlanDeCompras,
                                     ValorAct = d.ValorAct,
                                     SaldoAct = d.SaldoAct,
@@ -95,10 +95,10 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<DetalleCDP> ObtenerPlanAnualAdquisicionBase(int id)
+        public async Task<PlanAdquisicion> ObtenerPlanAnualAdquisicionBase(int id)
         {
-            return await _context.DetalleCDP
-                                    .FirstOrDefaultAsync(u => u.DetalleCdpId == id);
+            return await _context.PlanAdquisicion
+                                    .FirstOrDefaultAsync(u => u.PlanAdquisicionId == id);
         }
     }
 }

@@ -913,7 +913,15 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            }
+            else
+            {
+                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
+                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            }
 
             #region Renta exenta
 
@@ -1957,7 +1965,15 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            }
+            else
+            {
+                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
+                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            }
 
             #region Renta exenta
 
@@ -2236,7 +2252,15 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            }
+            else
+            {
+                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
+                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+            }
 
             #region Renta exenta
 

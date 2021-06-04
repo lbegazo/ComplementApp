@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210603131244_TDetalleCDP_RenameTable")]
+    partial class TDetalleCDP_RenameTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -557,6 +559,100 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("DetalleLiquidacionId");
 
                     b.ToTable("TDetalleArchivoLiquidacion");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.DetalleCDP", b =>
+                {
+                    b.Property<int>("DetalleCdpId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("ActividadEspecificaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ActividadGeneralId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("AplicaContrato")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("Cdp")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Convenio")
+                        .HasColumnType("int");
+
+                    b.Property<long>("Crp")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DecretoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DependenciaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdArchivo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PciId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PcpId")
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("PlanDeCompras")
+                        .HasColumnType("VARCHAR(500)");
+
+                    b.Property<int>("Prod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Proy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RubroPresupuestalId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SaldoAct")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("SaldoDisponible")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("SaldoTotal")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorAct")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorCDP")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorOB")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorOP")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorRP")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("Valor_Convenio")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.HasKey("DetalleCdpId");
+
+                    b.HasIndex("PciId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("TPlanAdquisicion");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
@@ -1348,103 +1444,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Photos");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.PlanAdquisicion", b =>
-                {
-                    b.Property<int>("PlanAdquisicionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("ActividadEspecificaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ActividadGeneralId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("AplicaContrato")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Cdp")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Convenio")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Crp")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("DecretoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DependenciaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstadoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdArchivo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PciId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PcpId")
-                        .HasColumnType("VARCHAR(10)");
-
-                    b.Property<string>("PlanDeCompras")
-                        .HasColumnType("VARCHAR(500)");
-
-                    b.Property<int>("Prod")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Proy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RubroPresupuestalId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("SaldoAct")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("SaldoDisponible")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("SaldoTotal")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ValorAct")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorCDP")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorOB")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorOP")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorRP")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("Valor_Convenio")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.HasKey("PlanAdquisicionId");
-
-                    b.HasIndex("PciId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("TPlanAdquisicion");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.PlanPago", b =>
@@ -2473,6 +2472,25 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("DetalleLiquidacion");
                 });
 
+            modelBuilder.Entity("ComplementApp.API.Models.DetalleCDP", b =>
+                {
+                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
+                        .WithMany()
+                        .HasForeignKey("PciId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ComplementApp.API.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pci");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.ClavePresupuestalContable", "ClavePresupuestalContable")
@@ -2650,25 +2668,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.PlanAdquisicion", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pci");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.PlanPago", b =>

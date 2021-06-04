@@ -82,7 +82,7 @@ namespace ComplementApp.API.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> RegistrarPlanAdquisicion(DetalleCDP planAdquisicion)
+        public async Task<IActionResult> RegistrarPlanAdquisicion(PlanAdquisicion planAdquisicion)
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             valorPciId = User.FindFirst(ClaimTypes.Role).Value;
@@ -100,7 +100,7 @@ namespace ComplementApp.API.Controllers
             return NoContent();
         }
 
-        private async Task ActualizarPlanAdquisicion(int pciId, DetalleCDP planAdquisicion)
+        private async Task ActualizarPlanAdquisicion(int pciId, PlanAdquisicion planAdquisicion)
         {
             DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
             ActividadEspecifica actividadEspecificaBD = null;
@@ -126,7 +126,7 @@ namespace ComplementApp.API.Controllers
 
             if (planAdquisicion.EstadoModificacion == (int)EstadoModificacion.Insertado)
             {
-                DetalleCDP planAdquisicionNuevo = new DetalleCDP();
+                PlanAdquisicion planAdquisicionNuevo = new PlanAdquisicion();
                 planAdquisicionNuevo.PlanDeCompras = planAdquisicion.PlanDeCompras;
                 planAdquisicionNuevo.ActividadGeneralId = planAdquisicion.ActividadEspecifica.ActividadGeneral.ActividadGeneralId;
                 planAdquisicionNuevo.ActividadEspecificaId = planAdquisicion.ActividadEspecifica.ActividadEspecificaId;
@@ -150,7 +150,7 @@ namespace ComplementApp.API.Controllers
                     operacion = 2; // resta
                     await _serviceActividad.ActualizarActividadEspecifica(actividadEspecificaBD, planAdquisicion.ValorAct, operacion);
                 }
-                await _dataContext.DetalleCDP.AddAsync(planAdquisicionNuevo);
+                await _dataContext.PlanAdquisicion.AddAsync(planAdquisicionNuevo);
                 await _dataContext.SaveChangesAsync();
             }
 
@@ -161,7 +161,7 @@ namespace ComplementApp.API.Controllers
             if (planAdquisicion.EstadoModificacion == (int)EstadoModificacion.Modificado)
             {
                 decimal valor = 0;
-                DetalleCDP planAdquisicionBD = await _repo.ObtenerPlanAnualAdquisicionBase(planAdquisicion.DetalleCdpId);
+                PlanAdquisicion planAdquisicionBD = await _repo.ObtenerPlanAnualAdquisicionBase(planAdquisicion.PlanAdquisicionId);
 
                 if (planAdquisicionBD != null)
                 {

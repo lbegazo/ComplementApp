@@ -11,6 +11,7 @@ using ComplementApp.API.Data;
 using ComplementApp.API.Interfaces;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Services
 {
@@ -361,7 +362,7 @@ namespace ComplementApp.API.Services
                 detalle.PlanDeCompras = (row as DataRow).ItemArray[7].ToString();
                 detalle.Responsable = (row as DataRow).ItemArray[8].ToString().Trim();
                 detalle.Dependencia = (row as DataRow).ItemArray[9].ToString();
-                detalle.RubroPresupuestal = new RubroPresupuestalDto();
+                detalle.RubroPresupuestal = new RubroPresupuestal();
                 detalle.RubroPresupuestal.Identificacion = (row as DataRow).ItemArray[10].ToString().Trim();
 
                 if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))

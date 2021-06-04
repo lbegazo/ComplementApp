@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210603163644_TPlanAdquisicion_DropDetalleCDPId")]
+    partial class TPlanAdquisicion_DropDetalleCDPId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1382,9 +1384,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("DependenciaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<int>("IdArchivo")

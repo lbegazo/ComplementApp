@@ -12,7 +12,6 @@ namespace ComplementApp.API.Data
 {
     public class CDPRepository : ICDPRepository
     {
-
         private readonly DataContext _context;
         public CDPRepository(DataContext context)
         {
@@ -23,7 +22,7 @@ namespace ComplementApp.API.Data
         {
 
             var cdps = await (from c in _context.CDP
-                              join d in _context.DetalleCDP on c.Cdp equals d.Cdp
+                              join d in _context.PlanAdquisicion on c.Cdp equals d.Cdp
                               where d.UsuarioId == usuarioId
                               where c.Instancia == (int)TipoDocumento.Cdp
                               group c by new
@@ -42,7 +41,7 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDP>> ObtenerListaCompromiso(UserParams userParams)
         {
-            var listaCompromisos = (from pp in _context.DetalleCDP
+            var listaCompromisos = (from pp in _context.PlanAdquisicion
                                     where pp.PciId == userParams.PciId
                                     select pp.Crp).ToHashSet();
 
@@ -66,7 +65,7 @@ namespace ComplementApp.API.Data
         public async Task<CDPDto> ObtenerCDP(int usuarioId, int numeroCDP)
         {
             var cdp = await (from c in _context.CDP
-                             join d in _context.DetalleCDP on c.Cdp equals d.Cdp
+                             join d in _context.PlanAdquisicion on c.Cdp equals d.Cdp
                              where d.UsuarioId == usuarioId
                              where c.Cdp == numeroCDP
                              where c.Instancia == (int)TipoDocumento.Cdp
@@ -215,7 +214,7 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<ICollection<DetalleCDP>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId)
+        public async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId)
         {
             var detalles = await (from d in _context.CDP
                                   join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
@@ -245,7 +244,7 @@ namespace ComplementApp.API.Data
                                   where d.PciId == pciId
                                   where d.Crp == crp
                                   where d.SaldoActual > 0
-                                  select new DetalleCDP()
+                                  select new DetalleCDPDto()
                                   {
                                       ValorCDP = d.ValorInicial,
                                       ValorOP = d.Operacion,
@@ -291,7 +290,7 @@ namespace ComplementApp.API.Data
 
         private async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesConCDP(int usuarioId, int numeroCDP)
         {
-            var detalles = await (from d in _context.DetalleCDP
+            var detalles = await (from d in _context.PlanAdquisicion
                                   join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
                                   join dec in _context.RubroPresupuestal on d.DecretoId equals dec.RubroPresupuestalId
                                   join c in _context.CDP on d.Cdp equals c.Cdp
@@ -315,7 +314,7 @@ namespace ComplementApp.API.Data
                                   where d.Cdp == numeroCDP
                                   select new DetalleCDPDto()
                                   {
-                                      DetalleCdpId = d.DetalleCdpId,
+                                      DetalleCdpId = d.PlanAdquisicionId,
                                       PcpId = d.PcpId,
                                       IdArchivo = d.IdArchivo,
                                       Cdp = d.Cdp,
@@ -340,7 +339,7 @@ namespace ComplementApp.API.Data
                                       Valor_Convenio = d.Valor_Convenio,
                                       Convenio = d.Convenio,
                                       Decreto = dec.Identificacion,
-                                      RubroPresupuestal = new RubroPresupuestalDto()
+                                      RubroPresupuestal = new RubroPresupuestal()
                                       {
                                           RubroPresupuestalId = i.RubroPresupuestalId,
                                           Identificacion = i.Identificacion,
@@ -357,7 +356,7 @@ namespace ComplementApp.API.Data
         //Para solicitud inicial no tiene CDP asociado
         private async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesSinCDP(int usuarioId, int numeroCDP)
         {
-            var detalles = await (from d in _context.DetalleCDP
+            var detalles = await (from d in _context.PlanAdquisicion
                                   join u in _context.Usuario on d.UsuarioId equals u.UsuarioId
                                   join r in _context.RubroPresupuestal on d.RubroPresupuestalId equals r.RubroPresupuestalId
                                   join dec in _context.RubroPresupuestal on d.DecretoId equals dec.RubroPresupuestalId
@@ -380,7 +379,7 @@ namespace ComplementApp.API.Data
 
                                   select new DetalleCDPDto()
                                   {
-                                      DetalleCdpId = d.DetalleCdpId,
+                                      DetalleCdpId = d.PlanAdquisicionId,
                                       PcpId = d.PcpId,
                                       IdArchivo = d.IdArchivo,
                                       Cdp = d.Cdp,
@@ -404,7 +403,7 @@ namespace ComplementApp.API.Data
                                       Valor_Convenio = d.Valor_Convenio,
                                       Convenio = d.Convenio,
                                       Decreto = dec.Identificacion,
-                                      RubroPresupuestal = new RubroPresupuestalDto()
+                                      RubroPresupuestal = new RubroPresupuestal()
                                       {
                                           RubroPresupuestalId = r.RubroPresupuestalId,
                                           Identificacion = r.Identificacion,

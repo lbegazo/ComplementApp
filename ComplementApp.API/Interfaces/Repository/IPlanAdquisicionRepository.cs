@@ -6,7 +6,7 @@ namespace ComplementApp.API.Interfaces.Repository
 {
     public interface IPlanAdquisicionRepository
     {
-        Task<ICollection<DetalleCDP>> ObtenerListaPlanAnualAdquisicion(int pciId);
-        Task<DetalleCDP> ObtenerPlanAnualAdquisicionBase(int id);
+        Task<ICollection<PlanAdquisicion>> ObtenerListaPlanAnualAdquisicion(int pciId);
+        Task<PlanAdquisicion> ObtenerPlanAnualAdquisicionBase(int id);
     }
 }

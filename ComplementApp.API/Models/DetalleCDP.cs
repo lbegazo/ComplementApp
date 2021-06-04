@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
 {
-    [Table("TDetalleCDP")]
-    public class DetalleCDP
+    [Table("TPlanAdquisicion")]
+    public class PlanAdquisicion
     {
-        public int DetalleCdpId { get; set; }
+        public int PlanAdquisicionId { get; set; }
 
         [Column(TypeName = "VARCHAR(10)")]
         public string PcpId { get; set; }
@@ -51,44 +51,31 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal Valor_Convenio { get; set; }
-
         public int Convenio { get; set; }
         public int ActividadGeneralId { get; set; }
-
-        [NotMapped]
-        public ActividadGeneral ActividadGeneral { get; set; }
         public int ActividadEspecificaId { get; set; }
-        [NotMapped]
-        public ActividadEspecifica ActividadEspecifica { get; set; }
         public int UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
         public int DependenciaId { get; set; }
         public int AreaId { get; set; }
         public int RubroPresupuestalId { get; set; }
+        public int DecretoId { get; set; }
+        public int PciId { get; set; }
+        public Pci Pci { get; set; }
+        public int EstadoId { get; set; }
+
+        [NotMapped]
+        public ActividadEspecifica ActividadEspecifica { get; set; }
+        [NotMapped]
+        public ActividadGeneral ActividadGeneral { get; set; }
         [NotMapped]
         public RubroPresupuestal RubroPresupuestal { get; set; }
 
         [NotMapped]
         public CDP CdpDocumento { get; set; }
-
-        public int DecretoId { get; set; }
-
         [NotMapped]
         public int EstadoModificacion { get; set; }
 
-        public int PciId { get; set; }
-        public Pci Pci { get; set; }
-
-        [NotMapped]
-        public string Dependencia { get; set; }
-
-        [NotMapped]
-        public string DependenciaDescripcion { get; set; }
-
-        [NotMapped]
-        public decimal ValorTotal { get; set; }
-        [NotMapped]
-        public int? ClavePresupuestalContableId { get; set; }
 
     }
 }

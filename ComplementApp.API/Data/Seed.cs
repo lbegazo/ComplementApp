@@ -813,7 +813,7 @@ namespace ComplementApp.API.Data
         {
             Estado nuevoEstado = null;
             List<Estado> lista = new List<Estado>();
-            if (!context.Estado.Any())
+            //if (!context.Estado.Any())
             {
                 if (File.Exists("Data/SeedFiles/_Estado.json"))
                 {

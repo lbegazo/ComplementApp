@@ -79,7 +79,7 @@ namespace ComplementApp.API.Data
             {
                 #region Setear datos
 
-                List<DetalleCDP> listaCDP = obtenerListaDetalleCdp(lista);
+                List<PlanAdquisicion> listaCDP = obtenerListaDetalleCdp(lista);
 
                 #endregion Setear datos
 
@@ -128,11 +128,11 @@ namespace ComplementApp.API.Data
         {
             try
             {
-                if (!_context.DetalleCDP.Any())
+                if (!_context.PlanAdquisicion.Any())
                     return true;
 
-                if (_context.DetalleCDP.Any())
-                    return _context.DetalleCDP.BatchDelete() > 0;
+                if (_context.PlanAdquisicion.Any())
+                    return _context.PlanAdquisicion.BatchDelete() > 0;
             }
             catch (Exception)
             {
@@ -348,10 +348,10 @@ namespace ComplementApp.API.Data
             return listaCDP;
         }
 
-        private List<DetalleCDP> obtenerListaDetalleCdp(IList<DetalleCDPDto> lista)
+        private List<PlanAdquisicion> obtenerListaDetalleCdp(IList<DetalleCDPDto> lista)
         {
-            List<DetalleCDP> listaCDP = new List<DetalleCDP>();
-            DetalleCDP cdp = null;
+            List<PlanAdquisicion> listaCDP = new List<PlanAdquisicion>();
+            PlanAdquisicion cdp = null;
 
             var listaActividadGeneral = _context.ActividadGeneral.ToList();
             var listaActividadEspecifica = _context.ActividadEspecifica.ToList();
@@ -362,7 +362,7 @@ namespace ComplementApp.API.Data
 
             foreach (var item in lista)
             {
-                cdp = new DetalleCDP();
+                cdp = new PlanAdquisicion();
 
                 cdp.PcpId = item.PcpId;
                 cdp.IdArchivo = item.IdArchivo;
