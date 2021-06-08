@@ -254,9 +254,16 @@ namespace ComplementApp.API.Services
 
             criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
 
-            valorMinimoRango = criterioReteFuente.Desde;
-            factorIncremento = criterioReteFuente.Factor;
-            tarifaCalculo = criterioReteFuente.Tarifa;
+            if (criterioReteFuente != null)
+            {
+                valorMinimoRango = criterioReteFuente.Desde;
+                factorIncremento = criterioReteFuente.Factor;
+                tarifaCalculo = criterioReteFuente.Tarifa;
+            }
+            else
+            {
+                throw new Exception($"No se pudo obtener el criterio de calculo de rendimiento");
+            }
 
             if (listaDeducciones != null && listaDeducciones.Count > 0)
             {
@@ -553,7 +560,15 @@ namespace ComplementApp.API.Services
 
             #endregion Fondo de solidaridad
 
-            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            }
+            else
+            {
+                C12subTotal1 = C1honorario;
+            }
+
             C15subTotal2 = C12subTotal1 - PL24PensionVoluntaria - PL14Afc;
 
             #region Descuento Dependiente
@@ -623,15 +638,7 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            if (!solicitudPago.EsSaludVencida)
-            {
-                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
-            else
-            {
-                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
-                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
 
             #region Renta exenta
 
@@ -843,7 +850,15 @@ namespace ComplementApp.API.Services
 
             #endregion Fondo de solidaridad
 
-            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            }
+            else
+            {
+                C12subTotal1 = C1honorario;
+            }
+
             C15subTotal2 = C12subTotal1 - PL24PensionVoluntaria - PL14Afc;
 
             #region Descuento Dependiente
@@ -913,15 +928,10 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            if (!solicitudPago.EsSaludVencida)
-            {
-                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
-            else
-            {
-                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
-                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
+
+
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
+
 
             #region Renta exenta
 
@@ -1658,10 +1668,17 @@ namespace ComplementApp.API.Services
             decimal tarifaCalculo = 0;
 
             criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
-
-            valorMinimoRango = criterioReteFuente.Desde;
-            factorIncremento = criterioReteFuente.Factor;
-            tarifaCalculo = criterioReteFuente.Tarifa;
+            
+            if (criterioReteFuente != null)
+            {
+                valorMinimoRango = criterioReteFuente.Desde;
+                factorIncremento = criterioReteFuente.Factor;
+                tarifaCalculo = criterioReteFuente.Tarifa;
+            }
+            else
+            {
+                throw new Exception($"No se pudo obtener el criterio de calculo de rendimiento");
+            }
 
             if (listaDeducciones != null && listaDeducciones.Count > 0)
             {
@@ -1895,7 +1912,15 @@ namespace ComplementApp.API.Services
 
             #endregion Fondo de solidaridad
 
-            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            }
+            else
+            {
+                C12subTotal1 = C1honorario;
+            }
+
             C15subTotal2 = C12subTotal1 - PL24PensionVoluntaria - PL14Afc;
 
             #region Descuento Dependiente
@@ -1965,15 +1990,8 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            if (!solicitudPago.EsSaludVencida)
-            {
-                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
-            else
-            {
-                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
-                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
+
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
 
             #region Renta exenta
 
@@ -2182,7 +2200,15 @@ namespace ComplementApp.API.Services
 
             #endregion Fondo de solidaridad
 
-            C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            if (!solicitudPago.EsSaludVencida)
+            {
+                C12subTotal1 = C1honorario - C8aporteASalud - C9aporteAPension - C10aporteRiesgoLaboral - C11fondoSolidaridad;
+            }
+            else
+            {
+                C12subTotal1 = C1honorario;
+            }
+
             C15subTotal2 = C12subTotal1 - PL24PensionVoluntaria - PL14Afc;
 
             #region Descuento Dependiente
@@ -2252,15 +2278,7 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-            if (!solicitudPago.EsSaludVencida)
-            {
-                C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
-            else
-            {
-                C20subTotal3 = C15subTotal2 + (C8aporteASalud + C9aporteAPension + C10aporteRiesgoLaboral)
-                                - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-            }
+            C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
 
             #region Renta exenta
 

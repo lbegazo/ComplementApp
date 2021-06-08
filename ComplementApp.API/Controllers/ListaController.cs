@@ -197,6 +197,15 @@ namespace ComplementApp.API.Controllers
             return base.Ok(listaDto);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaRubroPresupuestal([FromQuery(Name = "identificacion")] string identificacion,
+                                                                       [FromQuery(Name = "nombre")] string nombre)
+        {
+            var datos = await _repo.ObtenerListaRubroPresupuestal(identificacion, nombre);
+            return Ok(datos);
+        }
+        
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

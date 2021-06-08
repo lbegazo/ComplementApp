@@ -52,6 +52,8 @@ import { PlanAdquisicionComponent } from './plan-paa/plan-adquisicion/plan-adqui
 import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
 import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
+import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
+import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -185,7 +187,7 @@ export const routes: Routes = [
     path: 'SOLICITUDES_CERTIFICADO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
-    component: CdpMainComponent,
+    component: SolicitudDisponibilidadPresupuestalComponent,
     resolve: { transaccion: TransaccionResolver },
   },
   {

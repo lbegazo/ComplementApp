@@ -55,26 +55,28 @@ namespace ComplementApp.API.Models
         public int TipoOperacionId { get; set; }
 
         public Estado EstadoSolicitudCDP { get; set; }
-        
+
         public int EstadoSolicitudCDPId { get; set; }
 
         public ICollection<DetalleSolicitudCDP> DetalleSolicitudCDPs { get; set; }
 
         public Usuario Usuario { get; set; }
 
-        public int UsuarioId { get; set; }
+        public int UsuarioId { get; set; }        
 
         //**************Auditoría**********//
 
-        [Required]        
-        public int UsuarioIdRegistro { get; set; }  
+        [Required]
+        public int UsuarioIdRegistro { get; set; }
 
         [Required]
-        public DateTime FechaRegistro { get; set; }   
+        public DateTime FechaRegistro { get; set; }
 
-        public int UsuarioIdModificacion { get; set; }  
+        public int UsuarioIdModificacion { get; set; }
 
         public DateTime? FechaModificacion { get; set; }
+
+
 
     }
 }

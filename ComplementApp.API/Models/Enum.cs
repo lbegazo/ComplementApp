@@ -48,7 +48,6 @@ namespace ComplementApp.API.Models
         RENTA,
         VALORIVA,
         VOLUNTARIO,
-
     }
 
     public enum ModalidadContrato
@@ -149,5 +148,11 @@ namespace ComplementApp.API.Models
         Insertado = 1,
         Modificado = 2,
         Eliminado = 3,
+    }
+
+    public enum EstadoPlanAdquisicion
+    {
+        Generado = 28,
+        ConCDP = 29,
     }
 }

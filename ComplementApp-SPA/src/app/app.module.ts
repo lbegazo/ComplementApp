@@ -46,7 +46,6 @@ import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.com
 import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
 import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
 import { CdpEditComponent } from './solicitudCdp/cdp-edit/cdp-edit.component';
-import { CdpDetalleResolver } from './_resolvers/cdp-detalle.resolver';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
 import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
 import { CdpHeaderComponent } from './solicitudCdp/cdp-header/cdp-header.component';
@@ -133,6 +132,8 @@ import { PopupCompromisoComponent } from './plan-paa/plan-adquisicion/popup-comp
 import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
 import { FormatoSolicitudPagoEditComponent } from './tramites/registro-aprobacion-solicitud-pago/formato-solicitud-pago-edit/formato-solicitud-pago-edit.component';
 import { PopupSolicitudPagoEditComponent } from './tramites/registro-aprobacion-solicitud-pago/formato-solicitud-pago-edit/popup-solicitud-pago-edit/popup-solicitud-pago-edit.component';
+import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
+import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -219,6 +220,8 @@ export function tokenGetter() {
     FormatoSolicitudPagoEditComponent,
     PopupSolicitudPagoComponent,
     PopupSolicitudPagoEditComponent,
+    SolicitudDisponibilidadPresupuestalComponent,
+    SolicitudDisponibilidadPresupuestalEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -260,7 +263,6 @@ export function tokenGetter() {
     MemberDetailResolver,
     MemberListResolver,
     MemberEditResolver,
-    CdpDetalleResolver,
     UsuarioDetalleResolver,
     PlanPagoResolver,
     TransaccionResolver,

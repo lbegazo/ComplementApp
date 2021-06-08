@@ -26,6 +26,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { CdpService } from 'src/app/_services/cdp.service';
 import { GeneralService } from 'src/app/_services/general.service';
 import { ListaService } from 'src/app/_services/lista.service';
+import { SolicitudCdpService } from 'src/app/_services/solicitudCdp.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -79,7 +80,7 @@ export class SolicitudCdpComponent implements OnInit {
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private cdpService: CdpService,
+    private cdpService: SolicitudCdpService,
     private listaService: ListaService,
     private generalService: GeneralService
   ) {}

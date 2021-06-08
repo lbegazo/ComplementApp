@@ -16,7 +16,7 @@ namespace ComplementApp.API.Models
         public decimal SaldoActividad { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
-        public decimal? ValorActividad { get; set; }        
+        public decimal? ValorActividad { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(30,8)")]
@@ -29,11 +29,10 @@ namespace ComplementApp.API.Models
         public decimal? SaldoCDP { get; set; }
 
         public int RubroPresupuestalId { get; set; }
-
         public RubroPresupuestal RubroPresupuestal { get; set; }
-
         public int SolicitudCDPId { get; set; }
-
         public SolicitudCDP SolicitudCDP { get; set; }
+        public int? PlanAdquisicionId { get; set; }
+        public PlanAdquisicion PlanAdquisicion { get; set; }
     }
 }

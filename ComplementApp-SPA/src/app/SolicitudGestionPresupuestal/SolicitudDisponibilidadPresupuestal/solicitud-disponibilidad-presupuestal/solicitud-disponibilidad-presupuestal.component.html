@@ -1,0 +1,378 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera"> 
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--RADIO BUTTONS -->
+              <div class="container-fluid mt-2">
+                <div class="row">
+                  <div class="col-3 withoutPadding">
+                    <h4>Seleccione una opción:</h4>
+                    <div
+                      class="custom-control custom-radio custom-control-inline"
+                    >
+                      <input
+                        id="male"
+                        type="radio"
+                        class="custom-control-input"
+                        value="1"
+                        name="rbtRadicarFacturaCtrl"
+                        formControlName="rbtRadicarFacturaCtrl"
+                        (change)="onCreacion($event)"
+                        [checked]="this.esCreacion"
+                      />
+                      <label class="custom-control-label" for="male"
+                        >Solicitud Inicial</label
+                      >
+                    </div>
+                    <div
+                      class="custom-control custom-radio custom-control-inline"
+                    >
+                      <input
+                        id="female"
+                        type="radio"
+                        class="custom-control-input"
+                        value="2"
+                        name="rbtRadicarFacturaCtrl"
+                        formControlName="rbtRadicarFacturaCtrl"
+                        (change)="onModificacion($event)"
+                        [checked]="!this.esCreacion"
+                      />
+                      <label class="custom-control-label" for="female"
+                        >Modificación</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--CDP -->
+              <div class="form-row mt-3" *ngIf="!esCreacion">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md">Tipo de Operación</label
+                  >&nbsp;
+                  <select
+                    formControlName="tipoOperacionCtrl"
+                    (change)="onSeleccionarTipoOperacion()"
+                    class="form-control"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('tipoOperacionCtrl').touched &&
+                        facturaHeaderForm
+                          .get('tipoOperacionCtrl')
+                          .hasError('required')
+                    }"
+                    style="height: 35px; background-color: white"
+                  >
+                    <option disabled [ngValue]="null">Tipo operación</option>
+                    <option
+                      *ngFor="let item of listaTipoOperacionModificacion"
+                      [ngValue]="item"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('tipoOperacionCtrl').touched &&
+                      facturaHeaderForm
+                        .get('tipoOperacionCtrl')
+                        .hasError('required')
+                    "
+                  >
+                    El tipo de operación es requerido
+                  </div>
+                </div>
+                <div class="form-group col-md-1" style="margin: 0px">
+                  <label
+                    class="col-form-label-md"
+                    for="inputCDP"
+                    [ngClass]="{ deshabilitar: cdpSeleccionado }"
+                    >Número de CDP</label
+                  >
+                  <input
+                    id="inputCDP"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('cdpCtrl').errors &&
+                        facturaHeaderForm.get('cdpCtrl').touched
+                    }"
+                    type="number"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    style="height: 20px; width: 100px; background-color: white"
+                    placeholder="CDP"
+                    formControlName="cdpCtrl"
+                    min="1"
+                    onkeypress="return event.charCode >= 48"
+                  />
+                  <div class="invalid-feedback">
+                    El número de cdp es requerido
+                  </div>
+                </div>
+              </div>
+
+              <!--RUBRO PRESUPUESTAL-->
+              <div class="form-row mt-3" *ngIf="esCreacion">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label
+                    for="inputIdentificacionRubro"
+                    class="col-form-label-md"
+                    >Identificación</label
+                  >
+                  <input
+                    [(ngModel)]="search"
+                    typeaheadOptionField="identificacion"
+                    [typeahead]="suggestions$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    placeholder="Ingrese el código"
+                    formControlName="rubroPresupuestalCtrl"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    style="height: 20px; background-color: white"
+                    id="inputIdentificacionRubro"
+                    value="{{ rubroPresupuestal?.identificacion }}"
+                  />
+                  <div
+                    class="alert alert-danger"
+                    role="alert"
+                    *ngIf="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
+                </div>
+                <div class="form-group col-md-8" style="margin: 0px">
+                  <label for="inputRubroPresupuestal" class="col-form-label-md"
+                    >Rubro Presupuestal</label
+                  >
+                  <input
+                    [(ngModel)]="searchNombre"
+                    typeaheadOptionField="nombre"
+                    [typeahead]="suggestionsXNombre$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelectXNombre($event)"
+                    placeholder="Ingrese el rubro presupuestal"
+                    maxlength="50"
+                    formControlName="rubroPresupuestalDescripcionCtrl"
+                    id="inputRubroPresupuestal"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    style="height: 20px; background-color: white"
+                    value="{{ rubroPresupuestal?.nombre }}"
+                  />
+                </div>
+
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        &nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarFactura()"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="esCreacion">
+            <td
+              style="padding-top: 0px; padding-bottom: 0px; padding-left: 15px"
+            >
+              <label class="col-form-label-md">
+                <input
+                  type="checkbox"
+                  [checked]="seleccionaTodas"
+                  (change)="onCheckAllChange($event)"
+                />
+              </label>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr *ngIf="esCreacion">
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 3%;" class="inner aplicaBackground">
+                  <label class="col-form-label-md">Num</label>
+                </div>
+                <div style="width: 20%;" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">CODIGO</label>
+                </div>
+                <div style="width: 35%;" class="inner aplicaBackground center" >
+                  <label class="col-form-label-md">DESCRIPCION</label>
+                </div>
+                <div style="width: 11%;" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">V. ACTIVIDAD</label>
+                </div>
+                <div style="width: 11%;" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">S. ACTIVIDAD</label>
+                </div>
+                <div style="width: 20%;" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">RESPONSABLE</label>
+                </div>
+              </div>
+              <div *ngIf="listaPlanAdquisicion">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaPlanAdquisicion; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div style="width: 3%;" class="inner left aplicaBackground">
+                      <label class="col-form-label-md">
+                        <input
+                          type="checkbox"
+                          [checked]="item.esSeleccionada"
+                          [value]="item?.detalleCdpId"
+                          (change)="onCheckChange($event)"
+                        />
+                        {{ item?.detalleCdpId }}
+                      </label>
+                    </div>
+                    <div style="width: 20%;" class="inner center aplicaBackground">
+                      <p>{{ item?.rubroPresupuestal.identificacion }}</p>
+                    </div>
+                    <div style="width: 35%;" class="inner left aplicaBackground">
+                      <p>
+                        {{ item?.planDeCompras }}
+                      </p>
+                    </div>
+                    <div style="width: 11%;" class="inner right aplicaBackground">
+                      <p>
+                        {{ item?.valorAct | number: "1.0-3" }}
+                      </p>
+                    </div>
+                    <div style="width: 11%;" class="inner right aplicaBackground">
+                      <p>
+                        {{ item?.saldoAct | number: "1.0-3" }}
+                      </p>
+                    </div>
+                    <div style="width: 20%;" class="inner left aplicaBackground">
+                      <p>
+                        {{ item?.responsable }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr *ngIf="esCreacion">
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Procesar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="obtenerListaPlanAdquisicionSinCdp()"
+                    [disabled]="
+                      esCreacion &&
+                      listaPlanAdquisicionSeleccionada.length === 0
+                    "
+                    *ngIf="esCreacion"
+                  >
+                    {{ nombreBoton }}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="seleccionarCdp()"
+                    [disabled]="!esCreacion && !facturaHeaderForm.valid"
+                    *ngIf="!esCreacion"
+                  >
+                    {{ nombreBoton }}
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid mt-2">
+  <div class="row no-gutters center">
+    <div class="col-12" *ngIf="cdp != null">
+      <app-solicitud-disponibilidad-presupuestal-edit
+        [cdp]="cdp"
+        [tipoOperacion]="tipoOperacionSelecionado"
+        [rubroPresupuestalesSeleccionado]="listaPlanAdquisicionTotal"
+        (esCancelado)="habilitarCabecera($event)"
+      ></app-solicitud-disponibilidad-presupuestal-edit>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt-2">
+  <div class="row no-gutters center">
+    <div class="col-12" *ngIf="listaPlanAdquisicionTotal?.length > 0">
+      <app-solicitud-disponibilidad-presupuestal-edit
+        [cdp]="cdp"
+        [tipoOperacion]="tipoOperacionSolicitudInicial"
+        [rubroPresupuestalesSeleccionado]="listaPlanAdquisicionTotal"
+        (esCancelado)="habilitarCabecera($event)"
+      ></app-solicitud-disponibilidad-presupuestal-edit>
+    </div>
+  </div>
+</div>
+<!-- <p>Form status: {{ facturaHeaderForm.status | json }}</p> -->
+<!-- <div class="col-12" *ngIf="planPagoIdSeleccionado > 0"></div> -->
+<!-- <p>detallePlanPago: {{ detallePlanPago | json }}</p> -->

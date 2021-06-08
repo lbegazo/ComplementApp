@@ -64,8 +64,6 @@ namespace ComplementApp.API.Data
                                  where l.Nombre.Contains(nombre)
                                  select l);
             }
-
-
             return await listaFiltrada.ToListAsync();
         }
 
@@ -373,5 +371,35 @@ namespace ComplementApp.API.Data
 
             return await PagedList<RubroPresupuestal>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
+
+        public async Task<IEnumerable<RubroPresupuestal>> ObtenerListaRubroPresupuestal(string identificacion, string nombre)
+        {
+            IQueryable<RubroPresupuestal> listaFiltrada = null;
+
+            var lista = (from d in _context.RubroPresupuestal
+                         select new RubroPresupuestal
+                         {
+                             RubroPresupuestalId = d.RubroPresupuestalId,
+                             Identificacion = d.Identificacion,
+                             Nombre = d.Nombre,
+                             PadreRubroId = d.PadreRubroId,
+                         }).OrderBy(d => d.Nombre);
+
+            if (!string.IsNullOrEmpty(identificacion))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.Identificacion.Contains(identificacion)
+                                 select l);
+            }
+
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.Nombre.Contains(nombre)
+                                 select l);
+            }
+            return await listaFiltrada.ToListAsync();
+        }
+
     }
 }

@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Data;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Interfaces.Repository;
@@ -100,6 +102,77 @@ namespace ComplementApp.API.Controllers
             return NoContent();
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaPlanAnualAdquisicionPaginada([FromQuery(Name = "esCreacion")] int esCreacion,
+                                                                                   [FromQuery(Name = "rubroPresupuestalId")] int? rubroPresupuestalId,
+                                                                                   [FromQuery(Name = "numeroCdp")] int? numeroCdp,
+                                                                                   [FromQuery] UserParams userParams)
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
+            var pagedList = await _repo.ObtenerListaPlanAnualAdquisicionPaginada(usuarioId, esCreacion, rubroPresupuestalId, numeroCdp, userParams);
+
+            var listaDto = _mapper.Map<IEnumerable<DetalleCDPDto>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+            return Ok(listaDto);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaPlanAdquisicionSinCDPXIds([FromQuery(Name = "listaPlanAdquisicionId")] string listaPlanAdquisicionId,
+                                                                                [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
+                                                                                [FromQuery(Name = "rubroPresupuestalId")] int? rubroPresupuestalId)
+        {
+            List<DetalleCDPDto> listaFinal = new List<DetalleCDPDto>();
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
+
+            if (esSeleccionarTodo)
+            {
+                #region esSeleccionarTodo
+
+                UserParams userParams = new UserParams();
+                userParams.PageSize = 500;
+                userParams.PageNumber = 1;
+                userParams.PciId = pciId;
+
+                var pagedList = await _repo.ObtenerListaPlanAnualAdquisicionSinCDP(usuarioId, rubroPresupuestalId, userParams);
+                listaFinal = _mapper.Map<List<DetalleCDPDto>>(pagedList);
+
+                #endregion esSeleccionarTodo
+            }
+            else
+            {
+                #region Procesar por lista de ids
+
+                if (!string.IsNullOrEmpty(listaPlanAdquisicionId))
+                {
+                    List<int> listaIds = listaPlanAdquisicionId.Split(',').Select(int.Parse).ToList();
+                    listaFinal = await _repo.ObtenerListaPlanAdquisicionSinCDPXIds(listaIds);
+                }
+
+                #endregion Procesar por lista de ids
+            }
+
+            return Ok(listaFinal);
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
         private async Task ActualizarPlanAdquisicion(int pciId, PlanAdquisicion planAdquisicion)
         {
             DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
@@ -137,6 +210,7 @@ namespace ComplementApp.API.Controllers
                 planAdquisicionNuevo.DependenciaId = planAdquisicion.DependenciaId;
                 planAdquisicionNuevo.AreaId = areaId;
                 planAdquisicionNuevo.PciId = pciId;
+                planAdquisicionNuevo.EstadoId = (int)EstadoPlanAdquisicion.Generado;
                 if (planAdquisicion.RubroPresupuestal != null)
                 {
                     planAdquisicionNuevo.RubroPresupuestalId = planAdquisicion.RubroPresupuestal.RubroPresupuestalId;
@@ -199,5 +273,7 @@ namespace ComplementApp.API.Controllers
 
             await transaction.CommitAsync();
         }
+
+
     }
 }

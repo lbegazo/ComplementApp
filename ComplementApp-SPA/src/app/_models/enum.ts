@@ -105,3 +105,10 @@ export enum TipoIva {
   Fijo = 1,
   Variable = 2,
 }
+
+export enum TipoOperacionSolicitudCdp {
+  Anulacion = 1,
+  Reduccion = 2,
+  Adicion = 3,
+  SolicitudInicial = 4,
+}

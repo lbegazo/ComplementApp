@@ -45,5 +45,7 @@ namespace ComplementApp.API.Interfaces
         Task<Pci> ObtenerPci(int pciId);
 
         Task<PagedList<RubroPresupuestal>> ObtenerListaRubroPresupuestalPorPapa(int rubroPresupuestalId, UserParams userParams);
+
+        Task<IEnumerable<RubroPresupuestal>> ObtenerListaRubroPresupuestal(string identificacion, string nombre);
     }
 }

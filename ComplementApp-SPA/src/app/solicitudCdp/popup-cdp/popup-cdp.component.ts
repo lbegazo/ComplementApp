@@ -55,43 +55,29 @@ export class PopupCdpComponent implements OnInit {
       if (index !== -1) {
         this.arrayRubro.splice(index, 1);
       }
-
-      // console.log(event.target.value + ' ' + index);
-      // if (index !== -1) {
-      //   this.arrayRubro.splice(index, 1);
-      // }
-      // let i: number = 0;
-      // this.rubrosControles.controls.forEach((ctrl: FormControl) => {
-      //   if (ctrl.value === event.target.value) {
-      //     // Remove the unselected element from the arrayForm
-      //     this.arrayRubro.removeAt(i);
-      //     return;
-      //   }
-      //   i++;
-      // });
     }
   }
 
   cargarDetalleCDP() {
     
-    this.cdpService.ObtenerDetalleDeCDP(0).subscribe(
-      (documento: DetalleCDP[]) => {
-        this.detalleCdp = documento;
+    // this.cdpService.ObtenerDetalleDeCDP(0).subscribe(
+    //   (documento: DetalleCDP[]) => {
+    //     this.detalleCdp = documento;
 
-        if (this.detalleCdp) {
-          for (const detalle of this.detalleCdp) {
-            this.arrayControls.push(
-              new FormGroup({
-                rubroControl: new FormControl('', [Validators.required]),
-              })
-            );
-          }
-        }
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+    //     if (this.detalleCdp) {
+    //       for (const detalle of this.detalleCdp) {
+    //         this.arrayControls.push(
+    //           new FormGroup({
+    //             rubroControl: new FormControl('', [Validators.required]),
+    //           })
+    //         );
+    //       }
+    //     }
+    //   },
+    //   (error) => {
+    //     this.alertify.error(error);
+    //   }
+    //);
 
     this.popupCDPForm = this.fb.group({
       rubrosControles: this.arrayControls,

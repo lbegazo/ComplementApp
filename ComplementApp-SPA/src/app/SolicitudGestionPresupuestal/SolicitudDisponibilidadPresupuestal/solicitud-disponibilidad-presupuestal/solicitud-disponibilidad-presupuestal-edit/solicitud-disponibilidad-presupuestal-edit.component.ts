@@ -1,4 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
 
@@ -18,7 +26,6 @@ import {
   NgForm,
 } from '@angular/forms';
 import { ListaService } from 'src/app/_services/lista.service';
-import { CdpService } from 'src/app/_services/cdp.service';
 import { ValidarValorIngresado } from 'src/app/helpers/validarValorIngresado';
 import { SolicitudCDP } from 'src/app/_models/solicitudCDP';
 import { DetalleSolicitudCDP } from 'src/app/_models/detalleSolicitudCDP';
@@ -29,13 +36,17 @@ import { Estado } from 'src/app/_models/estado';
 import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { GeneralService } from 'src/app/_services/general.service';
 import { SolicitudCdpService } from 'src/app/_services/solicitudCdp.service';
+import { PlanAdquisicionService } from 'src/app/_services/planAdquisicion.service';
+import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 
 @Component({
-  selector: 'app-cdp-edit',
-  templateUrl: './cdp-edit.component.html',
-  styleUrls: ['./cdp-edit.component.css'],
+  selector: 'app-solicitud-disponibilidad-presupuestal-edit',
+  templateUrl: './solicitud-disponibilidad-presupuestal-edit.component.html',
+  styleUrls: ['./solicitud-disponibilidad-presupuestal-edit.component.css'],
 })
-export class CdpEditComponent implements OnInit {
+export class SolicitudDisponibilidadPresupuestalEditComponent
+  implements OnInit
+{
   @ViewChild('content') content: ElementRef;
   @ViewChild('cdpNgForm', { static: true }) cdpNgForm: NgForm;
   usuario: Usuario;
@@ -43,6 +54,7 @@ export class CdpEditComponent implements OnInit {
   @Input() cdp: Cdp;
   @Input() tipoOperacion: TipoOperacion;
   @Input() rubroPresupuestalesSeleccionado: DetalleCDP[];
+  @Output() esCancelado = new EventEmitter<boolean>();
   cambiosConfirmados = false;
 
   itemCdp: DetalleCDP;
@@ -57,6 +69,14 @@ export class CdpEditComponent implements OnInit {
   tipoDetalleSeleccionado: TipoDetalleCDP = { tipoDetalleCDPId: 0, nombre: '' };
   notaLegal: ValorSeleccion;
 
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+    maxSize: 10,
+  };
+
   constructor(
     private alertify: AlertifyService,
     private usuarioService: UsuarioService,
@@ -64,7 +84,7 @@ export class CdpEditComponent implements OnInit {
     private fb: FormBuilder,
     private listaService: ListaService,
     private cdpService: SolicitudCdpService,
-    private generalService: GeneralService
+    private planAdquisicionService: PlanAdquisicionService
   ) {}
 
   ngOnInit() {
@@ -86,33 +106,42 @@ export class CdpEditComponent implements OnInit {
     if (!this.esSolicitudInicial) {
       //#region No Solicitud Inicial
 
-      // this.cdpService.ObtenerDetalleDeCDP(this.cdp?.cdp).subscribe(
-      //   (documento: DetalleCDP[]) => {
-      //     this.detalleCdp = documento;
+      this.planAdquisicionService
+        .ObtenerListaPlanAnualAdquisicionPaginada(
+          0,
+          0,
+          this.cdp?.cdp,
+          this.pagination.currentPage,
+          this.pagination.itemsPerPage
+        )
+        .subscribe(
+          (documentos: PaginatedResult<DetalleCDP[]>) => {
+            this.detalleCdp = documentos.result;
+            this.pagination = documentos.pagination;
 
-      //     if (this.detalleCdp) {
-      //       this.itemCdp = this.detalleCdp[0];
+            if (this.detalleCdp) {
+              this.itemCdp = this.detalleCdp[0];
 
-      //       for (const detalle of this.detalleCdp) {
-      //         this.arrayControls.push(
-      //           new FormGroup({
-      //             rubroControl: new FormControl('', [
-      //               Validators.required,
-      //               ValidarValorIngresado.valorIncorrecto(
-      //                 idTipoOperacion,
-      //                 detalle.saldoAct,
-      //                 detalle.saldoCDP
-      //               ),
-      //             ]),
-      //           })
-      //         );
-      //       }
-      //     }
-      //   },
-      //   (error) => {
-      //     this.alertify.error(error);
-      //   }
-      // );
+              for (const detalle of this.detalleCdp) {
+                this.arrayControls.push(
+                  new FormGroup({
+                    rubroControl: new FormControl('', [
+                      Validators.required,
+                      ValidarValorIngresado.valorIncorrecto(
+                        idTipoOperacion,
+                        detalle.saldoAct,
+                        detalle.saldoCDP
+                      ),
+                    ]),
+                  })
+                );
+              }
+            }
+          },
+          (error) => {
+            this.alertify.error(error);
+          }
+        );
 
       objetoBien = this.cdp?.detalle4;
 
@@ -227,7 +256,8 @@ export class CdpEditComponent implements OnInit {
 
       //#region Setear datos
       solicitudCDP.tipoOperacion = new TipoOperacion();
-      solicitudCDP.tipoOperacion.tipoOperacionId = this.tipoOperacion.tipoOperacionId;
+      solicitudCDP.tipoOperacion.tipoOperacionId =
+        this.tipoOperacion.tipoOperacionId;
       solicitudCDP.tipoOperacion.codigo = this.tipoOperacion.codigo;
       solicitudCDP.tipoOperacion.nombre = this.tipoOperacion.nombre;
 
@@ -241,8 +271,7 @@ export class CdpEditComponent implements OnInit {
       solicitudCDP.usuarioId = this.usuario.usuarioId;
       solicitudCDP.numeroActividad = this.itemCdp.idArchivo;
 
-      solicitudCDP.aplicaContrato =
-        this.itemCdp.aplicaContrato;
+      solicitudCDP.aplicaContrato = this.itemCdp.aplicaContrato;
 
       solicitudCDP.nombreBienServicio = this.itemCdp.planDeCompras;
       solicitudCDP.proyectoInversion = this.itemCdp.proyecto;
@@ -255,9 +284,8 @@ export class CdpEditComponent implements OnInit {
         solicitudCDP.tipoDetalleCDP = new TipoDetalleCDP();
         solicitudCDP.tipoDetalleCDP = this.tipoDetalleSeleccionado;
       } else {
-        solicitudCDP.objetoBienServicioContratado = this.cdpForm.get(
-          'objetoBienControl'
-        ).value;
+        solicitudCDP.objetoBienServicioContratado =
+          this.cdpForm.get('objetoBienControl').value;
       }
 
       solicitudCDP.observaciones = this.cdpForm.get(
@@ -265,7 +293,6 @@ export class CdpEditComponent implements OnInit {
       ).value;
 
       this.detalleCdp.forEach((element) => {
-        console.log(element);
         const item: DetalleSolicitudCDP = new DetalleSolicitudCDP();
 
         item.rubroPresupuestal = new RubroPresupuestal();
@@ -274,7 +301,9 @@ export class CdpEditComponent implements OnInit {
         item.rubroPresupuestal.nombre = 'test';
         item.rubroPresupuestal.identificacion = 'test';
         item.rubroPresupuestal.padreRubroId = 1;
+
         item.saldoActividad = element.saldoAct;
+        item.planAdquisicionId = element.detalleCdpId;
 
         if (!this.esSolicitudInicial) {
           item.valorCDP = element.valorCDP;
@@ -318,7 +347,9 @@ export class CdpEditComponent implements OnInit {
             'Hubó un error al registrar la liquidación ' + error
           );
         },
-        () => {}
+        () => {
+          this.esCancelado.emit(true);
+        }
       );
     }
   }
@@ -356,6 +387,12 @@ export class CdpEditComponent implements OnInit {
       .catch((error) => {
         // Error Handling
       });
+  }
+
+  onCancelar() {
+    this.rubroPresupuestalesSeleccionado = [];
+    this.cdp = null;
+    this.esCancelado.emit(true);
   }
 
   cargarInformacionUsuario() {

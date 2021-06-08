@@ -17,6 +17,7 @@ import { Cdp } from 'src/app/_models/cdp';
 import { CdpService } from 'src/app/_services/cdp.service';
 import { PopupCdpComponent } from '../popup-cdp/popup-cdp.component';
 import { Subscription, combineLatest } from 'rxjs';
+import { SolicitudCdpService } from 'src/app/_services/solicitudCdp.service';
 
 @Component({
   selector: 'app-cdp-header',
@@ -44,7 +45,7 @@ export class CdpHeaderComponent implements OnInit {
   constructor(
     private listaService: ListaService,
     private alertify: AlertifyService,
-    private cdpService: CdpService,
+    private cdpService: SolicitudCdpService,
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
@@ -177,14 +178,14 @@ export class CdpHeaderComponent implements OnInit {
   cargarInformacionCDP() {}
 
   cargarRubrosPresupuestalesSinCdp() {
-    this.cdpService.ObtenerDetalleDeCDP(0).subscribe(
-      (documento: DetalleCDP[]) => {
-        this.rubroPresupuestalSinCdp = documento;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+    // this.cdpService.ObtenerDetalleDeCDP(0).subscribe(
+    //   (documento: DetalleCDP[]) => {
+    //     this.rubroPresupuestalSinCdp = documento;
+    //   },
+    //   (error) => {
+    //     this.alertify.error(error);
+    //   }
+    // );
   }
 
   obtenerRubrosPresupuestalesSinCdp() {

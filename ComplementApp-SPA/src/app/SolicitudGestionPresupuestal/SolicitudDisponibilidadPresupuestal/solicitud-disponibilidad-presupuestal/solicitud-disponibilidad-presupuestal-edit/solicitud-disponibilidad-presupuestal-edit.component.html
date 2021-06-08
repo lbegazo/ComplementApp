@@ -1,0 +1,1143 @@
+<form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="cdpForm">
+  <div class="container-fluid" style="color: black">
+    <div class="row">
+      <div
+        class="col-12"
+        id="content"
+        #content
+        class="addPadding"
+        style="width: 100%"
+      >
+        <table class="borderComplete">
+          <!--TITULO DEL DOCUMENTO-->
+          <tr>
+            <td style="padding: 0px" class="borderBotton">
+              <table>
+                <tr>
+                  <td style="width: 11%" class="borderRight verticalCenter">
+                    <span class="fontSmaller"
+                      ><strong>Versión No. 6</strong></span
+                    >
+                  </td>
+                  <td style="width: 78%" class="borderRight verticalCenter">
+                    <span>
+                      <small
+                        ><strong
+                          >SOLICITUD DE REGISTRO / MODIFICACION - CERTIFICADO DE
+                          DISPONIBILIDAD PRESUPUESTAL</strong
+                        ></small
+                      >
+                    </span>
+                  </td>
+                  <td style="width: 11%" class="verticalCenter">
+                    <img
+                      src="./assets/img/ane_logo.png"
+                      alt="ane"
+                      width="100"
+                      height="60"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!--ESPACIO-->
+          <tr>
+            <td class="addHeight"></td>
+          </tr>
+
+          <!--FECHA DE SOLICITUD-->
+          <tr>
+            <td>
+              <table class="addHeight30">
+                <tr>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight aplicaBackground"
+                  >
+                    <span class="fontSmaller"
+                      ><strong>FECHA SOLICITUD</strong></span
+                    >
+                  </td>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight"
+                  >
+                    <span class="fontSmaller">
+                      {{ today | date: "dd/MM/yyyy" }}
+                    </span>
+                  </td>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight aplicaBackground"
+                  >
+                    <span class="fontSmaller"><strong>ESTADO CDP</strong></span>
+                  </td>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight"
+                  >
+                    <span class="fontSmaller">
+                      {{ cdp?.detalle1 }}
+                    </span>
+                  </td>
+                  <td style="width: 56%"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!--ESPACIO-->
+          <tr>
+            <td class="addHeight"></td>
+          </tr>
+
+          <!--TIPO DE OPERACION-->
+          <tr>
+            <td>
+              <table class="addHeight30">
+                <tr>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight left aplicaBackground"
+                  >
+                    <span class="addPaddingLeft fontSmaller">
+                      <strong> I. TIPO DE OPERACIÓN </strong>
+                    </span>
+                  </td>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight"
+                  >
+                    <span class="fontSmaller">
+                      {{ this.tipoOperacion?.nombre }}
+                    </span>
+                  </td>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight aplicaBackground"
+                  >
+                    <span class="fontSmaller"><strong>NUMERO CDP</strong></span>
+                  </td>
+                  <td
+                    style="width: 11%; vertical-align: middle"
+                    class="borderTopBottonRight"
+                  >
+                    <span class="fontSmaller">
+                      {{ cdp?.cdp }}
+                    </span>
+                  </td>
+                  <td style="width: 66%"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!--ESPACIO-->
+          <tr>
+            <td class="addHeight"></td>
+          </tr>
+
+          <!--INFORMACION SOLICITANTE-->
+          <tr>
+            <td>
+              <table class="addHeight30">
+                <tr>
+                  <td
+                    style="width: 15%; vertical-align: middle"
+                    class="borderTopBottonRight left aplicaBackground"
+                  >
+                    <span class="addPaddingLeft">
+                      <span class="fontSmaller"
+                        ><strong> II. INFORMACION SOLICITANTE </strong></span
+                      >
+                    </span>
+                  </td>
+                  <td
+                    style="width: 23%; vertical-align: middle"
+                    class="borderTopBottonRight"
+                  >
+                    <span class="fontSmaller">
+                      {{ this.usuario?.nombres }}
+                      {{ this.usuario?.apellidos }}
+                    </span>
+                  </td>
+                  <td
+                    style="width: 5%; vertical-align: middle"
+                    class="borderTopBottonRight aplicaBackground"
+                  >
+                    <span class="fontSmaller"><strong>CARGO</strong></span>
+                  </td>
+                  <td
+                    style="width: 26%; vertical-align: middle"
+                    class="borderTopBottonRight"
+                  >
+                    <span class="fontSmaller">
+                      {{ this.usuario?.cargoNombre }}
+                    </span>
+                  </td>
+                  <td
+                    style="width: 5%; vertical-align: middle"
+                    class="borderTopBottonRight aplicaBackground"
+                  >
+                    <span class="fontSmaller"><strong>AREA</strong></span>
+                  </td>
+                  <td
+                    style="width: 26%; vertical-align: middle"
+                    class="borderTopBotton"
+                  >
+                    <span class="fontSmaller">
+                      {{ this.usuario?.areaNombre }}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!--ESPACIO-->
+          <tr>
+            <td class="addHeight"></td>
+          </tr>
+
+          <!--INFORMACION DEL BIEN O SERVICIO REQUERIDO-->
+          <tr>
+            <td>
+              <table>
+                <tr>
+                  <!--TITULO-->
+                  <td
+                    style="width: 15%; vertical-align: middle"
+                    class="borderTopBottonRight left aplicaBackground"
+                  >
+                    <p class="addPaddingLeft fontSmaller">
+                      III.INFORMACION DEL BIEN O SERVICIO REQUERIDO
+                    </p>
+                  </td>
+                  <!--SUBTITULOS-->
+                  <td
+                    style="width: 22%; vertical-align: middle"
+                    class="borderTopBottonRight left aplicaBackground"
+                  >
+                    <table>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left aplicaBackground"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            ><strong
+                              >NUMERO DE ACTIVIDAD (SEGÚN PACC)</strong
+                            ></span
+                          >
+                        </td>
+                      </tr>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left aplicaBackground"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            ><strong
+                              >NOMBRE DEL BIEN O SERVICIO (SEGÚN PAA)</strong
+                            ></span
+                          >
+                        </td>
+                      </tr>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left aplicaBackground"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            ><strong>PROYECTO DE INVERSION</strong>
+                          </span>
+                        </td>
+                      </tr>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left aplicaBackground"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            ><strong
+                              >ACTIVIDAD DEL PROYECTO DE INVERSION</strong
+                            >
+                          </span>
+                        </td>
+                      </tr>
+                      <!--DETALLE OBJETO BIEN-->
+                      <tr class="addHeight50">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="left aplicaBackground"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            ><strong
+                              >OBJETO DEL BIEN O SERVICIO A CONTRATAR</strong
+                            ></span
+                          >
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <!--VALORES-->
+                  <td
+                    style="width: 63%; vertical-align: middle"
+                    class="borderTopBotton left"
+                  >
+                    <table>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left addHeight30"
+                        >
+                          <table class="addHeight30" style="width: 100%">
+                            <tr>
+                              <td
+                                style="width: 11%; vertical-align: middle"
+                                class="borderRight center"
+                              >
+                                <span class="fontSmaller">
+                                  {{ itemCdp?.idArchivo }}
+                                </span>
+                              </td>
+                              <td
+                                style="width: 22%; vertical-align: middle"
+                                class="aplicaBackground borderRight center"
+                              >
+                                <span class="fontSmaller"
+                                  ><strong>APLICA CONTRATO</strong></span
+                                >
+                              </td>
+                              <td
+                                style="width: 11%; vertical-align: middle"
+                                class="borderRight center"
+                              >
+                                <span class="fontSmaller">
+                                  {{ itemCdp?.aplicaContrato }}
+                                </span>
+                              </td>
+                              <td style="width: 66%"></td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left"
+                        >
+                          <span class="addPaddingLeft fontSmaller">
+                            {{ itemCdp?.planDeCompras }}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            >{{ itemCdp?.proyecto }}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr class="addHeight30">
+                        <td
+                          style="width: 100%; vertical-align: middle"
+                          class="borderBotton left"
+                        >
+                          <span class="addPaddingLeft fontSmaller"
+                            >{{ itemCdp?.actividadBpin }}
+                          </span>
+                        </td>
+                      </tr>
+                      <!--DETALLE OBJETO BIEN-->
+                      <tr class="addHeight50">
+                        <td>
+                          <table>
+                            <tr>
+                              <td
+                                style="width: 100%; vertical-align: middle"
+                                class="left"
+                                *ngIf="!esSolicitudInicial"
+                              >
+                                <p class="addPaddingLeft fontSmaller">
+                                  {{ cdp?.detalle4 }}
+                                </p>
+                              </td>
+                              <!--Solicitud Inicial-->
+                              <td
+                                *ngIf="esSolicitudInicial"
+                                style="vertical-align: bottom; padding: 5px"
+                              >
+                                <textarea
+                                  [ngClass]="{
+                                    'is-invalid':
+                                      cdpForm.get('objetoBienControl').errors &&
+                                      cdpForm.get('objetoBienControl').touched
+                                  }"
+                                  name="textarea"
+                                  class="form-control col-form-label-sm"
+                                  formControlName="objetoBienControl"
+                                  style="
+                                    width: 100%;
+                                    height: 30px;
+                                    color: black;
+                                    overflow: hidden;
+                                  "
+                                  rows="2"
+                                  maxlength="230"
+                                  placeholder="Ingrese el objeto del bien aquí"
+                                  [readonly]="cambiosConfirmados"
+                                ></textarea>
+                                <div class="invalid-feedback">
+                                  REGISTRE EL OBJETO DEL BIEN O SERVICIO A
+                                  CONTRATAR
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!--ESPACIO-->
+          <tr>
+            <td class="addHeight"></td>
+          </tr>
+
+          <!--Rubros Presupuestales INICIO-->
+
+          <!---------------------------NO SOLICITUD INICIAL--------------------------------->
+
+          <!--No Solicitud Inicial y No Cambios confirmados-->
+          <tr *ngIf="!cambiosConfirmados && !esSolicitudInicial">
+            <td>
+              <div class="container-fluid">
+                <!--Titulo Principal-->
+                <div class="row borderTop">
+                  <div class="col-12 aplicaBackground">
+                    <small
+                      ><strong
+                        >IV. INFORMACION DE CONCEPTO(S) DE GASTO</strong
+                      ></small
+                    >
+                  </div>
+                </div>
+                <div>
+                  <!--Titulo de Columnas-->
+                  <div class="row borderTop">
+                    <div
+                      style="width: 8%"
+                      class="borderBottonRight aplicaBackground"
+                    ></div>
+                    <div
+                      style="width: 12%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>CODIGO</strong></small>
+                    </div>
+                    <div
+                      style="width: 30%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>DESCRIPCION</strong></small>
+                    </div>
+                    <div
+                      style="width: 12%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>SALDO ACTIVIDAD</strong></small>
+                    </div>
+                    <div
+                      style="width: 12%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>VALOR CDP</strong></small>
+                    </div>
+                    <div
+                      style="width: 12%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>SALDO CDP</strong></small>
+                    </div>
+                    <div
+                      style="width: 14%"
+                      class="borderBotton aplicaBackground"
+                    >
+                      <small><strong>VALOR SOLICITUD</strong></small>
+                    </div>
+                  </div>
+                  <!--Rubros Presupuestales-->
+                  <div class="row">
+                    <div class="col-12">
+                      <div *ngIf="detalleCdp">
+                        <div
+                          formArrayName="rubrosControles"
+                          class="row"
+                          *ngFor="let item of detalleCdp; let i = index"
+                        >
+                          <ng-container [formGroupName]="i">
+                            <div
+                              style="width: 8%"
+                              class="borderBottonRight parent"
+                            >
+                              <button
+                                class="btn btn-primary btn-sm child"
+                                (click)="EliminarRubroPresupuestal(i)"
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                            <div
+                              style="width: 12%"
+                              class="borderBottonRight centerAlign small"
+                            >
+                              <small>{{ item?.rubroPresupuestal.identificacion }}</small>
+                            </div>
+                            <div
+                              style="width: 30%"
+                              class="borderBottonRight left small"
+                            >
+                              <p class="addPaddingLeft fontSmaller">
+                                {{ item?.rubroPresupuestal.nombre }}
+                              </p>
+                            </div>
+                            <div
+                              style="width: 12%"
+                              class="borderBottonRight right"
+                            >
+                              <p class="addPaddingRight fontSmaller">
+                                {{ item?.saldoAct | number: "1.2-2" }}
+                              </p>
+                            </div>
+                            <div
+                              style="width: 12%"
+                              class="borderBottonRight right"
+                            >
+                              <p class="addPaddingRight fontSmaller">
+                                {{ item?.valorCDP | number: "1.2-2" }}
+                              </p>
+                            </div>
+                            <div
+                              style="width: 12%"
+                              class="borderBottonRight right"
+                            >
+                              <p class="addPaddingRight fontSmaller">
+                                {{ item?.saldoCDP | number: "1.2-2" }}
+                              </p>
+                            </div>
+                            <div
+                              style="width: 14%"
+                              class="borderBotton right addPaddingRight"
+                            >
+                              <input
+                                type="text"
+                                style="text-align: right; height: 30px"
+                                class="form-control col-form-label-sm"
+                                formControlName="rubroControl"
+                                appDecimalMask
+                                placeholder="Ingrese valor solicitud"
+                                value="{{ item?.valorSolicitud }}"
+                              />
+                              <div
+                                class="error col-form-label-sm"
+                                *ngIf="
+                                  rubrosControles.controls[i]
+                                    .get('rubroControl')
+                                    ?.hasError('required') &&
+                                  rubrosControles.controls[i].get(
+                                    'rubroControl'
+                                  )?.touched
+                                "
+                              >
+                                <small>
+                                  REGISTRE EL VALOR DE LA SOLICITUD</small
+                                >
+                              </div>
+                              <div
+                                class="error col-form-label-sm"
+                                *ngIf="
+                                  rubrosControles.controls[i]
+                                    .get('rubroControl')
+                                    ?.hasError('valorIncorrecto') &&
+                                  rubrosControles.controls[i].get(
+                                    'rubroControl'
+                                  )?.touched
+                                "
+                              >
+                                <small>
+                                  EL VALOR INGRESADO NO ES EL CORRECTO</small
+                                >
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!--Solicitud Inicial y Cambios confirmados-->
+          <tr *ngIf="cambiosConfirmados && !esSolicitudInicial">
+            <td class="withoutPadding withoutBorder">
+              <div class="container-fluid">
+                <!--Titulo Principal-->
+                <div class="row">
+                  <div class="col-12 borderTop aplicaBackground">
+                    <small
+                      ><strong
+                        >IV. INFORMACION DE CONCEPTO(S) DE GASTO</strong
+                      ></small
+                    >
+                  </div>
+                </div>
+                <div>
+                  <!--Titulo de Columnas-->
+                  <div class="row borderTop">
+                    <div
+                      style="width: 13%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>CODIGO</strong></small>
+                    </div>
+                    <div
+                      style="width: 35%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>DESCRIPCION</strong></small>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>SALDO ACTIVIDAD</strong></small>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>VALOR CDP</strong></small>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="borderBottonRight aplicaBackground"
+                    >
+                      <small><strong>SALDO CDP</strong></small>
+                    </div>
+                    <div
+                      style="width: 13%"
+                      class="borderBotton aplicaBackground"
+                    >
+                      <small><strong>VALOR SOLICITUD</strong></small>
+                    </div>
+                  </div>
+                  <!--Valores Rubros Presupuestales-->
+                  <div class="row">
+                    <div class="col-12">
+                      <div *ngIf="detalleCdp">
+                        <div
+                          formArrayName="rubrosControles"
+                          class="row"
+                          *ngFor="let item of detalleCdp; let i = index"
+                        >
+                          <ng-container [formGroupName]="i">
+                            <div
+                              style="width: 13%"
+                              class="borderBottonRight centerAlign small addPaddingLeft"
+                            >
+                              <small>{{ item?.rubroPresupuestal.identificacion }}</small>
+                            </div>
+                            <div
+                              style="width: 35%"
+                              class="borderBottonRight left small addPaddingLeft"
+                            >
+                              <small>{{ item?.rubroPresupuestal.nombre }}</small>
+                            </div>
+                            <div
+                              style="width: 13%"
+                              class="borderBottonRight right addPaddingRight"
+                            >
+                              <p>
+                                <small>{{
+                                  item?.saldoAct | number: "1.2-2"
+                                }}</small>
+                              </p>
+                            </div>
+                            <div
+                              style="width: 13%"
+                              class="borderBottonRight right addPaddingRight"
+                            >
+                              <label class="col-form-label-sm">{{
+                                item?.valorCDP | number: "1.2-2"
+                              }}</label>
+                            </div>
+                            <div
+                              style="width: 13%"
+                              class="borderBottonRight right addPaddingRight"
+                            >
+                              <label class="col-form-label-sm">{{
+                                item?.saldoCDP | number: "1.2-2"
+                              }}</label>
+                            </div>
+                            <div
+                              style="width: 13%"
+                              class="borderBotton right addPaddingRight"
+                            >
+                              <label class="col-form-label-sm">{{
+                                item?.valorSolicitud | number: "1.2-2"
+                              }}</label>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!---------------------------SOLICITUD INICIAL--------------------------------->
+
+          <!--Solicitud Inicial y No Cambios confirmados-->
+          <tr *ngIf="!cambiosConfirmados && esSolicitudInicial">
+            <td class="withoutPadding withoutBorder">
+              <div class="container-fluid">
+                <!--Titulo Principal-->
+                <div class="row borderTop">
+                  <div class="col-12 borderTop aplicaBackground">
+                    <small
+                      ><strong
+                        >IV. INFORMACION DE CONCEPTO(S) DE GASTO</strong
+                      ></small
+                    >
+                  </div>
+                </div>
+                <div>
+                  <!--Titulo de Columnas-->
+                  <div class="row borderTop">
+                    <div class="col-1 borderBottonRight aplicaBackground"></div>
+                    <div class="col-2 borderBottonRight aplicaBackground">
+                      <small><strong>CODIGO</strong></small>
+                    </div>
+                    <div class="col-3 borderBottonRight aplicaBackground">
+                      <small><strong>DESCRIPCION</strong></small>
+                    </div>
+                    <div
+                      class="col-2 borderBottonRight aplicaBackground center"
+                    >
+                      <small><strong>VALOR ACTIVIDAD</strong></small>
+                    </div>
+                    <div
+                      class="col-2 borderBottonRight aplicaBackground center"
+                    >
+                      <small><strong>SALDO ACTIVIDAD</strong></small>
+                    </div>
+                    <div class="col-2 borderBotton aplicaBackground center">
+                      <small><strong>VALOR SOLICITUD</strong></small>
+                    </div>
+                  </div>
+                  <!--Valores Rubros Presupuestales-->
+                  <div class="row">
+                    <div class="col-12">
+                      <div *ngIf="detalleCdp">
+                        <div
+                          formArrayName="rubrosControles"
+                          class="row"
+                          *ngFor="let item of detalleCdp; let i = index"
+                        >
+                          <ng-container [formGroupName]="i">
+                            <div class="col-1 borderBottonRight parent">
+                              <button
+                                class="btn btn-primary btn-sm child"
+                                (click)="EliminarRubroPresupuestal(i)"
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                            <div
+                              class="col-2 borderBottonRight centerAlign small addPaddingLeft"
+                            >
+                              <small>{{ item?.rubroPresupuestal.identificacion }}</small>
+                            </div>
+                            <div
+                              class="col-3 borderBottonRight left addPaddingLeft"
+                            >
+                              <small>{{ item?.rubroPresupuestal.nombre }}</small>
+                            </div>
+                            <div
+                              class="col-2 borderBottonRight right addPaddingRight"
+                            >
+                              <small>{{
+                                item?.saldoAct | number: "1.2-2"
+                              }}</small>
+                            </div>
+                            <div
+                              class="col-2 borderBottonRight right addPaddingRight"
+                            >
+                              <small>{{
+                                item?.saldoAct | number: "1.2-2"
+                              }}</small>
+                            </div>
+                            <div
+                              class="col-2 borderBotton right addPaddingRight"
+                            >
+                              <input
+                                type="text"
+                                style="text-align: right; height: 30px"
+                                class="form-control col-form-label-sm"
+                                formControlName="rubroControl"
+                                appDecimalMask
+                                placeholder="Ingrese valor solicitud"
+                              />
+                              <div
+                                class="error col-form-label-sm"
+                                *ngIf="
+                                  rubrosControles.controls[i]
+                                    .get('rubroControl')
+                                    ?.hasError('required') &&
+                                  rubrosControles.controls[i].get(
+                                    'rubroControl'
+                                  )?.touched
+                                "
+                              >
+                                <small>
+                                  REGISTRE EL VALOR DE LA SOLICITUD</small
+                                >
+                              </div>
+                              <div
+                                class="error col-form-label-sm"
+                                *ngIf="
+                                  rubrosControles.controls[i]
+                                    .get('rubroControl')
+                                    ?.hasError('valorIncorrecto') &&
+                                  rubrosControles.controls[i].get(
+                                    'rubroControl'
+                                  )?.touched
+                                "
+                              >
+                                <small>
+                                  EL VALOR INGRESADO NO ES EL CORRECTO</small
+                                >
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!--Solicitud Inicial y Cambios confirmados-->
+          <tr *ngIf="cambiosConfirmados && esSolicitudInicial">
+            <td class="withoutPadding withoutBorder">
+              <div class="container-fluid">
+                <!--Titulo Principal-->
+                <div class="row borderTop">
+                  <div class="col-12 borderTop aplicaBackground">
+                    <small
+                      ><strong
+                        >IV. INFORMACION DE CONCEPTO(S) DE GASTO</strong
+                      ></small
+                    >
+                  </div>
+                </div>
+                <div>
+                  <!--Titulo de Columnas-->
+                  <div class="row borderTop">
+                    <div class="col-2 borderBottonRight aplicaBackground">
+                      <small><strong>CODIGO</strong></small>
+                    </div>
+                    <div class="col-4 borderBottonRight aplicaBackground">
+                      <small><strong>DESCRIPCION</strong></small>
+                    </div>
+                    <div
+                      class="col-2 borderBottonRight aplicaBackground center"
+                    >
+                      <small><strong>VALOR ACTIVIDAD</strong></small>
+                    </div>
+                    <div
+                      class="col-2 borderBottonRight aplicaBackground center"
+                    >
+                      <small><strong>SALDO ACTIVIDAD</strong></small>
+                    </div>
+                    <div class="col-2 borderBotton aplicaBackground center">
+                      <small><strong>VALOR SOLICITUD</strong></small>
+                    </div>
+                  </div>
+                  <!--Rubros Presupuestales-->
+                  <div class="row">
+                    <div class="col-12">
+                      <div *ngIf="detalleCdp">
+                        <div
+                          formArrayName="rubrosControles"
+                          class="row"
+                          *ngFor="let item of detalleCdp; let i = index"
+                        >
+                          <ng-container [formGroupName]="i">
+                            <div
+                              class="col-2 borderBottonRight centerAlign addPaddingLeft"
+                            >
+                              <small>{{ item?.rubroPresupuestal.identificacion }}</small>
+                            </div>
+                            <div
+                              class="col-4 borderBottonRight left addPaddingLeft"
+                            >
+                              <small>{{ item?.rubroPresupuestal.nombre }}</small>
+                            </div>
+                            <div
+                              class="col-2 borderBottonRight right addPaddingRight"
+                            >
+                              <small>{{
+                                item?.saldoAct | number: "1.2-2"
+                              }}</small>
+                            </div>
+                            <div
+                              class="col-2 borderBottonRight right addPaddingRight"
+                            >
+                              <small>{{
+                                item?.saldoAct | number: "1.2-2"
+                              }}</small>
+                            </div>
+                            <div
+                              class="col-2 borderBotton right addPaddingRight"
+                            >
+                              <small>{{
+                                item?.valorSolicitud | number: "1.2-2"
+                              }}</small>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!--Rubros Presupuestales FIN-->
+
+          <!--ESPACIO-->
+          <tr>
+            <td class="addHeight"></td>
+          </tr>
+
+          <!--Tipo de detalle-->
+          <tr>
+            <td class="withoutPadding">
+              <div class="container-fluid">
+                <div class="row borderTopBotton">
+                  <div class="col-12 aplicaBackground center">
+                    <small
+                      ><strong>V. DETALLE DE LA MODIFICACION.</strong></small
+                    >
+                  </div>
+                </div>
+                <div class="row" *ngIf="!cambiosConfirmados">
+                  <div class="col-12" style="padding: 10px">
+                    <select                      
+                      formControlName="tipoDetalleControl"
+                      (change)="onSelectTipoDetalle()"
+                      class="form-control medium"
+                      style="height: 30px; padding-left: 5px;"                      
+                      [ngClass]="{
+                        'is-invalid':
+                          cdpForm.get('tipoDetalleControl').touched &&
+                          cdpForm.get('tipoDetalleControl').hasError('required')
+                      }"
+                    >
+                      <option [ngValue]="null" disabled>
+                        Seleccione el detalle de la modificación
+                      </option>
+                      <option
+                        *ngFor="let item of listaTipoDetalle"
+                        [ngValue]="item"
+                      >
+                        {{ item.nombre }}
+                      </option>
+                    </select>
+                    <div
+                      class="invalid-feedback left"
+                      *ngIf="
+                        cdpForm.get('tipoDetalleControl').touched &&
+                        cdpForm.get('tipoDetalleControl').hasError('required')
+                      "
+                    >
+                      SELECCIONE EL DETALLE DE LA MODIFICACION
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="cambiosConfirmados">
+                  <div class="col-12 left">
+                    <p class="fontSmaller" style="height: 20px; margin: 0px">
+                      {{ this.tipoDetalleSeleccionado?.nombre }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!--Observaciones-->
+          <tr>
+            <td class="withoutPadding">
+              <div class="container-fluid">
+                <div class="row borderTopBotton">
+                  <div class="col-12 aplicaBackground center">
+                    <small><strong>VI. OBSERVACIONES</strong></small>
+                  </div>
+                </div>
+                <div class="row" style="height: 50px; vertical-align: middle">
+                  <div class="col-12" style="height: 50px; padding: 5px">
+                    <textarea
+                      [ngClass]="{
+                        'is-invalid':
+                          cdpForm.get('observacionesControl').errors &&
+                          cdpForm.get('observacionesControl').touched
+                      }"
+                      name="textarea"
+                      class="form-control col-form-label-sm addPaddingLeft"
+                      formControlName="observacionesControl"
+                      style="
+                        width: 100%;
+                        height: 50px;
+                        color: black;
+                        overflow: hidden;
+                      "
+                      rows="2"
+                      maxlength="300"
+                      placeholder="Ingrese las observaciones aquí"
+                      [readonly]="cambiosConfirmados"
+                    ></textarea>
+                    <div class="invalid-feedback left">
+                      REGISTRE EN EL CAMPO OBSERVACIONES LA JUSTIFICACION DE LA
+                      SOLICITUD
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!--Firmas-->
+          <tr>
+            <td class="withoutPadding">
+              <div class="container-fluid">
+                <div class="row borderTopBotton">
+                  <div class="col-12 aplicaBackground center">
+                    <small><strong>VII. FIRMAS</strong></small>
+                  </div>
+                </div>
+                <div id="firma" class="row mt-5">
+                  <div class="col-3 aplicaBackground withoutPadding left">
+                    <small> FIRMA: </small>
+                  </div>
+                  <div style="width: 20px"></div>
+                  <div class="col-3 aplicaBackground withoutPadding left">
+                    <small> FIRMA: </small>
+                  </div>
+                  <div style="width: 20px"></div>
+                  <div
+                    class="col-3 aplicaBackground withoutPadding left"
+                    *ngIf="mostrarTerceraFirma"
+                  >
+                    <small> FIRMA: </small>
+                  </div>
+                </div>
+                <!--Nombre de los firmantes-->
+                <div id="firma" class="row mb-3">
+                  <div class="col-3 withoutPadding left">
+                    <span class="fontVerySmaller">
+                      SOLICITANTE: {{ this.usuario?.nombres }}
+                      {{ this.usuario?.apellidos }}
+                    </span>
+                  </div>
+                  <div style="width: 20px"></div>
+                  <div class="col-3 withoutPadding left">
+                    <span class="fontVerySmaller">
+                      ORDENADOR GASTO: ANDREY GEOVANNY RODRIGUEZ LEON</span
+                    >
+                  </div>
+                  <div style="width: 20px"></div>
+                  <div
+                    class="col-3 withoutPadding left"
+                    *ngIf="mostrarTerceraFirma"
+                  >
+                    <span class="fontVerySmaller">
+                      CONTRATACION: ANIBAL ANDRES ARROYO LEON
+                    </span>
+                  </div>
+                </div>
+                <!--Pie de pagina-->
+                <div class="row">
+                  <div class="col-12 center">
+                    <span
+                      style="margin: 0 auto; width: 100%"
+                      class="fontSmaller"
+                    >
+                      {{ notaLegal?.valor }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 right" style="padding-right:15px;">
+      <table style="width: 100%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              class="btn btn-success mr-2"
+              (click)="confirmarCambios()"
+              [disabled]="!cdpForm.valid || cambiosConfirmados"
+            >
+              Confirmar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary mr-2"
+              (click)="exportarPDF()"
+              [disabled]="!cambiosConfirmados"
+            >
+              Exportar PDF
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="onCancelar()"
+            >
+              Volver
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <p>Form value: {{ cdpForm.value | json }}</p>
+<p>Form status: {{ cdpForm.status | json }}</p>
+<p>{{ !cdpForm.valid || this.cambiosConfirmados }}</p>  -->

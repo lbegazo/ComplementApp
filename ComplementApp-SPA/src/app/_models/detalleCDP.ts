@@ -40,4 +40,5 @@ export class DetalleCDP {
   rubroPresupuestal: RubroPresupuestal;
   cdpDocumento: Cdp;
   clavePresupuestalContableId: number;
+  esSeleccionada: boolean;
 }
