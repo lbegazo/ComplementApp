@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
+import { RespuestaSolicitudPago } from '../_dto/respuestaSolicitudPago';
 import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { PaginatedResult } from '../_models/pagination';
@@ -28,9 +29,8 @@ export class DetalleLiquidacionService {
     pagesize?
   ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
     const path = 'ObtenerLiquidacionesParaCuentaPorPagarArchivo';
-    const paginatedResult: PaginatedResult<
-      FormatoCausacionyLiquidacionPago[]
-    > = new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
+    const paginatedResult: PaginatedResult<FormatoCausacionyLiquidacionPago[]> =
+      new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
 
     let params = new HttpParams();
     params = params.append('listaEstadoId', listaEstadoId);
@@ -229,9 +229,8 @@ export class DetalleLiquidacionService {
     pagesize?
   ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
     const path = 'ObtenerLiquidacionesParaArchivoObligacion';
-    const paginatedResult: PaginatedResult<
-      FormatoCausacionyLiquidacionPago[]
-    > = new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
+    const paginatedResult: PaginatedResult<FormatoCausacionyLiquidacionPago[]> =
+      new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
 
     let params = new HttpParams();
     params = params.append('listaEstadoId', listaEstadoId);
@@ -267,21 +266,31 @@ export class DetalleLiquidacionService {
       );
   }
 
-  public DescargarArchivoLiquidacionObligacion(
+  ObtenerListaLiquidacionIdParaArchivo(
     listaLiquidacionId: string,
     listaEstadoId: string,
     seleccionarTodo: number,
     terceroId: number,
     tipoArchivoObligacionId: number,
-    conUsoPresupuestal: number
-  ): Observable<HttpEvent<Blob>> {
+    conRubroFuncionamiento: number,
+    conRubroUsoPresupuestal: number
+  ): Observable<RespuestaSolicitudPago> {
+    const path = 'ObtenerListaLiquidacionIdParaArchivo';
+
     let params = new HttpParams();
     params = params.append('listaEstadoId', listaEstadoId);
     params = params.append(
       'tipoArchivoObligacionId',
       tipoArchivoObligacionId.toString()
     );
-    params = params.append('conUsoPresupuestal', conUsoPresupuestal.toString());
+    params = params.append(
+      'conRubroFuncionamiento',
+      conRubroFuncionamiento.toString()
+    );
+    params = params.append(
+      'conRubroUsoPresupuestal',
+      conRubroUsoPresupuestal.toString()
+    );
 
     if (listaLiquidacionId.length > 0) {
       params = params.append(
@@ -294,6 +303,29 @@ export class DetalleLiquidacionService {
     }
     if (seleccionarTodo != null) {
       params = params.append('seleccionarTodo', seleccionarTodo.toString());
+    }
+
+    return this.http.get<RespuestaSolicitudPago>(this.baseUrl + path, {
+      params,
+    });
+  }
+
+  public DescargarArchivoLiquidacionObligacion(
+    listaLiquidacionId: string,
+    tipoArchivoObligacionId: number
+  ): Observable<HttpEvent<Blob>> {
+    let params = new HttpParams();
+
+    params = params.append(
+      'tipoArchivoObligacionId',
+      tipoArchivoObligacionId.toString()
+    );
+
+    if (listaLiquidacionId.length > 0) {
+      params = params.append(
+        'listaLiquidacionId',
+        listaLiquidacionId.toString()
+      );
     }
 
     return this.http.request(

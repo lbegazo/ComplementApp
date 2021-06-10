@@ -437,6 +437,32 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
+        public async Task<List<int>> ObtenerLiquidacionIdsConRubroFuncionamiento(List<int> listaLiquidacionId)
+        {
+            string codigoFuncionamiento = "A-";
+
+            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
+                               join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
+                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
+                               join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
+                               join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               where sp.PciId == dl.PciId
+                               where sp.PciId == cp.PciId
+                               where sp.PciId == up.PciId
+                               where listaLiquidacionId.Contains(dl.DetalleLiquidacionId)
+                               where sp.PlanPagoId == dl.PlanPagoId
+                               where sp.Crp == cp.Crp
+                               where sp.EstadoId == (int)EstadoSolicitudPago.ConLiquidacionDeducciones
+                               where rp.Identificacion.StartsWith(codigoFuncionamiento)
+                               //where EF.Functions.Like()
+                               select dl.DetalleLiquidacionId)
+
+                               .Distinct()
+                               .ToListAsync();
+
+            return lista;
+        }
 
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId)
         {
@@ -593,7 +619,7 @@ namespace ComplementApp.API.Data
             return listaFinal;
         }
 
-        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerFacturaParaArchivoObligacion(List<int> listaLiquidacionId, int pciId)
+        public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerFacturaParaArchivoObligacion(List<int> listaLiquidacionId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
 

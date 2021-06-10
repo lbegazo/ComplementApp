@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
+import { RespuestaSolicitudPago } from 'src/app/_dto/respuestaSolicitudPago';
 import { EstadoPlanPago, TipoArchivoObligacion } from 'src/app/_models/enum';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
@@ -270,16 +271,45 @@ export class ObligacionPresupuestalComponent implements OnInit {
     }
   }
 
-  public DescargarArchivoDetalleLiquidacion() {
+  descargarArchivo(response) {
     let fileName = '';
+    switch (response.type) {
+      case HttpEventType.Response:
+        if (response.body !== null) {
+          const downloadedFile = new Blob([response.body], {
+            type: response.body.type,
+          });
+
+          const nombreArchivo = response.headers.get('filename');
+
+          if (nombreArchivo != null && nombreArchivo.length > 0) {
+            fileName = nombreArchivo + '.txt';
+          }
+
+          const a = document.createElement('a');
+          a.setAttribute('style', 'display:none;');
+          document.body.appendChild(a);
+          a.download = fileName;
+          a.href = URL.createObjectURL(downloadedFile);
+          a.target = '_blank';
+          a.click();
+          document.body.removeChild(a);
+        }
+        break;
+    }
+  }
+
+  public DescargarArchivoDetalleLiquidacion() {
     let listaIds: number[] = [];
 
     const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
     let listaCadenaIds = '';
+    let listaLiquidacionId = '';
     this.listaEstadoId =
       EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
     let tipoArchivoObligacion = 0;
-    let conUsoPresupuestal = 0;
+    let conRubroFuncionamiento = 0;
+    let conRubroUsoPresupuestal = 0;
 
     if (this.facturaHeaderForm.valid) {
       //#region Obtener lista de ids: listaCadenaIds
@@ -300,615 +330,1289 @@ export class ObligacionPresupuestalComponent implements OnInit {
 
       //#region Descargar archivo CABECERA CON USO PRESUPUESTAL
 
-      tipoArchivoObligacion = TipoArchivoObligacion.Cabecera.value;
-      conUsoPresupuestal = 1;
+      conRubroFuncionamiento = 1;
+      conRubroUsoPresupuestal = 1;
 
       this.liquidacionService
-        .DescargarArchivoLiquidacionObligacion(
+        .ObtenerListaLiquidacionIdParaArchivo(
           listaCadenaIds,
           this.listaEstadoId,
           esSeleccionarTodas,
           this.terceroId,
           tipoArchivoObligacion,
-          conUsoPresupuestal
+          conRubroFuncionamiento,
+          conRubroUsoPresupuestal
         )
         .subscribe(
-          (response) => {
-            switch (response.type) {
-              case HttpEventType.Response:
-                if (response.body !== null) {
-                  const downloadedFile = new Blob([response.body], {
-                    type: response.body.type,
-                  });
+          (response: RespuestaSolicitudPago) => {
+            if (response) {
+              if (
+                response.numeroFactura !== null &&
+                response.numeroFactura.length > 0
+              ) {
+                listaLiquidacionId = response.numeroFactura;
+              } else {
+                listaLiquidacionId = '';
+              }
 
-                  const nombreArchivo = response.headers.get('filename');
+              //#region Cabecera
 
-                  if (nombreArchivo != null && nombreArchivo.length > 0) {
-                    fileName = nombreArchivo + '.txt';
-                  } else {
-                    fileName = 'SIGPAA_Maestro.txt';
+              tipoArchivoObligacion = TipoArchivoObligacion.Cabecera.value;
+
+              this.liquidacionService
+                .DescargarArchivoLiquidacionObligacion(
+                  listaLiquidacionId,
+                  tipoArchivoObligacion
+                )
+                .subscribe(
+                  (response) => {
+                    this.descargarArchivo(response);
+                  },
+                  (error) => {
+                    this.alertify.warning(error);
+                  },
+                  () => {
+                    //#region Item
+
+                    tipoArchivoObligacion = TipoArchivoObligacion.Item.value;
+
+                    this.liquidacionService
+                      .DescargarArchivoLiquidacionObligacion(
+                        listaLiquidacionId,
+                        tipoArchivoObligacion
+                      )
+                      .subscribe(
+                        (response) => {
+                          this.descargarArchivo(response);
+                        },
+                        (error) => {
+                          this.alertify.warning(error);
+                        },
+                        () => {
+                          //#region DEDUCCIONES
+
+                          tipoArchivoObligacion =
+                            TipoArchivoObligacion.Deducciones.value;
+
+                          this.liquidacionService
+                            .DescargarArchivoLiquidacionObligacion(
+                              listaLiquidacionId,
+                              tipoArchivoObligacion
+                            )
+                            .subscribe(
+                              (response) => {
+                                this.descargarArchivo(response);
+                              },
+                              (error) => {
+                                this.alertify.warning(error);
+                              },
+                              () => {
+                                //#region USOS
+
+                                tipoArchivoObligacion =
+                                  TipoArchivoObligacion.Usos.value;
+
+                                this.liquidacionService
+                                  .DescargarArchivoLiquidacionObligacion(
+                                    listaLiquidacionId,
+                                    tipoArchivoObligacion
+                                  )
+                                  .subscribe(
+                                    (response) => {
+                                      this.descargarArchivo(response);
+                                    },
+                                    (error) => {
+                                      this.alertify.warning(error);
+                                    },
+                                    () => {
+                                      //#region FACTURA
+
+                                      tipoArchivoObligacion =
+                                        TipoArchivoObligacion.Factura.value;
+
+                                      this.liquidacionService
+                                        .DescargarArchivoLiquidacionObligacion(
+                                          listaLiquidacionId,
+                                          tipoArchivoObligacion
+                                        )
+                                        .subscribe(
+                                          (response) => {
+                                            this.descargarArchivo(response);
+                                          },
+                                          (error) => {
+                                            this.alertify.warning(error);
+                                          },
+                                          () => {
+                                            conRubroFuncionamiento = 1;
+                                            conRubroUsoPresupuestal = 0;
+
+                                            this.liquidacionService
+                                              .ObtenerListaLiquidacionIdParaArchivo(
+                                                listaCadenaIds,
+                                                this.listaEstadoId,
+                                                esSeleccionarTodas,
+                                                this.terceroId,
+                                                tipoArchivoObligacion,
+                                                conRubroFuncionamiento,
+                                                conRubroUsoPresupuestal
+                                              )
+                                              .subscribe(
+                                                (
+                                                  response: RespuestaSolicitudPago
+                                                ) => {
+                                                  if (response) {
+                                                    if (
+                                                      response.numeroFactura !==
+                                                        null &&
+                                                      response.numeroFactura
+                                                        .length > 0
+                                                    ) {
+                                                      listaLiquidacionId =
+                                                        response.numeroFactura;
+                                                    } else {
+                                                      listaLiquidacionId = '';
+                                                    }
+
+                                                    //#region Cabecera
+
+                                                    tipoArchivoObligacion =
+                                                      TipoArchivoObligacion
+                                                        .Cabecera.value;
+
+                                                    this.liquidacionService
+                                                      .DescargarArchivoLiquidacionObligacion(
+                                                        listaLiquidacionId,
+                                                        tipoArchivoObligacion
+                                                      )
+                                                      .subscribe(
+                                                        (response) => {
+                                                          this.descargarArchivo(
+                                                            response
+                                                          );
+                                                        },
+                                                        (error) => {
+                                                          this.alertify.warning(
+                                                            error
+                                                          );
+                                                        },
+                                                        () => {
+                                                          //#region Item
+
+                                                          tipoArchivoObligacion =
+                                                            TipoArchivoObligacion
+                                                              .Item.value;
+
+                                                          this.liquidacionService
+                                                            .DescargarArchivoLiquidacionObligacion(
+                                                              listaLiquidacionId,
+                                                              tipoArchivoObligacion
+                                                            )
+                                                            .subscribe(
+                                                              (response) => {
+                                                                this.descargarArchivo(
+                                                                  response
+                                                                );
+                                                              },
+                                                              (error) => {
+                                                                this.alertify.warning(
+                                                                  error
+                                                                );
+                                                              },
+                                                              () => {
+                                                                //#region DEDUCCIONES
+
+                                                                tipoArchivoObligacion =
+                                                                  TipoArchivoObligacion
+                                                                    .Deducciones
+                                                                    .value;
+
+                                                                this.liquidacionService
+                                                                  .DescargarArchivoLiquidacionObligacion(
+                                                                    listaLiquidacionId,
+                                                                    tipoArchivoObligacion
+                                                                  )
+                                                                  .subscribe(
+                                                                    (
+                                                                      response
+                                                                    ) => {
+                                                                      this.descargarArchivo(
+                                                                        response
+                                                                      );
+                                                                    },
+                                                                    (error) => {
+                                                                      this.alertify.warning(
+                                                                        error
+                                                                      );
+                                                                    },
+                                                                    () => {
+                                                                      //#region FACTURA
+
+                                                                      tipoArchivoObligacion =
+                                                                        TipoArchivoObligacion
+                                                                          .Factura
+                                                                          .value;
+
+                                                                      this.liquidacionService
+                                                                        .DescargarArchivoLiquidacionObligacion(
+                                                                          listaLiquidacionId,
+                                                                          tipoArchivoObligacion
+                                                                        )
+                                                                        .subscribe(
+                                                                          (
+                                                                            response
+                                                                          ) => {
+                                                                            this.descargarArchivo(
+                                                                              response
+                                                                            );
+                                                                          },
+                                                                          (
+                                                                            error
+                                                                          ) => {
+                                                                            this.alertify.warning(
+                                                                              error
+                                                                            );
+                                                                          },
+                                                                          () => {
+                                                                            conRubroFuncionamiento = 0;
+                                                                            conRubroUsoPresupuestal = 1;
+
+                                                                            this.liquidacionService
+                                                                              .ObtenerListaLiquidacionIdParaArchivo(
+                                                                                listaCadenaIds,
+                                                                                this
+                                                                                  .listaEstadoId,
+                                                                                esSeleccionarTodas,
+                                                                                this
+                                                                                  .terceroId,
+                                                                                tipoArchivoObligacion,
+                                                                                conRubroFuncionamiento,
+                                                                                conRubroUsoPresupuestal
+                                                                              )
+                                                                              .subscribe(
+                                                                                (
+                                                                                  response: RespuestaSolicitudPago
+                                                                                ) => {
+                                                                                  if (
+                                                                                    response
+                                                                                  ) {
+                                                                                    if (
+                                                                                      response.numeroFactura !==
+                                                                                        null &&
+                                                                                      response
+                                                                                        .numeroFactura
+                                                                                        .length >
+                                                                                        0
+                                                                                    ) {
+                                                                                      listaLiquidacionId =
+                                                                                        response.numeroFactura;
+                                                                                    } else {
+                                                                                      listaLiquidacionId =
+                                                                                        '';
+                                                                                    }
+                                                                                    //#region Cabecera
+
+                                                                                    tipoArchivoObligacion =
+                                                                                      TipoArchivoObligacion
+                                                                                        .Cabecera
+                                                                                        .value;
+
+                                                                                    this.liquidacionService
+                                                                                      .DescargarArchivoLiquidacionObligacion(
+                                                                                        listaLiquidacionId,
+                                                                                        tipoArchivoObligacion
+                                                                                      )
+                                                                                      .subscribe(
+                                                                                        (
+                                                                                          response
+                                                                                        ) => {
+                                                                                          this.descargarArchivo(
+                                                                                            response
+                                                                                          );
+                                                                                        },
+                                                                                        (
+                                                                                          error
+                                                                                        ) => {
+                                                                                          this.alertify.warning(
+                                                                                            error
+                                                                                          );
+                                                                                        },
+                                                                                        () => {
+                                                                                          //#region Item
+
+                                                                                          tipoArchivoObligacion =
+                                                                                            TipoArchivoObligacion
+                                                                                              .Item
+                                                                                              .value;
+
+                                                                                          this.liquidacionService
+                                                                                            .DescargarArchivoLiquidacionObligacion(
+                                                                                              listaLiquidacionId,
+                                                                                              tipoArchivoObligacion
+                                                                                            )
+                                                                                            .subscribe(
+                                                                                              (
+                                                                                                response
+                                                                                              ) => {
+                                                                                                this.descargarArchivo(
+                                                                                                  response
+                                                                                                );
+                                                                                              },
+                                                                                              (
+                                                                                                error
+                                                                                              ) => {
+                                                                                                this.alertify.warning(
+                                                                                                  error
+                                                                                                );
+                                                                                              },
+                                                                                              () => {
+                                                                                                //#region DEDUCCIONES
+
+                                                                                                tipoArchivoObligacion =
+                                                                                                  TipoArchivoObligacion
+                                                                                                    .Deducciones
+                                                                                                    .value;
+
+                                                                                                this.liquidacionService
+                                                                                                  .DescargarArchivoLiquidacionObligacion(
+                                                                                                    listaLiquidacionId,
+                                                                                                    tipoArchivoObligacion
+                                                                                                  )
+                                                                                                  .subscribe(
+                                                                                                    (
+                                                                                                      response
+                                                                                                    ) => {
+                                                                                                      this.descargarArchivo(
+                                                                                                        response
+                                                                                                      );
+                                                                                                    },
+                                                                                                    (
+                                                                                                      error
+                                                                                                    ) => {
+                                                                                                      this.alertify.warning(
+                                                                                                        error
+                                                                                                      );
+                                                                                                    },
+                                                                                                    () => {
+                                                                                                      //#region USOS
+
+                                                                                                      tipoArchivoObligacion =
+                                                                                                        TipoArchivoObligacion
+                                                                                                          .Usos
+                                                                                                          .value;
+
+                                                                                                      this.liquidacionService
+                                                                                                        .DescargarArchivoLiquidacionObligacion(
+                                                                                                          listaLiquidacionId,
+                                                                                                          tipoArchivoObligacion
+                                                                                                        )
+                                                                                                        .subscribe(
+                                                                                                          (
+                                                                                                            response
+                                                                                                          ) => {
+                                                                                                            this.descargarArchivo(
+                                                                                                              response
+                                                                                                            );
+                                                                                                          },
+                                                                                                          (
+                                                                                                            error
+                                                                                                          ) => {
+                                                                                                            this.alertify.warning(
+                                                                                                              error
+                                                                                                            );
+                                                                                                          },
+                                                                                                          () => {
+                                                                                                            //#region FACTURA
+
+                                                                                                            tipoArchivoObligacion =
+                                                                                                              TipoArchivoObligacion
+                                                                                                                .Factura
+                                                                                                                .value;
+
+                                                                                                            this.liquidacionService
+                                                                                                              .DescargarArchivoLiquidacionObligacion(
+                                                                                                                listaLiquidacionId,
+                                                                                                                tipoArchivoObligacion
+                                                                                                              )
+                                                                                                              .subscribe(
+                                                                                                                (
+                                                                                                                  response
+                                                                                                                ) => {
+                                                                                                                  this.descargarArchivo(
+                                                                                                                    response
+                                                                                                                  );
+                                                                                                                },
+                                                                                                                (
+                                                                                                                  error
+                                                                                                                ) => {
+                                                                                                                  this.alertify.warning(
+                                                                                                                    error
+                                                                                                                  );
+                                                                                                                },
+                                                                                                                () => {
+                                                                                                                  conRubroFuncionamiento = 0;
+                                                                                                                  conRubroUsoPresupuestal = 0;
+
+                                                                                                                  this.liquidacionService
+                                                                                                                    .ObtenerListaLiquidacionIdParaArchivo(
+                                                                                                                      listaCadenaIds,
+                                                                                                                      this
+                                                                                                                        .listaEstadoId,
+                                                                                                                      esSeleccionarTodas,
+                                                                                                                      this
+                                                                                                                        .terceroId,
+                                                                                                                      tipoArchivoObligacion,
+                                                                                                                      conRubroFuncionamiento,
+                                                                                                                      conRubroUsoPresupuestal
+                                                                                                                    )
+                                                                                                                    .subscribe(
+                                                                                                                      (
+                                                                                                                        response: RespuestaSolicitudPago
+                                                                                                                      ) => {
+                                                                                                                        if (
+                                                                                                                          response.numeroFactura !==
+                                                                                                                            null &&
+                                                                                                                          response.numeroFactura
+                                                                                                                            .length > 0
+                                                                                                                        ) {
+                                                                                                                          listaLiquidacionId =
+                                                                                                                            response.numeroFactura;
+                                                                                                                        } else {
+                                                                                                                          listaLiquidacionId = '';
+                                                                                                                        }
+                                                                                                                        
+                                                                                                                          //#region Cabecera
+
+                                                                                                                          tipoArchivoObligacion =
+                                                                                                                            TipoArchivoObligacion
+                                                                                                                              .Cabecera
+                                                                                                                              .value;
+
+                                                                                                                          this.liquidacionService
+                                                                                                                            .DescargarArchivoLiquidacionObligacion(
+                                                                                                                              listaLiquidacionId,
+                                                                                                                              tipoArchivoObligacion
+                                                                                                                            )
+                                                                                                                            .subscribe(
+                                                                                                                              (
+                                                                                                                                response
+                                                                                                                              ) => {
+                                                                                                                                this.descargarArchivo(
+                                                                                                                                  response
+                                                                                                                                );
+                                                                                                                              },
+                                                                                                                              (
+                                                                                                                                error
+                                                                                                                              ) => {
+                                                                                                                                this.alertify.warning(
+                                                                                                                                  error
+                                                                                                                                );
+                                                                                                                              },
+                                                                                                                              () => {
+                                                                                                                                //#region Item
+
+                                                                                                                                tipoArchivoObligacion =
+                                                                                                                                  TipoArchivoObligacion
+                                                                                                                                    .Item
+                                                                                                                                    .value;
+
+                                                                                                                                this.liquidacionService
+                                                                                                                                  .DescargarArchivoLiquidacionObligacion(
+                                                                                                                                    listaLiquidacionId,
+                                                                                                                                    tipoArchivoObligacion
+                                                                                                                                  )
+                                                                                                                                  .subscribe(
+                                                                                                                                    (
+                                                                                                                                      response
+                                                                                                                                    ) => {
+                                                                                                                                      this.descargarArchivo(
+                                                                                                                                        response
+                                                                                                                                      );
+                                                                                                                                    },
+                                                                                                                                    (
+                                                                                                                                      error
+                                                                                                                                    ) => {
+                                                                                                                                      this.alertify.warning(
+                                                                                                                                        error
+                                                                                                                                      );
+                                                                                                                                    },
+                                                                                                                                    () => {
+                                                                                                                                      //#region DEDUCCIONES
+
+                                                                                                                                      tipoArchivoObligacion =
+                                                                                                                                        TipoArchivoObligacion
+                                                                                                                                          .Deducciones
+                                                                                                                                          .value;
+
+                                                                                                                                      this.liquidacionService
+                                                                                                                                        .DescargarArchivoLiquidacionObligacion(
+                                                                                                                                          listaLiquidacionId,
+                                                                                                                                          tipoArchivoObligacion
+                                                                                                                                        )
+                                                                                                                                        .subscribe(
+                                                                                                                                          (
+                                                                                                                                            response
+                                                                                                                                          ) => {
+                                                                                                                                            this.descargarArchivo(
+                                                                                                                                              response
+                                                                                                                                            );
+                                                                                                                                          },
+                                                                                                                                          (
+                                                                                                                                            error
+                                                                                                                                          ) => {
+                                                                                                                                            this.alertify.warning(
+                                                                                                                                              error
+                                                                                                                                            );
+                                                                                                                                          },
+                                                                                                                                          () => {
+                                                                                                                                            //#region FACTURA
+
+                                                                                                                                            tipoArchivoObligacion =
+                                                                                                                                              TipoArchivoObligacion
+                                                                                                                                                .Factura
+                                                                                                                                                .value;
+
+                                                                                                                                            this.liquidacionService
+                                                                                                                                              .DescargarArchivoLiquidacionObligacion(
+                                                                                                                                                listaLiquidacionId,
+                                                                                                                                                tipoArchivoObligacion
+                                                                                                                                              )
+                                                                                                                                              .subscribe(
+                                                                                                                                                (
+                                                                                                                                                  response
+                                                                                                                                                ) => {
+                                                                                                                                                  this.descargarArchivo(
+                                                                                                                                                    response
+                                                                                                                                                  );
+                                                                                                                                                },
+                                                                                                                                                (
+                                                                                                                                                  error
+                                                                                                                                                ) => {
+                                                                                                                                                  this.alertify.warning(
+                                                                                                                                                    error
+                                                                                                                                                  );
+                                                                                                                                                },
+                                                                                                                                                () => {
+                                                                                                                                                  this.onLimpiarFactura();
+                                                                                                                                                  this.router.navigate(
+                                                                                                                                                    [
+                                                                                                                                                      '/GENERADOR_OBLIGACIONES',
+                                                                                                                                                    ]
+                                                                                                                                                  );
+                                                                                                                                                }
+                                                                                                                                              );
+
+                                                                                                                                            //#endregion FACTURA
+                                                                                                                                          }
+                                                                                                                                        );
+
+                                                                                                                                      //#endregion DEDUCCIONES
+                                                                                                                                    }
+                                                                                                                                  );
+
+                                                                                                                                //#endregion Item
+                                                                                                                              }
+                                                                                                                            );
+
+                                                                                                                          //#endregion Cabecera
+                                                                                                                        
+                                                                                                                      },
+                                                                                                                      (
+                                                                                                                        error
+                                                                                                                      ) => {
+                                                                                                                        this.alertify.warning(
+                                                                                                                          error
+                                                                                                                        );
+                                                                                                                      },
+                                                                                                                      () => {}
+                                                                                                                    );
+                                                                                                                }
+                                                                                                              );
+
+                                                                                                            //#endregion FACTURA
+                                                                                                          }
+                                                                                                        );
+
+                                                                                                      //#endregion USOS
+                                                                                                    }
+                                                                                                  );
+
+                                                                                                //#endregion DEDUCCIONES
+                                                                                              }
+                                                                                            );
+
+                                                                                          //#endregion Item
+                                                                                        }
+                                                                                      );
+
+                                                                                    //#endregion Cabecera
+                                                                                  }
+                                                                                },
+                                                                                (
+                                                                                  error
+                                                                                ) => {
+                                                                                  this.alertify.warning(
+                                                                                    error
+                                                                                  );
+                                                                                },
+                                                                                () => {}
+                                                                              );
+                                                                          }
+                                                                        );
+
+                                                                      //#endregion FACTURA
+                                                                    }
+                                                                  );
+
+                                                                //#endregion DEDUCCIONES
+                                                              }
+                                                            );
+
+                                                          //#endregion Item
+                                                        }
+                                                      );
+
+                                                    //#endregion Cabecera
+                                                  }
+                                                },
+                                                (error) => {
+                                                  this.alertify.warning(error);
+                                                },
+                                                () => {}
+                                              );
+                                          }
+                                        );
+
+                                      //#endregion FACTURA
+                                    }
+                                  );
+
+                                //#endregion USOS
+                              }
+                            );
+
+                          //#endregion DEDUCCIONES
+                        }
+                      );
+
+                    //#endregion Item
                   }
+                );
 
-                  const a = document.createElement('a');
-                  a.setAttribute('style', 'display:none;');
-                  document.body.appendChild(a);
-                  a.download = fileName;
-                  a.href = URL.createObjectURL(downloadedFile);
-                  a.target = '_blank';
-                  a.click();
-                  document.body.removeChild(a);
-                }
-                break;
+              //#endregion Cabecera
             }
           },
           (error) => {
             this.alertify.warning(error);
           },
-          () => {
-            //#region Descargar archivo ITEM
-
-            tipoArchivoObligacion = TipoArchivoObligacion.Item.value;
-
-            this.liquidacionService
-              .DescargarArchivoLiquidacionObligacion(
-                listaCadenaIds,
-                this.listaEstadoId,
-                esSeleccionarTodas,
-                this.terceroId,
-                tipoArchivoObligacion,
-                conUsoPresupuestal
-              )
-              .subscribe(
-                (response) => {
-                  switch (response.type) {
-                    case HttpEventType.Response:
-                      if (response.body !== null) {
-                        const downloadedFile = new Blob([response.body], {
-                          type: response.body.type,
-                        });
-
-                        const nombreArchivo = response.headers.get('filename');
-
-                        if (nombreArchivo != null && nombreArchivo.length > 0) {
-                          fileName = nombreArchivo + '.txt';
-                        } else {
-                          fileName = 'SIGPAA_Items.txt';
-                        }
-
-                        const a = document.createElement('a');
-                        a.setAttribute('style', 'display:none;');
-                        document.body.appendChild(a);
-                        a.download = fileName;
-                        a.href = URL.createObjectURL(downloadedFile);
-                        a.target = '_blank';
-                        a.click();
-                        document.body.removeChild(a);
-                      }
-                      break;
-                  }
-                },
-                (error) => {
-                  this.alertify.warning(error);
-                },
-                () => {
-                  //#region Descargar archivo DEDUCCIONES
-
-                  tipoArchivoObligacion =
-                    TipoArchivoObligacion.Deducciones.value;
-
-                  this.liquidacionService
-                    .DescargarArchivoLiquidacionObligacion(
-                      listaCadenaIds,
-                      this.listaEstadoId,
-                      esSeleccionarTodas,
-                      this.terceroId,
-                      tipoArchivoObligacion,
-                      conUsoPresupuestal
-                    )
-                    .subscribe(
-                      (response) => {
-                        switch (response.type) {
-                          case HttpEventType.Response:
-                            if (response.body !== null) {
-                              const downloadedFile = new Blob([response.body], {
-                                type: response.body.type,
-                              });
-
-                              const nombreArchivo =
-                                response.headers.get('filename');
-
-                              if (
-                                nombreArchivo != null &&
-                                nombreArchivo.length > 0
-                              ) {
-                                fileName = nombreArchivo + '.txt';
-                              } else {
-                                fileName = 'SIGPAA_Maestro.txt';
-                              }
-
-                              const a = document.createElement('a');
-                              a.setAttribute('style', 'display:none;');
-                              document.body.appendChild(a);
-                              a.download = fileName;
-                              a.href = URL.createObjectURL(downloadedFile);
-                              a.target = '_blank';
-                              a.click();
-                              document.body.removeChild(a);
-                            }
-                            break;
-                        }
-                      },
-                      (error) => {
-                        this.alertify.warning(error);
-                      },
-                      () => {
-                        //#region Descargar archivo USOS
-
-                        tipoArchivoObligacion =
-                          TipoArchivoObligacion.Usos.value;
-
-                        this.liquidacionService
-                          .DescargarArchivoLiquidacionObligacion(
-                            listaCadenaIds,
-                            this.listaEstadoId,
-                            esSeleccionarTodas,
-                            this.terceroId,
-                            tipoArchivoObligacion,
-                            conUsoPresupuestal
-                          )
-                          .subscribe(
-                            (response) => {
-                              switch (response.type) {
-                                case HttpEventType.Response:
-                                  if (response.body !== null) {
-                                    const downloadedFile = new Blob(
-                                      [response.body],
-                                      {
-                                        type: response.body.type,
-                                      }
-                                    );
-
-                                    const nombreArchivo =
-                                      response.headers.get('filename');
-
-                                    if (
-                                      nombreArchivo != null &&
-                                      nombreArchivo.length > 0
-                                    ) {
-                                      fileName = nombreArchivo + '.txt';
-                                    } else {
-                                      fileName = 'SIGPAA_Maestro.txt';
-                                    }
-
-                                    const a = document.createElement('a');
-                                    a.setAttribute('style', 'display:none;');
-                                    document.body.appendChild(a);
-                                    a.download = fileName;
-                                    a.href =
-                                      URL.createObjectURL(downloadedFile);
-                                    a.target = '_blank';
-                                    a.click();
-                                    document.body.removeChild(a);
-                                  }
-                                  break;
-                              }
-                            },
-                            (error) => {
-                              this.alertify.warning(error);
-                            },
-                            () => {
-                              //#region Descargar archivo FACTURA
-
-                              tipoArchivoObligacion =
-                                TipoArchivoObligacion.Factura.value;
-
-                              this.liquidacionService
-                                .DescargarArchivoLiquidacionObligacion(
-                                  listaCadenaIds,
-                                  this.listaEstadoId,
-                                  esSeleccionarTodas,
-                                  this.terceroId,
-                                  tipoArchivoObligacion,
-                                  conUsoPresupuestal
-                                )
-                                .subscribe(
-                                  (response) => {
-                                    switch (response.type) {
-                                      case HttpEventType.Response:
-                                        if (response.body !== null) {
-                                          const downloadedFile = new Blob(
-                                            [response.body],
-                                            {
-                                              type: response.body.type,
-                                            }
-                                          );
-
-                                          const nombreArchivo =
-                                            response.headers.get('filename');
-
-                                          if (
-                                            nombreArchivo != null &&
-                                            nombreArchivo.length > 0
-                                          ) {
-                                            fileName = nombreArchivo + '.txt';
-                                          } else {
-                                            fileName = 'SIGPAA_Maestro.txt';
-                                          }
-
-                                          const a = document.createElement('a');
-                                          a.setAttribute(
-                                            'style',
-                                            'display:none;'
-                                          );
-                                          document.body.appendChild(a);
-                                          a.download = fileName;
-                                          a.href =
-                                            URL.createObjectURL(downloadedFile);
-                                          a.target = '_blank';
-                                          a.click();
-                                          document.body.removeChild(a);
-                                        }
-                                        break;
-                                    }
-                                  },
-                                  (error) => {
-                                    this.alertify.warning(error);
-                                  },
-                                  () => {
-                                    //#region Descargar archivo CABECERA Y NO USO PRESUPUESTAL
-
-                                    tipoArchivoObligacion =
-                                      TipoArchivoObligacion.Cabecera.value;
-                                    conUsoPresupuestal = 0;
-
-                                    this.liquidacionService
-                                      .DescargarArchivoLiquidacionObligacion(
-                                        listaCadenaIds,
-                                        this.listaEstadoId,
-                                        esSeleccionarTodas,
-                                        this.terceroId,
-                                        tipoArchivoObligacion,
-                                        conUsoPresupuestal
-                                      )
-                                      .subscribe(
-                                        (response) => {
-                                          switch (response.type) {
-                                            case HttpEventType.Response:
-                                              if (response.body !== null) {
-                                                const downloadedFile = new Blob(
-                                                  [response.body],
-                                                  {
-                                                    type: response.body.type,
-                                                  }
-                                                );
-
-                                                const nombreArchivo =
-                                                  response.headers.get(
-                                                    'filename'
-                                                  );
-
-                                                if (
-                                                  nombreArchivo != null &&
-                                                  nombreArchivo.length > 0
-                                                ) {
-                                                  fileName =
-                                                    nombreArchivo + '.txt';
-                                                } else {
-                                                  fileName =
-                                                    'SIGPAA_Maestro.txt';
-                                                }
-
-                                                const a =
-                                                  document.createElement('a');
-                                                a.setAttribute(
-                                                  'style',
-                                                  'display:none;'
-                                                );
-                                                document.body.appendChild(a);
-                                                a.download = fileName;
-                                                a.href =
-                                                  URL.createObjectURL(
-                                                    downloadedFile
-                                                  );
-                                                a.target = '_blank';
-                                                a.click();
-                                                document.body.removeChild(a);
-                                              }
-                                              break;
-                                          }
-                                        },
-                                        (error) => {
-                                          this.alertify.warning(error);
-                                        },
-                                        () => {
-                                          //#region Descargar archivo ITEM
-
-                                          tipoArchivoObligacion =
-                                            TipoArchivoObligacion.Item.value;
-
-                                          this.liquidacionService
-                                            .DescargarArchivoLiquidacionObligacion(
-                                              listaCadenaIds,
-                                              this.listaEstadoId,
-                                              esSeleccionarTodas,
-                                              this.terceroId,
-                                              tipoArchivoObligacion,
-                                              conUsoPresupuestal
-                                            )
-                                            .subscribe(
-                                              (response) => {
-                                                switch (response.type) {
-                                                  case HttpEventType.Response:
-                                                    if (
-                                                      response.body !== null
-                                                    ) {
-                                                      const downloadedFile =
-                                                        new Blob(
-                                                          [response.body],
-                                                          {
-                                                            type: response.body
-                                                              .type,
-                                                          }
-                                                        );
-
-                                                      const nombreArchivo =
-                                                        response.headers.get(
-                                                          'filename'
-                                                        );
-
-                                                      if (
-                                                        nombreArchivo != null &&
-                                                        nombreArchivo.length > 0
-                                                      ) {
-                                                        fileName =
-                                                          nombreArchivo +
-                                                          '.txt';
-                                                      } else {
-                                                        fileName =
-                                                          'SIGPAA_Items.txt';
-                                                      }
-
-                                                      const a =
-                                                        document.createElement(
-                                                          'a'
-                                                        );
-                                                      a.setAttribute(
-                                                        'style',
-                                                        'display:none;'
-                                                      );
-                                                      document.body.appendChild(
-                                                        a
-                                                      );
-                                                      a.download = fileName;
-                                                      a.href =
-                                                        URL.createObjectURL(
-                                                          downloadedFile
-                                                        );
-                                                      a.target = '_blank';
-                                                      a.click();
-                                                      document.body.removeChild(
-                                                        a
-                                                      );
-                                                    }
-                                                    break;
-                                                }
-                                              },
-                                              (error) => {
-                                                this.alertify.warning(error);
-                                              },
-                                              () => {
-                                                //#region Descargar archivo DEDUCCIONES
-
-                                                tipoArchivoObligacion =
-                                                  TipoArchivoObligacion
-                                                    .Deducciones.value;
-
-                                                this.liquidacionService
-                                                  .DescargarArchivoLiquidacionObligacion(
-                                                    listaCadenaIds,
-                                                    this.listaEstadoId,
-                                                    esSeleccionarTodas,
-                                                    this.terceroId,
-                                                    tipoArchivoObligacion,
-                                                    conUsoPresupuestal
-                                                  )
-                                                  .subscribe(
-                                                    (response) => {
-                                                      switch (response.type) {
-                                                        case HttpEventType.Response:
-                                                          if (
-                                                            response.body !==
-                                                            null
-                                                          ) {
-                                                            const downloadedFile =
-                                                              new Blob(
-                                                                [response.body],
-                                                                {
-                                                                  type: response
-                                                                    .body.type,
-                                                                }
-                                                              );
-
-                                                            const nombreArchivo =
-                                                              response.headers.get(
-                                                                'filename'
-                                                              );
-
-                                                            if (
-                                                              nombreArchivo !=
-                                                                null &&
-                                                              nombreArchivo.length >
-                                                                0
-                                                            ) {
-                                                              fileName =
-                                                                nombreArchivo +
-                                                                '.txt';
-                                                            } else {
-                                                              fileName =
-                                                                'SIGPAA_Maestro.txt';
-                                                            }
-
-                                                            const a =
-                                                              document.createElement(
-                                                                'a'
-                                                              );
-                                                            a.setAttribute(
-                                                              'style',
-                                                              'display:none;'
-                                                            );
-                                                            document.body.appendChild(
-                                                              a
-                                                            );
-                                                            a.download =
-                                                              fileName;
-                                                            a.href =
-                                                              URL.createObjectURL(
-                                                                downloadedFile
-                                                              );
-                                                            a.target = '_blank';
-                                                            a.click();
-                                                            document.body.removeChild(
-                                                              a
-                                                            );
-                                                          }
-                                                          break;
-                                                      }
-                                                    },
-                                                    (error) => {
-                                                      this.alertify.warning(
-                                                        error
-                                                      );
-                                                    },
-                                                    () => {
-                                                      //#region Descargar archivo FACTURA
-
-                                                      tipoArchivoObligacion =
-                                                        TipoArchivoObligacion
-                                                          .Factura.value;
-
-                                                      this.liquidacionService
-                                                        .DescargarArchivoLiquidacionObligacion(
-                                                          listaCadenaIds,
-                                                          this.listaEstadoId,
-                                                          esSeleccionarTodas,
-                                                          this.terceroId,
-                                                          tipoArchivoObligacion,
-                                                          conUsoPresupuestal
-                                                        )
-                                                        .subscribe(
-                                                          (response) => {
-                                                            switch (
-                                                              response.type
-                                                            ) {
-                                                              case HttpEventType.Response:
-                                                                if (
-                                                                  response.body !==
-                                                                  null
-                                                                ) {
-                                                                  const downloadedFile =
-                                                                    new Blob(
-                                                                      [
-                                                                        response.body,
-                                                                      ],
-                                                                      {
-                                                                        type: response
-                                                                          .body
-                                                                          .type,
-                                                                      }
-                                                                    );
-
-                                                                  const nombreArchivo =
-                                                                    response.headers.get(
-                                                                      'filename'
-                                                                    );
-
-                                                                  if (
-                                                                    nombreArchivo !=
-                                                                      null &&
-                                                                    nombreArchivo.length >
-                                                                      0
-                                                                  ) {
-                                                                    fileName =
-                                                                      nombreArchivo +
-                                                                      '.txt';
-                                                                  } else {
-                                                                    fileName =
-                                                                      'SIGPAA_Maestro.txt';
-                                                                  }
-
-                                                                  const a =
-                                                                    document.createElement(
-                                                                      'a'
-                                                                    );
-                                                                  a.setAttribute(
-                                                                    'style',
-                                                                    'display:none;'
-                                                                  );
-                                                                  document.body.appendChild(
-                                                                    a
-                                                                  );
-                                                                  a.download =
-                                                                    fileName;
-                                                                  a.href =
-                                                                    URL.createObjectURL(
-                                                                      downloadedFile
-                                                                    );
-                                                                  a.target =
-                                                                    '_blank';
-                                                                  a.click();
-                                                                  document.body.removeChild(
-                                                                    a
-                                                                  );
-                                                                }
-                                                                break;
-                                                            }
-                                                          },
-                                                          (error) => {
-                                                            this.alertify.warning(
-                                                              error
-                                                            );
-                                                          },
-                                                          () => {
-                                                            this.onLimpiarFactura();
-                                                            this.router.navigate(
-                                                              [
-                                                                '/GENERADOR_OBLIGACIONES',
-                                                              ]
-                                                            );
-                                                          }
-                                                        );
-
-                                                      //#endregion Descargar archivo FACTURA
-                                                    }
-                                                  );
-
-                                                //#endregion Descargar archivo DEDUCCIONES
-                                              }
-                                            );
-
-                                          //#endregion Descargar archivo ITEM
-                                        }
-                                      );
-
-                                    //#endregion Descargar archivo CABECERA
-                                  }
-                                );
-
-                              //#endregion  Descargar archivo FACTURA
-                            }
-                          );
-
-                        //#endregion  Descargar archivo USOS
-                      }
-                    );
-
-                  //#endregion Descargar archivo DEDUCCIONES
-                }
-              );
-
-            //#endregion Descargar archivo ITEM
-          }
+          () => {}
         );
+
+      // this.liquidacionService
+      //   .DescargarArchivoLiquidacionObligacion(
+      //     listaCadenaIds,
+      //     this.listaEstadoId,
+      //     esSeleccionarTodas,
+      //     this.terceroId,
+      //     tipoArchivoObligacion,
+      //     conUsoPresupuestal
+      //   )
+      //   .subscribe(
+      //     (response) => {
+      //       switch (response.type) {
+      //         case HttpEventType.Response:
+      //           if (response.body !== null) {
+      //             const downloadedFile = new Blob([response.body], {
+      //               type: response.body.type,
+      //             });
+
+      //             const nombreArchivo = response.headers.get('filename');
+
+      //             if (nombreArchivo != null && nombreArchivo.length > 0) {
+      //               fileName = nombreArchivo + '.txt';
+      //             } else {
+      //               fileName = 'SIGPAA_Maestro.txt';
+      //             }
+
+      //             const a = document.createElement('a');
+      //             a.setAttribute('style', 'display:none;');
+      //             document.body.appendChild(a);
+      //             a.download = fileName;
+      //             a.href = URL.createObjectURL(downloadedFile);
+      //             a.target = '_blank';
+      //             a.click();
+      //             document.body.removeChild(a);
+      //           }
+      //           break;
+      //       }
+      //     },
+      //     (error) => {
+      //       this.alertify.warning(error);
+      //     },
+      //     () => {
+      //       //#region Descargar archivo ITEM
+
+      //       tipoArchivoObligacion = TipoArchivoObligacion.Item.value;
+
+      //       this.liquidacionService
+      //         .DescargarArchivoLiquidacionObligacion(
+      //           listaCadenaIds,
+      //           this.listaEstadoId,
+      //           esSeleccionarTodas,
+      //           this.terceroId,
+      //           tipoArchivoObligacion,
+      //           conUsoPresupuestal
+      //         )
+      //         .subscribe(
+      //           (response) => {
+      //             switch (response.type) {
+      //               case HttpEventType.Response:
+      //                 if (response.body !== null) {
+      //                   const downloadedFile = new Blob([response.body], {
+      //                     type: response.body.type,
+      //                   });
+
+      //                   const nombreArchivo = response.headers.get('filename');
+
+      //                   if (nombreArchivo != null && nombreArchivo.length > 0) {
+      //                     fileName = nombreArchivo + '.txt';
+      //                   } else {
+      //                     fileName = 'SIGPAA_Items.txt';
+      //                   }
+
+      //                   const a = document.createElement('a');
+      //                   a.setAttribute('style', 'display:none;');
+      //                   document.body.appendChild(a);
+      //                   a.download = fileName;
+      //                   a.href = URL.createObjectURL(downloadedFile);
+      //                   a.target = '_blank';
+      //                   a.click();
+      //                   document.body.removeChild(a);
+      //                 }
+      //                 break;
+      //             }
+      //           },
+      //           (error) => {
+      //             this.alertify.warning(error);
+      //           },
+      //           () => {
+      //             //#region Descargar archivo DEDUCCIONES
+
+      //             tipoArchivoObligacion =
+      //               TipoArchivoObligacion.Deducciones.value;
+
+      //             this.liquidacionService
+      //               .DescargarArchivoLiquidacionObligacion(
+      //                 listaCadenaIds,
+      //                 this.listaEstadoId,
+      //                 esSeleccionarTodas,
+      //                 this.terceroId,
+      //                 tipoArchivoObligacion,
+      //                 conUsoPresupuestal
+      //               )
+      //               .subscribe(
+      //                 (response) => {
+      //                   switch (response.type) {
+      //                     case HttpEventType.Response:
+      //                       if (response.body !== null) {
+      //                         const downloadedFile = new Blob([response.body], {
+      //                           type: response.body.type,
+      //                         });
+
+      //                         const nombreArchivo =
+      //                           response.headers.get('filename');
+
+      //                         if (
+      //                           nombreArchivo != null &&
+      //                           nombreArchivo.length > 0
+      //                         ) {
+      //                           fileName = nombreArchivo + '.txt';
+      //                         } else {
+      //                           fileName = 'SIGPAA_Maestro.txt';
+      //                         }
+
+      //                         const a = document.createElement('a');
+      //                         a.setAttribute('style', 'display:none;');
+      //                         document.body.appendChild(a);
+      //                         a.download = fileName;
+      //                         a.href = URL.createObjectURL(downloadedFile);
+      //                         a.target = '_blank';
+      //                         a.click();
+      //                         document.body.removeChild(a);
+      //                       }
+      //                       break;
+      //                   }
+      //                 },
+      //                 (error) => {
+      //                   this.alertify.warning(error);
+      //                 },
+      //                 () => {
+      //                   //#region Descargar archivo USOS
+
+      //                   tipoArchivoObligacion =
+      //                     TipoArchivoObligacion.Usos.value;
+
+      //                   this.liquidacionService
+      //                     .DescargarArchivoLiquidacionObligacion(
+      //                       listaCadenaIds,
+      //                       this.listaEstadoId,
+      //                       esSeleccionarTodas,
+      //                       this.terceroId,
+      //                       tipoArchivoObligacion,
+      //                       conUsoPresupuestal
+      //                     )
+      //                     .subscribe(
+      //                       (response) => {
+      //                         switch (response.type) {
+      //                           case HttpEventType.Response:
+      //                             if (response.body !== null) {
+      //                               const downloadedFile = new Blob(
+      //                                 [response.body],
+      //                                 {
+      //                                   type: response.body.type,
+      //                                 }
+      //                               );
+
+      //                               const nombreArchivo =
+      //                                 response.headers.get('filename');
+
+      //                               if (
+      //                                 nombreArchivo != null &&
+      //                                 nombreArchivo.length > 0
+      //                               ) {
+      //                                 fileName = nombreArchivo + '.txt';
+      //                               } else {
+      //                                 fileName = 'SIGPAA_Maestro.txt';
+      //                               }
+
+      //                               const a = document.createElement('a');
+      //                               a.setAttribute('style', 'display:none;');
+      //                               document.body.appendChild(a);
+      //                               a.download = fileName;
+      //                               a.href =
+      //                                 URL.createObjectURL(downloadedFile);
+      //                               a.target = '_blank';
+      //                               a.click();
+      //                               document.body.removeChild(a);
+      //                             }
+      //                             break;
+      //                         }
+      //                       },
+      //                       (error) => {
+      //                         this.alertify.warning(error);
+      //                       },
+      //                       () => {
+      //                         //#region Descargar archivo FACTURA
+
+      //                         tipoArchivoObligacion =
+      //                           TipoArchivoObligacion.Factura.value;
+
+      //                         this.liquidacionService
+      //                           .DescargarArchivoLiquidacionObligacion(
+      //                             listaCadenaIds,
+      //                             this.listaEstadoId,
+      //                             esSeleccionarTodas,
+      //                             this.terceroId,
+      //                             tipoArchivoObligacion,
+      //                             conUsoPresupuestal
+      //                           )
+      //                           .subscribe(
+      //                             (response) => {
+      //                               switch (response.type) {
+      //                                 case HttpEventType.Response:
+      //                                   if (response.body !== null) {
+      //                                     const downloadedFile = new Blob(
+      //                                       [response.body],
+      //                                       {
+      //                                         type: response.body.type,
+      //                                       }
+      //                                     );
+
+      //                                     const nombreArchivo =
+      //                                       response.headers.get('filename');
+
+      //                                     if (
+      //                                       nombreArchivo != null &&
+      //                                       nombreArchivo.length > 0
+      //                                     ) {
+      //                                       fileName = nombreArchivo + '.txt';
+      //                                     } else {
+      //                                       fileName = 'SIGPAA_Maestro.txt';
+      //                                     }
+
+      //                                     const a = document.createElement('a');
+      //                                     a.setAttribute(
+      //                                       'style',
+      //                                       'display:none;'
+      //                                     );
+      //                                     document.body.appendChild(a);
+      //                                     a.download = fileName;
+      //                                     a.href =
+      //                                       URL.createObjectURL(downloadedFile);
+      //                                     a.target = '_blank';
+      //                                     a.click();
+      //                                     document.body.removeChild(a);
+      //                                   }
+      //                                   break;
+      //                               }
+      //                             },
+      //                             (error) => {
+      //                               this.alertify.warning(error);
+      //                             },
+      //                             () => {
+      //                               //#region Descargar archivo CABECERA Y NO USO PRESUPUESTAL
+
+      //                               tipoArchivoObligacion =
+      //                                 TipoArchivoObligacion.Cabecera.value;
+      //                               conUsoPresupuestal = 0;
+
+      //                               this.liquidacionService
+      //                                 .DescargarArchivoLiquidacionObligacion(
+      //                                   listaCadenaIds,
+      //                                   this.listaEstadoId,
+      //                                   esSeleccionarTodas,
+      //                                   this.terceroId,
+      //                                   tipoArchivoObligacion,
+      //                                   conUsoPresupuestal
+      //                                 )
+      //                                 .subscribe(
+      //                                   (response) => {
+      //                                     switch (response.type) {
+      //                                       case HttpEventType.Response:
+      //                                         if (response.body !== null) {
+      //                                           const downloadedFile = new Blob(
+      //                                             [response.body],
+      //                                             {
+      //                                               type: response.body.type,
+      //                                             }
+      //                                           );
+
+      //                                           const nombreArchivo =
+      //                                             response.headers.get(
+      //                                               'filename'
+      //                                             );
+
+      //                                           if (
+      //                                             nombreArchivo != null &&
+      //                                             nombreArchivo.length > 0
+      //                                           ) {
+      //                                             fileName =
+      //                                               nombreArchivo + '.txt';
+      //                                           } else {
+      //                                             fileName =
+      //                                               'SIGPAA_Maestro.txt';
+      //                                           }
+
+      //                                           const a =
+      //                                             document.createElement('a');
+      //                                           a.setAttribute(
+      //                                             'style',
+      //                                             'display:none;'
+      //                                           );
+      //                                           document.body.appendChild(a);
+      //                                           a.download = fileName;
+      //                                           a.href =
+      //                                             URL.createObjectURL(
+      //                                               downloadedFile
+      //                                             );
+      //                                           a.target = '_blank';
+      //                                           a.click();
+      //                                           document.body.removeChild(a);
+      //                                         }
+      //                                         break;
+      //                                     }
+      //                                   },
+      //                                   (error) => {
+      //                                     this.alertify.warning(error);
+      //                                   },
+      //                                   () => {
+      //                                     //#region Descargar archivo ITEM
+
+      //                                     tipoArchivoObligacion =
+      //                                       TipoArchivoObligacion.Item.value;
+
+      //                                     this.liquidacionService
+      //                                       .DescargarArchivoLiquidacionObligacion(
+      //                                         listaCadenaIds,
+      //                                         this.listaEstadoId,
+      //                                         esSeleccionarTodas,
+      //                                         this.terceroId,
+      //                                         tipoArchivoObligacion,
+      //                                         conUsoPresupuestal
+      //                                       )
+      //                                       .subscribe(
+      //                                         (response) => {
+      //                                           switch (response.type) {
+      //                                             case HttpEventType.Response:
+      //                                               if (
+      //                                                 response.body !== null
+      //                                               ) {
+      //                                                 const downloadedFile =
+      //                                                   new Blob(
+      //                                                     [response.body],
+      //                                                     {
+      //                                                       type: response.body
+      //                                                         .type,
+      //                                                     }
+      //                                                   );
+
+      //                                                 const nombreArchivo =
+      //                                                   response.headers.get(
+      //                                                     'filename'
+      //                                                   );
+
+      //                                                 if (
+      //                                                   nombreArchivo != null &&
+      //                                                   nombreArchivo.length > 0
+      //                                                 ) {
+      //                                                   fileName =
+      //                                                     nombreArchivo +
+      //                                                     '.txt';
+      //                                                 } else {
+      //                                                   fileName =
+      //                                                     'SIGPAA_Items.txt';
+      //                                                 }
+
+      //                                                 const a =
+      //                                                   document.createElement(
+      //                                                     'a'
+      //                                                   );
+      //                                                 a.setAttribute(
+      //                                                   'style',
+      //                                                   'display:none;'
+      //                                                 );
+      //                                                 document.body.appendChild(
+      //                                                   a
+      //                                                 );
+      //                                                 a.download = fileName;
+      //                                                 a.href =
+      //                                                   URL.createObjectURL(
+      //                                                     downloadedFile
+      //                                                   );
+      //                                                 a.target = '_blank';
+      //                                                 a.click();
+      //                                                 document.body.removeChild(
+      //                                                   a
+      //                                                 );
+      //                                               }
+      //                                               break;
+      //                                           }
+      //                                         },
+      //                                         (error) => {
+      //                                           this.alertify.warning(error);
+      //                                         },
+      //                                         () => {
+      //                                           //#region Descargar archivo DEDUCCIONES
+
+      //                                           tipoArchivoObligacion =
+      //                                             TipoArchivoObligacion
+      //                                               .Deducciones.value;
+
+      //                                           this.liquidacionService
+      //                                             .DescargarArchivoLiquidacionObligacion(
+      //                                               listaCadenaIds,
+      //                                               this.listaEstadoId,
+      //                                               esSeleccionarTodas,
+      //                                               this.terceroId,
+      //                                               tipoArchivoObligacion,
+      //                                               conUsoPresupuestal
+      //                                             )
+      //                                             .subscribe(
+      //                                               (response) => {
+      //                                                 switch (response.type) {
+      //                                                   case HttpEventType.Response:
+      //                                                     if (
+      //                                                       response.body !==
+      //                                                       null
+      //                                                     ) {
+      //                                                       const downloadedFile =
+      //                                                         new Blob(
+      //                                                           [response.body],
+      //                                                           {
+      //                                                             type: response
+      //                                                               .body.type,
+      //                                                           }
+      //                                                         );
+
+      //                                                       const nombreArchivo =
+      //                                                         response.headers.get(
+      //                                                           'filename'
+      //                                                         );
+
+      //                                                       if (
+      //                                                         nombreArchivo !=
+      //                                                           null &&
+      //                                                         nombreArchivo.length >
+      //                                                           0
+      //                                                       ) {
+      //                                                         fileName =
+      //                                                           nombreArchivo +
+      //                                                           '.txt';
+      //                                                       } else {
+      //                                                         fileName =
+      //                                                           'SIGPAA_Maestro.txt';
+      //                                                       }
+
+      //                                                       const a =
+      //                                                         document.createElement(
+      //                                                           'a'
+      //                                                         );
+      //                                                       a.setAttribute(
+      //                                                         'style',
+      //                                                         'display:none;'
+      //                                                       );
+      //                                                       document.body.appendChild(
+      //                                                         a
+      //                                                       );
+      //                                                       a.download =
+      //                                                         fileName;
+      //                                                       a.href =
+      //                                                         URL.createObjectURL(
+      //                                                           downloadedFile
+      //                                                         );
+      //                                                       a.target = '_blank';
+      //                                                       a.click();
+      //                                                       document.body.removeChild(
+      //                                                         a
+      //                                                       );
+      //                                                     }
+      //                                                     break;
+      //                                                 }
+      //                                               },
+      //                                               (error) => {
+      //                                                 this.alertify.warning(
+      //                                                   error
+      //                                                 );
+      //                                               },
+      //                                               () => {
+      //                                                 //#region Descargar archivo FACTURA
+
+      //                                                 tipoArchivoObligacion =
+      //                                                   TipoArchivoObligacion
+      //                                                     .Factura.value;
+
+      //                                                 this.liquidacionService
+      //                                                   .DescargarArchivoLiquidacionObligacion(
+      //                                                     listaCadenaIds,
+      //                                                     this.listaEstadoId,
+      //                                                     esSeleccionarTodas,
+      //                                                     this.terceroId,
+      //                                                     tipoArchivoObligacion,
+      //                                                     conUsoPresupuestal
+      //                                                   )
+      //                                                   .subscribe(
+      //                                                     (response) => {
+      //                                                       switch (
+      //                                                         response.type
+      //                                                       ) {
+      //                                                         case HttpEventType.Response:
+      //                                                           if (
+      //                                                             response.body !==
+      //                                                             null
+      //                                                           ) {
+      //                                                             const downloadedFile =
+      //                                                               new Blob(
+      //                                                                 [
+      //                                                                   response.body,
+      //                                                                 ],
+      //                                                                 {
+      //                                                                   type: response
+      //                                                                     .body
+      //                                                                     .type,
+      //                                                                 }
+      //                                                               );
+
+      //                                                             const nombreArchivo =
+      //                                                               response.headers.get(
+      //                                                                 'filename'
+      //                                                               );
+
+      //                                                             if (
+      //                                                               nombreArchivo !=
+      //                                                                 null &&
+      //                                                               nombreArchivo.length >
+      //                                                                 0
+      //                                                             ) {
+      //                                                               fileName =
+      //                                                                 nombreArchivo +
+      //                                                                 '.txt';
+      //                                                             } else {
+      //                                                               fileName =
+      //                                                                 'SIGPAA_Maestro.txt';
+      //                                                             }
+
+      //                                                             const a =
+      //                                                               document.createElement(
+      //                                                                 'a'
+      //                                                               );
+      //                                                             a.setAttribute(
+      //                                                               'style',
+      //                                                               'display:none;'
+      //                                                             );
+      //                                                             document.body.appendChild(
+      //                                                               a
+      //                                                             );
+      //                                                             a.download =
+      //                                                               fileName;
+      //                                                             a.href =
+      //                                                               URL.createObjectURL(
+      //                                                                 downloadedFile
+      //                                                               );
+      //                                                             a.target =
+      //                                                               '_blank';
+      //                                                             a.click();
+      //                                                             document.body.removeChild(
+      //                                                               a
+      //                                                             );
+      //                                                           }
+      //                                                           break;
+      //                                                       }
+      //                                                     },
+      //                                                     (error) => {
+      //                                                       this.alertify.warning(
+      //                                                         error
+      //                                                       );
+      //                                                     },
+      //                                                     () => {
+      //                                                       this.onLimpiarFactura();
+      //                                                       this.router.navigate(
+      //                                                         [
+      //                                                           '/GENERADOR_OBLIGACIONES',
+      //                                                         ]
+      //                                                       );
+      //                                                     }
+      //                                                   );
+
+      //                                                 //#endregion Descargar archivo FACTURA
+      //                                               }
+      //                                             );
+
+      //                                           //#endregion Descargar archivo DEDUCCIONES
+      //                                         }
+      //                                       );
+
+      //                                     //#endregion Descargar archivo ITEM
+      //                                   }
+      //                                 );
+
+      //                               //#endregion Descargar archivo CABECERA
+      //                             }
+      //                           );
+
+      //                         //#endregion  Descargar archivo FACTURA
+      //                       }
+      //                     );
+
+      //                   //#endregion  Descargar archivo USOS
+      //                 }
+      //               );
+
+      //             //#endregion Descargar archivo DEDUCCIONES
+      //           }
+      //         );
+
+      //       //#endregion Descargar archivo ITEM
+      //     }
+      //   );
 
       //#endregion Descargar archivo CABECERA
     }
