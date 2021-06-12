@@ -215,6 +215,7 @@ namespace ComplementApp.API.Data
                              where d.PciId == acEs.PciId
                              where d.PciId == a.PciId
                              where d.Cdp == 0
+                             where d.SaldoAct > 0
 
                              select new DetalleCDPDto()
                              {
@@ -314,7 +315,7 @@ namespace ComplementApp.API.Data
                              })
                                .Distinct()
                                .OrderBy(x => x.RubroPresupuestal.Identificacion);
-                               
+
                     #endregion Usuario
                 }
             }

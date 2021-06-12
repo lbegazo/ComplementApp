@@ -38,17 +38,20 @@ namespace ComplementApp.API.Controllers
         private readonly IUsuarioRepository _usuarioRepo;
         private readonly IGeneralInterface _generalInterface;
         public IUsuarioRepository UsuarioRepo => _usuarioRepo;
+        private readonly IPlanAdquisicionRepository _planAdquisicionRepo;
+
         #endregion Dependency Injection
 
 
         public SolicitudCdpController(ISolicitudCdpRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper,
-                            DataContext dataContext, IGeneralInterface generalInterface)
+                            DataContext dataContext, IGeneralInterface generalInterface, IPlanAdquisicionRepository planAdquisicionRepo)
         {
             _usuarioRepo = usuarioRepo;
             _mapper = mapper;
             _repo = repo;
             _dataContext = dataContext;
             _generalInterface = generalInterface;
+            _planAdquisicionRepo = planAdquisicionRepo;
         }
 
 
@@ -69,6 +72,7 @@ namespace ComplementApp.API.Controllers
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             SolicitudCDP solicitud = null;
             DetalleSolicitudCDP detalle = null;
+            PlanAdquisicion planAdquisicion = null;
             List<DetalleSolicitudCDP> listaDetalle = new List<DetalleSolicitudCDP>();
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
@@ -76,123 +80,155 @@ namespace ComplementApp.API.Controllers
             {
                 if (solicitudCDP != null)
                 {
-                    #region Registrar Solicitud CDP
-
-                    #region Cabecera Solicitud CDP
-
-                    solicitud = new SolicitudCDP();
-                    solicitud.TipoOperacionId = solicitudCDP.TipoOperacion.TipoOperacionId;
-                    solicitud.UsuarioId = usuarioId;
-                    solicitud.UsuarioIdRegistro = usuarioId;
-                    solicitud.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
-                    solicitud.EstadoSolicitudCDPId = solicitudCDP.EstadoSolicitudCDP.EstadoId;
-
-                    solicitud.NumeroActividad = solicitudCDP.NumeroActividad;
-                    solicitud.AplicaContrato = solicitudCDP.AplicaContrato;
-                    solicitud.NombreBienServicio = solicitudCDP.NombreBienServicio;
-                    solicitud.ProyectoInversion = solicitudCDP.ProyectoInversion;
-                    solicitud.NombreBienServicio = solicitudCDP.NombreBienServicio;
-                    solicitud.ActividadProyectoInversion = solicitudCDP.ActividadProyectoInversion;
-                    solicitud.ObjetoBienServicioContratado = solicitudCDP.ObjetoBienServicioContratado;
-                    solicitud.Observaciones = solicitudCDP.Observaciones;
-
-                    if (solicitudCDP.TipoOperacion.TipoOperacionId != (int)TipoOperacionEnum.SOLICITUD_INICIAL)
+                    if (solicitudCDP.TipoOperacion.TipoOperacionId == (int)TipoOperacionEnum.SOLICITUD_INICIAL)
                     {
-                        solicitud.TipoDetalleCDPId = solicitudCDP.TipoDetalleCDP.TipoDetalleCDPId;
+
+                        #region Cabecera Solicitud CDP
+
+                        solicitud = new SolicitudCDP();
+                        solicitud.TipoOperacionId = solicitudCDP.TipoOperacion.TipoOperacionId;
+                        solicitud.UsuarioId = usuarioId;
+                        solicitud.UsuarioIdRegistro = usuarioId;
+                        solicitud.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                        solicitud.EstadoSolicitudCDPId = solicitudCDP.EstadoSolicitudCDP.EstadoId;
+
+                        solicitud.NumeroActividad = solicitudCDP.NumeroActividad;
+                        solicitud.AplicaContrato = solicitudCDP.AplicaContrato;
+                        solicitud.NombreBienServicio = solicitudCDP.NombreBienServicio;
+                        solicitud.ProyectoInversion = solicitudCDP.ProyectoInversion;
+                        solicitud.NombreBienServicio = solicitudCDP.NombreBienServicio;
+                        solicitud.ActividadProyectoInversion = solicitudCDP.ActividadProyectoInversion;
+                        solicitud.ObjetoBienServicioContratado = solicitudCDP.ObjetoBienServicioContratado;
+                        solicitud.Observaciones = solicitudCDP.Observaciones;
+                        solicitud.Cdp = null;
+                        solicitud.TipoDetalleCDPId = null;
+
+                        await _dataContext.SolicitudCDP.AddAsync(solicitud);
+                        await _dataContext.SaveChangesAsync();
+
+                        #endregion Cabecera Solicitud CDP
+
+                        #region Registrar Detalle Solicitud CDP
+
+                        if (solicitudCDP.DetalleSolicitudCDPs != null && solicitudCDP.DetalleSolicitudCDPs.Count > 0)
+                        {
+                            foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
+                            {
+                                detalle = new DetalleSolicitudCDP();
+                                detalle.SolicitudCDPId = solicitud.SolicitudCDPId;
+                                detalle.PlanAdquisicionId = item.PlanAdquisicionId;
+                                detalle.RubroPresupuestalId = item.RubroPresupuestal.RubroPresupuestalId;
+                                detalle.ValorActividad = item.ValorActividad;
+                                detalle.SaldoActividad = item.SaldoActividad;
+                                detalle.ValorSolicitud = item.ValorSolicitud;
+                                listaDetalle.Add(detalle);
+                            }
+
+                            //Insertar Detalle
+                            await _dataContext.DetalleSolicitudCDP.AddRangeAsync(listaDetalle);
+                            await _dataContext.SaveChangesAsync();
+                        }
+
+                        #endregion Registrar Detalle Solicitud CDP
+
+                        #region Actualizar Plan de adquisición
+
+                        if (solicitudCDP.DetalleSolicitudCDPs != null && solicitudCDP.DetalleSolicitudCDPs.Count > 0)
+                        {
+                            foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
+                            {
+                                planAdquisicion = await _planAdquisicionRepo.ObtenerPlanAnualAdquisicionBase(item.PlanAdquisicionId.Value);
+                                planAdquisicion.SaldoAct = planAdquisicion.SaldoAct - item.ValorSolicitud;
+                                planAdquisicion.EstadoId = (int)EstadoPlanAdquisicion.ConCDP;
+                                await _dataContext.SaveChangesAsync();
+                            }
+                        }
+
+                        #endregion Actualizar Plan de adquisición
                     }
                     else
                     {
-                        solicitud.Cdp = null;
-                        solicitud.TipoDetalleCDPId = null;
-                    }
+                        #region Cabecera Solicitud CDP
 
-                    //Insertar cabecera
-                    await _dataContext.SolicitudCDP.AddAsync(solicitud);
-                    await _dataContext.SaveChangesAsync();
+                        solicitud = new SolicitudCDP();
+                        solicitud.TipoOperacionId = solicitudCDP.TipoOperacion.TipoOperacionId;
+                        solicitud.UsuarioId = usuarioId;
+                        solicitud.UsuarioIdRegistro = usuarioId;
+                        solicitud.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                        solicitud.EstadoSolicitudCDPId = solicitudCDP.EstadoSolicitudCDP.EstadoId;
 
-                    #endregion Cabecera Solicitud CDP
+                        solicitud.NumeroActividad = solicitudCDP.NumeroActividad;
+                        solicitud.AplicaContrato = solicitudCDP.AplicaContrato;
+                        solicitud.NombreBienServicio = solicitudCDP.NombreBienServicio;
+                        solicitud.ProyectoInversion = solicitudCDP.ProyectoInversion;
+                        solicitud.NombreBienServicio = solicitudCDP.NombreBienServicio;
+                        solicitud.ActividadProyectoInversion = solicitudCDP.ActividadProyectoInversion;
+                        solicitud.ObjetoBienServicioContratado = solicitudCDP.ObjetoBienServicioContratado;
+                        solicitud.Observaciones = solicitudCDP.Observaciones;
+                        solicitud.Cdp = solicitudCDP.Cdp;
+                        solicitud.TipoDetalleCDPId = solicitudCDP.TipoDetalleCDP.TipoDetalleCDPId;
 
-                    if (solicitudCDP.DetalleSolicitudCDPs != null && solicitudCDP.DetalleSolicitudCDPs.Count > 0)
-                    {
-                        #region Registrar Detalle Solicitud CDP
-
-                        foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
-                        {
-                            detalle = new DetalleSolicitudCDP();
-                            detalle.SolicitudCDPId = solicitud.SolicitudCDPId;
-                            detalle.PlanAdquisicionId = item.PlanAdquisicionId;
-                            detalle.RubroPresupuestalId = item.RubroPresupuestal.RubroPresupuestalId;
-                            detalle.ValorActividad = item.ValorActividad;
-                            detalle.SaldoActividad = item.SaldoActividad;
-                            detalle.ValorSolicitud = item.ValorSolicitud;
-                            listaDetalle.Add(detalle);
-                        }
-
-                        //Insertar Detalle
-                        await _dataContext.DetalleSolicitudCDP.AddRangeAsync(listaDetalle);
+                        await _dataContext.SolicitudCDP.AddAsync(solicitud);
                         await _dataContext.SaveChangesAsync();
 
+                        #endregion Cabecera Solicitud CDP
+
+                        #region Registrar Detalle Solicitud CDP
+
+                        if (solicitudCDP.DetalleSolicitudCDPs != null && solicitudCDP.DetalleSolicitudCDPs.Count > 0)
+                        {
+                            foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
+                            {
+                                detalle = new DetalleSolicitudCDP();
+                                detalle.SolicitudCDPId = solicitud.SolicitudCDPId;
+                                detalle.PlanAdquisicionId = item.PlanAdquisicionId;
+                                detalle.RubroPresupuestalId = item.RubroPresupuestal.RubroPresupuestalId;
+                                detalle.ValorActividad = item.ValorActividad;
+                                detalle.SaldoActividad = item.SaldoActividad;
+                                detalle.ValorSolicitud = item.ValorSolicitud;
+                                listaDetalle.Add(detalle);
+                            }
+                            
+                            await _dataContext.DetalleSolicitudCDP.AddRangeAsync(listaDetalle);
+                            await _dataContext.SaveChangesAsync();
+                        }
+
                         #endregion Registrar Detalle Solicitud CDP
+
+                        #region Actualizar Plan de adquisición
+
+                        if (solicitudCDP.DetalleSolicitudCDPs != null && solicitudCDP.DetalleSolicitudCDPs.Count > 0)
+                        {
+                            foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
+                            {
+                                planAdquisicion = await _planAdquisicionRepo.ObtenerPlanAnualAdquisicionBase(item.PlanAdquisicionId.Value);
+
+                                switch (solicitudCDP.TipoOperacion.TipoOperacionId)
+                                {
+                                    case (int)TipoOperacionEnum.ADICION:
+                                        {
+                                            planAdquisicion.SaldoAct = planAdquisicion.SaldoAct - item.ValorSolicitud;
+                                            break;
+                                        }
+                                    case (int)TipoOperacionEnum.REDUCCION:
+                                        {
+                                            planAdquisicion.SaldoAct = planAdquisicion.SaldoAct + item.ValorSolicitud;
+                                            break;
+                                        }
+                                    case (int)TipoOperacionEnum.ANULACION:
+                                        {
+                                            planAdquisicion.SaldoAct = planAdquisicion.SaldoAct + item.ValorSolicitud;
+                                            break;
+                                        }
+                                }                               
+
+                                planAdquisicion.EstadoId = (int)EstadoPlanAdquisicion.ConCDP;
+                                await _dataContext.SaveChangesAsync();
+                            }
+                        }
+
+                        #endregion Actualizar Plan de adquisición
                     }
-
-                    #endregion Registrar Solicitud CDP
-
-                    #region Actualizar Plan de adquisición
-
-                    int EstadoPlanAdquisicion_ConCDP = (int)EstadoPlanAdquisicion.ConCDP;
-                    var listaPlaAdquisicionId = solicitudCDP.DetalleSolicitudCDPs.Select(x => x.PlanAdquisicionId).ToHashSet().ToList();
-
-                    var listaPlanAdquisicionBase = from pp in _dataContext.PlanAdquisicion
-                                                   where listaPlaAdquisicionId.Contains(pp.PlanAdquisicionId)
-                                                   select pp;
-
-                    listaPlanAdquisicionBase.BatchUpdate(new PlanAdquisicion
-                    {
-                        EstadoId = EstadoPlanAdquisicion_ConCDP
-                    });
-                    _dataContext.SaveChanges();
-
-
-                    #endregion Actualizar Plan de adquisición
-
-                    // var tipoOperacion = _dataContext.TipoOperacion
-                    //                         .Where(t => t.TipoOperacionId == solicitudCDP.TipoOperacion.TipoOperacionId)
-                    //                         .FirstOrDefault();
-
-                    // var estadoSolicitudCDP = _dataContext.EstadoSolicitudCDP
-                    // .Where(t => t.EstadoId == solicitudCDP.EstadoSolicitudCDP.EstadoId)
-                    // .FirstOrDefault();
-
-                    // if (estadoSolicitudCDP != null)
-                    // {
-                    //     solicitudCDP.EstadoSolicitudCDPId = estadoSolicitudCDP.EstadoId;
-                    //     solicitudCDP.EstadoSolicitudCDP = estadoSolicitudCDP;
-                    // }
-
-                    // if (tipoOperacion != null)
-                    // {
-                    //     solicitudCDP.TipoOperacionId = tipoOperacion.TipoOperacionId;
-                    //     solicitudCDP.TipoOperacion = tipoOperacion;
-
-                    //     if (tipoOperacion.TipoOperacionId != (int)TipoOperacionEnum.SOLICITUD_INICIAL)
-                    //     {
-                    //         var tipoDetalle = _dataContext.TipoDetalleModificacion
-                    //                             .Where(t => t.TipoDetalleCDPId == solicitudCDP.TipoDetalleCDP.TipoDetalleCDPId)
-                    //                             .FirstOrDefault();
-
-                    //         if (tipoDetalle != null)
-                    //         {
-                    //             solicitudCDP.TipoDetalleCDPId = tipoDetalle.TipoDetalleCDPId;
-                    //             solicitudCDP.TipoDetalleCDP = tipoDetalle;
-                    //         }
-                    //     }
-                    //     else
-                    //     {
-                    //         solicitudCDP.Cdp = null;
-                    //         solicitudCDP.TipoDetalleCDPId = null;
-                    //     }
-                    // }
-
 
                     await transaction.CommitAsync();
 

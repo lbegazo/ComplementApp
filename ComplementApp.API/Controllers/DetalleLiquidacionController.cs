@@ -37,7 +37,7 @@ namespace ComplementApp.API.Controllers
 
         #region Constantes
 
-        const int cantidadMinimaLiquidacion = 15;
+        const int cantidadMinimaLiquidacion = 10;
 
         #endregion Constantes
 

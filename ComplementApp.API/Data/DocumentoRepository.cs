@@ -16,13 +16,13 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
-        public bool InsertaCabeceraCDP(IList<CDPDto> listaCdp, IList<DetalleCDPDto> listaDetalle)
+        public bool InsertaCabeceraCDP(IList<CDPDto> listaCdp)
         {
             try
             {
                 #region Setear datos
 
-                List<CDP> listaCDP = obtenerListaCdp(listaCdp, listaDetalle);
+                List<CDP> listaCDP = obtenerListaCdp(listaCdp);
 
                 #endregion Setear datos
 
@@ -158,14 +158,12 @@ namespace ComplementApp.API.Data
             return false;
         }
 
-        private List<CDP> obtenerListaCdp(IList<CDPDto> listaCdp, IList<DetalleCDPDto> listaDetalle)
+        private List<CDP> obtenerListaCdp(IList<CDPDto> listaCdp)
         {
 
             List<CDP> listaCDP = new List<CDP>();
             CDP cdp = null;
             Tercero tercero = null;
-            DetalleCDPDto detalle = null;
-            string responsable = string.Empty;
 
             var listaRubrosPresupuestales = _context.RubroPresupuestal.ToList();
             var listaPci = _context.Pci.ToList();
@@ -173,17 +171,7 @@ namespace ComplementApp.API.Data
 
             foreach (var item in listaCdp)
             {
-                responsable = string.Empty;
-                cdp = new CDP();
-
-                if (listaDetalle != null)
-                {
-                    detalle = listaDetalle.FirstOrDefault(x => x.Cdp == item.Cdp);
-                    if (detalle != null)
-                    {
-                        responsable = detalle.Responsable;
-                    }
-                }
+                cdp = new CDP();                
 
                 cdp.Instancia = item.Instancia;
                 cdp.Cdp = item.Cdp;
@@ -201,7 +189,7 @@ namespace ComplementApp.API.Data
                 cdp.Detalle2 = item.Detalle2;
                 cdp.Detalle3 = item.Detalle3;
                 cdp.Detalle4 = item.Detalle4;
-                cdp.Detalle5 = responsable;
+                cdp.Detalle5 = string.Empty;
                 cdp.Detalle6 = item.Detalle6;
                 cdp.Detalle7 = item.Detalle7;
                 cdp.Detalle8 = item.Detalle8;

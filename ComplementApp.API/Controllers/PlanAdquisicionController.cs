@@ -273,7 +273,5 @@ namespace ComplementApp.API.Controllers
 
             await transaction.CommitAsync();
         }
-
-
     }
 }

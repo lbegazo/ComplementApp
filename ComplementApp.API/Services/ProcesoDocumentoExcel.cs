@@ -569,10 +569,7 @@ namespace ComplementApp.API.Services
         {
             var resultado = false;
             resultado = this._repo.EliminarCabeceraCDP();
-
-            if (resultado)
-                resultado = this._repo.EliminarDetalleCDP();
-
+                        
             return resultado;
         }
 

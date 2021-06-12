@@ -221,7 +221,7 @@
           <tr *ngIf="esCreacion">
             <td style="padding: 0px 15px">
               <div class="form-row mt-2">
-                <div style="width: 3%;" class="inner aplicaBackground">
+                <div style="width: 5%;" class="inner aplicaBackground">
                   <label class="col-form-label-md">Num</label>
                 </div>
                 <div style="width: 20%;" class="inner aplicaBackground center">
@@ -236,7 +236,7 @@
                 <div style="width: 11%;" class="inner aplicaBackground center">
                   <label class="col-form-label-md">S. ACTIVIDAD</label>
                 </div>
-                <div style="width: 20%;" class="inner aplicaBackground center">
+                <div style="width: 18%;" class="inner aplicaBackground center">
                   <label class="col-form-label-md">RESPONSABLE</label>
                 </div>
               </div>
@@ -247,7 +247,7 @@
                   *ngFor="let item of listaPlanAdquisicion; let i = index"
                 >
                   <ng-container [formGroupName]="i">
-                    <div style="width: 3%;" class="inner left aplicaBackground">
+                    <div style="width: 5%;" class="inner left aplicaBackground">
                       <label class="col-form-label-md">
                         <input
                           type="checkbox"
@@ -276,7 +276,7 @@
                         {{ item?.saldoAct | number: "1.0-3" }}
                       </p>
                     </div>
-                    <div style="width: 20%;" class="inner left aplicaBackground">
+                    <div style="width: 18%;" class="inner center aplicaBackground">
                       <p>
                         {{ item?.responsable }}
                       </p>

@@ -2,16 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using AutoMapper;
 using ComplementApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
-using ComplementApp.API.Services;
 
 namespace ComplementApp.API.Controllers
 {
@@ -64,17 +61,17 @@ namespace ComplementApp.API.Controllers
 
                     #region Obtener información del archivo excel
 
-                    DataTable dtDetalle = _documento.ObtenerDetalleDeExcel(file);
                     DataTable dtCabecera = _documento.ObtenerCabeceraDeExcel(file);
-                    DataTable dtPlanPago = _documento.ObtenerPlanPagosDeExcel(file);
+                    //DataTable dtDetalle = _documento.ObtenerDetalleDeExcel(file);
+                    // DataTable dtPlanPago = _documento.ObtenerPlanPagosDeExcel(file);
 
                     #endregion
 
                     #region Mapear datos en la lista de Dtos
 
                     List<CDPDto> listaDocumento = _documento.obtenerListaDeCDP(dtCabecera);
-                    List<DetalleCDPDto> listaDetalle = _documento.obtenerListaDeDetalleCDP(dtDetalle);
-                    List<PlanPagoDto> listaPlanPago = _documento.obtenerListaDePlanPago(dtPlanPago);
+                    // List<DetalleCDPDto> listaDetalle = _documento.obtenerListaDeDetalleCDP(dtDetalle);
+                    // List<PlanPagoDto> listaPlanPago = _documento.obtenerListaDePlanPago(dtPlanPago);
 
                     #endregion
 
@@ -82,20 +79,20 @@ namespace ComplementApp.API.Controllers
 
                     #region Insertar lista en la base de datos
 
-                    var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento, listaDetalle);
-                    var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
-                    var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
+                    var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento);
+                    // var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
+                    // var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
 
                     #endregion Insertar lista en la base de datos
 
                     if (!EsCabeceraCorrecto)
                         throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
 
-                    if (!EsDetalleCorrecto)
-                        throw new ArgumentException("No se pudieron registrar: " + nombreHojaDetalle);
+                    // if (!EsDetalleCorrecto)
+                    //     throw new ArgumentException("No se pudieron registrar: " + nombreHojaDetalle);
 
-                    if (!EsPlanPagoCorrecto)
-                        throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
+                    // if (!EsPlanPagoCorrecto)
+                    //     throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
 
                     transaction.Commit();
                 }
