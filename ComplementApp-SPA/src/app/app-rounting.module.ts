@@ -54,6 +54,7 @@ import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
 import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
+import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -283,6 +284,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: RadicadoPagoMensualComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_PLANANUALADQUISICION',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: PlanAnualAdquisicionComponent,
     resolve: {
       transaccion: TransaccionResolver,
     },

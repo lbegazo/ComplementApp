@@ -4,8 +4,10 @@ export interface Cdp {
   cdp: number;
   crp: number;
   ordenPago: number;
+  numeroDocumento: number;
 
   fecha: Date;
+  fechaFormato: string;
   detalle1: string; // Estado
   detalle4: string; // Objeto del bien
   objeto: string; // Objeto del bien completo

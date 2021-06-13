@@ -308,6 +308,85 @@ namespace ComplementApp.API.Services
             return dt;
         }
 
+        public DataTable ObtenerTablaDeListaPlanAnualAdquisicion(List<DetalleCDPDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("NUM", typeof(int)));
+            dt.Columns.Add(new DataColumn("DESCRIPCION_COMPRA", typeof(string)));
+            dt.Columns.Add(new DataColumn("CDP", typeof(long)));
+            dt.Columns.Add(new DataColumn("VALOR_INICIAL", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("VALOR_MODIF", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("SALDO_ACTUAL", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("VALOR_CDP", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("VALOR_COMPROM", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("VALOR_OBLIGADO", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("VALOR_PAGADO", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("RESPONSABLE", typeof(string)));
+            dt.Columns.Add(new DataColumn("DEPENDENCIA", typeof(string)));
+            dt.Columns.Add(new DataColumn("CONTRATO", typeof(string)));
+            dt.Columns.Add(new DataColumn("AREA", typeof(string)));            
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["NUM"] = item.DetalleCdpId;
+                dr["DESCRIPCION_COMPRA"] = item.PlanDeCompras;
+                dr["CDP"] = item.Cdp;
+                dr["VALOR_INICIAL"] = item.ValorAct;
+                dr["VALOR_MODIF"] = item.ValorModif;
+                dr["SALDO_ACTUAL"] = item.SaldoAct;
+                dr["VALOR_CDP"] = item.ValorCDP;
+                dr["VALOR_COMPROM"] = item.ValorRP;
+                dr["VALOR_OBLIGADO"] = item.ValorOB;
+                dr["VALOR_PAGADO"] = item.ValorOP;
+                dr["RESPONSABLE"] = item.Responsable;
+                dr["DEPENDENCIA"] = item.Dependencia;
+                dr["CONTRATO"] = item.AplicaContratoDescripcion;
+                dr["AREA"] = item.Area;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+
+        public DataTable ObtenerTablaDetallePlanAnualAdquisicion(List<CDPDto> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("NUMERO", typeof(long)));
+            dt.Columns.Add(new DataColumn("ESTADO", typeof(string)));
+            dt.Columns.Add(new DataColumn("FECHA_REGISTRO", typeof(string)));
+            dt.Columns.Add(new DataColumn("VALOR_INICIAL", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("OPERACION", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("VALORTOTAL", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("SALDOACTUAL", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("OBJETO", typeof(string)));         
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["NUMERO"] = item.NumeroDocumento;
+                dr["ESTADO"] = item.Detalle1;
+                dr["FECHA_REGISTRO"] = item.FechaFormato;
+                dr["VALOR_INICIAL"] = item.ValorInicial;
+                dr["OPERACION"] = item.Operacion;
+                dr["VALORTOTAL"] = item.ValorTotal;
+                dr["SALDOACTUAL"] = item.SaldoActual;
+                dr["OBJETO"] = item.Detalle4;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {
             var memoryStream = new MemoryStream();

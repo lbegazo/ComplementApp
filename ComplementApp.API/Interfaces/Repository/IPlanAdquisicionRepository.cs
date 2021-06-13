@@ -14,5 +14,6 @@ namespace ComplementApp.API.Interfaces.Repository
                                                                                 int? numeroCdp, UserParams userParams);
         Task<PagedList<DetalleCDPDto>> ObtenerListaPlanAnualAdquisicionSinCDP(int usuarioId, int? rubroPresupuestalId, UserParams userParams);
         Task<List<DetalleCDPDto>> ObtenerListaPlanAdquisicionSinCDPXIds(List<int> listaId);
+        Task<PagedList<DetalleCDPDto>> ObtenerListaPlanAdquisicionReporte(int usuarioId, int? rubroPresupuestalId, UserParams userParams);
     }
 }

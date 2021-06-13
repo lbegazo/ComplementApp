@@ -1,0 +1,140 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
+            <div class="row">
+              <div style="width: 7%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Num</strong></label>
+              </div>
+              <div style="width: 14%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Estado</strong></label>
+              </div>
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Fecha</strong></label>
+              </div>
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Valor Inicial</strong></label>
+              </div>
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Operación</strong></label>
+              </div>
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Valor Total</strong></label>
+              </div>
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Saldo Actual</strong></label>
+              </div>
+              <div style="width: 29%" class="inner aplicaBackground center">
+                <label class="col-form-label"><strong>Objeto</strong></label>
+              </div>
+            </div>
+            <div *ngIf="listaCdp">
+              <div
+                formArrayName="planPagoControles"
+                class="row"
+                *ngFor="let item of listaCdp; let i = index"
+              >
+                <ng-container [formGroupName]="i">
+                  <div style="width: 7%" class="inner center">
+                    <p class="fontSmaller">
+                      {{ item?.numeroDocumento }}
+                    </p>
+                  </div>
+                  <div style="width: 14%" class="inner center">
+                    <p class="fontSmaller">
+                      {{ item?.detalle1 }}
+                    </p>
+                  </div>
+                  <div style="width: 10%" class="inner center">
+                    <p class="fontSmaller">
+                      {{ item?.fecha | date: "yyyy/MM/dd" }}
+                    </p>
+                  </div>
+                  <div style="width: 10%" class="inner right">
+                    <p class="fontSmaller">
+                      {{ item?.valorInicial | number: "1.2-2" }}
+                    </p>
+                  </div>
+                  <div style="width: 10%" class="inner right">
+                    <p class="fontSmaller">
+                      {{ item?.operacion | number: "1.2-2" }}
+                    </p>
+                  </div>
+                  <div style="width: 10%" class="inner right">
+                    <p class="fontSmaller">
+                      {{ item?.valorTotal | number: "1.2-2" }}
+                    </p>
+                  </div>
+                  <div style="width: 10%" class="inner right">
+                    <p class="fontSmaller">
+                      {{ item?.saldoActual | number: "1.2-2" }}
+                    </p>
+                  </div>
+                  <div style="width: 29%" class="inner left">
+                    <p class="fontSmaller">
+                      {{
+                        item?.detalle4.length > 100
+                          ? (item?.detalle4 | slice: 0:100)+'..'
+                          : item?.detalle4
+                      }}
+                    </p>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </form>
+          <div style="height: 10px"></div>
+          <div class="d-flex justify-content-center">
+            <pagination
+              [boundaryLinks]="true"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage"
+              [(ngModel)]="pagination.currentPage"
+              (pageChanged)="pageChanged($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+              [ngModelOptions]="{ standalone: true }"
+              [maxSize]="pagination.maxSize"
+            ></pagination>
+          </div>
+
+          <div style="height: 10px"></div>
+
+          <div class="row">
+            <div class="col-12 right withoutPadding">
+              <button
+                type="submit"
+                class="btn btn-warning"
+                (click)="exportarExcel()"
+              >
+                Reporte
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary ml-2"
+                (click)="onAceptar()"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

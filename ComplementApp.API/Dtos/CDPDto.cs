@@ -11,6 +11,7 @@ namespace ComplementApp.API.Dtos
         public long Obligacion { get; set; }
         public long OrdenPago { get; set; }
         public DateTime Fecha { get; set; }
+        public string FechaFormato { get; set; }
         public string IdentificacionRubro { get; set; }
         public string NombreRubro { get; set; }
         public decimal ValorInicial { get; set; }
@@ -41,5 +42,7 @@ namespace ComplementApp.API.Dtos
         public decimal ValorFacturado { get; set; }
         public string NumeroRadicadoSupervisor { get; set; }
         public DateTime? FechaRadicadoSupervisor { get; set; }
+        public long NumeroDocumento { get; set; }
+
     }
 }

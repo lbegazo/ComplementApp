@@ -114,5 +114,42 @@ namespace ComplementApp.API.Data
                             .FirstOrDefaultAsync();
             return cdp;
         }
+
+        public async Task<PagedList<CDPDto>> ObtenerDetallePlanAnualAdquisicion(long cdp, int instancia, UserParams userParams)
+        {
+            var lista = (from c in _context.CDP
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId into TerceroCdp
+                         from terceroCdp in TerceroCdp.DefaultIfEmpty()
+                         where c.Cdp == cdp
+                         where c.PciId == userParams.PciId
+                         where c.Instancia == instancia
+                         select new CDPDto()
+                         {
+                             Fecha = c.Fecha,
+                             FechaFormato = c.Fecha.ToString(),
+                             Cdp = c.Cdp,
+                             Crp = c.Crp,
+                             Obligacion = c.Obligacion,
+                             OrdenPago = c.OrdenPago,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.Operacion,
+                             ValorTotal = c.ValorTotal,
+                             SaldoActual = c.SaldoActual,
+                             Detalle1 = c.Detalle1,
+                             //Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                             Detalle4 = c.Detalle4,
+                             NumeroIdentificacionTercero = c.TerceroId > 0 ? terceroCdp.NumeroIdentificacion : string.Empty,
+                             NombreTercero = c.TerceroId > 0 ? terceroCdp.Nombre : string.Empty,
+                             NumeroDocumento = (instancia == (int)TipoDocumento.Cdp ? c.Cdp :
+                                                (instancia == (int)TipoDocumento.Compromiso ? c.Crp :
+                                                (instancia == (int)TipoDocumento.Obligacion ? c.Obligacion :
+                                                (instancia == (int)TipoDocumento.OrdenPago ? c.OrdenPago : 0))))
+                         })
+                         .Distinct();
+
+            return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+
+        }
+
     }
 }

@@ -418,6 +418,14 @@
     "CodigoPadreTransaccion": "CONSULTAS"
   },
   {
+    "Codigo": "CONSULTAS_PLANANUALADQUISICION",
+    "Nombre": "Consulta Plan Anual Adquisiciones",
+    "Descripcion": "Consulta Plan Anual Adquisiciones",
+    "Icono": "assessment",
+    "Ruta": "CONSULTAS_PLANANUALADQUISICION",
+    "CodigoPadreTransaccion": "CONSULTAS"
+  },
+  {
     "Codigo": "GENERADOR_PILA",
     "Nombre": "Órdenes de Pago PILA",
     "Descripcion": "Órdenes de Pago PILA",

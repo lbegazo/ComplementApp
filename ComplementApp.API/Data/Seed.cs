@@ -989,7 +989,7 @@ namespace ComplementApp.API.Data
             Transaccion tran = null;
             Transaccion tranPapa = null;
             
-            if (!context.Transaccion.Any())
+            //if (!context.Transaccion.Any())
             {
                 if (File.Exists("Data/SeedFiles/_Transaccion.json"))
                 {

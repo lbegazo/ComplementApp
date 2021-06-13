@@ -20,6 +20,7 @@ namespace ComplementApp.API.Dtos
         public decimal SaldoAct { get; set; }
         //Cabecera
         public decimal ValorCDP { get; set; }
+        public decimal ValorModif { get; set; }
 
         //Cabecera
         public decimal SaldoCDP { get; set; }

@@ -1,4 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpParams,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
@@ -103,5 +108,74 @@ export class PlanAdquisicionService {
           return paginatedResult;
         })
       );
+  }
+
+  ObtenerListaPlanAdquisicionReporte(
+    rubroPresupuestalId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<DetalleCDP[]>> {
+    const path = 'ObtenerListaPlanAdquisicionReporte';
+    const paginatedResult: PaginatedResult<DetalleCDP[]> = new PaginatedResult<
+      DetalleCDP[]
+    >();
+
+    let params = new HttpParams();
+    if (rubroPresupuestalId > 0) {
+      params = params.append(
+        'rubroPresupuestalId',
+        rubroPresupuestalId.toString()
+      );
+    }
+
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<DetalleCDP[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  public DescargarListaPlanAnualAdquisicion(
+    rubroPresupuestalId?: number
+  ): Observable<HttpEvent<Blob>> {
+    let params = new HttpParams();
+    if (rubroPresupuestalId > 0) {
+      params = params.append(
+        'rubroPresupuestalId',
+        rubroPresupuestalId.toString()
+      );
+    }
+
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarListaPlanAnualAdquisicion'}`,
+        null,
+        {
+          params,
+          reportProgress: true,
+          responseType: 'blob',
+        }
+      )
+    );
   }
 }

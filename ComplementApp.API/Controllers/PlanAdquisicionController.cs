@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace ComplementApp.API.Controllers
         private readonly IActividadGeneralService _serviceActividad;
         private readonly IListaRepository _repoLista;
         private readonly IMapper _mapper;
+        private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
 
         #endregion Dependency Injection
 
@@ -48,7 +50,8 @@ namespace ComplementApp.API.Controllers
                                     IListaRepository repoLista,
                                     DataContext dataContext,
                                     IGeneralInterface generalInterface,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
         {
             _repo = repo;
             _mapper = mapper;
@@ -57,6 +60,7 @@ namespace ComplementApp.API.Controllers
             _repoActividad = repoActividad;
             _serviceActividad = serviceActividad;
             _repoLista = repoLista;
+            this._procesoCreacionExcelInterface = procesoCreacionExcelInterface;
         }
 
         [Route("[action]")]
@@ -170,7 +174,64 @@ namespace ComplementApp.API.Controllers
 
             return Ok(listaFinal);
 
-            throw new Exception($"No se pudo registrar el formato de liquidación");
+            throw new Exception($"No se puede obtener la lista de plan de adquisición");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaPlanAdquisicionReporte([FromQuery(Name = "rubroPresupuestalId")] int? rubroPresupuestalId,
+                                                                            [FromQuery] UserParams userParams)
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
+            var pagedList = await _repo.ObtenerListaPlanAdquisicionReporte(usuarioId, rubroPresupuestalId, userParams);
+
+            var listaDto = _mapper.Map<IEnumerable<DetalleCDPDto>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+            return Ok(listaDto);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaPlanAnualAdquisicion([FromQuery(Name = "rubroPresupuestalId")] int? rubroPresupuestalId)
+        {
+            string nombreArchivo = "PlanAnualAdquisicion.xlsx";
+            List<DetalleCDPDto> lista = null;
+            try
+            {
+                var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
+                UserParams userParams = new UserParams();
+                userParams.PageSize = 5000;
+                userParams.PageNumber = 1;
+                userParams.PciId = pciId;
+
+                var pagedList = await _repo.ObtenerListaPlanAdquisicionReporte(usuarioId, rubroPresupuestalId, userParams);
+                if (pagedList != null)
+                {
+                    lista = _mapper.Map<List<DetalleCDPDto>>(pagedList);
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDeListaPlanAnualAdquisicion(lista);
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
         }
 
         private async Task ActualizarPlanAdquisicion(int pciId, PlanAdquisicion planAdquisicion)

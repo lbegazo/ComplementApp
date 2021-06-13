@@ -214,6 +214,7 @@ namespace ComplementApp.API.Data
                              where d.PciId == acGe.PciId
                              where d.PciId == acEs.PciId
                              where d.PciId == a.PciId
+                             where d.PciId == userParams.PciId
                              where d.Cdp == 0
                              where d.SaldoAct > 0
 
@@ -278,6 +279,7 @@ namespace ComplementApp.API.Data
                              where d.PciId == acGe.PciId
                              where d.PciId == acEs.PciId
                              where d.PciId == a.PciId
+                             where d.PciId == userParams.PciId
                              where d.Cdp == 0
 
                              select new DetalleCDPDto()
@@ -383,6 +385,100 @@ namespace ComplementApp.API.Data
                         .ToListAsync();
 
             return lista;
+        }
+
+        public async Task<PagedList<DetalleCDPDto>> ObtenerListaPlanAdquisicionReporte(int usuarioId, int? rubroPresupuestalId, UserParams userParams)
+        {
+            IOrderedQueryable<DetalleCDPDto> lista = null;
+            var listaPerfilxUsuario = await _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToListAsync();
+
+            if (listaPerfilxUsuario != null && listaPerfilxUsuario.Count > 0)
+            {
+                var listaPerfilId = listaPerfilxUsuario.Select(x => x.PerfilId);
+
+                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador) ||
+                    listaPerfilId.Contains((int)PerfilUsuario.CoordinadorFinanciero))
+                {
+                    #region Administrador o Coordinador Financiero
+
+                    lista = (from d in _context.PlanAdquisicion
+                             join u in _context.Usuario on d.UsuarioId equals u.UsuarioId
+                             join de in _context.Dependencia on new { d.DependenciaId } equals new { de.DependenciaId } into DependenciaDetalle
+                             from de in DependenciaDetalle.DefaultIfEmpty()
+                             join a in _context.Area on new { d.AreaId } equals new { a.AreaId } into AreaDetalle
+                             from a in AreaDetalle.DefaultIfEmpty()
+                             where d.PciId == u.PciId
+                             //where c.Instancia == (int)TipoDocumento.Cdp
+                             where d.PciId == userParams.PciId
+                             where d.RubroPresupuestalId == rubroPresupuestalId || rubroPresupuestalId == null
+
+                             select new DetalleCDPDto()
+                             {
+                                 DetalleCdpId = d.PlanAdquisicionId,
+                                 PlanDeCompras = d.PlanDeCompras,
+                                 Cdp = d.Cdp,
+
+                                 ValorAct = d.ValorAct,
+                                 ValorModif = 0,
+                                 SaldoAct = d.SaldoAct,
+                                 ValorCDP = d.ValorCDP,
+                                 ValorRP = d.ValorRP,
+                                 ValorOB = d.ValorOB,
+                                 ValorOP = d.ValorOP,
+
+                                 Responsable = d.UsuarioId > 0 ? u.Nombres + ' ' + u.Apellidos : string.Empty,
+                                 Dependencia = d.DependenciaId > 0 ? de.Nombre : string.Empty,
+                                 AplicaContratoDescripcion = d.AplicaContrato ? "SI" : "NO",
+                                 Area = d.AreaId > 0 ? a.Nombre : string.Empty,
+                             })
+                                .Distinct()
+                                .OrderBy(x => x.Cdp);
+
+                    #endregion Administrador o Coordinador Financiero
+                }
+                else
+                {
+                    #region Usuario
+
+                    lista = (from d in _context.PlanAdquisicion
+                             join u in _context.Usuario on d.UsuarioId equals u.UsuarioId
+                             join de in _context.Dependencia on new { d.DependenciaId } equals new { de.DependenciaId } into DependenciaDetalle
+                             from de in DependenciaDetalle.DefaultIfEmpty()
+                             join a in _context.Area on new { d.AreaId } equals new { a.AreaId } into AreaDetalle
+                             from a in AreaDetalle.DefaultIfEmpty()
+                             where d.PciId == u.PciId
+                             //where c.Instancia == (int)TipoDocumento.Cdp
+                             where d.UsuarioId == usuarioId
+                             where d.PciId == userParams.PciId
+                             where d.RubroPresupuestalId == rubroPresupuestalId || rubroPresupuestalId == null
+
+                             select new DetalleCDPDto()
+                             {
+                                 DetalleCdpId = d.PlanAdquisicionId,
+                                 PlanDeCompras = d.PlanDeCompras,
+                                 Cdp = d.Cdp,
+
+                                 ValorAct = d.ValorAct,
+                                 ValorModif = 0,
+                                 SaldoAct = d.SaldoAct,
+                                 ValorCDP = d.ValorCDP,
+                                 ValorRP = d.ValorRP,
+                                 ValorOB = d.ValorOB,
+                                 ValorOP = d.ValorOP,
+
+                                 Responsable = d.UsuarioId > 0 ? u.Nombres + ' ' + u.Apellidos : string.Empty,
+                                 Dependencia = d.DependenciaId > 0 ? de.Nombre : string.Empty,
+                                 AplicaContratoDescripcion = d.AplicaContrato ? "SI" : "NO",
+                                 Area = d.AreaId > 0 ? a.Nombre : string.Empty,
+                             })
+                                .Distinct()
+                                .OrderBy(x => x.Cdp);
+
+                    #endregion Usuario
+                }
+            }
+
+            return await PagedList<DetalleCDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
     }
 }
