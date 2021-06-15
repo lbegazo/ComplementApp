@@ -358,7 +358,7 @@
     "Nombre": "Informe de Pago a Proveedores",
     "Descripcion": "Informe de Pago a Proveedores",
     "Icono": "assessment",
-    "Ruta": "",
+    "Ruta": "CONSULTAS_INFORMEPAGO",
     "CodigoPadreTransaccion": "CONSULTAS"
   },
   {

@@ -136,6 +136,8 @@ import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestion
 import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
 import { PopupDetallePlanAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/popup-detalle-plan-adquisicion/popup-detalle-plan-adquisicion.component';
+import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
+import { DetalleInformePagoProveedorComponent } from './reporte/informe-pago-proveedor/detalle-informe-pago-proveedor/detalle-informe-pago-proveedor.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -226,6 +228,8 @@ export function tokenGetter() {
     SolicitudDisponibilidadPresupuestalEditComponent,
     PlanAnualAdquisicionComponent,
     PopupDetallePlanAdquisicionComponent,
+    InformePagoProveedorComponent,
+    DetalleInformePagoProveedorComponent,
   ],
   imports: [
     BrowserModule,

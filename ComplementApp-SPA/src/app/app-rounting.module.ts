@@ -55,6 +55,7 @@ import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-ap
 import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
+import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -295,6 +296,16 @@ export const routes: Routes = [
     component: PlanAnualAdquisicionComponent,
     resolve: {
       transaccion: TransaccionResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_INFORMEPAGO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: InformePagoProveedorComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
     },
   },
   {
