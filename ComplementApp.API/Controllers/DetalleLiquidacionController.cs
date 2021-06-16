@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,17 +14,11 @@ using ComplementApp.API.Interfaces;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogActividadUsuario))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DetalleLiquidacionController : ControllerBase
+    public class DetalleLiquidacionController : BaseApiController
     {
         #region Variable
 
@@ -34,12 +27,6 @@ namespace ComplementApp.API.Controllers
         string valorPciId = string.Empty;
 
         #endregion
-
-        #region Constantes
-
-        const int cantidadMinimaLiquidacion = 10;
-
-        #endregion Constantes
 
         #region Dependency Injection
         private readonly DataContext _dataContext;
@@ -54,6 +41,7 @@ namespace ComplementApp.API.Controllers
         private readonly ITerceroRepository _terceroRepository;
         private readonly IProcesoCreacionArchivo _procesoCreacionArchivo;
         private readonly ISolicitudPagoRepository _solicitudPagoRepository;
+
         #endregion Dependency Injection
 
         public DetalleLiquidacionController(IUnitOfWork unitOfWork, IDetalleLiquidacionRepository repo,
@@ -584,6 +572,7 @@ namespace ComplementApp.API.Controllers
         {
             #region Variables
 
+            int cantidadMinimaLiquidacion = 5;
             string resultado = string.Empty;
             RespuestaSolicitudPago respuestaSolicitud = new RespuestaSolicitudPago();
             List<int> listaEstadoIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
@@ -601,6 +590,12 @@ namespace ComplementApp.API.Controllers
 
             #endregion Variables
 
+            var parametroGeneral = await _repoLista.ObtenerParametroGeneralXNombre("CantidadMinimaArchivoLiquidacion");
+
+            if (parametroGeneral != null)
+            {
+                cantidadMinimaLiquidacion = Convert.ToInt16(parametroGeneral.Valor);
+            }
 
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             valorPciId = User.FindFirst(ClaimTypes.Role).Value;

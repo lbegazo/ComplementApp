@@ -16,11 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogActividadUsuario))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CDPController : ControllerBase
+    
+    public class CDPController : BaseApiController
     {
         #region Variable
 

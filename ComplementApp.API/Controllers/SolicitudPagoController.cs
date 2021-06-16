@@ -15,11 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogActividadUsuario))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SolicitudPagoController : ControllerBase
+   
+    public class SolicitudPagoController : BaseApiController
     {
         #region Variable
 

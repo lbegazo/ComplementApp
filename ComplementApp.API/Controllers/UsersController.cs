@@ -10,11 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogUserActivity))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+   
+    public class UsersController : BaseApiController
     {
         
         private readonly IDatingRepository _repo;

@@ -102,5 +102,11 @@
     "Descripcion": "BaseLiqValorBruto",
     "Valor": "2-03-80-01",
     "Tipo": null
+  },
+  {
+    "Nombre": "CantidadMinimaArchivoLiquidacion",
+    "Descripcion": "CantidadMinimaArchivoLiquidacion",
+    "Valor": "8",
+    "Tipo": null
   }
 ]

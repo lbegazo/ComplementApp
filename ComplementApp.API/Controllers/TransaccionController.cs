@@ -14,11 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogActividadUsuario))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TransaccionController : ControllerBase
+    public class TransaccionController : BaseApiController
     {
         private readonly DataContext _dataContext;
 

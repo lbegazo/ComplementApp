@@ -3,30 +3,22 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using AutoMapper;
-using ComplementApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using OfficeOpenXml;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
-using ComplementApp.API.Helpers;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Compromiso = ComplementApp.API.Dtos.Serializacion.Compromiso;
-using Cdp = ComplementApp.API.Dtos.Serializacion.CDP;
 using Obligacion = ComplementApp.API.Dtos.Serializacion.Obligacion;
 using OrdenPago = ComplementApp.API.Dtos.Serializacion.OrdenPago;
 using ComplementApp.API.Models;
 using ComplementApp.API.Interfaces;
+using Cdp = ComplementApp.API.Dtos.Serializacion.CDP;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogActividadUsuario))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class XmlDocumentoController : ControllerBase
+   
+    public class XmlDocumentoController : BaseApiController
     {
         #region Propiedades
         private readonly IDocumentoRepository _repo;

@@ -16,11 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    [ServiceFilter(typeof(LogActividadUsuario))]
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ContratoController : ControllerBase
+   
+    public class ContratoController : BaseApiController
     {
         #region Variable
         int usuarioId = 0;

@@ -12,7 +12,6 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(100)")]
         public string Nombre { get; set; }
 
-
         [Required]
         [Column(TypeName = "VARCHAR(250)")]
         public string Descripcion { get; set; }
@@ -22,7 +21,5 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(250)")]
         public string Tipo { get; set; }
-
-
     }
 }

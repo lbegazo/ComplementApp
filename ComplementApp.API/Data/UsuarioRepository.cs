@@ -39,8 +39,8 @@ namespace ComplementApp.API.Data
         public async Task<Usuario> ObtenerUsuarioBase(int id)
         {
             return await _context.Usuario
-                        .Include(x => x.Area)
-                        .Include(c => c.Cargo)
+                        // .Include(x => x.Area)
+                        // .Include(c => c.Cargo)
                         .FirstOrDefaultAsync(u => u.UsuarioId == id);
         }
 
