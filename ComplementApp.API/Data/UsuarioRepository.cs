@@ -9,6 +9,7 @@ using System.Text;
 using System.Collections.Generic;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Data
 {

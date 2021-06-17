@@ -5,7 +5,7 @@ using ComplementApp.API.Dtos.Archivo;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Repository
 {
     public interface IDetalleLiquidacionRepository
     {

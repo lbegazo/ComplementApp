@@ -1,5 +1,5 @@
 using System;
-using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Services
 {

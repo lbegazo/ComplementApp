@@ -4,11 +4,10 @@ using System.Data;
 using System.IO;
 using ComplementApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
-using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Controllers
 {

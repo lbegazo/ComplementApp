@@ -7,7 +7,7 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Helpers;
 using System.Globalization;
-using System;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Data
 {

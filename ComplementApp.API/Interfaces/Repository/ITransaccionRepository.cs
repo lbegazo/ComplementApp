@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Models;
 
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Repository
 {
     public interface ITransaccionRepository
     {

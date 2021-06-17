@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;

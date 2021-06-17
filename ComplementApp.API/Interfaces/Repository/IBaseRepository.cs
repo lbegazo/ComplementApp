@@ -1,4 +1,4 @@
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Repository
 {
     public interface IBaseRepository
     {

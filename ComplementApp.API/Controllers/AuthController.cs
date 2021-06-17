@@ -3,15 +3,10 @@ using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Controllers
 {
@@ -20,14 +15,13 @@ namespace ComplementApp.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
-        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-
         private readonly DataContext _dataContext;
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, DataContext dataContext)
+        private readonly ITokenService _token;
+        public AuthController(IAuthRepository repo, IMapper mapper, DataContext dataContext, ITokenService token)
         {
+            _token = token;
             _mapper = mapper;
-            _config = config;
             _repo = repo;
             _dataContext = dataContext;
         }
@@ -71,45 +65,11 @@ namespace ComplementApp.API.Controllers
             if (!result)
                 return BadRequest("El sistema no se encuentra activo");
 
+            string token = _token.CreateToken(userFromRepo);
 
-            /**************************Create the token************************************/
-            //var role = userFromRepo.EsAdministrador ? 1 : 0;
-
-            //The token contains 3 claims: userId and username, Administrator
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.UsuarioId.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username),
-                new Claim(ClaimTypes.Role, userFromRepo.PciId.ToString()),
-                new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos),
-                new Claim(ClaimTypes.GivenName,  userFromRepo.Nombres),
-            };
-
-            //The server has to sign the token(To have a valid token)
-            var key = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(
-                                _config.GetSection("AppSettings:Token").Value));
-
-            //we are encryting the key(in bytes) using HmacSha512Signature           
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            //Create the token's features
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(60),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            //Create the token using the previous variables
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            //Return the token to the clients
-            return Ok(new { token = tokenHandler.WriteToken(token) });
-
+            //return Ok(new { token = tokenHandler.WriteToken(token) });
+            return Ok(new { token });
         }
-
-
 
         [HttpPost("CargarDatosIniciales")]
         ///

@@ -30,7 +30,6 @@ namespace ComplementApp.API
         {
             /*The order is not important*/
 
-            //Avoid use System.Text.Json package  
             services.AddApplicationServices(_config);
             services.AddControllers()
             .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
@@ -38,20 +37,8 @@ namespace ComplementApp.API
 
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
             services.AddCors();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(option =>
-                {
-                    option.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-
-                    };
-                });
+            services.AddIdentityServices(_config);
+            
             services.AddScoped<LogUserActivity>();
             services.AddScoped<LogActividadUsuario>();
         }
@@ -73,10 +60,10 @@ namespace ComplementApp.API
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             // this will serve wwwroot/index.html when path is '/'

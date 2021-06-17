@@ -9,8 +9,8 @@ using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers

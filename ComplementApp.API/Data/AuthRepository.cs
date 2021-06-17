@@ -6,6 +6,7 @@ using ComplementApp.API.Interfaces;
 using System.Security.Cryptography;
 using System.IO;
 using System;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Data
 {

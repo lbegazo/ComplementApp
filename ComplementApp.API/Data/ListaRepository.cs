@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using ComplementApp.API.Interfaces;
+using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Dtos;
 using System;
 using ComplementApp.API.Helpers;

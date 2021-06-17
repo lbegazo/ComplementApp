@@ -5,7 +5,7 @@ using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Repository
 {
     public interface IContratoRepository
     {

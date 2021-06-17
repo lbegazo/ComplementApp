@@ -10,8 +10,8 @@ using Microsoft.Extensions.Configuration;
 using ComplementApp.API.Data;
 using ComplementApp.API.Interfaces;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 using ComplementApp.API.Models;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Services
 {

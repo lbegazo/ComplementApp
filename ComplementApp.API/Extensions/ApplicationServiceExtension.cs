@@ -15,6 +15,7 @@ namespace ComplementApp.API.Extensions
         {
             services.Configure<MailSettings>(config.GetSection("MailSettings"));
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProcesoLiquidacionPlanPago, ProcesoLiquidacionPlanPago>();
             services.AddScoped<IProcesoLiquidacionSolicitudPago, ProcesoLiquidacionSolicitudPago>();
             services.AddScoped<IProcesoDocumentoExcel, ProcesoDocumentoExcel>();

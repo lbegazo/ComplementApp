@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using ComplementApp.API.Dtos;
-using ComplementApp.API.Helpers;
-using ComplementApp.API.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+using ComplementApp.API.Interfaces.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers

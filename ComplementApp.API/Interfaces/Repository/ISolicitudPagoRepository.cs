@@ -4,7 +4,7 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Models;
 
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Repository
 {
     public interface ISolicitudPagoRepository
     {

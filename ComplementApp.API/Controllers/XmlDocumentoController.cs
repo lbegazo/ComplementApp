@@ -4,7 +4,6 @@ using System.Data;
 using System.IO;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
 using System.Xml.Serialization;
@@ -14,6 +13,7 @@ using OrdenPago = ComplementApp.API.Dtos.Serializacion.OrdenPago;
 using ComplementApp.API.Models;
 using ComplementApp.API.Interfaces;
 using Cdp = ComplementApp.API.Dtos.Serializacion.CDP;
+using ComplementApp.API.Interfaces.Repository;
 
 namespace ComplementApp.API.Controllers
 {
@@ -25,17 +25,14 @@ namespace ComplementApp.API.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        private IConfiguration _configuration { get; }
-
         #endregion Propiedades
 
         public XmlDocumentoController(IUnitOfWork unitOfWork, IDocumentoRepository repo,
-                            IMapper mapper, IConfiguration configuration)
+                            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _repo = repo;
-            _configuration = configuration;
         }
 
 
