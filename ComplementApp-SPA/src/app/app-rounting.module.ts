@@ -56,6 +56,7 @@ import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGes
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
+import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -204,6 +205,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: ObligacionPresupuestalComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'GENERADOR_ORDENPAGO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: CargaMasivaOrdenPagoComponent,
     resolve: { transaccion: TransaccionResolver },
   },
   {

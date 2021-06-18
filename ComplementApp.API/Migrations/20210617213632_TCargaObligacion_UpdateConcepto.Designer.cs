@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210617213632_TCargaObligacion_UpdateConcepto")]
+    partial class TCargaObligacion_UpdateConcepto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,7 +355,7 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("NumeroDocSoporteCompromiso")
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<int>("NumeroDocumento")
                         .HasColumnType("int");
@@ -373,7 +375,7 @@ namespace ComplementApp.API.Migrations
 
                     b.Property<string>("RecursoPresupuestal")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("Reintegro")
                         .HasColumnType("VARCHAR(250)");
@@ -401,7 +403,7 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("TipoDocSoporteCompromiso")
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("TipoIdentificacion")
                         .IsRequired()

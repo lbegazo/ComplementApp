@@ -454,7 +454,7 @@
     "Nombre": "Cuentas por Pagar Presupuestales",
     "Descripcion": "Cuentas por Pagar Presupuestales",
     "Icono": "post_add",
-    "Ruta": "",
+    "Ruta": "GENERADOR_CUENTAPORPAGAR",
     "CodigoPadreTransaccion": "GENERADOR"
   },
   {
@@ -462,7 +462,15 @@
     "Nombre": "Obligaciones Presupuestales",
     "Descripcion": "Obligaciones Presupuestales",
     "Icono": "post_add",
-    "Ruta": "",
+    "Ruta": "GENERADOR_OBLIGACIONES",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
+    "Codigo": "GENERADOR_ORDENPAGO",
+    "Nombre": "Ordenes de pago",
+    "Descripcion": "Ordenes de pago",
+    "Icono": "post_add",
+    "Ruta": "GENERADOR_ORDENPAGO",
     "CodigoPadreTransaccion": "GENERADOR"
   },
   {

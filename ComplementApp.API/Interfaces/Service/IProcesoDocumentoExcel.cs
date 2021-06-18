@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
 using Microsoft.AspNetCore.Http;
 
-namespace ComplementApp.API.Interfaces
+namespace ComplementApp.API.Interfaces.Service
 {
     public interface IProcesoDocumentoExcel
     {

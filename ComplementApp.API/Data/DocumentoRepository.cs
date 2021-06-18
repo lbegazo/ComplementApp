@@ -252,7 +252,6 @@ namespace ComplementApp.API.Data
             return listaCDP;
         }
 
-
         private List<CDP> obtenerListaCdpConTercero(IList<CDPDto> lista)
         {
 

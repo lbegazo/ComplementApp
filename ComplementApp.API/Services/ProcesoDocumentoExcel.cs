@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using Microsoft.Extensions.Configuration;
 using ComplementApp.API.Data;
-using ComplementApp.API.Interfaces;
 using System.Net;
 using ComplementApp.API.Models;
 using ComplementApp.API.Interfaces.Repository;
+using ComplementApp.API.Interfaces.Service;
 
 namespace ComplementApp.API.Services
 {
@@ -21,17 +21,13 @@ namespace ComplementApp.API.Services
 
         private readonly IDocumentoRepository _repo;
         private readonly DataContext _dataContext;
-
         const int maxLongitudDetalle = 250;
         const int numeroColumnasCabecera = 27;
         const int numeroColumnasDetalle = 25;
         const int numeroColumnasPlanPago = 29;
-
         const string nombreHojaCabecera = "BD";
         const string nombreHojaDetalle = "DetallePresup";
-
         const string nombreHojaPlanPago = "PlanesPago";
-
         private IConfiguration _configuration { get; }
 
         #endregion Propiedades

@@ -6,12 +6,12 @@ using ComplementApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
-using ComplementApp.API.Interfaces;
 using ComplementApp.API.Interfaces.Repository;
+using ComplementApp.API.Interfaces.Service;
 
 namespace ComplementApp.API.Controllers
 {
-    
+
     public class DocumentoController : BaseApiController
     {
 
@@ -24,8 +24,6 @@ namespace ComplementApp.API.Controllers
         const string nombreHojaDetalle = "DetallePresup";
 
         const string nombreHojaPlanPago = "PlanesPago";
-
-
 
         #endregion Propiedades
 
