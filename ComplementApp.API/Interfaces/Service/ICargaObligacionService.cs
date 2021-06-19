@@ -12,6 +12,6 @@ namespace ComplementApp.API.Interfaces.Service
 
         DataTable ObtenerInformacionDeExcel(IFormFile file);
 
-        List<CargaObligacion> ObtenerListaCargaObligacion(DataTable dt);
+        List<CargaObligacion> ObtenerListaCargaObligacion(int pciId, DataTable dt);
     }
 }

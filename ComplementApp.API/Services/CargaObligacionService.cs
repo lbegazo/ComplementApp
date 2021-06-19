@@ -88,7 +88,7 @@ namespace ComplementApp.API.Services
         }
 
 
-        public List<CargaObligacion> ObtenerListaCargaObligacion(DataTable dt)
+        public List<CargaObligacion> ObtenerListaCargaObligacion(int pciId, DataTable dt)
         {
             CargaObligacion documento = null;
             List<CargaObligacion> listaDocumento = new List<CargaObligacion>();
@@ -96,6 +96,7 @@ namespace ComplementApp.API.Services
             int numValue = 0;
             decimal value = 0;
             DateTime fecha;
+            string valor = string.Empty;
 
             foreach (var row in dt.Rows)
             {
@@ -124,21 +125,30 @@ namespace ComplementApp.API.Services
 
                 //ValorActual
                 if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[4].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorActual = value;
+                }
 
                 //ValorDeduccion
                 if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorDeduccion = value;
+                }
 
                 //ValorObligadoNoOrdenado
                 if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorObligadoNoOrdenado = value;
+                }
 
                 //TipoIdentificacion
                 documento.TipoIdentificacion = (row as DataRow).ItemArray[7].ToString().Trim();
@@ -177,27 +187,39 @@ namespace ComplementApp.API.Services
 
                 //ValorInicial
                 if (!(row as DataRow).ItemArray[20].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[20].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorInicial = value;
+                }
 
                 //ValorOperacion
                 if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[21].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorOperacion = value;
+                }
 
                 //ValorActual2
                 if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[22].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorActual2 = value;
+                }
 
                 //SaldoPorUtilizar
                 if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[23].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.SaldoPorUtilizar = value;
+                }
 
                 //FuenteFinanciacion
                 documento.FuenteFinanciacion = (row as DataRow).ItemArray[24].ToString();
@@ -267,6 +289,7 @@ namespace ComplementApp.API.Services
 
                 //ObjetoCompromiso
                 documento.ObjetoCompromiso = (row as DataRow).ItemArray[39].ToString();
+                documento.PciId = pciId;
 
                 listaDocumento.Add(documento);
             }

@@ -4,6 +4,7 @@ export interface Cdp {
   cdp: number;
   crp: number;
   ordenPago: number;
+  obligacion: number;
   numeroDocumento: number;
 
   fecha: Date;
@@ -26,6 +27,8 @@ export interface Cdp {
 
   numeroIdentificacionTercero: string;
   nombreTercero: string;
+  identificacionRubro: string;
+  nombreRubro: string;
 
   formatoSolicitudPagoId: number;
   planPagoId: number;

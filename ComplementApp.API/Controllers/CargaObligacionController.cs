@@ -2,25 +2,46 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Threading.Tasks;
+using AutoMapper;
 using ComplementApp.API.Data;
+using ComplementApp.API.Dtos;
+using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ComplementApp.API.Controllers
 {
     public class CargaObligacionController : BaseApiController
     {
+        #region Variable
+
+        int pciId = 0;
+        string valorPciId = string.Empty;
+
+        #endregion 
+
+        #region Dependency Injection
+
         private readonly DataContext _dataContext;
         private readonly ICargaObligacionService _cargaService;
         private readonly ICargaObligacionRepository _repo;
-        public CargaObligacionController(DataContext dataContext, ICargaObligacionService cargaService, ICargaObligacionRepository repo)
+
+        private readonly IMapper _mapper;
+        #endregion Dependency Injection
+
+        public CargaObligacionController(DataContext dataContext, ICargaObligacionService cargaService,
+        ICargaObligacionRepository repo, IMapper mapper)
+
         {
             _repo = repo;
             _cargaService = cargaService;
             _dataContext = dataContext;
+            _mapper = mapper;
 
         }
 
@@ -31,6 +52,12 @@ namespace ComplementApp.API.Controllers
 
             if (Request.Form.Files.Count > 0)
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 using var transaction = _dataContext.Database.BeginTransaction();
 
                 try
@@ -51,7 +78,7 @@ namespace ComplementApp.API.Controllers
 
                     #region Mapear datos en la lista de Dtos
 
-                    List<CargaObligacion> listaDocumento = _cargaService.ObtenerListaCargaObligacion(dtCabecera);
+                    List<CargaObligacion> listaDocumento = _cargaService.ObtenerListaCargaObligacion(pciId, dtCabecera);
                     #endregion
 
                     var result = _repo.EliminarCargaObligacion();
@@ -80,5 +107,25 @@ namespace ComplementApp.API.Controllers
             return Ok();
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaCargaObligacion([FromQuery] string estado,
+                                                                     [FromQuery] UserParams userParams)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
+            var pagedList = await _repo.ObtenerListaCargaObligacion(estado, userParams);
+            var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
     }
 }

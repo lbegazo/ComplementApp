@@ -14,51 +14,85 @@ namespace ComplementApp.API.Data
     {
         public static void CargarDataInicial(DataContext context)
         {
-            SeedParametroSistema(context);
-            SeedPci(context);
+            SeedPosicionPac(context);
+            // SeedParametroSistema(context);
+            // SeedPci(context);
 
-            SeedTipoContrato(context);
-            SeedRubroPresupuestal(context);
-            SeedCargo(context);
-            SeedArea(context);
-            SeedTipoOperacion(context);
-            SeedTipoDetalleModificacion(context);
-            SeedEstado(context);
-            SeedTercero(context);
-            SeedActividadGeneral(context);
-            SeedUsoPresupuestal(context);
+            // SeedTipoContrato(context);
+            // SeedRubroPresupuestal(context);
+            // SeedCargo(context);
+            // SeedArea(context);
+            // SeedTipoOperacion(context);
+            // SeedTipoDetalleModificacion(context);
+            // SeedEstado(context);
+            // SeedTercero(context);
+            // SeedActividadGeneral(context);
+            // SeedUsoPresupuestal(context);
 
-            SeedPerfil(context);
-            SeedTransaccion(context);
-            SeedPerfilTransaccion(context);
-            SeedUsuarioPerfil(context);
+            // SeedPerfil(context);
+            // SeedTransaccion(context);
+            // SeedPerfilTransaccion(context);
+            // SeedUsuarioPerfil(context);
 
-            SeedUsuario(context);
-            SeedDependencia(context);
-            SeedActividadEspecifica(context);
+            // SeedUsuario(context);
+            // SeedDependencia(context);
+            // SeedActividadEspecifica(context);
 
-            SeedTipoBaseDeduccion(context);
-            SeedParametroGeneral(context);
-            SeedDeduccion(context);
-            SeedTerceroDeducciones(context);
-            SeedParametroLiquidacionTercero(context);
-            SeedCriterioCalculoReteFuente(context);
+            // SeedTipoBaseDeduccion(context);
+            // SeedParametroGeneral(context);
+            // SeedDeduccion(context);
+            // SeedTerceroDeducciones(context);
+            // SeedParametroLiquidacionTercero(context);
+            // SeedCriterioCalculoReteFuente(context);
 
-            SeedActividadEconomica(context);
-            SeedTipoGasto(context);
-            SeedSituacionFondo(context);
-            SeedFuenteFinanciacion(context);
-            SeedRecursoPresupuestal(context);
-            SeedAtributoContable(context);
+            // SeedActividadEconomica(context);
+            // SeedTipoGasto(context);
+            // SeedSituacionFondo(context);
+            // SeedFuenteFinanciacion(context);
+            // SeedRecursoPresupuestal(context);
+            // SeedAtributoContable(context);
 
-            SeedModalidadContrato(context);
-            SeedTipoDePago(context);
-            SeedTipoIva(context);
-            SeedTipoCuentaXPagar(context);
-            SeedTipoDocumentoSoporte(context);
-            SeedTipoDocumentoIdentidad(context);
+            // SeedModalidadContrato(context);
+            // SeedTipoDePago(context);
+            // SeedTipoIva(context);
+            // SeedTipoCuentaXPagar(context);
+            // SeedTipoDocumentoSoporte(context);
+            // SeedTipoDocumentoIdentidad(context);
 
-            SeedTipoAdminPila(context);
+            // SeedTipoAdminPila(context);
+        }
+
+        private static void SeedPosicionPac(DataContext context)
+        {
+            if (File.Exists("Data/SeedFiles/_NivelAgrupacionPac.json"))
+            {
+                string valor = string.Empty;
+                NivelAgrupacionPac itemNuevo = null;
+
+                var data = File.ReadAllText("Data/SeedFiles/_NivelAgrupacionPac.json");
+                var parametros = JsonConvert.DeserializeObject<List<NivelAgrupacionPacDto>>(data);
+                foreach (var item in parametros)
+                {
+                    var itemBD = obtenerPosicionPac(context, item.Identificacion);
+                    var rubroBD = obtenerRubroPresupuestal(context, item.RubroIdentificacion);
+                    var recursoBD = obtenerRecursoPresupuestal(context, item.REC);
+                    var situacionBD = obtenerSituacionFondo(context, item.SIT);
+                    var fuenteBD = obtenerFuenteFinanciacion(context, item.FTE);
+
+                    if (itemBD == null && rubroBD != null && recursoBD != null && situacionBD != null && fuenteBD != null)
+                    {
+                        itemNuevo = new NivelAgrupacionPac();
+                        itemNuevo.Identificacion = item.Identificacion;
+                        itemNuevo.Nombre = item.Nombre;
+                        itemNuevo.RubroPresupuestalId = rubroBD.RubroPresupuestalId;
+                        itemNuevo.RecursoPresupuestalId = recursoBD.RecursoPresupuestalId;
+                        itemNuevo.FuenteFinanciacionId = fuenteBD.FuenteFinanciacionId;
+                        itemNuevo.SituacionFondoId = situacionBD.SituacionFondoId;
+                        context.NivelAgrupacionPac.Add(itemNuevo);
+                    }
+                }
+                context.SaveChanges();
+            }
         }
 
         private static void SeedParametroSistema(DataContext context)
@@ -144,7 +178,6 @@ namespace ComplementApp.API.Data
         private static void SeedTipoAdminPila(DataContext context)
         {
             TipoAdminPila valor = null;
-            List<TipoAdminPila> lista = new List<TipoAdminPila>();
 
             if (!context.TipoAdminPila.Any())
             {
@@ -167,7 +200,6 @@ namespace ComplementApp.API.Data
         private static void SeedTipoDocumentoIdentidad(DataContext context)
         {
             TipoDocumentoIdentidad valor = null;
-            List<TipoDocumentoIdentidad> lista = new List<TipoDocumentoIdentidad>();
 
             if (!context.TipoDocumentoIdentidad.Any())
             {
@@ -190,7 +222,6 @@ namespace ComplementApp.API.Data
         private static void SeedModalidadContrato(DataContext context)
         {
             TipoModalidadContrato valor = null;
-            List<TipoModalidadContrato> lista = new List<TipoModalidadContrato>();
 
             if (!context.TipoModalidadContrato.Any())
             {
@@ -988,7 +1019,7 @@ namespace ComplementApp.API.Data
         {
             Transaccion tran = null;
             Transaccion tranPapa = null;
-            
+
             //if (!context.Transaccion.Any())
             {
                 if (File.Exists("Data/SeedFiles/_Transaccion.json"))
@@ -1182,6 +1213,26 @@ namespace ComplementApp.API.Data
         private static ParametroSistema obtenerParametroSistema(DataContext context, string nombre)
         {
             return context.ParametroSistema.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
+        }
+
+        private static NivelAgrupacionPac obtenerPosicionPac(DataContext context, string identificacion)
+        {
+            return context.NivelAgrupacionPac.Where(x => x.Identificacion.ToLower() == identificacion.ToLower()).FirstOrDefault();
+        }
+
+        private static RecursoPresupuestal obtenerRecursoPresupuestal(DataContext context, string codigo)
+        {
+            return context.RecursoPresupuestal.Where(x => x.Codigo.ToLower() == codigo.ToLower()).FirstOrDefault();
+        }
+
+        private static SituacionFondo obtenerSituacionFondo(DataContext context, string nombre)
+        {
+            return context.SituacionFondo.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
+        }
+
+        private static FuenteFinanciacion obtenerFuenteFinanciacion(DataContext context, string nombre)
+        {
+            return context.FuenteFinanciacion.Where(x => x.Nombre.ToLower() == nombre.ToLower()).FirstOrDefault();
         }
 
         private static string Encrypt(string clearText)

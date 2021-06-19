@@ -11,5 +11,6 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId);
         Task<CDPDto> ObtenerCDPPorCompromiso(long crp);
         Task<PagedList<CDPDto>> ObtenerDetallePlanAnualAdquisicion(long cdp, int instancia, UserParams userParams);
+        
     }
 }

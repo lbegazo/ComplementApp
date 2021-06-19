@@ -18,5 +18,8 @@ namespace ComplementApp.API.Models
 
         [Required]
         public bool Estado { get; set; }
+
+        [Column(TypeName = "VARCHAR(100)")]
+        public string Nit { get; set; }
     }
 }

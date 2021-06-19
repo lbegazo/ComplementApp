@@ -68,10 +68,10 @@ namespace ComplementApp.API.Models
         public string EntidadDescripcion { get; set; }
 
         [Required]
-        [Column(TypeName = "VARCHAR(3)")]
+        [Column(TypeName = "VARCHAR(20)")]
         public string Dependencia { get; set; }
 
-        [Column(TypeName = "VARCHAR(250)")]
+        [Column(TypeName = "VARCHAR(500)")]
         public string DependenciaDescripcion { get; set; }
 
         [Required]
@@ -107,7 +107,7 @@ namespace ComplementApp.API.Models
         public string RecursoPresupuestal { get; set; }
 
         [Required]
-        [Column(TypeName = "VARCHAR(500)")]
+        [Column(TypeName = "VARCHAR(1000)")]
         public string Concepto { get; set; }
 
         [Required]
@@ -140,6 +140,7 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(500)")]
         public string ObjetoCompromiso { get; set; }
-
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

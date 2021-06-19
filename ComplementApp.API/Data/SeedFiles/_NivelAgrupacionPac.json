@@ -1,0 +1,362 @@
+[
+  {
+    "Identificacion": "1-1-RESTO",
+    "Nombre": "GASTOS DE PERSONAL",
+    "RubroIdentificacion": "A-03-04-02-012",
+    "RubroNombre": "INCAPACIDADES Y LICENCIAS DE MATERNIDAD Y PATERNIDAD (NO DE PENSIONES)",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "1-2-BYS",
+    "Nombre": "BIENES Y SERVICIOS ",
+    "RubroIdentificacion": "A-02-01",
+    "RubroNombre": "ADQUISICIÓN DE ACTIVOS NO FINANCIEROS",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "1-2-BYS",
+    "Nombre": "BIENES Y SERVICIOS ",
+    "RubroIdentificacion": "A-02-02",
+    "RubroNombre": "ADQUISICIONES DIFERENTES DE ACTIVOS",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "1-3-IYM",
+    "Nombre": "IMPUESTOS Y MULTAS",
+    "RubroIdentificacion": "A-08-01",
+    "RubroNombre": "IMPUESTOS",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "1-3-IYM",
+    "Nombre": "IMPUESTOS Y MULTAS",
+    "RubroIdentificacion": "A-08-03",
+    "RubroNombre": "TASAS Y DERECHOS ADMINISTRATIVOS",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "1-3-OTRAS_TRANSFERENCIAS",
+    "Nombre": "OTRAS TRANSFERENCIAS",
+    "RubroIdentificacion": "A-05-01-01",
+    "RubroNombre": "MATERIALES Y SUMINISTROS",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "1-3-OTRAS_TRANSFERENCIAS",
+    "Nombre": "OTRAS TRANSFERENCIAS",
+    "RubroIdentificacion": "A-05-01-02",
+    "RubroNombre": "ADQUISICIÓN DE SERVICIOS",
+    "REC": "10",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2106-1900-7",
+    "RubroNombre": "AMPLIACIÓN DEL CONOCIMIENTO DEL POTENCIAL MINERAL EN EL TERRITORIO  NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2106-1900-9",
+    "RubroNombre": "INVESTIGACIÓN MONITOREO Y EVALUACIÓN DE AMENAZAS GEOLÓGICAS DEL TERRITORIO  NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2106-1900-10",
+    "RubroNombre": "INVESTIGACIÓN Y DESARROLLO GEOCIENTÍFICO DE HIDROCARBUROS EN EL TERRITORIO  NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2106-1900-11",
+    "RubroNombre": "CONTRIBUCIÓN AL DESARROLLO DE LA GESTIÓN Y SEGURIDAD RADIOLÓGICA, NUCLEAR E ISOTÓPICA DE LOS LABORATORIOS E INSTALACIONES DEL SERVICIO GEOLÓGICO COLOMBIANO.  BOGOTÁ",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2199-1900-4",
+    "RubroNombre": "FORTALECIMIENTO DE LA GESTIÓN ESTRATÉGICA INTEGRAL DEL SERVICIO GEOLÓGICO COLOMBIANO A NIVEL  NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2199-1900-6",
+    "RubroNombre": "MODERNIZACIÓN DE LOS DATACENTER PRINCIPAL Y ALTERNO DEL SERVICIO GEOLÓGICO COLOMBIANO  NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-FUNCIONAMIENTO",
+    "Nombre": "FUNCIONAMIENTO",
+    "RubroIdentificacion": "C-2199-1900-7",
+    "RubroNombre": "FORMACIÓN Y DESARROLLO DEL TALENTO HUMANO DEL SERVICIO GEOLÓGICO COLOMBIANO A NIVEL NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-MENOR_CUANTIA",
+    "Nombre": "MENOR CUANTIA",
+    "RubroIdentificacion": "C-2199-1900-8",
+    "RubroNombre": "MODERNIZACIÓN DEL SISTEMA DE GESTIÓN Y CONTROL DE INVENTARIOS Y ALMACÉN A NIVEL NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-MENOR_CUANTIA",
+    "Nombre": "MENOR CUANTIA",
+    "RubroIdentificacion": "C-2106-1900-15",
+    "RubroNombre": "MODERNIZACIÓN DE LOS SERVICIOS DE MUSEO GEOLÓGICO E INVESTIGACIONES ASOCIADAS A NIVEL NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-MENOR_CUANTIA",
+    "Nombre": "MENOR CUANTIA",
+    "RubroIdentificacion": "C-2199-1900-3",
+    "RubroNombre": "FORTALECIMIENTO INSTITUCIONAL DEL SERVICIO GEOLÓGICO COLOMBIANO A NIVEL   NACIONAL ",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "3-8-MENOR_CUANTIA",
+    "Nombre": "MENOR CUANTIA",
+    "RubroIdentificacion": "C-2106-1900-6",
+    "RubroNombre": "FORTALECIMIENTO DE LA INVESTIGACIÓN Y CARACTERIZACIÓN DE MATERIALES GEOLÓGICOS EN TERRITORIO  NACIONAL",
+    "REC": "11",
+    "SIT": "CSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "4-32-CA",
+    "Nombre": "CUOTA AUDITAJE",
+    "RubroIdentificacion": "A-08-04-01",
+    "RubroNombre": "CUOTA DE FISCALIZACIÓN Y AUDITAJE",
+    "REC": "11",
+    "SIT": "SSF",
+    "FTE": "Nación"
+  },
+  {
+    "Identificacion": "7-Feb",
+    "Nombre": "GASTOS GENERALES PROPIOS CSF",
+    "RubroIdentificacion": "A-02-02",
+    "RubroNombre": "ADQUISICIONES DIFERENTES DE ACTIVOS",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Mar",
+    "Nombre": "TRANSFERENCIAS CTES  Y CAPITAL PROPIOS CSF",
+    "RubroIdentificacion": "A-08-01",
+    "RubroNombre": "IMPUESTOS",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Mar",
+    "Nombre": "TRANSFERENCIAS CTES  Y CAPITAL PROPIOS CSF",
+    "RubroIdentificacion": "A-03-10-01-001",
+    "RubroNombre": "SENTENCIAS",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Mar",
+    "Nombre": "TRANSFERENCIAS CTES  Y CAPITAL PROPIOS CSF",
+    "RubroIdentificacion": "A-03-10-01-002",
+    "RubroNombre": "CONCILIACIONES",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Mar",
+    "Nombre": "TRANSFERENCIAS CTES  Y CAPITAL PROPIOS CSF",
+    "RubroIdentificacion": "A-03-03-01-999",
+    "RubroNombre": "OTRAS TRANSFERENCIAS - DISTRIBUCIÓN PREVIO CONCEPTO DGPPN",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Apr",
+    "Nombre": "GTOS COMERCIALIZACION Y PROD. PROPIOS CSF",
+    "RubroIdentificacion": "A-05-01-02",
+    "RubroNombre": "ADQUISICIÓN DE SERVICIOS",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Apr",
+    "Nombre": "GTOS COMERCIALIZACION Y PROD. PROPIOS CSF",
+    "RubroIdentificacion": "A-05-01-02",
+    "RubroNombre": "ADQUISICIÓN DE SERVICIOS",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Apr",
+    "Nombre": "GTOS COMERCIALIZACION Y PROD. PROPIOS CSF",
+    "RubroIdentificacion": "A-05-01-01",
+    "RubroNombre": "MATERIALES Y SUMINISTROS",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "7-Apr",
+    "Nombre": "GTOS COMERCIALIZACION Y PROD. PROPIOS CSF",
+    "RubroIdentificacion": "A-05-01-01",
+    "RubroNombre": "MATERIALES Y SUMINISTROS",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-6",
+    "RubroNombre": "FORTALECIMIENTO DE LA INVESTIGACIÓN Y CARACTERIZACIÓN DE MATERIALES GEOLÓGICOS EN TERRITORIO  NACIONAL",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-11",
+    "RubroNombre": "CONTRIBUCIÓN AL DESARROLLO DE LA GESTIÓN Y SEGURIDAD RADIOLÓGICA, NUCLEAR E ISOTÓPICA DE LOS LABORATORIOS E INSTALACIONES DEL SERVICIO GEOLÓGICO COLOMBIANO.  BOGOTÁ",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2199-1900-6",
+    "RubroNombre": "MODERNIZACIÓN DE LOS DATACENTER PRINCIPAL Y ALTERNO DEL SERVICIO GEOLÓGICO COLOMBIANO  NACIONAL",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-14",
+    "RubroNombre": "FORTALECIMIENTO  DE LA GESTIÓN DE LA INFORMACIÓN GEOCIENTÍFICA DEL BANCO DE INFORMACIÓN PETROLERA - BIP A NIVEL  NACIONAL",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-14",
+    "RubroNombre": "FORTALECIMIENTO  DE LA GESTIÓN DE LA INFORMACIÓN GEOCIENTÍFICA DEL BANCO DE INFORMACIÓN PETROLERA - BIP A NIVEL  NACIONAL",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-10",
+    "RubroNombre": "INVESTIGACIÓN Y DESARROLLO GEOCIENTÍFICO DE HIDROCARBUROS EN EL TERRITORIO  NACIONAL",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-9",
+    "RubroNombre": "INVESTIGACIÓN MONITOREO Y EVALUACIÓN DE AMENAZAS GEOLÓGICAS DEL TERRITORIO  NACIONAL",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-9",
+    "RubroNombre": "INVESTIGACIÓN MONITOREO Y EVALUACIÓN DE AMENAZAS GEOLÓGICAS DEL TERRITORIO  NACIONAL",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-7",
+    "RubroNombre": "AMPLIACIÓN DEL CONOCIMIENTO DEL POTENCIAL MINERAL EN EL TERRITORIO  NACIONAL",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-8",
+    "RubroNombre": "AMPLIACIÓN DEL CONOCIMIENTO GEOCIENTÍFICO BÁSICO DEL TERRITORIO  NACIONAL",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-8",
+    "RubroNombre": "AMPLIACIÓN DEL CONOCIMIENTO GEOCIENTÍFICO BÁSICO DEL TERRITORIO  NACIONAL",
+    "REC": "21",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  },
+  {
+    "Identificacion": "9-Jan",
+    "Nombre": "INVERSION PROPIOS CSF",
+    "RubroIdentificacion": "C-2106-1900-15",
+    "RubroNombre": "MODERNIZACIÓN DE LOS SERVICIOS DE MUSEO GEOLÓGICO E INVESTIGACIONES ASOCIADAS A NIVEL NACIONAL",
+    "REC": "20",
+    "SIT": "CSF",
+    "FTE": "Propios"
+  }
+]

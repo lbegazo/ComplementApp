@@ -4,10 +4,8 @@ import { Cdp } from '../_models/cdp';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { DetalleCDP } from '../_models/detalleCDP';
-import { SolicitudCDP } from '../_models/solicitudCDP';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/Operators';
-import { SolicitudCDPDto } from '../_models/solicitudCDPDto';
 
 @Injectable({
   providedIn: 'root',

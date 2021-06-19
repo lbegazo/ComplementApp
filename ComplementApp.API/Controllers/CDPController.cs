@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,7 +10,6 @@ using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers

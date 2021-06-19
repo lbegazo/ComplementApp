@@ -1,11 +1,161 @@
 <div class="container mt-3">
   <div class="row no-gutters">
     <div class="col-12">
-      <h2 class="text-center text-primary">{{nombreTransaccion}}</h2>
+      <h2 class="text-center text-primary">{{ nombreTransaccion }}</h2>
       <hr />
     </div>
   </div>
-  <div class="row no-gutters">
+</div>
+
+<form [formGroup]="facturaHeaderForm" *ngIf="!mostrarActualizarInformacion">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Obligación</label>
+                </div>
+                <div style="width: 15%" class="inner center">
+                  <label class="col-form-label-md">Identificación</label>
+                </div>
+                <div style="width: 25%" class="inner center">
+                  <label class="col-form-label-md">Tercero</label>
+                </div>
+                <div style="width: 15%" class="inner center">
+                  <label class="col-form-label-md">Código</label>
+                </div>
+                <div style="width: 20%" class="inner center">
+                  <label class="col-form-label-md">Rubro Presupuestal</label>
+                </div>
+                <div style="width: 15%" class="inner right">
+                  <label class="col-form-label-md">Valor</label>
+                </div>
+              </div>
+              <div *ngIf="listaPlanPago">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaPlanPago; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>{{ item?.obligacion }}</p>
+                    </div>
+                    <div
+                      style="width: 15%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>{{ item?.numeroIdentificacionTercero }}</p>
+                    </div>
+                    <div style="width: 25%" class="inner left aplicaBackground">
+                      <p>
+                        {{
+                          item?.nombreTercero.length > 50
+                            ? (item?.nombreTercero | slice: 0:50) + ".."
+                            : item?.nombreTercero
+                        }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 15%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.identificacionRubro }}
+                      </p>
+                    </div>
+                    <div style="width: 20%" class="inner left aplicaBackground">
+                      <p>
+                        {{
+                          item?.nombreRubro.length > 50
+                            ? (item?.nombreRubro | slice: 0:50) + ".."
+                            : item?.nombreRubro
+                        }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 15%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.valorInicial | number: "1.2-2" }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    (click)="mostrarActualizarInformacion = true"
+                  >
+                    Actualizar la información
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary ml-2"
+                    (click)="DescargarArchivoDetalleLiquidacion()"
+                  >
+                    Descargar archivos
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="container mt-3">  
+  <div class="row no-gutters" *ngIf="mostrarActualizarInformacion">
     <div class="col-md-3">
       <h3>Seleccionar el archivo</h3>
 
@@ -25,20 +175,20 @@
         ng2FileSelect
         [uploader]="uploader"
         multiple
-        style="display: none;"
+        style="display: none"
       /><br />
 
       <input
         type="file"
         ng2FileSelect
         [uploader]="uploader"
-        style="display: none;"
+        style="display: none"
       />
     </div>
 
     <div
       class="col-md-9"
-      style="margin-bottom: 40px;"
+      style="margin-bottom: 40px"
       *ngIf="uploader?.queue?.length"
     >
       <h3>Archivo</h3>
@@ -78,7 +228,7 @@
           <div>
             <button
               type="button"
-              class="btn btn-success btn-s  mr-2"
+              class="btn btn-success btn-s mr-2"
               (click)="uploader.uploadAll()"
               [disabled]="!uploader.getNotUploadedItems().length"
             >
@@ -101,3 +251,5 @@
     </div>
   </div>
 </div>
+
+
