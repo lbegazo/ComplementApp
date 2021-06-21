@@ -30,7 +30,7 @@ namespace ComplementApp.API.Data
             // SeedUsoPresupuestal(context);
 
             // SeedPerfil(context);
-            // SeedTransaccion(context);
+             SeedTransaccion(context);
             // SeedPerfilTransaccion(context);
             // SeedUsuarioPerfil(context);
 

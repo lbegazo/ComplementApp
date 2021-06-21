@@ -267,6 +267,44 @@ namespace ComplementApp.API.Data
                                         .ToListAsync();
                         break;
                     }
+                case TipoLista.FuenteFinanciacion:
+                    {
+                        lista = await (from m in _context.FuenteFinanciacion
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.FuenteFinanciacionId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.SituacionFondo:
+                    {
+                        lista = await (from m in _context.SituacionFondo
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.SituacionFondoId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.RecursoPresupuestal:
+                    {
+                        lista = await (from m in _context.RecursoPresupuestal
+                                       select new ValorSeleccion()
+                                       {
+                                           Id = m.RecursoPresupuestalId,
+                                           Codigo = m.Codigo,
+                                           Nombre = m.Nombre,
+                                       }).ToListAsync();
+                        break;
+                    }
+                case TipoLista.MedioPago:
+                    {
+                        lista = ListaMedioPago();
+                        break;
+                    }
                 default: break;
             }
 
@@ -373,8 +411,11 @@ namespace ComplementApp.API.Data
         }
 
         public async Task<IEnumerable<RubroPresupuestal>> ObtenerListaRubroPresupuestal(string identificacion, string nombre)
+
+
         {
             IQueryable<RubroPresupuestal> listaFiltrada = null;
+            var tieneFiltro = false;
 
             var lista = (from d in _context.RubroPresupuestal
                          select new RubroPresupuestal
@@ -387,6 +428,7 @@ namespace ComplementApp.API.Data
 
             if (!string.IsNullOrEmpty(identificacion))
             {
+                tieneFiltro = true;
                 listaFiltrada = (from l in lista
                                  where l.Identificacion.Contains(identificacion)
                                  select l);
@@ -394,12 +436,61 @@ namespace ComplementApp.API.Data
 
             if (!string.IsNullOrEmpty(nombre))
             {
+                tieneFiltro = true;
                 listaFiltrada = (from l in lista
                                  where l.Nombre.Contains(nombre)
                                  select l);
             }
-            return await listaFiltrada.ToListAsync();
+
+            if (tieneFiltro)
+                return await listaFiltrada.ToListAsync();
+            else
+                return await lista.ToListAsync();
         }
 
+        private List<ValorSeleccion> ListaMedioPago()
+        {
+            List<ValorSeleccion> lista = new List<ValorSeleccion>()
+            {
+             new ValorSeleccion()
+             {
+                Id = 1,
+                Codigo="AC",
+                Nombre="Abono en Cuenta",
+             },
+             new ValorSeleccion()
+             {
+                Id = 2,
+                Codigo="AC",
+                Nombre="Entre Entidades CUN",
+             },
+             new ValorSeleccion()
+             {
+                Id = 3,
+                Codigo="GR",
+                Nombre="Giro",
+             },
+             new ValorSeleccion()
+             {
+                Id = 4,
+                Codigo="CH",
+                Nombre="Cheque",
+             },
+             new ValorSeleccion()
+             {
+                Id = 5,
+                Codigo="AC",
+                Nombre="Transpaso a Pagaduria",
+             },
+             new ValorSeleccion()
+             {
+                Id = 5,
+                Codigo="EF",
+                Nombre="Efectivo",
+             },
+            };
+
+            return lista;
+        }
     }
 }

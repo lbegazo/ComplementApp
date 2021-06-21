@@ -7,16 +7,20 @@ using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComplementApp.API.Data
 {
     public class CargaObligacionRepository : ICargaObligacionRepository
     {
         private readonly DataContext _context;
+        private readonly IListaRepository _repoLista;
 
-        public CargaObligacionRepository(DataContext context)
+
+        public CargaObligacionRepository(DataContext context, IListaRepository listaRepository)
         {
             _context = context;
+            _repoLista = listaRepository;
         }
         public bool EliminarCargaObligacion()
         {
@@ -50,6 +54,7 @@ namespace ComplementApp.API.Data
         public async Task<PagedList<CDPDto>> ObtenerListaCargaObligacion(string estado, UserParams userParams)
         {
             var lista = (from c in _context.CargaObligacion
+                         join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
                          where c.Estado.ToLower() == estado.ToLower()
                          where c.PciId == userParams.PciId
                          select new CDPDto()
@@ -59,12 +64,134 @@ namespace ComplementApp.API.Data
                              ValorInicial = c.ValorActual2,
                              NumeroIdentificacionTercero = c.NumeroIdentificacion,
                              NombreTercero = c.NombreRazonSocial,
-                             IdentificacionRubro = c.RubroIdentificacion,
-                             NombreRubro = c.RubroDescripcion,
+                             IdentificacionRubro = rp.Identificacion,
+                             NombreRubro = rp.Nombre,
                          })
                          .Distinct();
 
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<ICollection<CargaObligacionDto>> ObtenerListaCargaObligacionArchivoCabecera(int usuarioId, string estado, int pciId)
+        {
+            var usuario = (from u in _context.Usuario
+                           join c in _context.Cargo on u.CargoId equals c.CargoId
+                           where u.UsuarioId == usuarioId
+                           select new
+                           {
+                               Nombres = u.Nombres,
+                               Apellidos = u.Apellidos,
+                               CargoDescripcion = c.Nombre,
+                           }
+                          ).FirstOrDefault();
+
+            var pci = (from p in _context.Pci
+                       where p.PciId == pciId
+                       select p).FirstOrDefault();
+
+            var lista = await (from co in _context.CargaObligacion
+                               join rp in _context.RubroPresupuestal on co.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join nap in _context.NivelAgrupacionPac on new
+                               {
+                                   RubroPresupuestalId = rp.PadreRubroId.Value,
+                                   SituacionFondoId = co.SituacionFondoId.Value,
+                                   FuenteFinanciacionId = co.FuenteFinanciacionId.Value,
+                                   RecursoPresupuestalId = co.RecursoPresupuestalId.Value,
+                                   pci = co.PciId
+                               } equals
+                                new
+                                {
+                                    RubroPresupuestalId = nap.RubroPresupuestalId,
+                                    SituacionFondoId = nap.SituacionFondoId,
+                                    FuenteFinanciacionId = nap.FuenteFinanciacionId,
+                                    RecursoPresupuestalId = nap.RecursoPresupuestalId,
+                                    pci = nap.PciId
+                                }
+                               where co.PciId == pciId
+                               where co.Estado.ToLower() == estado.ToLower()
+
+                               select new CargaObligacionDto()
+                               {
+                                   FechaRegistro = co.FechaRegistro,
+                                   FechaPago = co.FechaRegistro,
+                                   FechaLimitePago = System.DateTime.Now.AddDays(2),
+                                   Obligacion = co.Obligacion,
+                                   ValorActual = co.ValorActual,
+                                   CodigoTipoBeneficiario = (pci.Nit == co.NumeroIdentificacion) ? "P" : "B",
+                                   MedioPago = (co.MedioPago.ToLower() == "abono en cuenta") ? ("AC") :
+                                                (((co.MedioPago.ToLower() == "giro") ? ("GR") :
+                                                (((co.MedioPago.ToLower() == "cheque") ? ("CH") :
+                                                (((co.MedioPago.ToLower() == "efectivo") ? ("EF") : (string.Empty))))))),
+                                   CodigoPosicionPac = nap.Identificacion,
+                                   CodigoDependenciaAfectacionPac = nap.DependenciaAfectacionPAC,
+                                   CodigoPciTesoreria = nap.IdentificacionTesoreria,
+                                   Tercero = new TerceroDto()
+                                   {
+                                       TipoDocumentoIdentidad = co.TipoIdentificacion,
+                                       NumeroIdentificacion = co.NumeroIdentificacion,
+                                       Nombre = co.NombreRazonSocial
+                                   },
+                                   Pci = new Pci()
+                                   {
+                                       Identificacion = pci.Identificacion,
+                                   },
+                                   NumeroCuenta = co.NumeroCuenta,
+                                   TipoCuenta = co.TipoCuenta.ToLower() == "ahorro" ? "AHR" : "CRR",
+                                   TipoDocSoporteCompromiso = co.TipoDocSoporteCompromiso,
+                                   NumeroDocSoporteCompromiso = co.NumeroDocSoporteCompromiso,
+                                   FechaDocSoporteCompromiso = co.FechaDocSoporteCompromiso,
+                                   NombreFuncionario = usuario.Nombres + " " + usuario.Apellidos,
+                                   CargoFuncionario = usuario.CargoDescripcion,
+                                   ObjetoCompromiso = co.ObjetoCompromiso,
+                               })
+                               .Distinct()
+                               .ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<ICollection<CargaObligacionDto>> ObtenerListaCargaObligacionArchivoDetalle(string estado, int pciId)
+        {
+            var lista = await (from co in _context.CargaObligacion
+                               join rp in _context.RubroPresupuestal on co.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join ff in _context.FuenteFinanciacion on co.FuenteFinanciacionId equals ff.FuenteFinanciacionId
+                               join sf in _context.SituacionFondo on co.SituacionFondoId equals sf.SituacionFondoId
+                               join re in _context.RecursoPresupuestal on co.RecursoPresupuestalId equals re.RecursoPresupuestalId
+                               where co.PciId == pciId
+                               where co.Estado.ToLower() == estado.ToLower()
+                               select new CargaObligacionDto()
+                               {
+                                   Obligacion = co.Obligacion,
+                                   CargaObligacionId = co.CargaObligacionId,
+                                   Dependencia = co.Dependencia,
+                                   ValorActual2 = co.ValorActual2,
+                                   RubroPresupuestal = new RubroPresupuestalDto()
+                                   {
+                                       Identificacion = rp.Identificacion
+                                   },
+                                   FuenteFinanciacion = new FuenteFinanciacion()
+                                   {
+                                       Codigo = ff.Codigo
+                                   },
+                                   SituacionFondo = new SituacionFondo()
+                                   {
+                                       Codigo = sf.Codigo
+                                   },
+                                   RecursoPresupuestal = new RecursoPresupuestal()
+                                   {
+                                       Codigo = re.Codigo
+                                   }
+                               })
+                               .Distinct()
+                               .ToListAsync();
+
+            return lista;
+        }
+
+        private string ObtenerMedioPago(string nombre, List<ValorSeleccion> lista)
+        {
+            var medioPago = lista.Where(m => m.Nombre == nombre.ToLower()).FirstOrDefault();
+            return medioPago.Codigo;
         }
     }
 }

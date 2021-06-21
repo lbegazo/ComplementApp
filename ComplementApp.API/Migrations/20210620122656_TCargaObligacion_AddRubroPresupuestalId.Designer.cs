@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210620122656_TCargaObligacion_AddRubroPresupuestalId")]
+    partial class TCargaObligacion_AddRubroPresupuestalId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,8 +338,9 @@ namespace ComplementApp.API.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FuenteFinanciacionId")
-                        .HasColumnType("int");
+                    b.Property<string>("FuenteFinanciacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("MedioPago")
                         .IsRequired()
@@ -373,11 +376,20 @@ namespace ComplementApp.API.Migrations
                     b.Property<int?>("PciId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RecursoPresupuestalId")
-                        .HasColumnType("int");
+                    b.Property<string>("RecursoPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<string>("Reintegro")
                         .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("RubroDescripcion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("RubroIdentificacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<int?>("RubroPresupuestalId")
                         .HasColumnType("int");
@@ -385,8 +397,9 @@ namespace ComplementApp.API.Migrations
                     b.Property<decimal>("SaldoPorUtilizar")
                         .HasColumnType("decimal(30,8)");
 
-                    b.Property<int?>("SituacionFondoId")
-                        .HasColumnType("int");
+                    b.Property<string>("SituacionFondo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<int>("SolicitudCdp")
                         .HasColumnType("int");
@@ -422,15 +435,9 @@ namespace ComplementApp.API.Migrations
 
                     b.HasKey("CargaObligacionId");
 
-                    b.HasIndex("FuenteFinanciacionId");
-
                     b.HasIndex("PciId");
 
-                    b.HasIndex("RecursoPresupuestalId");
-
                     b.HasIndex("RubroPresupuestalId");
-
-                    b.HasIndex("SituacionFondoId");
 
                     b.ToTable("TCargaObligacion");
                 });
@@ -2569,35 +2576,17 @@ namespace ComplementApp.API.Migrations
 
             modelBuilder.Entity("ComplementApp.API.Models.CargaObligacion", b =>
                 {
-                    b.HasOne("ComplementApp.API.Models.FuenteFinanciacion", "FuenteFinanciacion")
-                        .WithMany()
-                        .HasForeignKey("FuenteFinanciacionId");
-
                     b.HasOne("ComplementApp.API.Models.Pci", "Pci")
                         .WithMany()
                         .HasForeignKey("PciId");
-
-                    b.HasOne("ComplementApp.API.Models.RecursoPresupuestal", "RecursoPresupuestal")
-                        .WithMany()
-                        .HasForeignKey("RecursoPresupuestalId");
 
                     b.HasOne("ComplementApp.API.Models.RubroPresupuestal", "RubroPresupuestal")
                         .WithMany()
                         .HasForeignKey("RubroPresupuestalId");
 
-                    b.HasOne("ComplementApp.API.Models.SituacionFondo", "SituacionFondo")
-                        .WithMany()
-                        .HasForeignKey("SituacionFondoId");
-
-                    b.Navigation("FuenteFinanciacion");
-
                     b.Navigation("Pci");
 
-                    b.Navigation("RecursoPresupuestal");
-
                     b.Navigation("RubroPresupuestal");
-
-                    b.Navigation("SituacionFondo");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.ClavePresupuestalContable", b =>

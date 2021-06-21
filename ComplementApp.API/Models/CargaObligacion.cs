@@ -74,14 +74,6 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "VARCHAR(500)")]
         public string DependenciaDescripcion { get; set; }
 
-        [Required]
-        [Column(TypeName = "VARCHAR(100)")]
-        public string RubroIdentificacion { get; set; }
-
-        [Required]
-        [Column(TypeName = "VARCHAR(250)")]
-        public string RubroDescripcion { get; set; }
-
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorInicial { get; set; }
 
@@ -92,19 +84,7 @@ namespace ComplementApp.API.Models
         public decimal ValorActual2 { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
-        public decimal SaldoPorUtilizar { get; set; }
-
-        [Required]
-        [Column(TypeName = "VARCHAR(50)")]
-        public string FuenteFinanciacion { get; set; }
-
-        [Required]
-        [Column(TypeName = "VARCHAR(50)")]
-        public string SituacionFondo { get; set; }
-
-        [Required]
-        [Column(TypeName = "VARCHAR(100)")]
-        public string RecursoPresupuestal { get; set; }
+        public decimal SaldoPorUtilizar { get; set; }        
 
         [Required]
         [Column(TypeName = "VARCHAR(1000)")]
@@ -142,5 +122,16 @@ namespace ComplementApp.API.Models
         public string ObjetoCompromiso { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+        public int? RubroPresupuestalId { get; set; }
+        public RubroPresupuestal RubroPresupuestal { get; set; }
+
+        public int? FuenteFinanciacionId { get; set; }
+        public FuenteFinanciacion FuenteFinanciacion { get; set; }
+        
+        public int? SituacionFondoId { get; set; }
+        public SituacionFondo SituacionFondo { get; set; }
+
+        public int? RecursoPresupuestalId { get; set; }
+        public RecursoPresupuestal RecursoPresupuestal { get; set; }
     }
 }

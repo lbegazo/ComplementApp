@@ -92,7 +92,7 @@ namespace ComplementApp.API.Data
                               ValorTotal = grp.Sum(i => i.ValorTotal),
                               TerceroId = grp.Key.TerceroId,
                           })
-                                      .OrderBy(x => x.Crp);
+                            .OrderBy(x => x.Crp);
 
             return await PagedList<CDPDto>.CreateAsync(lista1, userParams.PageNumber, userParams.PageSize);
         }

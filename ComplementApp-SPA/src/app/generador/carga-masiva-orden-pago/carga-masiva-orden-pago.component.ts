@@ -8,6 +8,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
 import { CargaObligacionService } from 'src/app/_services/cargaObligacion.service';
 import { Cdp } from 'src/app/_models/cdp';
+import { TipoArchivoObligacion } from 'src/app/_models/enum';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-carga-masiva-orden-pago',
@@ -135,7 +137,72 @@ export class CargaMasivaOrdenPagoComponent implements OnInit {
     this.onBuscarFactura();
   }
 
-  DescargarArchivoDetalleLiquidacion() {}
+  descargarArchivo(response) {
+    let fileName = '';
+    switch (response.type) {
+      case HttpEventType.Response:
+        if (response.body !== null) {
+          const downloadedFile = new Blob([response.body], {
+            type: response.body.type,
+          });
+
+          const nombreArchivo = response.headers.get('filename');
+
+          if (nombreArchivo != null && nombreArchivo.length > 0) {
+            fileName = nombreArchivo + '.txt';
+          }
+
+          const a = document.createElement('a');
+          a.setAttribute('style', 'display:none;');
+          document.body.appendChild(a);
+          a.download = fileName;
+          a.href = URL.createObjectURL(downloadedFile);
+          a.target = '_blank';
+          a.click();
+          document.body.removeChild(a);
+        }
+        break;
+    }
+  }
+
+  public DescargarArchivoDetalleLiquidacion() {
+
+    //#region Cabecera
+
+    let tipoArchivoObligacion = TipoArchivoObligacion.Cabecera.value;
+
+    this.cargaObligacionService
+      .DescargarArchivoCargaObligacion(tipoArchivoObligacion, 'Generada')
+      .subscribe(
+        (response) => {
+          this.descargarArchivo(response);
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          //#region Item
+
+          tipoArchivoObligacion = TipoArchivoObligacion.Item.value;
+
+          this.cargaObligacionService
+            .DescargarArchivoCargaObligacion(tipoArchivoObligacion, 'Generada')
+            .subscribe(
+              (response) => {
+                this.descargarArchivo(response);
+              },
+              (error) => {
+                this.alertify.warning(error);
+              },
+              () => {}
+            );
+
+          //#endregion Item
+        }
+      );
+
+    //#endregion Cabecera
+  }
 
   onSuccessItem(
     item: FileItem,

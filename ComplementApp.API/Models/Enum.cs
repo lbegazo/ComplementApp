@@ -90,6 +90,10 @@ namespace ComplementApp.API.Models
         Pci = 9,
         Dependencia = 10,
         Usuario = 11,
+        FuenteFinanciacion = 12,
+        SituacionFondo = 13,
+        RecursoPresupuestal = 14,
+        MedioPago=15,
     }
 
     public enum TipoOperacionTransaccion

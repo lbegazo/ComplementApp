@@ -13,13 +13,15 @@ using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text;
+using System.Linq;
 
 namespace ComplementApp.API.Controllers
 {
     public class CargaObligacionController : BaseApiController
     {
         #region Variable
-
+        int usuarioId = 0;
         int pciId = 0;
         string valorPciId = string.Empty;
 
@@ -30,14 +32,16 @@ namespace ComplementApp.API.Controllers
         private readonly DataContext _dataContext;
         private readonly ICargaObligacionService _cargaService;
         private readonly ICargaObligacionRepository _repo;
-
+        private readonly IGeneralInterface _generalInterface;
         private readonly IMapper _mapper;
         #endregion Dependency Injection
 
+
         public CargaObligacionController(DataContext dataContext, ICargaObligacionService cargaService,
-        ICargaObligacionRepository repo, IMapper mapper)
+        ICargaObligacionRepository repo, IMapper mapper, IGeneralInterface generalInterface)
 
         {
+            _generalInterface = generalInterface;
             _repo = repo;
             _cargaService = cargaService;
             _dataContext = dataContext;
@@ -47,9 +51,8 @@ namespace ComplementApp.API.Controllers
 
         [HttpPost]
         [Route("upload")]
-        public IActionResult RegistrarCargaObligacion()
+        public async Task<IActionResult> RegistrarCargaObligacion()
         {
-
             if (Request.Form.Files.Count > 0)
             {
                 valorPciId = User.FindFirst(ClaimTypes.Role).Value;
@@ -78,7 +81,7 @@ namespace ComplementApp.API.Controllers
 
                     #region Mapear datos en la lista de Dtos
 
-                    List<CargaObligacion> listaDocumento = _cargaService.ObtenerListaCargaObligacion(pciId, dtCabecera);
+                    List<CargaObligacion> listaDocumento = await _cargaService.ObtenerListaCargaObligacion(pciId, dtCabecera);
                     #endregion
 
                     var result = _repo.EliminarCargaObligacion();
@@ -106,9 +109,9 @@ namespace ComplementApp.API.Controllers
 
             return Ok();
         }
-
-        [Route("[action]")]
+        
         [HttpGet]
+        [Route("[action]")]
         public async Task<IActionResult> ObtenerListaCargaObligacion([FromQuery] string estado,
                                                                      [FromQuery] UserParams userParams)
         {
@@ -127,5 +130,98 @@ namespace ComplementApp.API.Controllers
 
             return base.Ok(listaDto);
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<IActionResult> DescargarArchivoCargaObligacion([FromQuery] int? tipoArchivoId,
+                                                                         [FromQuery] string estado
+                                                                                )
+        {
+            #region Variables
+
+            List<int> listaIds = new List<int>();
+            string cadena = string.Empty;
+            string nombreArchivo = string.Empty;
+            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
+            // int consecutivo = 0;
+
+            #endregion Variables
+
+            try
+            {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
+                switch (tipoArchivoId)
+                {
+                    case (int)TipoArchivoObligacion.Cabecera:
+                        {
+                            #region Cabecera
+
+                            var lista = (await _repo.ObtenerListaCargaObligacionArchivoCabecera(usuarioId, estado, pciId));
+
+
+                            //Obtener información para el archivo
+                            cadena = _cargaService.ObtenerInformacionOrdenPagoArchivoCabecera(lista.ToList());
+
+                            //Encoding.UTF8: Respeta las tildes en las palabras
+                            byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                            MemoryStream stream = new MemoryStream(byteArray);
+
+                            if (stream == null)
+                                return new NoContentResult();
+
+                            nombreArchivo = "SIGPAA Cabecera";
+                            Response.AddFileName(nombreArchivo);
+                            return File(stream, "application/octet-stream", nombreArchivo);
+
+                            #endregion Cabecera
+                        };
+                    case (int)TipoArchivoObligacion.Item:
+                        {
+                            #region Items
+
+                            var lista = await _repo.ObtenerListaCargaObligacionArchivoDetalle(estado, pciId);
+
+                            if (lista != null && lista.Count > 0)
+                            {
+                                //Obtener información para el archivo
+                                cadena = _cargaService.ObtenerInformacionOrdenPagoArchivoDetalle(lista.ToList());
+
+                                //Encoding.UTF8: Respeta las tildes en las palabras
+                                byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
+                                MemoryStream stream = new MemoryStream(byteArray);
+
+                                if (stream ==  null)
+                                    return new NoContentResult();
+
+                                nombreArchivo = "SIGPAA Detalle";
+                                Response.AddFileName(nombreArchivo);
+                                return File(stream, "application/octet-stream", nombreArchivo);
+                            }
+                            else
+                            {
+                                return new NoContentResult();
+                            }
+
+                            #endregion Items
+                        };
+                    default:
+                        break;
+                }
+
+                throw new Exception("No se pudo crear el archivo de las órdenes de pago");
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

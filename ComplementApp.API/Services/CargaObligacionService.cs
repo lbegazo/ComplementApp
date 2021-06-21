@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using ComplementApp.API.Data;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models;
@@ -16,16 +20,17 @@ namespace ComplementApp.API.Services
     {
 
         private readonly ICargaObligacionRepository _repo;
-
         private readonly DataContext _dataContext;
+        private readonly IListaRepository _repoLista;
+
         private const int numeroColumnasCabecera = 40;
 
-        public CargaObligacionService(ICargaObligacionRepository repo, DataContext dataContext)
+        public CargaObligacionService(ICargaObligacionRepository repo, DataContext dataContext, IListaRepository listaRepository)
         {
             _repo = repo;
             _dataContext = dataContext;
+            _repoLista = listaRepository;
         }
-
 
         public bool EliminarCargaObligacion()
         {
@@ -87,8 +92,7 @@ namespace ComplementApp.API.Services
             return dtCabecera1;
         }
 
-
-        public List<CargaObligacion> ObtenerListaCargaObligacion(int pciId, DataTable dt)
+        public async Task<List<CargaObligacion>> ObtenerListaCargaObligacion(int pciId, DataTable dt)
         {
             CargaObligacion documento = null;
             List<CargaObligacion> listaDocumento = new List<CargaObligacion>();
@@ -97,6 +101,15 @@ namespace ComplementApp.API.Services
             decimal value = 0;
             DateTime fecha;
             string valor = string.Empty;
+            RubroPresupuestal rubroPresupuestal = null;
+            ValorSeleccion fuenteFinanciacion = null;
+            ValorSeleccion situacionFondo = null;
+            ValorSeleccion recursoPresupuestal = null;
+
+            var listaRubroPresupuestal = (await _repoLista.ObtenerListaRubroPresupuestal(string.Empty, string.Empty)).ToList();
+            var listaFuenteFinanciacion = (await _repoLista.ObtenerListaXTipo(TipoLista.FuenteFinanciacion)).ToList();
+            var listaSituacionFondo = (await _repoLista.ObtenerListaXTipo(TipoLista.SituacionFondo)).ToList();
+            var listaRecursoPresupuestal = (await _repoLista.ObtenerListaXTipo(TipoLista.RecursoPresupuestal)).ToList();
 
             foreach (var row in dt.Rows)
             {
@@ -180,10 +193,13 @@ namespace ComplementApp.API.Services
                 documento.Dependencia = (row as DataRow).ItemArray[16].ToString().Trim();
                 //EntidadDescripcion 
                 documento.DependenciaDescripcion = (row as DataRow).ItemArray[17].ToString().Trim();
-                //RubroIdentificacion 
-                documento.RubroIdentificacion = (row as DataRow).ItemArray[18].ToString().Trim();
-                //RubroDescripcion 
-                documento.RubroDescripcion = (row as DataRow).ItemArray[19].ToString().Trim();
+
+                rubroPresupuestal = obtenerRubroPresupuestal((row as DataRow).ItemArray[18].ToString().Trim(), listaRubroPresupuestal);
+
+                if (rubroPresupuestal != null)
+                {
+                    documento.RubroPresupuestalId = rubroPresupuestal.RubroPresupuestalId;
+                }
 
                 //ValorInicial
                 if (!(row as DataRow).ItemArray[20].ToString().Equals(string.Empty))
@@ -222,11 +238,24 @@ namespace ComplementApp.API.Services
                 }
 
                 //FuenteFinanciacion
-                documento.FuenteFinanciacion = (row as DataRow).ItemArray[24].ToString();
+                fuenteFinanciacion = listaFuenteFinanciacion.Where(f => f.Nombre.ToLower() == (row as DataRow).ItemArray[24].ToString().ToLower()).FirstOrDefault();
+                if (fuenteFinanciacion != null)
+                {
+                    documento.FuenteFinanciacionId = fuenteFinanciacion.Id;
+                }
                 //SituacionFondo
-                documento.SituacionFondo = (row as DataRow).ItemArray[25].ToString();
+                situacionFondo = listaSituacionFondo.Where(f => f.Nombre.ToLower() == (row as DataRow).ItemArray[25].ToString().ToLower()).FirstOrDefault();
+                if (situacionFondo != null)
+                {
+                    documento.SituacionFondoId = situacionFondo.Id;
+                }
                 //RecursoPresupuestal
-                documento.RecursoPresupuestal = (row as DataRow).ItemArray[26].ToString();
+                recursoPresupuestal = listaRecursoPresupuestal.Where(f => f.Nombre.ToLower() == (row as DataRow).ItemArray[26].ToString().ToLower()).FirstOrDefault();
+                if (situacionFondo != null)
+                {
+                    documento.RecursoPresupuestalId = recursoPresupuestal.Id;
+                }
+
                 //Concepto
                 documento.Concepto = (row as DataRow).ItemArray[27].ToString();
 
@@ -295,6 +324,117 @@ namespace ComplementApp.API.Services
             }
 
             return listaDocumento;
+        }
+
+        public string ObtenerInformacionOrdenPagoArchivoCabecera(List<CargaObligacionDto> lista)
+        {
+            int consecutivo = 1;
+            StringBuilder sbBody = new StringBuilder();
+
+            foreach (var item in lista)
+            {
+                sbBody.Append(consecutivo);
+                sbBody.Append("|");
+                sbBody.Append(item.Pci.Identificacion);
+                sbBody.Append("|");
+                sbBody.Append(item.FechaRegistro.ToString("yyyy-MM-dd"));
+                sbBody.Append("|");
+                sbBody.Append(item.Obligacion);
+                sbBody.Append("|");
+                sbBody.Append(item.CodigoDependenciaAfectacionPac);
+                sbBody.Append("|");
+                sbBody.Append(item.CodigoPosicionPac);
+                sbBody.Append("|");
+                sbBody.Append(item.FechaPago.ToString("yyyy-MM-dd"));
+                sbBody.Append("|");
+                sbBody.Append(item.ValorActual.ToString().Replace(".", ","));
+                sbBody.Append("|");
+                sbBody.Append(item.CodigoTipoBeneficiario);
+                sbBody.Append("|");
+                sbBody.Append(item.MedioPago);
+                sbBody.Append("|");
+                sbBody.Append(item.CodigoPciTesoreria);
+                sbBody.Append("|");
+                sbBody.Append(item.Tercero.TipoDocumentoIdentidad);
+                sbBody.Append("|");
+                sbBody.Append(item.Tercero.NumeroIdentificacion);
+                sbBody.Append("|");
+                sbBody.Append(item.NumeroCuenta);
+                sbBody.Append("|");
+                sbBody.Append(item.TipoCuenta);
+                sbBody.Append("|");
+                sbBody.Append(item.FechaLimitePago.ToString("yyyy-MM-dd"));
+                sbBody.Append("|");
+                sbBody.Append(item.TipoDocSoporteCompromiso);
+                sbBody.Append("|");
+                sbBody.Append(item.NumeroDocSoporteCompromiso);
+                sbBody.Append("|");
+                sbBody.Append(item.FechaDocSoporteCompromiso.ToString("yyyy-MM-dd"));
+                //Expedidor vacío
+                sbBody.Append("||");
+                sbBody.Append(item.NombreFuncionario);
+                sbBody.Append("|");
+                sbBody.Append(item.CargoFuncionario);
+                sbBody.Append("|");
+                sbBody.Append(item.ObjetoCompromiso);
+                sbBody.Append("|");
+                sbBody.Append(Environment.NewLine);
+                consecutivo++;
+            }
+            return sbBody.ToString();
+        }
+
+        public string ObtenerInformacionOrdenPagoArchivoDetalle(List<CargaObligacionDto> listaTotal)
+        {
+            List<CargaObligacionDto> lista = null;
+            int consecutivoCabecera = 1;
+            int consecutivoInterno = 1;
+            StringBuilder sbBody = new StringBuilder();
+
+            var listaAgrupada = (from l in listaTotal
+                                 group l by new { l.Obligacion }
+                                 into grp
+                                 select new
+                                 {
+                                     grp.Key.Obligacion
+                                 });
+
+            var listaIds = listaAgrupada.Select(s => s.Obligacion).ToList();
+
+            foreach (var item in listaIds)
+            {
+                lista = listaTotal.Where(x => x.Obligacion == item).ToList();
+
+                foreach (var itemInterno in lista)
+                {
+                    sbBody.Append(consecutivoCabecera);
+                    sbBody.Append("|");
+                    sbBody.Append(consecutivoInterno);
+                    sbBody.Append("|");
+                    sbBody.Append(itemInterno.Dependencia);
+                    sbBody.Append("|");
+                    sbBody.Append(itemInterno.RubroPresupuestal.Identificacion);
+                    sbBody.Append("|");
+                    sbBody.Append(itemInterno.RecursoPresupuestal.Codigo);
+                    sbBody.Append("|");
+                    sbBody.Append(itemInterno.FuenteFinanciacion.Codigo);
+                    sbBody.Append("|");
+                    sbBody.Append(itemInterno.SituacionFondo.Codigo);
+                    sbBody.Append("|");
+                    sbBody.Append(itemInterno.ValorActual2.ToString().Replace(".", ","));
+                    sbBody.Append(Environment.NewLine);
+
+                    consecutivoInterno++;
+                }
+                consecutivoCabecera++;
+            }
+            return sbBody.ToString();
+        }
+
+
+        private RubroPresupuestal obtenerRubroPresupuestal(string Identificacion, List<RubroPresupuestal> lista)
+        {
+            return lista.Where(x => x.Identificacion == Identificacion).FirstOrDefault();
         }
     }
 }
