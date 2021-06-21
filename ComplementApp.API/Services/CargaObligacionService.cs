@@ -105,11 +105,15 @@ namespace ComplementApp.API.Services
             ValorSeleccion fuenteFinanciacion = null;
             ValorSeleccion situacionFondo = null;
             ValorSeleccion recursoPresupuestal = null;
+            ValorSeleccion tipoDocSoporte = null;
+            ValorSeleccion tipoDocIdentidad = null;
 
             var listaRubroPresupuestal = (await _repoLista.ObtenerListaRubroPresupuestal(string.Empty, string.Empty)).ToList();
             var listaFuenteFinanciacion = (await _repoLista.ObtenerListaXTipo(TipoLista.FuenteFinanciacion)).ToList();
             var listaSituacionFondo = (await _repoLista.ObtenerListaXTipo(TipoLista.SituacionFondo)).ToList();
             var listaRecursoPresupuestal = (await _repoLista.ObtenerListaXTipo(TipoLista.RecursoPresupuestal)).ToList();
+            var listaTipoDocIdentidad = (await _repoLista.ObtenerListaXTipo(TipoLista.TipoDocumentoIdentidad)).ToList();
+            var listaTipoDocSoporte = (await _repoLista.ObtenerListaXTipo(TipoLista.TipoDocumentoSoporte)).ToList();
 
             foreach (var row in dt.Rows)
             {
@@ -164,7 +168,11 @@ namespace ComplementApp.API.Services
                 }
 
                 //TipoIdentificacion
-                documento.TipoIdentificacion = (row as DataRow).ItemArray[7].ToString().Trim();
+                tipoDocIdentidad = listaTipoDocIdentidad.Where(f => f.Nombre.ToLower().Trim() == (row as DataRow).ItemArray[7].ToString().ToLower().Trim()).FirstOrDefault();
+                if (tipoDocIdentidad != null)
+                {
+                    documento.TipoDocumentoIdentidadId = tipoDocIdentidad.Id;
+                }
 
                 //NumeroIdentificacion
                 documento.NumeroIdentificacion = (row as DataRow).ItemArray[8].ToString().Trim();
@@ -251,7 +259,7 @@ namespace ComplementApp.API.Services
                 }
                 //RecursoPresupuestal
                 recursoPresupuestal = listaRecursoPresupuestal.Where(f => f.Nombre.ToLower() == (row as DataRow).ItemArray[26].ToString().ToLower()).FirstOrDefault();
-                if (situacionFondo != null)
+                if (recursoPresupuestal != null)
                 {
                     documento.RecursoPresupuestalId = recursoPresupuestal.Id;
                 }
@@ -311,7 +319,11 @@ namespace ComplementApp.API.Services
                             documento.FechaDocSoporteCompromiso = fecha;
 
                 //TipoDocSoporteCompromiso
-                documento.TipoDocSoporteCompromiso = (row as DataRow).ItemArray[37].ToString();
+                tipoDocSoporte = listaTipoDocSoporte.Where(f => f.Nombre.ToLower().Trim() == (row as DataRow).ItemArray[37].ToString().ToLower().Trim()).FirstOrDefault();
+                if (tipoDocSoporte != null)
+                {
+                    documento.TipoDocumentoSoporteId = tipoDocSoporte.Id;
+                }
 
                 //NumeroDocSoporteCompromiso
                 documento.NumeroDocSoporteCompromiso = (row as DataRow).ItemArray[38].ToString();
@@ -370,14 +382,13 @@ namespace ComplementApp.API.Services
                 sbBody.Append(item.NumeroDocSoporteCompromiso);
                 sbBody.Append("|");
                 sbBody.Append(item.FechaDocSoporteCompromiso.ToString("yyyy-MM-dd"));
-                //Expedidor vacío
-                sbBody.Append("||");
+                //Expedidor 5
+                sbBody.Append("|5|");
                 sbBody.Append(item.NombreFuncionario);
                 sbBody.Append("|");
                 sbBody.Append(item.CargoFuncionario);
                 sbBody.Append("|");
                 sbBody.Append(item.ObjetoCompromiso);
-                sbBody.Append("|");
                 sbBody.Append(Environment.NewLine);
                 consecutivo++;
             }
@@ -415,9 +426,9 @@ namespace ComplementApp.API.Services
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.RubroPresupuestal.Identificacion);
                     sbBody.Append("|");
-                    sbBody.Append(itemInterno.RecursoPresupuestal.Codigo);
+                    sbBody.Append(itemInterno.FuenteFinanciacion.Codigo);                    
                     sbBody.Append("|");
-                    sbBody.Append(itemInterno.FuenteFinanciacion.Codigo);
+                    sbBody.Append(itemInterno.RecursoPresupuestal.Codigo);
                     sbBody.Append("|");
                     sbBody.Append(itemInterno.SituacionFondo.Codigo);
                     sbBody.Append("|");
@@ -430,11 +441,20 @@ namespace ComplementApp.API.Services
             }
             return sbBody.ToString();
         }
-
-
         private RubroPresupuestal obtenerRubroPresupuestal(string Identificacion, List<RubroPresupuestal> lista)
         {
             return lista.Where(x => x.Identificacion == Identificacion).FirstOrDefault();
         }
+
+        private ValorSeleccion obtenerTipoDocumentoIdentidad(string nombre, List<ValorSeleccion> lista)
+        {
+            return lista.Where(x => x.Nombre.ToLower().Trim() == nombre.ToLower().Trim()).FirstOrDefault();
+        }
+
+        private ValorSeleccion obtenerTipoDocumentoSoporte(string nombre, List<ValorSeleccion> lista)
+        {
+            return lista.Where(x => x.Nombre.ToLower().Trim() == nombre.ToLower().Trim()).FirstOrDefault();
+        }
+
     }
 }

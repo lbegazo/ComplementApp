@@ -91,6 +91,8 @@ namespace ComplementApp.API.Data
 
             var lista = await (from co in _context.CargaObligacion
                                join rp in _context.RubroPresupuestal on co.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join td in _context.TipoDocumentoIdentidad on co.TipoDocumentoIdentidadId equals td.TipoDocumentoIdentidadId
+                               join tds in _context.TipoDocumentoSoporte on co.TipoDocumentoSoporteId equals tds.TipoDocumentoSoporteId
                                join nap in _context.NivelAgrupacionPac on new
                                {
                                    RubroPresupuestalId = rp.PadreRubroId.Value,
@@ -112,7 +114,7 @@ namespace ComplementApp.API.Data
 
                                select new CargaObligacionDto()
                                {
-                                   FechaRegistro = co.FechaRegistro,
+                                   FechaRegistro = System.DateTime.Now,
                                    FechaPago = co.FechaRegistro,
                                    FechaLimitePago = System.DateTime.Now.AddDays(2),
                                    Obligacion = co.Obligacion,
@@ -127,7 +129,7 @@ namespace ComplementApp.API.Data
                                    CodigoPciTesoreria = nap.IdentificacionTesoreria,
                                    Tercero = new TerceroDto()
                                    {
-                                       TipoDocumentoIdentidad = co.TipoIdentificacion,
+                                       TipoDocumentoIdentidad = td.Codigo,
                                        NumeroIdentificacion = co.NumeroIdentificacion,
                                        Nombre = co.NombreRazonSocial
                                    },
@@ -137,12 +139,12 @@ namespace ComplementApp.API.Data
                                    },
                                    NumeroCuenta = co.NumeroCuenta,
                                    TipoCuenta = co.TipoCuenta.ToLower() == "ahorro" ? "AHR" : "CRR",
-                                   TipoDocSoporteCompromiso = co.TipoDocSoporteCompromiso,
+                                   TipoDocSoporteCompromiso = tds.Codigo,
                                    NumeroDocSoporteCompromiso = co.NumeroDocSoporteCompromiso,
                                    FechaDocSoporteCompromiso = co.FechaDocSoporteCompromiso,
                                    NombreFuncionario = usuario.Nombres + " " + usuario.Apellidos,
                                    CargoFuncionario = usuario.CargoDescripcion,
-                                   ObjetoCompromiso = co.ObjetoCompromiso,
+                                   ObjetoCompromiso = co.ObjetoCompromiso.Length > 200 ? co.ObjetoCompromiso.Substring(0, 200) : co.ObjetoCompromiso,
                                })
                                .Distinct()
                                .ToListAsync();

@@ -32,10 +32,6 @@ namespace ComplementApp.API.Models
         public decimal ValorObligadoNoOrdenado { get; set; }
 
         [Required]
-        [Column(TypeName = "VARCHAR(50)")]
-        public string TipoIdentificacion { get; set; }
-
-        [Required]
         [Column(TypeName = "VARCHAR(20)")]
         public string NumeroIdentificacion { get; set; }
 
@@ -109,12 +105,8 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(250)")]
         public string Reintegro { get; set; }
-
         public DateTime FechaDocSoporteCompromiso { get; set; }
-
-        [Column(TypeName = "VARCHAR(100)")]
-        public string TipoDocSoporteCompromiso { get; set; }
-
+        
         [Column(TypeName = "VARCHAR(100)")]
         public string NumeroDocSoporteCompromiso { get; set; }
 
@@ -124,7 +116,6 @@ namespace ComplementApp.API.Models
         public Pci Pci { get; set; }
         public int? RubroPresupuestalId { get; set; }
         public RubroPresupuestal RubroPresupuestal { get; set; }
-
         public int? FuenteFinanciacionId { get; set; }
         public FuenteFinanciacion FuenteFinanciacion { get; set; }
         
@@ -133,5 +124,9 @@ namespace ComplementApp.API.Models
 
         public int? RecursoPresupuestalId { get; set; }
         public RecursoPresupuestal RecursoPresupuestal { get; set; }
+        public int? TipoDocumentoIdentidadId { get; set; }
+        public TipoDocumentoIdentidad TipoDocumentoIdentidad { get; set; }
+        public int? TipoDocumentoSoporteId { get; set; }
+        public TipoDocumentoSoporte TipoDocumentoSoporte { get; set; }
     }
 }
