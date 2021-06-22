@@ -42,6 +42,7 @@ namespace ComplementApp.API.Extensions
             services.AddScoped<ISolicitudCdpRepository, SolicitudCdpRepository>();
             services.AddScoped<ICargaObligacionRepository, CargaObligacionRepository>();
             services.AddScoped<ICargaObligacionService, CargaObligacionService>();
+            services.AddScoped<IHolidayService, HolidayService>();
 
             services.AddDbContext<DataContext>();
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces.Repository;
+using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,11 @@ namespace ComplementApp.API.Data
         private readonly DataContext _context;
         private readonly IListaRepository _repoLista;
 
+        private readonly IHolidayService _holiday;
 
-        public CargaObligacionRepository(DataContext context, IListaRepository listaRepository)
+        public CargaObligacionRepository(DataContext context, IListaRepository listaRepository, IHolidayService holiday)
         {
+            _holiday = holiday;
             _context = context;
             _repoLista = listaRepository;
         }
@@ -74,6 +77,9 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<CargaObligacionDto>> ObtenerListaCargaObligacionArchivoCabecera(int usuarioId, string estado, int pciId)
         {
+            //var fechaLimitePago = _holiday.GetNextWorkingDay(System.DateTime.Now, 2);
+            DateTime dateValue = new DateTime(2021, 10, 29);
+            var fechaLimitePago = _holiday.GetNextWorkingDay(dateValue, 2);
             var usuario = (from u in _context.Usuario
                            join c in _context.Cargo on u.CargoId equals c.CargoId
                            where u.UsuarioId == usuarioId
@@ -116,7 +122,7 @@ namespace ComplementApp.API.Data
                                {
                                    FechaRegistro = System.DateTime.Now,
                                    FechaPago = co.FechaRegistro,
-                                   FechaLimitePago = System.DateTime.Now.AddDays(2),
+                                   FechaLimitePago = fechaLimitePago,
                                    Obligacion = co.Obligacion,
                                    ValorActual = co.ValorActual,
                                    CodigoTipoBeneficiario = (pci.Nit == co.NumeroIdentificacion) ? "P" : "B",
@@ -144,7 +150,7 @@ namespace ComplementApp.API.Data
                                    FechaDocSoporteCompromiso = co.FechaDocSoporteCompromiso,
                                    NombreFuncionario = usuario.Nombres + " " + usuario.Apellidos,
                                    CargoFuncionario = usuario.CargoDescripcion,
-                                   ObjetoCompromiso = co.ObjetoCompromiso.Length > 200 ? co.ObjetoCompromiso.Substring(0, 200) : co.ObjetoCompromiso,
+                                   Concepto = co.Concepto.Length > 200 ? co.Concepto.Substring(0, 200) : co.Concepto,
                                })
                                .Distinct()
                                .ToListAsync();
@@ -188,12 +194,6 @@ namespace ComplementApp.API.Data
                                .ToListAsync();
 
             return lista;
-        }
-
-        private string ObtenerMedioPago(string nombre, List<ValorSeleccion> lista)
-        {
-            var medioPago = lista.Where(m => m.Nombre == nombre.ToLower()).FirstOrDefault();
-            return medioPago.Codigo;
         }
     }
 }

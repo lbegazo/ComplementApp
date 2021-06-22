@@ -152,7 +152,7 @@ namespace ComplementApp.API.Services
                 //ValorDeduccion
                 if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
                 {
-                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    valor = (row as DataRow).ItemArray[5].ToString().Replace(",", "");
                     if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorDeduccion = value;
@@ -161,7 +161,7 @@ namespace ComplementApp.API.Services
                 //ValorObligadoNoOrdenado
                 if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
                 {
-                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    valor = (row as DataRow).ItemArray[6].ToString().Replace(",", "");
                     if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorObligadoNoOrdenado = value;
@@ -212,7 +212,7 @@ namespace ComplementApp.API.Services
                 //ValorInicial
                 if (!(row as DataRow).ItemArray[20].ToString().Equals(string.Empty))
                 {
-                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    valor = (row as DataRow).ItemArray[20].ToString().Replace(",", "");
                     if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorInicial = value;
@@ -221,7 +221,7 @@ namespace ComplementApp.API.Services
                 //ValorOperacion
                 if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
                 {
-                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    valor = (row as DataRow).ItemArray[21].ToString().Replace(",", "");
                     if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorOperacion = value;
@@ -230,7 +230,7 @@ namespace ComplementApp.API.Services
                 //ValorActual2
                 if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
                 {
-                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    valor = (row as DataRow).ItemArray[22].ToString().Replace(",", "");
                     if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.ValorActual2 = value;
@@ -239,7 +239,7 @@ namespace ComplementApp.API.Services
                 //SaldoPorUtilizar
                 if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
                 {
-                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    valor = (row as DataRow).ItemArray[23].ToString().Replace(",", "");
                     if (decimal.TryParse(valor, out value))
                         if (value > 0)
                             documento.SaldoPorUtilizar = value;
@@ -388,7 +388,7 @@ namespace ComplementApp.API.Services
                 sbBody.Append("|");
                 sbBody.Append(item.CargoFuncionario);
                 sbBody.Append("|");
-                sbBody.Append(item.ObjetoCompromiso);
+                sbBody.Append(item.Concepto);
                 sbBody.Append(Environment.NewLine);
                 consecutivo++;
             }
@@ -446,15 +446,6 @@ namespace ComplementApp.API.Services
             return lista.Where(x => x.Identificacion == Identificacion).FirstOrDefault();
         }
 
-        private ValorSeleccion obtenerTipoDocumentoIdentidad(string nombre, List<ValorSeleccion> lista)
-        {
-            return lista.Where(x => x.Nombre.ToLower().Trim() == nombre.ToLower().Trim()).FirstOrDefault();
-        }
-
-        private ValorSeleccion obtenerTipoDocumentoSoporte(string nombre, List<ValorSeleccion> lista)
-        {
-            return lista.Where(x => x.Nombre.ToLower().Trim() == nombre.ToLower().Trim()).FirstOrDefault();
-        }
-
+       
     }
 }
