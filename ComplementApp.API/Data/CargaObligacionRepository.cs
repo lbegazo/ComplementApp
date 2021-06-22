@@ -77,9 +77,9 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<CargaObligacionDto>> ObtenerListaCargaObligacionArchivoCabecera(int usuarioId, string estado, int pciId)
         {
-            //var fechaLimitePago = _holiday.GetNextWorkingDay(System.DateTime.Now, 2);
-            DateTime dateValue = new DateTime(2021, 10, 29);
-            var fechaLimitePago = _holiday.GetNextWorkingDay(dateValue, 2);
+            var fechaLimitePago = _holiday.GetNextWorkingDay(System.DateTime.Now, 2);
+            // DateTime dateValue = new DateTime(2021, 10, 29);
+            // var fechaLimitePago = _holiday.GetNextWorkingDay(dateValue, 2);
             var usuario = (from u in _context.Usuario
                            join c in _context.Cargo on u.CargoId equals c.CargoId
                            where u.UsuarioId == usuarioId
