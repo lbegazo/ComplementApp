@@ -209,6 +209,7 @@ namespace ComplementApp.API.Controllers
                     detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     detalleLiquidacion.BaseImpuestos = false;
                     detalleLiquidacion.PciId = pciId;
+                    detalleLiquidacion.EstadoId = (int)EstadoDetalleLiquidacion.Generado;
 
                     #endregion Mapear datos 
 
@@ -323,9 +324,11 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
-        [Route("[action]/{planPagoId}/{mensajeRechazo}")]
+        [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> RechazarDetalleLiquidacion(int planPagoId, string mensajeRechazo)
+        public async Task<IActionResult> RechazarDetalleLiquidacion([FromQuery(Name = "solicitudPagoId")] int solicitudPagoId,
+                                                                        [FromQuery(Name = "planPagoId")] int planPagoId,
+                                                                        [FromQuery(Name = "mensajeRechazo")] string mensajeRechazo)
         {
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             PlanPago planNuevo = new PlanPago();
@@ -338,10 +341,13 @@ namespace ComplementApp.API.Controllers
                     var planPagoBD = await _planPagoRepository.ObtenerPlanPagoBase(planPagoId);
 
                     //Actualizar plan de pago existente a estado Por Pagar
-                    planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
-                    planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
-                    planPagoBD.UsuarioIdModificacion = usuarioId;
-                    await _dataContext.SaveChangesAsync();
+                    if (planPagoBD != null)
+                    {
+                        planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
+                        planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        planPagoBD.UsuarioIdModificacion = usuarioId;
+                        await _dataContext.SaveChangesAsync();
+                    }
 
                     //Crear nuevo plan de pago en estado rechazado
                     planNuevo = planPagoBD;
@@ -351,14 +357,24 @@ namespace ComplementApp.API.Controllers
                     planNuevo.UsuarioIdRegistro = usuarioId;
                     planNuevo.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     await _dataContext.PlanPago.AddAsync(planNuevo);
-                    await _dataContext.SaveChangesAsync();
+                    await _dataContext.SaveChangesAsync();                    
 
                     //Enviar email
                     var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
                     await EnviarEmail(planPagoDto, mensajeRechazo);
 
-                    await transaction.CommitAsync();
+                    //Actualizar formato solicitud pago
+                    var formatoBD = await _solicitudPagoRepository.ObtenerFormatoSolicitudPagoBase(solicitudPagoId);
+                    if (formatoBD != null)
+                    {
+                        formatoBD.UsuarioIdModificacion = usuarioId;
+                        formatoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        formatoBD.Observaciones = mensajeRechazo;
+                        formatoBD.EstadoId = (int)EstadoSolicitudPago.Rechazado;
+                        await _dataContext.SaveChangesAsync();
+                    }
 
+                    await transaction.CommitAsync();
 
                     return Ok(planNuevo.PlanPagoId);
                 }
@@ -373,6 +389,57 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
+        
+          [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> RechazarLiquidacion([FromQuery(Name = "detalleLiquidacionId")] int detalleLiquidacionId,
+                                                             [FromQuery(Name = "solicitudPagoId")] int solicitudPagoId,
+                                                             [FromQuery(Name = "planPagoId")] int planPagoId,
+                                                             [FromQuery(Name = "mensajeRechazo")] string mensajeRechazo)
+        {
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);            
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+            try
+            {
+                if (detalleLiquidacionId > 0)
+                {
+                    var detalleLiquidacion = await _repo.ObtenerDetalleLiquidacionBase(detalleLiquidacionId);
+
+                    //Actualizar plan de pago existente a estado Por Pagar
+                    if (detalleLiquidacion != null)
+                    {
+                        detalleLiquidacion.EstadoId = (int)EstadoDetalleLiquidacion.Rechazado;
+                        detalleLiquidacion.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        detalleLiquidacion.UsuarioIdModificacion = usuarioId;
+                        detalleLiquidacion.MotivoRechazo = mensajeRechazo;
+                        await _dataContext.SaveChangesAsync();
+                    }
+
+                    //Actualizar formato solicitud pago
+                    var formatoBD = await _solicitudPagoRepository.ObtenerFormatoSolicitudPagoBase(solicitudPagoId);
+                    if (formatoBD != null)
+                    {
+                        formatoBD.UsuarioIdModificacion = usuarioId;
+                        formatoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                        formatoBD.EstadoId = (int)EstadoSolicitudPago.Aprobado;
+                        await _dataContext.SaveChangesAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    return Ok(detalleLiquidacion.DetalleLiquidacionId);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo registrar el formato de liquidación");
+        }
+
+        
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)

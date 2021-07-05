@@ -52,6 +52,7 @@ namespace ComplementApp.API.Data
                                             {
                                                 //Plan de pago
                                                 DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                                FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value,
                                                 PlanPagoId = dl.PlanPagoId,
                                                 TerceroId = dl.TerceroId,
                                                 ModalidadContrato = dl.ModalidadContrato,
@@ -160,6 +161,7 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                          where (dl.Crp == c.Crp)
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
@@ -196,6 +198,7 @@ namespace ComplementApp.API.Data
         {
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                                                     where dl.PciId == pciId
                                                     where dl.TerceroId == terceroId
                                                     where dl.FechaOrdenPago.Value.Month == mesAnterior
@@ -212,6 +215,7 @@ namespace ComplementApp.API.Data
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
 
             var lista = await (from dl in _context.DetalleLiquidacion
+                               where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                                where dl.TerceroId == terceroId
                                where dl.PciId == pciId
                                where dl.FechaRegistro.Value.Month == mesAnterior
@@ -285,6 +289,7 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                          where dl.PciId == pciId
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
@@ -349,6 +354,7 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                          from pl in parametroLiquidacion.DefaultIfEmpty()
+                         where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                          where dl.PciId == c.PciId
                          where dl.PciId == pl.PciId
                          where dl.PciId == userParams.PciId
@@ -358,6 +364,7 @@ namespace ComplementApp.API.Data
                          {
                              DetalleLiquidacionId = dl.DetalleLiquidacionId,
                              PlanPagoId = dl.PlanPagoId,
+                             FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value,
                              IdentificacionTercero = dl.NumeroIdentificacion,
                              NombreTercero = dl.Nombre,
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
@@ -404,6 +411,7 @@ namespace ComplementApp.API.Data
                                join t in _context.Tercero on c.TerceroId equals t.TerceroId
                                join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
+                               where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                                where dl.PciId == c.PciId
                                where dl.PciId == pl.PciId
                                where dl.PciId == pciId
@@ -628,6 +636,7 @@ namespace ComplementApp.API.Data
                                join sp in _context.FormatoSolicitudPago on dl.Crp equals sp.Crp
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
+                               where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                                where dl.PciId == pl.PciId
                                where sp.PciId == dl.PciId
                                where sp.PlanPagoId == dl.PlanPagoId
@@ -669,6 +678,7 @@ namespace ComplementApp.API.Data
             int mesAnterior = _generalInterface.ObtenerFechaHoraActual().AddMonths(-1).Month;
 
             var detalleLiquidacionAnterior = await (from dl in _context.DetalleLiquidacion
+                                                    where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                                                     where dl.PciId == pcidId
                                                     where listaTerceroId.Contains(dl.TerceroId)
                                                     where dl.FechaOrdenPago.Value.Month == mesAnterior
@@ -684,6 +694,7 @@ namespace ComplementApp.API.Data
             List<DetalleLiquidacion> lista = new List<DetalleLiquidacion>();
 
             var query1 = (from dl in _context.DetalleLiquidacion
+                          where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
                           where dl.PciId == pciId
                           where listaTerceroId.Contains(dl.TerceroId)
                           where dl.FechaRegistro.Value.Month == mesAnterior

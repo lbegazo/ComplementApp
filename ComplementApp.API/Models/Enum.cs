@@ -159,4 +159,10 @@ namespace ComplementApp.API.Models
         Generado = 28,
         ConCDP = 29,
     }
+
+    public enum EstadoDetalleLiquidacion
+    {
+        Generado = 30,
+        Rechazado = 31,
+    }
 }

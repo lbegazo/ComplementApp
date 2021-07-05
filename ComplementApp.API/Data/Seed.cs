@@ -14,7 +14,7 @@ namespace ComplementApp.API.Data
     {
         public static void CargarDataInicial(DataContext context)
         {
-            SeedPosicionPac(context);
+            //SeedPosicionPac(context);
             // SeedParametroSistema(context);
             // SeedPci(context);
 
@@ -24,7 +24,7 @@ namespace ComplementApp.API.Data
             // SeedArea(context);
             // SeedTipoOperacion(context);
             // SeedTipoDetalleModificacion(context);
-            // SeedEstado(context);
+            SeedEstado(context);
             // SeedTercero(context);
             // SeedActividadGeneral(context);
             // SeedUsoPresupuestal(context);

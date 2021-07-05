@@ -446,7 +446,7 @@
                               <!--Titulo de Columnas-->
                               <div class="row borderTop">
                                 <div
-                                  style="width: 10%"
+                                  style="width: 5%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -456,37 +456,67 @@
                                   <strong>NUM. PAGO</strong>
                                 </div>
                                 <div
-                                  style="width: 15%"
+                                  style="width: 10%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>NUM. ORDEN DE PAGO</strong>
+                                  <strong>OBLIGACION</strong>
                                 </div>
                                 <div
-                                  style="width: 15%"
+                                  style="width: 10%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>ESTADO ORDEN PAGO</strong>
+                                  <strong>ORDEN DE PAGO</strong>
                                 </div>
                                 <div
-                                  style="width: 15%"
+                                  style="width: 10%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>FECHA ORDEN PAGO</strong>
+                                  <strong>ESTADO OP</strong>
                                 </div>
                                 <div
-                                  style="width: 15%"
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>FECHA OP</strong>
+                                </div>
+                                <div
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>DEPENDENCIA</strong>
+                                </div>
+                                <div
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>RUBRO PRES.</strong>
+                                </div>
+                                <div
+                                  style="width: 12%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -496,17 +526,17 @@
                                   <strong>VALOR BRUTO</strong>
                                 </div>
                                 <div
-                                  style="width: 15%"
+                                  style="width: 10%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>VALOR DEDUCCIONES</strong>
+                                  <strong>VALOR DEDUC.</strong>
                                 </div>
                                 <div
-                                  style="width: 15%"
+                                  style="width: 13%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -528,7 +558,7 @@
                                     >
                                       <ng-container [formGroupName]="i">
                                         <div
-                                          style="width: 10%"
+                                          style="width: 5%"
                                           class="
                                             borderBottonRight
                                             centerAlign
@@ -538,7 +568,15 @@
                                           {{ i + 1 }}
                                         </div>
                                         <div
-                                          style="width: 15%"
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.obligacion }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 10%"
                                           class="borderBottonRight center"
                                         >
                                           <p class="addPaddingLeft fontSmaller">
@@ -546,7 +584,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 15%"
+                                          style="width: 10%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -554,9 +592,9 @@
                                           >
                                             {{ item?.detalle1 }}
                                           </p>
-                                        </div>
+                                        </div>                                        
                                         <div
-                                          style="width: 15%"
+                                          style="width: 10%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -568,7 +606,27 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 15%"
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{ item?.detalle2 }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{ item?.identificacionRubro }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 12%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -581,7 +639,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 15%"
+                                          style="width: 10%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -593,7 +651,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 15%"
+                                          style="width: 13%"
                                           class="borderBottonRight center"
                                         >
                                           <p

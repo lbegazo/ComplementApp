@@ -36,6 +36,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
 
   listaPlanPago: FormatoCausacionyLiquidacionPago[] = [];
   tercero: Tercero;
+  detalleLiquidacionIdSeleccionado = 0;
+  formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
 
   facturaHeaderForm = new FormGroup({});
   terceroId?: number = null;
@@ -49,6 +51,7 @@ export class ObligacionPresupuestalComponent implements OnInit {
   };
   liquidacionesSeleccionadas: number[] = [];
   seleccionaTodas = false;
+  
 
   constructor(
     private http: HttpClient,
@@ -206,6 +209,8 @@ export class ObligacionPresupuestalComponent implements OnInit {
     this.terceroId = null;
     this.liquidacionesSeleccionadas = [];
     this.seleccionaTodas = false;
+    this.detalleLiquidacionIdSeleccionado = 0;
+    this.formatoCausacionyLiquidacionPago = null;
     this.onBuscarFactura();
   }
 
@@ -299,7 +304,55 @@ export class ObligacionPresupuestalComponent implements OnInit {
     }
   }
 
-  public DescargarArchivoDetalleLiquidacion() {
+  verLiquidacion() {
+    if (
+      this.liquidacionesSeleccionadas &&
+      this.liquidacionesSeleccionadas.length > 0 &&
+      this.liquidacionesSeleccionadas.length === 1
+    ) {
+      this.detalleLiquidacionIdSeleccionado =
+        this.liquidacionesSeleccionadas[0];
+      if (this.detalleLiquidacionIdSeleccionado > 0) {
+        this.ObtenerDetalleFormatoCausacionyLiquidacionPago();
+      }
+    }
+  }
+
+  ObtenerDetalleFormatoCausacionyLiquidacionPago() {
+    this.liquidacionService
+      .ObtenerDetalleFormatoCausacionyLiquidacionPago(
+        this.detalleLiquidacionIdSeleccionado
+      )
+      .subscribe(
+        (response: FormatoCausacionyLiquidacionPago) => {
+          if (response) {
+            this.formatoCausacionyLiquidacionPago = response;
+            this.terceroId = this.formatoCausacionyLiquidacionPago.terceroId;
+            this.mostrarCabecera = false;
+          }
+        },
+        (error) => {
+          this.alertify.error(
+            'Hubo un error al obtener el formato de liquidación.'
+          );
+        }
+      );
+  }
+
+  HabilitarCabecera($event) {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 0,
+      maxSize: 10,
+    };
+
+    this.mostrarCabecera = true;
+    this.onLimpiarFactura();
+  }
+
+  DescargarArchivoDetalleLiquidacion() {
     let listaIds: number[] = [];
 
     const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
@@ -771,150 +824,152 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                                                         if (
                                                                                                                           response.numeroFactura !==
                                                                                                                             null &&
-                                                                                                                          response.numeroFactura
-                                                                                                                            .length > 0
+                                                                                                                          response
+                                                                                                                            .numeroFactura
+                                                                                                                            .length >
+                                                                                                                            0
                                                                                                                         ) {
                                                                                                                           listaLiquidacionId =
                                                                                                                             response.numeroFactura;
                                                                                                                         } else {
-                                                                                                                          listaLiquidacionId = '';
+                                                                                                                          listaLiquidacionId =
+                                                                                                                            '';
                                                                                                                         }
-                                                                                                                        
-                                                                                                                          //#region Cabecera
 
-                                                                                                                          tipoArchivoObligacion =
-                                                                                                                            TipoArchivoObligacion
-                                                                                                                              .Cabecera
-                                                                                                                              .value;
+                                                                                                                        //#region Cabecera
 
-                                                                                                                          this.liquidacionService
-                                                                                                                            .DescargarArchivoLiquidacionObligacion(
-                                                                                                                              listaLiquidacionId,
-                                                                                                                              tipoArchivoObligacion
-                                                                                                                            )
-                                                                                                                            .subscribe(
-                                                                                                                              (
+                                                                                                                        tipoArchivoObligacion =
+                                                                                                                          TipoArchivoObligacion
+                                                                                                                            .Cabecera
+                                                                                                                            .value;
+
+                                                                                                                        this.liquidacionService
+                                                                                                                          .DescargarArchivoLiquidacionObligacion(
+                                                                                                                            listaLiquidacionId,
+                                                                                                                            tipoArchivoObligacion
+                                                                                                                          )
+                                                                                                                          .subscribe(
+                                                                                                                            (
+                                                                                                                              response
+                                                                                                                            ) => {
+                                                                                                                              this.descargarArchivo(
                                                                                                                                 response
-                                                                                                                              ) => {
-                                                                                                                                this.descargarArchivo(
-                                                                                                                                  response
-                                                                                                                                );
-                                                                                                                              },
-                                                                                                                              (
+                                                                                                                              );
+                                                                                                                            },
+                                                                                                                            (
+                                                                                                                              error
+                                                                                                                            ) => {
+                                                                                                                              this.alertify.warning(
                                                                                                                                 error
-                                                                                                                              ) => {
-                                                                                                                                this.alertify.warning(
-                                                                                                                                  error
-                                                                                                                                );
-                                                                                                                              },
-                                                                                                                              () => {
-                                                                                                                                //#region Item
+                                                                                                                              );
+                                                                                                                            },
+                                                                                                                            () => {
+                                                                                                                              //#region Item
 
-                                                                                                                                tipoArchivoObligacion =
-                                                                                                                                  TipoArchivoObligacion
-                                                                                                                                    .Item
-                                                                                                                                    .value;
+                                                                                                                              tipoArchivoObligacion =
+                                                                                                                                TipoArchivoObligacion
+                                                                                                                                  .Item
+                                                                                                                                  .value;
 
-                                                                                                                                this.liquidacionService
-                                                                                                                                  .DescargarArchivoLiquidacionObligacion(
-                                                                                                                                    listaLiquidacionId,
-                                                                                                                                    tipoArchivoObligacion
-                                                                                                                                  )
-                                                                                                                                  .subscribe(
-                                                                                                                                    (
+                                                                                                                              this.liquidacionService
+                                                                                                                                .DescargarArchivoLiquidacionObligacion(
+                                                                                                                                  listaLiquidacionId,
+                                                                                                                                  tipoArchivoObligacion
+                                                                                                                                )
+                                                                                                                                .subscribe(
+                                                                                                                                  (
+                                                                                                                                    response
+                                                                                                                                  ) => {
+                                                                                                                                    this.descargarArchivo(
                                                                                                                                       response
-                                                                                                                                    ) => {
-                                                                                                                                      this.descargarArchivo(
-                                                                                                                                        response
-                                                                                                                                      );
-                                                                                                                                    },
-                                                                                                                                    (
+                                                                                                                                    );
+                                                                                                                                  },
+                                                                                                                                  (
+                                                                                                                                    error
+                                                                                                                                  ) => {
+                                                                                                                                    this.alertify.warning(
                                                                                                                                       error
-                                                                                                                                    ) => {
-                                                                                                                                      this.alertify.warning(
-                                                                                                                                        error
-                                                                                                                                      );
-                                                                                                                                    },
-                                                                                                                                    () => {
-                                                                                                                                      //#region DEDUCCIONES
+                                                                                                                                    );
+                                                                                                                                  },
+                                                                                                                                  () => {
+                                                                                                                                    //#region DEDUCCIONES
 
-                                                                                                                                      tipoArchivoObligacion =
-                                                                                                                                        TipoArchivoObligacion
-                                                                                                                                          .Deducciones
-                                                                                                                                          .value;
+                                                                                                                                    tipoArchivoObligacion =
+                                                                                                                                      TipoArchivoObligacion
+                                                                                                                                        .Deducciones
+                                                                                                                                        .value;
 
-                                                                                                                                      this.liquidacionService
-                                                                                                                                        .DescargarArchivoLiquidacionObligacion(
-                                                                                                                                          listaLiquidacionId,
-                                                                                                                                          tipoArchivoObligacion
-                                                                                                                                        )
-                                                                                                                                        .subscribe(
-                                                                                                                                          (
+                                                                                                                                    this.liquidacionService
+                                                                                                                                      .DescargarArchivoLiquidacionObligacion(
+                                                                                                                                        listaLiquidacionId,
+                                                                                                                                        tipoArchivoObligacion
+                                                                                                                                      )
+                                                                                                                                      .subscribe(
+                                                                                                                                        (
+                                                                                                                                          response
+                                                                                                                                        ) => {
+                                                                                                                                          this.descargarArchivo(
                                                                                                                                             response
-                                                                                                                                          ) => {
-                                                                                                                                            this.descargarArchivo(
-                                                                                                                                              response
-                                                                                                                                            );
-                                                                                                                                          },
-                                                                                                                                          (
+                                                                                                                                          );
+                                                                                                                                        },
+                                                                                                                                        (
+                                                                                                                                          error
+                                                                                                                                        ) => {
+                                                                                                                                          this.alertify.warning(
                                                                                                                                             error
-                                                                                                                                          ) => {
-                                                                                                                                            this.alertify.warning(
-                                                                                                                                              error
-                                                                                                                                            );
-                                                                                                                                          },
-                                                                                                                                          () => {
-                                                                                                                                            //#region FACTURA
+                                                                                                                                          );
+                                                                                                                                        },
+                                                                                                                                        () => {
+                                                                                                                                          //#region FACTURA
 
-                                                                                                                                            tipoArchivoObligacion =
-                                                                                                                                              TipoArchivoObligacion
-                                                                                                                                                .Factura
-                                                                                                                                                .value;
+                                                                                                                                          tipoArchivoObligacion =
+                                                                                                                                            TipoArchivoObligacion
+                                                                                                                                              .Factura
+                                                                                                                                              .value;
 
-                                                                                                                                            this.liquidacionService
-                                                                                                                                              .DescargarArchivoLiquidacionObligacion(
-                                                                                                                                                listaLiquidacionId,
-                                                                                                                                                tipoArchivoObligacion
-                                                                                                                                              )
-                                                                                                                                              .subscribe(
-                                                                                                                                                (
+                                                                                                                                          this.liquidacionService
+                                                                                                                                            .DescargarArchivoLiquidacionObligacion(
+                                                                                                                                              listaLiquidacionId,
+                                                                                                                                              tipoArchivoObligacion
+                                                                                                                                            )
+                                                                                                                                            .subscribe(
+                                                                                                                                              (
+                                                                                                                                                response
+                                                                                                                                              ) => {
+                                                                                                                                                this.descargarArchivo(
                                                                                                                                                   response
-                                                                                                                                                ) => {
-                                                                                                                                                  this.descargarArchivo(
-                                                                                                                                                    response
-                                                                                                                                                  );
-                                                                                                                                                },
-                                                                                                                                                (
+                                                                                                                                                );
+                                                                                                                                              },
+                                                                                                                                              (
+                                                                                                                                                error
+                                                                                                                                              ) => {
+                                                                                                                                                this.alertify.warning(
                                                                                                                                                   error
-                                                                                                                                                ) => {
-                                                                                                                                                  this.alertify.warning(
-                                                                                                                                                    error
-                                                                                                                                                  );
-                                                                                                                                                },
-                                                                                                                                                () => {
-                                                                                                                                                  this.onLimpiarFactura();
-                                                                                                                                                  this.router.navigate(
-                                                                                                                                                    [
-                                                                                                                                                      '/GENERADOR_OBLIGACIONES',
-                                                                                                                                                    ]
-                                                                                                                                                  );
-                                                                                                                                                }
-                                                                                                                                              );
+                                                                                                                                                );
+                                                                                                                                              },
+                                                                                                                                              () => {
+                                                                                                                                                this.onLimpiarFactura();
+                                                                                                                                                this.router.navigate(
+                                                                                                                                                  [
+                                                                                                                                                    '/GENERADOR_OBLIGACIONES',
+                                                                                                                                                  ]
+                                                                                                                                                );
+                                                                                                                                              }
+                                                                                                                                            );
 
-                                                                                                                                            //#endregion FACTURA
-                                                                                                                                          }
-                                                                                                                                        );
+                                                                                                                                          //#endregion FACTURA
+                                                                                                                                        }
+                                                                                                                                      );
 
-                                                                                                                                      //#endregion DEDUCCIONES
-                                                                                                                                    }
-                                                                                                                                  );
+                                                                                                                                    //#endregion DEDUCCIONES
+                                                                                                                                  }
+                                                                                                                                );
 
-                                                                                                                                //#endregion Item
-                                                                                                                              }
-                                                                                                                            );
+                                                                                                                              //#endregion Item
+                                                                                                                            }
+                                                                                                                          );
 
-                                                                                                                          //#endregion Cabecera
-                                                                                                                        
+                                                                                                                        //#endregion Cabecera
                                                                                                                       },
                                                                                                                       (
                                                                                                                         error

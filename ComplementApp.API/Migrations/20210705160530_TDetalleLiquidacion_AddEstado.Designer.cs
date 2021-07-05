@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210705160530_TDetalleLiquidacion_AddEstado")]
+    partial class TDetalleLiquidacion_AddEstado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -849,9 +851,6 @@ namespace ComplementApp.API.Migrations
 
                     b.Property<int>("ModalidadContrato")
                         .HasColumnType("int");
-
-                    b.Property<string>("MotivoRechazo")
-                        .HasColumnType("VARCHAR(250)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

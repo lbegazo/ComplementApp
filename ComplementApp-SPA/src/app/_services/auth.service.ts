@@ -5,7 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { Transaccion } from '../_models/transaccion';
-import { Observable, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,21 +19,27 @@ export class AuthService {
   transaccionChanged = new Subject<Transaccion[]>();
   transacciones: Transaccion[] = [];
 
+  private currentUserSource = new ReplaySubject<User>(1);
+  currentUser$ = this.currentUserSource.asObservable();
+
   constructor(private http: HttpClient) {}
 
   login(model: any) {
-    return this.http.post(this.baseUrlPlus + 'login', model)
-    .pipe(
+    return this.http.post(this.baseUrlPlus + 'login', model).pipe(
       map((response: any) => {
         const user = response;
         if (user) {
           localStorage.setItem('token', user.token);
+          this.currentUserSource.next(user);
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
-
           this.obtenerListaTransaccionXUsuario1(+this.decodedToken.nameid);
         }
       })
     );
+  }
+
+  setCurrentUser(user: User) {
+    this.currentUserSource.next(user);
   }
 
   private obtenerListaTransaccionXUsuario1(idUsuario: number) {
@@ -64,4 +70,8 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
+  logout() {
+    localStorage.clear();
+    this.currentUserSource.next(null);
+  }
 }

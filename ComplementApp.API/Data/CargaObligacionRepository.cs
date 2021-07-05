@@ -97,6 +97,9 @@ namespace ComplementApp.API.Data
 
             var lista = await (from co in _context.CargaObligacion
                                join rp in _context.RubroPresupuestal on co.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join ff in _context.FuenteFinanciacion on co.FuenteFinanciacionId equals ff.FuenteFinanciacionId
+                               join sf in _context.SituacionFondo on co.SituacionFondoId equals sf.SituacionFondoId
+                               join re in _context.RecursoPresupuestal on co.RecursoPresupuestalId equals re.RecursoPresupuestalId
                                join td in _context.TipoDocumentoIdentidad on co.TipoDocumentoIdentidadId equals td.TipoDocumentoIdentidadId
                                join tds in _context.TipoDocumentoSoporte on co.TipoDocumentoSoporteId equals tds.TipoDocumentoSoporteId
                                join nap in _context.NivelAgrupacionPac on new
@@ -122,7 +125,7 @@ namespace ComplementApp.API.Data
                                {
                                    FechaRegistro = System.DateTime.Now,
                                    FechaPago = co.FechaRegistro,
-                                   FechaLimitePago = fechaLimitePago,
+                                   FechaLimitePago = (co.ValorActual - co.ValorDeduccion > 0) ? fechaLimitePago : System.DateTime.Now,
                                    Obligacion = co.Obligacion,
                                    ValorActual = co.ValorActual,
                                    CodigoTipoBeneficiario = (pci.Nit == co.NumeroIdentificacion) ? "P" : "B",
@@ -165,6 +168,24 @@ namespace ComplementApp.API.Data
                                join ff in _context.FuenteFinanciacion on co.FuenteFinanciacionId equals ff.FuenteFinanciacionId
                                join sf in _context.SituacionFondo on co.SituacionFondoId equals sf.SituacionFondoId
                                join re in _context.RecursoPresupuestal on co.RecursoPresupuestalId equals re.RecursoPresupuestalId
+                               join td in _context.TipoDocumentoIdentidad on co.TipoDocumentoIdentidadId equals td.TipoDocumentoIdentidadId
+                               join tds in _context.TipoDocumentoSoporte on co.TipoDocumentoSoporteId equals tds.TipoDocumentoSoporteId
+                               join nap in _context.NivelAgrupacionPac on new
+                               {
+                                   RubroPresupuestalId = rp.PadreRubroId.Value,
+                                   SituacionFondoId = co.SituacionFondoId.Value,
+                                   FuenteFinanciacionId = co.FuenteFinanciacionId.Value,
+                                   RecursoPresupuestalId = co.RecursoPresupuestalId.Value,
+                                   pci = co.PciId
+                               } equals
+                                new
+                                {
+                                    RubroPresupuestalId = nap.RubroPresupuestalId,
+                                    SituacionFondoId = nap.SituacionFondoId,
+                                    FuenteFinanciacionId = nap.FuenteFinanciacionId,
+                                    RecursoPresupuestalId = nap.RecursoPresupuestalId,
+                                    pci = nap.PciId
+                                }
                                where co.PciId == pciId
                                where co.Estado.ToLower() == estado.ToLower()
                                select new CargaObligacionDto()

@@ -35,7 +35,9 @@ namespace ComplementApp.API.Data
             {
                 var listaPerfilId = listaPerfilxUsuario.Select(x => x.PerfilId).ToList();
 
-                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador) || listaPerfilId.Contains((int)PerfilUsuario.CoordinadorFinanciero))
+                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador) 
+                    || listaPerfilId.Contains((int)PerfilUsuario.CoordinadorFinanciero)
+                    || listaPerfilId.Contains((int)PerfilUsuario.RegistradorContable))
                 {
                     #region Administrador y Coordinador financiero
 
@@ -529,6 +531,7 @@ namespace ComplementApp.API.Data
         public async Task<List<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId)
         {
             var lista = await (from c in _context.CDP
+                                join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
                                where c.Instancia == (int)TipoDocumento.OrdenPago
                                where c.PciId == pciId
                                where c.Crp == crp
@@ -538,13 +541,17 @@ namespace ComplementApp.API.Data
                                    Cdp = c.Cdp,
                                    Crp = c.Crp,
                                    OrdenPago = c.OrdenPago,
+                                   Obligacion = c.Obligacion,
                                    Detalle1 = c.Detalle1.ToUpper(), //Estado OP
+                                   Detalle2 = c.Detalle2, //Codigo Dependencia
                                    Fecha = c.Fecha, //Fecha Orden Pago
                                    Detalle5 = c.Detalle5, //Supervisor
                                    Detalle4 = c.Detalle4, //objeto contrato
                                    ValorInicial = c.ValorInicial, //Valor Bruto
                                    Operacion = c.Operacion, //Valor deducciones
                                    ValorTotal = c.ValorTotal, //valor neto
+                                   IdentificacionRubro = rp.Identificacion, //Rubro Presupuestal
+
                                })
                                  .Distinct()
                                  .OrderBy(c => c.OrdenPago)

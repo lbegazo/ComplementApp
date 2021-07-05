@@ -118,5 +118,15 @@
     "Nombre": "ConCDP",
     "Descripcion": "ConCDP",
     "TipoDocumento": "EstadoPlanAdquisicion"
+  },
+  {
+    "Nombre": "Generado",
+    "Descripcion": "Generado",
+    "TipoDocumento": "DetalleLiquidacion"
+  },
+  {
+    "Nombre": "Rechazado",
+    "Descripcion": "Rechazado",
+    "TipoDocumento": "DetalleLiquidacion"
   }
 ]

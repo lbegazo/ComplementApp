@@ -573,7 +573,7 @@ namespace ComplementApp.API.Services
 
             #region Descuento Dependiente
 
-            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
+            if ((PL17HonorarioSinIvaParametro + viaticosPagados) * valorDescuentoDependiente > valorUvt * 32)
             {
                 if (PL17DescuentoDependiente > 0)
                 {
@@ -582,7 +582,7 @@ namespace ComplementApp.API.Services
             }
             else
             {
-                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
+                C17DescuentoDependiente = (PL17HonorarioSinIvaParametro + viaticosPagados) * PL17DescuentoDependiente;
             }
 
             #endregion Descuento Dependiente
@@ -863,7 +863,7 @@ namespace ComplementApp.API.Services
 
             #region Descuento Dependiente
 
-            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
+            if ((PL17HonorarioSinIvaParametro + viaticosPagados) * valorDescuentoDependiente > valorUvt * 32)
             {
                 if (PL17DescuentoDependiente > 0)
                 {
@@ -872,7 +872,7 @@ namespace ComplementApp.API.Services
             }
             else
             {
-                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
+                C17DescuentoDependiente = (PL17HonorarioSinIvaParametro + viaticosPagados) * PL17DescuentoDependiente;
             }
 
             #endregion Descuento Dependiente
@@ -928,10 +928,7 @@ namespace ComplementApp.API.Services
 
             #endregion Total Deducciones
 
-
-
             C20subTotal3 = C15subTotal2 - PL16MedicinaPrepagada - C17DescuentoDependiente - PL18InteresVivienda;
-
 
             #region Renta exenta
 
@@ -1550,6 +1547,7 @@ namespace ComplementApp.API.Services
                                 detalleLiquidacion.UsuarioIdRegistro = usuarioId;
                                 detalleLiquidacion.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                                 detalleLiquidacion.PciId = pciId;
+                                detalleLiquidacion.EstadoId = (int)EstadoDetalleLiquidacion.Generado;
 
                                 MapearLiquidacionDeducciones(formato, detalleLiquidacion);
 
@@ -1668,7 +1666,7 @@ namespace ComplementApp.API.Services
             decimal tarifaCalculo = 0;
 
             criterioReteFuente = ObtenerCriterioCalculoRendimiento(listaCriterioReteFuente, baseGravableUvtCalculada);
-            
+
             if (criterioReteFuente != null)
             {
                 valorMinimoRango = criterioReteFuente.Desde;
@@ -1925,7 +1923,7 @@ namespace ComplementApp.API.Services
 
             #region Descuento Dependiente
 
-            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
+            if ((PL17HonorarioSinIvaParametro + viaticosPagados) * valorDescuentoDependiente > valorUvt * 32)
             {
                 if (PL17DescuentoDependiente > 0)
                 {
@@ -1934,7 +1932,7 @@ namespace ComplementApp.API.Services
             }
             else
             {
-                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
+                C17DescuentoDependiente = (PL17HonorarioSinIvaParametro + viaticosPagados) * PL17DescuentoDependiente;
             }
 
             #endregion Descuento Dependiente
@@ -2213,7 +2211,7 @@ namespace ComplementApp.API.Services
 
             #region Descuento Dependiente
 
-            if (PL17HonorarioSinIvaParametro * valorDescuentoDependiente > valorUvt * 32)
+            if ((PL17HonorarioSinIvaParametro + viaticosPagados) * valorDescuentoDependiente > valorUvt * 32)
             {
                 if (PL17DescuentoDependiente > 0)
                 {
@@ -2222,7 +2220,7 @@ namespace ComplementApp.API.Services
             }
             else
             {
-                C17DescuentoDependiente = PL17HonorarioSinIvaParametro * PL17DescuentoDependiente;
+                C17DescuentoDependiente = (PL17HonorarioSinIvaParametro + viaticosPagados) * PL17DescuentoDependiente;
             }
 
             #endregion Descuento Dependiente

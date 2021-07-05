@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Input,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { NavService } from '../_services/nav.service';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
@@ -35,8 +30,8 @@ export class TopNavComponent implements OnInit {
   }
 
   logout() {
+    this.authService.logout();
     this.model = {};
-    localStorage.clear();
     this.alertify.message('Su sesión ha sido cerrada');
     this.router.navigate(['/home']);
   }

@@ -117,13 +117,38 @@ export class DetalleLiquidacionService {
 
   RechazarDetalleLiquidacion(
     planPagoId: number,
+    solicitudPagoId: number,
     mensajeRechazo: string
   ): Observable<any> {
     const path = 'RechazarDetalleLiquidacion/';
+    let params = new HttpParams();
+    params = params.append('solicitudPagoId', solicitudPagoId.toString());
+    params = params.append('planPagoId', planPagoId.toString());
+    params = params.append('mensajeRechazo', mensajeRechazo);
+
     return this.http.get(
-      this.baseUrl + path + planPagoId + '/' + mensajeRechazo
+      this.baseUrl + path, { params }
     );
   }
+
+  RechazarLiquidacion(
+    detalleLiquidacionId: number,
+    planPagoId: number,
+    solicitudPagoId: number,
+    mensajeRechazo: string
+  ): Observable<any> {
+    const path = 'RechazarLiquidacion/';
+    let params = new HttpParams();
+    params = params.append('detalleLiquidacionId', detalleLiquidacionId.toString());
+    params = params.append('solicitudPagoId', solicitudPagoId.toString());
+    params = params.append('planPagoId', planPagoId.toString());
+    params = params.append('mensajeRechazo', mensajeRechazo);
+
+    return this.http.get(
+      this.baseUrl + path, { params }
+    );
+  }
+
 
   ObtenerFormatoCausacionyLiquidacionPago(
     solicitudPagoId: number,
@@ -168,7 +193,7 @@ export class DetalleLiquidacionService {
 
   //#region Creación Archivo Cuenta Por Pagar
 
-  public DescargarCabeceraArchivoLiquidacionCuentaPorPagar(
+  DescargarCabeceraArchivoLiquidacionCuentaPorPagar(
     listaLiquidacionId: string
   ): Observable<HttpEvent<Blob>> {
     return this.http.request(
@@ -186,7 +211,7 @@ export class DetalleLiquidacionService {
     );
   }
 
-  public DescargarDetalleArchivoLiquidacionCuentaPorPagar(
+  DescargarDetalleArchivoLiquidacionCuentaPorPagar(
     listaLiquidacionId: string
   ): Observable<HttpEvent<Blob>> {
     return this.http.request(

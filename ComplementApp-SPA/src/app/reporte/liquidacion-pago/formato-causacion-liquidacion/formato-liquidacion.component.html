@@ -894,6 +894,14 @@
           style="width: 90%; margin-left: auto; margin-right: auto"
           class="right"
         >
+        <button
+            type="submit"
+            class="btn btn-danger mr-2"
+            (click)="rechazarLiquidacion()"
+            *ngIf="sePuedeRechazar"
+          >
+            Rechazar
+          </button>
           <button
             type="submit"
             class="btn btn-primary mr-2"

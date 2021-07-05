@@ -417,20 +417,60 @@ export class CausacionyLiquidacionComponent implements OnInit {
   }
 
   verLiquidacion() {
-    if (
-      this.listaSolicitudPago &&
-      this.listaSolicitudPago.length > 0 &&
-      this.listaSolicitudPagoSeleccionada.length === 1
-    ) {
-      this.solicitudPagoIdSeleccionado = this.listaSolicitudPagoSeleccionada[0];
-      this.solicitudPagoSeleccionado = this.listaSolicitudPago.filter(
-        (x) => x.formatoSolicitudPagoId === this.solicitudPagoIdSeleccionado
-      )[0];
+    this.obtenerSolicitudPago();
 
-      if (this.solicitudPagoSeleccionado) {
-        this.obtenerDetallePlanPago(0);
-      }
+    if (this.solicitudPagoSeleccionado) {
+      this.obtenerDetallePlanPago(0);
     }
+  }
+
+  rechazarLiquidacion() {
+    let mensaje = '';
+    let planPagoId = 0;
+    this.alertify.confirm2(
+      'Formato de Causación y Liquidación',
+      '¿Esta seguro que desea rechazar el plan de pago?',
+      () => {
+        mensaje = window.prompt('Motivo de rechazo: ', '');
+        if (mensaje.length === 0) {
+          this.alertify.warning('Debe ingresar el motivo de rechazo');
+        } else {
+          this.obtenerSolicitudPago();
+
+          if (this.solicitudPagoSeleccionado) {
+            this.liquidacionService
+              .RechazarDetalleLiquidacion(
+                this.solicitudPagoSeleccionado.planPagoId,
+                this.solicitudPagoSeleccionado.formatoSolicitudPagoId,
+                mensaje
+              )
+              .subscribe(
+                (response: any) => {
+                  if (!isNaN(response)) {
+                    planPagoId = +response;
+                    this.alertify.success(
+                      'El formato de causación y liquidación se rechazó correctamente'
+                    );
+                  } else {
+                    this.alertify.error(
+                      'No se pudo rechazar el formato de causación y liquidación '
+                    );
+                  }
+                },
+
+                (error) => {
+                  this.alertify.error(
+                    'Hubó un error al rechazar la liquidación ' + error
+                  );
+                },
+                () => {
+                  this.onLimpiarFactura();
+                }
+              );
+          }
+        }
+      }
+    );
   }
 
   cargarListaActividadEconomicaXTercero() {
@@ -449,38 +489,18 @@ export class CausacionyLiquidacionComponent implements OnInit {
       );
   }
 
-  // get esAbrirPopup() {
-  //   const resultado = false;
-  //   this.mostrarValorIngresado = false;
-  //   this.mostrarActividadEconomica = false;
-
-  //   if (this.planPagoSeleccionado) {
-  //     this.modalidadContrato = this.planPagoSeleccionado.modalidadContrato;
-  //     this.tipoPago = this.planPagoSeleccionado.tipoPago;
-  //     this.terceroId = this.planPagoSeleccionado.terceroId;
-
-  //     if (
-  //       this.modalidadContrato ===
-  //         ModalidadContrato.ProveedorConDescuento.value &&
-  //       this.tipoPago === TipoPago.Variable.value
-  //     ) {
-  //       this.mostrarValorIngresado = true;
-  //     }
-
-  //     if (
-  //       this.listaActividadEconomica &&
-  //       this.listaActividadEconomica.length > 1
-  //     ) {
-  //       this.mostrarActividadEconomica = true;
-  //     }
-
-  //     if (this.mostrarValorIngresado || this.mostrarActividadEconomica) {
-  //       return true;
-  //     }
-
-  //     return resultado;
-  //   }
-  // }
+  obtenerSolicitudPago() {
+    if (
+      this.listaSolicitudPago &&
+      this.listaSolicitudPago.length > 0 &&
+      this.listaSolicitudPagoSeleccionada.length === 1
+    ) {
+      this.solicitudPagoIdSeleccionado = this.listaSolicitudPagoSeleccionada[0];
+      this.solicitudPagoSeleccionado = this.listaSolicitudPago.filter(
+        (x) => x.formatoSolicitudPagoId === this.solicitudPagoIdSeleccionado
+      )[0];
+    }
+  }
 
   abrirPopup() {
     let valor = 0;

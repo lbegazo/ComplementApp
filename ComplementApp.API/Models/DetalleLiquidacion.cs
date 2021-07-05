@@ -39,10 +39,8 @@ namespace ComplementApp.API.Models
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorContrato { get; set; }
 
-
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorAdicionReduccion { get; set; }
-
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorCancelado { get; set; }
@@ -210,5 +208,9 @@ namespace ComplementApp.API.Models
         public Pci Pci { get; set; }
         public int? FormatoSolicitudPagoId { get; set; }
         public FormatoSolicitudPago FormatoSolicitudPago { get; set; }
+        public int EstadoId { get; set; }
+        
+        [Column(TypeName = "VARCHAR(250)")]
+        public string MotivoRechazo { get; set; }
     }
 }

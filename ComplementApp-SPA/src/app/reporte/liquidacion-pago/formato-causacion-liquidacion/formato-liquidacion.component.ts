@@ -12,6 +12,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PlanPagoService } from 'src/app/_services/planPago.service';
 import * as jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
+import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
 
 @Component({
   selector: 'app-formato-liquidacion',
@@ -25,6 +26,7 @@ export class FormatoLiquidacionComponent implements OnInit {
   @ViewChild('formatoNgForm', { static: true }) formatoNgForm: NgForm;
 
   @Input() formatoCausacionyLiquidacionPago: FormatoCausacionyLiquidacionPago;
+  @Input() sePuedeRechazar: boolean;
   @Output() esCancelado = new EventEmitter<boolean>();
   liquidacionRechazada = false;
 
@@ -32,7 +34,7 @@ export class FormatoLiquidacionComponent implements OnInit {
   arrayControls = new FormArray([]);
 
   constructor(
-    private planPagoService: PlanPagoService,
+    private liquidacionService: DetalleLiquidacionService,
     private alertify: AlertifyService,
     private fb: FormBuilder
   ) {}
@@ -95,6 +97,53 @@ export class FormatoLiquidacionComponent implements OnInit {
 
   onCancelar() {
     this.esCancelado.emit(true);
+  }
+
+  rechazarLiquidacion(){
+    let mensaje = '';
+    let planPagoId = 0;
+    this.alertify.confirm2(
+      'Formato de Causación y Liquidación',
+      '¿Esta seguro que desea rechazar la liquidación?',
+      () => {
+        mensaje = window.prompt('Motivo de rechazo: ', '');
+        if (mensaje.length === 0) {
+          this.alertify.warning('Debe ingresar el motivo de rechazo');
+        } else {
+          this.liquidacionService
+            .RechazarLiquidacion(
+              this.formatoCausacionyLiquidacionPago.detalleLiquidacionId,
+              this.formatoCausacionyLiquidacionPago.planPagoId,
+              this.formatoCausacionyLiquidacionPago.formatoSolicitudPagoId,
+              mensaje
+            )
+            .subscribe(
+              (response: any) => {
+                if (!isNaN(response)) {
+                  planPagoId = +response;
+                  this.alertify.success(
+                    'El formato de causación y liquidación se rechazó correctamente'
+                  );
+                  this.liquidacionRechazada = true;
+                } else {
+                  this.alertify.error(
+                    'No se pudo rechazar el formato de causación y liquidación '
+                  );
+                }
+              },
+
+              (error) => {
+                this.alertify.error(
+                  'Hubó un error al rechazar la liquidación ' + error
+                );
+              },
+              () => {
+                this.onCancelar();
+              }
+            );
+        }
+      }
+    );
   }
 
   get textoComprobanteContable() {

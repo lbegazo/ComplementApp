@@ -123,6 +123,7 @@ export class FormatoCausacionLiquidacionComponent implements OnInit {
           this.liquidacionService
             .RechazarDetalleLiquidacion(
               this.formatoCausacionyLiquidacionPago.planPagoId,
+              this.formatoCausacionyLiquidacionPago.formatoSolicitudPagoId,
               mensaje
             )
             .subscribe(

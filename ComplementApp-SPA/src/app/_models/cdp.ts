@@ -10,6 +10,7 @@ export interface Cdp {
   fecha: Date;
   fechaFormato: string;
   detalle1: string; // Estado
+  detalle2: string; // Codigo dependencia
   detalle4: string; // Objeto del bien
   objeto: string; // Objeto del bien completo
   detalle5: string; // Supervisor

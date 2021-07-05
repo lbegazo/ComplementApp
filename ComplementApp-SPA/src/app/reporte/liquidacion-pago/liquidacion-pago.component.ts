@@ -13,19 +13,14 @@ import { noop, Observable, Observer, of, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/Operators';
 import {
   EstadoPlanPago,
-  ModalidadContrato,
-  TipoPago,
 } from 'src/app/_models/enum';
 import { FormatoCausacionyLiquidacionPago } from 'src/app/_models/formatoCausacionyLiquidacionPago';
 import { PaginatedResult, Pagination } from 'src/app/_models/pagination';
-import { PlanPago } from 'src/app/_models/planPago';
 import { Tercero } from 'src/app/_models/tercero';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { DetalleLiquidacionService } from 'src/app/_services/detalleLiquidacion.service';
-import { PlanPagoService } from 'src/app/_services/planPago.service';
 import { environment } from 'src/environments/environment';
-import { FormatoLiquidacionComponent } from './formato-causacion-liquidacion/formato-liquidacion.component';
 
 @Component({
   selector: 'app-liquidacion-pago',

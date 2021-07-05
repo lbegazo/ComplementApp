@@ -46,19 +46,19 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(250)")]
         public string Observaciones { get; set; }
-        public DateTime? FechaFactura { get; set; }        
+        public DateTime? FechaFactura { get; set; }
         public int? EstadoPlanPagoId { get; set; }
         public int? EstadoOrdenPagoId { get; set; }
         public int TerceroId { get; set; }
         public Tercero Tercero { get; set; }
         public int? RubroPresupuestalId { get; set; }
-        public int? UsoPresupuestalId { get; set; } 
-        public int UsuarioIdRegistro { get; set; }  
-        public DateTime? FechaRegistro { get; set; }   
-        public int UsuarioIdModificacion { get; set; }  
+        public int? UsoPresupuestalId { get; set; }
+        public int UsuarioIdRegistro { get; set; }
+        public DateTime? FechaRegistro { get; set; }
+        public int UsuarioIdModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
 
-         [Column(TypeName = "VARCHAR(250)")]
+        [Column(TypeName = "VARCHAR(250)")]
         public string MotivoRechazo { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
