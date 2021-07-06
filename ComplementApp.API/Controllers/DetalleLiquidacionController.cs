@@ -361,7 +361,7 @@ namespace ComplementApp.API.Controllers
 
                     //Enviar email
                     var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
-                    await EnviarEmail(planPagoDto, mensajeRechazo);
+                    //await EnviarEmail(planPagoDto, mensajeRechazo);
 
                     //Actualizar formato solicitud pago
                     var formatoBD = await _solicitudPagoRepository.ObtenerFormatoSolicitudPagoBase(solicitudPagoId);
