@@ -525,7 +525,7 @@ namespace ComplementApp.API.Controllers
             planPago.ValorInicial = valor;
             planPago.ValorAdicion = 0;
             planPago.ValorAPagar = valor;
-            planPago.SaldoDisponible = 0;
+            planPago.SaldoDisponible = valor;
             planPago.Viaticos = viaticos;
             planPago.TerceroId = cdp.TerceroId;
             planPago.NumeroPago = numeroPago;

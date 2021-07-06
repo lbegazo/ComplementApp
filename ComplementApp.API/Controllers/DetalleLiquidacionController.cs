@@ -346,6 +346,7 @@ namespace ComplementApp.API.Controllers
                         planPagoBD.EstadoPlanPagoId = (int)EstadoPlanPago.PorPagar;
                         planPagoBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
                         planPagoBD.UsuarioIdModificacion = usuarioId;
+                        planPagoBD.SaldoDisponible = planPagoBD.ValorInicial;
                         await _dataContext.SaveChangesAsync();
                     }
 
