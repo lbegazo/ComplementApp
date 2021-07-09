@@ -364,6 +364,7 @@ namespace ComplementApp.API.Data
                          {
                              DetalleLiquidacionId = dl.DetalleLiquidacionId,
                              PlanPagoId = dl.PlanPagoId,
+                             Crp = dl.Crp.ToString(),
                              FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value,
                              IdentificacionTercero = dl.NumeroIdentificacion,
                              NombreTercero = dl.Nombre,
@@ -427,7 +428,8 @@ namespace ComplementApp.API.Data
         {
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
-                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join dl in _context.DetalleLiquidacion on new { sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId } equals
+                                                                         new { dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value }
                                join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where sp.PciId == dl.PciId
@@ -451,7 +453,8 @@ namespace ComplementApp.API.Data
 
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
-                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join dl in _context.DetalleLiquidacion on new { sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId } equals
+                                                                            new { dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value }
                                join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
@@ -525,7 +528,8 @@ namespace ComplementApp.API.Data
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
-                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join dl in _context.DetalleLiquidacion on new { Crp = sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId } equals
+                                                                         new { Crp = dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value }
                                join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join rc in _context.RelacionContable on cp.RelacionContableId equals rc.RelacionContableId
                                join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
@@ -597,7 +601,8 @@ namespace ComplementApp.API.Data
             var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
                                join rp in _context.RubroPresupuestal on cpc.RubroPresupuestalId equals rp.RubroPresupuestalId
                                join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
-                               join dl in _context.DetalleLiquidacion on sp.Crp equals dl.Crp
+                               join dl in _context.DetalleLiquidacion on new { sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId } equals
+                                                                            new { dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value }
                                join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join up in _context.UsoPresupuestal on cp.UsoPresupuestalId equals up.UsoPresupuestalId
                                where (sp.PciId == dl.PciId)
@@ -633,7 +638,8 @@ namespace ComplementApp.API.Data
 
             var lista = await (from dl in _context.DetalleLiquidacion
                                join t in _context.Tercero on dl.TerceroId equals t.TerceroId
-                               join sp in _context.FormatoSolicitudPago on dl.Crp equals sp.Crp
+                               join sp in _context.FormatoSolicitudPago on new { dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value } equals
+                                                                            new { sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId }
                                join p in _context.ParametroLiquidacionTercero on dl.TerceroId equals p.TerceroId into parametroLiquidacion
                                from pl in parametroLiquidacion.DefaultIfEmpty()
                                where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado

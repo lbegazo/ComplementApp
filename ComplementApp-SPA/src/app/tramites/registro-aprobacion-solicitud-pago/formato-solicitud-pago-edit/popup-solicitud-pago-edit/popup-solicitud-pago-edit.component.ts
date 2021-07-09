@@ -291,6 +291,14 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
         return;
       }
 
+      if (!this.validarValorLimiteRubroPresupuestal()) {
+        const a = 'error';
+        this.alertify.warning(
+          'El valor registrado en cada rubro presupuestal debe ser menor a su correspondiente saldo actual.'
+        );
+        return;
+      }
+
       const listaDetalle = this.leerRubrosPresupuestales();
 
       //#endregion Read Rubros Presupuestales
@@ -406,6 +414,23 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  validarValorLimiteRubroPresupuestal(): boolean {
+    let resultado = true;
+
+    for (const element of this.rubrosPresupuestales) {
+      if (element.valorSolicitud > element.saldoAct) {
+        resultado = false;
+        break;
+      }
+      else
+      {
+        resultado = true;
+      }
+    }
+
+    return resultado;
   }
 
   //#region Controles

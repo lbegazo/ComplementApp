@@ -1,18 +1,21 @@
 <nav
   class="navbar navbar-expand-md navbar-dark"
-  style="padding-left: 50px; padding-right: 50px; background-color: #3C94DB;"
+  style="padding-left: 50px; padding-right: 50px; background-color: #3c94db"
 >
   <div class="container-fluid" style="padding: 0px">
     <div
       style="width: 95%; margin-left: auto; margin-right: auto"
       class="d-flex justify-content-between"
     >
-      <div style="width: 30%" class="d-flex justify-content-start align-self-center">
+      <div
+        style="width: 30%"
+        class="d-flex justify-content-start align-self-center"
+      >
         <mat-toolbar
           color="primary"
           class="mat-elevation-z1"
           style="
-            background-color: #3C94DB;
+            background-color: #3c94db;
             width: 600px;
             box-shadow: none;
             padding-left: 0px;
@@ -30,7 +33,10 @@
         </mat-toolbar>
       </div>
       <div style="width: 5%"></div>
-      <div style="width: 30%;" class="d-flex justify-content-center align-self-center">
+      <div
+        style="width: 30%"
+        class="d-flex justify-content-center align-self-center"
+      >
         <a [routerLink]="['/']">
           <img
             src="./assets/img/sigpaa.png"
@@ -39,9 +45,15 @@
             height="80"
           />
         </a>
+        <!-- <div *ngIf="esQA">
+          <img src="./assets/img/QA.png" alt="QA" width="90" height="80" />
+        </div> -->
       </div>
       <div style="width: 5%"></div>
-      <div style="width: 30%;" class="d-flex justify-content-end align-self-center">
+      <div
+        style="width: 30%"
+        class="d-flex justify-content-end align-self-center"
+      >
         <div *ngIf="loggedIn()" class="dropdown" dropdown>
           <a class="dropdown-toggle text-light" dropdownToggle>
             Bienvenido
@@ -58,7 +70,7 @@
               ><i class="fa fa-sign-out"></i> Cerrar sesión</a
             >
           </div>
-        </div>        
+        </div>
       </div>
     </div>
   </div>

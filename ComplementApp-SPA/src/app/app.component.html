@@ -3,7 +3,7 @@
 </ngx-spinner>
 
 <div *ngIf="loggedIn()">
-  <app-top-nav class="fixed-topnav" fxHide.gt-xs></app-top-nav>
+  <app-top-nav class="fixed-topnav" fxHide.gt-xs [esQA]="esQA"></app-top-nav>
 </div>
 
 <mat-sidenav-container [hidden]="!loggedIn()">
@@ -11,7 +11,7 @@
     <mat-nav-list>
       <app-menu-list-item
         *ngFor="let item of transacciones"
-        [item]="item"
+        [item]="item"        
       ></app-menu-list-item>
     </mat-nav-list>
   </mat-sidenav>
@@ -56,7 +56,7 @@
                       alt="SIGPAA"
                       width="250"
                       height="250"
-                    />
+                    />                   
                   </div>
                 </div>
               </div>
