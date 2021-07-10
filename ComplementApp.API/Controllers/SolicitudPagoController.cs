@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-   
+
     public class SolicitudPagoController : BaseApiController
     {
         #region Variable
@@ -386,9 +386,11 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "crp")] int crp)
+        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "terceroId")] int terceroId,
+                                                                     [FromQuery(Name = "crp")] int crp)
         {
             FormatoSolicitudPagoDto formato = null;
+            string listaCompromiso = string.Empty;
 
             try
             {
@@ -397,15 +399,20 @@ namespace ComplementApp.API.Controllers
                 {
                     pciId = int.Parse(valorPciId);
                 }
+
                 formato = await _repo.ObtenerFormatoSolicitudPago(crp, pciId);
                 if (formato != null)
                 {
+                    List<long> listaCrp = await _repo.ObtenerListaCompromisoXTerceroId(terceroId);
+                    listaCompromiso = string.Join(",", listaCrp);
+
                     var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp, pciId);
 
+                    formato.ListaCompromiso = listaCompromiso;
                     formato.CantidadMaxima = CantidadMaxima;
                     formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
 
-                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(formato.Cdp.Crp, pciId);
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXTerceroId(terceroId, listaCrp);
                     if (pagosRealizados != null)
                     {
                         var listaOrdenPago = from pr in pagosRealizados

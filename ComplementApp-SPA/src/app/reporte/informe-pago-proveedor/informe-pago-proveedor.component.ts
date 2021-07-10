@@ -28,10 +28,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-informe-pago-proveedor',
   templateUrl: './informe-pago-proveedor.component.html',
-  styleUrls: ['./informe-pago-proveedor.component.scss']
+  styleUrls: ['./informe-pago-proveedor.component.scss'],
 })
 export class InformePagoProveedorComponent implements OnInit {
-
   nombreTransaccion: string;
   transaccion: Transaccion;
 
@@ -69,6 +68,7 @@ export class InformePagoProveedorComponent implements OnInit {
   usuarioLogueado: Usuario;
   perfilId: number;
   listaNotasLegales: ValorSeleccion[] = [];
+  listaInformacionPagador: ValorSeleccion[] = [];
 
   constructor(
     private http: HttpClient,
@@ -82,6 +82,7 @@ export class InformePagoProveedorComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarNotasLegales();
+    this.cargarInformacionPagador();
 
     this.route.data.subscribe((data) => {
       this.transaccion = data['transaccion'];
@@ -274,37 +275,42 @@ export class InformePagoProveedorComponent implements OnInit {
   }
 
   ObtenerFormatoSolicitudPago() {
-    this.solicitudPagoService.ObtenerFormatoSolicitudPago(this.crp).subscribe(
-      (response: FormatoSolicitudPagoDto) => {
-        if (response !== null) {
-          this.formatoSolicitudPago = response;
-          if (this.formatoSolicitudPago) {
-            this.terceroId = this.formatoSolicitudPago.tercero.terceroId;
-          } else {
-            this.alertify.error(
-              'No se puede obtener información para el formato de solicitud de pago'
+    this.solicitudPagoService
+      .ObtenerFormatoSolicitudPago(
+        this.planPagoSeleccionado.crp,
+        this.planPagoSeleccionado.terceroId
+      )
+      .subscribe(
+        (response: FormatoSolicitudPagoDto) => {
+          if (response !== null) {
+            this.formatoSolicitudPago = response;
+            if (this.formatoSolicitudPago) {
+              this.terceroId = this.formatoSolicitudPago.tercero.terceroId;
+            } else {
+              this.alertify.error(
+                'No se puede obtener información para el formato de solicitud de pago'
+              );
+              return;
+            }
+          }
+        },
+        (error) => {
+          this.alertify.error(
+            'Hubo un error al obtener el formato de liquidación.'
+          );
+        },
+        () => {
+          if (
+            this.formatoSolicitudPago &&
+            this.formatoSolicitudPago.tercero &&
+            this.formatoSolicitudPago.tercero.terceroId > 0
+          ) {
+            this.obtenerParametrizacionTercero(
+              this.formatoSolicitudPago.tercero.terceroId
             );
-            return;
           }
         }
-      },
-      (error) => {
-        this.alertify.error(
-          'Hubo un error al obtener el formato de liquidación.'
-        );
-      },
-      () => {
-        if (
-          this.formatoSolicitudPago &&
-          this.formatoSolicitudPago.tercero &&
-          this.formatoSolicitudPago.tercero.terceroId > 0
-        ) {
-          this.obtenerParametrizacionTercero(
-            this.formatoSolicitudPago.tercero.terceroId
-          );
-        }
-      }
-    );
+      );
   }
 
   obtenerParametrizacionTercero(terceroId: number) {
@@ -335,6 +341,17 @@ export class InformePagoProveedorComponent implements OnInit {
     );
   }
 
+  cargarInformacionPagador() {
+    this.listaService.ObtenerParametrosGeneralesXTipo('InformePagoProveedores').subscribe(
+      (lista: ValorSeleccion[]) => {
+        this.listaInformacionPagador = lista;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
+  }
+
   HabilitarCabecera($event) {
     this.pagination = {
       currentPage: 1,
@@ -347,6 +364,4 @@ export class InformePagoProveedorComponent implements OnInit {
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }
-
-
 }

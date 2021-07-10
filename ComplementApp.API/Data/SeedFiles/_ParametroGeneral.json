@@ -108,5 +108,29 @@
     "Descripcion": "CantidadMinimaArchivoLiquidacion",
     "Valor": "8",
     "Tipo": null
+  },
+  {
+    "Nombre": "Nombre",
+    "Descripcion": "Nombre",
+    "Valor": "Luis Begazo Samanez",
+    "Tipo": "InformePagoProveedores"
+  },
+  {
+    "Nombre": "NumeroIdentificacion",
+    "Descripcion": "NumeroIdentificacion",
+    "Valor": "40439111",
+    "Tipo": "InformePagoProveedores"
+  },
+  {
+    "Nombre": "Cargo",
+    "Descripcion": "Cargo",
+    "Valor": "Contratista de la República",
+    "Tipo": "InformePagoProveedores"
+  },
+  {
+    "Nombre": "Firma",
+    "Descripcion": "Firma",
+    "Valor": "Firma del Pagador",
+    "Tipo": "InformePagoProveedores"
   }
 ]

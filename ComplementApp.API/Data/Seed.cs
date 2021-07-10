@@ -14,7 +14,7 @@ namespace ComplementApp.API.Data
     {
         public static void CargarDataInicial(DataContext context)
         {
-            //SeedPosicionPac(context);
+            // SeedPosicionPac(context);
             // SeedParametroSistema(context);
             // SeedPci(context);
 
@@ -24,13 +24,13 @@ namespace ComplementApp.API.Data
             // SeedArea(context);
             // SeedTipoOperacion(context);
             // SeedTipoDetalleModificacion(context);
-            SeedEstado(context);
+            // SeedEstado(context);
             // SeedTercero(context);
             // SeedActividadGeneral(context);
             // SeedUsoPresupuestal(context);
 
             // SeedPerfil(context);
-             SeedTransaccion(context);
+            // SeedTransaccion(context);
             // SeedPerfilTransaccion(context);
             // SeedUsuarioPerfil(context);
 
@@ -39,7 +39,7 @@ namespace ComplementApp.API.Data
             // SeedActividadEspecifica(context);
 
             // SeedTipoBaseDeduccion(context);
-            // SeedParametroGeneral(context);
+             SeedParametroGeneral(context);
             // SeedDeduccion(context);
             // SeedTerceroDeducciones(context);
             // SeedParametroLiquidacionTercero(context);
@@ -634,7 +634,7 @@ namespace ComplementApp.API.Data
         {
             ParametroGeneral nuevoItem = null;
             List<ParametroGeneral> lista = new List<ParametroGeneral>();
-            if (!context.ParametroGeneral.Any())
+            //if (!context.ParametroGeneral.Any())
             {
                 if (File.Exists("Data/SeedFiles/_ParametroGeneral.json"))
                 {

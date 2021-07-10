@@ -28,10 +28,9 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-registro-aprobacion-solicitud-pago',
   templateUrl: './registro-aprobacion-solicitud-pago.component.html',
-  styleUrls: ['./registro-aprobacion-solicitud-pago.component.scss']
+  styleUrls: ['./registro-aprobacion-solicitud-pago.component.scss'],
 })
 export class RegistroAprobacionSolicitudPagoComponent implements OnInit {
-
   nombreTransaccion: string;
   transaccion: Transaccion;
 
@@ -274,37 +273,42 @@ export class RegistroAprobacionSolicitudPagoComponent implements OnInit {
   }
 
   ObtenerFormatoSolicitudPago() {
-    this.solicitudPagoService.ObtenerFormatoSolicitudPago(this.crp).subscribe(
-      (response: FormatoSolicitudPagoDto) => {
-        if (response !== null) {
-          this.formatoSolicitudPago = response;
-          if (this.formatoSolicitudPago) {
-            this.terceroId = this.formatoSolicitudPago.tercero.terceroId;
-          } else {
-            this.alertify.error(
-              'No se puede obtener información para el formato de solicitud de pago'
+    this.solicitudPagoService
+      .ObtenerFormatoSolicitudPago(
+        this.planPagoSeleccionado.crp,
+        this.planPagoSeleccionado.terceroId
+      )
+      .subscribe(
+        (response: FormatoSolicitudPagoDto) => {
+          if (response !== null) {
+            this.formatoSolicitudPago = response;
+            if (this.formatoSolicitudPago) {
+              this.terceroId = this.formatoSolicitudPago.tercero.terceroId;
+            } else {
+              this.alertify.error(
+                'No se puede obtener información para el formato de solicitud de pago'
+              );
+              return;
+            }
+          }
+        },
+        (error) => {
+          this.alertify.error(
+            'Hubo un error al obtener el formato de liquidación.'
+          );
+        },
+        () => {
+          if (
+            this.formatoSolicitudPago &&
+            this.formatoSolicitudPago.tercero &&
+            this.formatoSolicitudPago.tercero.terceroId > 0
+          ) {
+            this.obtenerParametrizacionTercero(
+              this.formatoSolicitudPago.tercero.terceroId
             );
-            return;
           }
         }
-      },
-      (error) => {
-        this.alertify.error(
-          'Hubo un error al obtener el formato de liquidación.'
-        );
-      },
-      () => {
-        if (
-          this.formatoSolicitudPago &&
-          this.formatoSolicitudPago.tercero &&
-          this.formatoSolicitudPago.tercero.terceroId > 0
-        ) {
-          this.obtenerParametrizacionTercero(
-            this.formatoSolicitudPago.tercero.terceroId
-          );
-        }
-      }
-    );
+      );
   }
 
   obtenerParametrizacionTercero(terceroId: number) {
@@ -347,5 +351,4 @@ export class RegistroAprobacionSolicitudPagoComponent implements OnInit {
     this.mostrarCabecera = true;
     this.onLimpiarFactura();
   }
-
 }

@@ -19,6 +19,8 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<Numeracion> ObtenerUltimaNumeracionDisponible(int pciId);
         Task<Numeracion> ObtenerNumeracionBase(int numeracionId);
         Task<Numeracion> ObtenerNumeracionxNumeroFactura(string numeroFactura);
+        Task<List<long>> ObtenerListaCompromisoXTerceroId(int terceroId);
+        Task<List<CDPDto>> ObtenerPagosRealizadosXTerceroId(int terceroId, List<long> listaCrp);
 
         #region Proceso Liquidación Masiva
         Task<ICollection<FormatoSolicitudPago>> ObtenerListaFormatoSolicitudPagoBase(List<int> listaSolicitudPagoId);

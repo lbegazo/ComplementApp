@@ -4,7 +4,6 @@ using ComplementApp.API.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ComplementApp.API.Dtos;
-using ComplementApp.API.Interfaces;
 using ComplementApp.API.Helpers;
 using System.Globalization;
 using ComplementApp.API.Interfaces.Repository;
@@ -35,7 +34,7 @@ namespace ComplementApp.API.Data
             {
                 var listaPerfilId = listaPerfilxUsuario.Select(x => x.PerfilId).ToList();
 
-                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador) 
+                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador)
                     || listaPerfilId.Contains((int)PerfilUsuario.CoordinadorFinanciero)
                     || listaPerfilId.Contains((int)PerfilUsuario.RegistradorContable))
                 {
@@ -53,6 +52,7 @@ namespace ComplementApp.API.Data
                                  Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
+                                 TerceroId = c.TerceroId,
                              })
                           .Distinct()
                           .OrderBy(x => x.Crp);
@@ -83,10 +83,11 @@ namespace ComplementApp.API.Data
                                  Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
+                                 TerceroId = c.TerceroId,
                              })
                             .Distinct()
                             .OrderBy(x => x.Crp);
-                            
+
                     #endregion SupervisorContractual
                 }
                 else if (listaPerfilId.Contains((int)PerfilUsuario.Contratista))
@@ -107,6 +108,7 @@ namespace ComplementApp.API.Data
                                  Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
+                                 TerceroId = c.TerceroId,
                              })
                             .Distinct()
                             .OrderBy(x => x.Crp);
@@ -217,6 +219,16 @@ namespace ComplementApp.API.Data
         public async Task<FormatoSolicitudPago> ObtenerFormatoSolicitudPagoBase(int formatoSolicitudPagoId)
         {
             return await _context.FormatoSolicitudPago.FirstOrDefaultAsync(u => u.FormatoSolicitudPagoId == formatoSolicitudPagoId);
+        }
+
+        public async Task<List<long>> ObtenerListaCompromisoXTerceroId(int terceroId)
+        {
+            var listaCompromiso = (from c in _context.CDP
+                                   where c.TerceroId == terceroId
+                                   where c.Instancia == (int)TipoDocumento.Compromiso
+                                   select c.Crp).Distinct();
+
+            return await listaCompromiso.ToListAsync();
         }
 
         public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp, int pciId)
@@ -531,7 +543,7 @@ namespace ComplementApp.API.Data
         public async Task<List<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId)
         {
             var lista = await (from c in _context.CDP
-                                join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
                                where c.Instancia == (int)TipoDocumento.OrdenPago
                                where c.PciId == pciId
                                where c.Crp == crp
@@ -559,6 +571,40 @@ namespace ComplementApp.API.Data
 
             return lista;
         }
+
+        public async Task<List<CDPDto>> ObtenerPagosRealizadosXTerceroId(int terceroId, List<long> listaCrp)
+        {
+            var lista = await (from c in _context.CDP
+                               join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
+                               where c.Instancia == (int)TipoDocumento.OrdenPago
+                               where c.TerceroId == terceroId
+                               where listaCrp.Contains(c.Crp)
+                               where c.Detalle1.ToUpper() == "PAGADA"
+                               select new CDPDto()
+                               {
+                                   Cdp = c.Cdp,
+                                   Crp = c.Crp,
+                                   OrdenPago = c.OrdenPago,
+                                   Obligacion = c.Obligacion,
+                                   Detalle1 = c.Detalle1.ToUpper(), //Estado OP
+                                   Detalle2 = c.Detalle2, //Codigo Dependencia
+                                   Fecha = c.Fecha, //Fecha Orden Pago
+                                   Detalle5 = c.Detalle5, //Supervisor
+                                   Detalle4 = c.Detalle4, //objeto contrato
+                                   ValorInicial = c.ValorInicial, //Valor Bruto
+                                   Operacion = c.Operacion, //Valor deducciones
+                                   ValorTotal = c.ValorTotal, //valor neto
+                                   IdentificacionRubro = rp.Identificacion, //Rubro Presupuestal
+
+                               })
+                                 .Distinct()
+                                 .OrderBy(c => c.Crp)
+                                 .ThenBy(c => c.OrdenPago)
+                                 .ToListAsync();
+
+            return lista;
+        }
+
 
         public async Task<Numeracion> ObtenerUltimaNumeracionDisponible(int pciId)
         {

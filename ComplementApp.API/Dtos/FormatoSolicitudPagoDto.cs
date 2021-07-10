@@ -17,6 +17,7 @@ namespace ComplementApp.API.Dtos
         public string MesDescripcion { get; set; }
         public string NumeroPlanilla { get; set; }
         public string NumeroFactura { get; set; }
+        public string ListaCompromiso { get; set; }
         public string Observaciones { get; set; }
         public decimal ValorBaseGravableRenta { get; set; }
         public decimal ValorIva { get; set; }

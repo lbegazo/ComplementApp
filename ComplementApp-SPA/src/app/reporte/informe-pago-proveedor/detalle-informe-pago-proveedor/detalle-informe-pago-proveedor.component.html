@@ -31,9 +31,7 @@
                                 style="width: 70%; height: 60px"
                                 class="center fontLarge stronger"
                               >
-                                <STRONG
-                                  >INFORME DE PAGO A PROVEEDORES</STRONG
-                                >
+                                <STRONG>INFORME DE PAGO A PROVEEDORES</STRONG>
                               </td>
                               <td
                                 style="width: 15%; height: 60px"
@@ -157,13 +155,11 @@
                               <td style="width: 15%" class="center fontSmaller">
                                 <span class="stronger">NUM. CDP</span>
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
-                                <span class="stronger">NUM. COMPROMISO</span>
-                              </td>
                               <td style="width: 15%" class="center fontSmaller">
-                                <span class="stronger"
-                                  >FECHA REG. COMPROMISO</span
-                                >
+                                <span class="stronger">NUM. CRP</span>
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
+                                <span class="stronger">FECHA REG. CRP</span>
                               </td>
                             </tr>
                             <tr>
@@ -195,10 +191,10 @@
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.cdp.cdp }}
                               </td>
-                              <td style="width: 10%" class="center fontSmaller">
-                                {{ formatoSolicitudPago?.cdp.crp }}
-                              </td>
                               <td style="width: 15%" class="center fontSmaller">
+                                {{ formatoSolicitudPago?.listaCompromiso }}
+                              </td>
+                              <td style="width: 10%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.cdp.fecha
                                     | date: "dd/MM/yyyy"
@@ -446,6 +442,26 @@
                               <!--Titulo de Columnas-->
                               <div class="row borderTop">
                                 <div
+                                  style="width: 3%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>NUM.</strong>
+                                </div>
+                                <div
+                                  style="width: 4%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>CRP</strong>
+                                </div>
+                                <div
                                   style="width: 5%"
                                   class="
                                     borderBottonRight
@@ -453,30 +469,20 @@
                                     fontSmaller
                                   "
                                 >
-                                  <strong>NUM. PAGO</strong>
+                                  <strong>OBLI.</strong>
                                 </div>
                                 <div
-                                  style="width: 10%"
+                                  style="width: 5%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>OBLIGACION</strong>
+                                  <strong>OP</strong>
                                 </div>
                                 <div
-                                  style="width: 10%"
-                                  class="
-                                    borderBottonRight
-                                    aplicaBackground
-                                    fontSmaller
-                                  "
-                                >
-                                  <strong>ORDEN DE PAGO</strong>
-                                </div>
-                                <div
-                                  style="width: 10%"
+                                  style="width: 6%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -486,7 +492,7 @@
                                   <strong>ESTADO OP</strong>
                                 </div>
                                 <div
-                                  style="width: 10%"
+                                  style="width: 6%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -496,17 +502,17 @@
                                   <strong>FECHA OP</strong>
                                 </div>
                                 <div
-                                  style="width: 10%"
+                                  style="width: 5%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>DEPENDENCIA</strong>
+                                  <strong>DEPEND.</strong>
                                 </div>
                                 <div
-                                  style="width: 10%"
+                                  style="width: 14%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -516,7 +522,7 @@
                                   <strong>RUBRO PRES.</strong>
                                 </div>
                                 <div
-                                  style="width: 12%"
+                                  style="width: 9%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -526,17 +532,7 @@
                                   <strong>VALOR BRUTO</strong>
                                 </div>
                                 <div
-                                  style="width: 10%"
-                                  class="
-                                    borderBottonRight
-                                    aplicaBackground
-                                    fontSmaller
-                                  "
-                                >
-                                  <strong>VALOR DEDUC.</strong>
-                                </div>
-                                <div
-                                  style="width: 13%"
+                                  style="width: 9%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -544,6 +540,26 @@
                                   "
                                 >
                                   <strong>VALOR NETO</strong>
+                                </div>
+                                <div
+                                  style="width: 8%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>VALOR REINT.</strong>
+                                </div>
+                                <div
+                                  style="width: 26%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>OBJ. CONTRATO</strong>
                                 </div>
                               </div>
                               <!--Pagos realizados-->
@@ -558,7 +574,7 @@
                                     >
                                       <ng-container [formGroupName]="i">
                                         <div
-                                          style="width: 5%"
+                                          style="width: 3%"
                                           class="
                                             borderBottonRight
                                             centerAlign
@@ -568,7 +584,15 @@
                                           {{ i + 1 }}
                                         </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 4%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.crp }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 5%"
                                           class="borderBottonRight center"
                                         >
                                           <p class="addPaddingLeft fontSmaller">
@@ -576,7 +600,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 5%"
                                           class="borderBottonRight center"
                                         >
                                           <p class="addPaddingLeft fontSmaller">
@@ -584,7 +608,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 6%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -592,9 +616,9 @@
                                           >
                                             {{ item?.detalle1 }}
                                           </p>
-                                        </div>                                        
+                                        </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 6%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -606,7 +630,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 5%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -616,7 +640,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 14%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -626,7 +650,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 12%"
+                                          style="width: 9%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -639,7 +663,19 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 10%"
+                                          style="width: 9%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.valorTotal | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 8%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -651,14 +687,17 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 13%"
+                                          style="width: 26%"
                                           class="borderBottonRight center"
                                         >
                                           <p
                                             class="addPaddingRight fontSmaller"
                                           >
                                             {{
-                                              item?.valorTotal | number: "1.0-0"
+                                              item?.detalle4.length > 50
+                                                ? (item?.detalle4
+                                                    | slice: 0:50) + ".."
+                                                : item?.detalle4
                                             }}
                                           </p>
                                         </div>
@@ -674,9 +713,7 @@
                       <!--DETALLE SOLICITUD DE PAGO ACTUAL-->
                       <tr>
                         <td class="center fontMedium" style="height: 40px">
-                          <strong
-                            >III. DETALLE DE RUBROS PRESUPUESTALES</strong
-                          >
+                          <strong>III. DETALLE DE RUBROS PRESUPUESTALES</strong>
                         </td>
                       </tr>
                       <tr *ngIf="notaLegal1 !== '' || notaLegal2 !== ''">
@@ -997,237 +1034,11 @@
                         </td>
                       </tr>
                       <!--Firmas-->
-                      <tr
-                        *ngIf="
-                          formatoSolicitudPago?.contrato?.supervisor2
-                            .usuarioId > 0
-                        "
-                      >
-                        <td class="withoutPadding">
-                          <table style="width: 100%">
-                            <tr>
-                              <td
-                                style="width: 50%"
-                                *ngIf="
-                                  formatoSolicitudPago?.contrato?.supervisor1
-                                    .usuarioId > 0
-                                "
-                              >
-                                <table style="width: 100%; height: 100%">
-                                  <tr>
-                                    <td style="width: 66%; padding: 0px">
-                                      <table style="width: 100%; height: 100%">
-                                        <tr>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                              addHeight
-                                            "
-                                            style="width: 37%"
-                                          >
-                                            NOMBRES:
-                                          </td>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                            "
-                                            style="width: 63%"
-                                          >
-                                            {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor1?.nombreCompleto
-                                            }}
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                              addHeight
-                                            "
-                                            style="width: 37%"
-                                          >
-                                            NUM. IDENTIFICACION:
-                                          </td>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                            "
-                                            style="width: 63%"
-                                          >
-                                            {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor1
-                                                ?.numeroIdentificacion
-                                            }}
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                              addHeight
-                                            "
-                                            style="width: 37%"
-                                          >
-                                            CARGO:
-                                          </td>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                            "
-                                            style="width: 63%"
-                                          >
-                                            {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor1?.cargoNombre
-                                            }}
-                                          </td>
-                                        </tr>
-                                      </table>
-                                    </td>
-                                    <td
-                                      class="center fontVerySmaller"
-                                      style="vertical-align: bottom; width: 34%"
-                                    >
-                                      FIRMA DEL SUPERVISOR O INTERVENTOR
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                              <td
-                                style="width: 50%"
-                                *ngIf="
-                                  formatoSolicitudPago?.contrato?.supervisor2
-                                    .usuarioId > 0
-                                "
-                              >
-                                <table style="width: 100%; height: 100%">
-                                  <tr>
-                                    <td style="width: 66%; padding: 0px">
-                                      <table style="width: 100%; height: 100%">
-                                        <tr>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                              addHeight
-                                            "
-                                            style="width: 38%"
-                                          >
-                                            NOMBRES:
-                                          </td>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                            "
-                                            style="width: 62%"
-                                          >
-                                            {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor2?.nombreCompleto
-                                            }}
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                              addHeight
-                                            "
-                                            style="width: 38%"
-                                          >
-                                            NUM. IDENTIFICACION:
-                                          </td>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                            "
-                                            style="width: 62%"
-                                          >
-                                            {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor2
-                                                ?.numeroIdentificacion
-                                            }}
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                              addHeight
-                                            "
-                                            style="width: 38%"
-                                          >
-                                            CARGO:
-                                          </td>
-                                          <td
-                                            class="
-                                              left
-                                              fontVerySmaller
-                                              addPaddingLeft5
-                                            "
-                                            style="width: 62%"
-                                          >
-                                            {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor2?.cargoNombre
-                                            }}
-                                          </td>
-                                        </tr>
-                                      </table>
-                                    </td>
-                                    <td
-                                      class="center fontVerySmaller"
-                                      style="vertical-align: bottom; width: 34%"
-                                    >
-                                      FIRMA DEL SUPERVISOR O INTERVENTOR
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                      <tr
-                        *ngIf="
-                          formatoSolicitudPago?.contrato?.supervisor2
-                            .usuarioId === 0
-                        "
-                      >
+                      <tr>
                         <td class="withoutPadding">
                           <table style="width: 100%" class="withoutPadding">
                             <tr>
-                              <td
-                                style="width: 100%"
-                                *ngIf="
-                                  formatoSolicitudPago?.contrato?.supervisor1
-                                    .usuarioId > 0
-                                "
-                              >
+                              <td style="width: 100%">
                                 <table style="width: 100%; height: 100%">
                                   <tr>
                                     <td style="width: 66%; padding: 0px">
@@ -1253,8 +1064,8 @@
                                             style="width: 60%"
                                           >
                                             {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor1?.nombreCompleto
+                                              this.listaInformacionPagador[0]
+                                                .valor
                                             }}
                                           </td>
                                         </tr>
@@ -1279,9 +1090,8 @@
                                             style="width: 60%"
                                           >
                                             {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor1
-                                                ?.numeroIdentificacion
+                                              this.listaInformacionPagador[1]
+                                                .valor
                                             }}
                                           </td>
                                         </tr>
@@ -1306,8 +1116,8 @@
                                             style="width: 60%"
                                           >
                                             {{
-                                              formatoSolicitudPago?.contrato
-                                                ?.supervisor1?.cargoNombre
+                                              this.listaInformacionPagador[2]
+                                                .valor
                                             }}
                                           </td>
                                         </tr>
@@ -1317,7 +1127,9 @@
                                       class="center fontSmaller"
                                       style="vertical-align: bottom; width: 34%"
                                     >
-                                      FIRMA DEL SUPERVISOR O INTERVENTOR
+                                      {{
+                                        this.listaInformacionPagador[3].valor
+                                      }}
                                     </td>
                                   </tr>
                                 </table>

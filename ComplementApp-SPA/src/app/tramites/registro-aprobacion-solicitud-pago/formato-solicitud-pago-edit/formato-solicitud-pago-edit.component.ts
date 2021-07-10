@@ -50,6 +50,7 @@ export class FormatoSolicitudPagoEditComponent implements OnInit {
   @Input() formatoSolicitudPago: FormatoSolicitudPagoDto;
   @Input() parametroLiquidacionSeleccionado: ParametroLiquidacionTercero;
   @Input() listaNotasLegales: ValorSeleccion[];
+
   @Output() esCancelado = new EventEmitter<boolean>();
 
   listaMeses: ValorSeleccion[] = [];
@@ -279,10 +280,13 @@ export class FormatoSolicitudPagoEditComponent implements OnInit {
 
   registrarSolicitudPago() {
     if (this.formatoForm.valid) {
-      this.formatoSolicitudPagoPopup.terceroId = this.formatoSolicitudPago.tercero.terceroId;
-      this.formatoSolicitudPagoPopup.planPagoId = this.planPagoSeleccionada.planPagoId;
+      this.formatoSolicitudPagoPopup.terceroId =
+        this.formatoSolicitudPago.tercero.terceroId;
+      this.formatoSolicitudPagoPopup.planPagoId =
+        this.planPagoSeleccionada.planPagoId;
       this.formatoSolicitudPagoPopup.crp = this.formatoSolicitudPago.cdp.crp;
-      this.formatoSolicitudPagoPopup.supervisorId = this.formatoSolicitudPago.cdp.supervisorId;
+      this.formatoSolicitudPagoPopup.supervisorId =
+        this.formatoSolicitudPago.cdp.supervisorId;
 
       this.solicitudPagoService
         .RegistraryAprobarSolicitudPago(this.formatoSolicitudPagoPopup)
@@ -434,38 +438,44 @@ export class FormatoSolicitudPagoEditComponent implements OnInit {
       if (this.parametroLiquidacionSeleccionado) {
         if (this.parametroLiquidacionSeleccionado.notaLegal1) {
           if (this.listaNotasLegales[0] != null) {
-            this.notaLegal1 = (this
-              .listaNotasLegales[0] as ValorSeleccion).valor;
+            this.notaLegal1 = (
+              this.listaNotasLegales[0] as ValorSeleccion
+            ).valor;
           }
         }
         if (this.parametroLiquidacionSeleccionado.notaLegal2) {
           if (this.listaNotasLegales[1] != null) {
-            this.notaLegal2 = (this
-              .listaNotasLegales[1] as ValorSeleccion).valor;
+            this.notaLegal2 = (
+              this.listaNotasLegales[1] as ValorSeleccion
+            ).valor;
           }
         }
         if (this.parametroLiquidacionSeleccionado.notaLegal3) {
           if (this.listaNotasLegales[2] != null) {
-            this.notaLegal3 = (this
-              .listaNotasLegales[2] as ValorSeleccion).valor;
+            this.notaLegal3 = (
+              this.listaNotasLegales[2] as ValorSeleccion
+            ).valor;
           }
         }
         if (this.parametroLiquidacionSeleccionado.notaLegal4) {
           if (this.listaNotasLegales[3] != null) {
-            this.notaLegal4 = (this
-              .listaNotasLegales[3] as ValorSeleccion).valor;
+            this.notaLegal4 = (
+              this.listaNotasLegales[3] as ValorSeleccion
+            ).valor;
           }
         }
         if (this.parametroLiquidacionSeleccionado.notaLegal5) {
           if (this.listaNotasLegales[4] != null) {
-            this.notaLegal5 = (this
-              .listaNotasLegales[4] as ValorSeleccion).valor;
+            this.notaLegal5 = (
+              this.listaNotasLegales[4] as ValorSeleccion
+            ).valor;
           }
         }
         if (this.parametroLiquidacionSeleccionado.notaLegal6) {
           if (this.listaNotasLegales[5] != null) {
-            this.notaLegal6 = (this
-              .listaNotasLegales[5] as ValorSeleccion).valor;
+            this.notaLegal6 = (
+              this.listaNotasLegales[5] as ValorSeleccion
+            ).valor;
           }
         }
       }
