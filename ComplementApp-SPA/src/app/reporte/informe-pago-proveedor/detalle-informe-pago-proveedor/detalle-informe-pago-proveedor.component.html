@@ -25,7 +25,7 @@
                                 style="width: 15%; height: 60px"
                                 class="center fontSmaller stronger"
                               >
-                                VERSION: 6
+                                VERSION: 1
                               </td>
                               <td
                                 style="width: 70%; height: 60px"
@@ -37,7 +37,7 @@
                                 style="width: 15%; height: 60px"
                                 class="center fontSmaller stronger"
                               >
-                                CODIGO TRD: 130.131.41..
+                                CODIGO
                               </td>
                             </tr>
                           </table>
@@ -57,16 +57,10 @@
                           <table>
                             <tr class="aplicaBackground">
                               <td
-                                style="width: 7%"
+                                style="width: 15%"
                                 class="center fontSmaller stronger"
                               >
-                                NUM.
-                              </td>
-                              <td
-                                style="width: 8%"
-                                class="center fontSmaller stronger"
-                              >
-                                FECHA
+                                FECHA GENERACION
                               </td>
                               <td
                                 style="width: 10%"
@@ -100,10 +94,7 @@
                               </td>
                             </tr>
                             <tr>
-                              <td style="width: 7%" class="center fontSmaller">
-                                <strong>{{ formatoSolicitudPagoId }}</strong>
-                              </td>
-                              <td style="width: 8%" class="center fontSmaller">
+                              <td style="width: 15%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.fechaSistema
                                     | date: "dd/MM/yyyy"
@@ -141,7 +132,7 @@
                                   >FECHA EXP. DOCUMENTO</span
                                 >
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 20%" class="center fontSmaller">
                                 <span class="stronger">REGIMEN TRIBUTARIO</span>
                               </td>
                               <td style="width: 15%" class="center fontSmaller">
@@ -155,11 +146,8 @@
                               <td style="width: 15%" class="center fontSmaller">
                                 <span class="stronger">NUM. CDP</span>
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 20%" class="center fontSmaller">
                                 <span class="stronger">NUM. CRP</span>
-                              </td>
-                              <td style="width: 10%" class="center fontSmaller">
-                                <span class="stronger">FECHA REG. CRP</span>
                               </td>
                             </tr>
                             <tr>
@@ -170,7 +158,7 @@
                                     | date: "dd/MM/yyyy"
                                 }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 20%" class="center fontSmaller">
                                 {{
                                   formatoSolicitudPago?.tercero
                                     .regimenTributario
@@ -191,14 +179,8 @@
                               <td style="width: 15%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.cdp.cdp }}
                               </td>
-                              <td style="width: 15%" class="center fontSmaller">
+                              <td style="width: 20%" class="center fontSmaller">
                                 {{ formatoSolicitudPago?.listaCompromiso }}
-                              </td>
-                              <td style="width: 10%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago?.cdp.fecha
-                                    | date: "dd/MM/yyyy"
-                                }}
                               </td>
                             </tr>
                           </table>
@@ -335,92 +317,257 @@
                           >
                         </td>
                       </tr>
-                      <tr>
+                      <tr
+                        *ngIf="
+                          formatoSolicitudPago.compromisos &&
+                          formatoSolicitudPago.compromisos.length > 0
+                        "
+                      >
                         <td class="withoutPadding">
-                          <table>
-                            <tr style="width: 100%" class="aplicaBackground">
-                              <td
-                                style="width: 15%"
-                                class="center fontSmaller stronger"
-                              >
-                                VALOR INICIAL
-                              </td>
-                              <td
-                                style="width: 15%"
-                                class="center fontSmaller stronger"
-                              >
-                                VALOR ADI./RED.
-                              </td>
-                              <td
-                                style="width: 15%"
-                                class="center fontSmaller stronger"
-                              >
-                                VALOR ACTUAL
-                              </td>
-                              <td
-                                style="width: 15%"
-                                class="center fontSmaller stronger"
-                              >
-                                SALDO ACTUAL
-                              </td>
-                              <td
-                                style="width: 15%"
-                                class="center fontSmaller stronger"
-                              >
-                                VALOR DE PAGOS A LA FECHA
-                              </td>
-                              <td
-                                style="width: 15%"
-                                class="center fontSmaller stronger"
-                              >
-                                NUM PAGOS A LA FECHA
-                              </td>
-                              <td
-                                style="width: 10%"
-                                class="center fontSmaller stronger"
-                              >
-                                PAGOS A REALIZAR
-                              </td>
-                            </tr>
-                            <tr style="width: 100%">
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago.cdp.valorTotal
-                                    | number: "1.0-0"
-                                }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago.cdp.operacion
-                                    | number: "1.0-0"
-                                }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago.cdp.valorTotal
-                                    | number: "1.0-0"
-                                }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago.cdp.saldoActual
-                                    | number: "1.0-0"
-                                }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{
-                                  formatoSolicitudPago.valorPagadoFechaActual
-                                    | number: "1.0-0"
-                                }}
-                              </td>
-                              <td style="width: 15%" class="center fontSmaller">
-                                {{ formatoSolicitudPago.numeroPagoFechaActual }}
-                              </td>
-                              <td style="width: 10%" class="center fontSmaller">
-                                {{ formatoSolicitudPago.cantidadMaxima }}
-                              </td>
-                            </tr>
-                          </table>
+                          <div class="container-fluid">
+                            <div>
+                              <!--Titulo de Columnas-->
+                              <div class="row borderTop">
+                                <div
+                                  style="width: 3%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>NUM.</strong>
+                                </div>
+                                <div
+                                  style="width: 8%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>PCI</strong>
+                                </div>
+                                <div
+                                  style="width: 5%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>CRP</strong>
+                                </div>
+                                <div
+                                  style="width: 8%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>FECHA</strong>
+                                </div>
+                                <div
+                                  style="width: 12%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong> VALOR INICIAL.</strong>
+                                </div>
+                                <div
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>VALOR ADI./RED.</strong>
+                                </div>
+                                <div
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>VALOR ACTUAL</strong>
+                                </div>
+                                <div
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>SALDO ACTUAL</strong>
+                                </div>
+                                <div
+                                  style="width: 10%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>VALOR PAGO A LA FECHA</strong>
+                                </div>
+                                <div
+                                  style="width: 12%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>NUM.PAGOS A LA FECHA</strong>
+                                </div>
+                                <div
+                                  style="width: 12%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>PAGOS A REALIZAR</strong>
+                                </div>
+                              </div>
+                              <!--Compromisos-->
+                              <div class="row">
+                                <div class="col-12">
+                                  <div *ngIf="compromisos">
+                                    <div
+                                      formArrayName="CompromisoControles"
+                                      class="row"
+                                      *ngFor="
+                                        let item of compromisos;
+                                        let i = index
+                                      "
+                                      style="height: 20px"
+                                    >
+                                      <ng-container [formGroupName]="i">
+                                        <div
+                                          style="width: 3%"
+                                          class="
+                                            borderBottonRight
+                                            centerAlign
+                                            fontSmaller
+                                          "
+                                        >
+                                          {{ i + 1 }}
+                                        </div>
+                                        <div
+                                          style="width: 8%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.pci }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 5%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.crp }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 8%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{
+                                              item?.fecha | date: "dd/MM/yyyy"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 12%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{
+                                              item?.valorTotal | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{
+                                              item?.operacion | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{
+                                              item?.valorTotal | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.saldoActual
+                                                | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 10%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
+                                              item?.valorPagadoFechaActual
+                                                | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 12%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.numeroPagoFechaActual }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 12%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p class="addPaddingLeft fontSmaller">
+                                            {{ item?.cantidadMaxima }}
+                                          </p>
+                                        </div>
+                                      </ng-container>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                       <!--PAGOS REALIZADO-->
@@ -482,7 +629,7 @@
                                   <strong>OP</strong>
                                 </div>
                                 <div
-                                  style="width: 6%"
+                                  style="width: 5%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -492,7 +639,7 @@
                                   <strong>ESTADO OP</strong>
                                 </div>
                                 <div
-                                  style="width: 6%"
+                                  style="width: 5%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
@@ -519,27 +666,7 @@
                                     fontSmaller
                                   "
                                 >
-                                  <strong>RUBRO PRES.</strong>
-                                </div>
-                                <div
-                                  style="width: 9%"
-                                  class="
-                                    borderBottonRight
-                                    aplicaBackground
-                                    fontSmaller
-                                  "
-                                >
-                                  <strong>VALOR BRUTO</strong>
-                                </div>
-                                <div
-                                  style="width: 9%"
-                                  class="
-                                    borderBottonRight
-                                    aplicaBackground
-                                    fontSmaller
-                                  "
-                                >
-                                  <strong>VALOR NETO</strong>
+                                  <strong>RUBRO PRESUPUESTAL</strong>
                                 </div>
                                 <div
                                   style="width: 8%"
@@ -549,17 +676,47 @@
                                     fontSmaller
                                   "
                                 >
-                                  <strong>VALOR REINT.</strong>
+                                  <strong>VALOR BRUTO</strong>
                                 </div>
                                 <div
-                                  style="width: 26%"
+                                  style="width: 7%"
                                   class="
                                     borderBottonRight
                                     aplicaBackground
                                     fontSmaller
                                   "
                                 >
-                                  <strong>OBJ. CONTRATO</strong>
+                                  <strong>VALOR DEDUC.</strong>
+                                </div>
+                                <div
+                                  style="width: 8%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>VALOR NETO</strong>
+                                </div>
+                                <div
+                                  style="width: 7%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>VALOR REINT.</strong>
+                                </div>
+                                <div
+                                  style="width: 24%"
+                                  class="
+                                    borderBottonRight
+                                    aplicaBackground
+                                    fontSmaller
+                                  "
+                                >
+                                  <strong>DETALLE DE PAGO</strong>
                                 </div>
                               </div>
                               <!--Pagos realizados-->
@@ -608,7 +765,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 6%"
+                                          style="width: 5%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -618,7 +775,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 6%"
+                                          style="width: 5%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -650,7 +807,7 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 9%"
+                                          style="width: 8%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -663,14 +820,16 @@
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 9%"
+                                          style="width: 7%"
                                           class="borderBottonRight center"
                                         >
                                           <p
                                             class="addPaddingRight fontSmaller"
                                           >
                                             {{
-                                              item?.valorTotal | number: "1.0-0"
+                                              item?.valorInicial -
+                                                item?.valorTotal
+                                                | number: "1.0-0"
                                             }}
                                           </p>
                                         </div>
@@ -682,12 +841,24 @@
                                             class="addPaddingRight fontSmaller"
                                           >
                                             {{
+                                              item?.valorTotal | number: "1.0-0"
+                                            }}
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="width: 7%"
+                                          class="borderBottonRight center"
+                                        >
+                                          <p
+                                            class="addPaddingRight fontSmaller"
+                                          >
+                                            {{
                                               item?.operacion | number: "1.0-0"
                                             }}
                                           </p>
                                         </div>
                                         <div
-                                          style="width: 26%"
+                                          style="width: 24%"
                                           class="borderBottonRight center"
                                         >
                                           <p
@@ -752,7 +923,37 @@
                                     <!--Titulo de Columnas-->
                                     <div class="row borderTop">
                                       <div
-                                        style="width: 12%"
+                                        style="width: 3%"
+                                        class="
+                                          borderBottonRight
+                                          aplicaBackground
+                                          fontSmaller
+                                        "
+                                      >
+                                        <strong>NUM.</strong>
+                                      </div>
+                                      <div
+                                        style="width: 8%"
+                                        class="
+                                          borderBottonRight
+                                          aplicaBackground
+                                          fontSmaller
+                                        "
+                                      >
+                                        <strong>PCI</strong>
+                                      </div>
+                                      <div
+                                        style="width: 5%"
+                                        class="
+                                          borderBottonRight
+                                          aplicaBackground
+                                          fontSmaller
+                                        "
+                                      >
+                                        <strong>CRP</strong>
+                                      </div>
+                                      <div
+                                        style="width: 10%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -762,7 +963,7 @@
                                         <strong>CODIGO</strong>
                                       </div>
                                       <div
-                                        style="width: 30%"
+                                        style="width: 19%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -782,7 +983,7 @@
                                         <strong>DEPENDENCIA</strong>
                                       </div>
                                       <div
-                                        style="width: 5%"
+                                        style="width: 4%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -792,7 +993,7 @@
                                         <strong>FTE</strong>
                                       </div>
                                       <div
-                                        style="width: 4%"
+                                        style="width: 3%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -802,7 +1003,7 @@
                                         <strong>SIT</strong>
                                       </div>
                                       <div
-                                        style="width: 4%"
+                                        style="width: 3%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -866,7 +1067,37 @@
                                           >
                                             <ng-container [formGroupName]="i">
                                               <div
-                                                style="width: 12%"
+                                                style="width: 3%"
+                                                class="
+                                                  borderBottonRight
+                                                  centerAlign
+                                                  fontSmaller
+                                                "
+                                              >
+                                                {{ i + 1 }}
+                                              </div>
+                                              <div
+                                                style="width: 8%"
+                                                class="
+                                                  borderBottonRight
+                                                  centerAlign
+                                                  fontSmaller
+                                                "
+                                              >
+                                                {{ item?.identificacionPci }}
+                                              </div>
+                                              <div
+                                                style="width: 5%"
+                                                class="
+                                                  borderBottonRight
+                                                  centerAlign
+                                                  fontSmaller
+                                                "
+                                              >
+                                                {{ item?.crp }}
+                                              </div>
+                                              <div
+                                                style="width: 10%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign
@@ -879,7 +1110,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 30%"
+                                                style="width: 19%"
                                                 class="
                                                   borderBottonRight
                                                   left
@@ -908,7 +1139,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 5%"
+                                                style="width: 4%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign
@@ -920,7 +1151,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 4%"
+                                                style="width: 3%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign
@@ -932,7 +1163,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 4%"
+                                                style="width: 3%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign

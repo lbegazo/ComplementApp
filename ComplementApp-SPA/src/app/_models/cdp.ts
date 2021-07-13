@@ -14,6 +14,7 @@ export interface Cdp {
   detalle4: string; // Objeto del bien
   objeto: string; // Objeto del bien completo
   detalle5: string; // Supervisor
+  detalle6: string; // Numero Contrado
   detalle7: string; // ModalidadContrato
   detalle8: string; // Fuente Financiacion FTE
   detalle9: string; // Situacion Fondo SIT
@@ -30,6 +31,10 @@ export interface Cdp {
   nombreTercero: string;
   identificacionRubro: string;
   nombreRubro: string;
+  pci: string;
+  cantidadMaxima: number;
+  valorPagadoFechaActual: number;
+  numeroPagoFechaActual: number;
 
   formatoSolicitudPagoId: number;
   planPagoId: number;

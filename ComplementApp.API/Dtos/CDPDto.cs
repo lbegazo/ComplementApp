@@ -29,6 +29,9 @@ namespace ComplementApp.API.Dtos
         public string Detalle9 { get; set; }
         public string Detalle10 { get; set; }
         public string Pci { get; set; }
+        public int CantidadMaxima { get; set; }
+        public decimal ValorPagadoFechaActual { get; set; }
+        public int NumeroPagoFechaActual { get; set; }
         public int TipoIdentificacionTercero { get; set; }
         public int TerceroId { get; set; }
         public string NumeroIdentificacionTercero { get; set; }

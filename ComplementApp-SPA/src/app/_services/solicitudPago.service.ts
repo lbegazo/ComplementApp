@@ -64,6 +64,51 @@ export class SolicitudPagoService {
       );
   }
 
+  ObtenerListaCompromisoConContrato(
+    numeroContrato: string,
+    crp?: number,
+    terceroId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<Cdp[]>> {
+    const paginatedResult: PaginatedResult<Cdp[]> = new PaginatedResult<
+      Cdp[]
+    >();
+
+    const path = 'ObtenerListaCompromisoConContrato';
+
+    let params = new HttpParams();
+    params = params.append('numeroContrato', numeroContrato.toString());
+
+    if (crp > 0) {
+      params = params.append('crp', crp.toString());
+    }
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Cdp[]>(this.baseUrl + path, { observe: 'response', params })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
   ObtenerListaSolicitudPagoAprobada(
     terceroId: number,
     page?,
@@ -152,14 +197,27 @@ export class SolicitudPagoService {
   }
 
   ObtenerFormatoSolicitudPago(
-    crp: number,
-    terceroId: number
+    crp: number
   ): Observable<FormatoSolicitudPagoDto> {
     const path = 'ObtenerFormatoSolicitudPago';
 
     let params = new HttpParams();
     params = params.append('crp', crp.toString());
-    params = params.append('terceroId', terceroId.toString());
+
+    return this.http.get<FormatoSolicitudPagoDto>(this.baseUrl + path, {
+      params,
+    });
+  }
+
+  ObtenerFormatoSolicitudPagoXNumeroContrato(
+    numeroContrato: string,
+    crp: number
+  ): Observable<FormatoSolicitudPagoDto> {
+    const path = 'ObtenerFormatoSolicitudPagoXNumeroContrato';
+
+    let params = new HttpParams();
+    params = params.append('numeroContrato', numeroContrato);
+    params = params.append('crp', crp.toString());
 
     return this.http.get<FormatoSolicitudPagoDto>(this.baseUrl + path, {
       params,

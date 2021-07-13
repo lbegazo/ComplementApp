@@ -326,6 +326,33 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<ActionResult> ObtenerListaCompromisoConContrato([FromQuery(Name = "numeroContrato")] string numeroContrato,
+                                                                         [FromQuery(Name = "crp")] long? crp,
+                                                                         [FromQuery(Name = "terceroId")] int? terceroId,
+                                                                         [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                var pagedList = await _repo.ObtenerListaCompromisoConContrato(usuarioId, numeroContrato, crp, terceroId, userParams);
+                var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
+
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                    pagedList.TotalCount, pagedList.TotalPages);
+
+                return Ok(listaDto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de compromisos");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<ActionResult> ObtenerSolicitudesPagoParaAprobar([FromQuery(Name = "usuarioId")] int usuarioId,
                                                                             [FromQuery(Name = "terceroId")] int? terceroId,
                                                                             [FromQuery] UserParams userParams)
@@ -386,8 +413,7 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "terceroId")] int terceroId,
-                                                                     [FromQuery(Name = "crp")] int crp)
+        public async Task<IActionResult> ObtenerFormatoSolicitudPago([FromQuery(Name = "crp")] int crp)
         {
             FormatoSolicitudPagoDto formato = null;
             string listaCompromiso = string.Empty;
@@ -403,16 +429,11 @@ namespace ComplementApp.API.Controllers
                 formato = await _repo.ObtenerFormatoSolicitudPago(crp, pciId);
                 if (formato != null)
                 {
-                    List<long> listaCrp = await _repo.ObtenerListaCompromisoXTerceroId(terceroId);
-                    listaCompromiso = string.Join(",", listaCrp);
-
                     var CantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(formato.Cdp.Crp, pciId);
-
-                    formato.ListaCompromiso = listaCompromiso;
                     formato.CantidadMaxima = CantidadMaxima;
                     formato.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
 
-                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXTerceroId(terceroId, listaCrp);
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXCompromiso(crp, pciId);
                     if (pagosRealizados != null)
                     {
                         var listaOrdenPago = from pr in pagosRealizados
@@ -425,6 +446,64 @@ namespace ComplementApp.API.Controllers
                         formato.NumeroPagoFechaActual = listaOrdenPago.Count();
                         formato.PagosRealizados = pagosRealizados;
                     }
+                }
+                return Ok(formato);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener información de la solicitud de pago");
+        }
+
+
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerFormatoSolicitudPagoXNumeroContrato([FromQuery(Name = "numeroContrato")] string numeroContrato,
+                                                                                    [FromQuery(Name = "crp")] long crp)
+        {
+            FormatoSolicitudPagoDto formato = null;
+            string listaCompromiso = string.Empty;
+            int cantidadMaxima = 0;
+
+            try
+            {
+                formato = await _repo.ObtenerFormatoSolicitudPagoXCompromiso(crp);
+                if (formato != null)
+                {
+                    List<long> listaCrp = await _repo.ObtenerListaCompromisoXNumeroContrato(numeroContrato);
+                    listaCompromiso = string.Join(",", listaCrp);
+
+                    var compromisos = await _repo.ObtenerInformacionFinancieraXListaCompromiso(numeroContrato, listaCrp);
+
+                    var pagosRealizados = await _repo.ObtenerPagosRealizadosXListaCompromiso(listaCrp);
+
+                    foreach (var item in compromisos)
+                    {
+                        formato = await _repo.ObtenerFormatoSolicitudPagoXCompromiso(item.Crp);
+                        cantidadMaxima = _planPagoRepository.ObtenerCantidadMaximaPlanPago(item.Crp, item.PciId);
+                        item.CantidadMaxima = cantidadMaxima > 0 ? cantidadMaxima : 0;
+                        item.ValorPagadoFechaActual = formato.Cdp.ValorTotal - formato.Cdp.SaldoActual;
+
+                        if (pagosRealizados != null)
+                        {
+                            var listaOrdenPago = from pr in pagosRealizados
+                                                 where pr.Crp == item.Crp
+                                                 group pr by pr.OrdenPago
+                                                 into g
+                                                 select new
+                                                 {
+                                                     name = g.Key
+                                                 };
+
+                            item.NumeroPagoFechaActual = listaOrdenPago.Count();
+                        }
+                    }
+                    formato.PagosRealizados = pagosRealizados;
+                    formato.Compromisos = compromisos;
+                    formato.ListaCompromiso = listaCompromiso;
                 }
                 return Ok(formato);
             }

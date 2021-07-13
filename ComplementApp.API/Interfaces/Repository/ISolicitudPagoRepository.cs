@@ -9,7 +9,12 @@ namespace ComplementApp.API.Interfaces.Repository
     public interface ISolicitudPagoRepository
     {
         Task<PagedList<CDPDto>> ObtenerCompromisosParaSolicitudRegistroPago(int usuarioId, int perfilId, int? terceroId, UserParams userParams);
-        Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp, int pciId);
+        Task<PagedList<CDPDto>> ObtenerListaCompromisoConContrato(int usuarioId, string numeroContrato,
+                                                                                long? crp, int? terceroId,
+                                                                                UserParams userParams);
+        Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(long crp, int pciId);
+        Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPagoXCompromiso(long crp);
+        Task<List<CDPDto>> ObtenerInformacionFinancieraXListaCompromiso(string numeroContrato, List<long> listaCrp);
         Task<List<CDPDto>> ObtenerPagosRealizadosXCompromiso(long crp, int pciId);
         Task<PagedList<CDPDto>> ObtenerSolicitudesPagoParaAprobar(int usuarioId, int? terceroId, UserParams userParams);
         Task<PagedList<CDPDto>> ObtenerListaSolicitudPagoAprobada(int? terceroId, UserParams userParams);
@@ -19,8 +24,8 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<Numeracion> ObtenerUltimaNumeracionDisponible(int pciId);
         Task<Numeracion> ObtenerNumeracionBase(int numeracionId);
         Task<Numeracion> ObtenerNumeracionxNumeroFactura(string numeroFactura);
-        Task<List<long>> ObtenerListaCompromisoXTerceroId(int terceroId);
-        Task<List<CDPDto>> ObtenerPagosRealizadosXTerceroId(int terceroId, List<long> listaCrp);
+        Task<List<long>> ObtenerListaCompromisoXNumeroContrato(string numeroContrato);
+        Task<List<CDPDto>> ObtenerPagosRealizadosXListaCompromiso(List<long> listaCrp);
 
         #region Proceso Liquidación Masiva
         Task<ICollection<FormatoSolicitudPago>> ObtenerListaFormatoSolicitudPagoBase(List<int> listaSolicitudPagoId);

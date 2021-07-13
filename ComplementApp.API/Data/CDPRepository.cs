@@ -13,9 +13,11 @@ namespace ComplementApp.API.Data
     public class CDPRepository : ICDPRepository
     {
         private readonly DataContext _context;
-        public CDPRepository(DataContext context)
+        private readonly IGeneralInterface _generalInterface;
+        public CDPRepository(DataContext context, IGeneralInterface generalInterface)
         {
             _context = context;
+            _generalInterface = generalInterface;
         }
 
         public async Task<PagedList<CDP>> ObtenerListaCompromiso(UserParams userParams)
@@ -96,6 +98,94 @@ namespace ComplementApp.API.Data
                                  .Distinct()
                                  .OrderBy(x => x.RubroPresupuestal.Identificacion)
                                  .ToListAsync();
+            return detalles;
+        }
+
+        public async Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesXNumeroContrato(string numeroContrato)
+        {
+            var detalles = await (from d in _context.CDP
+                                  join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
+                                  join pci in _context.Pci on d.PciId equals pci.PciId
+                                  join sf in _context.SituacionFondo on d.Detalle9.ToUpper() equals sf.Nombre.ToUpper()
+                                  join ff in _context.FuenteFinanciacion on d.Detalle8.ToUpper() equals ff.Nombre.ToUpper()
+                                  join rp in _context.RecursoPresupuestal on d.Detalle10.ToUpper() equals rp.Codigo.ToUpper()
+                                  join cp in _context.ClavePresupuestalContable on new
+                                  {
+                                      d.Crp,
+                                      d.RubroPresupuestalId,
+                                      sf.SituacionFondoId,
+                                      ff.FuenteFinanciacionId,
+                                      rp.RecursoPresupuestalId,
+                                      Dependencia = d.Detalle2
+                                  } equals
+                                    new
+                                    {
+                                        cp.Crp,
+                                        cp.RubroPresupuestalId,
+                                        cp.SituacionFondoId,
+                                        cp.FuenteFinanciacionId,
+                                        cp.RecursoPresupuestalId,
+                                        Dependencia = cp.Dependencia
+                                    } into ClavePresupuestal
+                                  from clave in ClavePresupuestal.DefaultIfEmpty()
+                                  where d.Instancia == (int)TipoDocumento.Compromiso
+                                  where d.Detalle6.Trim() == numeroContrato
+                                  // where d.SaldoActual > 0
+                                  select new DetalleCDPDto()
+                                  {
+                                      ValorCDP = d.ValorInicial,
+                                      ValorOP = d.Operacion,
+                                      ValorTotal = d.ValorTotal,
+                                      SaldoAct = d.SaldoActual,
+                                      Dependencia = d.Detalle2,
+                                      DependenciaDescripcion = d.Detalle2 + " " + (d.Detalle3.Length > 100 ? d.Detalle3.Substring(0, 100) + "..." : d.Detalle3),
+                                      ClavePresupuestalContableId = clave.ClavePresupuestalContableId,
+                                      IdentificacionPci = pci.Identificacion,
+                                      Crp = d.Crp,
+                                      RubroPresupuestal = new RubroPresupuestal()
+                                      {
+                                          RubroPresupuestalId = i.RubroPresupuestalId,
+                                          Identificacion = i.Identificacion,
+                                          Nombre = i.Nombre,
+                                      },
+                                      CdpDocumento = new CDP()
+                                      {
+                                          Detalle8 = d.Detalle8,
+                                          Detalle9 = d.Detalle9,
+                                          Detalle10 = d.Detalle10,
+                                      }
+                                  })
+                                 .Distinct()
+                                 .OrderBy(x => x.RubroPresupuestal.Identificacion)
+                                 .ToListAsync();
+
+            #region Modificar nombre de rubro
+
+            if (detalles != null)
+            {
+                string nombre = string.Empty;
+                foreach (var item in detalles)
+                {
+                    if (item.RubroPresupuestal != null)
+                    {
+                        if (item.RubroPresupuestal.Identificacion.Contains("C-"))
+                        {
+                            string[] words = item.RubroPresupuestal.Nombre.Split('-');
+                            if (words != null && words.Length > 1)
+                            {
+                                item.RubroPresupuestal.Nombre = _generalInterface.ObtenerCadenaLimitada(words[1], 40);
+                            }
+                        }
+                        else
+                        {
+                            item.RubroPresupuestal.Nombre = _generalInterface.ObtenerCadenaLimitada(item.RubroPresupuestal.Nombre, 40);
+                        }
+                    }
+                }
+            }
+
+            #endregion Modificar nombre de rubro
+
             return detalles;
         }
 

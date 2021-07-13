@@ -24,7 +24,7 @@ namespace ComplementApp.API.Data
         #region Registro de Solicitud de Pago
 
         public async Task<PagedList<CDPDto>> ObtenerCompromisosParaSolicitudRegistroPago(int usuarioId, int perfilId,
-                                                                                         int? terceroId, UserParams userParams)
+                                                                                      int? terceroId, UserParams userParams)
         {
             IQueryable<CDPDto> lista = null;
             var usuario = await _context.Usuario.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
@@ -112,6 +112,115 @@ namespace ComplementApp.API.Data
                              })
                             .Distinct()
                             .OrderBy(x => x.Crp);
+
+                    #endregion Contratista
+                }
+            }
+            return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<PagedList<CDPDto>> ObtenerListaCompromisoConContrato(int usuarioId, string numeroContrato,
+                                                                                long? crp, int? terceroId,
+                                                                                UserParams userParams)
+        {
+            IQueryable<CDPDto> lista = null;
+            var usuario = await _context.Usuario.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
+            var listaPerfilxUsuario = await _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToListAsync();
+
+            if (listaPerfilxUsuario != null && listaPerfilxUsuario.Count > 0)
+            {
+                var listaPerfilId = listaPerfilxUsuario.Select(x => x.PerfilId).ToList();
+
+                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador)
+                    || listaPerfilId.Contains((int)PerfilUsuario.CoordinadorFinanciero)
+                    || listaPerfilId.Contains((int)PerfilUsuario.RegistradorContable))
+                {
+                    #region Administrador y Coordinador financiero
+
+                    lista = (from co in _context.Contrato
+                             join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), co.PciId } equals
+                                                        new { c.Crp, NumeroContrato = c.Detalle6.Trim(), c.PciId }
+                             join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                             where c.Instancia == (int)TipoDocumento.Compromiso
+                             where c.SaldoActual > 0 //Saldo Disponible
+                             where co.Crp == crp || crp == null
+                             where co.NumeroContrato == numeroContrato || numeroContrato == null
+                             where c.TerceroId == terceroId || terceroId == null
+                             select new CDPDto()
+                             {
+                                 Crp = c.Crp,
+                                 Detalle6 = c.Detalle6, //número de contrato
+                                 Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                                 NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                                 NombreTercero = t.Nombre,
+                                 TerceroId = c.TerceroId,
+                             })
+                          .Distinct()
+                          .OrderBy(x => x.Detalle6)
+                          .ThenBy(x => x.Crp);
+
+                    #endregion Administrador y Coordinador financiero
+                }
+                else if (listaPerfilId.Contains((int)PerfilUsuario.SupervisorContractual))
+                {
+                    #region SupervisorContractual
+
+                    lista = (from co in _context.Contrato
+                             join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), PciId = co.PciId } equals
+                                                        new { c.Crp, NumeroContrato = c.Detalle6.Trim(), PciId = c.PciId }
+                             join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                             join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
+                             from pt in ParametroTercero.DefaultIfEmpty()
+                             where c.Instancia == (int)TipoDocumento.Compromiso
+                             where c.PciId == pt.PciId
+                             where c.SaldoActual > 0 //Saldo Disponible
+                             where co.Supervisor1Id == usuarioId
+                             where co.Crp == crp || crp == null
+                             where co.NumeroContrato == numeroContrato || numeroContrato == null
+                             where c.TerceroId == terceroId || terceroId == null
+                             where pt.ModalidadContrato != (int)ModalidadContrato.ContratoPrestacionServicio
+                             select new CDPDto()
+                             {
+                                 Crp = c.Crp,
+                                 Detalle6 = c.Detalle6, //número de contrato
+                                 Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                                 NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                                 NombreTercero = t.Nombre,
+                                 TerceroId = c.TerceroId,
+                             })
+                            .Distinct()
+                            .OrderBy(x => x.Detalle6)
+                          .ThenBy(x => x.Crp);
+
+                    #endregion SupervisorContractual
+                }
+                else if (listaPerfilId.Contains((int)PerfilUsuario.Contratista))
+                {
+                    #region Contratista
+
+                    terceroId = usuario.TerceroId;
+
+                    lista = (from co in _context.Contrato
+                             join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), PciId = co.PciId } equals
+                                                        new { c.Crp, NumeroContrato = c.Detalle6.Trim(), PciId = c.PciId }
+                             join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                             where c.Instancia == (int)TipoDocumento.Compromiso
+                             where c.SaldoActual > 0 //Saldo Disponible
+                             where c.TerceroId == terceroId
+                             where co.Crp == crp || crp == null
+                             where co.NumeroContrato == numeroContrato || numeroContrato == null
+                             select new CDPDto()
+                             {
+                                 Crp = c.Crp,
+                                 Detalle6 = c.Detalle6, //número de contrato
+                                 Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                                 NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                                 NombreTercero = t.Nombre,
+                                 TerceroId = c.TerceroId,
+                             })
+                            .Distinct()
+                           .OrderBy(x => x.Detalle6)
+                          .ThenBy(x => x.Crp);
 
                     #endregion Contratista
                 }
@@ -221,17 +330,17 @@ namespace ComplementApp.API.Data
             return await _context.FormatoSolicitudPago.FirstOrDefaultAsync(u => u.FormatoSolicitudPagoId == formatoSolicitudPagoId);
         }
 
-        public async Task<List<long>> ObtenerListaCompromisoXTerceroId(int terceroId)
+        public async Task<List<long>> ObtenerListaCompromisoXNumeroContrato(string numeroContrato)
         {
-            var listaCompromiso = (from c in _context.CDP
-                                   where c.TerceroId == terceroId
-                                   where c.Instancia == (int)TipoDocumento.Compromiso
+            var listaCompromiso = (from c in _context.Contrato
+                                   where c.NumeroContrato.Trim() == numeroContrato.Trim()
+                                   //where c.Instancia == (int)TipoDocumento.Compromiso
                                    select c.Crp).Distinct();
 
             return await listaCompromiso.ToListAsync();
         }
 
-        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(int crp, int pciId)
+        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(long crp, int pciId)
         {
             var lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
@@ -370,6 +479,192 @@ namespace ComplementApp.API.Data
                                  }).FirstOrDefaultAsync();
 
             return formato;
+        }
+
+
+        public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPagoXCompromiso(long crp)
+        {
+            var lista = (from c in _context.CDP
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where c.Crp == crp
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         select new CDPDto()
+                         {
+                             Cdp = c.Cdp,
+                             Crp = c.Crp,
+                             Fecha = c.Fecha, //Fecha compromiso
+                             Detalle4 = c.Detalle4, //objeto contrato
+                             Detalle6 = c.Detalle6.Trim(), //Numero de contrato
+                             TerceroId = c.TerceroId,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.Operacion, //Valor adicion/reduccion
+                             ValorTotal = c.ValorTotal, //valor actual
+                             SaldoActual = c.SaldoActual, //saldo actual
+                             Detalle7 = c.Detalle7,
+                         });
+
+            var listaAgrupada = (from i in lista
+                                 group i by new
+                                 {
+                                     i.Cdp,
+                                     i.Crp,
+                                     i.Fecha,
+                                     i.Detalle4,
+                                     i.Detalle6,
+                                     i.Detalle7,
+                                     i.TerceroId,
+                                     i.ValorInicial,
+                                     i.Operacion,
+                                     i.ValorTotal,
+                                     i.SaldoActual
+                                 }
+                          into grp
+                                 select new CDPDto()
+                                 {
+                                     Cdp = grp.Key.Cdp,
+                                     Crp = grp.Key.Crp,
+                                     Fecha = grp.Key.Fecha,
+                                     Detalle4 = grp.Key.Detalle4,
+                                     Detalle6 = grp.Key.Detalle6,
+                                     Detalle7 = grp.Key.Detalle7,
+                                     TerceroId = grp.Key.TerceroId,
+                                     ValorInicial = grp.Sum(i => i.ValorInicial),
+                                     Operacion = grp.Sum(i => i.Operacion),
+                                     ValorTotal = grp.Sum(i => i.ValorTotal),
+                                     SaldoActual = grp.Sum(i => i.SaldoActual)
+                                 });
+
+            var formato = await (from c in listaAgrupada
+                                 join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                                 join co in _context.Contrato on c.Crp equals co.Crp
+                                 join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
+                                 from pt in ParametroTercero.DefaultIfEmpty()
+                                 join ap in _context.TipoAdminPila on pt.TipoAdminPilaId equals ap.TipoAdminPilaId into AdminPila
+                                 from adminPila in AdminPila.DefaultIfEmpty()
+
+                                 join sup1 in _context.Usuario on co.Supervisor1Id equals sup1.UsuarioId into Supervisor1
+                                 from super1 in Supervisor1.DefaultIfEmpty()
+                                 join carg1 in _context.Cargo on super1.CargoId equals carg1.CargoId into Cargo1
+                                 from cargoSuper1 in Cargo1.DefaultIfEmpty()
+                                 join tercSup1 in _context.Tercero on super1.TerceroId equals tercSup1.TerceroId into TerceroSupervisor1
+                                 from tercSuper1 in TerceroSupervisor1.DefaultIfEmpty()
+
+                                 join sup2 in _context.Usuario on co.Supervisor2Id equals sup2.UsuarioId into Supervisor2
+                                 from super2 in Supervisor2.DefaultIfEmpty()
+                                 join carg2 in _context.Cargo on super2.CargoId equals carg2.CargoId into Cargo2
+                                 from cargoSuper2 in Cargo2.DefaultIfEmpty()
+                                 join tercSup2 in _context.Tercero on super2.TerceroId equals tercSup2.TerceroId into TerceroSupervisor2
+                                 from tercSuper2 in TerceroSupervisor2.DefaultIfEmpty()
+
+                                 select new FormatoSolicitudPagoDto()
+                                 {
+                                     FormatoSolicitudPagoId = 666,
+                                     FechaSistema = _generalInterface.ObtenerFechaHoraActual(),
+                                     TipoAdminPila = adminPila.TipoAdminPilaId > 0 ? adminPila.Nombre : string.Empty,
+
+                                     Cdp = new CDPDto()
+                                     {
+                                         Cdp = c.Cdp,
+                                         Crp = c.Crp,
+                                         Fecha = c.Fecha, //Fecha compromiso
+                                         Detalle4 = c.Detalle4, //objeto contrato
+                                         Detalle6 = c.Detalle6.Trim(), //número de contrato
+                                         Detalle7 = c.Detalle7.Trim(), //modalidad de contrato
+                                         ValorInicial = c.ValorInicial,
+                                         Operacion = c.Operacion, //Valor adicion/reduccion
+                                         ValorTotal = c.ValorTotal, //valor actual
+                                         SaldoActual = c.SaldoActual, //saldo actual
+                                         SupervisorId = super1.UsuarioId
+                                     },
+                                     Contrato = new ContratoDto()
+                                     {
+                                         ContratoId = co.ContratoId,
+                                         NumeroContrato = co.NumeroContrato,
+                                         Crp = co.Crp,
+                                         FechaInicio = co.FechaInicio,
+                                         FechaFinal = co.FechaFinal,
+                                         FechaRegistro = co.FechaRegistro,
+                                         FechaExpedicionPoliza = co.FechaExpedicionPoliza,
+
+                                         Supervisor1 = new UsuarioParaDetalleDto()
+                                         {
+                                             UsuarioId = super1.UsuarioId > 0 ? super1.UsuarioId : 0,
+                                             Nombres = super1.Nombres,
+                                             Apellidos = super1.Apellidos,
+                                             NombreCompleto = co.Supervisor1Id > 0 ? super1.Nombres + " " + super1.Apellidos : string.Empty,
+                                             CargoNombre = cargoSuper1.CargoId > 0 ? cargoSuper1.Nombre : string.Empty,
+                                             NumeroIdentificacion = tercSuper1.NumeroIdentificacion,
+                                         },
+                                         Supervisor2 = new UsuarioParaDetalleDto()
+                                         {
+                                             UsuarioId = co.Supervisor2Id.HasValue ? co.Supervisor2Id.Value : 0,
+                                             Nombres = super2.Nombres,
+                                             Apellidos = super2.Apellidos,
+                                             NombreCompleto = co.Supervisor2Id > 0 ? super2.Nombres + " " + super2.Apellidos : string.Empty,
+                                             CargoNombre = cargoSuper2.CargoId > 0 ? cargoSuper2.Nombre : string.Empty,
+                                             NumeroIdentificacion = tercSuper2.NumeroIdentificacion,
+                                         }
+                                     },
+                                     Tercero = new TerceroDto()
+                                     {
+                                         TerceroId = t.TerceroId,
+                                         Nombre = t.Nombre,
+                                         NumeroIdentificacion = t.NumeroIdentificacion,
+                                         Email = t.Email,
+                                         Telefono = t.Telefono,
+                                         Direccion = t.Direccion.Length > 45 ? t.Direccion.Substring(0, 45) + "..." : t.Direccion,
+                                         FechaExpedicionDocumento = t.FechaExpedicionDocumento.HasValue ? (t.FechaExpedicionDocumento.Value.ToString() != "0001-01-01 00:00:00.0000000" ? t.FechaExpedicionDocumento.Value : null) : null,
+                                         RegimenTributario = t.RegimenTributario,
+                                         DeclaranteRentaDescripcion = t.DeclaranteRenta ? "SI" : "NO",
+                                         FacturadorElectronicoDescripcion = pt.FacturaElectronica ? "SI" : "NO"
+                                     },
+
+                                 }).FirstOrDefaultAsync();
+
+            return formato;
+        }
+
+        public async Task<List<CDPDto>> ObtenerInformacionFinancieraXListaCompromiso(string numeroContrato, List<long> listaCrp)
+        {
+            var lista = (from c in _context.CDP
+                         join co in _context.Contrato on new { c.Crp, c.PciId } equals new { co.Crp, co.PciId }
+                         join pci in _context.Pci on c.PciId equals pci.PciId
+                         where c.Detalle6.Trim() == numeroContrato
+                         where listaCrp.Contains(c.Crp)
+                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         select new CDPDto()
+                         {
+                             Crp = c.Crp,
+                             Fecha = c.Fecha,
+                             PciId = c.PciId.Value,
+                             Pci = pci.Identificacion,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.Operacion, //Valor adicion/reduccion
+                             ValorTotal = c.ValorTotal, //valor actual
+                             SaldoActual = c.SaldoActual, //saldo actual
+                         });
+
+            var listaAgrupada = await (from i in lista
+                                       group i by new
+                                       {
+                                           i.Crp,
+                                           i.Fecha,
+                                           i.PciId,
+                                           i.Pci,
+                                       }
+                          into grp
+                                       select new CDPDto()
+                                       {
+                                           Crp = grp.Key.Crp,
+                                           Fecha = grp.Key.Fecha,
+                                           PciId = grp.Key.PciId,
+                                           Pci = grp.Key.Pci,
+                                           ValorInicial = grp.Sum(i => i.ValorInicial),
+                                           Operacion = grp.Sum(i => i.Operacion),
+                                           ValorTotal = grp.Sum(i => i.ValorTotal),
+                                           SaldoActual = grp.Sum(i => i.SaldoActual)
+                                       }).ToListAsync();
+            return listaAgrupada;
         }
 
         public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPagoXId(int formatoSolicitudPagoId)
@@ -572,12 +867,11 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-        public async Task<List<CDPDto>> ObtenerPagosRealizadosXTerceroId(int terceroId, List<long> listaCrp)
+        public async Task<List<CDPDto>> ObtenerPagosRealizadosXListaCompromiso(List<long> listaCrp)
         {
             var lista = await (from c in _context.CDP
                                join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
                                where c.Instancia == (int)TipoDocumento.OrdenPago
-                               where c.TerceroId == terceroId
                                where listaCrp.Contains(c.Crp)
                                where c.Detalle1.ToUpper() == "PAGADA"
                                select new CDPDto()

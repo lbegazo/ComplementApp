@@ -40,6 +40,7 @@ export interface FormatoSolicitudPagoDto {
   actividadEconomica: ValorSeleccion;
   planPago: PlanPago;
   pagosRealizados: Cdp[];
+  compromisos: Cdp[];
   cdp: Cdp;
   tercero: Tercero;
   contrato: Contrato;

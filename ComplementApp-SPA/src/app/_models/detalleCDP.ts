@@ -42,4 +42,5 @@ export class DetalleCDP {
   cdpDocumento: Cdp;
   clavePresupuestalContableId: number;
   esSeleccionada: boolean;
+  identificacionPci: string;
 }

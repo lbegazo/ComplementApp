@@ -41,5 +41,6 @@ namespace ComplementApp.API.Dtos
         public string DependenciaDescripcion { get; set; }
         public decimal ValorTotal { get; set; }
         public int? ClavePresupuestalContableId { get; set; }
+        public string IdentificacionPci { get; set; }
     }
 }

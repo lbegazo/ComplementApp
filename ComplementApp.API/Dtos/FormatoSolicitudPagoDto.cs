@@ -41,6 +41,7 @@ namespace ComplementApp.API.Dtos
         public ContratoDto Contrato { get; set; }
         public PlanPagoDto PlanPago { get; set; }
         public ValorSeleccion ActividadEconomica { get; set; }
+        public ICollection<CDPDto> Compromisos { get; set; }
         public ICollection<CDPDto> PagosRealizados { get; set; }
         public ICollection<DetalleFormatoSolicitudPagoDto> DetallesFormatoSolicitudPago { get; set; }
 

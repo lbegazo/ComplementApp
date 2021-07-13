@@ -97,6 +97,7 @@ export class InformePagoProveedorComponent implements OnInit {
     }
 
     this.createForm();
+
     this.onBuscarFactura();
 
     this.cargarBusquedaTerceroXCodigo();
@@ -106,7 +107,9 @@ export class InformePagoProveedorComponent implements OnInit {
 
   createForm() {
     this.facturaHeaderForm = this.fb.group({
-      terceroCtrl: ['', Validators.required],
+      numeroContratoCtrl: [''],
+      compromisoCtrl: [''],
+      terceroCtrl: [''],
       terceroDescripcionCtrl: [''],
       planPagoControles: this.arrayControls,
     });
@@ -202,10 +205,14 @@ export class InformePagoProveedorComponent implements OnInit {
   }
 
   onBuscarFactura() {
+    const formValues = Object.assign({}, this.facturaHeaderForm.value);
+    const numeroContratoCtrl = formValues.numeroContratoCtrl;
+    const compromisoCtrl = formValues.compromisoCtrl;
+
     this.solicitudPagoService
-      .ObtenerCompromisosParaSolicitudRegistroPago(
-        this.usuarioLogueado.usuarioId,
-        this.perfilId,
+      .ObtenerListaCompromisoConContrato(
+        numeroContratoCtrl,
+        compromisoCtrl,
         this.terceroId,
         this.pagination.currentPage,
         this.pagination.itemsPerPage
@@ -222,7 +229,9 @@ export class InformePagoProveedorComponent implements OnInit {
         },
         () => {
           this.facturaHeaderForm = this.fb.group({
-            terceroCtrl: ['', Validators.required],
+            numeroContratoCtrl: [''],
+            compromisoCtrl: [''],
+            terceroCtrl: [''],
             terceroDescripcionCtrl: [''],
             planPagoControles: this.arrayControls,
           });
@@ -269,16 +278,16 @@ export class InformePagoProveedorComponent implements OnInit {
         (x) => x.crp === this.crp
       )[0];
       if (this.planPagoSeleccionado) {
-        this.ObtenerFormatoSolicitudPago();
+        this.ObtenerFormatoSolicitudPagoXNumeroContrato();
       }
     }
   }
 
-  ObtenerFormatoSolicitudPago() {
+  ObtenerFormatoSolicitudPagoXNumeroContrato() {
     this.solicitudPagoService
-      .ObtenerFormatoSolicitudPago(
+      .ObtenerFormatoSolicitudPagoXNumeroContrato(
+        this.planPagoSeleccionado.detalle6,
         this.planPagoSeleccionado.crp,
-        this.planPagoSeleccionado.terceroId
       )
       .subscribe(
         (response: FormatoSolicitudPagoDto) => {
@@ -342,14 +351,16 @@ export class InformePagoProveedorComponent implements OnInit {
   }
 
   cargarInformacionPagador() {
-    this.listaService.ObtenerParametrosGeneralesXTipo('InformePagoProveedores').subscribe(
-      (lista: ValorSeleccion[]) => {
-        this.listaInformacionPagador = lista;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+    this.listaService
+      .ObtenerParametrosGeneralesXTipo('InformePagoProveedores')
+      .subscribe(
+        (lista: ValorSeleccion[]) => {
+          this.listaInformacionPagador = lista;
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
   }
 
   HabilitarCabecera($event) {

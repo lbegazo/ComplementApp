@@ -275,8 +275,7 @@ export class RegistroAprobacionSolicitudPagoComponent implements OnInit {
   ObtenerFormatoSolicitudPago() {
     this.solicitudPagoService
       .ObtenerFormatoSolicitudPago(
-        this.planPagoSeleccionado.crp,
-        this.planPagoSeleccionado.terceroId
+        this.planPagoSeleccionado.crp
       )
       .subscribe(
         (response: FormatoSolicitudPagoDto) => {

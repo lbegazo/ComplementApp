@@ -55,6 +55,14 @@ export class CdpService {
     return this.http.get<DetalleCDP[]>(this.baseUrl + path + crp);
   }
 
+  ObtenerRubrosPresupuestalesXNumeroContrato(
+    numeroContrato: string
+  ): Observable<DetalleCDP[]> {
+    const path = 'ObtenerRubrosPresupuestalesXNumeroContrato/';
+    return this.http.get<DetalleCDP[]>(this.baseUrl + path + numeroContrato);
+  }
+
+
   ObtenerDetallePlanAnualAdquisicion(
     cdp: number,
     instancia: number,

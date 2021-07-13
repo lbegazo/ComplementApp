@@ -81,6 +81,15 @@ namespace ComplementApp.API.Controllers
             return Ok(rubros);
         }
 
+        
+        [Route("[action]/{numeroContrato}")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerRubrosPresupuestalesXNumeroContrato(string numeroContrato)
+        {
+            var rubros = await _repo.ObtenerRubrosPresupuestalesXNumeroContrato(numeroContrato);
+            return Ok(rubros);
+        }
+
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> ObtenerDetallePlanAnualAdquisicion([FromQuery] long cdp,

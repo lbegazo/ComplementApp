@@ -10,5 +10,6 @@ namespace ComplementApp.API.Interfaces.Repository
          decimal ObtenerValorRedondeadoAl100XEncima(decimal valor);
          decimal ObtenerValorRedondeadoAl1000XEncima(decimal valor);
          string UppercaseFirst(string s);
+         string ObtenerCadenaLimitada(string cadena, int limite);
     }
 }

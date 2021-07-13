@@ -91,5 +91,18 @@ namespace ComplementApp.API.Services
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
+        public string ObtenerCadenaLimitada(string cadena, int limite)
+        {
+            if (!string.IsNullOrEmpty(cadena))
+            {
+                if (cadena.Length > limite)
+                {
+                    return cadena.Substring(0, limite - 1) + "..";
+                }
+                return cadena;
+            }
+            return string.Empty;
+        }
+
     }
 }

@@ -20,9 +20,53 @@
         >
           <tr>
             <td style="padding: 0px 10px">
-              <!--TERCERO-->
+              <!--NUMERO DE CONTRATO-->
               <div class="form-row mt-3">
-                <div class="form-group col-md-3" style="margin: 0px">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputNumeroContrato" class="col-form-label-md" 
+                    >Número de Contrato</label
+                  >
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('numeroContratoCtrl').errors &&
+                        facturaHeaderForm.get('numeroContratoCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control"
+                    placeholder="Número de Contrato"
+                    formControlName="numeroContratoCtrl"
+                    style="text-align: center; height: 30px"
+                    id="inputNumeroContrato"
+                    maxlength="20"
+                    onDrag="return false"
+                    onDrop="return false"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="form-group col-md-1" style="margin: 0px">
+                  <label for="inputCompromiso" class="col-form-label-md"
+                    >CRP</label
+                  >
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('compromisoCtrl').errors &&
+                        facturaHeaderForm.get('compromisoCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control"
+                    placeholder="CRP"
+                    formControlName="compromisoCtrl"
+                    style="text-align: center; height: 30px"
+                    id="inputCompromiso"
+                    maxlength="20"
+                    onDrag="return false"
+                    onDrop="return false"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="form-group col-md-2" style="margin: 0px">
                   <label for="inputNumeroTercero" class="col-form-label-md"
                     >Número de identificación</label
                   >
@@ -47,7 +91,7 @@
                     {{ errorMessage }}
                   </div>
                 </div>
-                <div class="form-group col-md-6" style="margin: 0px">
+                <div class="form-group col-md-5" style="margin: 0px">
                   <label for="inputTercero" class="col-form-label-md"
                     >Nombre del tercero</label
                   >
@@ -67,7 +111,7 @@
                   />
                 </div>
 
-                <div class="form-group col-md-3" style="margin: 0px">
+                <div class="form-group col-md-2" style="margin: 0px">
                   <table>
                     <tr style="vertical-align: bottom">
                       <td style="padding-top: 15px">
@@ -100,16 +144,19 @@
             <td style="padding: 0px 15px">
               <div class="form-row mt-2">
                 <div style="width: 2%"></div>
+                <div style="width: 12%" class="inner center">
+                  <label class="col-form-label-md">Contrato</label>
+                </div>
                 <div style="width: 6%" class="inner center">
                   <label class="col-form-label-md">CRP</label>
                 </div>
                 <div style="width: 8%" class="inner center">
                   <label class="col-form-label-md">Núm. Tercero</label>
                 </div>
-                <div style="width: 37%" class="inner center">
+                <div style="width: 30%" class="inner center">
                   <label class="col-form-label-md">Tercero</label>
                 </div>
-                <div style="width: 47%" class="inner center">
+                <div style="width: 42%" class="inner center">
                   <label class="col-form-label-md">Objeto</label>
                 </div>
               </div>
@@ -132,6 +179,12 @@
                       />
                     </div>
                     <div
+                      style="width: 12%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">{{ item?.detalle6 }}</p>
+                    </div>
+                    <div
                       style="width: 6%"
                       class="inner center aplicaBackground"
                     >
@@ -145,12 +198,12 @@
                         {{ item?.numeroIdentificacionTercero }}
                       </p>
                     </div>
-                    <div style="width: 37%" class="inner left aplicaBackground">
+                    <div style="width: 30%" class="inner left aplicaBackground">
                       <p class="medium">
                         {{ item?.nombreTercero }}
                       </p>
                     </div>
-                    <div style="width: 47%" class="inner left aplicaBackground">
+                    <div style="width: 42%" class="inner left aplicaBackground">
                       <p class="medium">
                         {{ item?.detalle4 }}
                       </p>

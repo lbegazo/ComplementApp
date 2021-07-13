@@ -9,6 +9,7 @@ namespace ComplementApp.API.Interfaces.Repository
     {
         Task<PagedList<CDP>> ObtenerListaCompromiso(UserParams userParams);
         Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesPorCompromiso(long crp, int pciId);
+        Task<ICollection<DetalleCDPDto>> ObtenerRubrosPresupuestalesXNumeroContrato(string numeroContrato);
         Task<CDPDto> ObtenerCDPPorCompromiso(long crp);
         Task<PagedList<CDPDto>> ObtenerDetallePlanAnualAdquisicion(long cdp, int instancia, UserParams userParams);
         

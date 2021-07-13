@@ -54,6 +54,7 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
 
   formatoForm = new FormGroup({});
   arrayControls = new FormArray([]);
+  arrayCompromisosControls = new FormArray([]);
   arrayRubrosControls = new FormArray([]);
 
   listaActividadEconomica: ValorSeleccion[];
@@ -73,6 +74,7 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
 
   rubrosPresupuestales: DetalleCDP[] = [];
   cdps: Cdp[] = [];
+  compromisos: Cdp[] = [];
 
   constructor(
     private alertify: AlertifyService,
@@ -86,9 +88,8 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
   ngOnInit() {
     this.cargarNotaLegal();
     this.cargarNotasLegales();
-    this.cargarInformacionPagador();
     this.createEmptyForm();
-    this.obtenerRubrosPresupuestales();
+    this.ObtenerRubrosPresupuestalesXNumeroContrato();
     this.cargarListaActividadEconomicaXTercero();
     this.cargarMeses();
   }
@@ -96,6 +97,7 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
   createEmptyForm() {
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
+      CompromisosControles: this.arrayCompromisosControls,
       rubrosControles: this.arrayRubrosControls,
     });
   }
@@ -115,6 +117,20 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
       }
     }
 
+    if (
+      this.formatoSolicitudPago.compromisos != null &&
+      this.formatoSolicitudPago.compromisos.length > 0
+    ) {
+      this.compromisos = this.formatoSolicitudPago.compromisos;
+      for (const detalle of this.compromisos) {
+        this.arrayCompromisosControls.push(
+          new FormGroup({
+            compromisoControl: new FormControl('', []),
+          })
+        );
+      }
+    }
+
     if (this.rubrosPresupuestales && this.rubrosPresupuestales.length > 0) {
       for (const detalle of this.rubrosPresupuestales) {
         this.arrayRubrosControls.push(
@@ -127,6 +143,7 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
 
     this.formatoForm = this.fb.group({
       deduccionControles: this.arrayControls,
+      CompromisoControles: this.arrayCompromisosControls,
       rubrosControles: this.arrayRubrosControls,
     });
   }
@@ -294,12 +311,6 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
     }
   }
 
-  cargarInformacionPagador() {
-    if (this.listaInformacionPagador) {
-      console.log(this.listaInformacionPagador);
-    }
-  }
-
   cargarNotaLegal() {
     this.listaService.ObtenerParametroGeneralXNombre('NotaLegalANE').subscribe(
       (data: ValorSeleccion) => {
@@ -311,10 +322,10 @@ export class DetalleInformePagoProveedorComponent implements OnInit {
     );
   }
 
-  obtenerRubrosPresupuestales() {
+  ObtenerRubrosPresupuestalesXNumeroContrato() {
     this.cdpService
-      .ObtenerRubrosPresupuestalesPorCompromiso(
-        this.formatoSolicitudPago.cdp.crp
+      .ObtenerRubrosPresupuestalesXNumeroContrato(
+        this.formatoSolicitudPago.cdp.detalle6
       )
       .subscribe(
         (lista: DetalleCDP[]) => {
