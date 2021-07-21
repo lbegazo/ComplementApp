@@ -103,9 +103,16 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> ObtenerListaUsuarioxFiltro([FromQuery(Name = "nombres")] string nombres)
+        public async Task<IActionResult> ObtenerListaUsuarioxFiltro([FromQuery(Name = "nombres")] string nombres,
+                                                                    [FromQuery(Name = "apellidos")] string apellidos)
         {
-            var datos = await _repo.ObtenerListaUsuarioxFiltro(nombres);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+
+            var datos = await _repo.ObtenerListaUsuarioxFiltro(pciId, nombres, apellidos);
             return Ok(datos);
         }
 
@@ -205,7 +212,7 @@ namespace ComplementApp.API.Controllers
             var datos = await _repo.ObtenerListaRubroPresupuestal(identificacion, nombre);
             return Ok(datos);
         }
-        
+
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

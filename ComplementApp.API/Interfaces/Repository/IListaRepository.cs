@@ -29,7 +29,7 @@ namespace ComplementApp.API.Interfaces.Repository
 
         Task<ICollection<CriterioCalculoReteFuente>> ObtenerListaCriterioCalculoReteFuente();
 
-        Task<IEnumerable<UsuarioParaDetalleDto>> ObtenerListaUsuarioxFiltro(string nombres);
+        Task<IEnumerable<UsuarioParaDetalleDto>> ObtenerListaUsuarioxFiltro(int pciId, string nombres, string apellidos);
 
         Task<ICollection<Estado>> ObtenerListaEstado(string tipoDocumento);
 

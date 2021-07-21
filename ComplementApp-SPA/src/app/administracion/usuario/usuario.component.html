@@ -1,0 +1,282 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera">
+      <div class="col-md-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--RADIO BUTTONS -->
+
+              <div class="container-fluid mt-2">
+                <div class="row">
+                  <div class="col-12 withoutPadding">
+                    <h4>Seleccione una opción:</h4>
+                    <div
+                      class="custom-control custom-radio custom-control-inline"
+                    >
+                      <input
+                        id="male"
+                        type="radio"
+                        class="custom-control-input"
+                        value="1"
+                        name="rbtRadicarFacturaCtrl"
+                        formControlName="rbtRadicarFacturaCtrl"                        
+                        (change)="onModificacion($event)"
+                        [checked]="!this.esCreacion"
+                      />
+                      <label class="custom-control-label" for="male"
+                        >Modificar</label
+                      >
+                    </div>
+
+                    <div
+                      class="custom-control custom-radio custom-control-inline"
+                    >
+                      <input
+                        id="female"
+                        type="radio"
+                        class="custom-control-input"
+                        value="2"
+                        name="rbtRadicarFacturaCtrl"
+                        formControlName="rbtRadicarFacturaCtrl"
+                        (change)="onCreacion($event)"
+                        [checked]="this.esCreacion"
+                      />
+                      <label class="custom-control-label" for="female"
+                        >Crear</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--TERCERO-->
+              <div class="form-row mt-2">
+                <div class="form-group col-md-4">
+                  <label for="inputNumeroTercero" class="col-form-label-md"
+                    >Nombres</label
+                  >
+                  <input
+                    [(ngModel)]="search"
+                    typeaheadOptionField="nombres"
+                    [typeahead]="suggestions$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    placeholder="Ingrese los nombres"
+                    formControlName="terceroCtrl"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    style="height: 20px"
+                    id="inputNumeroTercero"
+                    value="{{ usuario?.nombres }}"
+                  />
+                  <div
+                    class="alert alert-danger"
+                    role="alert"
+                    *ngIf="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="inputTercero" class="col-form-label-md"
+                    >Apellidos</label
+                  >
+                  <input
+                    [(ngModel)]="searchNombre"
+                    typeaheadOptionField="apellidos"
+                    [typeahead]="suggestionsXNombre$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelectXNombre($event)"
+                    type="text"
+                    class="form-control border addPaddingLeft"
+                    style="height: 20px; background-color: white"
+                    maxlength="50"
+                    formControlName="terceroDescripcionCtrl"
+                    id="inputTercero"
+                    value="{{ usuario?.apellidos }}"
+                    placeholder="Ingrese los apellidos"
+                  />
+                </div>
+
+                <div class="form-group col-md-4">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarUsuario()"
+                        >
+                          Buscar</button
+                        >
+                        <button
+                          type="submit"
+                          class="btn btn-success ml-2"
+                          (click)="onLimpiarFactura()"
+                        >
+                          Limpiar
+                        </button>                       
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 2%"></div>
+                <div style="width: 18%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Nombres</label
+                  >
+                </div>
+                <div style="width: 20%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Apellidos</label
+                  >
+                </div>                
+                <div style="width: 30%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Area</label
+                  >
+                </div>
+                <div style="width: 30%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Cargo</label
+                  >
+                </div>
+              </div>
+              <div *ngIf="listaUsuario">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaUsuario; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 2%"
+                      class="inner center aplicaBackground"
+                    >
+                      <input
+                        type="radio"
+                        [value]="item?.usuarioId"
+                        (change)="onCheckChange($event)"
+                        name="inlineDefaultRadiosExample"
+                      />
+                    </div>
+                    <div
+                      style="width: 18%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.nombres }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 20%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.apellidos }}
+                      </p>
+                    </div>
+                    <div style="width: 30%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.areaNombre }}
+                      </p>
+                    </div>
+                    <div style="width: 30%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.cargoNombre }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onModificar()"
+                    [disabled]="usuarioId === 0"
+                  >
+                    Modificar
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="container-fluid mt-1">
+  <div class="row">
+    <div class="col-12" *ngIf="!mostrarCabecera">
+      <app-usuario-edit-new
+        [usuarioSeleccionado]="usuarioSeleccionado"
+        [esCreacion]="esCreacion"
+        (esCancelado)="HabilitarCabecera($event)"
+        [areas]="areas"
+        [cargos]="cargos"
+        [listaPci]="listaPci"
+        [perfiles]="esCreacion"
+      ></app-usuario-edit-new>
+    </div>
+  </div>
+</div> 

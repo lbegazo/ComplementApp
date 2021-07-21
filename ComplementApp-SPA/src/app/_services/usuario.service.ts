@@ -27,6 +27,47 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
+  ObtenerUsuariosXFiltro(
+    tipo: number,
+    usuarioId?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<Usuario[]>> {
+    const paginatedResult: PaginatedResult<Usuario[]> = new PaginatedResult<
+      Usuario[]
+    >();
+
+    let params = new HttpParams();
+    params = params.append('tipo', tipo.toString());
+    if (usuarioId > 0) {
+      params = params.append('usuarioId', usuarioId.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Usuario[]>(this.baseUrl, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
   ObtenerUsuarios(page?, pagesize?): Observable<PaginatedResult<Usuario[]>> {
     const paginatedResult: PaginatedResult<Usuario[]> = new PaginatedResult<
       Usuario[]

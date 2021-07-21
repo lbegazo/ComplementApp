@@ -30,8 +30,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   transacciones: Transaccion[] = [];
   subscription: Subscription;
   model: any = {};
-  esQA = false;
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private navService: NavService,
@@ -66,10 +64,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       () => {},
       () => {
-        // const token = localStorage.getItem('token');
-        // this.authService.decodedToken = this.jwtHelper.decodeToken(token);
-        // this.esQA = this.authService.decodedToken?.email !== '' ? true : false;
-        // console.log(this.esQA);
         this.router.navigate(['/home']);
       }
     );

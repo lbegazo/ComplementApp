@@ -124,107 +124,28 @@ namespace ComplementApp.API.Data
                                                                                 UserParams userParams)
         {
             IQueryable<CDPDto> lista = null;
-            var usuario = await _context.Usuario.Where(x => x.UsuarioId == usuarioId).FirstOrDefaultAsync();
-            var listaPerfilxUsuario = await _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToListAsync();
 
-            if (listaPerfilxUsuario != null && listaPerfilxUsuario.Count > 0)
-            {
-                var listaPerfilId = listaPerfilxUsuario.Select(x => x.PerfilId).ToList();
+            lista = (from co in _context.Contrato
+                     join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), co.PciId } equals
+                                             new { c.Crp, NumeroContrato = c.Detalle6.Trim(), c.PciId }
+                     join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                     where c.Instancia == (int)TipoDocumento.Compromiso
+                     where co.Crp == crp || crp == null
+                     where co.NumeroContrato == numeroContrato || numeroContrato == null
+                     where c.TerceroId == terceroId || terceroId == null
+                     select new CDPDto()
+                     {
+                         Crp = c.Crp,
+                         Detalle6 = c.Detalle6, //número de contrato
+                         Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
+                         NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                         NombreTercero = t.Nombre,
+                         TerceroId = c.TerceroId,
+                     })
+                    .Distinct()
+                    .OrderBy(x => x.Detalle6)
+                    .ThenBy(x => x.Crp);
 
-                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador)
-                    || listaPerfilId.Contains((int)PerfilUsuario.CoordinadorFinanciero)
-                    || listaPerfilId.Contains((int)PerfilUsuario.RegistradorContable))
-                {
-                    #region Administrador y Coordinador financiero
-
-                    lista = (from co in _context.Contrato
-                             join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), co.PciId } equals
-                                                        new { c.Crp, NumeroContrato = c.Detalle6.Trim(), c.PciId }
-                             join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                             where c.Instancia == (int)TipoDocumento.Compromiso
-                             where c.SaldoActual > 0 //Saldo Disponible
-                             where co.Crp == crp || crp == null
-                             where co.NumeroContrato == numeroContrato || numeroContrato == null
-                             where c.TerceroId == terceroId || terceroId == null
-                             select new CDPDto()
-                             {
-                                 Crp = c.Crp,
-                                 Detalle6 = c.Detalle6, //número de contrato
-                                 Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                                 NumeroIdentificacionTercero = t.NumeroIdentificacion,
-                                 NombreTercero = t.Nombre,
-                                 TerceroId = c.TerceroId,
-                             })
-                          .Distinct()
-                          .OrderBy(x => x.Detalle6)
-                          .ThenBy(x => x.Crp);
-
-                    #endregion Administrador y Coordinador financiero
-                }
-                else if (listaPerfilId.Contains((int)PerfilUsuario.SupervisorContractual))
-                {
-                    #region SupervisorContractual
-
-                    lista = (from co in _context.Contrato
-                             join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), PciId = co.PciId } equals
-                                                        new { c.Crp, NumeroContrato = c.Detalle6.Trim(), PciId = c.PciId }
-                             join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                             join p in _context.ParametroLiquidacionTercero on t.TerceroId equals p.TerceroId into ParametroTercero
-                             from pt in ParametroTercero.DefaultIfEmpty()
-                             where c.Instancia == (int)TipoDocumento.Compromiso
-                             where c.PciId == pt.PciId
-                             where c.SaldoActual > 0 //Saldo Disponible
-                             where co.Supervisor1Id == usuarioId
-                             where co.Crp == crp || crp == null
-                             where co.NumeroContrato == numeroContrato || numeroContrato == null
-                             where c.TerceroId == terceroId || terceroId == null
-                             where pt.ModalidadContrato != (int)ModalidadContrato.ContratoPrestacionServicio
-                             select new CDPDto()
-                             {
-                                 Crp = c.Crp,
-                                 Detalle6 = c.Detalle6, //número de contrato
-                                 Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                                 NumeroIdentificacionTercero = t.NumeroIdentificacion,
-                                 NombreTercero = t.Nombre,
-                                 TerceroId = c.TerceroId,
-                             })
-                            .Distinct()
-                            .OrderBy(x => x.Detalle6)
-                          .ThenBy(x => x.Crp);
-
-                    #endregion SupervisorContractual
-                }
-                else if (listaPerfilId.Contains((int)PerfilUsuario.Contratista))
-                {
-                    #region Contratista
-
-                    terceroId = usuario.TerceroId;
-
-                    lista = (from co in _context.Contrato
-                             join c in _context.CDP on new { co.Crp, NumeroContrato = co.NumeroContrato.Trim(), PciId = co.PciId } equals
-                                                        new { c.Crp, NumeroContrato = c.Detalle6.Trim(), PciId = c.PciId }
-                             join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                             where c.Instancia == (int)TipoDocumento.Compromiso
-                             where c.SaldoActual > 0 //Saldo Disponible
-                             where c.TerceroId == terceroId
-                             where co.Crp == crp || crp == null
-                             where co.NumeroContrato == numeroContrato || numeroContrato == null
-                             select new CDPDto()
-                             {
-                                 Crp = c.Crp,
-                                 Detalle6 = c.Detalle6, //número de contrato
-                                 Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                                 NumeroIdentificacionTercero = t.NumeroIdentificacion,
-                                 NombreTercero = t.Nombre,
-                                 TerceroId = c.TerceroId,
-                             })
-                            .Distinct()
-                           .OrderBy(x => x.Detalle6)
-                          .ThenBy(x => x.Crp);
-
-                    #endregion Contratista
-                }
-            }
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -869,6 +790,8 @@ namespace ComplementApp.API.Data
 
         public async Task<List<CDPDto>> ObtenerPagosRealizadosXListaCompromiso(List<long> listaCrp)
         {
+            List<CDPDto> listaFinal = new List<CDPDto>();
+
             var lista = await (from c in _context.CDP
                                join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
                                where c.Instancia == (int)TipoDocumento.OrdenPago
@@ -892,11 +815,18 @@ namespace ComplementApp.API.Data
 
                                })
                                  .Distinct()
-                                 .OrderBy(c => c.Crp)
-                                 .ThenBy(c => c.OrdenPago)
                                  .ToListAsync();
 
-            return lista;
+            if (lista != null && lista.Count > 0)
+            {
+                listaFinal = lista
+                                 .OrderBy(c => c.Crp)
+                                 .ThenBy(c => c.OrdenPago)
+                                 .ToList();
+
+            }
+
+            return listaFinal;
         }
 
 

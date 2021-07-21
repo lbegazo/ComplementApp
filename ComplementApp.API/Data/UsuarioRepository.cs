@@ -57,11 +57,29 @@ namespace ComplementApp.API.Data
             }
         }
 
-        public async Task<PagedList<Usuario>> ObtenerUsuarios(UserParams userParams)
+        public async Task<PagedList<UsuarioParaDetalleDto>> ObtenerUsuarios(int tipo, int? usuarioId, UserParams userParams)
         {
-            var users = _context.Usuario.OrderBy(x => x.Nombres);
+            IOrderedQueryable<UsuarioParaDetalleDto> lista = null;
 
-            return await PagedList<Usuario>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+            lista = (from t in _context.Usuario
+                     join ar in _context.Area on t.AreaId equals ar.AreaId
+                     join ca in _context.Cargo on t.CargoId equals ca.CargoId
+                     where t.UsuarioId == usuarioId || usuarioId == null
+                     where t.PciId == userParams.PciId
+                     select new UsuarioParaDetalleDto()
+                     {
+                         UsuarioId = t.UsuarioId,
+                         Nombres = t.Nombres,
+                         Apellidos = t.Apellidos,
+                         CargoNombre = ca.Nombre,
+                         AreaNombre = ar.Nombre,
+                         Username = t.Username,
+                     })
+                       .Distinct()
+                       .OrderBy(t => t.Nombres);
+
+
+            return await PagedList<UsuarioParaDetalleDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> UserExists(string username)

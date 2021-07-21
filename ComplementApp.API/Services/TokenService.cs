@@ -12,7 +12,7 @@ namespace ComplementApp.API.Services
     public class TokenService : ITokenService
     {
         private readonly SymmetricSecurityKey _key;
-        //private readonly string _environment;
+        private readonly string _environment;
 
         public TokenService(IConfiguration config)
         {
@@ -20,7 +20,7 @@ namespace ComplementApp.API.Services
             _key = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(
                                 config["AppSettings:Token"]));
-            //_environment = config["AppSettings:environment"];
+            _environment = config["AppSettings:environment"];
         }
 
         public string CreateToken(Usuario userFromRepo)
@@ -33,8 +33,8 @@ namespace ComplementApp.API.Services
                 new Claim(ClaimTypes.Name, userFromRepo.Username),
                 new Claim(ClaimTypes.Role, userFromRepo.PciId.ToString()),
                 new Claim(ClaimTypes.Surname, userFromRepo.Nombres+ ' '+ userFromRepo.Apellidos),
-                new Claim(ClaimTypes.GivenName,  userFromRepo.Nombres)
-                //new Claim(ClaimTypes.Email,  _environment),
+                new Claim(ClaimTypes.GivenName,  userFromRepo.Nombres),
+                new Claim(ClaimTypes.Email,  _environment),
             };
 
             //we are encryting the key(in bytes) using HmacSha512Signature           

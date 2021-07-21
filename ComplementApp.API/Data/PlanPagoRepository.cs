@@ -417,10 +417,19 @@ namespace ComplementApp.API.Data
 
         public int ObtenerCantidadMaximaPlanPago(long crp, int pciId)
         {
-            var cantidad = (from pp in _context.PlanPago
-                            where pp.Crp == crp
-                            where pp.PciId == pciId
-                            select pp).Max(x => x.NumeroPago);
+            // int cantidad = 0;
+            // var resultado = (from pp in _context.PlanPago
+            //                  where pp.Crp == crp
+            //                  where pp.PciId == pciId)
+            //                  .Max(x => x.NumeroPago as int?) ?? 0;
+
+            // if (resultado != null)
+            // {
+            //     cantidad = resultado;
+            // }
+
+            int cantidad = _context.PlanPago.Where(x => x.Crp == crp).Where(x => x.PciId == pciId).Max(x => x.NumeroPago as int?) ?? 0;
+
             return cantidad;
         }
 

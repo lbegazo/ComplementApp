@@ -13,14 +13,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-    
+
     public class UsuarioController : BaseApiController
     {
         #region Variable
         int pciId = 0;
         string valorPciId = string.Empty;
-        
-        #endregion 
+
+        #endregion
 
         #region Dependency injection
 
@@ -43,15 +43,33 @@ namespace ComplementApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerUsuarios([FromQuery] UserParams userParams)
+        public async Task<IActionResult> ObtenerUsuarios([FromQuery(Name = "tipo")] int tipo,
+                                                         [FromQuery(Name = "usuarioId")] int? usuarioId,
+                                                         [FromQuery] UserParams userParams)
         {
-            var pagedList = await _repo.ObtenerUsuarios(userParams);
-            var usersForList = _mapper.Map<IEnumerable<UsuarioParaDetalleDto>>(pagedList);
+            try
+            {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
 
-            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
-                                pagedList.TotalCount, pagedList.TotalPages);
+                var pagedList = await _repo.ObtenerUsuarios(tipo, usuarioId, userParams);
+                var usersForList = _mapper.Map<IEnumerable<UsuarioParaDetalleDto>>(pagedList);
 
-            return Ok(usersForList);
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                       pagedList.TotalCount, pagedList.TotalPages);
+
+                return Ok(usersForList);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de usuarios");
         }
 
         [HttpGet("{id}")]

@@ -10,7 +10,7 @@ namespace ComplementApp.API.Interfaces.Repository
     {
         Task<Usuario> Register(Usuario user, string password);
         
-        Task<PagedList<Usuario>> ObtenerUsuarios(UserParams userParams);
+        Task<PagedList<UsuarioParaDetalleDto>> ObtenerUsuarios(int tipo, int? usuarioId, UserParams userParams);
 
         Task<Usuario> ObtenerUsuarioBase(int id);       
 

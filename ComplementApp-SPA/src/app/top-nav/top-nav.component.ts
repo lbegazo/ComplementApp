@@ -15,7 +15,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class TopNavComponent implements OnInit {
   jwtHelper = new JwtHelperService();
   @ViewChild('loginForm', { static: true }) loginForm: NgForm;
-  @Input() esQA: boolean;
 
   model: any = {};
   constructor(
@@ -26,7 +25,6 @@ export class TopNavComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // console.log(this.esQA);
   }
 
   loggedIn() {
@@ -38,5 +36,9 @@ export class TopNavComponent implements OnInit {
     this.model = {};
     this.alertify.message('Su sesión ha sido cerrada');
     this.router.navigate(['/home']);
+  }
+
+  environmentTest(){
+    return this.authService.environmentTest();
   }
 }

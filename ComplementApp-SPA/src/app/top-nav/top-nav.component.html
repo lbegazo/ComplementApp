@@ -45,15 +45,16 @@
             height="80"
           />
         </a>
-        <!-- <div *ngIf="esQA">
+        <div *ngIf="environmentTest()">
           <img src="./assets/img/QA.png" alt="QA" width="90" height="80" />
-        </div> -->
+        </div>
       </div>
       <div style="width: 5%"></div>
       <div
         style="width: 30%"
         class="d-flex justify-content-end align-self-center"
       >
+        
         <div *ngIf="loggedIn()" class="dropdown" dropdown>
           <a class="dropdown-toggle text-light" dropdownToggle>
             Bienvenido

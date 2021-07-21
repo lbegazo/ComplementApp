@@ -933,7 +933,7 @@
                                         <strong>NUM.</strong>
                                       </div>
                                       <div
-                                        style="width: 8%"
+                                        style="width: 6%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -943,7 +943,7 @@
                                         <strong>PCI</strong>
                                       </div>
                                       <div
-                                        style="width: 5%"
+                                        style="width: 4%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -953,7 +953,7 @@
                                         <strong>CRP</strong>
                                       </div>
                                       <div
-                                        style="width: 10%"
+                                        style="width: 11%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -973,7 +973,7 @@
                                         <strong>NOMBRE RUBRO</strong>
                                       </div>
                                       <div
-                                        style="width: 13%"
+                                        style="width: 20%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -1013,7 +1013,7 @@
                                         <strong>REC</strong>
                                       </div>
                                       <div
-                                        style="width: 8%"
+                                        style="width: 7%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -1023,7 +1023,7 @@
                                         <strong>VALOR INICIAL</strong>
                                       </div>
                                       <div
-                                        style="width: 8%"
+                                        style="width: 6%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -1033,7 +1033,7 @@
                                         <strong>VALOR OPER.</strong>
                                       </div>
                                       <div
-                                        style="width: 8%"
+                                        style="width: 7%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -1043,7 +1043,7 @@
                                         <strong> VALOR ACTUAL</strong>
                                       </div>
                                       <div
-                                        style="width: 8%"
+                                        style="width: 7%"
                                         class="
                                           borderBottonRight
                                           aplicaBackground
@@ -1077,7 +1077,7 @@
                                                 {{ i + 1 }}
                                               </div>
                                               <div
-                                                style="width: 8%"
+                                                style="width: 6%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign
@@ -1087,7 +1087,7 @@
                                                 {{ item?.identificacionPci }}
                                               </div>
                                               <div
-                                                style="width: 5%"
+                                                style="width: 4%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign
@@ -1097,7 +1097,7 @@
                                                 {{ item?.crp }}
                                               </div>
                                               <div
-                                                style="width: 10%"
+                                                style="width: 11%"
                                                 class="
                                                   borderBottonRight
                                                   centerAlign
@@ -1125,7 +1125,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 13%"
+                                                style="width: 20%"
                                                 class="
                                                   borderBottonRight
                                                   left
@@ -1136,6 +1136,10 @@
                                               >
                                                 {{
                                                   item?.dependenciaDescripcion
+                                                    .length > 40
+                                                    ? (item?.dependenciaDescripcion
+                                                        | slice: 0:40) + ".."
+                                                    : item?.dependenciaDescripcion
                                                 }}
                                               </div>
                                               <div
@@ -1175,7 +1179,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 8%"
+                                                style="width: 7%"
                                                 class="
                                                   borderBottonRight
                                                   right
@@ -1189,7 +1193,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 8%"
+                                                style="width: 6%"
                                                 class="
                                                   borderBottonRight
                                                   right
@@ -1203,7 +1207,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 8%"
+                                                style="width: 7%"
                                                 class="
                                                   borderBottonRight
                                                   right
@@ -1217,7 +1221,7 @@
                                                 }}
                                               </div>
                                               <div
-                                                style="width: 8%"
+                                                style="width: 7%"
                                                 class="
                                                   borderBottonRight
                                                   right

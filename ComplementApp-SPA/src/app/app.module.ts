@@ -139,6 +139,9 @@ import { PopupDetallePlanAdquisicionComponent } from './reporte/plan-anual-adqui
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
 import { DetalleInformePagoProveedorComponent } from './reporte/informe-pago-proveedor/detalle-informe-pago-proveedor/detalle-informe-pago-proveedor.component';
 import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
+import { UsuarioComponent } from './administracion/usuario/usuario.component';
+import { UsuarioEditNewComponent } from './administracion/usuario/usuario-edit-new/usuario-edit-new.component';
+
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -232,6 +235,8 @@ export function tokenGetter() {
     InformePagoProveedorComponent,
     DetalleInformePagoProveedorComponent,
     CargaMasivaOrdenPagoComponent,
+    UsuarioComponent,
+    UsuarioEditNewComponent
   ],
   imports: [
     BrowserModule,

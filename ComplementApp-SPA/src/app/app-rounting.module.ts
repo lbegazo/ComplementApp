@@ -10,7 +10,6 @@ import { UsuarioDetalleResolver } from './_resolvers/usuario-detalle.resolver';
 import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
 import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-main.component';
 import { CausacionyLiquidacionComponent } from './CausacionyLiquidacion/CausacionyLiquidacion.component';
-import { CdpMainComponent } from './solicitudCdp/cdp-main/cdp-main.component';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
 import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 import { TransaccionResolver } from './_resolvers/transaccion.resolver';
@@ -24,7 +23,6 @@ import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.com
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
 import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
-import { RelacionContableComponent } from './administracion/relacion-contable/relacion-contable.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
 import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
@@ -52,11 +50,11 @@ import { PlanAdquisicionComponent } from './plan-paa/plan-adquisicion/plan-adqui
 import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
 import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
-import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
 import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
+import { UsuarioComponent } from './administracion/usuario/usuario.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -64,42 +62,56 @@ export const routes: Routes = [
     path: 'home',
     component: HomeComponent,
   },
+  // {
+  //   path: 'ADMINISTRACION_USUARIO',
+  //   canActivate: [AuthGuard],
+  //   runGuardsAndResolvers: 'always',
+  //   component: UsuarioMainComponent,
+  //   resolve: { transaccion: TransaccionResolver },
+  //   children: [
+  //     { path: '', component: UsuarioStartComponent },
+  //     {
+  //       path: 'new',
+  //       component: UsuarioEditComponent,
+  //       resolve: {
+  //         areas: ListaAreasResolver,
+  //         cargos: ListaCargosResolver,
+  //         pcis: ListaPciResolver,
+  //         perfiles: ListaPerfilesResolver,
+  //       },
+  //     },
+  //     {
+  //       path: ':id',
+  //       component: UsuarioDetailComponent,
+  //       resolve: { usuario: UsuarioDetalleParametroResolver },
+  //     },
+  //     {
+  //       path: ':id/edit',
+  //       component: UsuarioEditComponent,
+  //       resolve: {
+  //         areas: ListaAreasResolver,
+  //         cargos: ListaCargosResolver,
+  //         pcis: ListaPciResolver,
+  //         perfiles: ListaPerfilesResolver,
+  //       },
+
+  //       // canDeactivate: [PreventUnsavedChangesUsuario],
+  //     },
+  //   ],
+  // },
   {
     path: 'ADMINISTRACION_USUARIO',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
-    component: UsuarioMainComponent,
-    resolve: { transaccion: TransaccionResolver },
-    children: [
-      { path: '', component: UsuarioStartComponent },
-      {
-        path: 'new',
-        component: UsuarioEditComponent,
-        resolve: {
-          areas: ListaAreasResolver,
-          cargos: ListaCargosResolver,
-          pcis: ListaPciResolver,
-          perfiles: ListaPerfilesResolver,
-        },
-      },
-      {
-        path: ':id',
-        component: UsuarioDetailComponent,
-        resolve: { usuario: UsuarioDetalleParametroResolver },
-      },
-      {
-        path: ':id/edit',
-        component: UsuarioEditComponent,
-        resolve: {
-          areas: ListaAreasResolver,
-          cargos: ListaCargosResolver,
-          pcis: ListaPciResolver,
-          perfiles: ListaPerfilesResolver,
-        },
-
-        // canDeactivate: [PreventUnsavedChangesUsuario],
-      },
-    ],
+    component: UsuarioComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      tipoDocumentoIdentidad: ListaTipoDocumentoIdentidadResolver,
+      areas: ListaAreasResolver,
+      cargos: ListaCargosResolver,
+      pcis: ListaPciResolver,
+      perfiles: ListaPerfilesResolver,
+    },
   },
   {
     path: 'ADMINISTRACION_PARAMETROLIQUIDACIONTERCERO',

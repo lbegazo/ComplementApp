@@ -74,4 +74,11 @@ export class AuthService {
     localStorage.clear();
     this.currentUserSource.next(null);
   }
+
+  environmentTest() {
+    const token = localStorage.getItem('token');
+    this.decodedToken = this.jwtHelper.decodeToken(token);
+    const esQA = this.decodedToken?.email !== '' ? true : false;
+    return esQA;
+  }
 }

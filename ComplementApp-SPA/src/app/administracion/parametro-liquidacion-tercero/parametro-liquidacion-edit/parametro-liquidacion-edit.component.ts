@@ -752,7 +752,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   onAgregarDeduccion() {
     if (this.accionAgregarDeduccion) {
       //#region Agregar Deducción Actividad Economica
-      console.log(this.deduccion);
       if (this.deduccion === undefined || this.deduccion === null) {
         //#region Solo Actividad Economica
 

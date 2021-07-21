@@ -118,18 +118,39 @@ namespace ComplementApp.API.Data
             return await _context.Estado.Where(x => x.TipoDocumento == tipoDocumento).ToListAsync();
         }
 
-        public async Task<IEnumerable<UsuarioParaDetalleDto>> ObtenerListaUsuarioxFiltro(string nombres)
+        public async Task<IEnumerable<UsuarioParaDetalleDto>> ObtenerListaUsuarioxFiltro(int pciId, string nombres, string apellidos)
         {
-            var listaUsuario = await (from u in _context.Usuario
-                                      where (u.Nombres.Contains(nombres))
-                                      select new UsuarioParaDetalleDto()
-                                      {
-                                          UsuarioId = u.UsuarioId,
-                                          Nombres = u.Nombres,
-                                          Apellidos = u.Apellidos,
-                                          NombreCompleto = u.Nombres + " " + u.Apellidos,
-                                          Username = u.Username
-                                      }).ToListAsync();
+            IQueryable<UsuarioParaDetalleDto> listaFiltrada = null;
+
+            var lista = (from u in _context.Usuario
+                         where u.PciId == pciId
+                         select new UsuarioParaDetalleDto()
+                         {
+                             UsuarioId = u.UsuarioId,
+                             Nombres = u.Nombres,
+                             Apellidos = u.Apellidos,
+                             NombreCompleto = u.Nombres + " " + u.Apellidos,
+                             Username = u.Username,
+                             PciId = u.PciId.Value,
+                         }).OrderBy(d => d.Nombres);
+
+            if (!string.IsNullOrEmpty(nombres))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.PciId == pciId
+                                 where l.Nombres.Contains(nombres)
+                                 select l);
+            }
+
+            if (!string.IsNullOrEmpty(apellidos))
+            {
+                listaFiltrada = (from l in lista
+                                 where l.PciId == pciId
+                                 where l.Apellidos.Contains(apellidos)
+                                 select l);
+            }
+
+            var listaUsuario = await listaFiltrada.ToListAsync();
 
             foreach (var usuario in listaUsuario)
             {
@@ -140,6 +161,7 @@ namespace ComplementApp.API.Data
                 usuario.Perfiles = new List<Perfil>();
                 usuario.Perfiles.Add(perfil);
             }
+
             return listaUsuario;
         }
 
