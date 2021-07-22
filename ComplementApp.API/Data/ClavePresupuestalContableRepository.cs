@@ -41,7 +41,7 @@ namespace ComplementApp.API.Data
                          select new CDPDto()
                          {
                              Crp = c.Crp,
-                             Detalle4 = c.Detalle4.Length > 180 ? c.Detalle4.Substring(0, 180) + "..." : c.Detalle4,
+                             Detalle4 = c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
                          })
@@ -61,7 +61,7 @@ namespace ComplementApp.API.Data
                          select new CDPDto()
                          {
                              Crp = c.Crp,
-                             Detalle4 = c.Detalle4.Length > 180 ? c.Detalle4.Substring(0, 180) + "..." : c.Detalle4,
+                             Detalle4 = c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
                          })
@@ -128,7 +128,7 @@ namespace ComplementApp.API.Data
                              UsoPresupuestal = new ValorSeleccion()
                              {
                                  Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
-                                 Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
+                                 Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion + " " + usoPre.Nombre : string.Empty,
                              },
                          })
                          .Distinct()
@@ -258,7 +258,7 @@ namespace ComplementApp.API.Data
                                       {
                                           Id = cla.UsoPresupuestalId.HasValue ? cla.UsoPresupuestalId.Value : 0,
                                           Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
-                                          Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
+                                          Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion + " " + usoPre.Nombre : string.Empty,
                                       },
                                   })
                                  .Distinct()
