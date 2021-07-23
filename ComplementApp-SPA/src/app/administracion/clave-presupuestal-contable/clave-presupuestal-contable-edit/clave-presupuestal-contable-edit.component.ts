@@ -109,9 +109,9 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
 
       //#region Cargar información del popup (OnHidden event)
 
-      const combine = combineLatest([
-        this.modalService.onHidden,
-      ]).subscribe(() => this.changeDetection.markForCheck());
+      const combine = combineLatest([this.modalService.onHidden]).subscribe(
+        () => this.changeDetection.markForCheck()
+      );
 
       this.subscriptions.push(
         this.modalService.onHidden.subscribe((reason: string) => {
@@ -123,10 +123,13 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
           ) {
             const relacionContable = this.bsModalRef.content
               .relacionContableSeleccionado as RelacionContableDto;
+
             const valorRelacionContable: ValorSeleccion = new ValorSeleccion();
             (valorRelacionContable.id = relacionContable.relacionContableId),
               (valorRelacionContable.codigo =
                 relacionContable.cuentaContable.codigo);
+            valorRelacionContable.nombre =
+              relacionContable.cuentaContable.nombre;
 
             clavePresupuestal.relacionContable = valorRelacionContable;
 

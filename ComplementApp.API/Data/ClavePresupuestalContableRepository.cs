@@ -128,7 +128,7 @@ namespace ComplementApp.API.Data
                              UsoPresupuestal = new ValorSeleccion()
                              {
                                  Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
-                                 Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion + " " + usoPre.Nombre : string.Empty,
+                                 Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
                              },
                          })
                          .Distinct()
@@ -203,7 +203,8 @@ namespace ComplementApp.API.Data
                                   join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
                                   join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
                                   from cuCo in CuentaContable.DefaultIfEmpty()
-                                  join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
+                                  join up in _context.UsoPresupuestal on new { UsoPresupuestalId = cla.UsoPresupuestalId.Value, PciId = cla.PciId.Value } equals 
+                                                                         new { UsoPresupuestalId = up.UsoPresupuestalId, PciId = up.PciId.Value } into UsoPresupuestal
                                   from usoPre in UsoPresupuestal.DefaultIfEmpty()
                                   where rp.RubroPresupuestalId == c.RubroPresupuestalId
                                   where c.Instancia == (int)TipoDocumento.Compromiso
@@ -211,7 +212,6 @@ namespace ComplementApp.API.Data
                                   where cla.Dependencia == c.Detalle2
                                   where cla.PciId == c.PciId
                                   where cla.PciId == rc.PciId
-                                  where cla.PciId == usoPre.PciId
                                   where cla.PciId == pciId
 
                                   select new ClavePresupuestalContableDto()
@@ -253,12 +253,13 @@ namespace ComplementApp.API.Data
                                       {
                                           Id = cla.RelacionContableId > 0 ? cla.RelacionContableId : 0,
                                           Codigo = cuCo.NumeroCuenta,
+                                          Nombre = cuCo.DescripcionCuenta
                                       },
                                       UsoPresupuestal = new ValorSeleccion()
                                       {
                                           Id = cla.UsoPresupuestalId.HasValue ? cla.UsoPresupuestalId.Value : 0,
                                           Codigo = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion : string.Empty,
-                                          Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Identificacion + " " + usoPre.Nombre : string.Empty,
+                                          Nombre = cla.UsoPresupuestalId > 0 ? usoPre.Nombre : string.Empty,
                                       },
                                   })
                                  .Distinct()
