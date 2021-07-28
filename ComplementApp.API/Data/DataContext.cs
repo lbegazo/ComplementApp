@@ -110,6 +110,7 @@ namespace ComplementApp.API.Data
         public DbSet<ParametroSistema> ParametroSistema { get; set; }
         public DbSet<CargaObligacion> CargaObligacion { get; set; }
         public DbSet<NivelAgrupacionPac> NivelAgrupacionPac { get; set; }
+        public DbSet<PlanAdquisicionHistorico> PlanAdquisicionHistorico { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

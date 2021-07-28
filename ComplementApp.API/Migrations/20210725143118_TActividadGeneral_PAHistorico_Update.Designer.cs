@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210725143118_TActividadGeneral_PAHistorico_Update")]
+    partial class TActividadGeneral_PAHistorico_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1736,9 +1738,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("RubroPresupuestalId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Saldo")
-                        .HasColumnType("decimal(30,8)");
-
                     b.Property<int?>("TransaccionId")
                         .HasColumnType("int");
 
@@ -2017,9 +2016,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(500)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ProyectoInversion")
                         .IsRequired()
                         .HasColumnType("VARCHAR(500)");
@@ -2042,8 +2038,6 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("SolicitudCDPId");
 
                     b.HasIndex("EstadoSolicitudCDPId");
-
-                    b.HasIndex("PciId");
 
                     b.HasIndex("TipoDetalleCDPId");
 
@@ -3152,10 +3146,6 @@ namespace ComplementApp.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
                     b.HasOne("ComplementApp.API.Models.TipoDetalleCDP", "TipoDetalleCDP")
                         .WithMany()
                         .HasForeignKey("TipoDetalleCDPId");
@@ -3173,8 +3163,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired();
 
                     b.Navigation("EstadoSolicitudCDP");
-
-                    b.Navigation("Pci");
 
                     b.Navigation("TipoDetalleCDP");
 

@@ -62,7 +62,10 @@ namespace ComplementApp.API.Models
 
         public Usuario Usuario { get; set; }
 
-        public int UsuarioId { get; set; }        
+        public int UsuarioId { get; set; }
+
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
 
         //**************Auditoría**********//
 

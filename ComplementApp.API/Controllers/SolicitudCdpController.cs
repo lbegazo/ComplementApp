@@ -7,22 +7,19 @@ using AutoMapper;
 using ComplementApp.API.Data;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
-using ComplementApp.API.Interfaces;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models;
-using EFCore.BulkExtensions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-   
     public class SolicitudCdpController : BaseApiController
     {
         #region Variable
 
         int usuarioId = 0;
+        int transaccionId = 21;
 
         #endregion 
 
@@ -35,19 +32,24 @@ namespace ComplementApp.API.Controllers
         private readonly IUsuarioRepository _usuarioRepo;
         private readonly IGeneralInterface _generalInterface;
         public IUsuarioRepository UsuarioRepo => _usuarioRepo;
+        private readonly IPlanAdquisicionService _planAdquisicionService;
         private readonly IPlanAdquisicionRepository _planAdquisicionRepo;
+
 
         #endregion Dependency Injection
 
 
         public SolicitudCdpController(ISolicitudCdpRepository repo, IUsuarioRepository usuarioRepo, IMapper mapper,
-                            DataContext dataContext, IGeneralInterface generalInterface, IPlanAdquisicionRepository planAdquisicionRepo)
+                            DataContext dataContext, IGeneralInterface generalInterface,
+                            IPlanAdquisicionService planAdquisicionService,
+                            IPlanAdquisicionRepository planAdquisicionRepo)
         {
             _usuarioRepo = usuarioRepo;
             _mapper = mapper;
             _repo = repo;
             _dataContext = dataContext;
             _generalInterface = generalInterface;
+            _planAdquisicionService = planAdquisicionService;
             _planAdquisicionRepo = planAdquisicionRepo;
         }
 
@@ -69,7 +71,7 @@ namespace ComplementApp.API.Controllers
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             SolicitudCDP solicitud = null;
             DetalleSolicitudCDP detalle = null;
-            PlanAdquisicion planAdquisicion = null;
+            //PlanAdquisicion planAdquisicion = null;
             List<DetalleSolicitudCDP> listaDetalle = new List<DetalleSolicitudCDP>();
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
 
@@ -79,7 +81,6 @@ namespace ComplementApp.API.Controllers
                 {
                     if (solicitudCDP.TipoOperacion.TipoOperacionId == (int)TipoOperacionEnum.SOLICITUD_INICIAL)
                     {
-
                         #region Cabecera Solicitud CDP
 
                         solicitud = new SolicitudCDP();
@@ -134,10 +135,9 @@ namespace ComplementApp.API.Controllers
                         {
                             foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
                             {
-                                planAdquisicion = await _planAdquisicionRepo.ObtenerPlanAnualAdquisicionBase(item.PlanAdquisicionId.Value);
-                                planAdquisicion.SaldoAct = planAdquisicion.SaldoAct - item.ValorSolicitud;
-                                planAdquisicion.EstadoId = (int)EstadoPlanAdquisicion.ConCDP;
-                                await _dataContext.SaveChangesAsync();
+                                await _planAdquisicionService.ActualizarPlanAdquisicionExterno(usuarioId, transaccionId, item.PlanAdquisicionId.Value,
+                                                                                                solicitud.ObjetoBienServicioContratado,
+                                                                                                item.ValorSolicitud, esDebito: true);
                             }
                         }
 
@@ -185,7 +185,7 @@ namespace ComplementApp.API.Controllers
                                 detalle.ValorSolicitud = item.ValorSolicitud;
                                 listaDetalle.Add(detalle);
                             }
-                            
+
                             await _dataContext.DetalleSolicitudCDP.AddRangeAsync(listaDetalle);
                             await _dataContext.SaveChangesAsync();
                         }
@@ -198,28 +198,31 @@ namespace ComplementApp.API.Controllers
                         {
                             foreach (var item in solicitudCDP.DetalleSolicitudCDPs)
                             {
-                                planAdquisicion = await _planAdquisicionRepo.ObtenerPlanAnualAdquisicionBase(item.PlanAdquisicionId.Value);
+                                //planAdquisicion = await _planAdquisicionRepo.ObtenerPlanAnualAdquisicionBase(item.PlanAdquisicionId.Value);
 
                                 switch (solicitudCDP.TipoOperacion.TipoOperacionId)
                                 {
                                     case (int)TipoOperacionEnum.ADICION:
                                         {
-                                            planAdquisicion.SaldoAct = planAdquisicion.SaldoAct - item.ValorSolicitud;
+                                            await _planAdquisicionService.ActualizarPlanAdquisicionExterno(usuarioId, transaccionId, item.PlanAdquisicionId.Value, solicitud.ObjetoBienServicioContratado, item.ValorSolicitud, esDebito: true);
+                                            //planAdquisicion.SaldoAct = planAdquisicion.SaldoAct - item.ValorSolicitud;
                                             break;
                                         }
                                     case (int)TipoOperacionEnum.REDUCCION:
                                         {
-                                            planAdquisicion.SaldoAct = planAdquisicion.SaldoAct + item.ValorSolicitud;
+                                            await _planAdquisicionService.ActualizarPlanAdquisicionExterno(usuarioId, transaccionId, item.PlanAdquisicionId.Value, solicitud.ObjetoBienServicioContratado, item.ValorSolicitud, esDebito: true);
+                                            //planAdquisicion.SaldoAct = planAdquisicion.SaldoAct + item.ValorSolicitud;
                                             break;
                                         }
                                     case (int)TipoOperacionEnum.ANULACION:
                                         {
-                                            planAdquisicion.SaldoAct = planAdquisicion.SaldoAct + item.ValorSolicitud;
+                                            await _planAdquisicionService.ActualizarPlanAdquisicionExterno(usuarioId, transaccionId, item.PlanAdquisicionId.Value, solicitud.ObjetoBienServicioContratado, item.ValorSolicitud, esDebito: true);
+                                            //planAdquisicion.SaldoAct = planAdquisicion.SaldoAct + item.ValorSolicitud;
                                             break;
                                         }
-                                }                               
+                                }
 
-                                planAdquisicion.EstadoId = (int)EstadoPlanAdquisicion.ConCDP;
+                                //planAdquisicion.EstadoId = (int)EstadoPlanAdquisicion.ConCDP;
                                 await _dataContext.SaveChangesAsync();
                             }
                         }

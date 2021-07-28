@@ -17,7 +17,7 @@ import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { EstadoModificacion } from 'src/app/_models/enum';
 import { RubroPresupuestal } from 'src/app/_models/rubroPresupuestal';
 import { Transaccion } from 'src/app/_models/transaccion';
-import { ActividadGeneralService } from 'src/app/_services/actividadGeneral.service';
+import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
 import { PlanAdquisicionService } from 'src/app/_services/planAdquisicion.service';
@@ -43,7 +43,7 @@ export class PlanAdquisicionComponent implements OnInit {
   rubroPresupuestalSeleccionado: RubroPresupuestal;
   planAdquisicionSeleccionado: DetalleCDP;
   cdpSeleccionado: Cdp;
-  detalleCdpId = 0;
+  planAdquisicionId = 0;
   inicioPlanAdquisicionId = 5000;
   valor = 0;
 
@@ -64,12 +64,12 @@ export class PlanAdquisicionComponent implements OnInit {
   bsModalRef: BsModalRef;
 
   facturaHeaderForm = new FormGroup({});
+  nombreValor = 'Valor Actividad';
 
   constructor(
     private alertify: AlertifyService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private actividadService: ActividadGeneralService,
     private planAdquisicionService: PlanAdquisicionService,
     private router: Router,
     private modalService: BsModalService,
@@ -129,26 +129,32 @@ export class PlanAdquisicionComponent implements OnInit {
 
   onAgregar() {
     if (this.facturaHeaderForm.valid) {
-      if (this.validarValor()) {
+      const respuesta = this.validarValor();
+      if (respuesta) {
         if (this.accion) {
           //#region Agregar
 
           this.inicioPlanAdquisicionId = this.inicioPlanAdquisicionId + 1;
           const planAdquisicionNuevo = new DetalleCDP();
-          planAdquisicionNuevo.detalleCdpId = this.inicioPlanAdquisicionId;
+          planAdquisicionNuevo.planAdquisicionId = this.inicioPlanAdquisicionId;
           planAdquisicionNuevo.planDeCompras = this.nombreCtrl.value;
           planAdquisicionNuevo.rubroPresupuestal = new RubroPresupuestal();
           planAdquisicionNuevo.rubroPresupuestal.rubroPresupuestalId =
             this.rubroPresupuestalSeleccionado.rubroPresupuestalId;
-          planAdquisicionNuevo.rubroPresupuestal.identificacion = this.rubroPresupuestalSeleccionado.identificacion;
-          planAdquisicionNuevo.rubroPresupuestal.nombre = this.rubroPresupuestalSeleccionado.nombre;
-          planAdquisicionNuevo.rubroPresupuestal.padreRubroId = this.rubroPresupuestalSeleccionado.padreRubroId;
-          (planAdquisicionNuevo.aplicaContrato =
+          planAdquisicionNuevo.rubroPresupuestal.identificacion =
+            this.rubroPresupuestalSeleccionado.identificacion;
+          planAdquisicionNuevo.rubroPresupuestal.nombre =
+            this.rubroPresupuestalSeleccionado.nombre;
+          planAdquisicionNuevo.rubroPresupuestal.padreRubroId =
+            this.rubroPresupuestalSeleccionado.padreRubroId;
+          planAdquisicionNuevo.aplicaContrato =
             this.aplicaContratoCtrl.value === null ||
             this.aplicaContratoCtrl.value === false
               ? false
-              : true),
-            (planAdquisicionNuevo.usuarioId = this.idResponsableSeleccionado);
+              : true;
+          planAdquisicionNuevo.usuarioId = this.idResponsableSeleccionado;
+          planAdquisicionNuevo.responsable = this.responsableSeleccionado;
+
           planAdquisicionNuevo.dependenciaId = this.idDependenciaSeleccionado;
           planAdquisicionNuevo.valorAct = GeneralService.obtenerValorAbsoluto(
             this.valorCtrl.value
@@ -164,24 +170,25 @@ export class PlanAdquisicionComponent implements OnInit {
           //#endregion Agregar
         } else {
           //#region Modificar
-          this.planAdquisicionSeleccionado.planDeCompras =
-            this.nombreCtrl.value;
-          (this.planAdquisicionSeleccionado.aplicaContrato =
-            this.aplicaContratoCtrl.value === null ||
-            this.aplicaContratoCtrl.value === false
-              ? false
-              : true),
+          (this.planAdquisicionSeleccionado.planDeCompras =
+            this.nombreCtrl.value),
+            (this.planAdquisicionSeleccionado.aplicaContrato =
+              this.aplicaContratoCtrl.value === null ||
+              this.aplicaContratoCtrl.value === false
+                ? false
+                : true),
             (this.planAdquisicionSeleccionado.usuarioId =
-              this.idResponsableSeleccionado);
-          this.planAdquisicionSeleccionado.dependenciaId =
-            this.idDependenciaSeleccionado;
-          this.planAdquisicionSeleccionado.valorAct =
-            GeneralService.obtenerValorAbsoluto(this.valorCtrl.value);
+              this.idResponsableSeleccionado),
+            (this.planAdquisicionSeleccionado.responsable =
+              this.responsableSeleccionado),
+            (this.planAdquisicionSeleccionado.dependenciaId =
+              this.idDependenciaSeleccionado),
+            (this.planAdquisicionSeleccionado.valorAct =
+              GeneralService.obtenerValorAbsoluto(this.valorCtrl.value));
           this.planAdquisicionSeleccionado.crp = this.cdpSeleccionado.crp;
-          this.planAdquisicionSeleccionado.estadoModificacion =
-            EstadoModificacion.Modificado;
-
-          this.onRegistrar(this.planAdquisicionSeleccionado);
+          (this.planAdquisicionSeleccionado.estadoModificacion =
+            EstadoModificacion.Modificado),
+            this.onRegistrar(this.planAdquisicionSeleccionado);
 
           //#endregion Modificar
         }
@@ -342,8 +349,9 @@ export class PlanAdquisicionComponent implements OnInit {
     this.dependenciaSeleccionado = null;
     this.idResponsableSeleccionado = 0;
     this.idDependenciaSeleccionado = 0;
-    this.detalleCdpId = 0;
+    this.planAdquisicionId = 0;
     this.valor = 0;
+    this.nombreValor = 'Valor Actividad';
   }
 
   limpiarControles() {
@@ -371,9 +379,10 @@ export class PlanAdquisicionComponent implements OnInit {
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      this.detalleCdpId = +event.target.value;
+      this.planAdquisicionId = +event.target.value;
       this.cargarPlanAquisicion();
       this.nombreBoton = 'Modificar';
+      this.nombreValor = 'Valor Modificación';
       this.accion = false;
       this.habilitarBotonPopupActividadEspecifica = false;
       this.habilitarBotonPopupRubroPresupuestal = false;
@@ -382,9 +391,9 @@ export class PlanAdquisicionComponent implements OnInit {
   }
 
   cargarPlanAquisicion() {
-    if (this.detalleCdpId > 0) {
+    if (this.planAdquisicionId > 0) {
       this.planAdquisicionSeleccionado = this.listaPlanAdquisicion.filter(
-        (x) => x.detalleCdpId === this.detalleCdpId
+        (x) => x.planAdquisicionId === this.planAdquisicionId
       )[0];
 
       if (this.planAdquisicionSeleccionado !== null) {
@@ -412,9 +421,7 @@ export class PlanAdquisicionComponent implements OnInit {
 
         this.facturaHeaderForm.patchValue({
           nombreCtrl: this.planAdquisicionSeleccionado.planDeCompras,
-          valorCtrl: GeneralService.obtenerFormatoLongMoney(
-            this.planAdquisicionSeleccionado.saldoAct
-          ),
+          valorCtrl: 0,
           responsableCtrl: this.responsableSeleccionado,
           dependenciaCtrl: this.dependenciaSeleccionado,
           aplicaContratoCtrl: aplicaContrato,

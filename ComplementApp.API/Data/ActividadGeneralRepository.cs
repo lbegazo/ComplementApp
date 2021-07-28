@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ComplementApp.API.Dtos;
 using ComplementApp.API.Helpers;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
@@ -23,15 +24,21 @@ namespace ComplementApp.API.Data
                         .FirstOrDefaultAsync(u => u.ActividadGeneralId == id);
         }
 
-        public async Task<ICollection<ActividadGeneral>> ObtenerActividadesGenerales(int pciId)
+        public async Task<ICollection<ActividadGeneralDto>> ObtenerActividadesGenerales(int pciId)
         {
 
             var lista = await ((from rp in _context.RubroPresupuestal
                                 join ag in _context.ActividadGeneral on rp.RubroPresupuestalId equals ag.RubroPresupuestalId into RubroActividadGeneral
                                 from ruAcGe in RubroActividadGeneral.DefaultIfEmpty()
+                                join ff in _context.FuenteFinanciacion on ruAcGe.FuenteFinanciacionId equals ff.FuenteFinanciacionId into FuenteFinanciacion
+                                from fuente in FuenteFinanciacion.DefaultIfEmpty()
+                                join sf in _context.SituacionFondo on ruAcGe.SituacionFondoId equals sf.SituacionFondoId into SituacionFondo
+                                from situacion in SituacionFondo.DefaultIfEmpty()
+                                join re in _context.RecursoPresupuestal on ruAcGe.RecursoPresupuestalId equals re.RecursoPresupuestalId into RecursoPresupuestal
+                                from recurso in RecursoPresupuestal.DefaultIfEmpty()
                                 where ruAcGe.PciId == pciId
                                 where rp.PadreRubroId == 0
-                                select new ActividadGeneral()
+                                select new ActividadGeneralDto()
                                 {
                                     RubroPresupuestal = new RubroPresupuestal()
                                     {
@@ -43,6 +50,21 @@ namespace ComplementApp.API.Data
                                     ActividadGeneralId = ruAcGe.ActividadGeneralId > 0 ? ruAcGe.ActividadGeneralId : 0,
                                     ApropiacionDisponible = ruAcGe.ActividadGeneralId > 0 ? ruAcGe.ApropiacionDisponible : 0,
                                     ApropiacionVigente = ruAcGe.ActividadGeneralId > 0 ? ruAcGe.ApropiacionVigente : 0,
+                                    FuenteFinanciacion = new ValorSeleccion()
+                                    {
+                                        Codigo = fuente.Codigo,
+                                        Nombre = fuente.Nombre
+                                    },
+                                    SituacionFondo = new ValorSeleccion()
+                                    {
+                                        Codigo = situacion.Codigo,
+                                        Nombre = situacion.Nombre,
+                                    },
+                                    RecursoPresupuestal = new ValorSeleccion()
+                                    {
+                                        Codigo = recurso.Codigo,
+                                        Nombre = recurso.Nombre,
+                                    }
                                 }).Distinct()
                             .OrderBy(t => t.RubroPresupuestal.Identificacion))
                             .ToListAsync();

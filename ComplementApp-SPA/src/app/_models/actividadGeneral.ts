@@ -1,3 +1,4 @@
+import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { RubroPresupuestal } from './rubroPresupuestal';
 
 export class ActividadGeneral {
@@ -5,4 +6,7 @@ export class ActividadGeneral {
   apropiacionVigente: number;
   apropiacionDisponible: number;
   rubroPresupuestal: RubroPresupuestal;
+  situacionFondo: ValorSeleccion;
+  fuenteFinanciacion: ValorSeleccion;
+  recursoPresupuestal: ValorSeleccion;
 }

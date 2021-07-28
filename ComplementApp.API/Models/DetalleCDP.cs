@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComplementApp.API.Models
@@ -39,7 +39,6 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal ValorOP { get; set; }
-
         public bool AplicaContrato { get; set; }
 
         [Column(TypeName = "decimal(30,8)")]
@@ -62,7 +61,11 @@ namespace ComplementApp.API.Models
         public int DecretoId { get; set; }
         public int PciId { get; set; }
         public Pci Pci { get; set; }
-        public int EstadoId { get; set; }
+        public int EstadoId { get; set; }        
+        public int UsuarioIdRegistro { get; set; }
+        public DateTime? FechaRegistro { get; set; }
+        public int UsuarioIdModificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
 
         [NotMapped]
         public ActividadEspecifica ActividadEspecifica { get; set; }

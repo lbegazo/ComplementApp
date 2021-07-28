@@ -83,18 +83,18 @@
                   class="form-group col-md-2"
                   style="margin: 0px; padding-top: 27px"
                 >
-                    <button
-                      type="submit"
-                      class="btn btn-warning"
-                      (click)="abrirPopupRubroPresupuestal()"
-                      [disabled]="!habilitarBotonPopupRubroPresupuestal"
-                    >
-                      Seleccionar Rubro
-                    </button>
+                  <button
+                    type="submit"
+                    class="btn btn-warning"
+                    (click)="abrirPopupRubroPresupuestal()"
+                    [disabled]="!habilitarBotonPopupRubroPresupuestal"
+                  >
+                    Seleccionar Rubro
+                  </button>
                 </div>
               </div>
               <!--COMPROMISO-->
-              <div class="form-row mt-3" *ngIf="!accion">
+              <div class="form-row mt-3" *ngIf="false">
                 <!--CRP-->
                 <div class="form-group col-md-2" style="margin: 0px">
                   <label class="col-form-label-md">Num. Compromiso</label>
@@ -238,9 +238,9 @@
                 </div>
                 <!--VALOR-->
                 <div class="form-group col-md-2" style="margin: 0px">
-                  <label for="inputValor" class="col-form-label-md"
-                    >Valor Actividad</label
-                  >
+                  <label for="inputValor" class="col-form-label-md">{{
+                    nombreValor
+                  }}</label>
                   <input
                     [ngClass]="{
                       'is-invalid':
@@ -253,7 +253,7 @@
                     formControlName="valorCtrl"
                     style="text-align: right; height: 30px"
                     id="inputValor"
-                    appDecimalMask
+                    appNegativeDecimalMask
                     (blur)="validarValor()"
                   />
                   <div class="invalid-feedback">Debe ingresar el valor</div>
@@ -309,20 +309,29 @@
             <td style="padding: 0px 15px">
               <div class="form-row mt-2">
                 <div style="width: 2%"></div>
-                <div style="width: 20%" class="inner center">
+                <div style="width: 4%" class="inner center">
+                  <label class="col-form-label-md">Num</label>
+                </div>
+                <div style="width: 12%" class="inner center">
                   <label class="col-form-label-md">Plan de Compras</label>
                 </div>
                 <div style="width: 13%" class="inner center">
                   <label class="col-form-label-md">Identificación</label>
                 </div>
-                <div style="width: 40%" class="inner center">
+                <div style="width: 31%" class="inner center">
                   <label class="col-form-label-md">Rubro Presupuestal</label>
                 </div>
-                <div style="width: 13%" class="inner center">
+                <div style="width: 10%" class="inner center">
                   <label class="col-form-label-md">Valor</label>
                 </div>
-                <div style="width: 12%" class="inner center">
+                <div style="width: 10%" class="inner center">
                   <label class="col-form-label-md">Saldo</label>
+                </div>
+                <div style="width: 12%" class="inner center">
+                  <label class="col-form-label-md">Responsable</label>
+                </div>
+                <div style="width: 6%" class="inner center">
+                  <label class="col-form-label-md">Apli. Cont.</label>
                 </div>
               </div>
               <div
@@ -340,12 +349,20 @@
                     >
                       <input
                         type="radio"
-                        [value]="item?.detalleCdpId"
+                        [value]="item?.planAdquisicionId"
                         (change)="onCheckChange($event)"
                         name="inlineDefaultRadiosExample"
                       />
                     </div>
-                    <div style="width: 20%" class="inner left aplicaBackground">
+                    <div
+                      style="width: 4%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.planAdquisicionId }}
+                      </p>
+                    </div>
+                    <div style="width: 12%" class="inner left aplicaBackground">
                       <p class="medium">
                         {{ item?.planDeCompras }}
                       </p>
@@ -358,13 +375,13 @@
                         {{ item?.rubroPresupuestal.identificacion }}
                       </p>
                     </div>
-                    <div style="width: 40%" class="inner left aplicaBackground">
+                    <div style="width: 31%" class="inner left aplicaBackground">
                       <p class="medium">
                         {{ item?.rubroPresupuestal.nombre }}
                       </p>
                     </div>
                     <div
-                      style="width: 13%"
+                      style="width: 10%"
                       class="inner right aplicaBackground"
                     >
                       <p class="medium">
@@ -372,11 +389,24 @@
                       </p>
                     </div>
                     <div
-                      style="width: 12%"
+                      style="width: 10%"
                       class="inner right aplicaBackground"
                     >
                       <p class="medium">
                         {{ item?.saldoAct | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div style="width: 12%" class="inner left aplicaBackground">
+                      <p class="medium">
+                        {{ item?.responsable?.nombre }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 6%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.aplicaContrato ? "SI" : "NO" }}
                       </p>
                     </div>
                   </ng-container>

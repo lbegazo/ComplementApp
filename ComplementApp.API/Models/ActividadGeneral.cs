@@ -17,5 +17,8 @@ namespace ComplementApp.API.Models
         public RubroPresupuestal RubroPresupuestal { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+        public int? FuenteFinanciacionId { get; set; }
+        public int? SituacionFondoId { get; set; }
+        public int? RecursoPresupuestalId { get; set; }
     }
 }

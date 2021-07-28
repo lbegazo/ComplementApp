@@ -16,7 +16,7 @@ namespace ComplementApp.API.Data
         {
             // SeedPosicionPac(context);
             // SeedParametroSistema(context);
-            // SeedPci(context);
+             SeedPci(context);
 
             // SeedTipoContrato(context);
             // SeedRubroPresupuestal(context);
@@ -30,7 +30,7 @@ namespace ComplementApp.API.Data
             // SeedUsoPresupuestal(context);
 
             // SeedPerfil(context);
-            // SeedTransaccion(context);
+             SeedTransaccion(context);
             // SeedPerfilTransaccion(context);
             // SeedUsuarioPerfil(context);
 

@@ -17,31 +17,51 @@ namespace ComplementApp.API.Data
             _context = context;
         }
 
-        public async Task<ICollection<PlanAdquisicionDto>> ObtenerListaPlanAnualAdquisicion(int pciId)
+        public async Task<ICollection<PlanAdquisicionDto>> ObtenerListaPlanAnualAdquisicion(int pciId, int usuarioId)
         {
-            var listaCdp = (from c in _context.CDP
-                            where c.PciId == pciId
-                            where c.Instancia == (int)TipoDocumento.Compromiso
-                            group c by new
-                            {
-                                c.Crp,
-                                c.Detalle4,
-                                c.SaldoActual
-                            } into g
-                            select new CDP
-                            {
-                                Crp = g.Key.Crp,
-                                Detalle4 = g.Key.Detalle4,
-                                SaldoActual = g.Key.SaldoActual,
-                            }).OrderBy(t => t.Crp); ;
+            int? usuarioIdFiltro = null;
+            List<PlanAdquisicionDto> lista = new List<PlanAdquisicionDto>();
+            var listaPerfilxUsuario = await _context.UsuarioPerfil.Where(x => x.UsuarioId == usuarioId).ToListAsync();
 
-            var lista = await ((from d in _context.PlanAdquisicion
+            if (listaPerfilxUsuario != null && listaPerfilxUsuario.Count > 0)
+            {
+                var listaPerfilId = listaPerfilxUsuario.Select(x => x.PerfilId);
+
+                if (listaPerfilId.Contains((int)PerfilUsuario.Administrador))
+                {
+                    usuarioIdFiltro = null;
+                }
+                else
+                {
+                    usuarioIdFiltro = usuarioId;
+                }
+
+                var listaCdp = (from c in _context.CDP
+                                where c.PciId == pciId
+                                where c.Instancia == (int)TipoDocumento.Compromiso
+                                group c by new
+                                {
+                                    c.Crp,
+                                    c.Detalle4,
+                                    c.SaldoActual
+                                } into g
+                                select new CDP
+                                {
+                                    Crp = g.Key.Crp,
+                                    Detalle4 = g.Key.Detalle4,
+                                    SaldoActual = g.Key.SaldoActual,
+                                }).OrderBy(t => t.Crp);
+
+                lista = await ((from d in _context.PlanAdquisicion
                                 join rp in _context.RubroPresupuestal on d.RubroPresupuestalId equals rp.RubroPresupuestalId
                                 join ag in _context.ActividadGeneral on d.ActividadGeneralId equals ag.ActividadGeneralId
                                 join ae in _context.ActividadEspecifica on d.ActividadEspecificaId equals ae.ActividadEspecificaId
+                                join u in _context.Usuario on new { UsuarioId = d.UsuarioId, PciId = d.PciId } equals
+                                                                new { UsuarioId = u.UsuarioId, PciId = u.PciId.Value }
                                 join rpae in _context.RubroPresupuestal on ae.RubroPresupuestalId equals rpae.RubroPresupuestalId
                                 join c in listaCdp on d.Crp equals c.Crp into CDP
                                 from cc in CDP.DefaultIfEmpty()
+                                where d.UsuarioId == usuarioIdFiltro || usuarioIdFiltro == null
                                 where d.PciId == ag.PciId
                                 where d.PciId == ae.PciId
                                 where ag.ActividadGeneralId == ae.ActividadGeneralId
@@ -86,13 +106,17 @@ namespace ComplementApp.API.Data
                                         Crp = d.Crp > 0 ? cc.Crp : 0,
                                         Detalle4 = d.Crp > 0 ? cc.Detalle4 : string.Empty,
                                         SaldoActual = d.Crp > 0 ? cc.SaldoActual : 0,
+                                    },
+                                    Responsable = new ValorSeleccion()
+                                    {
+                                        Id = u.UsuarioId,
+                                        Nombre = u.Nombres + " " + u.Apellidos
                                     }
                                 })
-                                .Distinct()
-                                .OrderBy(t => t.RubroPresupuestal.Identificacion))
-                                .ToListAsync();
-
-
+                                                .Distinct()
+                                                .OrderBy(t => t.RubroPresupuestal.Identificacion))
+                                                .ToListAsync();
+            }
 
             return lista;
         }

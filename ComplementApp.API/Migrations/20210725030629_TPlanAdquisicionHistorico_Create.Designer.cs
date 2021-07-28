@@ -4,14 +4,16 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210725030629_TPlanAdquisicionHistorico_Create")]
+    partial class TPlanAdquisicionHistorico_Create
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,19 +88,10 @@ namespace ComplementApp.API.Migrations
                     b.Property<decimal>("ApropiacionVigente")
                         .HasColumnType("decimal(30,8)");
 
-                    b.Property<int?>("FuenteFinanciacionId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PciId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RecursoPresupuestalId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("RubroPresupuestalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SituacionFondoId")
                         .HasColumnType("int");
 
                     b.HasKey("ActividadGeneralId");
@@ -1618,12 +1611,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaRegistro")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("IdArchivo")
                         .HasColumnType("int");
 
@@ -1655,12 +1642,6 @@ namespace ComplementApp.API.Migrations
                         .HasColumnType("decimal(30,8)");
 
                     b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioIdModificacion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioIdRegistro")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ValorAct")
@@ -1721,9 +1702,6 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("FechaRegistro")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("PciId")
                         .HasColumnType("int");
 
@@ -1736,19 +1714,13 @@ namespace ComplementApp.API.Migrations
                     b.Property<int>("RubroPresupuestalId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Saldo")
+                    b.Property<decimal>("SaldoAct")
                         .HasColumnType("decimal(30,8)");
-
-                    b.Property<int?>("TransaccionId")
-                        .HasColumnType("int");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioIdRegistro")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Valor")
+                    b.Property<decimal>("ValorAct")
                         .HasColumnType("decimal(30,8)");
 
                     b.HasKey("PlanAdquisicionHistoricoId");
@@ -2017,9 +1989,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(500)");
 
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ProyectoInversion")
                         .IsRequired()
                         .HasColumnType("VARCHAR(500)");
@@ -2042,8 +2011,6 @@ namespace ComplementApp.API.Migrations
                     b.HasKey("SolicitudCDPId");
 
                     b.HasIndex("EstadoSolicitudCDPId");
-
-                    b.HasIndex("PciId");
 
                     b.HasIndex("TipoDetalleCDPId");
 
@@ -3152,10 +3119,6 @@ namespace ComplementApp.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
                     b.HasOne("ComplementApp.API.Models.TipoDetalleCDP", "TipoDetalleCDP")
                         .WithMany()
                         .HasForeignKey("TipoDetalleCDPId");
@@ -3173,8 +3136,6 @@ namespace ComplementApp.API.Migrations
                         .IsRequired();
 
                     b.Navigation("EstadoSolicitudCDP");
-
-                    b.Navigation("Pci");
 
                     b.Navigation("TipoDetalleCDP");
 

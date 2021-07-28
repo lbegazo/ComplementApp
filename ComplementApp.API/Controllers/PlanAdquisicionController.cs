@@ -12,12 +12,11 @@ using ComplementApp.API.Interfaces;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
 {
-   
+
     public class PlanAdquisicionController : BaseApiController
     {
         #region Variable
@@ -25,19 +24,20 @@ namespace ComplementApp.API.Controllers
         int usuarioId = 0;
         int pciId = 0;
         string valorPciId = string.Empty;
+        int transaccionId = 71;
 
         #endregion 
 
         #region Dependency Injection
 
         private readonly DataContext _dataContext;
-        private readonly IGeneralInterface _generalInterface;
         private readonly IPlanAdquisicionRepository _repo;
         private readonly IActividadGeneralRepository _repoActividad;
         private readonly IActividadGeneralService _serviceActividad;
         private readonly IListaRepository _repoLista;
         private readonly IMapper _mapper;
         private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
+        private readonly IPlanAdquisicionService _planAdquisicionService;
 
         #endregion Dependency Injection
 
@@ -48,16 +48,17 @@ namespace ComplementApp.API.Controllers
                                     DataContext dataContext,
                                     IGeneralInterface generalInterface,
                                     IMapper mapper,
-                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
+                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface,
+                                    IPlanAdquisicionService planAdquisicionService)
         {
             _repo = repo;
             _mapper = mapper;
             _dataContext = dataContext;
-            _generalInterface = generalInterface;
             _repoActividad = repoActividad;
             _serviceActividad = serviceActividad;
             _repoLista = repoLista;
-            this._procesoCreacionExcelInterface = procesoCreacionExcelInterface;
+            _procesoCreacionExcelInterface = procesoCreacionExcelInterface;
+            _planAdquisicionService = planAdquisicionService;
         }
 
         [Route("[action]")]
@@ -66,13 +67,14 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
+                usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 valorPciId = User.FindFirst(ClaimTypes.Role).Value;
                 if (!string.IsNullOrEmpty(valorPciId))
                 {
                     pciId = int.Parse(valorPciId);
                 }
 
-                var listaDto = await _repo.ObtenerListaPlanAnualAdquisicion(pciId);
+                var listaDto = await _repo.ObtenerListaPlanAnualAdquisicion(pciId, usuarioId);
                 return Ok(listaDto);
             }
             catch (Exception)
@@ -96,7 +98,8 @@ namespace ComplementApp.API.Controllers
 
             if (planAdquisicion != null)
             {
-                await ActualizarPlanAdquisicion(pciId, planAdquisicion);
+                planAdquisicion.UsuarioIdRegistro = usuarioId;
+                await _planAdquisicionService.ActualizarPlanAdquisicion(pciId, transaccionId, planAdquisicion);
 
                 return Ok(1);
             }
@@ -231,105 +234,5 @@ namespace ComplementApp.API.Controllers
             return BadRequest();
         }
 
-        private async Task ActualizarPlanAdquisicion(int pciId, PlanAdquisicion planAdquisicion)
-        {
-            DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
-            ActividadEspecifica actividadEspecificaBD = null;
-            int operacion = 1; // operacion=1=>suma; operacion=2=>resta
-            int areaId = 0;
-
-            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
-
-            #region Obtener Area
-
-            if (planAdquisicion.DependenciaId > 0)
-            {
-                Dependencia dependencia = _dataContext.Dependencia.Where(x => x.DependenciaId == planAdquisicion.DependenciaId).FirstOrDefault();
-                if (dependencia != null)
-                {
-                    areaId = dependencia.AreaId;
-                }
-            }
-
-            #endregion Obtener Area
-
-            #region Registrar nuevos 
-
-            if (planAdquisicion.EstadoModificacion == (int)EstadoModificacion.Insertado)
-            {
-                PlanAdquisicion planAdquisicionNuevo = new PlanAdquisicion();
-                planAdquisicionNuevo.PlanDeCompras = planAdquisicion.PlanDeCompras;
-                planAdquisicionNuevo.ActividadGeneralId = planAdquisicion.ActividadEspecifica.ActividadGeneral.ActividadGeneralId;
-                planAdquisicionNuevo.ActividadEspecificaId = planAdquisicion.ActividadEspecifica.ActividadEspecificaId;
-                planAdquisicionNuevo.ValorAct = planAdquisicion.ValorAct;
-                planAdquisicionNuevo.SaldoAct = planAdquisicion.ValorAct;
-                planAdquisicionNuevo.AplicaContrato = planAdquisicion.AplicaContrato;
-                planAdquisicionNuevo.UsuarioId = planAdquisicion.UsuarioId;
-                planAdquisicionNuevo.DependenciaId = planAdquisicion.DependenciaId;
-                planAdquisicionNuevo.AreaId = areaId;
-                planAdquisicionNuevo.PciId = pciId;
-                planAdquisicionNuevo.EstadoId = (int)EstadoPlanAdquisicion.Generado;
-                if (planAdquisicion.RubroPresupuestal != null)
-                {
-                    planAdquisicionNuevo.RubroPresupuestalId = planAdquisicion.RubroPresupuestal.RubroPresupuestalId;
-                    planAdquisicionNuevo.DecretoId = planAdquisicion.RubroPresupuestal.PadreRubroId.Value;
-                }
-
-                actividadEspecificaBD = await _repoActividad.ObtenerActividadEspecificaBase(planAdquisicion.ActividadEspecifica.ActividadEspecificaId);
-
-                if (actividadEspecificaBD != null)
-                {
-                    operacion = 2; // resta
-                    await _serviceActividad.ActualizarActividadEspecifica(actividadEspecificaBD, planAdquisicion.ValorAct, operacion);
-                }
-                await _dataContext.PlanAdquisicion.AddAsync(planAdquisicionNuevo);
-                await _dataContext.SaveChangesAsync();
-            }
-
-            #endregion Registrar nuevos 
-
-            #region Actualizar registros
-
-            if (planAdquisicion.EstadoModificacion == (int)EstadoModificacion.Modificado)
-            {
-                decimal valor = 0;
-                PlanAdquisicion planAdquisicionBD = await _repo.ObtenerPlanAnualAdquisicionBase(planAdquisicion.PlanAdquisicionId);
-
-                if (planAdquisicionBD != null)
-                {
-                    if (planAdquisicionBD.ValorAct > planAdquisicion.ValorAct)
-                    {
-                        operacion = 1; // Suma
-                        valor = planAdquisicionBD.ValorAct - planAdquisicion.ValorAct;
-                    }
-                    else
-                    {
-                        operacion = 2; // Resta
-                        valor = planAdquisicion.ValorAct - planAdquisicionBD.ValorAct;
-                    }
-
-                    planAdquisicionBD.PlanDeCompras = planAdquisicion.PlanDeCompras;
-                    planAdquisicionBD.AplicaContrato = planAdquisicion.AplicaContrato;
-                    planAdquisicionBD.SaldoAct = planAdquisicion.ValorAct;
-                    planAdquisicionBD.ValorAct = planAdquisicion.ValorAct;
-                    planAdquisicionBD.AplicaContrato = planAdquisicion.AplicaContrato;
-                    planAdquisicionBD.DependenciaId = planAdquisicion.DependenciaId;
-                    planAdquisicionBD.Crp = planAdquisicion.Crp;
-                    planAdquisicionBD.AreaId = areaId;
-                    await _dataContext.SaveChangesAsync();
-
-                    actividadEspecificaBD = await _repoActividad.ObtenerActividadEspecificaBase(planAdquisicion.ActividadEspecifica.ActividadEspecificaId);
-
-                    if (actividadEspecificaBD != null)
-                    {
-                        await _serviceActividad.ActualizarActividadEspecifica(actividadEspecificaBD, valor, operacion);
-                    }
-                }
-            }
-
-            #endregion Actualizar registros
-
-            await transaction.CommitAsync();
-        }
     }
 }

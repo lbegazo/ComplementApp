@@ -42,18 +42,20 @@ namespace ComplementApp.API.Dtos
         public int ActividadGeneralId { get; set; }
         public int ActividadEspecificaId { get; set; }
         public int UsuarioId { get; set; }
-        public Usuario Usuario { get; set; }
+
         public int DependenciaId { get; set; }
         public int AreaId { get; set; }
         public int RubroPresupuestalId { get; set; }
         public int DecretoId { get; set; }
         public int PciId { get; set; }
-        public Pci Pci { get; set; }
         public int EstadoId { get; set; }
+        public int EstadoModificacion { get; set; }
         public ActividadEspecifica ActividadEspecifica { get; set; }
         public ActividadGeneral ActividadGeneral { get; set; }
         public RubroPresupuestal RubroPresupuestal { get; set; }
         public CDP CdpDocumento { get; set; }
-        public int EstadoModificacion { get; set; }
+        public ValorSeleccion Responsable { get; set; }
+        public Pci Pci { get; set; }
+
     }
 }

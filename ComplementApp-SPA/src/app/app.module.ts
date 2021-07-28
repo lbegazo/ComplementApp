@@ -141,6 +141,7 @@ import { DetalleInformePagoProveedorComponent } from './reporte/informe-pago-pro
 import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
 import { UsuarioEditNewComponent } from './administracion/usuario/usuario-edit-new/usuario-edit-new.component';
+import { NegativeDecimalMaskDirective } from './_directives/negative-decimal-mask.directive';
 
 
 defineLocale('es', esLocale);
@@ -174,6 +175,7 @@ export function tokenGetter() {
     TwoDigitDecimaNumberDirective,
     LongDecimalMaskDirective,
     DecimalMaskDirective,
+    NegativeDecimalMaskDirective,
     SpecialCharacterDirective,
     PopupCdpComponent,
     NumberCommaDirective,

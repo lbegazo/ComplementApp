@@ -1,9 +1,12 @@
+import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { ActividadEspecifica } from './actividadEspecifica';
 import { Cdp } from './cdp';
 import { RubroPresupuestal } from './rubroPresupuestal';
+import { Usuario } from './usuario';
 
 export class DetalleCDP {
   detalleCdpId: number;
+  planAdquisicionId: number;
   pcpId: number;
   idArchivo: number;
   cdp: number;
@@ -12,7 +15,6 @@ export class DetalleCDP {
   proyecto: string;
   actividadBpin: string;
   planDeCompras: string;
-  responsable: string;
   dependencia: string;
   dependenciaDescripcion: string;
   valorAct: number;
@@ -35,12 +37,15 @@ export class DetalleCDP {
   decreto: string;
   valorSolicitud: number;
   estadoModificacion: number;
-  actividadEspecifica: ActividadEspecifica;
-  usuarioId: number;
-  dependenciaId: number;
-  rubroPresupuestal: RubroPresupuestal;
-  cdpDocumento: Cdp;
+
   clavePresupuestalContableId: number;
   esSeleccionada: boolean;
   identificacionPci: string;
+
+  usuarioId: number;
+  dependenciaId: number;
+  actividadEspecifica: ActividadEspecifica;
+  rubroPresupuestal: RubroPresupuestal;
+  cdpDocumento: Cdp;
+  responsable: ValorSeleccion;
 }
