@@ -213,6 +213,14 @@ namespace ComplementApp.API.Controllers
             return Ok(datos);
         }
 
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaSolicitudCDP([FromQuery(Name = "numeroSolicitud")] string numeroSolicitud)
+        {
+            var datos = await _repo.ObtenerListaSolicitudCDP(numeroSolicitud);
+            return Ok(datos);
+        }
+
         static string UppercaseFirst(string s)
         {
             // Check for empty string.

@@ -129,7 +129,7 @@ export class PlanAdquisicionComponent implements OnInit {
 
   onAgregar() {
     if (this.facturaHeaderForm.valid) {
-      const respuesta = this.validarValor();
+      const respuesta = this.validarValorActividadEspecifica();
       if (respuesta) {
         if (this.accion) {
           //#region Agregar
@@ -466,8 +466,26 @@ export class PlanAdquisicionComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  validarValor() {
+  validarValorActividadEspecifica() {
     let respuesta = false;
+    let esNegativo = false;
+
+    const saldoActual = this.planAdquisicionSeleccionado.saldoAct;
+
+    const valorIngresado = +GeneralService.obtenerValorAbsoluto(
+      this.valorCtrl.value
+    );
+    esNegativo = valorIngresado > 0 ? false : true;
+
+    if (esNegativo) {
+      const valorDiferencia = saldoActual + valorIngresado;
+      if (valorDiferencia < 0) {
+        this.alertify.error(
+          'El valor ingresado debe ser menor o igual al saldo'
+        );
+        return;
+      }
+    }
 
     if (
       this.actividadEspecificaSeleccionado !== null &&
@@ -476,9 +494,6 @@ export class PlanAdquisicionComponent implements OnInit {
     ) {
       const valorDisponible =
         +this.actividadEspecificaSeleccionado.saldoPorProgramar;
-      const valorIngresado = +GeneralService.obtenerValorAbsoluto(
-        this.valorCtrl.value
-      );
 
       // Modificacion
       if (!this.accion) {

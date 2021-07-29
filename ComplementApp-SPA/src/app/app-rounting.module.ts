@@ -55,6 +55,7 @@ import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
 import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
+import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -205,6 +206,14 @@ export const routes: Routes = [
     component: SolicitudDisponibilidadPresupuestalComponent,
     resolve: { transaccion: TransaccionResolver },
   },
+  {
+    path: 'SOLICITUDES_VINCULARCDP',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: VincularCdpSolicitudComponent,
+    resolve: { transaccion: TransaccionResolver },
+  },
+
   {
     path: 'GENERADOR_CUENTAPORPAGAR',
     canActivate: [AuthGuard],

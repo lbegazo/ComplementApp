@@ -1,0 +1,269 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2" *ngIf="mostrarCabecera">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--RADIO BUTTONS -->
+              <div class="container-fluid mt-2">
+                <div class="row">
+                  <div class="col-3 withoutPadding">
+                    <h4>Seleccione una opción:</h4>
+                    <div
+                      class="custom-control custom-radio custom-control-inline"
+                    >
+                      <input
+                        id="male"
+                        type="radio"
+                        class="custom-control-input"
+                        value="1"
+                        name="rbtRadicarFacturaCtrl"
+                        formControlName="rbtRadicarFacturaCtrl"
+                        (change)="onCreacion($event)"
+                        [checked]="this.esCreacion"
+                      />
+                      <label class="custom-control-label" for="male"
+                        >Vincular CDP</label
+                      >
+                    </div>
+                    <div
+                      class="custom-control custom-radio custom-control-inline"
+                    >
+                      <input
+                        id="female"
+                        type="radio"
+                        class="custom-control-input"
+                        value="2"
+                        name="rbtRadicarFacturaCtrl"
+                        formControlName="rbtRadicarFacturaCtrl"
+                        (change)="onModificacion($event)"
+                        [checked]="!this.esCreacion"
+                      />
+                      <label class="custom-control-label" for="female"
+                        >Modificar CDP</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--CDP -->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label class="col-form-label-md" for="inputCDP"
+                    >Número de Solicitud</label
+                  >
+                  <input
+                    [(ngModel)]="search"
+                    typeaheadOptionField="solicitudCDPId"
+                    [typeahead]="suggestions$"
+                    [typeaheadAsync]="true"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    placeholder="Ingrese Num. solicitud"
+                    formControlName="cdpCtrl"
+                    class="form-control border border-bottom-0 addPaddingLeft"
+                    id="inputCDP"
+                    style="height: 20px; background-color: white"
+                    value="{{ solicitudCdpSeleccionado?.solicitudCDPId }}"
+                  />
+                  <div
+                    class="alert alert-danger"
+                    role="alert"
+                    *ngIf="errorMessage"
+                  >
+                    {{ errorMessage }}
+                  </div>
+                </div>
+                <div class="form-group col-md-6" style="margin: 0px">
+                  <label for="inputTercero" class="col-form-label-md"
+                    >Objeto del bien</label
+                  >
+                  <input
+                    class="form-control border addPaddingLeft"
+                    style="height: 20px; background-color: white"
+                    maxlength="50"
+                    formControlName="objetoBienCtrl"
+                    id="inputTercero"
+                    value="{{
+                      solicitudCdpSeleccionado?.objetoBienServicioContratado
+                    }}"
+                    placeholder="Objeto del bien"
+                    readonly
+                  />
+                </div>
+                <div class="form-group col-md-3" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        &nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                          style="width: 80px"
+                        >
+                          Buscar</button
+                        >&nbsp;
+                        <button
+                          type="submit"
+                          class="btn btn-success"
+                          (click)="onLimpiarFactura()"
+                          style="width: 80px"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 5%" class="inner center aplicaBackground">
+                  <label class="col-form-label-md">NUM</label>
+                </div>
+                <div style="width: 20%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">FECHA DE REGISTRO</label>
+                </div>
+                <div style="width: 35%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md"
+                    >ACTIVIDAD PROYECTO INVERSION</label
+                  >
+                </div>
+                <div style="width: 40%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">OBJETO DEL BIEN</label>
+                </div>
+              </div>
+              <div *ngIf="listaSolicitudCdp">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaSolicitudCdp; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 5%"
+                      class="inner center aplicaBackground"
+                    >
+                      <label class="col-form-label-md">
+                        <input
+                          type="radio"
+                          [value]="item?.solicitudCDPId"
+                          (change)="onCheckChange($event)"
+                          name="inlineDefaultRadiosExample"
+                        />
+                        {{ item?.solicitudCDPId }}
+                      </label>
+                    </div>
+                    <div
+                      style="width: 20%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>{{ item?.fechaRegistro | date: "dd/MM/yyyy" }}</p>
+                    </div>
+                    <div style="width: 35%" class="inner left aplicaBackground">
+                      <p>
+                        {{
+                          item?.actividadProyectoInversion?.length > 100
+                            ? (item?.actividadProyectoInversion
+                                | slice: 0:100) + ".."
+                            : item?.actividadProyectoInversion
+                        }}
+                      </p>
+                    </div>
+                    <div style="width: 40%" class="inner left aplicaBackground">
+                      <p>
+                        {{
+                          item?.objetoBienServicioContratado?.length > 100
+                            ? (item?.objetoBienServicioContratado
+                                | slice: 0:100) + ".."
+                            : item?.objetoBienServicioContratado
+                        }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr >
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Procesar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onRegistrarSolicitud()"
+                    [disabled]="solicitudCDPId === 0"
+                  >
+                    {{nombreBoton}}
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid mt-2">
+  <div class="row no-gutters center">
+    <div class="col-12" *ngIf="solicitudCdpSeleccionado != null">
+      <app-vincular-cdp-solicitud-edit
+        [solicitudCdpSeleccionado]="solicitudCdpSeleccionado"
+        [esCreacion]="esCreacion"
+        (esCancelado)="habilitarCabecera($event)"
+      ></app-vincular-cdp-solicitud-edit>
+    </div>
+  </div>
+</div>

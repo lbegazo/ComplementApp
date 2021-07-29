@@ -13,9 +13,7 @@ using ComplementApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComplementApp.API.Controllers
-{
-    
-    public class CDPController : BaseApiController
+{   public class CDPController : BaseApiController
     {
         #region Variable
 
@@ -104,6 +102,28 @@ namespace ComplementApp.API.Controllers
             userParams.PciId = pciId;
 
             var pagedList = await _repo.ObtenerDetallePlanAnualAdquisicion(cdp, instancia, userParams);
+            var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerListaCdpParaVinculacion([FromQuery] long? cdp,
+                                                                        [FromQuery] int instancia,
+                                                                        [FromQuery] UserParams userParams)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
+            var pagedList = await _repo.ObtenerListaCdpParaVinculacion(cdp, instancia, userParams);
             var listaDto = _mapper.Map<IEnumerable<CDPDto>>(pagedList);
 
             Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,

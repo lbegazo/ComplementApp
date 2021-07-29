@@ -19,6 +19,12 @@ namespace ComplementApp.API.Data
             _context = context;
         }
 
+        public async Task<SolicitudCDP> ObtenerSolicitudCdpBase(int solicitudId)
+        {
+            return await _context.SolicitudCDP
+                        .FirstOrDefaultAsync(u => u.SolicitudCDPId == solicitudId);
+        }
+
         public async Task<CDPDto> ObtenerCDP(int usuarioId, int numeroCDP)
         {
             var cdp = await (from c in _context.CDP
@@ -105,6 +111,7 @@ namespace ComplementApp.API.Data
                                      where (s.UsuarioId == usuarioId || usuarioId == null)
                                      where (s.FechaRegistro.Date == fechaRegistro || fechaRegistro == null)
                                      where (s.EstadoSolicitudCDPId == estadoSolicitudId || estadoSolicitudId == null)
+                                     where (s.PciId == userParams.PciId)
                                      select new SolicitudCDPParaPrincipalDto()
                                      {
                                          SolicitudCDPId = s.SolicitudCDPId,
@@ -131,6 +138,46 @@ namespace ComplementApp.API.Data
 
 
             return await PagedList<SolicitudCDPParaPrincipalDto>.CreateAsync(listaSolicitudCDP, userParams.PageNumber, userParams.PageSize);
+        }
+
+
+        public async Task<PagedList<SolicitudCDPParaPrincipalDto>> ObtenerListaSolicitudParaVincularCDP(int tipo, int? numeroSolicitud, UserParams userParams)
+        {
+            IOrderedQueryable<SolicitudCDPParaPrincipalDto> lista = null;
+
+            if (tipo == (int)TipoOperacionTransaccion.Creacion)
+            {
+                lista = (from s in _context.SolicitudCDP
+                         where (s.PciId == userParams.PciId)
+                         where (s.SolicitudCDPId == numeroSolicitud || numeroSolicitud == null)
+                         where (s.Cdp == null)
+                         select new SolicitudCDPParaPrincipalDto()
+                         {
+                             SolicitudCDPId = s.SolicitudCDPId,
+                             FechaRegistro = s.FechaRegistro,
+                             ActividadProyectoInversion = s.ActividadProyectoInversion,
+                             ObjetoBienServicioContratado = s.ObjetoBienServicioContratado,
+
+                         }).OrderBy(s => s.SolicitudCDPId);
+
+            }
+            else
+            {
+                lista = (from s in _context.SolicitudCDP
+                         where (s.PciId == userParams.PciId)
+                         where s.Cdp != null
+                         where (s.SolicitudCDPId == numeroSolicitud || numeroSolicitud == null)
+                         select new SolicitudCDPParaPrincipalDto()
+                         {
+                             SolicitudCDPId = s.SolicitudCDPId,
+                             FechaRegistro = s.FechaRegistro,
+                             ActividadProyectoInversion = s.ActividadProyectoInversion,
+                             ObjetoBienServicioContratado = s.ObjetoBienServicioContratado,
+
+                         }).OrderBy(s => s.SolicitudCDPId);
+
+            }
+            return await PagedList<SolicitudCDPParaPrincipalDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<ICollection<DetalleSolicitudCDP>> ObtenerDetalleSolicitudCDP(int solicitudCDPId)
@@ -177,6 +224,7 @@ namespace ComplementApp.API.Data
                                   Fecha = g.Key.Fecha
                               }).Distinct()
                               .ToListAsync();
+
             return cdps;
         }
     }

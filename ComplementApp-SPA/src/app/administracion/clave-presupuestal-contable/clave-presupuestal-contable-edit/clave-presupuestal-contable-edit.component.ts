@@ -53,7 +53,6 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
     this.cargarClavesPresupuestales();
 
     if (!this.esCreacion) {
-      this.createFullForm();
       this.nombreBoton = 'Actualizar';
       this.nombreBotonPopup = 'Modificar';
     } else {
@@ -84,8 +83,6 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
       planPagoControles: this.arrayControls,
     });
   }
-
-  createFullForm() {}
 
   cargarListaUsosPresupuestales() {}
 

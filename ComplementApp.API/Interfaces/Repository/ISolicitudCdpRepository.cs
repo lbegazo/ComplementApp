@@ -9,6 +9,7 @@ namespace ComplementApp.API.Interfaces.Repository
 {
     public interface ISolicitudCdpRepository
     {
+        Task<SolicitudCDP> ObtenerSolicitudCdpBase(int solicitudId);
         Task<CDPDto> ObtenerCDP(int usuarioId, int numeroCDP);
         Task<SolicitudCDPDto> ObtenerSolicitudCDP(int solicitudCDPId);
         Task<ICollection<DetalleSolicitudCDP>> ObtenerDetalleSolicitudCDP(int solicitudCDPId);
@@ -17,5 +18,6 @@ namespace ComplementApp.API.Interfaces.Repository
                                                                     int? usuarioId, DateTime? fechaRegistro,
                                                                     int? estadoSolicitudId, UserParams userParams);
         Task<IEnumerable<CDP>> ObtenerListaCDP(int usuarioId);
+        Task<PagedList<SolicitudCDPParaPrincipalDto>> ObtenerListaSolicitudParaVincularCDP(int tipo, int? numeroSolicitud, UserParams userParams);
     }
 }

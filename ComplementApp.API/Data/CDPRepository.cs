@@ -241,5 +241,31 @@ namespace ComplementApp.API.Data
 
         }
 
+        public async Task<PagedList<CDPDto>> ObtenerListaCdpParaVinculacion(long? cdp, int instancia, UserParams userParams)
+        {
+            var listaSolicitud = (from pp in _context.SolicitudCDP
+                                    where pp.PciId == userParams.PciId
+                                    where pp.Cdp != null 
+                                    select pp.Cdp).ToHashSet();
+
+            var lista = (from c in _context.CDP
+                         join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
+                         where c.PciId == userParams.PciId
+                         where c.Instancia == instancia
+                          where !listaSolicitud.Contains(c.Cdp)
+                         where c.Cdp == cdp || cdp == null
+                         select new CDPDto()
+                         {
+                             Cdp = c.Cdp,
+                             ValorTotal = c.ValorTotal,
+                             SaldoActual = c.SaldoActual,
+                             Detalle4 = c.Detalle4,
+                             IdentificacionRubro = rp.Identificacion,
+                             NombreRubro = rp.Nombre
+                         })
+                         .OrderBy(x => x.Cdp);
+
+            return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
     }
 }

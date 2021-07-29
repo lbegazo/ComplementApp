@@ -19,6 +19,8 @@ namespace ComplementApp.API.Controllers
         #region Variable
 
         int usuarioId = 0;
+        int pciId = 0;
+        string valorPciId = string.Empty;
         int transaccionId = 21;
 
         #endregion 
@@ -244,6 +246,38 @@ namespace ComplementApp.API.Controllers
         }
 
         [Route("[action]")]
+        [HttpPut]
+        public async Task<IActionResult> ActualizarSolicitudCDP(SolicitudCDPDto solicitudCDP)
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                //Registrar Parametro liquidación Tercero
+                var solicitudBD = await _repo.ObtenerSolicitudCdpBase(solicitudCDP.SolicitudCDPId);
+
+                #region Mapear datos Tercero
+
+                solicitudBD.Cdp = solicitudCDP.Cdp;
+                solicitudBD.UsuarioIdModificacion = usuarioId;
+                solicitudBD.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+
+                #endregion Mapear datos Tercero
+
+                await _dataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerSolicitudCDP([FromQuery(Name = "solicitudId")] int solicitudId)
         {
@@ -271,7 +305,6 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo obtener la solicitud de CDP");
         }
 
-
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult> ObtenerListaSolicitudCDP([FromQuery(Name = "solicitudId")] int? solicitudId,
@@ -283,6 +316,13 @@ namespace ComplementApp.API.Controllers
         {
             try
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                    userParams.PciId = pciId;
+                }
+
                 if (fechaRegistro != null)
                 {
                     fechaRegistro = fechaRegistro.Value.Date;
@@ -306,6 +346,42 @@ namespace ComplementApp.API.Controllers
 
             throw new Exception($"No se pudo obtener la solicitud de CDP");
         }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult> ObtenerListaSolicitudParaVincularCDP([FromQuery(Name = "tipo")] int tipo,
+                                            [FromQuery(Name = "numeroSolicitud")] int? numeroSolicitud,
+                                            [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                    userParams.PciId = pciId;
+                }
+
+                var pagedList = await _repo.ObtenerListaSolicitudParaVincularCDP(tipo, numeroSolicitud, userParams);
+
+                var listaDto = _mapper.Map<IEnumerable<SolicitudCDPParaPrincipalDto>>(pagedList);
+
+                Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                    pagedList.TotalCount, pagedList.TotalPages);
+
+                return base.Ok(listaDto);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la solicitud de CDP");
+        }
+
+
+
 
         [Route("[action]")]
         [HttpGet]

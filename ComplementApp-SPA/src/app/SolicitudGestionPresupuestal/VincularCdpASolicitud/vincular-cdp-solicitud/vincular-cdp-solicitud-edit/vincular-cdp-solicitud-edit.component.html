@@ -1,0 +1,211 @@
+<form #cdpNgForm="ngForm" id="cdpNgForm" [formGroup]="editForm">
+  <div class="container-fluid mt-1" style="color: black">
+    <div class="row mt-2">
+      <div class="col-md-12 withoutPadding">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <div class="form-row mt-4">
+                <!--Número de Solicitud-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="tipoDocumentoIdentidad" class="col-form-label-md"
+                    ><strong>Número</strong></label
+                  >
+                  <p class="paragraph">
+                    {{ solicitudCdpSeleccionado.solicitudCDPId }}
+                  </p>
+                </div>
+                <!--Fecha Registro-->
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label
+                    for="NumeroDocumentoIdentidad"
+                    class="col-form-label-md"
+                    ><strong>Fecha de Registro</strong></label
+                  >
+                  <p class="paragraph">
+                    {{
+                      solicitudCdpSeleccionado?.fechaRegistro
+                        | date: "dd/MM/yyyy"
+                    }}
+                  </p>
+                </div>
+                <!--Actividad Proyecto Inversión-->
+                <div class="form-group col-md-8" style="margin: 0px">
+                  <label class="col-form-label-md"
+                    ><strong>Actividad Proyecto Inversión</strong></label
+                  >
+                  <p class="paragraph">
+                    {{ solicitudCdpSeleccionado?.actividadProyectoInversion }}
+                  </p>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12" style="margin: 0px">
+                  <label class="col-form-label-md"
+                    ><strong>Objeto del bien</strong></label
+                  >
+                  <p class="paragraphLeft">
+                    {{ solicitudCdpSeleccionado?.objetoBienServicioContratado }}
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td class="left">
+              <label class="col-form-label-md"
+                ><strong>Debe seleccionar el CDP</strong></label
+              >
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row">
+                <div style="width: 6%" class="inner center aplicaBackground">
+                  <label class="col-form-label-md">CDP</label>
+                </div>
+                <div style="width: 33%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">DETALLE DE SOLICITUD</label>
+                </div>
+                <div style="width: 10%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">VALOR TOTAL</label>
+                </div>
+                <div style="width: 10%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">SALDO ACTUAL</label>
+                </div>
+                <div style="width: 15%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">CODIGO</label>
+                </div>
+                <div style="width: 26%" class="inner aplicaBackground center">
+                  <label class="col-form-label-md">DESCRIPCION RUBRO</label>
+                </div>
+              </div>
+              <div *ngIf="listaCdp">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaCdp; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div
+                      style="width: 6%"
+                      class="inner center aplicaBackground"
+                    >
+                      <label class="col-form-label-md">
+                        <input
+                          type="radio"
+                          [value]="item?.cdp"
+                          (change)="onCheckChange($event)"
+                          name="inlineDefaultRadiosExample"
+                        />
+                        {{ item?.cdp }}
+                      </label>
+                    </div>
+                    <div style="width: 33%" class="inner left aplicaBackground">
+                      <p class="fontSmaller">
+                        {{
+                          item?.detalle4?.length > 130
+                            ? (item?.detalle4 | slice: 0:130) + ".."
+                            : item?.detalle4
+                        }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.valorTotal | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p class="medium">
+                        {{ item?.saldoActual | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 15%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.identificacionRubro }}
+                      </p>
+                    </div>
+                    <div style="width: 26%" class="inner left aplicaBackground">
+                      <p class="fontSmaller">
+                        {{
+                          item?.nombreRubro?.length > 100
+                            ? (item?.nombreRubro | slice: 0:100) + ".."
+                            : item?.nombreRubro
+                        }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-12 withoutPadding right">
+      <table style="width: 90%; margin-left: auto; margin-right: auto">
+        <tr>
+          <td>
+            <button
+              class="btn btn-primary"
+              (click)="onGuardar()"
+              style="margin-right: 10px"
+              [disabled]="cdp === 0"
+            >
+              {{ nombreBoton }}
+            </button>
+            <button
+              class="btn btn-default"
+              type="button"
+              (click)="onCancelar()"
+            >
+              Volver
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <p>Form value: {{ editForm.value | json }}</p>
+<p>Form status: {{ editForm.status | json }}</p>
+<p>planPagoSeleccionado: {{ listaClavePresupuestalContable | json }}</p> -->

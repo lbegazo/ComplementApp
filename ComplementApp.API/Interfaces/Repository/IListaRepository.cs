@@ -47,5 +47,6 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<PagedList<RubroPresupuestal>> ObtenerListaRubroPresupuestalPorPapa(int rubroPresupuestalId, UserParams userParams);
 
         Task<IEnumerable<RubroPresupuestal>> ObtenerListaRubroPresupuestal(string identificacion, string nombre);
+        Task<IEnumerable<SolicitudCDPParaPrincipalDto>> ObtenerListaSolicitudCDP(string numeroSolicitud);
     }
 }

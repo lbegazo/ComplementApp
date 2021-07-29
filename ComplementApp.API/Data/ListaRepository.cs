@@ -470,6 +470,30 @@ namespace ComplementApp.API.Data
                 return await lista.ToListAsync();
         }
 
+        public async Task<IEnumerable<SolicitudCDPParaPrincipalDto>> ObtenerListaSolicitudCDP(string numeroSolicitud)
+        {
+            IQueryable<SolicitudCDPParaPrincipalDto> listaFiltrada = null;
+
+            var lista = (from d in _context.SolicitudCDP
+                         select new SolicitudCDPParaPrincipalDto()
+                         {
+                             SolicitudCDPId = d.SolicitudCDPId,
+                             ObjetoBienServicioContratado = d.ObjetoBienServicioContratado,
+                         }).OrderBy(d => d.SolicitudCDPId);
+
+            if (!string.IsNullOrEmpty(numeroSolicitud))
+            {
+                // listaFiltrada = lista
+                //                  .Where(x => EF.Functions.Like(x.SolicitudCDPId.ToString(), numeroSolicitud));
+
+                listaFiltrada = (from l in lista
+                                 where l.SolicitudCDPId.ToString().Contains(numeroSolicitud)
+                                 select l);
+
+            }
+
+            return await listaFiltrada.ToListAsync();
+        }
         private List<ValorSeleccion> ListaMedioPago()
         {
             List<ValorSeleccion> lista = new List<ValorSeleccion>()

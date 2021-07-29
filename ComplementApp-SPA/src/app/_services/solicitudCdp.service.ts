@@ -32,6 +32,11 @@ export class SolicitudCdpService {
     return this.http.post(this.baseUrl + path, formato);
   }
 
+  ActualizarSolicitudCDP(solicitud: SolicitudCDP) {
+    const path = 'ActualizarSolicitudCDP';
+    return this.http.put(this.baseUrl + path, solicitud);
+  }
+
   ObtenerListaSolicitudCDP(
     solicitudId?: number,
     tipoOperacionId?: number,
@@ -61,6 +66,50 @@ export class SolicitudCdpService {
     if (fechaRegistro != null) {
       params = params.append('fechaRegistro', fechaRegistro.toString());
     }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<SolicitudCDPDto[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  ObtenerListaSolicitudParaVincularCDP(
+    tipo: number,
+    numeroSolicitud?: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<SolicitudCDPDto[]>> {
+    const path = 'ObtenerListaSolicitudParaVincularCDP';
+    const paginatedResult: PaginatedResult<SolicitudCDPDto[]> =
+      new PaginatedResult<SolicitudCDPDto[]>();
+
+    let params = new HttpParams();
+
+    params = params.append('tipo', tipo.toString());
+
+    if (numeroSolicitud > 0) {
+      params = params.append('numeroSolicitud', numeroSolicitud.toString());
+    }
+
     if (page != null) {
       params = params.append('pageNumber', page);
     }

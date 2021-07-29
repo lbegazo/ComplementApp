@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Cdp } from '../_models/cdp';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpParams,
+  HttpRequest,
+} from '@angular/common/http';
 import { DetalleCDP } from '../_models/detalleCDP';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/Operators';
@@ -62,7 +67,6 @@ export class CdpService {
     return this.http.get<DetalleCDP[]>(this.baseUrl + path + numeroContrato);
   }
 
-
   ObtenerDetallePlanAnualAdquisicion(
     cdp: number,
     instancia: number,
@@ -76,6 +80,49 @@ export class CdpService {
 
     let params = new HttpParams();
     params = params.append('cdp', cdp.toString());
+    params = params.append('instancia', instancia.toString());
+
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<Cdp[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  ObtenerListaCdpParaVinculacion(
+    instancia: number,
+    cdp: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<Cdp[]>> {
+    const path = 'ObtenerListaCdpParaVinculacion';
+    const paginatedResult: PaginatedResult<Cdp[]> = new PaginatedResult<
+      Cdp[]
+    >();
+
+    let params = new HttpParams();
+    if (cdp > 0) {
+      params = params.append('cdp', cdp.toString());
+    }
     params = params.append('instancia', instancia.toString());
 
     if (page != null) {

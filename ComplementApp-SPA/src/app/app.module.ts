@@ -142,6 +142,8 @@ import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pa
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
 import { UsuarioEditNewComponent } from './administracion/usuario/usuario-edit-new/usuario-edit-new.component';
 import { NegativeDecimalMaskDirective } from './_directives/negative-decimal-mask.directive';
+import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
+import { VincularCdpSolicitudEditComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud-edit/vincular-cdp-solicitud-edit.component';
 
 
 defineLocale('es', esLocale);
@@ -238,7 +240,9 @@ export function tokenGetter() {
     DetalleInformePagoProveedorComponent,
     CargaMasivaOrdenPagoComponent,
     UsuarioComponent,
-    UsuarioEditNewComponent
+    UsuarioEditNewComponent,
+    VincularCdpSolicitudComponent,
+    VincularCdpSolicitudEditComponent,
   ],
   imports: [
     BrowserModule,
