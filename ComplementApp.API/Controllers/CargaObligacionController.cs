@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text;
 using System.Linq;
+using ComplementApp.API.Interfaces;
 
 namespace ComplementApp.API.Controllers
 {
@@ -34,11 +35,12 @@ namespace ComplementApp.API.Controllers
         private readonly ICargaObligacionRepository _repo;
         private readonly IGeneralInterface _generalInterface;
         private readonly IMapper _mapper;
+        private readonly IProcesoCreacionArchivo _procesoCreacionArchivo;
         #endregion Dependency Injection
 
 
         public CargaObligacionController(DataContext dataContext, ICargaObligacionService cargaService,
-        ICargaObligacionRepository repo, IMapper mapper, IGeneralInterface generalInterface)
+        ICargaObligacionRepository repo, IMapper mapper, IGeneralInterface generalInterface, IProcesoCreacionArchivo procesoCreacionArchivo)
 
         {
             _generalInterface = generalInterface;
@@ -46,6 +48,7 @@ namespace ComplementApp.API.Controllers
             _cargaService = cargaService;
             _dataContext = dataContext;
             _mapper = mapper;
+            _procesoCreacionArchivo = procesoCreacionArchivo;
 
         }
 
@@ -109,7 +112,7 @@ namespace ComplementApp.API.Controllers
 
             return Ok();
         }
-        
+
         [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> ObtenerListaCargaObligacion([FromQuery] string estado,
@@ -143,7 +146,6 @@ namespace ComplementApp.API.Controllers
             string cadena = string.Empty;
             string nombreArchivo = string.Empty;
             DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
-            // int consecutivo = 0;
 
             #endregion Variables
 
@@ -162,11 +164,25 @@ namespace ComplementApp.API.Controllers
                         {
                             #region Cabecera
 
+                            nombreArchivo = "SIGPAA Cabecera";
+
                             var lista = (await _repo.ObtenerListaCargaObligacionArchivoCabecera(usuarioId, estado, pciId));
 
+                            List<int> listIds = lista.Select(x => x.Obligacion).ToList();
+                            List<int> listDistinct = listIds.Distinct().ToList();
 
                             //Obtener información para el archivo
                             cadena = _cargaService.ObtenerInformacionOrdenPagoArchivoCabecera(lista.ToList());
+
+
+                            //Registrar archivo y sus detalles
+                            ArchivoDetalleLiquidacion archivo = _procesoCreacionArchivo.RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, listDistinct,
+                                                                                                    nombreArchivo, 0,
+                                                                                                    (int)TipoDocumentoArchivo.OrdenPago);
+                            _dataContext.SaveChanges();
+
+                            _procesoCreacionArchivo.RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
+                            _dataContext.SaveChanges();
 
                             //Encoding.UTF8: Respeta las tildes en las palabras
                             byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
@@ -174,8 +190,7 @@ namespace ComplementApp.API.Controllers
 
                             if (stream == null)
                                 return new NoContentResult();
-
-                            nombreArchivo = "SIGPAA Cabecera";
+                            
                             Response.AddFileName(nombreArchivo);
                             return File(stream, "application/octet-stream", nombreArchivo);
 
@@ -196,7 +211,7 @@ namespace ComplementApp.API.Controllers
                                 byte[] byteArray = Encoding.UTF8.GetBytes(cadena);
                                 MemoryStream stream = new MemoryStream(byteArray);
 
-                                if (stream ==  null)
+                                if (stream == null)
                                     return new NoContentResult();
 
                                 nombreArchivo = "SIGPAA Detalle";
@@ -222,6 +237,8 @@ namespace ComplementApp.API.Controllers
                 throw;
             }
         }
+
+
 
     }
 }

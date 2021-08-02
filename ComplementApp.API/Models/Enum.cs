@@ -114,6 +114,7 @@ namespace ComplementApp.API.Models
     {
         CuentaPorPagar = 1,
         Obligacion = 2,
+        OrdenPago = 3,
     }
 
     public enum TipoArchivoObligacion

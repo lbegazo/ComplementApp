@@ -489,17 +489,17 @@ namespace ComplementApp.API.Controllers
 
                         //Obtener nombre del archivo detalle
                         consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId) + 1;
-                        nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                        nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                             (int)TipoDocumentoArchivo.CuentaPorPagar,
                                                             (int)TipoArchivoCuentaPorPagar.Cabecera);
 
                         //Registrar archivo y sus detalles
-                        ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, listDistinct,
+                        ArchivoDetalleLiquidacion archivo = _procesoCreacionArchivo.RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, listDistinct,
                                                                                                 nombreArchivo, consecutivo,
                                                                                                 (int)TipoDocumentoArchivo.CuentaPorPagar);
                         _dataContext.SaveChanges();
 
-                        RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
+                        _procesoCreacionArchivo.RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, listDistinct);
                         _dataContext.SaveChanges();
 
                         //Encoding.UTF8: Respeta las tildes en las palabras
@@ -564,7 +564,7 @@ namespace ComplementApp.API.Controllers
 
                     //Obtener nombre del archivo detalle
                     consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
-                    nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                    nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                         (int)TipoDocumentoArchivo.CuentaPorPagar,
                                                         (int)TipoArchivoCuentaPorPagar.Detalle);
 
@@ -795,7 +795,7 @@ namespace ComplementApp.API.Controllers
 
                                 //Obtener nombre del archivo detalle
                                 consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId) + 1;
-                                nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                                     (int)TipoDocumentoArchivo.Obligacion,
                                                                     (int)TipoArchivoObligacion.Cabecera
                                                                     );
@@ -806,12 +806,12 @@ namespace ComplementApp.API.Controllers
                                     cadena = _procesoCreacionArchivo.ObtenerInformacionCabeceraLiquidacion_ArchivoObligacion(listaLiquidacion.ToList());
 
                                     //Registrar archivo y sus detalles
-                                    ArchivoDetalleLiquidacion archivo = RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, liquidacionIds,
+                                    ArchivoDetalleLiquidacion archivo = _procesoCreacionArchivo.RegistrarArchivoDetalleLiquidacion(usuarioId, pciId, liquidacionIds,
                                                                                                             nombreArchivo, consecutivo,
                                                                                                             (int)TipoDocumentoArchivo.Obligacion);
                                     _dataContext.SaveChanges();
 
-                                    RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, liquidacionIds);
+                                    _procesoCreacionArchivo.RegistrarDetalleArchivoLiquidacion(archivo.ArchivoDetalleLiquidacionId, liquidacionIds);
                                     _dataContext.SaveChanges();
 
                                     //Encoding.UTF8: Respeta las tildes en las palabras
@@ -838,7 +838,7 @@ namespace ComplementApp.API.Controllers
 
                                 //Obtener nombre del archivo detalle
                                 consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
-                                nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                                     (int)TipoDocumentoArchivo.Obligacion,
                                                                     (int)TipoArchivoObligacion.Item);
 
@@ -872,7 +872,7 @@ namespace ComplementApp.API.Controllers
 
                                 //Obtener nombre del archivo detalle
                                 consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
-                                nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                                     (int)TipoDocumentoArchivo.Obligacion,
                                                                     (int)TipoArchivoObligacion.Deducciones);
 
@@ -906,7 +906,7 @@ namespace ComplementApp.API.Controllers
 
                                 //Obtener nombre del archivo detalle
                                 consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
-                                nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                                     (int)TipoDocumentoArchivo.Obligacion,
                                                                     (int)TipoArchivoObligacion.Uso);
 
@@ -940,7 +940,7 @@ namespace ComplementApp.API.Controllers
 
                                 //Obtener nombre del archivo detalle
                                 consecutivo = _repo.ObtenerUltimoConsecutivoArchivoLiquidacion(pciId);
-                                nombreArchivo = ObtenerNombreArchivo(fecha, consecutivo,
+                                nombreArchivo = _procesoCreacionArchivo.ObtenerNombreArchivo(fecha, consecutivo,
                                                                     (int)TipoDocumentoArchivo.Obligacion,
                                                                     (int)TipoArchivoObligacion.Factura
                                                                     );
@@ -1114,125 +1114,7 @@ namespace ComplementApp.API.Controllers
 
             return true;
         }
-
-        private ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, int pciId, List<int> listIds,
-                                                                                string nombreArchivo, int consecutivo,
-                                                                                int tipoDocumentoArchivo)
-        {
-            ArchivoDetalleLiquidacion archivo = new ArchivoDetalleLiquidacion();
-            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
-
-            try
-            {
-                archivo.FechaGeneracion = fecha;
-                archivo.FechaRegistro = fecha;
-                archivo.UsuarioIdRegistro = usuarioId;
-                archivo.Nombre = nombreArchivo;
-                archivo.CantidadRegistro = listIds.Count;
-                archivo.Consecutivo = consecutivo;
-                archivo.TipoDocumentoArchivo = tipoDocumentoArchivo;
-                archivo.PciId = pciId;
-                _dataContext.ArchivoDetalleLiquidacion.Add(archivo);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return archivo;
-        }
-
-        private string ObtenerNombreArchivo(DateTime fecha, int consecutivo, int tipoDocumentoArchivo, int tipoArchivo)
-        {
-            string nombre = string.Empty;
-            string nombreInicial = "SIGPAA ";
-            string nombreIntermedio = string.Empty;
-            string nombreFinal = fecha.Year.ToString() +
-                                fecha.Month.ToString().PadLeft(2, '0') +
-                                fecha.Date.Day.ToString().PadLeft(2, '0') +
-                                " " + consecutivo.ToString().PadLeft(4, '0');
-
-            switch (tipoDocumentoArchivo)
-            {
-                case (int)TipoDocumentoArchivo.Obligacion:
-                    {
-                        switch (tipoArchivo)
-                        {
-                            case (int)TipoArchivoObligacion.Cabecera:
-                                {
-                                    nombreIntermedio = "Cabecera ";
-                                }
-                                break;
-                            case (int)TipoArchivoObligacion.Item:
-                                {
-                                    nombreIntermedio = "Item ";
-                                }
-                                break;
-                            case (int)TipoArchivoObligacion.Deducciones:
-                                {
-                                    nombreIntermedio = "Deducciones ";
-                                }
-                                break;
-                            case (int)TipoArchivoObligacion.Uso:
-                                {
-                                    nombreIntermedio = "Usos ";
-                                }
-                                break;
-                            case (int)TipoArchivoObligacion.Factura:
-                                {
-                                    nombreIntermedio = "Factura ";
-                                }
-                                break;
-
-                            default: break;
-                        }
-
-                    }
-                    break;
-                case (int)TipoDocumentoArchivo.CuentaPorPagar:
-                    {
-                        switch (tipoArchivo)
-                        {
-                            case (int)TipoArchivoCuentaPorPagar.Cabecera:
-                                {
-                                    nombreIntermedio = "Cabecera ";
-                                }
-                                break;
-                            case (int)TipoArchivoCuentaPorPagar.Detalle:
-                                {
-                                    nombreIntermedio = "Detalle ";
-                                }
-                                break;
-
-                            default: break;
-                        }
-                    }
-                    break;
-                default: break;
-            }
-            nombre = nombreInicial + nombreIntermedio + nombreFinal;
-
-            return nombre;
-        }
-
-        private void RegistrarDetalleArchivoLiquidacion(int archivoId, List<int> listIds)
-        {
-            DetalleArchivoLiquidacion detalle = null;
-            List<DetalleArchivoLiquidacion> lista = new List<DetalleArchivoLiquidacion>();
-
-            foreach (var item in listIds)
-            {
-                if (item > 0)
-                {
-                    detalle = new DetalleArchivoLiquidacion();
-                    detalle.DetalleLiquidacionId = item;
-                    detalle.ArchivoDetalleLiquidacionId = archivoId;
-                    lista.Add(detalle);
-                }
-            }
-            _repo.RegistrarDetalleArchivoLiquidacion(lista);
-        }
-
+        
         private string EliminarCaracteresEspeciales(string texto)
         {
             var normalizedString = texto.Normalize(NormalizationForm.FormD);

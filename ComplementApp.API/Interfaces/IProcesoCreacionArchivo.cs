@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Dtos.Archivo;
+using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Interfaces
 {
@@ -20,5 +22,17 @@ namespace ComplementApp.API.Interfaces
         string ObtenerInformacionFacturaLiquidacion_ArchivoObligacion(List<DetalleLiquidacionParaArchivo> lista);
 
         #endregion Obligacion
+
+        #region Registrar archivo
+
+        ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, int pciId, List<int> listIds,
+                                                                               string nombreArchivo, int consecutivo,
+                                                                               int tipoDocumentoArchivo);
+
+        string ObtenerNombreArchivo(DateTime fecha, int consecutivo, int tipoDocumentoArchivo, int tipoArchivo);
+
+        void RegistrarDetalleArchivoLiquidacion(int archivoId, List<int> listIds);
+
+        #endregion Registrar archivo
     }
 }

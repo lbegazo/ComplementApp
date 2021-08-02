@@ -5,11 +5,25 @@ using System.Linq;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Dtos.Archivo;
 using ComplementApp.API.Interfaces;
+using ComplementApp.API.Models;
+using ComplementApp.API.Interfaces.Repository;
+using ComplementApp.API.Data;
 
 namespace ComplementApp.API.Services
 {
     public class ProcesoCreacionArchivo : IProcesoCreacionArchivo
     {
+        private readonly IGeneralInterface _generalInterface;
+        private readonly DataContext _dataContext;
+        private readonly IDetalleLiquidacionRepository _repo;
+
+        public ProcesoCreacionArchivo(DataContext dataContext, IGeneralInterface generalInterface, IDetalleLiquidacionRepository repo)
+        {
+            _dataContext = dataContext;
+            _generalInterface = generalInterface;
+            _repo = repo;
+        }
+
         #region Cuenta Por Pagar
         public string ObtenerInformacionMaestroLiquidacion_ArchivoCuentaPagar(List<DetalleLiquidacionParaArchivo> lista)
         {
@@ -304,5 +318,127 @@ namespace ComplementApp.API.Services
 
         #endregion Obligacion
 
+        #region Registrar archivo
+
+        public ArchivoDetalleLiquidacion RegistrarArchivoDetalleLiquidacion(int usuarioId, int pciId, List<int> listIds,
+                                                                               string nombreArchivo, int consecutivo,
+                                                                               int tipoDocumentoArchivo)
+        {
+            ArchivoDetalleLiquidacion archivo = new ArchivoDetalleLiquidacion();
+            DateTime fecha = _generalInterface.ObtenerFechaHoraActual();
+
+            try
+            {
+                archivo.FechaGeneracion = fecha;
+                archivo.FechaRegistro = fecha;
+                archivo.UsuarioIdRegistro = usuarioId;
+                archivo.Nombre = nombreArchivo;
+                archivo.CantidadRegistro = listIds.Count;
+                archivo.Consecutivo = consecutivo;
+                archivo.TipoDocumentoArchivo = tipoDocumentoArchivo;
+                archivo.PciId = pciId;
+                _dataContext.ArchivoDetalleLiquidacion.Add(archivo);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return archivo;
+        }
+
+        public string ObtenerNombreArchivo(DateTime fecha, int consecutivo, int tipoDocumentoArchivo, int tipoArchivo)
+        {
+            string nombre = string.Empty;
+            string nombreInicial = "SIGPAA ";
+            string nombreIntermedio = string.Empty;
+            string nombreFinal = fecha.Year.ToString() +
+                                fecha.Month.ToString().PadLeft(2, '0') +
+                                fecha.Date.Day.ToString().PadLeft(2, '0') +
+                                " " + consecutivo.ToString().PadLeft(4, '0');
+
+            switch (tipoDocumentoArchivo)
+            {
+                case (int)TipoDocumentoArchivo.Obligacion:
+                    {
+                        switch (tipoArchivo)
+                        {
+                            case (int)TipoArchivoObligacion.Cabecera:
+                                {
+                                    nombreIntermedio = "Cabecera ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Item:
+                                {
+                                    nombreIntermedio = "Item ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Deducciones:
+                                {
+                                    nombreIntermedio = "Deducciones ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Uso:
+                                {
+                                    nombreIntermedio = "Usos ";
+                                }
+                                break;
+                            case (int)TipoArchivoObligacion.Factura:
+                                {
+                                    nombreIntermedio = "Factura ";
+                                }
+                                break;
+
+                            default: break;
+                        }
+
+                    }
+                    break;
+                case (int)TipoDocumentoArchivo.CuentaPorPagar:
+                    {
+                        switch (tipoArchivo)
+                        {
+                            case (int)TipoArchivoCuentaPorPagar.Cabecera:
+                                {
+                                    nombreIntermedio = "Cabecera ";
+                                }
+                                break;
+                            case (int)TipoArchivoCuentaPorPagar.Detalle:
+                                {
+                                    nombreIntermedio = "Detalle ";
+                                }
+                                break;
+
+                            default: break;
+                        }
+                    }
+                    break;
+                default: break;
+            }
+            nombre = nombreInicial + nombreIntermedio + nombreFinal;
+
+            return nombre;
+        }
+
+        public void RegistrarDetalleArchivoLiquidacion(int archivoId, List<int> listIds)
+        {
+            DetalleArchivoLiquidacion detalle = null;
+            List<DetalleArchivoLiquidacion> lista = new List<DetalleArchivoLiquidacion>();
+
+            foreach (var item in listIds)
+            {
+                if (item > 0)
+                {
+                    detalle = new DetalleArchivoLiquidacion();
+                    detalle.DetalleLiquidacionId = item;
+                    detalle.ArchivoDetalleLiquidacionId = archivoId;
+                    lista.Add(detalle);
+                }
+            }
+            _repo.RegistrarDetalleArchivoLiquidacion(lista);
+        }
+
+
+        #endregion Registrar archivo
     }
 }
