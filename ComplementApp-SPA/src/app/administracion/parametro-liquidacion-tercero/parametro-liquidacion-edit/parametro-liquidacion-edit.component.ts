@@ -1458,11 +1458,13 @@ export class ParametroLiquidacionEditComponent implements OnInit {
   ValidarTerceroDeDeduccion(): boolean {
     let resultado = true;
     for (const x of this.listaTerceroDeducciones) {
-      if (x.terceroDeDeduccion === null || x.terceroDeDeduccion.id === 0) {
-        resultado = false;
+      if (x.deduccion && x.deduccion.deduccionId > 0) {
+        if (x.terceroDeDeduccion === null || x.terceroDeDeduccion.id === 0) {
+          resultado = false;
 
-        if (!resultado) {
-          break;
+          if (!resultado) {
+            break;
+          }
         }
       }
     }
