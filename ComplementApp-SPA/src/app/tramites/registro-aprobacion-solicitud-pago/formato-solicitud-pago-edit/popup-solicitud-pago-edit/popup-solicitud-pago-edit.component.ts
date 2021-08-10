@@ -347,13 +347,25 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
   }
 
   replicarValorFacturado() {
+    let valorBaseGravableC = 0;
+    let baseCotizacionC = '';
+    const formValues = Object.assign({}, this.popupForm.value);
+
+    const valorFacturado = +GeneralService.obtenerValorAbsoluto(
+      formValues.valorFacturaCtrl
+    );
+
+    if (this.parametroLiquidacionTercero) {
+      valorBaseGravableC =
+        valorFacturado * this.parametroLiquidacionTercero.baseAporteSalud;
+      baseCotizacionC = GeneralService.obtenerFormatoMoney(valorBaseGravableC);
+
+      this.popupForm.patchValue({
+        baseCotizacionCtrl: baseCotizacionC,
+      });
+    }
+
     if (this.rubrosPresupuestales && this.rubrosPresupuestales.length === 1) {
-      const formValues = Object.assign({}, this.popupForm.value);
-
-      const valorFacturado = +GeneralService.obtenerValorAbsoluto(
-        formValues.valorFacturaCtrl
-      );
-
       this.rubroPresupuestalTemporal = this.rubrosPresupuestales[0];
       this.rubroPresupuestalTemporal.valorSolicitud = valorFacturado;
 
@@ -423,9 +435,7 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
       if (element.valorSolicitud > element.saldoAct) {
         resultado = false;
         break;
-      }
-      else
-      {
+      } else {
         resultado = true;
       }
     }

@@ -273,7 +273,6 @@ namespace ComplementApp.API.Data
                           join us in _context.Usuario on pp.UsuarioIdRegistro equals us.UsuarioId into Usuario
                           from us in Usuario.DefaultIfEmpty()
 
-
                           join con in _context.Contrato on pp.Crp equals con.Crp into Contrato
                           from contra in Contrato.DefaultIfEmpty()
                           join sup in _context.Usuario on contra.Supervisor1Id equals sup.UsuarioId into Supervisor
