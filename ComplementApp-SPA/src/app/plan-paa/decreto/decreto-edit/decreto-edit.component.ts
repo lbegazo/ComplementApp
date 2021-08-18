@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ValidarValorIngresado } from 'src/app/helpers/validarValorIngresado';
 import { ActividadGeneralPrincipalDto } from 'src/app/_dto/actividadGeneralPrincipalDto';
 import { ActividadGeneral } from 'src/app/_models/actividadGeneral';
 import { Transaccion } from 'src/app/_models/transaccion';

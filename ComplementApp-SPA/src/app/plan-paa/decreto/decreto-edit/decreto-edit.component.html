@@ -22,26 +22,41 @@
           <tr>
             <td style="padding: 0px 15px">
               <div class="form-row mt-2">
-                <div style="width: 10%" class="inner center">
+                <div style="width: 8%" class="inner center">
                   <label class="col-form-label-md">Identificación</label>
                 </div>
-                <div style="width: 40%" class="inner center">
+                <div style="width: 41%" class="inner center">
                   <label class="col-form-label-md">Nombre</label>
                 </div>
-                <div style="width: 12%" class="inner center">
-                  <label class="col-form-label-md">Aprop. Vigente</label>
+                <div style="width: 11%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Apropiación<br />
+                    Vigente</label
+                  >
                 </div>
-                <div style="width: 12%" class="inner center">
-                  <label class="col-form-label-md">Aprop. Disponible</label>
+                <div style="width: 11%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Apropiación<br />
+                    Disponible</label
+                  >
                 </div>
-                <div style="width: 5%" class="inner center">
-                  <label class="col-form-label-md">FF</label>
+                <div style="width: 7%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Fuente de<br />
+                    Financiación</label
+                  >
                 </div>
-                <div style="width: 3%" class="inner center">
-                  <label class="col-form-label-md">SF</label>
+                <div style="width: 7%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Situación de<br />
+                    Fondos</label
+                  >
                 </div>
-                <div style="width: 18%" class="inner center">
-                  <label class="col-form-label-md">RP</label>
+                <div style="width: 15%" class="inner center">
+                  <label class="col-form-label-md"
+                    >Recurso<br />
+                    Presupuestal</label
+                  >
                 </div>
               </div>
               <div *ngIf="listaActividadGeneral">
@@ -52,26 +67,26 @@
                 >
                   <ng-container [formGroupName]="i">
                     <div
-                      style="width: 10%"
+                      style="width: 8%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">
+                      <p class="fontSmaller">
                         {{ item?.rubroPresupuestal.identificacion }}
                       </p>
                     </div>
-                    <div style="width: 40%" class="inner left aplicaBackground">
-                      <p class="medium">
+                    <div style="width: 41%" class="inner left aplicaBackground">
+                      <p class="fontSmaller">
                         {{ item?.rubroPresupuestal.nombre }}
                       </p>
                     </div>
                     <div
-                      style="width: 12%"
+                      style="width: 11%"
                       class="inner center aplicaBackground"
                     >
                       <input
                         type="text"
                         style="text-align: right; height: 30px"
-                        class="form-control col-form-label"
+                        class="form-control col-form-label fontSmaller"
                         formControlName="rubroControlVigente"
                         appDecimalMask
                         placeholder="Aprop. vigente"
@@ -92,13 +107,13 @@
                       </div>
                     </div>
                     <div
-                      style="width: 12%"
+                      style="width: 11%"
                       class="inner center aplicaBackground"
                     >
                       <input
                         type="text"
                         style="text-align: right; height: 30px"
-                        class="form-control col-form-label"
+                        class="form-control col-form-label fontSmaller"
                         formControlName="rubroControlDisponible"
                         appDecimalMask
                         placeholder="Aprop. disponible"
@@ -136,28 +151,35 @@
                       </div>
                     </div>
                     <div
-                      style="width: 5%"
+                      style="width: 7%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">
+                      <p class="fontSmaller">
                         {{ item?.fuenteFinanciacion?.nombre }}
                       </p>
                     </div>
                     <div
-                      style="width: 3%"
+                      style="width: 7%"
                       class="inner center aplicaBackground"
                     >
-                      <p class="medium">
+                      <p class="fontSmaller">
                         {{ item?.situacionFondo?.nombre }}
                       </p>
                     </div>
-                    <div style="width: 18%" class="inner left aplicaBackground">
-                      <p class="medium">
+                    <div
+                      style="width: 15%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p class="fontSmaller">
                         {{
-                          item?.recursoPresupuestal?.nombre?.length > 27
-                            ? (item?.recursoPresupuestal?.nombre
-                                | slice: 0:27) + ".."
-                            : item?.recursoPresupuestal?.nombre
+                          item?.recursoPresupuestal?.nombre?.length > 20
+                            ? (item?.recursoPresupuestal?.codigo +
+                                "-" +
+                                item?.recursoPresupuestal?.nombre
+                                | slice: 0:20) + ".."
+                            : item?.recursoPresupuestal?.codigo +
+                              "-" +
+                              item?.recursoPresupuestal?.nombre
                         }}
                       </p>
                     </div>
@@ -166,18 +188,21 @@
               </div>
               <!--Valores Totales-->
               <div class="form-row mt-2">
-                <div style="width: 20%" class="inner center"></div>
-                <div style="width: 54%" class="inner center"></div>
-                <div style="width: 13%" class="inner right">
-                  <p class="paragraph">
-                    {{ valorTotalVigente | number: "1.2-2" }}
+                <div style="width: 8%" class="inner center"></div>
+                <div style="width: 41%" class="inner center"></div>
+                <div style="width: 11%" class="inner right">
+                  <p class="fontSmaller">
+                    {{ valorTotalVigente | number: "1.0-0" }}
                   </p>
                 </div>
-                <div style="width: 13%" class="inner right">
-                  <p class="paragraph">
-                    {{ valorTotalDisponible | number: "1.2-2" }}
+                <div style="width: 11%" class="inner right">
+                  <p class="fontSmaller">
+                    {{ valorTotalDisponible | number: "1.0-0" }}
                   </p>
                 </div>
+                <div style="width: 7%" class="inner center"></div>
+                <div style="width: 7%" class="inner center"></div>
+                <div style="width: 15%" class="inner center"></div>
               </div>
             </td>
           </tr>

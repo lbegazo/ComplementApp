@@ -48,5 +48,9 @@ table {
   .form-inline .form-group {
     vertical-align:bottom;
   }
+
+  .fontSmaller {
+    font-size: 13px;
+  }
   
   

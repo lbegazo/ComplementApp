@@ -469,21 +469,27 @@ export class PlanAdquisicionComponent implements OnInit {
   validarValorActividadEspecifica() {
     let respuesta = false;
     let esNegativo = false;
+    let valorIngresado = 0;
 
-    const saldoActual = this.planAdquisicionSeleccionado.saldoAct;
+    if (
+      this.planAdquisicionSeleccionado !== null &&
+      this.planAdquisicionSeleccionado !== undefined
+    ) {
+      const saldoActual = this.planAdquisicionSeleccionado.saldoAct;
 
-    const valorIngresado = +GeneralService.obtenerValorAbsoluto(
-      this.valorCtrl.value
-    );
-    esNegativo = valorIngresado > 0 ? false : true;
+      valorIngresado = +GeneralService.obtenerValorAbsoluto(
+        this.valorCtrl.value
+      );
+      esNegativo = valorIngresado > 0 ? false : true;
 
-    if (esNegativo) {
-      const valorDiferencia = saldoActual + valorIngresado;
-      if (valorDiferencia < 0) {
-        this.alertify.error(
-          'El valor ingresado debe ser menor o igual al saldo'
-        );
-        return;
+      if (esNegativo) {
+        const valorDiferencia = saldoActual + valorIngresado;
+        if (valorDiferencia < 0) {
+          this.alertify.error(
+            'El valor ingresado debe ser menor o igual al saldo'
+          );
+          return;
+        }
       }
     }
 

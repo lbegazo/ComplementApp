@@ -144,6 +144,7 @@ import { UsuarioEditNewComponent } from './administracion/usuario/usuario-edit-n
 import { NegativeDecimalMaskDirective } from './_directives/negative-decimal-mask.directive';
 import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
 import { VincularCdpSolicitudEditComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud-edit/vincular-cdp-solicitud-edit.component';
+import { GraficoTestComponent } from './grafico/test/graficoTest/graficoTest.component';
 
 
 defineLocale('es', esLocale);
@@ -243,6 +244,7 @@ export function tokenGetter() {
     UsuarioEditNewComponent,
     VincularCdpSolicitudComponent,
     VincularCdpSolicitudEditComponent,
+    GraficoTestComponent,
   ],
   imports: [
     BrowserModule,
