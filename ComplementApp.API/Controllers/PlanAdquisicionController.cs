@@ -194,6 +194,19 @@ namespace ComplementApp.API.Controllers
 
             var listaDto = _mapper.Map<IEnumerable<DetalleCDPDto>>(pagedList);
 
+            foreach (var item in listaDto)
+            {
+                var listaPlanHistorico = _dataContext.PlanAdquisicionHistorico.Where(x => x.PlanAdquisicioId == item.DetalleCdpId).ToList();
+                if (listaPlanHistorico != null)
+                {
+                    var planHistoricoInicial = listaPlanHistorico.OrderBy(x => x.PlanAdquisicionHistoricoId).FirstOrDefault();
+                    if (planHistoricoInicial != null)
+                    {
+                        item.ValorAct = planHistoricoInicial.Valor;
+                    }
+                }
+            }
+
             Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
                                 pagedList.TotalCount, pagedList.TotalPages);
             return Ok(listaDto);

@@ -2307,7 +2307,7 @@
           type="submit"
           class="btn btn-light mr-2"
           (click)="abrirPopupCargaArchivo()"
-          [disabled]="true"
+          [disabled]="!habilitaDatosRegistrados || solicitudRegistrada"
         >
           Cargar archivos
         </button>
