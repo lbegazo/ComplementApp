@@ -50,6 +50,13 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "decimal(30,8)")]
         public decimal Valor_Convenio { get; set; }
+
+        [Column(TypeName = "decimal(30,8)")]
+        public decimal ValorInicial { get; set; }
+
+        [Column(TypeName = "decimal(30,8)")]
+        public decimal ValorModificacion { get; set; }
+
         public int Convenio { get; set; }
         public int ActividadGeneralId { get; set; }
         public int ActividadEspecificaId { get; set; }
@@ -61,7 +68,7 @@ namespace ComplementApp.API.Models
         public int DecretoId { get; set; }
         public int PciId { get; set; }
         public Pci Pci { get; set; }
-        public int EstadoId { get; set; }        
+        public int EstadoId { get; set; }
         public int UsuarioIdRegistro { get; set; }
         public DateTime? FechaRegistro { get; set; }
         public int UsuarioIdModificacion { get; set; }

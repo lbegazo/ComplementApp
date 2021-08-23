@@ -68,6 +68,7 @@ namespace ComplementApp.API.Services
                 planAdquisicionNuevo.ActividadEspecificaId = planAdquisicion.ActividadEspecifica.ActividadEspecificaId;
                 planAdquisicionNuevo.ValorAct = planAdquisicion.ValorAct;
                 planAdquisicionNuevo.SaldoAct = planAdquisicion.ValorAct;
+                planAdquisicionNuevo.ValorInicial = planAdquisicion.ValorAct;
                 planAdquisicionNuevo.AplicaContrato = planAdquisicion.AplicaContrato;
                 planAdquisicionNuevo.UsuarioId = planAdquisicion.UsuarioId;
                 planAdquisicionNuevo.DependenciaId = planAdquisicion.DependenciaId;
@@ -76,6 +77,7 @@ namespace ComplementApp.API.Services
                 planAdquisicionNuevo.EstadoId = (int)EstadoPlanAdquisicion.Generado;
                 planAdquisicionNuevo.UsuarioIdRegistro = planAdquisicion.UsuarioIdRegistro;
                 planAdquisicionNuevo.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+
                 if (planAdquisicion.RubroPresupuestal != null)
                 {
                     planAdquisicionNuevo.RubroPresupuestalId = planAdquisicion.RubroPresupuestal.RubroPresupuestalId;
@@ -122,6 +124,7 @@ namespace ComplementApp.API.Services
                     planAdquisicionBD.AplicaContrato = planAdquisicion.AplicaContrato;
                     planAdquisicionBD.SaldoAct = planAdquisicionBD.SaldoAct + planAdquisicion.ValorAct;
                     planAdquisicionBD.ValorAct = planAdquisicionBD.ValorAct + planAdquisicion.ValorAct;
+                    planAdquisicionBD.ValorModificacion = planAdquisicionBD.ValorModificacion + planAdquisicion.ValorAct;
                     planAdquisicionBD.AplicaContrato = planAdquisicion.AplicaContrato;
                     planAdquisicionBD.DependenciaId = planAdquisicion.DependenciaId;
                     planAdquisicionBD.Crp = planAdquisicion.Crp;

@@ -338,7 +338,7 @@ namespace ComplementApp.API.Services
                 dr["DESCRIPCION_COMPRA"] = item.PlanDeCompras;
                 dr["CDP"] = item.Cdp;
                 dr["VALOR_INICIAL"] = item.ValorAct;
-                dr["VALOR_MODIF"] = item.ValorModif;
+                dr["VALOR_MODIF"] = item.ValorModificacion;
                 dr["SALDO_ACTUAL"] = item.SaldoAct;
                 dr["VALOR_CDP"] = item.ValorCDP;
                 dr["VALOR_COMPROM"] = item.ValorRP;

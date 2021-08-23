@@ -180,6 +180,7 @@ namespace ComplementApp.API.Services
         {
             if (operacion == 1)
             {
+                valor = (-1) * valor;
                 actividad.SaldoPorProgramar = actividad.SaldoPorProgramar + valor;
             }
             else

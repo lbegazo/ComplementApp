@@ -19,7 +19,8 @@ export class DetalleCDP {
   dependenciaDescripcion: string;
   valorAct: number;
   saldoAct: number;
-  valorModif: number;
+  valorInicial: number;
+  valorModificacion: number;
   valorCDP: number;
   saldoCDP: number;
   valorRP: number;

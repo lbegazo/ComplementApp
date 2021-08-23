@@ -442,8 +442,10 @@ namespace ComplementApp.API.Data
                                  PlanDeCompras = d.PlanDeCompras,
                                  Cdp = d.Cdp,
 
+                                 ValorInicial = d.ValorInicial,
+                                 ValorModificacion = d.ValorModificacion,
+
                                  ValorAct = d.ValorAct,
-                                 ValorModif = 0,
                                  SaldoAct = d.SaldoAct,
                                  ValorCDP = d.ValorCDP,
                                  ValorRP = d.ValorRP,
@@ -456,7 +458,7 @@ namespace ComplementApp.API.Data
                                  Area = d.AreaId > 0 ? a.Nombre : string.Empty,
                              })
                                 .Distinct()
-                                .OrderBy(x => x.Cdp);
+                                .OrderBy(x => x.DetalleCdpId);
 
                     #endregion Administrador o Coordinador Financiero
                 }
@@ -483,7 +485,9 @@ namespace ComplementApp.API.Data
                                  Cdp = d.Cdp,
 
                                  ValorAct = d.ValorAct,
-                                 ValorModif = 0,
+
+                                 ValorInicial = d.ValorInicial,
+                                 ValorModificacion = d.ValorModificacion,
                                  SaldoAct = d.SaldoAct,
                                  ValorCDP = d.ValorCDP,
                                  ValorRP = d.ValorRP,
@@ -496,7 +500,7 @@ namespace ComplementApp.API.Data
                                  Area = d.AreaId > 0 ? a.Nombre : string.Empty,
                              })
                                 .Distinct()
-                                .OrderBy(x => x.Cdp);
+                                .OrderBy(x => x.DetalleCdpId);
 
                     #endregion Usuario
                 }

@@ -18,9 +18,10 @@ namespace ComplementApp.API.Dtos
         public string Dependencia { get; set; }
         public decimal ValorAct { get; set; }
         public decimal SaldoAct { get; set; }
+        public decimal ValorInicial { get; set; }
         //Cabecera
         public decimal ValorCDP { get; set; }
-        public decimal ValorModif { get; set; }
+        public decimal ValorModificacion { get; set; }
 
         //Cabecera
         public decimal SaldoCDP { get; set; }
