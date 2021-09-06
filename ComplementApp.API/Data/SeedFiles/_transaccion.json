@@ -326,7 +326,7 @@
     "Nombre": "Metas de Ejecución Presupuestal",
     "Descripcion": "Metas de Ejecución Presupuestal",
     "Icono": "assessment",
-    "Ruta": "",
+    "Ruta": "CONSULTAS_METAS",
     "CodigoPadreTransaccion": "CONSULTAS"
   },
   {

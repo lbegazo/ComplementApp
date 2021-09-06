@@ -206,9 +206,11 @@
                       style="width: 8%"
                       class="inner right aplicaBackground fontSmaller"
                     >
-                      <p>
-                        {{ item?.valorModificacion | number: "1.2-2" }}
-                      </p>
+                      <a
+                        [routerLink]=""
+                        (click)="abrirPopupGeneral(item?.detalleCdpId, 10)"
+                        >{{ item?.valorModificacion | number: "1.2-2" }}</a
+                      >
                     </div>
                     <div
                       style="width: 8%"

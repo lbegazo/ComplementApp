@@ -73,6 +73,11 @@ namespace ComplementApp.API.Controllers
             usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             SolicitudCDP solicitud = null;
             DetalleSolicitudCDP detalle = null;
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
             //PlanAdquisicion planAdquisicion = null;
             List<DetalleSolicitudCDP> listaDetalle = new List<DetalleSolicitudCDP>();
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
@@ -91,6 +96,7 @@ namespace ComplementApp.API.Controllers
                         solicitud.UsuarioIdRegistro = usuarioId;
                         solicitud.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                         solicitud.EstadoSolicitudCDPId = solicitudCDP.EstadoSolicitudCDP.EstadoId;
+                        solicitud.PciId = pciId;
 
                         solicitud.NumeroActividad = solicitudCDP.NumeroActividad;
                         solicitud.AplicaContrato = solicitudCDP.AplicaContrato;
@@ -155,6 +161,7 @@ namespace ComplementApp.API.Controllers
                         solicitud.UsuarioIdRegistro = usuarioId;
                         solicitud.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                         solicitud.EstadoSolicitudCDPId = solicitudCDP.EstadoSolicitudCDP.EstadoId;
+                        solicitud.PciId = pciId;
 
                         solicitud.NumeroActividad = solicitudCDP.NumeroActividad;
                         solicitud.AplicaContrato = solicitudCDP.AplicaContrato;

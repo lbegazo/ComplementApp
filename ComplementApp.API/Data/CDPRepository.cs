@@ -207,7 +207,61 @@ namespace ComplementApp.API.Data
 
         public async Task<PagedList<CDPDto>> ObtenerDetallePlanAnualAdquisicion(long cdp, int instancia, UserParams userParams)
         {
-            var lista = (from c in _context.CDP
+            IQueryable<CDPDto> lista = Enumerable.Empty<CDPDto>().AsQueryable();
+
+            if (instancia == 10)
+            {
+                int id = 0;
+                var listaPrimaria = (from c in _context.PlanAdquisicionHistorico
+                                     where c.PlanAdquisicioId == cdp
+                                     where c.PciId == userParams.PciId
+                                     select c.PlanAdquisicionHistoricoId)
+                                    .ToList();
+
+                if (listaPrimaria != null && listaPrimaria.Count > 0)
+                {
+                    id = listaPrimaria.Min();
+
+                    lista = (from c in _context.PlanAdquisicionHistorico
+                             join t in _context.Transaccion on c.TransaccionId equals t.TransaccionId
+                             join u in _context.Usuario on c.UsuarioId equals u.UsuarioId
+                             where c.PlanAdquisicioId == cdp
+                             where c.PciId == userParams.PciId
+                             where c.PlanAdquisicionHistoricoId != id
+                             select new CDPDto()
+                             {
+                                 CdpId = c.PlanAdquisicioId,
+                                 Cdp = c.PlanAdquisicionHistoricoId,
+                                 Fecha = c.FechaRegistro.Value,
+                                 Operacion = c.Valor,
+                                 Detalle1 = t.Nombre,
+                                 Detalle2 = u.Nombres + " " + u.Apellidos,
+                             })
+                       .Distinct();
+                }
+                else
+                {
+                    lista = (from c in _context.PlanAdquisicionHistorico
+                             join t in _context.Transaccion on c.TransaccionId equals t.TransaccionId
+                             join u in _context.Usuario on c.UsuarioId equals u.UsuarioId
+                             where c.PlanAdquisicioId == cdp
+                             where c.PciId == userParams.PciId
+                             select new CDPDto()
+                             {
+                                 CdpId = c.PlanAdquisicioId,
+                                 Cdp = c.PlanAdquisicionHistoricoId,
+                                 Fecha = c.FechaRegistro.Value,
+                                 Operacion = c.Valor,
+                                 Detalle1 = t.Nombre,
+                                 Detalle2 = u.Nombres + " " + u.Apellidos,
+                             })
+                      .Distinct()
+                      .AsQueryable();
+                }
+            }
+            else
+            {
+                lista = (from c in _context.CDP
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId into TerceroCdp
                          from terceroCdp in TerceroCdp.DefaultIfEmpty()
                          where c.Cdp == cdp
@@ -226,7 +280,6 @@ namespace ComplementApp.API.Data
                              ValorTotal = c.ValorTotal,
                              SaldoActual = c.SaldoActual,
                              Detalle1 = c.Detalle1,
-                             //Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                              Detalle4 = c.Detalle4,
                              NumeroIdentificacionTercero = c.TerceroId > 0 ? terceroCdp.NumeroIdentificacion : string.Empty,
                              NombreTercero = c.TerceroId > 0 ? terceroCdp.Nombre : string.Empty,
@@ -235,24 +288,24 @@ namespace ComplementApp.API.Data
                                                 (instancia == (int)TipoDocumento.Obligacion ? c.Obligacion :
                                                 (instancia == (int)TipoDocumento.OrdenPago ? c.OrdenPago : 0))))
                          })
-                         .Distinct();
-
+                            .Distinct()
+                            .AsQueryable();
+            }
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
-
         }
 
         public async Task<PagedList<CDPDto>> ObtenerListaCdpParaVinculacion(long? cdp, int instancia, UserParams userParams)
         {
             var listaSolicitud = (from pp in _context.SolicitudCDP
-                                    where pp.PciId == userParams.PciId
-                                    where pp.Cdp != null 
-                                    select pp.Cdp).ToHashSet();
+                                  where pp.PciId == userParams.PciId
+                                  where pp.Cdp != null
+                                  select pp.Cdp).ToHashSet();
 
             var lista = (from c in _context.CDP
                          join rp in _context.RubroPresupuestal on c.RubroPresupuestalId equals rp.RubroPresupuestalId
                          where c.PciId == userParams.PciId
                          where c.Instancia == instancia
-                          where !listaSolicitud.Contains(c.Cdp)
+                         where !listaSolicitud.Contains(c.Cdp)
                          where c.Cdp == cdp || cdp == null
                          select new CDPDto()
                          {

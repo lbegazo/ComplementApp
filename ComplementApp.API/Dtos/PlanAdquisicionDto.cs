@@ -1,3 +1,4 @@
+using System;
 using ComplementApp.API.Models;
 
 namespace ComplementApp.API.Dtos
@@ -56,6 +57,7 @@ namespace ComplementApp.API.Dtos
         public CDP CdpDocumento { get; set; }
         public ValorSeleccion Responsable { get; set; }
         public Pci Pci { get; set; }
+        public DateTime FechaEstimadaContratacion { get; set; }
 
     }
 }

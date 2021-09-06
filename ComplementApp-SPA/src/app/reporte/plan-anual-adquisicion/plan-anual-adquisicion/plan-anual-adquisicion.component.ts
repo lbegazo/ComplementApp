@@ -29,6 +29,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 import { PlanAdquisicionService } from 'src/app/_services/planAdquisicion.service';
 import { environment } from 'src/environments/environment';
 import { PopupDetallePlanAdquisicionComponent } from './popup-detalle-plan-adquisicion/popup-detalle-plan-adquisicion.component';
+import { PopupDetallePlanHistoricoComponent } from './popup-detalle-plan-historico/popup-detalle-plan-historico.component';
 
 @Component({
   selector: 'app-plan-anual-adquisicion',
@@ -75,7 +76,6 @@ export class PlanAnualAdquisicionComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private planAdquisicionService: PlanAdquisicionService,
-    private router: Router,
     private modalService: BsModalService,
     private changeDetection: ChangeDetectorRef
   ) {}
@@ -281,7 +281,11 @@ export class PlanAnualAdquisicionComponent implements OnInit {
   abrirPopupGeneral(cdp: number, instancia: number) {
     this.cdp = cdp;
     this.instancia = instancia;
-    this.abrirPopupDetallePlanAdquisicion();
+    if (instancia === 10) {
+      this.abrirPopupDetallePlanHistorico();
+    } else {
+      this.abrirPopupDetallePlanAdquisicion();
+    }
   }
 
   abrirPopupDetallePlanAdquisicion() {
@@ -295,6 +299,39 @@ export class PlanAnualAdquisicionComponent implements OnInit {
 
     this.bsModalRef = this.modalService.show(
       PopupDetallePlanAdquisicionComponent,
+      Object.assign({ initialState }, { class: 'gray modal-xl' })
+    );
+
+    //#endregion Abrir Popup
+
+    //#region Cargar información del popup (OnHidden event)
+
+    const combine = combineLatest([this.modalService.onHidden]).subscribe(() =>
+      this.changeDetection.markForCheck()
+    );
+
+    this.subscriptions.push(
+      this.modalService.onHidden.subscribe((reason: string) => {
+        this.unsubscribe();
+      })
+    );
+
+    this.subscriptions.push(combine);
+
+    //#endregion Cargar información del popup (OnHidden event)
+  }
+
+  abrirPopupDetallePlanHistorico() {
+    //#region Abrir Popup
+
+    const initialState = {
+      title: 'Plan Anual de Adquisiciones Historico',
+      cdp: this.cdp,
+      instancia: this.instancia,
+    };
+
+    this.bsModalRef = this.modalService.show(
+      PopupDetallePlanHistoricoComponent,
       Object.assign({ initialState }, { class: 'gray modal-xl' })
     );
 

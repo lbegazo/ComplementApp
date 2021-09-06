@@ -76,6 +76,8 @@ namespace ComplementApp.API.Data
                                     UsuarioId = d.UsuarioId,
                                     DependenciaId = d.DependenciaId,
                                     AplicaContrato = d.AplicaContrato,
+                                    FechaEstimadaContratacion = d.FechaEstimadaContratacion,
+
                                     ActividadGeneral = new ActividadGeneral()
                                     {
                                         ActividadGeneralId = d.ActividadGeneralId,

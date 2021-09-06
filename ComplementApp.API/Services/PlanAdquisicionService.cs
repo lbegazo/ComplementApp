@@ -77,6 +77,7 @@ namespace ComplementApp.API.Services
                 planAdquisicionNuevo.EstadoId = (int)EstadoPlanAdquisicion.Generado;
                 planAdquisicionNuevo.UsuarioIdRegistro = planAdquisicion.UsuarioIdRegistro;
                 planAdquisicionNuevo.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                planAdquisicionNuevo.FechaEstimadaContratacion = planAdquisicion.FechaEstimadaContratacion;
 
                 if (planAdquisicion.RubroPresupuestal != null)
                 {
@@ -132,6 +133,7 @@ namespace ComplementApp.API.Services
                     planAdquisicionBD.UsuarioId = planAdquisicion.UsuarioId;
                     planAdquisicionBD.UsuarioIdModificacion = planAdquisicion.UsuarioIdRegistro;
                     planAdquisicionBD.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
+                    planAdquisicionBD.FechaEstimadaContratacion = planAdquisicion.FechaEstimadaContratacion;
                     await _dataContext.SaveChangesAsync();
 
                     actividadEspecificaBD = await _repoActividad.ObtenerActividadEspecificaBase(planAdquisicion.ActividadEspecifica.ActividadEspecificaId);

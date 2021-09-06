@@ -49,4 +49,5 @@ export class DetalleCDP {
   rubroPresupuestal: RubroPresupuestal;
   cdpDocumento: Cdp;
   responsable: ValorSeleccion;
+  fechaEstimadaContratacion: Date;
 }

@@ -145,6 +145,8 @@ import { NegativeDecimalMaskDirective } from './_directives/negative-decimal-mas
 import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
 import { VincularCdpSolicitudEditComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud-edit/vincular-cdp-solicitud-edit.component';
 import { GraficoTestComponent } from './grafico/test/graficoTest/graficoTest.component';
+import { PopupDetallePlanHistoricoComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/popup-detalle-plan-historico/popup-detalle-plan-historico.component';
+import { MetaEjecucionPresupuestalComponent } from './reporte/meta-ejecucion-presupuestal/meta-ejecucion-presupuestal.component';
 
 
 defineLocale('es', esLocale);
@@ -237,6 +239,7 @@ export function tokenGetter() {
     SolicitudDisponibilidadPresupuestalEditComponent,
     PlanAnualAdquisicionComponent,
     PopupDetallePlanAdquisicionComponent,
+    PopupDetallePlanHistoricoComponent,
     InformePagoProveedorComponent,
     DetalleInformePagoProveedorComponent,
     CargaMasivaOrdenPagoComponent,
@@ -245,6 +248,7 @@ export function tokenGetter() {
     VincularCdpSolicitudComponent,
     VincularCdpSolicitudEditComponent,
     GraficoTestComponent,
+    MetaEjecucionPresupuestalComponent
   ],
   imports: [
     BrowserModule,

@@ -23,7 +23,6 @@ import { TipoOperacion } from 'src/app/_models/tipoOperacion';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { CdpService } from 'src/app/_services/cdp.service';
 import { GeneralService } from 'src/app/_services/general.service';
 import { ListaService } from 'src/app/_services/lista.service';
 import { SolicitudCdpService } from 'src/app/_services/solicitudCdp.service';

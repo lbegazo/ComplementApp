@@ -19,6 +19,8 @@ namespace ComplementApp.API.Models
 
         public int Prod { get; set; }
 
+        public DateTime FechaEstimadaContratacion { get; set; }
+
         [Column(TypeName = "VARCHAR(500)")]
         public string PlanDeCompras { get; set; }
 
@@ -72,7 +74,7 @@ namespace ComplementApp.API.Models
         public int UsuarioIdRegistro { get; set; }
         public DateTime? FechaRegistro { get; set; }
         public int UsuarioIdModificacion { get; set; }
-        public DateTime? FechaModificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }        
 
         [NotMapped]
         public ActividadEspecifica ActividadEspecifica { get; set; }

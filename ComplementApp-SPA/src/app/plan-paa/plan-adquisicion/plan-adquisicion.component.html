@@ -258,6 +258,37 @@
                   />
                   <div class="invalid-feedback">Debe ingresar el valor</div>
                 </div>
+                <!--FECHA ESTIMADA CONTRATACION-->
+                <div class="form-group col-md-2 parent" style="margin: 0px">
+                  <label for="inputFechaInicio" class="col-form-label-md"
+                    >Fecha estimada contratación</label
+                  >
+
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                      facturaHeaderForm.get('fechaContratacionCtrl').errors &&
+                      facturaHeaderForm.get('fechaContratacionCtrl').touched
+                    }"
+                    class="form-control border border-bottom-0 addPadding"
+                    placeholder="Fecha de contratación"
+                    formControlName="fechaContratacionCtrl"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    id="inputFechaInicio"
+                    style="height: 33px; text-align: center"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                    facturaHeaderForm.get('fechaContratacionCtrl').touched &&
+                    facturaHeaderForm.get('fechaContratacionCtrl').hasError('required')
+                    "
+                  >
+                    La fecha de contratación es requerida
+                  </div>
+                </div>
                 <!--APLICA CONTRATO-->
                 <div class="form-group col-md-2 parent" style="margin: 0px">
                   <div class="aplicaBackground child" style="padding: 4px 8px">
@@ -270,6 +301,7 @@
                     </label>
                   </div>
                 </div>
+                
               </div>
             </td>
           </tr>

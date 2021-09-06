@@ -347,9 +347,7 @@ export class SolicitudDisponibilidadPresupuestalEditComponent
             'Hubó un error al registrar la liquidación ' + error
           );
         },
-        () => {
-          this.esCancelado.emit(true);
-        }
+        () => {}
       );
     }
   }

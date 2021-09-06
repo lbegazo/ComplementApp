@@ -56,6 +56,7 @@ import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/
 import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
 import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
+import { MetaEjecucionPresupuestalComponent } from './reporte/meta-ejecucion-presupuestal/meta-ejecucion-presupuestal.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -332,6 +333,16 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: InformePagoProveedorComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },  
+  {
+    path: 'CONSULTAS_METAS',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: MetaEjecucionPresupuestalComponent,
     resolve: {
       transaccion: TransaccionResolver,
       usuarioLogueado: UsuarioDetalleResolver,

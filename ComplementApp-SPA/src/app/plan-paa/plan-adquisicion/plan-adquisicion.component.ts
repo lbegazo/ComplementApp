@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -7,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { combineLatest } from 'rxjs';
 import { Subscription } from 'rxjs';
@@ -17,7 +19,6 @@ import { DetalleCDP } from 'src/app/_models/detalleCDP';
 import { EstadoModificacion } from 'src/app/_models/enum';
 import { RubroPresupuestal } from 'src/app/_models/rubroPresupuestal';
 import { Transaccion } from 'src/app/_models/transaccion';
-import { Usuario } from 'src/app/_models/usuario';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
 import { PlanAdquisicionService } from 'src/app/_services/planAdquisicion.service';
@@ -65,6 +66,7 @@ export class PlanAdquisicionComponent implements OnInit {
 
   facturaHeaderForm = new FormGroup({});
   nombreValor = 'Valor Actividad';
+  bsConfig: Partial<BsDaterangepickerConfig>;
 
   constructor(
     private alertify: AlertifyService,
@@ -88,6 +90,7 @@ export class PlanAdquisicionComponent implements OnInit {
     this.facturaHeaderForm = this.fb.group({
       nombreCtrl: ['', Validators.required],
       valorCtrl: [0, Validators.required],
+      fechaContratacionCtrl: ['', Validators.required],
       responsableCtrl: [null, Validators.required],
       dependenciaCtrl: [null, Validators.required],
       aplicaContratoCtrl: [null],
@@ -131,12 +134,32 @@ export class PlanAdquisicionComponent implements OnInit {
     if (this.facturaHeaderForm.valid) {
       const respuesta = this.validarValorActividadEspecifica();
       if (respuesta) {
+        const formValues = Object.assign({}, this.facturaHeaderForm.value);
+
+        //#region Read dates
+
+        let dateFechaContratacion = null;
+        const valueFechaInicio = formValues.fechaContratacionCtrl;
+
+        if (GeneralService.isValidDate(valueFechaInicio)) {
+          dateFechaContratacion = valueFechaInicio;
+        } else {
+          if (valueFechaInicio && valueFechaInicio.indexOf('-') > -1) {
+            dateFechaContratacion =
+              GeneralService.dateString2Date(valueFechaInicio);
+          }
+        }
+
+        //#endregion Read dates
+
         if (this.accion) {
           //#region Agregar
 
           this.inicioPlanAdquisicionId = this.inicioPlanAdquisicionId + 1;
           const planAdquisicionNuevo = new DetalleCDP();
           planAdquisicionNuevo.planAdquisicionId = this.inicioPlanAdquisicionId;
+          planAdquisicionNuevo.fechaEstimadaContratacion =
+            dateFechaContratacion;
           planAdquisicionNuevo.planDeCompras = this.nombreCtrl.value;
           planAdquisicionNuevo.rubroPresupuestal = new RubroPresupuestal();
           planAdquisicionNuevo.rubroPresupuestal.rubroPresupuestalId =
@@ -170,6 +193,8 @@ export class PlanAdquisicionComponent implements OnInit {
           //#endregion Agregar
         } else {
           //#region Modificar
+          this.planAdquisicionSeleccionado.fechaEstimadaContratacion =
+            dateFechaContratacion;
           (this.planAdquisicionSeleccionado.planDeCompras =
             this.nombreCtrl.value),
             (this.planAdquisicionSeleccionado.aplicaContrato =
@@ -325,6 +350,7 @@ export class PlanAdquisicionComponent implements OnInit {
         this.facturaHeaderForm = this.fb.group({
           nombreCtrl: ['', Validators.required],
           valorCtrl: [0, Validators.required],
+          fechaContratacionCtrl: ['', Validators.required],
           responsableCtrl: [null, Validators.required],
           dependenciaCtrl: [null, Validators.required],
           aplicaContratoCtrl: [null],
@@ -392,11 +418,20 @@ export class PlanAdquisicionComponent implements OnInit {
 
   cargarPlanAquisicion() {
     if (this.planAdquisicionId > 0) {
+      let fechaEstimadaContratacion = null;
+
       this.planAdquisicionSeleccionado = this.listaPlanAdquisicion.filter(
         (x) => x.planAdquisicionId === this.planAdquisicionId
       )[0];
 
       if (this.planAdquisicionSeleccionado !== null) {
+        if (this.planAdquisicionSeleccionado.fechaEstimadaContratacion.toString() === '0001-01-01T00:00:00') {
+          fechaEstimadaContratacion = new Date();
+        } else {
+          fechaEstimadaContratacion =
+            this.planAdquisicionSeleccionado.fechaEstimadaContratacion;
+        }
+
         this.responsableSeleccionado = this.listaResponsable.filter(
           (x) => x.id === this.planAdquisicionSeleccionado.usuarioId
         )[0];
@@ -425,6 +460,11 @@ export class PlanAdquisicionComponent implements OnInit {
           responsableCtrl: this.responsableSeleccionado,
           dependenciaCtrl: this.dependenciaSeleccionado,
           aplicaContratoCtrl: aplicaContrato,
+          fechaContratacionCtrl: formatDate(
+            fechaEstimadaContratacion,
+            'dd-MM-yyyy',
+            'en'
+          ),
         });
       }
     }

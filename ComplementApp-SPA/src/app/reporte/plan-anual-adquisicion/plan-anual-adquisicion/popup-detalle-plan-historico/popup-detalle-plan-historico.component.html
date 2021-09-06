@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <form #editForm="ngForm" id="editForm" [formGroup]="popupForm">
+            <div class="row">
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label fontMedium"><strong>NUM.</strong></label>
+              </div>             
+              <div style="width: 10%" class="inner aplicaBackground center">
+                <label class="col-form-label fontMedium"><strong>FECHA</strong></label>
+              </div>
+              <div style="width: 20%" class="inner aplicaBackground center">
+                <label class="col-form-label fontMedium"><strong>VALOR<br>OPERACION</strong></label>
+              </div>
+              <div style="width: 30%" class="inner aplicaBackground center">
+                <label class="col-form-label fontMedium"><strong>TRANSACCION</strong></label>
+              </div>
+              <div style="width: 30%" class="inner aplicaBackground center">
+                <label class="col-form-label fontMedium"><strong>USUARIO</strong></label>
+              </div>
+            </div>
+            <div *ngIf="listaCdp">
+              <div
+                formArrayName="planPagoControles"
+                class="row"
+                *ngFor="let item of listaCdp; let i = index"
+              >
+                <ng-container [formGroupName]="i">
+                  <div style="width: 10%" class="inner center">
+                    <p class="fontMedium">
+                      {{ item?.cdp }}
+                    </p>
+                  </div>                 
+                  <div style="width: 10%" class="inner center">
+                    <p class="fontMedium">
+                      {{ item?.fecha | date: "yyyy/MM/dd" }}
+                    </p>
+                  </div>
+                  <div style="width: 20%" class="inner right">
+                    <p class="fontMedium">
+                      {{ item?.operacion | number: "1.2-2" }}
+                    </p>
+                  </div>                  
+                  <div style="width: 30%" class="inner center">
+                    <p class="fontMedium">
+                      {{
+                        item?.detalle1.length > 100
+                          ? (item?.detalle1 | slice: 0:100)+'..'
+                          : item?.detalle1
+                      }}
+                    </p>
+                  </div>
+                  <div style="width: 30%" class="inner center">
+                    <p class="fontMedium">
+                      {{
+                        item?.detalle2.length > 100
+                          ? (item?.detalle2 | slice: 0:100)+'..'
+                          : item?.detalle2
+                      }}
+                    </p>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </form>
+          <div style="height: 10px"></div>
+          <div class="d-flex justify-content-center">
+            <pagination
+              [boundaryLinks]="true"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage"
+              [(ngModel)]="pagination.currentPage"
+              (pageChanged)="pageChanged($event)"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+              [ngModelOptions]="{ standalone: true }"
+              [maxSize]="pagination.maxSize"
+            ></pagination>
+          </div>
+
+          <div style="height: 10px"></div>
+
+          <div class="row">
+            <div class="col-12 right withoutPadding">
+              <button
+                type="submit"
+                class="btn btn-warning"
+                (click)="exportarExcel()"
+              >
+                Reporte
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary ml-2"
+                (click)="onAceptar()"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
