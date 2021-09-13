@@ -397,8 +397,8 @@ namespace ComplementApp.API.Services
             dt.Columns.Add(new DataColumn("ID", typeof(int)));
             dt.Columns.Add(new DataColumn("IDENTIFICACION", typeof(string)));
             dt.Columns.Add(new DataColumn("TERCERO", typeof(string)));
-            dt.Columns.Add(new DataColumn("CRP", typeof(long)));
-            dt.Columns.Add(new DataColumn("NUMERO_RADICADO", typeof(long)));
+            dt.Columns.Add(new DataColumn("CRP", typeof(string)));
+            dt.Columns.Add(new DataColumn("NUMERO_RADICADO", typeof(string)));
             dt.Columns.Add(new DataColumn("FECHA_RADICADO", typeof(string)));
             dt.Columns.Add(new DataColumn("VALOR_FACTURADO", typeof(decimal)));
             dt.Columns.Add(new DataColumn("TIENE_CLAVE", typeof(string)));         

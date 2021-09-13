@@ -289,6 +289,58 @@ export class DetalleLiquidacionService {
       );
   }
 
+  public DescargarListaDetalleLiquidacion(
+    listaEstadoId: string,
+    terceroId?: number,
+    procesado?: number,
+    page?,
+    pagesize?
+  ): Observable<HttpEvent<Blob>> {
+    let parametros = new HttpParams();
+    parametros = parametros.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      parametros = parametros.append('terceroId', terceroId.toString());
+    }
+    if (procesado != null) {
+      parametros = parametros.append('procesado', procesado.toString());
+    }
+    if (page != null) {
+      parametros = parametros.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      parametros = parametros.append('pageSize', pagesize);
+    }
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarListaDetalleLiquidacion'}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+          params: parametros,
+        }
+      )
+    );
+  }
+
+  ValidarLiquidacionSinClavePresupuestal(
+    listaEstadoId: string,
+    terceroId?: number
+  ): Observable<RespuestaSolicitudPago> {
+    const path = 'ValidarLiquidacionSinClavePresupuestal';
+
+    let params = new HttpParams();
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+
+    return this.http.get<RespuestaSolicitudPago>(this.baseUrl + path, {
+      params,
+    });
+  }
+
   ObtenerListaLiquidacionIdParaArchivo(
     listaLiquidacionId: string,
     listaEstadoId: string,
@@ -327,41 +379,6 @@ export class DetalleLiquidacionService {
     return this.http.get<RespuestaSolicitudPago>(this.baseUrl + path, {
       params,
     });
-  }
-
-  public DescargarListaDetalleLiquidacion(
-    listaEstadoId: string,
-    terceroId?: number,
-    procesado?: number,
-    page?,
-    pagesize?
-  ): Observable<HttpEvent<Blob>> {
-    let parametros = new HttpParams();
-    parametros = parametros.append('listaEstadoId', listaEstadoId);
-    if (terceroId > 0) {
-      parametros = parametros.append('terceroId', terceroId.toString());
-    }
-    if (procesado != null) {
-      parametros = parametros.append('procesado', procesado.toString());
-    }
-    if (page != null) {
-      parametros = parametros.append('pageNumber', page);
-    }
-    if (pagesize != null) {
-      parametros = parametros.append('pageSize', pagesize);
-    }
-    return this.http.request(
-      new HttpRequest(
-        'GET',
-        `${this.baseUrl + 'DescargarListaDetalleLiquidacion'}`,
-        null,
-        {
-          reportProgress: true,
-          responseType: 'blob',
-          params: parametros,
-        }
-      )
-    );
   }
 
   public DescargarArchivoLiquidacionObligacion(

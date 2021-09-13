@@ -120,29 +120,50 @@ export class ObligacionPresupuestalComponent implements OnInit {
       EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
 
     this.liquidacionService
-      .ObtenerLiquidacionesParaArchivoObligacion(
+      .ValidarLiquidacionSinClavePresupuestal(
         this.listaEstadoId,
-        this.terceroId,
-        0,
-        this.pagination.currentPage,
-        this.pagination.itemsPerPage
+        this.terceroId
       )
       .subscribe(
-        (documentos: PaginatedResult<FormatoCausacionyLiquidacionPago[]>) => {
-          this.listaPlanPago = documentos.result;
-          this.pagination = documentos.pagination;
-
-          this.crearControlesDeArray();
+        (response: RespuestaSolicitudPago) => {
+          if (response && response.respuesta) {
+            this.alertify.error(
+              'Existen compromisos que no tienen clave presupuestal contable'
+            );
+          }
         },
         (error) => {
           this.alertify.error(error);
         },
         () => {
-          this.facturaHeaderForm = this.fb.group({
-            terceroCtrl: [''],
-            terceroDescripcionCtrl: [''],
-            planPagoControles: this.arrayControls,
-          });
+          this.liquidacionService
+            .ObtenerLiquidacionesParaArchivoObligacion(
+              this.listaEstadoId,
+              this.terceroId,
+              0,
+              this.pagination.currentPage,
+              this.pagination.itemsPerPage
+            )
+            .subscribe(
+              (
+                documentos: PaginatedResult<FormatoCausacionyLiquidacionPago[]>
+              ) => {
+                this.listaPlanPago = documentos.result;
+                this.pagination = documentos.pagination;
+
+                this.crearControlesDeArray();
+              },
+              (error) => {
+                this.alertify.error(error);
+              },
+              () => {
+                this.facturaHeaderForm = this.fb.group({
+                  terceroCtrl: [''],
+                  terceroDescripcionCtrl: [''],
+                  planPagoControles: this.arrayControls,
+                });
+              }
+            );
         }
       );
   }

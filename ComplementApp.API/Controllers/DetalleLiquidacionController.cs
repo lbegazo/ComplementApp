@@ -461,46 +461,6 @@ namespace ComplementApp.API.Controllers
         }
 
 
-        [Route("[action]")]
-        [HttpGet]
-        public async Task<IActionResult> DescargarListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
-                                                             [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
-                                                             [FromQuery(Name = "procesado")] int? procesado,
-                                                             [FromQuery] UserParams userParams)
-        {
-            string nombreArchivo = "DetalleLiquidacion.xlsx";
-            try
-            {
-                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
-                if (!string.IsNullOrEmpty(valorPciId))
-                {
-                    pciId = int.Parse(valorPciId);
-                }
-                userParams.PciId = pciId;
-                userParams.PageSize = pageSizeMax;
-                List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
-                bool? esProcesado = null;
-
-                if (procesado.HasValue)
-                {
-                    esProcesado = (procesado.Value == 1) ? (true) : (false);
-                }
-
-                var pagedList = await _repo.ObtenerLiquidacionesParaObligacionArchivo(terceroId, listIds, esProcesado, userParams);
-                var lista = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
-
-                if (lista != null)
-                {
-                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDetalleLiquidacion(lista.ToList());
-                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return BadRequest();
-        }
         #region Archivo Cuenta Por Pagar
 
         [HttpGet]
@@ -644,6 +604,28 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<IActionResult> ValidarLiquidacionSinClavePresupuestal([FromQuery(Name = "terceroId")] int? terceroId,
+                                                                                [FromQuery(Name = "listaEstadoId")] string listaEstadoId)
+        {
+            bool respuesta = false;
+            RespuestaSolicitudPago respuestaSolicitud = new RespuestaSolicitudPago();
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+
+            List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+
+            respuesta = await _repo.ValidarLiquidacionSinClavePresupuestal(terceroId, listIds, pciId);
+            respuestaSolicitud.Respuesta = respuesta;
+
+            return base.Ok(respuestaSolicitud);
+        }
+
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<IActionResult> ObtenerLiquidacionesParaArchivoObligacion([FromQuery(Name = "terceroId")] int? terceroId,
                                                              [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                              [FromQuery(Name = "procesado")] int? procesado,
@@ -670,6 +652,48 @@ namespace ComplementApp.API.Controllers
                                 pagedList.TotalCount, pagedList.TotalPages);
 
             return base.Ok(listaDto);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
+                                                           [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                           [FromQuery(Name = "procesado")] int? procesado,
+                                                           [FromQuery] UserParams userParams)
+        {
+            string nombreArchivo = "DetalleLiquidacion.xlsx";
+            try
+            {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
+                userParams.PageNumber = 1;
+                userParams.PageSize = pageSizeMax;
+                List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+                bool? esProcesado = null;
+
+                if (procesado.HasValue)
+                {
+                    esProcesado = (procesado.Value == 1) ? (true) : (false);
+                }
+
+                var pagedList = await _repo.ObtenerLiquidacionesParaObligacionArchivo(terceroId, listIds, esProcesado, userParams);
+                var lista = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
+
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDetalleLiquidacion(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
         }
 
 

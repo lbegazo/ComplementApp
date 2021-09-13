@@ -379,6 +379,35 @@ namespace ComplementApp.API.Data
             return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
+        public async Task<bool> ValidarLiquidacionSinClavePresupuestal(
+                           int? terceroId,
+                           List<int> listaEstadoId,
+                           int pciId)
+        {
+            bool respuesta = false;
+            var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
+                                           where pp.PciId == pciId
+                                           select pp.Crp).ToHashSet();
+
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
+                               where dl.PciId == pciId
+                               where (dl.TerceroId == terceroId || terceroId == null)
+                               where !listaCompromisoConClave.Contains(dl.Crp)
+                               where (dl.Procesado == false)
+                               select dl.DetalleLiquidacionId
+                         )
+                         .Distinct()
+                         .ToListAsync();
+
+            if (lista != null && lista.Count > 0)
+            {
+                respuesta = true;
+            }
+
+            return respuesta;
+        }
+
         public async Task<List<int>> ObtenerLiquidacionesConClaveParaArchivoObligacion(int pciId, List<int> listaLiquidacionId)
         {
             var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
