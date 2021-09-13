@@ -1,6 +1,7 @@
 using System;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
+using ComplementApp.API.Models.ExcelDocumento;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -111,6 +112,10 @@ namespace ComplementApp.API.Data
         public DbSet<CargaObligacion> CargaObligacion { get; set; }
         public DbSet<NivelAgrupacionPac> NivelAgrupacionPac { get; set; }
         public DbSet<PlanAdquisicionHistorico> PlanAdquisicionHistorico { get; set; }
+        public DbSet<DocumentoCdp> DocumentoCdp { get; set; }
+        public DbSet<DocumentoCompromiso> DocumentoCompromiso { get; set; }
+        public DbSet<DocumentoObligacion> DocumentoObligacion { get; set; }
+        public DbSet<DocumentoOrdenPago> DocumentoOrdenPago { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

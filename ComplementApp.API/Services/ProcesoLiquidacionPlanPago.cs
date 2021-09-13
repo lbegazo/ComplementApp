@@ -44,6 +44,7 @@ namespace ComplementApp.API.Services
         private readonly IGeneralInterface _generalInterface;
         private readonly ITerceroRepository _terceroRepository;
         private readonly ISolicitudPagoRepository _solicitudPagoRepository;
+        private readonly IClavePresupuestalContableRepository _clavePresupuestalRepository;
         private readonly DataContext _dataContext;
 
         #endregion Dependency Injection
@@ -55,6 +56,7 @@ namespace ComplementApp.API.Services
                                             IGeneralInterface generalInterface,
                                             ITerceroRepository terceroRepository,
                                             ISolicitudPagoRepository solicitudPagoRepository,
+                                            IClavePresupuestalContableRepository clavePresupuestalRepository,
                                             DataContext dataContext)
         {
             this._planPagoRepository = planPagoRepository;
@@ -64,6 +66,7 @@ namespace ComplementApp.API.Services
             this._generalInterface = generalInterface;
             this._terceroRepository = terceroRepository;
             this._solicitudPagoRepository = solicitudPagoRepository;
+            this._clavePresupuestalRepository = clavePresupuestalRepository;
             _dataContext = dataContext;
         }
 
@@ -2691,6 +2694,43 @@ namespace ComplementApp.API.Services
 
         #endregion Liquidación Masiva
 
+        public async Task VincularClavePresupuestalAListaSolicitudPago(List<int> liquidacionIds)
+        {
+            //Obtener lista liquidaciones sin clave presupuestal
+            var listaLiquidacion = await _repo.ObtenerListaDetalleLiquidacionSinClavePresupuestalXIds(liquidacionIds);
+
+            if (listaLiquidacion != null && listaLiquidacion.Count > 0)
+            {
+                var liquidacionSinClaveIds = listaLiquidacion.Select(x => x.DetalleLiquidacionId).ToHashSet();
+
+                //Obtener detalles de solicitudes de pago
+                List<DetalleFormatoSolicitudPago> listaDetalleTotal = await _solicitudPagoRepository.ObtenerDetalleSolicitudPagoLiquidacionIds(liquidacionSinClaveIds.ToList());
+
+                foreach (var liquidacion in listaLiquidacion)
+                {
+                    //Obtener la lista de claves para un compromiso
+                    var listaClave = await _clavePresupuestalRepository.ObtenerClavesPresupuestalContableXCompromiso(Convert.ToInt32(liquidacion.Crp), liquidacion.PciId.Value);
+
+                    //Filtro la lista de detalles para el formato de solicitud de pago
+                    List<DetalleFormatoSolicitudPago> listaDetalle = listaDetalleTotal.Where(x => x.FormatoSolicitudPago.FormatoSolicitudPagoId == liquidacion.FormatoSolicitudPagoId).ToList();
+
+                    foreach (var detalle in listaDetalle)
+                    {
+                        var item = listaClave.Where(c => c.RubroPresupuestal.Id == detalle.RubroPresupuestalId
+                                                    && c.Dependencia == detalle.Dependencia).FirstOrDefault();
+
+                        if (item != null)
+                        {
+                            var detalleBD = await _solicitudPagoRepository.ObtenerDetalleFormatoSolicitudPagoBase(detalle.DetalleFormatoSolicitudPagoId);
+
+                            detalleBD.ClavePresupuestalContableId = item.ClavePresupuestalContableId;
+                            _dataContext.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
+
         private bool FechaActualEntreFechasVigencia(DateTime fechaInicio, DateTime fechaFinal)
         {
             DateTime fechaActual = _generalInterface.ObtenerFechaHoraActual();
@@ -2742,8 +2782,6 @@ namespace ComplementApp.API.Services
 
             return criterio;
         }
-
-
         private decimal ObtenerValorViaticosAnteriores(List<DetalleLiquidacion> listaDetalleLiquidacion)
         {
             decimal valor = 0;

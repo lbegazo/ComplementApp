@@ -8,14 +8,15 @@ using Microsoft.AspNetCore.Http;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
+using ComplementApp.API.Models.ExcelDocumento;
 
 namespace ComplementApp.API.Controllers
 {
-
     public class DocumentoController : BaseApiController
     {
 
         #region Propiedades
+
         private readonly IDocumentoRepository _repo;
         private readonly DataContext _dataContext;
         private readonly IProcesoDocumentoExcel _documento;
@@ -134,6 +135,67 @@ namespace ComplementApp.API.Controllers
             }
             return Ok();
         }
+
+        #region Carga Registro Gestion Presupuestal
+
+        [HttpPost]
+        [Route("ActualizarDocumentosBase")]
+        public IActionResult ActualizarDocumentosBase()
+        {
+
+            if (Request.Form.Files.Count > 0)
+            {
+                using var transaction = _dataContext.Database.BeginTransaction();
+
+                try
+                {
+                    IFormFile file = Request.Form.Files[0];
+
+                    if (file == null || file.Length <= 0)
+                        return BadRequest("El archivo se encuentra vacío");
+
+                    if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                        return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
+
+                    #region Obtener información del archivo excel
+
+                    DataTable dtCabecera = _documento.ObtenerInformacionDocumentoCdp(file);
+
+                    #endregion
+
+                    #region Mapear datos en la lista de Dtos
+
+                    List<DocumentoCdp> listaDocumento = _documento.obtenerListaDocumentoCdp(dtCabecera);
+
+                    #endregion
+
+                    var result = _documento.EliminarInformacionCDP();
+
+                    #region Insertar lista en la base de datos
+
+                    var EsCabeceraCorrecto = _repo.InsertarListaDocumentoCDP(listaDocumento);
+
+                    #endregion Insertar lista en la base de datos
+
+                    if (!EsCabeceraCorrecto)
+                        throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                return BadRequest("El archivo no pudo ser enviado al servidor web");
+            }
+
+            return Ok();
+        }
+
+        #endregion Carga Registro Gestion Presupuestal
 
     }
 }

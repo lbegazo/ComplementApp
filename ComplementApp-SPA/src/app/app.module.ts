@@ -147,7 +147,8 @@ import { VincularCdpSolicitudEditComponent } from './SolicitudGestionPresupuesta
 import { GraficoTestComponent } from './grafico/test/graficoTest/graficoTest.component';
 import { PopupDetallePlanHistoricoComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/popup-detalle-plan-historico/popup-detalle-plan-historico.component';
 import { MetaEjecucionPresupuestalComponent } from './reporte/meta-ejecucion-presupuestal/meta-ejecucion-presupuestal.component';
-
+import { IntegracionSiifNacionModule } from './integracion-siif-nacion/integracion-siif-nacion.module';
+import { TramitePagoModule } from './tramite-pago/tramite-pago.module';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -248,7 +249,7 @@ export function tokenGetter() {
     VincularCdpSolicitudComponent,
     VincularCdpSolicitudEditComponent,
     GraficoTestComponent,
-    MetaEjecucionPresupuestalComponent
+    MetaEjecucionPresupuestalComponent,
   ],
   imports: [
     BrowserModule,
@@ -281,6 +282,8 @@ export function tokenGetter() {
         blacklistedRoutes: ['localhost:5000/api/auth'],
       },
     }),
+    IntegracionSiifNacionModule,
+    TramitePagoModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-Co' },

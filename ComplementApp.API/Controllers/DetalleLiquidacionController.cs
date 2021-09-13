@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace ComplementApp.API.Controllers
         int pciId = 0;
         string valorPciId = string.Empty;
 
+        int pageSizeMax = 1000;
+
         #endregion
 
         #region Dependency Injection
@@ -41,6 +44,7 @@ namespace ComplementApp.API.Controllers
         private readonly ITerceroRepository _terceroRepository;
         private readonly IProcesoCreacionArchivo _procesoCreacionArchivo;
         private readonly ISolicitudPagoRepository _solicitudPagoRepository;
+        private readonly IProcesoCreacionArchivoExcel _procesoCreacionExcelInterface;
 
         #endregion Dependency Injection
 
@@ -53,7 +57,8 @@ namespace ComplementApp.API.Controllers
                                     IListaRepository listaRepository,
                                     ITerceroRepository terceroRepository,
                                     IProcesoCreacionArchivo procesoCreacionArchivo,
-                                    ISolicitudPagoRepository solicitudPagoRepository)
+                                    ISolicitudPagoRepository solicitudPagoRepository,
+                                    IProcesoCreacionArchivoExcel procesoCreacionExcelInterface)
         {
             this._mapper = mapper;
             this._repo = repo;
@@ -67,6 +72,7 @@ namespace ComplementApp.API.Controllers
             this._repoLista = listaRepository;
             this._procesoCreacionArchivo = procesoCreacionArchivo;
             this._solicitudPagoRepository = solicitudPagoRepository;
+            this._procesoCreacionExcelInterface = procesoCreacionExcelInterface;
         }
 
         [Route("[action]")]
@@ -358,7 +364,7 @@ namespace ComplementApp.API.Controllers
                     planNuevo.UsuarioIdRegistro = usuarioId;
                     planNuevo.FechaRegistro = _generalInterface.ObtenerFechaHoraActual();
                     await _dataContext.PlanPago.AddAsync(planNuevo);
-                    await _dataContext.SaveChangesAsync();                    
+                    await _dataContext.SaveChangesAsync();
 
                     //Enviar email
                     var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
@@ -390,15 +396,15 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
-        
-          [Route("[action]")]
+
+        [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> RechazarLiquidacion([FromQuery(Name = "detalleLiquidacionId")] int detalleLiquidacionId,
-                                                             [FromQuery(Name = "solicitudPagoId")] int solicitudPagoId,
-                                                             [FromQuery(Name = "planPagoId")] int planPagoId,
-                                                             [FromQuery(Name = "mensajeRechazo")] string mensajeRechazo)
+                                                           [FromQuery(Name = "solicitudPagoId")] int solicitudPagoId,
+                                                           [FromQuery(Name = "planPagoId")] int planPagoId,
+                                                           [FromQuery(Name = "mensajeRechazo")] string mensajeRechazo)
         {
-            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);            
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             await using var transaction = await _dataContext.Database.BeginTransactionAsync();
             try
@@ -440,7 +446,7 @@ namespace ComplementApp.API.Controllers
             throw new Exception($"No se pudo registrar el formato de liquidación");
         }
 
-        
+
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult> ObtenerListaActividadesEconomicaXTercero([FromQuery(Name = "terceroId")] int terceroId)
@@ -454,6 +460,47 @@ namespace ComplementApp.API.Controllers
             return base.Ok(lista);
         }
 
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> DescargarListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
+                                                             [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                             [FromQuery(Name = "procesado")] int? procesado,
+                                                             [FromQuery] UserParams userParams)
+        {
+            string nombreArchivo = "DetalleLiquidacion.xlsx";
+            try
+            {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
+                userParams.PageSize = pageSizeMax;
+                List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+                bool? esProcesado = null;
+
+                if (procesado.HasValue)
+                {
+                    esProcesado = (procesado.Value == 1) ? (true) : (false);
+                }
+
+                var pagedList = await _repo.ObtenerLiquidacionesParaObligacionArchivo(terceroId, listIds, esProcesado, userParams);
+                var lista = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
+
+                if (lista != null)
+                {
+                    DataTable dtResultado = _procesoCreacionExcelInterface.ObtenerTablaDetalleLiquidacion(lista.ToList());
+                    return _procesoCreacionExcelInterface.ExportExcel(Response, dtResultado, nombreArchivo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
+        }
         #region Archivo Cuenta Por Pagar
 
         [HttpGet]
@@ -632,7 +679,6 @@ namespace ComplementApp.API.Controllers
                                                                                 [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                                                 [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
                                                                                 [FromQuery(Name = "terceroId")] int? terceroId,
-                                                                                [FromQuery(Name = "tipoArchivoObligacionId")] int? tipoArchivoObligacionId,
                                                                                 [FromQuery(Name = "conRubroFuncionamiento")] int? conRubroFuncionamiento,
                                                                                 [FromQuery(Name = "conRubroUsoPresupuestal")] int? conRubroUsoPresupuestal
 
@@ -700,6 +746,9 @@ namespace ComplementApp.API.Controllers
 
                 //Filtrar solo liquidaciones con clave presupuestal contable
                 listaIdsConClavePresupuestal = await _repo.ObtenerLiquidacionesConClaveParaArchivoObligacion(pciId, liquidacionIdsTotal);
+
+                //Vincular clave presupuestal contable a lista de solicitud de pago pendientes
+                await _procesoLiquidacion.VincularClavePresupuestalAListaSolicitudPago(listaIdsConClavePresupuestal);
 
                 #region Filtrar lista de liquidaciones Por inversión o Funcionamiento
 
@@ -1114,7 +1163,7 @@ namespace ComplementApp.API.Controllers
 
             return true;
         }
-        
+
         private string EliminarCaracteresEspeciales(string texto)
         {
             var normalizedString = texto.Normalize(NormalizationForm.FormD);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Models;
+using ComplementApp.API.Models.ExcelDocumento;
 
 namespace ComplementApp.API.Interfaces.Repository
 {
@@ -20,5 +21,9 @@ namespace ComplementApp.API.Interfaces.Repository
         bool EliminarDetalleCDP();
 
         bool EliminarCabeceraCDPXInstancia(int instancia);
+
+        bool EliminarDatosDocumentoCDP();
+
+        bool InsertarListaDocumentoCDP(IList<DocumentoCdp> listaCdp);
     }
 }

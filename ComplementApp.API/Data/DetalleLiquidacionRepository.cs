@@ -342,9 +342,6 @@ namespace ComplementApp.API.Data
                     bool? procesado,
                     UserParams userParams)
         {
-            //int modalidadContrato = (int)ModalidadContrato.ContratoPrestacionServicio;
-            //int estadoPlanPago_ConLiquidacionDeducciones = (int)EstadoPlanPago.ConLiquidacionDeducciones;
-
             var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
                                            where pp.PciId == userParams.PciId
                                            select pp.Crp).ToHashSet();
@@ -475,6 +472,8 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
+
+
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
@@ -521,6 +520,27 @@ namespace ComplementApp.API.Data
                 listaFinal = lista.OrderBy(x => x.FechaRegistro).ToList();
             }
             return listaFinal;
+        }
+
+        public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionSinClavePresupuestalXIds(List<int> listaLiquidacionId)
+        {
+            //cusba
+            var lista = await (from dl in _context.DetalleLiquidacion
+                               join sp in _context.FormatoSolicitudPago on new { Crp = dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value, dl.PciId } equals
+                                                                           new { Crp = sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId, sp.PciId }
+                               join dsp in _context.DetalleFormatoSolicitudPago on new { sp.FormatoSolicitudPagoId } equals new { dsp.FormatoSolicitudPagoId }
+                               where (listaLiquidacionId.Contains(dl.DetalleLiquidacionId))
+                               where dsp.ClavePresupuestalContableId == null
+                               select new DetalleLiquidacion()
+                               {
+                                   DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                                   Crp = dl.Crp,
+                                   PciId = dl.PciId,
+                                   FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId,
+                               })
+                    .ToListAsync();
+
+            return lista;
         }
 
         public async Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId)

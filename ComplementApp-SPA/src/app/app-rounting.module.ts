@@ -1,17 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './_guards/auth.guard';
-import { UsuarioMainComponent } from './Usuario/usuario-main/usuario-main.component';
-import { UsuarioStartComponent } from './Usuario/usuario-start/usuario-start.component';
-import { UsuarioDetailComponent } from './Usuario/usuario-detail/usuario-detail.component';
-import { UsuarioEditComponent } from './Usuario/usuario-edit/usuario-edit.component';
 import { HomeComponent } from './home/home.component';
 import { UsuarioDetalleResolver } from './_resolvers/usuario-detalle.resolver';
 import { PreventUnsavedChangesUsuario } from './_guards/prevent-unsaved-changes-usuario.guard';
 import { FacturaMainComponent } from './facturaCompromiso/factura-main/factura-main.component';
 import { CausacionyLiquidacionComponent } from './CausacionyLiquidacion/CausacionyLiquidacion.component';
 import { ArchivoMainComponent } from './archivo/archivo-main/archivo-main.component';
-import { PlanPagoResolver } from './_resolvers/planPago.resolver';
 import { TransaccionResolver } from './_resolvers/transaccion.resolver';
 import { CargaArchivoXmlComponent } from './carga-archivo-xml/carga-archivo-xml.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
@@ -21,7 +16,6 @@ import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion
 import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
 import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
-import { UsuarioDetalleParametroResolver } from './_resolvers/usuario-detalle-parametro.resolver';
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
@@ -49,7 +43,6 @@ import { EjecucionPresupuestalComponent } from './plan-paa/ejecucion-presupuesta
 import { PlanAdquisicionComponent } from './plan-paa/plan-adquisicion/plan-adquisicion.component';
 import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
 import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
-import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
@@ -57,6 +50,8 @@ import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pa
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
 import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
 import { MetaEjecucionPresupuestalComponent } from './reporte/meta-ejecucion-presupuestal/meta-ejecucion-presupuestal.component';
+import { CargaGestionPresupuestalComponent } from './integracion-siif-nacion/carga-gestion-presupuestal/carga-gestion-presupuestal.component';
+import { RegistroAprobacionSolicitudPagoComponent } from './tramite-pago/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -337,7 +332,7 @@ export const routes: Routes = [
       transaccion: TransaccionResolver,
       usuarioLogueado: UsuarioDetalleResolver,
     },
-  },  
+  },
   {
     path: 'CONSULTAS_METAS',
     canActivate: [AuthGuard],
@@ -352,7 +347,7 @@ export const routes: Routes = [
     path: 'INTEGRACION_GESTIONPRESUPUESTAL',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
-    component: CargaArchivoXmlComponent,
+    component: CargaGestionPresupuestalComponent,
     resolve: { transaccion: TransaccionResolver },
   },
   { path: 'not-found', component: NotFoundComponent },

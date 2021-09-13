@@ -4,6 +4,7 @@ using System.Linq;
 using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
+using ComplementApp.API.Models.ExcelDocumento;
 using EFCore.BulkExtensions;
 
 namespace ComplementApp.API.Data
@@ -16,6 +17,8 @@ namespace ComplementApp.API.Data
         {
             _context = context;
         }
+
+        #region Carga Masiva PAA
         public bool InsertaCabeceraCDP(IList<CDPDto> listaCdp)
         {
             try
@@ -171,7 +174,7 @@ namespace ComplementApp.API.Data
 
             foreach (var item in listaCdp)
             {
-                cdp = new CDP();                
+                cdp = new CDP();
 
                 cdp.Instancia = item.Instancia;
                 cdp.Cdp = item.Cdp;
@@ -619,5 +622,42 @@ namespace ComplementApp.API.Data
             _context.Tercero.Add(tercero);
             _context.SaveChanges();
         }
+
+        #endregion Carga Masiva PAA
+
+        #region Carga Registro Gestion Presupuestal
+
+        public bool EliminarDatosDocumentoCDP()
+        {
+            try
+            {
+                if (!_context.DocumentoCdp.Any())
+                    return true;
+
+                if (_context.DocumentoCdp.Any())
+                    return _context.CDP.BatchDelete() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return false;
+        }
+
+
+        public bool InsertarListaDocumentoCDP(IList<DocumentoCdp> listaCdp)
+        {
+            try
+            {
+                _context.BulkInsert(listaCdp);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        #endregion Carga Registro Gestion Presupuestal
     }
 }

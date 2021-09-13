@@ -251,6 +251,38 @@ namespace ComplementApp.API.Data
             return await _context.FormatoSolicitudPago.FirstOrDefaultAsync(u => u.FormatoSolicitudPagoId == formatoSolicitudPagoId);
         }
 
+        public async Task<DetalleFormatoSolicitudPago> ObtenerDetalleFormatoSolicitudPagoBase(int detalleFormatoSolicitudPagoId)
+        {
+            return await _context.DetalleFormatoSolicitudPago.FirstOrDefaultAsync(u => u.DetalleFormatoSolicitudPagoId == detalleFormatoSolicitudPagoId);
+        }
+
+        public async Task<List<DetalleFormatoSolicitudPago>> ObtenerDetalleSolicitudPagoLiquidacionIds(List<int> listaLiquidacionId)
+        {
+            var lista = await (from cpc in _context.DetalleFormatoSolicitudPago
+                               join sp in _context.FormatoSolicitudPago on cpc.FormatoSolicitudPagoId equals sp.FormatoSolicitudPagoId
+                               join dl in _context.DetalleLiquidacion on new { sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId, sp.PciId } equals
+                                                                         new { dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value, dl.PciId }
+                               where listaLiquidacionId.Contains(dl.DetalleLiquidacionId)
+                               where sp.PlanPagoId == dl.PlanPagoId
+                               select new DetalleFormatoSolicitudPago()
+                               {
+                                   DetalleFormatoSolicitudPagoId = cpc.DetalleFormatoSolicitudPagoId,
+                                   RubroPresupuestalId = cpc.RubroPresupuestalId,
+                                   Dependencia = cpc.Dependencia,
+                                   FormatoSolicitudPago = new FormatoSolicitudPago()
+                                   {
+                                       FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value,
+                                       Crp = dl.Crp,
+                                       PciId = dl.PciId,
+                                   }
+
+                               })
+                               .Distinct()
+                               .ToListAsync();
+
+            return lista;
+        }
+
         public async Task<List<long>> ObtenerListaCompromisoXNumeroContrato(string numeroContrato)
         {
             var listaCompromiso = (from c in _context.Contrato

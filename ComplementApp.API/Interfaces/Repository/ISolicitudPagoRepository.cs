@@ -20,6 +20,9 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<PagedList<CDPDto>> ObtenerListaSolicitudPagoAprobada(int? terceroId, UserParams userParams);
         Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPagoXId(int formatoSolicitudPagoId);
         Task<FormatoSolicitudPago> ObtenerFormatoSolicitudPagoBase(int formatoSolicitudPagoId);
+        Task<DetalleFormatoSolicitudPago> ObtenerDetalleFormatoSolicitudPagoBase(int detalleFormatoSolicitudPagoId);
+
+        Task<List<DetalleFormatoSolicitudPago>> ObtenerDetalleSolicitudPagoLiquidacionIds(List<int> listaLiquidacionId);
 
         Task<Numeracion> ObtenerUltimaNumeracionDisponible(int pciId);
         Task<Numeracion> ObtenerNumeracionBase(int numeracionId);

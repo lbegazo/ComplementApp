@@ -126,9 +126,7 @@ export class DetalleLiquidacionService {
     params = params.append('planPagoId', planPagoId.toString());
     params = params.append('mensajeRechazo', mensajeRechazo);
 
-    return this.http.get(
-      this.baseUrl + path, { params }
-    );
+    return this.http.get(this.baseUrl + path, { params });
   }
 
   RechazarLiquidacion(
@@ -139,16 +137,16 @@ export class DetalleLiquidacionService {
   ): Observable<any> {
     const path = 'RechazarLiquidacion/';
     let params = new HttpParams();
-    params = params.append('detalleLiquidacionId', detalleLiquidacionId.toString());
+    params = params.append(
+      'detalleLiquidacionId',
+      detalleLiquidacionId.toString()
+    );
     params = params.append('solicitudPagoId', solicitudPagoId.toString());
     params = params.append('planPagoId', planPagoId.toString());
     params = params.append('mensajeRechazo', mensajeRechazo);
 
-    return this.http.get(
-      this.baseUrl + path, { params }
-    );
+    return this.http.get(this.baseUrl + path, { params });
   }
-
 
   ObtenerFormatoCausacionyLiquidacionPago(
     solicitudPagoId: number,
@@ -296,7 +294,6 @@ export class DetalleLiquidacionService {
     listaEstadoId: string,
     seleccionarTodo: number,
     terceroId: number,
-    tipoArchivoObligacionId: number,
     conRubroFuncionamiento: number,
     conRubroUsoPresupuestal: number
   ): Observable<RespuestaSolicitudPago> {
@@ -304,10 +301,7 @@ export class DetalleLiquidacionService {
 
     let params = new HttpParams();
     params = params.append('listaEstadoId', listaEstadoId);
-    params = params.append(
-      'tipoArchivoObligacionId',
-      tipoArchivoObligacionId.toString()
-    );
+
     params = params.append(
       'conRubroFuncionamiento',
       conRubroFuncionamiento.toString()
@@ -333,6 +327,41 @@ export class DetalleLiquidacionService {
     return this.http.get<RespuestaSolicitudPago>(this.baseUrl + path, {
       params,
     });
+  }
+
+  public DescargarListaDetalleLiquidacion(
+    listaEstadoId: string,
+    terceroId?: number,
+    procesado?: number,
+    page?,
+    pagesize?
+  ): Observable<HttpEvent<Blob>> {
+    let parametros = new HttpParams();
+    parametros = parametros.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      parametros = parametros.append('terceroId', terceroId.toString());
+    }
+    if (procesado != null) {
+      parametros = parametros.append('procesado', procesado.toString());
+    }
+    if (page != null) {
+      parametros = parametros.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      parametros = parametros.append('pageSize', pagesize);
+    }
+    return this.http.request(
+      new HttpRequest(
+        'GET',
+        `${this.baseUrl + 'DescargarListaDetalleLiquidacion'}`,
+        null,
+        {
+          reportProgress: true,
+          responseType: 'blob',
+          params: parametros,
+        }
+      )
+    );
   }
 
   public DescargarArchivoLiquidacionObligacion(

@@ -35,7 +35,7 @@ namespace ComplementApp.API.Interfaces.Repository
 
         bool RegistrarDetalleArchivoLiquidacion(List<DetalleArchivoLiquidacion> listaDetalle);
 
-        int ObtenerUltimoConsecutivoArchivoLiquidacion(int pciId);
+        int ObtenerUltimoConsecutivoArchivoLiquidacion(int pciId);        
 
         #region Liquidación Masiva
 
@@ -58,6 +58,8 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<List<int>> ObtenerLiquidacionesConClaveParaArchivoObligacion(int pciId, List<int> listaLiquidacionId);
 
         Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId);
+
+        Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionSinClavePresupuestalXIds(List<int> listaLiquidacionId);
 
         Task<ICollection<ClavePresupuestalContableParaArchivo>> ObtenerItemsLiquidacionParaArchivoObligacion(List<int> listaLiquidacionId);
 

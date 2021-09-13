@@ -51,7 +51,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
   };
   liquidacionesSeleccionadas: number[] = [];
   seleccionaTodas = false;
-  
 
   constructor(
     private http: HttpClient,
@@ -318,6 +317,55 @@ export class ObligacionPresupuestalComponent implements OnInit {
     }
   }
 
+  exportarExcel() {
+    let fileName = '';
+    this.listaEstadoId =
+      EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
+
+    this.liquidacionService
+      .DescargarListaDetalleLiquidacion(
+        this.listaEstadoId,
+        this.terceroId,
+        0,
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage
+      )
+      .subscribe(
+        (response) => {
+          switch (response.type) {
+            case HttpEventType.Response:
+              const downloadedFile = new Blob([response.body], {
+                type: response.body.type,
+              });
+
+              const nombreArchivo = response.headers.get('filename');
+
+              if (nombreArchivo != null && nombreArchivo.length > 0) {
+                fileName = nombreArchivo;
+              } else {
+                fileName = 'DetalleLiquidacion.xlsx';
+              }
+
+              const a = document.createElement('a');
+              a.setAttribute('style', 'display:none;');
+              document.body.appendChild(a);
+              a.download = fileName;
+              a.href = URL.createObjectURL(downloadedFile);
+              a.target = '_blank';
+              a.click();
+              document.body.removeChild(a);
+              break;
+          }
+        },
+        (error) => {
+          this.alertify.warning(error);
+        },
+        () => {
+          this.router.navigate(['/GENERADOR_OBLIGACIONES']);
+        }
+      );
+  }
+
   ObtenerDetalleFormatoCausacionyLiquidacionPago() {
     this.liquidacionService
       .ObtenerDetalleFormatoCausacionyLiquidacionPago(
@@ -392,7 +440,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
           this.listaEstadoId,
           esSeleccionarTodas,
           this.terceroId,
-          tipoArchivoObligacion,
           conRubroFuncionamiento,
           conRubroUsoPresupuestal
         )
@@ -505,7 +552,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                 this.listaEstadoId,
                                                 esSeleccionarTodas,
                                                 this.terceroId,
-                                                tipoArchivoObligacion,
                                                 conRubroFuncionamiento,
                                                 conRubroUsoPresupuestal
                                               )
@@ -637,7 +683,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                 esSeleccionarTodas,
                                                                                 this
                                                                                   .terceroId,
-                                                                                tipoArchivoObligacion,
                                                                                 conRubroFuncionamiento,
                                                                                 conRubroUsoPresupuestal
                                                                               )
@@ -813,7 +858,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                                                       esSeleccionarTodas,
                                                                                                                       this
                                                                                                                         .terceroId,
-                                                                                                                      tipoArchivoObligacion,
                                                                                                                       conRubroFuncionamiento,
                                                                                                                       conRubroUsoPresupuestal
                                                                                                                     )
@@ -1061,613 +1105,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
           },
           () => {}
         );
-
-      // this.liquidacionService
-      //   .DescargarArchivoLiquidacionObligacion(
-      //     listaCadenaIds,
-      //     this.listaEstadoId,
-      //     esSeleccionarTodas,
-      //     this.terceroId,
-      //     tipoArchivoObligacion,
-      //     conUsoPresupuestal
-      //   )
-      //   .subscribe(
-      //     (response) => {
-      //       switch (response.type) {
-      //         case HttpEventType.Response:
-      //           if (response.body !== null) {
-      //             const downloadedFile = new Blob([response.body], {
-      //               type: response.body.type,
-      //             });
-
-      //             const nombreArchivo = response.headers.get('filename');
-
-      //             if (nombreArchivo != null && nombreArchivo.length > 0) {
-      //               fileName = nombreArchivo + '.txt';
-      //             } else {
-      //               fileName = 'SIGPAA_Maestro.txt';
-      //             }
-
-      //             const a = document.createElement('a');
-      //             a.setAttribute('style', 'display:none;');
-      //             document.body.appendChild(a);
-      //             a.download = fileName;
-      //             a.href = URL.createObjectURL(downloadedFile);
-      //             a.target = '_blank';
-      //             a.click();
-      //             document.body.removeChild(a);
-      //           }
-      //           break;
-      //       }
-      //     },
-      //     (error) => {
-      //       this.alertify.warning(error);
-      //     },
-      //     () => {
-      //       //#region Descargar archivo ITEM
-
-      //       tipoArchivoObligacion = TipoArchivoObligacion.Item.value;
-
-      //       this.liquidacionService
-      //         .DescargarArchivoLiquidacionObligacion(
-      //           listaCadenaIds,
-      //           this.listaEstadoId,
-      //           esSeleccionarTodas,
-      //           this.terceroId,
-      //           tipoArchivoObligacion,
-      //           conUsoPresupuestal
-      //         )
-      //         .subscribe(
-      //           (response) => {
-      //             switch (response.type) {
-      //               case HttpEventType.Response:
-      //                 if (response.body !== null) {
-      //                   const downloadedFile = new Blob([response.body], {
-      //                     type: response.body.type,
-      //                   });
-
-      //                   const nombreArchivo = response.headers.get('filename');
-
-      //                   if (nombreArchivo != null && nombreArchivo.length > 0) {
-      //                     fileName = nombreArchivo + '.txt';
-      //                   } else {
-      //                     fileName = 'SIGPAA_Items.txt';
-      //                   }
-
-      //                   const a = document.createElement('a');
-      //                   a.setAttribute('style', 'display:none;');
-      //                   document.body.appendChild(a);
-      //                   a.download = fileName;
-      //                   a.href = URL.createObjectURL(downloadedFile);
-      //                   a.target = '_blank';
-      //                   a.click();
-      //                   document.body.removeChild(a);
-      //                 }
-      //                 break;
-      //             }
-      //           },
-      //           (error) => {
-      //             this.alertify.warning(error);
-      //           },
-      //           () => {
-      //             //#region Descargar archivo DEDUCCIONES
-
-      //             tipoArchivoObligacion =
-      //               TipoArchivoObligacion.Deducciones.value;
-
-      //             this.liquidacionService
-      //               .DescargarArchivoLiquidacionObligacion(
-      //                 listaCadenaIds,
-      //                 this.listaEstadoId,
-      //                 esSeleccionarTodas,
-      //                 this.terceroId,
-      //                 tipoArchivoObligacion,
-      //                 conUsoPresupuestal
-      //               )
-      //               .subscribe(
-      //                 (response) => {
-      //                   switch (response.type) {
-      //                     case HttpEventType.Response:
-      //                       if (response.body !== null) {
-      //                         const downloadedFile = new Blob([response.body], {
-      //                           type: response.body.type,
-      //                         });
-
-      //                         const nombreArchivo =
-      //                           response.headers.get('filename');
-
-      //                         if (
-      //                           nombreArchivo != null &&
-      //                           nombreArchivo.length > 0
-      //                         ) {
-      //                           fileName = nombreArchivo + '.txt';
-      //                         } else {
-      //                           fileName = 'SIGPAA_Maestro.txt';
-      //                         }
-
-      //                         const a = document.createElement('a');
-      //                         a.setAttribute('style', 'display:none;');
-      //                         document.body.appendChild(a);
-      //                         a.download = fileName;
-      //                         a.href = URL.createObjectURL(downloadedFile);
-      //                         a.target = '_blank';
-      //                         a.click();
-      //                         document.body.removeChild(a);
-      //                       }
-      //                       break;
-      //                   }
-      //                 },
-      //                 (error) => {
-      //                   this.alertify.warning(error);
-      //                 },
-      //                 () => {
-      //                   //#region Descargar archivo USOS
-
-      //                   tipoArchivoObligacion =
-      //                     TipoArchivoObligacion.Usos.value;
-
-      //                   this.liquidacionService
-      //                     .DescargarArchivoLiquidacionObligacion(
-      //                       listaCadenaIds,
-      //                       this.listaEstadoId,
-      //                       esSeleccionarTodas,
-      //                       this.terceroId,
-      //                       tipoArchivoObligacion,
-      //                       conUsoPresupuestal
-      //                     )
-      //                     .subscribe(
-      //                       (response) => {
-      //                         switch (response.type) {
-      //                           case HttpEventType.Response:
-      //                             if (response.body !== null) {
-      //                               const downloadedFile = new Blob(
-      //                                 [response.body],
-      //                                 {
-      //                                   type: response.body.type,
-      //                                 }
-      //                               );
-
-      //                               const nombreArchivo =
-      //                                 response.headers.get('filename');
-
-      //                               if (
-      //                                 nombreArchivo != null &&
-      //                                 nombreArchivo.length > 0
-      //                               ) {
-      //                                 fileName = nombreArchivo + '.txt';
-      //                               } else {
-      //                                 fileName = 'SIGPAA_Maestro.txt';
-      //                               }
-
-      //                               const a = document.createElement('a');
-      //                               a.setAttribute('style', 'display:none;');
-      //                               document.body.appendChild(a);
-      //                               a.download = fileName;
-      //                               a.href =
-      //                                 URL.createObjectURL(downloadedFile);
-      //                               a.target = '_blank';
-      //                               a.click();
-      //                               document.body.removeChild(a);
-      //                             }
-      //                             break;
-      //                         }
-      //                       },
-      //                       (error) => {
-      //                         this.alertify.warning(error);
-      //                       },
-      //                       () => {
-      //                         //#region Descargar archivo FACTURA
-
-      //                         tipoArchivoObligacion =
-      //                           TipoArchivoObligacion.Factura.value;
-
-      //                         this.liquidacionService
-      //                           .DescargarArchivoLiquidacionObligacion(
-      //                             listaCadenaIds,
-      //                             this.listaEstadoId,
-      //                             esSeleccionarTodas,
-      //                             this.terceroId,
-      //                             tipoArchivoObligacion,
-      //                             conUsoPresupuestal
-      //                           )
-      //                           .subscribe(
-      //                             (response) => {
-      //                               switch (response.type) {
-      //                                 case HttpEventType.Response:
-      //                                   if (response.body !== null) {
-      //                                     const downloadedFile = new Blob(
-      //                                       [response.body],
-      //                                       {
-      //                                         type: response.body.type,
-      //                                       }
-      //                                     );
-
-      //                                     const nombreArchivo =
-      //                                       response.headers.get('filename');
-
-      //                                     if (
-      //                                       nombreArchivo != null &&
-      //                                       nombreArchivo.length > 0
-      //                                     ) {
-      //                                       fileName = nombreArchivo + '.txt';
-      //                                     } else {
-      //                                       fileName = 'SIGPAA_Maestro.txt';
-      //                                     }
-
-      //                                     const a = document.createElement('a');
-      //                                     a.setAttribute(
-      //                                       'style',
-      //                                       'display:none;'
-      //                                     );
-      //                                     document.body.appendChild(a);
-      //                                     a.download = fileName;
-      //                                     a.href =
-      //                                       URL.createObjectURL(downloadedFile);
-      //                                     a.target = '_blank';
-      //                                     a.click();
-      //                                     document.body.removeChild(a);
-      //                                   }
-      //                                   break;
-      //                               }
-      //                             },
-      //                             (error) => {
-      //                               this.alertify.warning(error);
-      //                             },
-      //                             () => {
-      //                               //#region Descargar archivo CABECERA Y NO USO PRESUPUESTAL
-
-      //                               tipoArchivoObligacion =
-      //                                 TipoArchivoObligacion.Cabecera.value;
-      //                               conUsoPresupuestal = 0;
-
-      //                               this.liquidacionService
-      //                                 .DescargarArchivoLiquidacionObligacion(
-      //                                   listaCadenaIds,
-      //                                   this.listaEstadoId,
-      //                                   esSeleccionarTodas,
-      //                                   this.terceroId,
-      //                                   tipoArchivoObligacion,
-      //                                   conUsoPresupuestal
-      //                                 )
-      //                                 .subscribe(
-      //                                   (response) => {
-      //                                     switch (response.type) {
-      //                                       case HttpEventType.Response:
-      //                                         if (response.body !== null) {
-      //                                           const downloadedFile = new Blob(
-      //                                             [response.body],
-      //                                             {
-      //                                               type: response.body.type,
-      //                                             }
-      //                                           );
-
-      //                                           const nombreArchivo =
-      //                                             response.headers.get(
-      //                                               'filename'
-      //                                             );
-
-      //                                           if (
-      //                                             nombreArchivo != null &&
-      //                                             nombreArchivo.length > 0
-      //                                           ) {
-      //                                             fileName =
-      //                                               nombreArchivo + '.txt';
-      //                                           } else {
-      //                                             fileName =
-      //                                               'SIGPAA_Maestro.txt';
-      //                                           }
-
-      //                                           const a =
-      //                                             document.createElement('a');
-      //                                           a.setAttribute(
-      //                                             'style',
-      //                                             'display:none;'
-      //                                           );
-      //                                           document.body.appendChild(a);
-      //                                           a.download = fileName;
-      //                                           a.href =
-      //                                             URL.createObjectURL(
-      //                                               downloadedFile
-      //                                             );
-      //                                           a.target = '_blank';
-      //                                           a.click();
-      //                                           document.body.removeChild(a);
-      //                                         }
-      //                                         break;
-      //                                     }
-      //                                   },
-      //                                   (error) => {
-      //                                     this.alertify.warning(error);
-      //                                   },
-      //                                   () => {
-      //                                     //#region Descargar archivo ITEM
-
-      //                                     tipoArchivoObligacion =
-      //                                       TipoArchivoObligacion.Item.value;
-
-      //                                     this.liquidacionService
-      //                                       .DescargarArchivoLiquidacionObligacion(
-      //                                         listaCadenaIds,
-      //                                         this.listaEstadoId,
-      //                                         esSeleccionarTodas,
-      //                                         this.terceroId,
-      //                                         tipoArchivoObligacion,
-      //                                         conUsoPresupuestal
-      //                                       )
-      //                                       .subscribe(
-      //                                         (response) => {
-      //                                           switch (response.type) {
-      //                                             case HttpEventType.Response:
-      //                                               if (
-      //                                                 response.body !== null
-      //                                               ) {
-      //                                                 const downloadedFile =
-      //                                                   new Blob(
-      //                                                     [response.body],
-      //                                                     {
-      //                                                       type: response.body
-      //                                                         .type,
-      //                                                     }
-      //                                                   );
-
-      //                                                 const nombreArchivo =
-      //                                                   response.headers.get(
-      //                                                     'filename'
-      //                                                   );
-
-      //                                                 if (
-      //                                                   nombreArchivo != null &&
-      //                                                   nombreArchivo.length > 0
-      //                                                 ) {
-      //                                                   fileName =
-      //                                                     nombreArchivo +
-      //                                                     '.txt';
-      //                                                 } else {
-      //                                                   fileName =
-      //                                                     'SIGPAA_Items.txt';
-      //                                                 }
-
-      //                                                 const a =
-      //                                                   document.createElement(
-      //                                                     'a'
-      //                                                   );
-      //                                                 a.setAttribute(
-      //                                                   'style',
-      //                                                   'display:none;'
-      //                                                 );
-      //                                                 document.body.appendChild(
-      //                                                   a
-      //                                                 );
-      //                                                 a.download = fileName;
-      //                                                 a.href =
-      //                                                   URL.createObjectURL(
-      //                                                     downloadedFile
-      //                                                   );
-      //                                                 a.target = '_blank';
-      //                                                 a.click();
-      //                                                 document.body.removeChild(
-      //                                                   a
-      //                                                 );
-      //                                               }
-      //                                               break;
-      //                                           }
-      //                                         },
-      //                                         (error) => {
-      //                                           this.alertify.warning(error);
-      //                                         },
-      //                                         () => {
-      //                                           //#region Descargar archivo DEDUCCIONES
-
-      //                                           tipoArchivoObligacion =
-      //                                             TipoArchivoObligacion
-      //                                               .Deducciones.value;
-
-      //                                           this.liquidacionService
-      //                                             .DescargarArchivoLiquidacionObligacion(
-      //                                               listaCadenaIds,
-      //                                               this.listaEstadoId,
-      //                                               esSeleccionarTodas,
-      //                                               this.terceroId,
-      //                                               tipoArchivoObligacion,
-      //                                               conUsoPresupuestal
-      //                                             )
-      //                                             .subscribe(
-      //                                               (response) => {
-      //                                                 switch (response.type) {
-      //                                                   case HttpEventType.Response:
-      //                                                     if (
-      //                                                       response.body !==
-      //                                                       null
-      //                                                     ) {
-      //                                                       const downloadedFile =
-      //                                                         new Blob(
-      //                                                           [response.body],
-      //                                                           {
-      //                                                             type: response
-      //                                                               .body.type,
-      //                                                           }
-      //                                                         );
-
-      //                                                       const nombreArchivo =
-      //                                                         response.headers.get(
-      //                                                           'filename'
-      //                                                         );
-
-      //                                                       if (
-      //                                                         nombreArchivo !=
-      //                                                           null &&
-      //                                                         nombreArchivo.length >
-      //                                                           0
-      //                                                       ) {
-      //                                                         fileName =
-      //                                                           nombreArchivo +
-      //                                                           '.txt';
-      //                                                       } else {
-      //                                                         fileName =
-      //                                                           'SIGPAA_Maestro.txt';
-      //                                                       }
-
-      //                                                       const a =
-      //                                                         document.createElement(
-      //                                                           'a'
-      //                                                         );
-      //                                                       a.setAttribute(
-      //                                                         'style',
-      //                                                         'display:none;'
-      //                                                       );
-      //                                                       document.body.appendChild(
-      //                                                         a
-      //                                                       );
-      //                                                       a.download =
-      //                                                         fileName;
-      //                                                       a.href =
-      //                                                         URL.createObjectURL(
-      //                                                           downloadedFile
-      //                                                         );
-      //                                                       a.target = '_blank';
-      //                                                       a.click();
-      //                                                       document.body.removeChild(
-      //                                                         a
-      //                                                       );
-      //                                                     }
-      //                                                     break;
-      //                                                 }
-      //                                               },
-      //                                               (error) => {
-      //                                                 this.alertify.warning(
-      //                                                   error
-      //                                                 );
-      //                                               },
-      //                                               () => {
-      //                                                 //#region Descargar archivo FACTURA
-
-      //                                                 tipoArchivoObligacion =
-      //                                                   TipoArchivoObligacion
-      //                                                     .Factura.value;
-
-      //                                                 this.liquidacionService
-      //                                                   .DescargarArchivoLiquidacionObligacion(
-      //                                                     listaCadenaIds,
-      //                                                     this.listaEstadoId,
-      //                                                     esSeleccionarTodas,
-      //                                                     this.terceroId,
-      //                                                     tipoArchivoObligacion,
-      //                                                     conUsoPresupuestal
-      //                                                   )
-      //                                                   .subscribe(
-      //                                                     (response) => {
-      //                                                       switch (
-      //                                                         response.type
-      //                                                       ) {
-      //                                                         case HttpEventType.Response:
-      //                                                           if (
-      //                                                             response.body !==
-      //                                                             null
-      //                                                           ) {
-      //                                                             const downloadedFile =
-      //                                                               new Blob(
-      //                                                                 [
-      //                                                                   response.body,
-      //                                                                 ],
-      //                                                                 {
-      //                                                                   type: response
-      //                                                                     .body
-      //                                                                     .type,
-      //                                                                 }
-      //                                                               );
-
-      //                                                             const nombreArchivo =
-      //                                                               response.headers.get(
-      //                                                                 'filename'
-      //                                                               );
-
-      //                                                             if (
-      //                                                               nombreArchivo !=
-      //                                                                 null &&
-      //                                                               nombreArchivo.length >
-      //                                                                 0
-      //                                                             ) {
-      //                                                               fileName =
-      //                                                                 nombreArchivo +
-      //                                                                 '.txt';
-      //                                                             } else {
-      //                                                               fileName =
-      //                                                                 'SIGPAA_Maestro.txt';
-      //                                                             }
-
-      //                                                             const a =
-      //                                                               document.createElement(
-      //                                                                 'a'
-      //                                                               );
-      //                                                             a.setAttribute(
-      //                                                               'style',
-      //                                                               'display:none;'
-      //                                                             );
-      //                                                             document.body.appendChild(
-      //                                                               a
-      //                                                             );
-      //                                                             a.download =
-      //                                                               fileName;
-      //                                                             a.href =
-      //                                                               URL.createObjectURL(
-      //                                                                 downloadedFile
-      //                                                               );
-      //                                                             a.target =
-      //                                                               '_blank';
-      //                                                             a.click();
-      //                                                             document.body.removeChild(
-      //                                                               a
-      //                                                             );
-      //                                                           }
-      //                                                           break;
-      //                                                       }
-      //                                                     },
-      //                                                     (error) => {
-      //                                                       this.alertify.warning(
-      //                                                         error
-      //                                                       );
-      //                                                     },
-      //                                                     () => {
-      //                                                       this.onLimpiarFactura();
-      //                                                       this.router.navigate(
-      //                                                         [
-      //                                                           '/GENERADOR_OBLIGACIONES',
-      //                                                         ]
-      //                                                       );
-      //                                                     }
-      //                                                   );
-
-      //                                                 //#endregion Descargar archivo FACTURA
-      //                                               }
-      //                                             );
-
-      //                                           //#endregion Descargar archivo DEDUCCIONES
-      //                                         }
-      //                                       );
-
-      //                                     //#endregion Descargar archivo ITEM
-      //                                   }
-      //                                 );
-
-      //                               //#endregion Descargar archivo CABECERA
-      //                             }
-      //                           );
-
-      //                         //#endregion  Descargar archivo FACTURA
-      //                       }
-      //                     );
-
-      //                   //#endregion  Descargar archivo USOS
-      //                 }
-      //               );
-
-      //             //#endregion Descargar archivo DEDUCCIONES
-      //           }
-      //         );
-
-      //       //#endregion Descargar archivo ITEM
-      //     }
-      //   );
 
       //#endregion Descargar archivo CABECERA
     }

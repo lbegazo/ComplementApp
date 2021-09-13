@@ -1055,6 +1055,539 @@ namespace ComplementApp.API.Migrations
                     b.ToTable("TEstado");
                 });
 
+            modelBuilder.Entity("ComplementApp.API.Models.ExcelDocumento.DocumentoCdp", b =>
+                {
+                    b.Property<int>("DocumentoCdpId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Compromisos")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("CuentasPagar")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("Dependencia")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("DependenciaDescripcion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("DescripcionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FuenteFinanciacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("IdentificacionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<long>("NumeroDocumento")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Objeto")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("Obligaciones")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("OrdenesPago")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("RecursoPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Reintegros")
+                        .HasColumnType("VARCHAR(3000)");
+
+                    b.Property<decimal>("SaldoPorComprometer")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<string>("SituacionFondo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("SolicitudCdp")
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("TipoCdp")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<decimal>("ValorActual")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorInicial")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorOperacion")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.HasKey("DocumentoCdpId");
+
+                    b.ToTable("TDocumentoCdp");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.ExcelDocumento.DocumentoCompromiso", b =>
+                {
+                    b.Property<int>("DocumentoCompromisoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Cdp")
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Compromisos")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("CuentasXPagar")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("Dependencia")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("DependenciaDescripcion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("DescripcionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("EntidadDescripcion")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("EntidadNit")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("EstadoCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaDocumentoSoporte")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FuenteFinanciacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("IdentificacionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("MedioPago")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NombreRazonSocial")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("NumeroCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<long>("NumeroDocumento")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NumeroDocumentoSoporte")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NumeroIdentificacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("Obligaciones")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("Observaciones")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("OrdenesPago")
+                        .HasColumnType("VARCHAR(6000)");
+
+                    b.Property<string>("RecursoPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Reintegros")
+                        .HasColumnType("VARCHAR(3000)");
+
+                    b.Property<decimal>("SaldoPorUtilizar")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<string>("SituacionFondo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("SolicitudCdp")
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("TipoCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoDocumentoSoporte")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoIdentificacion")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<decimal>("ValorActual")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorInicial")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorOperacion")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.HasKey("DocumentoCompromisoId");
+
+                    b.ToTable("TDocumentoCompromiso");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.ExcelDocumento.DocumentoObligacion", b =>
+                {
+                    b.Property<int>("DocumentoObligacionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Cdp")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Compromisos")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Concepto")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(3000)");
+
+                    b.Property<string>("CuentasXPagar")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Dependencia")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("DependenciaDescripcion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("DescripcionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("EntidadDescripcion")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("EntidadNit")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("EstadoCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaCuentaXPagar")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaDocumentoSoporte")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FuenteFinanciacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("IdentificacionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("MedioPago")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NombreRazonSocial")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("NumeroCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<long>("NumeroDocumento")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NumeroDocumentoSoporte")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NumeroIdentificacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("ObjetoCompromiso")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("Obligaciones")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("OrdenesPago")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("RecursoPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Reintegros")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<decimal>("SaldoPorUtilizar")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<string>("SituacionFondo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("SolicitudCdp")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoDocumentoSoporte")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoIdentificacion")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<decimal>("ValorActual")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorActual2")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorDeduccion")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorInicial")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorObligadoNoOrdenado")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorOperacion")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.HasKey("DocumentoObligacionId");
+
+                    b.ToTable("TDocumentoObligacion");
+                });
+
+            modelBuilder.Entity("ComplementApp.API.Models.ExcelDocumento.DocumentoOrdenPago", b =>
+                {
+                    b.Property<int>("DocumentoOrdenPagoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Cdp")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Compromisos")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("ConceptoPago")
+                        .HasColumnType("VARCHAR(1000)");
+
+                    b.Property<string>("CuentaPagaduria")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("CuentasXPagar")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Dependencia")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("DependenciaDescripcion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("DescripcionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("Endosada")
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("EntidadDescripcion")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("EntidadNit")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("EstadoCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<DateTime>("FechaCuentaXPagar")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaDocumentoSoporteCompromiso")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FuenteFinanciacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("IdentificacionPagaduria")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("IdentificacionRubroPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("MedioPago")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NombreRazonSocial")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("NombreRazonSocial1")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("NumeroCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NumeroCuenta1")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<long>("NumeroDocumento")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NumeroDocumentoSoporteCompromiso")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("NumeroIdentificacion")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("NumeroIdentificacion1")
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("ObjetoCompromiso")
+                        .HasColumnType("VARCHAR(250)");
+
+                    b.Property<string>("Obligaciones")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("OrdenesPago")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("RecursoPresupuestal")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.Property<string>("Reintegros")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("SituacionFondo")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)");
+
+                    b.Property<string>("SolicitudCdp")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TesoreriaPagadora")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoBeneficiario")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoCuenta")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoDocumentoSoporteCompromiso")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoIdentificacion")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<string>("TipoIdentificacion1")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.Property<decimal>("ValorBruto")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorDeduccion")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorMoneda")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorNeto")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorPesos")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorReintegradoMoneda")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<decimal>("ValorReintegradoPesos")
+                        .HasColumnType("decimal(30,8)");
+
+                    b.Property<string>("VigenciaPresupuestal")
+                        .HasColumnType("VARCHAR(100)");
+
+                    b.HasKey("DocumentoOrdenPagoId");
+
+                    b.ToTable("TDocumentoOrdenPago");
+                });
+
             modelBuilder.Entity("ComplementApp.API.Models.FormatoSolicitudPago", b =>
                 {
                     b.Property<int>("FormatoSolicitudPagoId")

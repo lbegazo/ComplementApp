@@ -1,0 +1,246 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12 addPadding">
+        <div class="modal-content">
+          <div class="modal-header" style="padding: 5px">
+            <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+            <button
+              type="button"
+              class="close pull-right"
+              aria-label="Close"
+              (click)="bsModalRef.hide()"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div
+            class="modal-body"
+            style="padding-top: 0px; background-color: gainsboro"
+          >
+            <form [formGroup]="popupForm">
+              <!--PROVEEDOR-->
+              <div class="form-row mt-3">
+                <div class="form-group col-6">
+                  <label for="inputNumeroContratista" class="col-form-label-md"
+                    >Num. radicado contratista</label
+                  >
+  
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('numeroContratistaCtrl').errors &&
+                        popupForm.get('numeroContratistaCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control border border-bottom-0 addPadding"
+                    maxlength="50"
+                    formControlName="numeroContratistaCtrl"
+                    placeholder="Ingrese número de contratista"
+                    id="inputNumeroContratista"
+                  />
+                  <div class="invalid-feedback left">
+                    Número de contratista requerido
+                  </div>
+                </div>
+                <div class="form-group col-6">
+                  <label for="inputFechaContratista" class="col-form-label-md"
+                    >Fecha radicado contratista</label
+                  >
+  
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('fechaContratistaCtrl').errors &&
+                        popupForm.get('fechaContratistaCtrl').touched
+                    }"
+                    class="form-control border border-bottom-0 addPadding"
+                    placeholder="Fecha de contratista"
+                    formControlName="fechaContratistaCtrl"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    id="inputFechaContratista"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      popupForm.get('fechaContratistaCtrl').touched &&
+                      popupForm.get('fechaContratistaCtrl').hasError('required')
+                    "
+                  >
+                    La fecha es requerida
+                  </div>
+                </div>
+              </div>
+  
+              <!--SUPERVISOR-->
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="inputNumeroSupervisor" class="col-form-label-md"
+                    >Num. radicado supervisor</label
+                  >
+  
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('numeroSupervisorCtrl').errors &&
+                        popupForm.get('numeroSupervisorCtrl').touched
+                    }"
+                    type="text"
+                    class="form-control border border-bottom-0 addPadding"
+                    maxlength="50"
+                    formControlName="numeroSupervisorCtrl"
+                    placeholder="Ingrese número de supervisor"
+                    id="inputNumeroSupervisor"                  
+                  />
+                  <div class="invalid-feedback left">
+                    Número de supervisor requerido
+                  </div>
+                </div>
+                <div class="form-group col-6">
+                  <label for="inputFechaSupervisor" class="col-form-label-md"
+                    >Fecha radicado supervisor</label
+                  >
+  
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('fechaSupervisorCtrl').errors &&
+                        popupForm.get('fechaSupervisorCtrl').touched
+                    }"
+                    class="form-control border border-bottom-0 addPadding"
+                    placeholder="Fecha de supervisor"
+                    formControlName="fechaSupervisorCtrl"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    id="inputFechaSupervisor"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      popupForm.get('fechaSupervisorCtrl').touched &&
+                      popupForm.get('fechaSupervisorCtrl').hasError('required')
+                    "
+                  >
+                    La fecha es requerida
+                  </div>
+                </div>
+              </div>
+              <!--OBSERVACIONES-->
+              <div class="form-row">
+                <div class="form-group col-12">
+                  <label for="inputObservaciones" class="col-form-label-md"
+                    >Observaciones</label
+                  >
+                  <textarea
+                    [ngClass]="{
+                      'is-invalid':
+                        popupForm.get('observacionesCtrl').errors &&
+                        popupForm.get('observacionesCtrl').touched
+                    }"
+                    name="textarea"
+                    class="form-control addPadding"
+                    formControlName="observacionesCtrl"
+                    style="width: 100%; background-color: white"
+                    id="inputObservaciones"
+                    rows="2"
+                    maxlength="100"
+                    placeholder="Ingrese las observaciones aquí"
+                    onDrag="return false"
+                    onDrop="return false"
+                    autocomplete="off"
+                    appSpecialCharacter
+                  ></textarea>
+                  <div class="invalid-feedback left">
+                    Registre el campo observaciones
+                  </div>
+                </div>
+              </div>
+              <!--RUBROS PRESUPUESTALES TITULO-->
+              <div class="form-row">
+                <div class="col-1"></div>
+                <div class="col-2 inner center">
+                  <small><strong>CODIGO</strong></small>
+                </div>
+                <div class="col-4 inner center">
+                  <small><strong>DESCRIPCION</strong></small>
+                </div>
+                <div class="col-3 inner center">
+                  <small><strong>DEPENDENCIA</strong></small>
+                </div>
+                <div class="col-2 inner center">
+                  <small><strong>VALOR SOLICITUD</strong></small>
+                </div>
+              </div>
+              <!--RUBROS PRESUPUESTALES GRILLA-->
+              <div class="form-row">
+                <div *ngIf="rubrosPresupuestales" class="form-group col-12">
+                  <div
+                    formArrayName="rubrosControles"
+                    class="form-row"
+                    *ngFor="let item of rubrosPresupuestales; let i = index"
+                  >
+                    <ng-container [formGroupName]="i">
+                      <div class="col-1 inner center aplicaBackground parent">
+                        <button
+                          class="btn btn-danger btn-sm child"
+                          (click)="EliminarRubroPresupuestal(i)"
+                        >
+                          Elim.
+                        </button>
+                      </div>
+                      <div class="col-2 inner center aplicaBackground">
+                        <small>{{ item?.rubroPresupuestal.identificacion }}</small>
+                      </div>
+                      <div class="col-4 inner left aplicaBackground">
+                        <small>{{ item?.rubroPresupuestal.nombre }}</small>
+                      </div>
+                      <div class="col-3 inner left aplicaBackground">
+                        <small>{{ item?.dependenciaDescripcion }}</small>
+                      </div>
+                      <div class="col-2 inner center aplicaBackground">
+                        <input
+                          type="text"
+                          style="text-align: right; height: 30px"
+                          class="form-control col-form-label-sm"
+                          formControlName="rubroControl"
+                          appDecimal
+                          placeholder="Ingrese valor a pagar"
+                          value="{{ item?.valorSolicitud }}"
+                        />
+                        <div
+                          class="error col-form-label-sm"
+                          *ngIf="
+                            rubrosControles.controls[i]
+                              .get('rubroControl')
+                              ?.hasError('required') &&
+                            rubrosControles.controls[i].get('rubroControl')
+                              ?.touched
+                          "
+                        >
+                          <small>REGISTRE EL VALOR A PAGAR</small>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </form>
+  
+            <div class="form-group right" style="margin: 0px">
+              <button
+                type="button"
+                class="btn btn-primary mt-2"
+                (click)="onAceptar()"
+                [disabled]="!popupForm.valid"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

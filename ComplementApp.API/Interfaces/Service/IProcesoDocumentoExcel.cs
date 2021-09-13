@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
+using ComplementApp.API.Models.ExcelDocumento;
 using Microsoft.AspNetCore.Http;
 
 namespace ComplementApp.API.Interfaces.Service
 {
     public interface IProcesoDocumentoExcel
     {
+        #region Carga Masiva PAA
+
         bool EliminarInformacionCDP();
 
         DataTable ObtenerDetalleDeExcel(IFormFile file);
@@ -23,6 +26,16 @@ namespace ComplementApp.API.Interfaces.Service
         List<DetalleCDPDto> obtenerListaDeDetalleCDP(DataTable dtDetalle);
 
         List<PlanPagoDto> obtenerListaDePlanPago(DataTable dtPlanPago);
+
+        #endregion Carga Masiva PAA
+
+        #region Carga Registro Gestion Presupuestal
+
+        DataTable ObtenerInformacionDocumentoCdp(IFormFile file);
+
+        List<DocumentoCdp> obtenerListaDocumentoCdp(DataTable dtCabecera);
+
+        #endregion Carga Registro Gestion Presupuestal
 
     }
 }

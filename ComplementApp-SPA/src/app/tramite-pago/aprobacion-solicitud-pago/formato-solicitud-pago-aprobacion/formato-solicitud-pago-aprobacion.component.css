@@ -1,0 +1,140 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+  
+  .borderRight {
+    border-right: 1px solid black;
+  }
+  
+  .borderBotton {
+    border-bottom: 1px solid black;
+  }
+  
+  .borderBottonRight {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+  }
+  
+  .borderTopBottonRight {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+  }
+  
+  .borderTopBotton {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+  }
+  
+  .borderTop {
+    border-top: 1px solid black;
+  }
+  
+  .borderComplete {
+    border: 1px solid black;
+  }
+  
+  .aplicaBackground {
+    background-color: lightgrey;
+  }
+  
+  .right {
+    text-align: right;
+  }
+  
+  .left {
+    text-align: left;
+  }
+  
+  .addPaddingLeft {
+    padding-left: 10px;
+  }
+
+  .addPaddingLeft5 {
+    padding-left: 5px;
+  }
+  
+  .addPaddingRight {
+    padding-right: 10px;
+  }
+
+  .addPaddingRight5 {
+    padding-right: 5px;
+  }
+  
+  .addPadding {
+    padding: 15px;
+  }
+
+  .fontLarge {
+    font-size: 23px;
+  }
+  
+  .fontSmaller {
+    font-size: 13px;
+  }
+
+  .fontVerySmaller {
+    font-size: 11px;
+  }
+  
+  .withoutPadding {
+    padding: 0px;
+  }
+  
+  .stronger {
+    font-weight: bold;
+  }
+  
+  .center {
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .centerAlign {
+    text-align: center;
+  }
+  
+  .verticalCenter {
+    vertical-align: middle;
+  }
+  
+  .small {
+    font-size: smaller;
+  }
+  
+  .withoutBorderBotton {
+    border-bottom: none;
+  }
+  
+  .noBorder {
+    border:hidden;
+  }
+  
+  .withoutMarginBottom {
+    margin-bottom: 0px;
+    margin-top: 5px;
+  }
+
+  .withoutMargin {
+    margin: 0px;
+  }
+
+  #firma {
+    display: flex;
+    justify-content: center; 
+  }
+
+  .addHeight {
+    height: 35px;
+  }
+  

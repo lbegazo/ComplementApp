@@ -387,6 +387,39 @@ namespace ComplementApp.API.Services
             }
             return dt;
         }
+        
+        public DataTable ObtenerTablaDetalleLiquidacion(List<FormatoCausacionyLiquidacionPagos> lista)
+        {
+            int consecutivo = 1;
+            DataTable dt = new DataTable();
+            DataRow dr = null;
+            
+            dt.Columns.Add(new DataColumn("ID", typeof(int)));
+            dt.Columns.Add(new DataColumn("IDENTIFICACION", typeof(string)));
+            dt.Columns.Add(new DataColumn("TERCERO", typeof(string)));
+            dt.Columns.Add(new DataColumn("CRP", typeof(long)));
+            dt.Columns.Add(new DataColumn("NUMERO_RADICADO", typeof(long)));
+            dt.Columns.Add(new DataColumn("FECHA_RADICADO", typeof(string)));
+            dt.Columns.Add(new DataColumn("VALOR_FACTURADO", typeof(decimal)));
+            dt.Columns.Add(new DataColumn("TIENE_CLAVE", typeof(string)));         
+
+            foreach (var item in lista)
+            {
+                dr = dt.NewRow();
+                dr["ID"] = consecutivo;
+                dr["IDENTIFICACION"] = item.IdentificacionTercero;
+                dr["TERCERO"] = item.NombreTercero;
+                dr["CRP"] = item.Crp;
+                dr["NUMERO_RADICADO"] = item.NumeroRadicadoSupervisor;
+                dr["FECHA_RADICADO"] = item.FechaRadicadoSupervisor.ToString("yyyy-MM-dd");
+                dr["VALOR_FACTURADO"] = item.ValorTotal;
+                dr["TIENE_CLAVE"] = item.TieneClavePresupuestalContable;
+                dt.Rows.Add(dr);
+                consecutivo++;
+            }
+            return dt;
+        }
+        
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {
             var memoryStream = new MemoryStream();

@@ -18,6 +18,8 @@ namespace ComplementApp.API.Interfaces
         DataTable ObtenerTablaDeListaActividadEconomica(List<ValorSeleccion> lista);
         DataTable ObtenerTablaDeListaPlanAnualAdquisicion(List<DetalleCDPDto> lista);
         DataTable ObtenerTablaDetallePlanAnualAdquisicion(List<CDPDto> lista);
+        DataTable ObtenerTablaDetalleLiquidacion(List<FormatoCausacionyLiquidacionPagos> lista);
         FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo);
+        
     }
 }

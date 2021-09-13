@@ -12,6 +12,7 @@ using System.Net;
 using ComplementApp.API.Models;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
+using ComplementApp.API.Models.ExcelDocumento;
 
 namespace ComplementApp.API.Services
 {
@@ -37,6 +38,60 @@ namespace ComplementApp.API.Services
             _repo = repo;
             _configuration = configuration;
             _dataContext = dataContext;
+        }
+
+        #region Carga Masiva PAA
+        public DataTable ObtenerCabeceraDeExcel(IFormFile file)
+        {
+            DataTable dtCabecera1 = new DataTable();
+            bool hasHeader = true;
+            try
+            {
+                using (var package = new ExcelPackage())
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        file.CopyTo(stream);
+                        package.Load(stream);
+                    }
+
+                    #region Cargar Cabecera
+
+                    var wsCabecera = package.Workbook.Worksheets[nombreHojaCabecera];
+
+                    if (wsCabecera != null)
+                    {
+                        foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, numeroColumnasCabecera])
+                        {
+                            dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                        }
+                        var startRow = hasHeader ? 2 : 1;
+                        for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
+                        {
+                            var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, numeroColumnasCabecera];
+                            DataRow row = dtCabecera1.Rows.Add();
+                            foreach (var cell in wsRow)
+                            {
+                                row[cell.Start.Column - 1] = cell.Value;
+                            }
+                            //Dejo de leer la hoja del excel
+                            //Razón de la salida: CDP de la hoja BD
+                            if (row.ItemArray[1].ToString().Equals(string.Empty))
+                            {
+                                dtCabecera1.Rows.Remove(row);
+                                break;
+                            }
+                        }
+                    }
+
+                    #endregion Cargar Cabecera                    
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return dtCabecera1;
         }
 
         public DataTable ObtenerDetalleDeExcel(IFormFile file)
@@ -90,59 +145,6 @@ namespace ComplementApp.API.Services
                 throw;
             }
             return dtDetalle;
-        }
-
-        public DataTable ObtenerCabeceraDeExcel(IFormFile file)
-        {
-            DataTable dtCabecera1 = new DataTable();
-            bool hasHeader = true;
-            try
-            {
-                using (var package = new ExcelPackage())
-                {
-                    using (var stream = new MemoryStream())
-                    {
-                        file.CopyTo(stream);
-                        package.Load(stream);
-                    }
-
-                    #region Cargar Cabecera
-
-                    var wsCabecera = package.Workbook.Worksheets[nombreHojaCabecera];
-
-                    if (wsCabecera != null)
-                    {
-                        foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, numeroColumnasCabecera])
-                        {
-                            dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
-                        }
-                        var startRow = hasHeader ? 2 : 1;
-                        for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
-                        {
-                            var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, numeroColumnasCabecera];
-                            DataRow row = dtCabecera1.Rows.Add();
-                            foreach (var cell in wsRow)
-                            {
-                                row[cell.Start.Column - 1] = cell.Value;
-                            }
-                            //Dejo de leer la hoja del excel
-                            //Razón de la salida: CDP de la hoja BD
-                            if (row.ItemArray[1].ToString().Equals(string.Empty))
-                            {
-                                dtCabecera1.Rows.Remove(row);
-                                break;
-                            }
-                        }
-                    }
-
-                    #endregion Cargar Cabecera                    
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return dtCabecera1;
         }
 
         public DataTable ObtenerPlanPagosDeExcel(IFormFile file)
@@ -565,10 +567,137 @@ namespace ComplementApp.API.Services
         {
             var resultado = false;
             resultado = this._repo.EliminarCabeceraCDP();
-                        
+
             return resultado;
         }
 
+        #endregion Carga Masiva PAA
+
+        #region Carga Registro Gestion Presupuestal
+
+        public DataTable ObtenerInformacionDocumentoCdp(IFormFile file)
+        {
+            DataTable dtCabecera1 = new DataTable();
+            bool hasHeader = true;
+            try
+            {
+                using (var package = new ExcelPackage())
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        file.CopyTo(stream);
+                        package.Load(stream);
+                    }
+
+                    #region Cargar Cabecera
+
+                    var wsCabecera = package.Workbook.Worksheets[0];
+
+                    if (wsCabecera != null)
+                    {
+                        foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, 23])
+                        {
+                            dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                        }
+                        var startRow = hasHeader ? 2 : 1;
+                        for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
+                        {
+                            var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, 23];
+                            DataRow row = dtCabecera1.Rows.Add();
+                            foreach (var cell in wsRow)
+                            {
+                                row[cell.Start.Column - 1] = cell.Value;
+                            }
+                            //Dejo de leer la hoja del excel
+                            //Razón de la salida: CDP de la hoja BD
+                            if (row.ItemArray[1].ToString().Equals(string.Empty))
+                            {
+                                dtCabecera1.Rows.Remove(row);
+                                break;
+                            }
+                        }
+                    }
+
+                    #endregion Cargar Cabecera                    
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return dtCabecera1;
+        }
+
+        public List<DocumentoCdp> obtenerListaDocumentoCdp(DataTable dtCabecera)
+        {
+            DocumentoCdp documento = null;
+            List<DocumentoCdp> listaDocumento = new List<DocumentoCdp>();
+            int numValue = 0;
+            decimal value = 0;
+            DateTime fecha;
+
+            foreach (var row in dtCabecera.Rows)
+            {
+                documento = new DocumentoCdp();
+
+                //Instancia
+                if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
+                        documento.NumeroDocumento = numValue;
+
+                //FechaRegistro
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[1].ToString(), out fecha))
+                        documento.FechaRegistro = fecha;
+
+                //FechaCreacion
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[2].ToString(), out fecha))
+                        documento.FechaCreacion = fecha;
+
+                documento.TipoCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[3].ToString(), 100);
+                documento.Estado = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[4].ToString(), 100);
+                documento.Dependencia = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[5].ToString(), 20);
+                documento.DependenciaDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[6].ToString(), 250);
+                documento.IdentificacionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), 250);
+                documento.DescripcionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[8].ToString(), 250);
+                documento.FuenteFinanciacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[9].ToString(), 50);
+                documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[10].ToString(), 50);
+                documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[11].ToString(), 10);
+
+                if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                        documento.ValorInicial = value;
+
+                if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
+                        documento.ValorOperacion = value;
+
+                if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
+                        documento.ValorActual = value;
+
+                if (!(row as DataRow).ItemArray[15].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[15].ToString(), out value))
+                        documento.SaldoPorComprometer = value;
+
+                documento.Objeto = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 250);
+                documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[17].ToString(), 50);
+                documento.Compromisos = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[18].ToString(), 6000);
+                documento.CuentasPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[19].ToString(), 6000);
+                documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[20].ToString(), 6000);
+                documento.OrdenesPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[21].ToString(), 6000);
+                documento.Reintegros = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[22].ToString(), 3000);
+
+                listaDocumento.Add(documento);
+            }
+
+            return listaDocumento;
+        }
+
+        #endregion Carga Registro Gestion Presupuestal
+
+        #region Funciones Privadas
         private string ObtenerCadenaLimitada(string cadena, int limite)
         {
             if (!string.IsNullOrEmpty(cadena))
@@ -581,5 +710,7 @@ namespace ComplementApp.API.Services
             }
             return string.Empty;
         }
+
+        #endregion Funciones Privadas
     }
 }
