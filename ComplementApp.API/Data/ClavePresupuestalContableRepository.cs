@@ -41,6 +41,7 @@ namespace ComplementApp.API.Data
                          select new CDPDto()
                          {
                              Crp = c.Crp,
+                             Cdp = c.Cdp,
                              Detalle4 = c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
@@ -61,6 +62,7 @@ namespace ComplementApp.API.Data
                          select new CDPDto()
                          {
                              Crp = c.Crp,
+                             Cdp = c.Cdp,
                              Detalle4 = c.Detalle4,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
@@ -203,7 +205,7 @@ namespace ComplementApp.API.Data
                                   join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
                                   join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
                                   from cuCo in CuentaContable.DefaultIfEmpty()
-                                  join up in _context.UsoPresupuestal on new { UsoPresupuestalId = cla.UsoPresupuestalId.Value, PciId = cla.PciId.Value } equals 
+                                  join up in _context.UsoPresupuestal on new { UsoPresupuestalId = cla.UsoPresupuestalId.Value, PciId = cla.PciId.Value } equals
                                                                          new { UsoPresupuestalId = up.UsoPresupuestalId, PciId = up.PciId.Value } into UsoPresupuestal
                                   from usoPre in UsoPresupuestal.DefaultIfEmpty()
                                   where rp.RubroPresupuestalId == c.RubroPresupuestalId

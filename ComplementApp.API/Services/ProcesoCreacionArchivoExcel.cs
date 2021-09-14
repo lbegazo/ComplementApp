@@ -313,7 +313,7 @@ namespace ComplementApp.API.Services
             int consecutivo = 1;
             DataTable dt = new DataTable();
             DataRow dr = null;
-            
+
             dt.Columns.Add(new DataColumn("ID", typeof(int)));
             dt.Columns.Add(new DataColumn("NUM", typeof(int)));
             dt.Columns.Add(new DataColumn("DESCRIPCION_COMPRA", typeof(string)));
@@ -328,7 +328,7 @@ namespace ComplementApp.API.Services
             dt.Columns.Add(new DataColumn("RESPONSABLE", typeof(string)));
             dt.Columns.Add(new DataColumn("DEPENDENCIA", typeof(string)));
             dt.Columns.Add(new DataColumn("CONTRATO", typeof(string)));
-            dt.Columns.Add(new DataColumn("AREA", typeof(string)));            
+            dt.Columns.Add(new DataColumn("AREA", typeof(string)));
 
             foreach (var item in lista)
             {
@@ -359,7 +359,7 @@ namespace ComplementApp.API.Services
             int consecutivo = 1;
             DataTable dt = new DataTable();
             DataRow dr = null;
-            
+
             dt.Columns.Add(new DataColumn("ID", typeof(int)));
             dt.Columns.Add(new DataColumn("NUMERO", typeof(long)));
             dt.Columns.Add(new DataColumn("ESTADO", typeof(string)));
@@ -368,7 +368,7 @@ namespace ComplementApp.API.Services
             dt.Columns.Add(new DataColumn("OPERACION", typeof(decimal)));
             dt.Columns.Add(new DataColumn("VALORTOTAL", typeof(decimal)));
             dt.Columns.Add(new DataColumn("SALDOACTUAL", typeof(decimal)));
-            dt.Columns.Add(new DataColumn("OBJETO", typeof(string)));         
+            dt.Columns.Add(new DataColumn("OBJETO", typeof(string)));
 
             foreach (var item in lista)
             {
@@ -387,13 +387,13 @@ namespace ComplementApp.API.Services
             }
             return dt;
         }
-        
+
         public DataTable ObtenerTablaDetalleLiquidacion(List<FormatoCausacionyLiquidacionPagos> lista)
         {
             int consecutivo = 1;
             DataTable dt = new DataTable();
             DataRow dr = null;
-            
+
             dt.Columns.Add(new DataColumn("ID", typeof(int)));
             dt.Columns.Add(new DataColumn("IDENTIFICACION", typeof(string)));
             dt.Columns.Add(new DataColumn("TERCERO", typeof(string)));
@@ -401,7 +401,7 @@ namespace ComplementApp.API.Services
             dt.Columns.Add(new DataColumn("NUMERO_RADICADO", typeof(string)));
             dt.Columns.Add(new DataColumn("FECHA_RADICADO", typeof(string)));
             dt.Columns.Add(new DataColumn("VALOR_FACTURADO", typeof(decimal)));
-            dt.Columns.Add(new DataColumn("TIENE_CLAVE", typeof(string)));         
+            dt.Columns.Add(new DataColumn("TIENE_CLAVE", typeof(string)));
 
             foreach (var item in lista)
             {
@@ -413,13 +413,13 @@ namespace ComplementApp.API.Services
                 dr["NUMERO_RADICADO"] = item.NumeroRadicadoSupervisor;
                 dr["FECHA_RADICADO"] = item.FechaRadicadoSupervisor.ToString("yyyy-MM-dd");
                 dr["VALOR_FACTURADO"] = item.ValorTotal;
-                dr["TIENE_CLAVE"] = item.TieneClavePresupuestalContable;
+                dr["TIENE_CLAVE"] = item.TieneClavePresupuestalContable ? "SI" : "NO";
                 dt.Rows.Add(dr);
                 consecutivo++;
             }
             return dt;
         }
-        
+
         public FileStreamResult ExportExcel(HttpResponse response, DataTable dt, string nombreArchivo)
         {
             var memoryStream = new MemoryStream();

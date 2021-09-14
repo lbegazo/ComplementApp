@@ -245,6 +245,7 @@ export class ContratoComponent implements OnInit {
     this.search = '';
     this.terceroId = null;
     this.cdpSeleccionado = null;
+    this.contratoSeleccionado = null;
 
     this.pagination = {
       currentPage: 1,
