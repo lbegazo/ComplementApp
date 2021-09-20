@@ -50,7 +50,7 @@ export class ArchivoMainComponent implements OnInit {
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 10 * 1024 * 1024,
-      queueLimit: 1,
+      queueLimit: 3,
     });
 
     this.uploader.onErrorItem = (item, response, status, headers) =>

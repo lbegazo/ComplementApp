@@ -627,7 +627,7 @@ namespace ComplementApp.API.Data
 
         #region Carga Registro Gestion Presupuestal
 
-        public bool EliminarDatosDocumentoCDP()
+public bool EliminarDocumentoCDP()
         {
             try
             {
@@ -635,7 +635,7 @@ namespace ComplementApp.API.Data
                     return true;
 
                 if (_context.DocumentoCdp.Any())
-                    return _context.CDP.BatchDelete() > 0;
+                    return _context.DocumentoCdp.BatchDelete() > 0;
             }
             catch (Exception)
             {
@@ -644,6 +644,56 @@ namespace ComplementApp.API.Data
             return false;
         }
 
+        public bool EliminarDocumentoCompromiso()
+        {
+            try
+            {
+                if (!_context.DocumentoCompromiso.Any())
+                    return true;
+
+                if (_context.DocumentoCompromiso.Any())
+                    return _context.DocumentoCompromiso.BatchDelete() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return false;
+        }
+
+        public bool EliminarDocumentoObligacion()
+        {
+            try
+            {
+                if (!_context.DocumentoObligacion.Any())
+                    return true;
+
+                if (_context.DocumentoObligacion.Any())
+                    return _context.DocumentoObligacion.BatchDelete() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return false;
+        }
+
+        public bool EliminarDocumentoOrdenPago()
+        {
+            try
+            {
+                if (!_context.DocumentoOrdenPago.Any())
+                    return true;
+
+                if (_context.DocumentoOrdenPago.Any())
+                    return _context.DocumentoOrdenPago.BatchDelete() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return false;
+        }
 
         public bool InsertarListaDocumentoCDP(IList<DocumentoCdp> listaCdp)
         {

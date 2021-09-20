@@ -5,8 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
-
-
 @NgModule({
   declarations: [CargaGestionPresupuestalComponent],
   imports: [
@@ -14,8 +12,9 @@ import { FileUploadModule } from 'ng2-file-upload';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    FileUploadModule,
+    FileUploadModule
   ],
-  exports: [CargaGestionPresupuestalComponent]
+  providers: [],
+  exports: [CargaGestionPresupuestalComponent],
 })
-export class IntegracionSiifNacionModule { }
+export class IntegracionSiifNacionModule {}

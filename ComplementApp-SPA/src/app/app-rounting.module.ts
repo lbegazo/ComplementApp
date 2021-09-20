@@ -13,14 +13,14 @@ import { ServerErrorComponent } from './server-error/server-error.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
-import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
+
 import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
 import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
-import { ObligacionPresupuestalComponent } from './generador/obligacion-presupuestal/obligacion-presupuestal.component';
+
 import { PlanPagoComponent } from './administracion/plan-pago/plan-pago.component';
 import { ListaAreasResolver } from './_resolvers/lista-areas.resolver';
 import { ListaCargosResolver } from './_resolvers/lista-cargos.resolver';
@@ -46,12 +46,17 @@ import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
-import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
+
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
 import { VincularCdpSolicitudComponent } from './SolicitudGestionPresupuestal/VincularCdpASolicitud/vincular-cdp-solicitud/vincular-cdp-solicitud.component';
 import { MetaEjecucionPresupuestalComponent } from './reporte/meta-ejecucion-presupuestal/meta-ejecucion-presupuestal.component';
 import { CargaGestionPresupuestalComponent } from './integracion-siif-nacion/carga-gestion-presupuestal/carga-gestion-presupuestal.component';
 import { RegistroAprobacionSolicitudPagoComponent } from './tramite-pago/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
+import { CuentaPorPagarComponent } from './generador-archivos/cuenta-por-pagar/cuenta-por-pagar.component';
+import { ObligacionPresupuestalComponent } from './generador-archivos/obligacion-presupuestal/obligacion-presupuestal.component';
+import { CargaMasivaOrdenPagoComponent } from './generador-archivos/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
+import { AdministracionArchivosComponent } from './generador-archivos/administracion-archivos/administracion-archivos.component';
+import { ListaTipoArchivoResolver } from './_resolvers/lista-TipoArchivo.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -230,6 +235,16 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     component: CargaMasivaOrdenPagoComponent,
     resolve: { transaccion: TransaccionResolver },
+  },
+  {
+    path: 'GENERADOR_ADMINISTRACIONARCHIVO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: AdministracionArchivosComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      tipoArchivo: ListaTipoArchivoResolver,
+    },
   },
   {
     path: 'TRAMITE_REGISTRAR',

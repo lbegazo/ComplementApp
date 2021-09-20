@@ -16,13 +16,20 @@ namespace ComplementApp.API.Interfaces.Repository
 
         bool InsertaPlanDePago(IList<PlanPagoDto> lista);
 
-        bool EliminarCabeceraCDP();        
+        bool EliminarCabeceraCDP();
 
         bool EliminarDetalleCDP();
 
         bool EliminarCabeceraCDPXInstancia(int instancia);
 
-        bool EliminarDatosDocumentoCDP();
+        bool EliminarDocumentoCDP();
+
+        bool EliminarDocumentoCompromiso();
+
+        bool EliminarDocumentoObligacion();
+
+        bool EliminarDocumentoOrdenPago();
+
 
         bool InsertarListaDocumentoCDP(IList<DocumentoCdp> listaCdp);
     }

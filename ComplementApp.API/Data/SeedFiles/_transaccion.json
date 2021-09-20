@@ -466,6 +466,14 @@
     "CodigoPadreTransaccion": "GENERADOR"
   },
   {
+    "Codigo": "GENERADOR_ADMINISTRACIONARCHIVO",
+    "Nombre": "Administración de Archivos",
+    "Descripcion": "Administración de Archivos",
+    "Icono": "post_add",
+    "Ruta": "GENERADOR_ADMINISTRACIONARCHIVO",
+    "CodigoPadreTransaccion": "GENERADOR"
+  },
+  {
     "Codigo": "GENERADOR_ORDENPAGO",
     "Nombre": "Ordenes de pago",
     "Descripcion": "Ordenes de pago",

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileItem, FileUploader, ParsedResponseHeaders } from 'ng2-file-upload';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Transaccion } from 'src/app/_models/transaccion';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { environment } from 'src/environments/environment';
@@ -9,11 +8,11 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-carga-gestion-presupuestal',
   templateUrl: './carga-gestion-presupuestal.component.html',
-  styleUrls: ['./carga-gestion-presupuestal.component.css']
+  styleUrls: ['./carga-gestion-presupuestal.component.css'],
 })
 export class CargaGestionPresupuestalComponent implements OnInit {
-
-  title: string;
+  nombreTransaccion: string;
+  transaccion: Transaccion;
   respuesta = '';
 
   uploader: FileUploader;
@@ -25,11 +24,18 @@ export class CargaGestionPresupuestalComponent implements OnInit {
 
   constructor(
     private alertify: AlertifyService,
-    private route: ActivatedRoute,
-    public bsModalRef: BsModalRef
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.route.data.subscribe((data) => {
+      this.transaccion = data['transaccion'];
+      if (this.transaccion) {
+        this.nombreTransaccion = this.transaccion.nombre;
+        console.log(this.nombreTransaccion);
+      }
+    });
+
     this.initializeUploader();
   }
 
@@ -78,11 +84,6 @@ export class CargaGestionPresupuestalComponent implements OnInit {
     headers: ParsedResponseHeaders
   ): any {
     this.alertify.error('Ocurrió un error al ejecutar el proceso ' + response);
-  }
-
-  onAceptar() {
-    this.bsModalRef.hide();
-    this.respuesta = 'DONE';
   }
 
 }

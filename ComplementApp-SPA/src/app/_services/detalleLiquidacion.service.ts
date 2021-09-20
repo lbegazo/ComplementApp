@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/Operators';
 import { environment } from 'src/environments/environment';
+import { EnvioParametroDto } from '../_dto/envioParametroDto';
 import { RespuestaSolicitudPago } from '../_dto/respuestaSolicitudPago';
 import { ValorSeleccion } from '../_dto/valorSeleccion';
 import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
@@ -413,5 +414,77 @@ export class DetalleLiquidacionService {
     );
   }
 
-  //#region Creacion Archivo Obligacion
+  //#endregion Creacion Archivo Obligacion
+
+  //#region Archivo General
+
+  ObtenerListaArchivoCreados(
+    param: EnvioParametroDto
+  ): Observable<ValorSeleccion[]> {
+    const path = 'ObtenerListaArchivoCreados';
+
+    return this.http.put<ValorSeleccion[]>(this.baseUrl + path, param);
+  }
+
+  ObtenerDocumentosParaAdministracionArchivo(
+    archivoId: number,
+    page?,
+    pagesize?
+  ): Observable<PaginatedResult<FormatoCausacionyLiquidacionPago[]>> {
+    const path = 'ObtenerDocumentosParaAdministracionArchivo';
+    const paginatedResult: PaginatedResult<FormatoCausacionyLiquidacionPago[]> =
+      new PaginatedResult<FormatoCausacionyLiquidacionPago[]>();
+
+    let params = new HttpParams();
+    params = params.append('archivoId', archivoId.toString());
+
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http
+      .get<FormatoCausacionyLiquidacionPago[]>(this.baseUrl + path, {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body;
+
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
+  ActualizarListaLiquidacionDeArchivo(
+    archivoId: number,
+    listaLiquidacionId: string,
+    seleccionarTodo: number
+  ): Observable<any> {
+    const path = 'ActualizarListaLiquidacionDeArchivo';
+
+    let params = new HttpParams();
+    params = params.append('archivoId', archivoId.toString());
+    if (seleccionarTodo > 0) {
+      params = params.append('seleccionarTodo', seleccionarTodo.toString());
+    }
+    if (listaLiquidacionId.length > 0) {
+      params = params.append(
+        'listaLiquidacionId',
+        listaLiquidacionId.toString()
+      );
+    }
+
+    return this.http.get(this.baseUrl + path, { params });
+  }
+
+  //#endregion  Archivo General
 }

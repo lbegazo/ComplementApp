@@ -1,0 +1,95 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .bordealo {
+    border: 1px solid #ccc;
+  }
+  
+  .addPadding {
+    padding: 10px;
+    background-color: transparent;
+  }
+  
+  .addPaddingLeft {
+    padding-left: 5px;
+  }
+  
+  .addPaddingTop {
+    padding-top: 10px;
+    background-color: transparent;
+  }
+  
+  .withoutPadding {
+    padding: 0px;
+    padding-left: 0px;
+  }
+  
+  .withoutBorder {
+    border: none;
+  }
+  
+  .withoutBorderBotton {
+    border-bottom: none;
+  }
+  
+  .withBorderBotton {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .inner {
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+  }
+  
+  .inner {
+    border-right: 1px solid #ccc;
+    padding: 5px 5px;
+  }
+  
+  .inner-end {
+    padding: 5px 5px;
+  }
+  
+  .aplicaBackground {
+    background-color: white;
+  }
+  
+  .gfg {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  .right {
+    text-align: right;
+  }
+  
+  .left {
+    text-align: left;
+  }
+  
+  #tablaContenedor {
+    background-color: gainsboro;
+  }
+  
+  input[type="text"] {
+    background-color: white;
+    height: 25px;
+  }
+  
+  #inputNumeroTercero {
+    background-color: white;
+  }
+  
+  .form-inline .form-group {
+    vertical-align:bottom;
+  }
+  
+  

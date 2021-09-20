@@ -193,6 +193,17 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public IActionResult ObtenerListaTipoArchivo()
+        {
+            List<ValorSeleccion> lista = new List<ValorSeleccion>();
+
+            lista.Add(new ValorSeleccion() { Id = 1, Nombre = "Cuenta por Pagar" });
+            lista.Add(new ValorSeleccion() { Id = 2, Nombre = "Obligación" });
+            return Ok(lista);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<IActionResult> ObtenerListaRubroPresupuestalPorPapa([FromQuery] int rubroPresupuestalId, [FromQuery] UserParams userParams)
         {
             var pagedList = await _repo.ObtenerListaRubroPresupuestalPorPapa(rubroPresupuestalId, userParams);

@@ -1,0 +1,336 @@
+<div class="container-fluid mt-1">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <h2 class="text-center text-primary" style="margin: 0px">
+        {{ nombreTransaccion }}
+      </h2>
+      <hr style="margin: 5px" />
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="facturaHeaderForm">
+  <div class="container-fluid mt-1">
+    <div class="row mt-2">
+      <div class="col-12">
+        <table
+          class="table"
+          id="tablaContenedor"
+          style="width: 90%; margin-left: auto; margin-right: auto"
+        >
+          <tr>
+            <td style="padding: 0px 10px">
+              <!--FILTROS-->
+              <div class="form-row mt-3">
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputFechaGeneracion" class="col-form-label-md"
+                    >Fecha de Generación</label
+                  >
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('fechaGeneracionCtrl').errors &&
+                        facturaHeaderForm.get('fechaGeneracionCtrl').touched
+                    }"
+                    class="form-control border border-bottom-0 addPadding"
+                    placeholder="Fecha de generación"
+                    formControlName="fechaGeneracionCtrl"
+                    type="text"
+                    bsDatepicker
+                    [bsConfig]="bsConfig"
+                    id="inputFechaGeneracion"
+                    style="height: 33px; text-align: center"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('fechaGeneracionCtrl').touched &&
+                      facturaHeaderForm
+                        .get('fechaGeneracionCtrl')
+                        .hasError('required')
+                    "
+                  >
+                    La fecha de generación es requerida
+                  </div>
+                </div>
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputTipoArchivo" class="col-form-label-md"
+                    >Tipo de Archivo</label
+                  >
+                  <select
+                    *ngIf="listaTipoArchivo"
+                    formControlName="tipoArchivoCtrl"
+                    class="form-control withoutPadding"
+                    style="height: 30px; background-color: white"
+                    (change)="onSelectTipoArchivo()"
+                    id="inputTipoArchivo"
+                    [(ngModel)]="tipoArchivoSeleccionado"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('tipoArchivoCtrl').touched &&
+                        facturaHeaderForm
+                          .get('tipoArchivoCtrl')
+                          .hasError('required')
+                    }"
+                  >
+                    <option disabled [ngValue]="null">Tipo de Archivo</option>
+                    <option
+                      *ngFor="let item of listaTipoArchivo"
+                      [ngValue]="item"
+                    >
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('tipoArchivoCtrl').touched &&
+                      facturaHeaderForm
+                        .get('tipoArchivoCtrl')
+                        .hasError('required')
+                    "
+                  >
+                    Debe seleccionar el tipo de archivo
+                  </div>
+                </div>
+
+                <div class="form-group col-md-2" style="margin: 0px">
+                  <label for="inputArchivo" class="col-form-label-md"
+                    >Seleccione el Archivo</label
+                  >
+                  <select
+                    placeholder="Seleccione el archivo"
+                    formControlName="archivoCtrl"
+                    class="form-control withoutPadding"
+                    style="height: 30px; background-color: white"
+                    (change)="onSelectArchivo()"
+                    id="inputArchivo"
+                    [(ngModel)]="archivoSeleccionado"
+                    [ngClass]="{
+                      'is-invalid':
+                        facturaHeaderForm.get('archivoCtrl').touched &&
+                        facturaHeaderForm
+                          .get('archivoCtrl')
+                          .hasError('required')
+                    }"
+                  >
+                    <option disabled [ngValue]="null">Archivo</option>
+                    <option *ngFor="let item of listaArchivo" [ngValue]="item">
+                      {{ item.nombre }}
+                    </option>
+                  </select>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      facturaHeaderForm.get('archivoCtrl').touched &&
+                      facturaHeaderForm.get('archivoCtrl').hasError('required')
+                    "
+                  >
+                    Debe seleccionar el archivo
+                  </div>
+                </div>
+
+                <div class="form-group col-md-3" style="margin: 0px">
+                  <table>
+                    <tr style="vertical-align: bottom">
+                      <td style="padding-top: 15px">
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          (click)="onBuscarFactura()"
+                          style="width: 80px"
+                          [disabled]="idArchivoSelecionado === 0"
+                        >
+                          Buscar
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-success ml-2"
+                          (click)="onLimpiarFactura()"
+                          style="width: 80px"
+                        >
+                          Limpiar
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="padding-top: 0px; padding-bottom: 0px; padding-left: 15px"
+            >
+              <label class="col-form-label-md">
+                <input
+                  type="checkbox"
+                  [checked]="seleccionaTodas"
+                  (change)="onCheckAllChange($event)"
+                />
+              </label>
+            </td>
+          </tr>
+          <!--Grilla de facturas-->
+          <tr>
+            <td style="padding: 0px 15px">
+              <div class="form-row mt-2">
+                <div style="width: 2%"></div>
+                <div style="width: 7%" class="inner center">
+                  <label class="col-form-label-md">Id</label>
+                </div>
+                <div style="width: 8%" class="inner center">
+                  <label class="col-form-label-md">Identificación</label>
+                </div>
+                <div style="width: 30%" class="inner center">
+                  <label class="col-form-label-md">Tercero</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">CRP</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Num. Radicado</label>
+                </div>
+                <div style="width: 10%" class="inner center">
+                  <label class="col-form-label-md">Fecha Rad.</label>
+                </div>
+                <div style="width: 15%" class="inner right">
+                  <label class="col-form-label-md">Valor Facturado</label>
+                </div>
+                <div style="width: 8%" class="inner center">
+                  <label class="col-form-label-md">Clave Presup.</label>
+                </div>
+              </div>
+              <div *ngIf="listaPlanPago">
+                <div
+                  formArrayName="planPagoControles"
+                  class="form-row"
+                  *ngFor="let item of listaPlanPago; let i = index"
+                >
+                  <ng-container [formGroupName]="i">
+                    <div style="width: 2%" class="inner left aplicaBackground">
+                      <label class="col-form-label-sm">
+                        <input
+                          type="checkbox"
+                          [checked]="item.esSeleccionada"
+                          [value]="item?.detalleLiquidacionId"
+                          (change)="onCheckChange($event)"
+                        />
+                      </label>
+                    </div>
+                    <div
+                      style="width: 7%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>{{ item?.detalleLiquidacionId }}</p>
+                    </div>
+                    <div
+                      style="width: 8%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>{{ item?.identificacionTercero }}</p>
+                    </div>
+                    <div
+                      style="width: 30%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>{{ item?.nombreTercero }}</p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.crp }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.numeroRadicadoSupervisor }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 10%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.fechaRadicadoSupervisor | date: "dd/MM/yyyy" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 15%"
+                      class="inner right aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.valorTotal | number: "1.2-2" }}
+                      </p>
+                    </div>
+                    <div
+                      style="width: 8%"
+                      class="inner center aplicaBackground"
+                    >
+                      <p>
+                        {{ item?.tieneClavePresupuestalContable ? "SI" : "" }}
+                      </p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!--Paginación-->
+          <tr>
+            <td style="padding: 0px">
+              <div class="d-flex justify-content-center mt-3">
+                <pagination
+                  [boundaryLinks]="true"
+                  [totalItems]="pagination.totalItems"
+                  [itemsPerPage]="pagination.itemsPerPage"
+                  [(ngModel)]="pagination.currentPage"
+                  (pageChanged)="pageChanged($event)"
+                  previousText="&lsaquo;"
+                  nextText="&rsaquo;"
+                  firstText="&laquo;"
+                  lastText="&raquo;"
+                  [ngModelOptions]="{ standalone: true }"
+                  [maxSize]="pagination.maxSize"
+                >
+                </pagination>
+              </div>
+            </td>
+          </tr>
+          <!--Botón Liquidar-->
+          <tr>
+            <td
+              style="
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-bottom: 15px;
+                padding-top: 0px;
+              "
+            >
+              <div class="form-row">
+                <div class="col-12 right">
+                  <button
+                    type="button"
+                    class="btn btn-primary ml-2"
+                    (click)="actualizarListaLiquidacionDeArchivo()"
+                    [disabled]="liquidacionesSeleccionadas.length === 0"
+                  >
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- <div class="col-12" *ngIf="planPagoIdSeleccionado > 0"></div> -->
+<!-- <p>detallePlanPago: {{ detallePlanPago | json }}</p> -->

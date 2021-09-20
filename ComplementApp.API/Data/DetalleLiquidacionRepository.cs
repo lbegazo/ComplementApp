@@ -501,8 +501,6 @@ namespace ComplementApp.API.Data
             return lista;
         }
 
-
-
         public async Task<ICollection<DetalleLiquidacionParaArchivo>> ObtenerCabeceraParaArchivoObligacion(List<int> listaLiquidacionId, int pciId)
         {
             List<DetalleLiquidacionParaArchivo> listaFinal = new List<DetalleLiquidacionParaArchivo>();
@@ -712,6 +710,85 @@ namespace ComplementApp.API.Data
         }
 
         #endregion Archivo Obligacion Presupuestal
+
+        #region Archivo General
+
+        public async Task<ICollection<ValorSeleccion>> ObtenerListaArchivoCreados(DateTime fechaGeneracion, int tipoDocumentoArchivo, int pcidId)
+        {
+            List<ValorSeleccion> listaFinal = new List<ValorSeleccion>();
+
+            var lista = await (from adl in _context.ArchivoDetalleLiquidacion
+                               where adl.FechaGeneracion.Date == fechaGeneracion.Date
+                               where adl.TipoDocumentoArchivo == tipoDocumentoArchivo
+                               where adl.PciId == pcidId
+                               select new ValorSeleccion()
+                               {
+                                   Id = adl.ArchivoDetalleLiquidacionId,
+                                   Nombre = adl.Nombre,
+                               })
+                    .ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerDocumentosParaAdministracionArchivo(
+             int archivoId,
+             UserParams userParams)
+        {
+            var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
+                                           where pp.PciId == userParams.PciId
+                                           select pp.Crp).ToHashSet();
+
+            var lista = (from dal in _context.DetalleArchivoLiquidacion
+                         join dl in _context.DetalleLiquidacion on new { dal.DetalleLiquidacionId } equals new { dl.DetalleLiquidacionId }
+                         join c in _context.PlanPago on new { dl.PlanPagoId, dl.PciId } equals new { c.PlanPagoId, c.PciId }
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         join p in _context.ParametroLiquidacionTercero on new { c.TerceroId, dl.PciId } equals new { p.TerceroId, p.PciId }
+                         where dal.ArchivoDetalleLiquidacionId == archivoId
+                         where dl.PciId == userParams.PciId
+                         select new FormatoCausacionyLiquidacionPagos()
+                         {
+                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                             PlanPagoId = dl.PlanPagoId,
+                             Crp = dl.Crp.ToString(),
+                             FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value,
+                             IdentificacionTercero = dl.NumeroIdentificacion,
+                             NombreTercero = dl.Nombre,
+                             NumeroRadicadoSupervisor = dl.NumeroRadicado,
+                             FechaRadicadoSupervisor = dl.FechaRadicado,
+                             ValorTotal = c.ValorFacturado.Value,
+                             TieneClavePresupuestalContable = listaCompromisoConClave.Contains(c.Crp)
+                         });
+
+            if (lista != null)
+            {
+                lista.OrderBy(c => c.FechaRadicadoSupervisor);
+            }
+
+            return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task<bool> EliminarListaDetalleArchivo(List<int> liquidacionIds)
+        {
+            var listaExistente = await (from plt in _context.DetalleArchivoLiquidacion
+                                        where liquidacionIds.Contains(plt.DetalleLiquidacionId)
+                                        select plt).ToListAsync();
+
+            _context.DetalleArchivoLiquidacion.RemoveRange(listaExistente);
+            return true;
+        }
+
+        public async Task<bool> EliminarArchivoDetalleLiquidacion(int archivoId)
+        {
+            var archivo = await (from plt in _context.ArchivoDetalleLiquidacion
+                                 where plt.ArchivoDetalleLiquidacionId == archivoId
+                                 select plt).FirstOrDefaultAsync();
+
+            _context.ArchivoDetalleLiquidacion.Remove(archivo);
+            return true;
+        }
+
+        #endregion Archivo General
 
         #region Liquidación Masiva
 

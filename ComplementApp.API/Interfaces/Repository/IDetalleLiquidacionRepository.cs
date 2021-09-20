@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComplementApp.API.Dtos;
@@ -75,5 +76,19 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<List<int>> ObtenerLiquidacionIdsConRubroFuncionamiento(List<int> listaLiquidacionId);
 
         #endregion Archivo Obligacion Presupuestal
+
+        #region Archivo General
+
+        Task<ICollection<ValorSeleccion>> ObtenerListaArchivoCreados(DateTime fechaGeneracion, int tipoDocumentoArchivo, int pciId);
+
+        Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerDocumentosParaAdministracionArchivo(
+                                                                                                    int archivoId,
+                                                                                                    UserParams userParams);
+
+        Task<bool> EliminarArchivoDetalleLiquidacion(int archivoId);
+
+        Task<bool> EliminarListaDetalleArchivo(List<int> liquidacionIds);
+
+        #endregion Archivo General
     }
 }

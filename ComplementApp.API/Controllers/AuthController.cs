@@ -63,7 +63,7 @@ namespace ComplementApp.API.Controllers
             var result = await _repo.ValidateDate();
 
             if (!result)
-                return BadRequest("El sistema no se encuentra activo");
+                return BadRequest("El sistema no se encuentra activo, por favor comunicarse con el administrador del sistema");
 
             string token = _token.CreateToken(userFromRepo);
 

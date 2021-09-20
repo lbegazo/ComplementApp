@@ -16,6 +16,7 @@ using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Models;
 using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComplementApp.API.Controllers
 {
@@ -1070,6 +1071,128 @@ namespace ComplementApp.API.Controllers
 
         #endregion Archivo Obligacion Presupuestal
 
+        #region Archivo General
+
+        [Route("[action]")]
+        [HttpPut]
+        public async Task<IActionResult> ObtenerListaArchivoCreados(EnvioParametroDto parametroDto)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            var datos = await _repo.ObtenerListaArchivoCreados(parametroDto.FechaGeneracion, parametroDto.TipoArchivo, pciId);
+            return Ok(datos);
+        }
+
+
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerDocumentosParaAdministracionArchivo(
+                                                              [FromQuery(Name = "archivoId")] int archivoId,
+                                                              [FromQuery] UserParams userParams)
+        {
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+            userParams.PciId = pciId;
+
+            var pagedList = await _repo.ObtenerDocumentosParaAdministracionArchivo(archivoId, userParams);
+            var listaDto = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
+
+            Response.AddPagination(pagedList.CurrentPage, pagedList.PageSize,
+                                pagedList.TotalCount, pagedList.TotalPages);
+
+            return base.Ok(listaDto);
+        }
+
+
+        [HttpGet]
+        [Route("ActualizarListaLiquidacionDeArchivo")]
+        public async Task<IActionResult> ActualizarListaLiquidacionDeArchivo([FromQuery(Name = "archivoId")] int archivoId,
+                                                                                [FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId,
+                                                                                [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo)
+        {
+            #region Variables
+
+            string resultado = string.Empty;
+            bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
+
+            List<int> liquidacionIdsTotal = new List<int>();
+
+            #endregion Variables
+
+            usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+            if (!string.IsNullOrEmpty(valorPciId))
+            {
+                pciId = int.Parse(valorPciId);
+            }
+
+            try
+            {
+                #region Obtener lista de liquidaciones a actualizar
+
+                if (esSeleccionarTodo)
+                {
+                    #region esSeleccionarTodo
+
+                    UserParams userParams = new UserParams();
+                    userParams.PageNumber = 1;
+                    userParams.PageSize = pageSizeMax;
+                    userParams.PciId = pciId;
+                    var pagedList = await _repo.ObtenerDocumentosParaAdministracionArchivo(archivoId, userParams);
+                    var listaDto = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
+                    liquidacionIdsTotal = listaDto.Select(x => x.DetalleLiquidacionId).ToList();
+
+                    #endregion esSeleccionarTodo
+                }
+                else
+                {
+                    #region Selección manual
+
+                    if (!string.IsNullOrEmpty(listaLiquidacionId))
+                    {
+                        liquidacionIdsTotal = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
+                    }
+
+                    #endregion Selección manual
+                }
+
+                #endregion Obtener lista de liquidaciones a actualizar
+
+                //Actualizar el estado de las liquidaciones procesadas
+                await using var transaction = await _dataContext.Database.BeginTransactionAsync();
+
+                await ActualizarProcesadoListaDetalleLiquidacion(usuarioId, liquidacionIdsTotal, esProcesado: false);
+                await _dataContext.SaveChangesAsync();
+
+                await _repo.EliminarListaDetalleArchivo(liquidacionIdsTotal);
+                await _dataContext.SaveChangesAsync();
+
+                bool respuesta = await _dataContext.ArchivoDetalleLiquidacion.AnyAsync(c => c.ArchivoDetalleLiquidacionId == archivoId);
+
+                if (respuesta)
+                {
+                    await _repo.EliminarArchivoDetalleLiquidacion(archivoId);
+                    await _dataContext.SaveChangesAsync();
+                }
+
+                await transaction.CommitAsync();
+
+                return Ok(true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        #endregion Archivo General
+
         #region Funciones Generales
 
         private async Task EnviarEmail(DetallePlanPagoDto planPagoDto, string mensaje)
@@ -1172,7 +1295,6 @@ namespace ComplementApp.API.Controllers
 
         private async Task<bool> ActualizarEstadoDetalleLiquidacion(int usuarioId, List<int> listIds)
         {
-
             //Actualización del detalle de liquidación
             var q = from pp in _dataContext.DetalleLiquidacion
                     where listIds.Contains(pp.DetalleLiquidacionId)
@@ -1182,8 +1304,26 @@ namespace ComplementApp.API.Controllers
             {
                 Procesado = true,
                 UsuarioIdModificacion = usuarioId,
-                FechaModificacion = _generalInterface.ObtenerFechaHoraActual()
+                FechaModificacion = _generalInterface.ObtenerFechaHoraActual(),
             });
+
+            return true;
+        }
+
+        private async Task<bool> ActualizarProcesadoListaDetalleLiquidacion(int usuarioId, List<int> listIds, bool esProcesado)
+        {
+            //Actualización del detalle de liquidación
+            var q = await (from pp in _dataContext.DetalleLiquidacion
+                           where listIds.Contains(pp.DetalleLiquidacionId)
+                           select pp)
+                          .ToListAsync();
+
+            foreach (var item in q)
+            {
+                item.UsuarioIdModificacion = usuarioId;
+                item.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
+                item.Procesado = esProcesado;
+            }
 
             return true;
         }

@@ -149,27 +149,30 @@ namespace ComplementApp.API.Controllers
 
                 try
                 {
-                    IFormFile file = Request.Form.Files[0];
+                    IFormFile fileCdp = Request.Form.Files[0];
+                    IFormFile fileCompromiso = Request.Form.Files[1];
+                    IFormFile fileObligacion = Request.Form.Files[2];
+                    IFormFile fileOrdenPago = Request.Form.Files[3];
 
-                    if (file == null || file.Length <= 0)
-                        return BadRequest("El archivo se encuentra vacío");
+                    // if (fileCdp == null || fileCdp.Length <= 0)
+                    //     return BadRequest("El archivo CDP se encuentra vacío");
 
-                    if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                        return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
+                    // if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    //     return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
 
                     #region Obtener información del archivo excel
 
-                    DataTable dtCabecera = _documento.ObtenerInformacionDocumentoCdp(file);
+                    DataTable dtCdp = _documento.ObtenerInformacionDocumentoCdp(fileCdp);
 
                     #endregion
 
                     #region Mapear datos en la lista de Dtos
 
-                    List<DocumentoCdp> listaDocumento = _documento.obtenerListaDocumentoCdp(dtCabecera);
+                    List<DocumentoCdp> listaDocumento = _documento.obtenerListaDocumentoCdp(dtCdp);
 
                     #endregion
 
-                    var result = _documento.EliminarInformacionCDP();
+                    var result = _repo.EliminarDocumentoCDP();
 
                     #region Insertar lista en la base de datos
 
@@ -194,6 +197,7 @@ namespace ComplementApp.API.Controllers
 
             return Ok();
         }
+
 
         #endregion Carga Registro Gestion Presupuestal
 

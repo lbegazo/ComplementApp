@@ -74,7 +74,7 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { RadicadoPagoComponent } from './reporte/radicado-pago/radicado-pago.component';
 import { LiquidacionPagoComponent } from './reporte/liquidacion-pago/liquidacion-pago.component';
 import { FormatoLiquidacionComponent } from './reporte/liquidacion-pago/formato-causacion-liquidacion/formato-liquidacion.component';
-import { CuentaPorPagarComponent } from './generador/cuenta-por-pagar/cuenta-por-pagar.component';
+
 import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.component';
 import { FormatoCdpComponent } from './reporte/solicitud-cdp/formato-cdp/formato-cdp.component';
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
@@ -95,7 +95,7 @@ import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitu
 import { FormatoSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/formato-solicitud-pago-aprobacion.component';
 import { PopupSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
 import { PopupClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/popup-clave-presupuestal-contable/popup-clave-presupuestal-contable.component';
-import { ObligacionPresupuestalComponent } from './generador/obligacion-presupuestal/obligacion-presupuestal.component';
+
 import { DecimalMaskDirective } from './_directives/decimal-mask.directive';
 import { PopupParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/popup-parametro-liquidacion-tercero/popup-parametro-liquidacion-tercero.component';
 import { PlanPagoComponent } from './administracion/plan-pago/plan-pago.component';
@@ -138,7 +138,7 @@ import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/
 import { PopupDetallePlanAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/popup-detalle-plan-adquisicion/popup-detalle-plan-adquisicion.component';
 import { InformePagoProveedorComponent } from './reporte/informe-pago-proveedor/informe-pago-proveedor.component';
 import { DetalleInformePagoProveedorComponent } from './reporte/informe-pago-proveedor/detalle-informe-pago-proveedor/detalle-informe-pago-proveedor.component';
-import { CargaMasivaOrdenPagoComponent } from './generador/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
+
 import { UsuarioComponent } from './administracion/usuario/usuario.component';
 import { UsuarioEditNewComponent } from './administracion/usuario/usuario-edit-new/usuario-edit-new.component';
 import { NegativeDecimalMaskDirective } from './_directives/negative-decimal-mask.directive';
@@ -149,6 +149,8 @@ import { PopupDetallePlanHistoricoComponent } from './reporte/plan-anual-adquisi
 import { MetaEjecucionPresupuestalComponent } from './reporte/meta-ejecucion-presupuestal/meta-ejecucion-presupuestal.component';
 import { IntegracionSiifNacionModule } from './integracion-siif-nacion/integracion-siif-nacion.module';
 import { TramitePagoModule } from './tramite-pago/tramite-pago.module';
+import { GeneradorArchivosModule } from './generador-archivos/generador-archivos.module';
+import { ListaTipoArchivoResolver } from './_resolvers/lista-TipoArchivo.resolver';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -198,7 +200,6 @@ export function tokenGetter() {
     RadicadoPagoComponent,
     LiquidacionPagoComponent,
     FormatoLiquidacionComponent,
-    CuentaPorPagarComponent,
     SolicitudCdpComponent,
     FormatoCdpComponent,
     RadicadoPagoMensualComponent,
@@ -218,7 +219,6 @@ export function tokenGetter() {
     FormatoSolicitudPagoAprobacionComponent,
     PopupSolicitudPagoAprobacionComponent,
     PopupSolicitudPagoRechazoComponent,
-    ObligacionPresupuestalComponent,
     PlanPagoComponent,
     PlanPagoEditComponent,
     TerceroComponent,
@@ -243,7 +243,6 @@ export function tokenGetter() {
     PopupDetallePlanHistoricoComponent,
     InformePagoProveedorComponent,
     DetalleInformePagoProveedorComponent,
-    CargaMasivaOrdenPagoComponent,
     UsuarioComponent,
     UsuarioEditNewComponent,
     VincularCdpSolicitudComponent,
@@ -284,6 +283,7 @@ export function tokenGetter() {
     }),
     IntegracionSiifNacionModule,
     TramitePagoModule,
+    GeneradorArchivosModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-Co' },
@@ -313,6 +313,7 @@ export function tokenGetter() {
     ListaPerfilesResolver,
     ListaUsuarioResolver,
     ListaDependenciaResolver,
+    ListaTipoArchivoResolver,
     PreventUnsavedChanges,
     PreventUnsavedChangesUsuario,
     PreventUnsavedChangesFactura,

@@ -1757,10 +1757,6 @@ export class ParametroLiquidacionEditComponent implements OnInit {
       this.listaSubcontrata = data['SIoNO'];
     });
 
-    this.route.data.subscribe((data) => {
-      this.listaFacturaElectronica = data['SIoNO'];
-      this.listaSubcontrata = data['SIoNO'];
-    });
   }
 
   cargarListas() {

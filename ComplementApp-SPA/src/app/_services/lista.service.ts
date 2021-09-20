@@ -82,9 +82,7 @@ export class ListaService {
   //#endregion
 
   ObtenerListaMeses(): Observable<ValorSeleccion[]> {
-    return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'ObtenerListaMeses'
-    );
+    return this.http.get<ValorSeleccion[]>(this.baseUrl + 'ObtenerListaMeses');
   }
 
   ObtenerParametroGeneralXNombre(nombre: string): Observable<ValorSeleccion> {
@@ -122,10 +120,9 @@ export class ListaService {
     if (listaId > 0) {
       params = params.append('listaId', listaId.toString());
     }
-    return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'ObtenerListaXTipo',
-      { params }
-    );
+    return this.http.get<ValorSeleccion[]>(this.baseUrl + 'ObtenerListaXTipo', {
+      params,
+    });
   }
 
   ObtenerListaXTipoyPci(listaId: number): Observable<ValorSeleccion[]> {
@@ -141,8 +138,12 @@ export class ListaService {
   }
 
   ObtenerListaSIoNO(): Observable<ValorSeleccion[]> {
+    return this.http.get<ValorSeleccion[]>(this.baseUrl + 'ObtenerListaSIoNO');
+  }
+
+  ObtenerListaTipoArchivo(): Observable<ValorSeleccion[]> {
     return this.http.get<ValorSeleccion[]>(
-      this.baseUrl + 'ObtenerListaSIoNO'
+      this.baseUrl + 'ObtenerListaTipoArchivo'
     );
   }
 
@@ -164,9 +165,8 @@ export class ListaService {
   ): Observable<PaginatedResult<RubroPresupuestal[]>> {
     let params = new HttpParams();
     const path = 'ObtenerListaRubroPresupuestalPorPapa';
-    const paginatedResult: PaginatedResult<
-      RubroPresupuestal[]
-    > = new PaginatedResult<RubroPresupuestal[]>();
+    const paginatedResult: PaginatedResult<RubroPresupuestal[]> =
+      new PaginatedResult<RubroPresupuestal[]>();
 
     if (rubroPresupuestalId != null) {
       params = params.append('rubroPresupuestalId', rubroPresupuestalId);
