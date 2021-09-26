@@ -139,49 +139,87 @@ namespace ComplementApp.API.Controllers
         #region Carga Registro Gestion Presupuestal
 
         [HttpPost]
-        [Route("ActualizarDocumentosBase")]
+        [Route("[action]")]
         public IActionResult ActualizarDocumentosBase()
         {
-
+            int tipoArchivo = 0;
             if (Request.Form.Files.Count > 0)
             {
-                using var transaction = _dataContext.Database.BeginTransaction();
+                IFormFile file = null;
+                IFormFile fileCdp = null;
+                IFormFile fileCompromiso = null;
+                IFormFile fileObligacion = null;
+                IFormFile fileOrdenPago = null;
 
                 try
                 {
-                    IFormFile fileCdp = Request.Form.Files[0];
-                    IFormFile fileCompromiso = Request.Form.Files[1];
-                    IFormFile fileObligacion = Request.Form.Files[2];
-                    IFormFile fileOrdenPago = Request.Form.Files[3];
+                    file = Request.Form.Files[0];
+                    if (file == null || file.Length <= 0)
+                        return BadRequest("El archivo se encuentra vacío");
 
-                    // if (fileCdp == null || fileCdp.Length <= 0)
-                    //     return BadRequest("El archivo CDP se encuentra vacío");
+                    if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                        return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
 
-                    // if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                    //     return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
+                    fileCdp = ObtenerArchivoDeLista(file, 1);
+                    fileCompromiso = ObtenerArchivoDeLista(file, 2);
+                    fileObligacion = ObtenerArchivoDeLista(file, 3);
+                    fileOrdenPago = ObtenerArchivoDeLista(file, 4);
+
+                    tipoArchivo = ObtenerTipoArhivo(fileCdp, fileCompromiso, fileObligacion, fileOrdenPago);
+                    if (tipoArchivo == 0)
+                        return BadRequest("El archivo seleccionado no se pudo procesar ya que se trata de un archivo desconocido");
 
                     #region Obtener información del archivo excel
 
-                    DataTable dtCdp = _documento.ObtenerInformacionDocumentoCdp(fileCdp);
+                    DataTable dtCdp = _documento.ObtenerInformacionDocumentoExcel(fileCdp, 23);
+                    DataTable dtCompromiso = _documento.ObtenerInformacionDocumentoExcel(fileCompromiso, 35);
+                    DataTable dtObligacion = _documento.ObtenerInformacionDocumentoExcel(fileObligacion, 40);
+                    DataTable dtOrdenPago = _documento.ObtenerInformacionDocumentoExcel(fileOrdenPago, 50);
 
                     #endregion
 
                     #region Mapear datos en la lista de Dtos
 
-                    List<DocumentoCdp> listaDocumento = _documento.obtenerListaDocumentoCdp(dtCdp);
+                    List<DocumentoCdp> listaCdp = _documento.obtenerListaDocumentoCdp(dtCdp);
+                    List<DocumentoCompromiso> listaCompromiso = _documento.obtenerListaDocumentoCompromiso(dtCompromiso);
+                    List<DocumentoObligacion> listaObligacion = _documento.obtenerListaDocumentoObligacion(dtObligacion);
+                    List<DocumentoOrdenPago> listaOrdenPago = _documento.obtenerListaDocumentoOrdenPago(dtOrdenPago);
 
                     #endregion
 
-                    var result = _repo.EliminarDocumentoCDP();
+                    using var transaction = _dataContext.Database.BeginTransaction();
+
+                    #region Eliminar datos previos
+
+                    if (tipoArchivo == 1)
+                        _repo.EliminarDocumentoCDP();
+
+                    if (tipoArchivo == 2)
+                        _repo.EliminarDocumentoCompromiso();
+
+                    if (tipoArchivo == 3)
+                        _repo.EliminarDocumentoObligacion();
+
+                    if (tipoArchivo == 4)
+                        _repo.EliminarDocumentoOrdenPago();
+
+                    #endregion Eliminar datos previos
 
                     #region Insertar lista en la base de datos
 
-                    var EsCabeceraCorrecto = _repo.InsertarListaDocumentoCDP(listaDocumento);
+                    if (listaCdp != null && listaCdp.Count > 0)
+                        _repo.InsertarListaDocumentoCDP(listaCdp);
+
+                    if (listaCompromiso != null && listaCompromiso.Count > 0)
+                        _repo.InsertarListaDocumentoCompromiso(listaCompromiso);
+
+                    if (listaObligacion != null && listaObligacion.Count > 0)
+                        _repo.InsertarListaDocumentoObligacion(listaObligacion);
+
+                    if (listaOrdenPago != null && listaOrdenPago.Count > 0)
+                        _repo.InsertarListaDocumentoOrdenPago(listaOrdenPago);
 
                     #endregion Insertar lista en la base de datos
-
-                    if (!EsCabeceraCorrecto)
-                        throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
 
                     transaction.Commit();
                 }
@@ -195,9 +233,59 @@ namespace ComplementApp.API.Controllers
                 return BadRequest("El archivo no pudo ser enviado al servidor web");
             }
 
-            return Ok();
+            return Ok(tipoArchivo);
         }
 
+        private IFormFile ObtenerArchivoDeLista(IFormFile archivo, int tipoArchivo)
+        {
+            IFormFile file = null;
+
+            if (archivo != null)
+            {
+                if (tipoArchivo == 1 && archivo.FileName.ToUpper().Contains("CDP"))
+                {
+                    file = archivo;
+                }
+
+                if (tipoArchivo == 2 && archivo.FileName.ToUpper().Contains("COMPROMISO"))
+                {
+                    file = archivo;
+                }
+
+                if (tipoArchivo == 3 && archivo.FileName.ToUpper().Contains("OBLIGA"))
+                {
+                    file = archivo;
+                }
+
+                if (tipoArchivo == 4 && archivo.FileName.ToUpper().Contains("ORDENES"))
+                {
+                    file = archivo;
+                }
+
+            }
+            return file;
+        }
+
+        private int ObtenerTipoArhivo(IFormFile cdp, IFormFile compromiso, IFormFile obligacion, IFormFile ordenPago)
+        {
+            if (cdp != null)
+            {
+                return 1;
+            }
+            if (compromiso != null)
+            {
+                return 2;
+            }
+            if (obligacion != null)
+            {
+                return 3;
+            }
+            if (ordenPago != null)
+            {
+                return 4;
+            }
+            return 0;
+        }
 
         #endregion Carga Registro Gestion Presupuestal
 

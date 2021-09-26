@@ -9,80 +9,46 @@
     <div class="col-12 addPadding">
       <div class="modal-body" style="padding-top: 0px">
         <div class="row">
-          <div class="col-12">
-            <h3>Seleccionar los archivos a cargar</h3>
+          <div class="col-md-3">
+            <h3>Seleccionar los archivos</h3>
 
-            <table class="table">
-              <tr class="spaceUnder">
-                <td style="width: 15%;">
-                  <label for="cdp">Cdp</label>
-                </td>
-                <td style="width: 85%;">
-                  <input
-                    type="file"
-                    ng2FileSelect
-                    [uploader]="uploader"
-                    id="cdp"
-                  />
-                </td>
-              </tr>
-              <tr class="spaceUnder">
-                <td>
-                  <label for="compromiso">Compromiso</label>
-                </td>
-                <td>
-                  <input
-                    type="file"
-                    ng2FileSelect
-                    [uploader]="uploader"
-                    id="compromiso"
-                  />
-                </td>
-              </tr>
-              <tr class="spaceUnder">
-                <td>
-                  <label for="obligacion">Obligación</label>
-                </td>
-                <td>
-                  <input
-                    type="file"
-                    ng2FileSelect
-                    [uploader]="uploader"
-                    id="obligacion"
-                  />
-                </td>
-              </tr>
-              <tr class="spaceUnder">
-                <td>
-                  <label for="ordenPago">Orden de Pago</label>
-                </td>
-                <td>
-                  <input
-                    type="file"
-                    ng2FileSelect
-                    [uploader]="uploader"
-                    id="ordenPago"
-                  />
-                </td>
-              </tr>
-            </table>
+            <div
+              ng2FileDrop
+              [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
+              (fileOver)="fileOverBase($event)"
+              [uploader]="uploader"
+              class="well my-drop-zone"
+            >
+              <i class="fa fa-upload fa-5x"></i>
+              Soltar los archivos aquí
+            </div>
+
+            <input
+              type="file"
+              ng2FileSelect
+              [uploader]="uploader"
+              multiple
+              style="display: none"
+            /><br />
+
+            <input
+              type="file"
+              ng2FileSelect
+              [uploader]="uploader"
+              style="display: none"
+            />
           </div>
-        </div>
-        <div class="row">
-          <div
-            class="col-md-12"
-            style="margin-bottom: 40px"
-            *ngIf="uploader?.queue?.length"
-          >
+
+          <div class="col-md-9" style="margin-bottom: 40px">
             <h3>Archivos a cargar</h3>
             <p>Cantidad de archivos: {{ uploader?.queue?.length }}</p>
 
             <table class="table">
               <thead>
                 <tr>
-                  <th width="40%">Nombre</th>
+                  <th width="50%">Nombre</th>
                   <th>Tamaño</th>
-                  <th>Acción</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,17 +62,17 @@
                   <td nowrap>
                     <button
                       type="button"
-                      class="btn btn-success btn-xs mr-2"
+                      class="btn btn-success btn-xs"
                       (click)="item.upload()"
                       [disabled]="
                         item.isReady || item.isUploading || item.isSuccess
                       "
                     >
-                      <span class="glyphicon glyphicon-upload"></span> Anexar
+                      <span class="glyphicon glyphicon-upload"></span> Cargar
                     </button>
                     <button
                       type="button"
-                      class="btn btn-danger btn-xs"
+                      class="btn btn-danger btn-xs ml-2"
                       (click)="item.remove()"
                     >
                       <span class="glyphicon glyphicon-trash"></span> Eliminar
@@ -127,29 +93,22 @@
                   ></div>
                 </div>
               </div>
-              <div class="row">
-                <div>
-                  <button
-                    type="button"
-                    class="btn btn-success btn-s mr-2 ml-2"
-                    (click)="uploader.uploadAll()"
-                    [disabled]="!uploader.getNotUploadedItems().length"
-                  >
-                    <span class="fa fa-upload"></span> Anexar todo
-                  </button>
-                </div>
-                <div class="divider"></div>
-                <div>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-s"
-                    (click)="uploader.clearQueue()"
-                    [disabled]="!uploader.queue.length"
-                  >
-                    <span class="fa fa-trash"></span> Eliminar
-                  </button>
-                </div>
-              </div>
+              <button
+                type="button"
+                class="btn btn-success btn-s"
+                (click)="uploader.uploadAll()"
+                [disabled]="!uploader.getNotUploadedItems().length"
+              >
+                <span class="glyphicon glyphicon-upload"></span> Cargar todo
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger btn-s ml-2"
+                (click)="uploader.clearQueue()"
+                [disabled]="!uploader.queue.length"
+              >
+                <span class="glyphicon glyphicon-trash"></span> Eliminar
+              </button>
             </div>
           </div>
         </div>

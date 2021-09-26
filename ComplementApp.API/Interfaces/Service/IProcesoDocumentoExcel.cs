@@ -31,9 +31,12 @@ namespace ComplementApp.API.Interfaces.Service
 
         #region Carga Registro Gestion Presupuestal
 
-        DataTable ObtenerInformacionDocumentoCdp(IFormFile file);
+        DataTable ObtenerInformacionDocumentoExcel(IFormFile file, int numeroColumna);
 
         List<DocumentoCdp> obtenerListaDocumentoCdp(DataTable dtCabecera);
+        List<DocumentoCompromiso> obtenerListaDocumentoCompromiso(DataTable dtCabecera);
+        List<DocumentoObligacion> obtenerListaDocumentoObligacion(DataTable dtCabecera);
+        List<DocumentoOrdenPago> obtenerListaDocumentoOrdenPago(DataTable dtCabecera);
 
         #endregion Carga Registro Gestion Presupuestal
 

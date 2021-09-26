@@ -575,55 +575,58 @@ namespace ComplementApp.API.Services
 
         #region Carga Registro Gestion Presupuestal
 
-        public DataTable ObtenerInformacionDocumentoCdp(IFormFile file)
+        public DataTable ObtenerInformacionDocumentoExcel(IFormFile file, int numeroColumna)
         {
             DataTable dtCabecera1 = new DataTable();
             bool hasHeader = true;
-            try
+            if (file != null)
             {
-                using (var package = new ExcelPackage())
+                try
                 {
-                    using (var stream = new MemoryStream())
+                    using (var package = new ExcelPackage())
                     {
-                        file.CopyTo(stream);
-                        package.Load(stream);
-                    }
-
-                    #region Cargar Cabecera
-
-                    var wsCabecera = package.Workbook.Worksheets[0];
-
-                    if (wsCabecera != null)
-                    {
-                        foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, 23])
+                        using (var stream = new MemoryStream())
                         {
-                            dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                            file.CopyTo(stream);
+                            package.Load(stream);
                         }
-                        var startRow = hasHeader ? 2 : 1;
-                        for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
-                        {
-                            var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, 23];
-                            DataRow row = dtCabecera1.Rows.Add();
-                            foreach (var cell in wsRow)
-                            {
-                                row[cell.Start.Column - 1] = cell.Value;
-                            }
-                            //Dejo de leer la hoja del excel
-                            //Razón de la salida: CDP de la hoja BD
-                            if (row.ItemArray[1].ToString().Equals(string.Empty))
-                            {
-                                dtCabecera1.Rows.Remove(row);
-                                break;
-                            }
-                        }
-                    }
 
-                    #endregion Cargar Cabecera                    
+                        #region Cargar Cabecera
+
+                        var wsCabecera = package.Workbook.Worksheets[0];
+
+                        if (wsCabecera != null)
+                        {
+                            foreach (var firstRowCell in wsCabecera.Cells[1, 1, 1, numeroColumna])
+                            {
+                                dtCabecera1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                            }
+                            var startRow = hasHeader ? 2 : 1;
+                            for (int rowNum = startRow; rowNum <= wsCabecera.Dimension.End.Row; rowNum++)
+                            {
+                                var wsRow = wsCabecera.Cells[rowNum, 1, rowNum, numeroColumna];
+                                DataRow row = dtCabecera1.Rows.Add();
+                                foreach (var cell in wsRow)
+                                {
+                                    row[cell.Start.Column - 1] = cell.Value;
+                                }
+                                //Dejo de leer la hoja del excel
+                                //Razón de la salida: CDP de la hoja BD
+                                if (row.ItemArray[1].ToString().Equals(string.Empty))
+                                {
+                                    dtCabecera1.Rows.Remove(row);
+                                    break;
+                                }
+                            }
+                        }
+
+                        #endregion Cargar Cabecera                    
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                throw;
+                catch (Exception)
+                {
+                    throw;
+                }
             }
             return dtCabecera1;
         }
@@ -688,6 +691,313 @@ namespace ComplementApp.API.Services
                 documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[20].ToString(), 6000);
                 documento.OrdenesPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[21].ToString(), 6000);
                 documento.Reintegros = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[22].ToString(), 3000);
+
+                listaDocumento.Add(documento);
+            }
+
+            return listaDocumento;
+        }
+
+        public List<DocumentoCompromiso> obtenerListaDocumentoCompromiso(DataTable dtCabecera)
+        {
+            DocumentoCompromiso documento = null;
+            List<DocumentoCompromiso> listaDocumento = new List<DocumentoCompromiso>();
+            int numValue = 0;
+            decimal value = 0;
+            DateTime fecha;
+
+            foreach (var row in dtCabecera.Rows)
+            {
+                documento = new DocumentoCompromiso();
+
+                //Instancia
+                if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
+                        documento.NumeroDocumento = numValue;
+
+                //FechaRegistro
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[1].ToString(), out fecha))
+                        documento.FechaRegistro = fecha;
+
+                //FechaCreacion
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[2].ToString(), out fecha))
+                        documento.FechaCreacion = fecha;
+
+                documento.Estado = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[3].ToString(), 100);
+                documento.Dependencia = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[4].ToString(), 20);
+                documento.DependenciaDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[5].ToString(), 250);
+                documento.IdentificacionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[6].ToString(), 250);
+                documento.DescripcionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), 250);
+                documento.FuenteFinanciacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[8].ToString(), 50);
+                documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[9].ToString(), 50);
+                documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[10].ToString(), 10);
+
+                if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
+                        documento.ValorInicial = value;
+
+                if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                        documento.ValorOperacion = value;
+
+                if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
+                        documento.ValorActual = value;
+
+                if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
+                        documento.SaldoPorUtilizar = value;
+
+                documento.TipoIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[15].ToString(), 100);
+                documento.NumeroIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 20);
+                documento.NombreRazonSocial = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[17].ToString(), 250);
+                documento.MedioPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[18].ToString(), 100);
+                documento.TipoCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[19].ToString(), 100);
+                documento.NumeroCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[20].ToString(), 100);
+                documento.EstadoCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[21].ToString(), 100);
+                documento.EntidadNit = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[22].ToString(), 100);
+                documento.EntidadDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[23].ToString(), 250);
+                documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 50);
+                documento.Cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 50);
+                documento.Compromisos = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[26].ToString(), 6000);
+                documento.CuentasXPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[27].ToString(), 6000);
+                documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[28].ToString(), 6000);
+                documento.OrdenesPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[29].ToString(), 6000);
+                documento.Reintegros = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[30].ToString(), 3000);
+
+                //FechaDocumentoSoporte
+                if (!(row as DataRow).ItemArray[31].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[31].ToString(), out fecha))
+                        documento.FechaDocumentoSoporte = fecha;
+
+                documento.TipoDocumentoSoporte = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[32].ToString(), 100);
+                documento.NumeroDocumentoSoporte = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[33].ToString(), 100);
+                documento.Observaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[34].ToString(), 250);
+
+                listaDocumento.Add(documento);
+            }
+
+            return listaDocumento;
+        }
+
+        public List<DocumentoObligacion> obtenerListaDocumentoObligacion(DataTable dtCabecera)
+        {
+            DocumentoObligacion documento = null;
+            List<DocumentoObligacion> listaDocumento = new List<DocumentoObligacion>();
+            int numValue = 0;
+            decimal value = 0;
+            DateTime fecha;
+
+            foreach (var row in dtCabecera.Rows)
+            {
+                documento = new DocumentoObligacion();
+
+                //NumeroDocumento
+                if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
+                        documento.NumeroDocumento = numValue;
+
+                //FechaRegistro
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[1].ToString(), out fecha))
+                        documento.FechaRegistro = fecha;
+
+                //FechaCreacion
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[2].ToString(), out fecha))
+                        documento.FechaCreacion = fecha;
+
+                documento.Estado = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[3].ToString(), 100);
+
+                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[4].ToString(), out value))
+                        documento.ValorActual = value;
+
+                if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
+                        documento.ValorDeduccion = value;
+
+                if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
+                        documento.ValorObligadoNoOrdenado = value;
+
+                documento.TipoIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), 100);
+                documento.NumeroIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[8].ToString(), 20);
+                documento.NombreRazonSocial = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[9].ToString(), 250);
+                documento.MedioPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[10].ToString(), 100);
+                documento.TipoCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[11].ToString(), 100);
+                documento.NumeroCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[12].ToString(), 100);
+                documento.EstadoCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[13].ToString(), 100);
+                documento.EntidadNit = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[14].ToString(), 100);
+                documento.EntidadDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[15].ToString(), 250);
+                documento.Dependencia = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 20);
+                documento.DependenciaDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[17].ToString(), 250);
+                documento.IdentificacionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[18].ToString(), 250);
+                documento.DescripcionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[19].ToString(), 250);
+
+                if (!(row as DataRow).ItemArray[20].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[20].ToString(), out value))
+                        documento.ValorInicial = value;
+
+                if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[21].ToString(), out value))
+                        documento.ValorOperacion = value;
+
+                if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[22].ToString(), out value))
+                        documento.ValorActual = value;
+
+                if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[23].ToString(), out value))
+                        documento.SaldoPorUtilizar = value;
+
+
+                documento.FuenteFinanciacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 50);
+                documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 50);
+                documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[26].ToString(), 10);
+                documento.Concepto = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[27].ToString(), 3000);
+
+                documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[28].ToString(), 100);
+                documento.Cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[29].ToString(), 100);
+                documento.Compromisos = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[30].ToString(), 100);
+                documento.CuentasXPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[31].ToString(), 100);
+
+                //FechaCuentaXPagar
+                if (!(row as DataRow).ItemArray[32].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[32].ToString(), out fecha))
+                        documento.FechaCuentaXPagar = fecha;
+
+                documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[33].ToString(), 100);
+                documento.OrdenesPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[34].ToString(), 100);
+                documento.Reintegros = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[35].ToString(), 100);
+
+                //FechaDocumentoSoporte
+                if (!(row as DataRow).ItemArray[36].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[36].ToString(), out fecha))
+                        documento.FechaDocumentoSoporte = fecha;
+
+                documento.TipoDocumentoSoporte = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[37].ToString(), 100);
+                documento.NumeroDocumentoSoporte = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[38].ToString(), 100);
+                documento.ObjetoCompromiso = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[39].ToString(), 250);
+
+                listaDocumento.Add(documento);
+            }
+
+            return listaDocumento;
+        }
+
+        public List<DocumentoOrdenPago> obtenerListaDocumentoOrdenPago(DataTable dtCabecera)
+        {
+            DocumentoOrdenPago documento = null;
+            List<DocumentoOrdenPago> listaDocumento = new List<DocumentoOrdenPago>();
+            int numValue = 0;
+            decimal value = 0;
+            DateTime fecha;
+
+            foreach (var row in dtCabecera.Rows)
+            {
+                documento = new DocumentoOrdenPago();
+
+                //NumeroDocumento
+                if (!(row as DataRow).ItemArray[0].ToString().Equals(string.Empty))
+                    if (Int32.TryParse((row as DataRow).ItemArray[0].ToString(), out numValue))
+                        documento.NumeroDocumento = numValue;
+
+                //FechaRegistro
+                if (!(row as DataRow).ItemArray[1].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[1].ToString(), out fecha))
+                        documento.FechaRegistro = fecha;
+
+                //FechaPago
+                if (!(row as DataRow).ItemArray[2].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[2].ToString(), out fecha))
+                        documento.FechaPago = fecha;
+
+                documento.Estado = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[3].ToString(), 100);
+
+                if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[4].ToString(), out value))
+                        documento.ValorBruto = value;
+
+                if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
+                        documento.ValorDeduccion = value;
+
+                if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
+                        documento.ValorNeto = value;
+
+                documento.TipoBeneficiario = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), 100);
+                documento.VigenciaPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[8].ToString(), 100);
+                documento.TipoIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[9].ToString(), 100);
+                documento.NumeroIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[10].ToString(), 20);
+                documento.NombreRazonSocial = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[11].ToString(), 250);
+                documento.MedioPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[12].ToString(), 100);
+                documento.TipoCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[13].ToString(), 100);
+                documento.NumeroCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[14].ToString(), 100);
+                documento.EstadoCuenta = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[15].ToString(), 100);
+                documento.EntidadNit = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 100);
+                documento.EntidadDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[17].ToString(), 250);
+                documento.Dependencia = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[18].ToString(), 20);
+                documento.DependenciaDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[19].ToString(), 250);
+                documento.IdentificacionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[20].ToString(), 250);
+                documento.DescripcionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[21].ToString(), 250);
+                documento.FuenteFinanciacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[22].ToString(), 50);
+                documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[23].ToString(), 50);
+                documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 10);
+
+                if (!(row as DataRow).ItemArray[25].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[25].ToString(), out value))
+                        documento.ValorPesos = value;
+
+                if (!(row as DataRow).ItemArray[26].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[26].ToString(), out value))
+                        documento.ValorMoneda = value;
+
+                if (!(row as DataRow).ItemArray[27].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[27].ToString(), out value))
+                        documento.ValorReintegradoPesos = value;
+
+                if (!(row as DataRow).ItemArray[28].ToString().Equals(string.Empty))
+                    if (decimal.TryParse((row as DataRow).ItemArray[28].ToString(), out value))
+                        documento.ValorReintegradoMoneda = value;
+
+                documento.TesoreriaPagadora = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[29].ToString(), 100);
+                documento.IdentificacionPagaduria = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[30].ToString(), 100);
+                documento.CuentaPagaduria = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[31].ToString(), 100);
+                documento.Endosada = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[32].ToString(), 10);
+
+                documento.TipoIdentificacion1 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[33].ToString(), 100);
+                documento.NumeroIdentificacion1 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[34].ToString(), 20);
+                documento.NombreRazonSocial1 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[35].ToString(), 250);
+                documento.NumeroCuenta1 = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[36].ToString(), 100);
+
+                documento.ConceptoPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[37].ToString(), 1000);
+
+                documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[38].ToString(), 100);
+                documento.Cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[39].ToString(), 100);
+                documento.Compromisos = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[40].ToString(), 100);
+                documento.CuentasXPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[41].ToString(), 100);
+
+                //FechaCuentaXPagar
+                if (!(row as DataRow).ItemArray[42].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[42].ToString(), out fecha))
+                        documento.FechaCuentaXPagar = fecha;
+
+                documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[43].ToString(), 100);
+                documento.OrdenesPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[44].ToString(), 100);
+                documento.Reintegros = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[45].ToString(), 100);
+
+                //FechaDocumentoSoporte
+                if (!(row as DataRow).ItemArray[46].ToString().Equals(string.Empty))
+                    if (DateTime.TryParse((row as DataRow).ItemArray[46].ToString(), out fecha))
+                        documento.FechaDocumentoSoporteCompromiso = fecha;
+
+                documento.TipoDocumentoSoporteCompromiso = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[47].ToString(), 100);
+                documento.NumeroDocumentoSoporteCompromiso = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[48].ToString(), 100);
+                documento.ObjetoCompromiso = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[49].ToString(), 250);
 
                 listaDocumento.Add(documento);
             }

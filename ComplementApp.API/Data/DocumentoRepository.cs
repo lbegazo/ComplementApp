@@ -627,7 +627,7 @@ namespace ComplementApp.API.Data
 
         #region Carga Registro Gestion Presupuestal
 
-public bool EliminarDocumentoCDP()
+        public bool EliminarDocumentoCDP()
         {
             try
             {
@@ -700,6 +700,45 @@ public bool EliminarDocumentoCDP()
             try
             {
                 _context.BulkInsert(listaCdp);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool InsertarListaDocumentoObligacion(IList<DocumentoObligacion> lista)
+        {
+            try
+            {
+                _context.BulkInsert(lista);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool InsertarListaDocumentoCompromiso(IList<DocumentoCompromiso> lista)
+        {
+            try
+            {
+                _context.BulkInsert(lista);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool InsertarListaDocumentoOrdenPago(IList<DocumentoOrdenPago> lista)
+        {
+            try
+            {
+                _context.BulkInsert(lista);
                 return true;
             }
             catch (Exception)

@@ -71,9 +71,21 @@ export class CargaGestionPresupuestalComponent implements OnInit {
     headers: ParsedResponseHeaders
   ): any {
     if (status === 200) {
-      this.alertify.success('El archivo fue anexado exitosamente');
+      let documento = '';
+      if (response === '1') {
+        documento = 'CDPs';
+      } else if (response === '2') {
+        documento = 'Compromisos';
+      } else if (response === '3') {
+        documento = 'Obligaciones';
+      } else if (response === '4') {
+        documento = 'Ordenes de pago';
+      }
+      this.alertify.success(
+        'El archivo ' + documento + ' fue cargado exitosamente'
+      );
     } else {
-      this.alertify.error('No se pudo anexar el archivo');
+      this.alertify.error('No se pudo cargar el archivo');
     }
   }
 
@@ -83,7 +95,6 @@ export class CargaGestionPresupuestalComponent implements OnInit {
     status: number,
     headers: ParsedResponseHeaders
   ): any {
-    this.alertify.error('Ocurrió un error al ejecutar el proceso ' + response);
+    this.alertify.error('Ocurrió un error al ejecutar el proceso: ' + response);
   }
-
 }

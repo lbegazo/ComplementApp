@@ -22,6 +22,8 @@ namespace ComplementApp.API.Interfaces.Repository
 
         bool EliminarCabeceraCDPXInstancia(int instancia);
 
+        #region Carga Registro Gestion Presupuestal
+
         bool EliminarDocumentoCDP();
 
         bool EliminarDocumentoCompromiso();
@@ -30,7 +32,14 @@ namespace ComplementApp.API.Interfaces.Repository
 
         bool EliminarDocumentoOrdenPago();
 
-
         bool InsertarListaDocumentoCDP(IList<DocumentoCdp> listaCdp);
+
+        bool InsertarListaDocumentoCompromiso(IList<DocumentoCompromiso> lista);
+
+        bool InsertarListaDocumentoObligacion(IList<DocumentoObligacion> lista);
+
+        bool InsertarListaDocumentoOrdenPago(IList<DocumentoOrdenPago> lista);
+
+        #endregion Carga Registro Gestion Presupuestal
     }
 }
