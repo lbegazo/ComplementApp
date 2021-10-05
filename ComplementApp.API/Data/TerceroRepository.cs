@@ -143,8 +143,7 @@ namespace ComplementApp.API.Data
                              NumeroIdentificacion = t.NumeroIdentificacion,
                              Nombre = t.Nombre,
                          })
-                           .Distinct()
-                           .OrderBy(t => t.Nombre);
+                        .OrderBy(t => t.Nombre);
             }
             else
             {
@@ -161,8 +160,7 @@ namespace ComplementApp.API.Data
                              NumeroIdentificacion = t.NumeroIdentificacion,
                              Nombre = t.Nombre,
                          })
-                           .Distinct()
-                           .OrderBy(t => t.Nombre);
+                        .OrderBy(t => t.Nombre);
             }
 
             return await PagedList<TerceroDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);

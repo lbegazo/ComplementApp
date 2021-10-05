@@ -104,12 +104,9 @@ namespace ComplementApp.API.Data
             var lista = (from c in _context.PlanPago
                          join e in _context.Estado on c.EstadoPlanPagoId equals e.EstadoId
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
-                         from pl in parametroLiquidacion.DefaultIfEmpty()
-                         where c.PciId == pl.PciId
+                         join pl in _context.ParametroLiquidacionTercero on new { c.TerceroId, c.PciId } equals new { pl.TerceroId, pl.PciId }
                          where c.Crp == crp
                          where c.PciId == userParams.PciId
-                         where pl.PciId == userParams.PciId
                          where listaEstadoId.Contains(c.EstadoPlanPagoId.Value)
                          where c.SaldoDisponible > 0
                          select new PlanPago()
