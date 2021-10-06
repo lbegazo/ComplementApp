@@ -27,6 +27,7 @@ namespace ComplementApp.API.Dtos
         public decimal SaldoActual { get; set; }
         public string IdentificacionRubroPresupuestal { get; set; }
         public string IdentificacionUsoPresupuestal { get; set; }
+        public string FuenteFinanciacion { get; set; }
         public string NombreSupervisor { get; set; }
         public string NumeroRadicadoSupervisor { get; set; }
         public DateTime FechaRadicadoSupervisor { get; set; }

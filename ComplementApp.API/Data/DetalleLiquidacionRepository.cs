@@ -347,13 +347,14 @@ namespace ComplementApp.API.Data
                                            select pp.Crp).ToHashSet();
 
             var lista = (from dl in _context.DetalleLiquidacion
-                         join c in _context.PlanPago on dl.PlanPagoId equals c.PlanPagoId
+                         join sp in _context.FormatoSolicitudPago on new { FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value } equals new { sp.FormatoSolicitudPagoId }
+                         join dsp in _context.DetalleFormatoSolicitudPago on new { sp.FormatoSolicitudPagoId } equals new { dsp.FormatoSolicitudPagoId }
+                         join cpc in _context.ClavePresupuestalContable on new { ClavePresupuestalContableId = dsp.ClavePresupuestalContableId.Value } equals new { cpc.ClavePresupuestalContableId }
+                         join rp in _context.RubroPresupuestal on new { dsp.RubroPresupuestalId } equals new { rp.RubroPresupuestalId }
+                         join ff in _context.FuenteFinanciacion on new { cpc.FuenteFinanciacionId } equals new { ff.FuenteFinanciacionId }
+                         join c in _context.PlanPago on new { dl.PlanPagoId, dl.PciId } equals new { c.PlanPagoId, c.PciId }
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         join p in _context.ParametroLiquidacionTercero on c.TerceroId equals p.TerceroId into parametroLiquidacion
-                         from pl in parametroLiquidacion.DefaultIfEmpty()
                          where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
-                         where dl.PciId == c.PciId
-                         where dl.PciId == pl.PciId
                          where dl.PciId == userParams.PciId
                          where (dl.TerceroId == terceroId || terceroId == null)
                          where (dl.Procesado == procesado || procesado == null)
@@ -367,8 +368,10 @@ namespace ComplementApp.API.Data
                              NombreTercero = dl.Nombre,
                              NumeroRadicadoSupervisor = dl.NumeroRadicado,
                              FechaRadicadoSupervisor = dl.FechaRadicado,
-                             ValorTotal = c.ValorFacturado.Value,
+                             ValorTotal = dsp.ValorAPagar,
                              TieneClavePresupuestalContable = listaCompromisoConClave.Contains(c.Crp),
+                             IdentificacionRubroPresupuestal = rp.Identificacion,
+                             FuenteFinanciacion = ff.Nombre
                          });
 
             if (lista != null)

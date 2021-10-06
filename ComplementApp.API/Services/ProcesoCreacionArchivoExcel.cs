@@ -402,6 +402,8 @@ namespace ComplementApp.API.Services
             dt.Columns.Add(new DataColumn("FECHA_RADICADO", typeof(string)));
             dt.Columns.Add(new DataColumn("VALOR_FACTURADO", typeof(decimal)));
             dt.Columns.Add(new DataColumn("TIENE_CLAVE", typeof(string)));
+            dt.Columns.Add(new DataColumn("RUBRO_PRESUPUESTAL", typeof(string)));
+            dt.Columns.Add(new DataColumn("FUENTE_FINANCIACION", typeof(string)));
 
             foreach (var item in lista)
             {
@@ -414,6 +416,8 @@ namespace ComplementApp.API.Services
                 dr["FECHA_RADICADO"] = item.FechaRadicadoSupervisor.ToString("yyyy-MM-dd");
                 dr["VALOR_FACTURADO"] = item.ValorTotal;
                 dr["TIENE_CLAVE"] = item.TieneClavePresupuestalContable ? "SI" : "NO";
+                dr["RUBRO_PRESUPUESTAL"] = item.IdentificacionRubroPresupuestal;
+                dr["FUENTE_FINANCIACION"] = item.FuenteFinanciacion;
                 dt.Rows.Add(dr);
                 consecutivo++;
             }
