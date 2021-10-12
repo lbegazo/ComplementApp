@@ -18,8 +18,6 @@ import { SolicitudCdpComponent } from './reporte/solicitud-cdp/solicitud-cdp.com
 import { RadicadoPagoMensualComponent } from './reporte/radicado-pago-mensual/radicado-pago-mensual.component';
 import { ClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable.component';
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
-import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
-import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
 
 import { PlanPagoComponent } from './administracion/plan-pago/plan-pago.component';
 import { ListaAreasResolver } from './_resolvers/lista-areas.resolver';
@@ -57,6 +55,8 @@ import { ObligacionPresupuestalComponent } from './generador-archivos/obligacion
 import { CargaMasivaOrdenPagoComponent } from './generador-archivos/carga-masiva-orden-pago/carga-masiva-orden-pago.component';
 import { AdministracionArchivosComponent } from './generador-archivos/administracion-archivos/administracion-archivos.component';
 import { ListaTipoArchivoResolver } from './_resolvers/lista-TipoArchivo.resolver';
+import { AprobacionSolicitudPagoComponent } from './tramite-pago/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
+import { RegistroSolicitudPagoComponent } from './tramite-pago/registro-solicitud-pago/registro-solicitud-pago.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },

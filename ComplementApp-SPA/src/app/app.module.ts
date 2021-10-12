@@ -86,14 +86,6 @@ import { ClavePresupuestalContableEditComponent } from './administracion/clave-p
 import { ParametroLiquidacionTerceroComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-tercero.component';
 import { ParametroLiquidacionEditComponent } from './administracion/parametro-liquidacion-tercero/parametro-liquidacion-edit/parametro-liquidacion-edit.component';
 import { LongDecimalMaskDirective } from './_directives/long-decimal-mask.directive';
-import { RegistroSolicitudPagoComponent } from './tramites/registro-solicitud-pago/registro-solicitud-pago.component';
-import { FormatoSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/formato-solicitud-pago.component';
-import { PopupSolicitudPagoComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-solicitud-pago/popup-solicitud-pago.component';
-import { PopupFacturaComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-factura/popup-factura.component';
-import { PopupCargarArchivosComponent } from './tramites/registro-solicitud-pago/formato-solicitud-pago/popup-cargar-archivos/popup-cargar-archivos.component';
-import { AprobacionSolicitudPagoComponent } from './tramites/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
-import { FormatoSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/formato-solicitud-pago-aprobacion.component';
-import { PopupSolicitudPagoAprobacionComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion/popup-solicitud-pago-aprobacion.component';
 import { PopupClavePresupuestalContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/popup-clave-presupuestal-contable/popup-clave-presupuestal-contable.component';
 
 import { DecimalMaskDirective } from './_directives/decimal-mask.directive';
@@ -109,7 +101,6 @@ import { ListaTipoIvaResolver } from './_resolvers/lista-TipoIva.resolver';
 import { ListaTipoPagoResolver } from './_resolvers/lista-TipoPago.resolver';
 import { ListaSupervisorResolver } from './_resolvers/lista-Supervisor.resolver';
 import { ListaSIoNOResolver } from './_resolvers/lista-SiONo.resolver';
-import { PopupSolicitudPagoRechazoComponent } from './tramites/aprobacion-solicitud-pago/formato-solicitud-pago-aprobacion/popup-solicitud-pago-rechazo/popup-solicitud-pago-rechazo.component';
 import { ListaAdminPilaResolver } from './_resolvers/lista-AdminPila.resolver';
 import { TerceroEditComponent } from './administracion/tercero/tercero-edit/tercero-edit.component';
 import { TerceroComponent } from './administracion/tercero/tercero.component';
@@ -129,9 +120,6 @@ import { PopupRubroPresupuestalComponent } from './plan-paa/plan-adquisicion/pop
 import { ListaUsuarioResolver } from './_resolvers/lista-Usuario.resolver';
 import { ListaDependenciaResolver } from './_resolvers/lista-Dependencia.resolver';
 import { PopupCompromisoComponent } from './plan-paa/plan-adquisicion/popup-compromiso/popup-compromiso.component';
-import { RegistroAprobacionSolicitudPagoComponent } from './tramites/registro-aprobacion-solicitud-pago/registro-aprobacion-solicitud-pago.component';
-import { FormatoSolicitudPagoEditComponent } from './tramites/registro-aprobacion-solicitud-pago/formato-solicitud-pago-edit/formato-solicitud-pago-edit.component';
-import { PopupSolicitudPagoEditComponent } from './tramites/registro-aprobacion-solicitud-pago/formato-solicitud-pago-edit/popup-solicitud-pago-edit/popup-solicitud-pago-edit.component';
 import { SolicitudDisponibilidadPresupuestalComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal.component';
 import { SolicitudDisponibilidadPresupuestalEditComponent } from './SolicitudGestionPresupuestal/SolicitudDisponibilidadPresupuestal/solicitud-disponibilidad-presupuestal/solicitud-disponibilidad-presupuestal-edit/solicitud-disponibilidad-presupuestal-edit.component';
 import { PlanAnualAdquisicionComponent } from './reporte/plan-anual-adquisicion/plan-anual-adquisicion/plan-anual-adquisicion.component';
@@ -211,14 +199,6 @@ export function tokenGetter() {
     ParametroLiquidacionTerceroComponent,
     ParametroLiquidacionEditComponent,
     PopupParametroLiquidacionTerceroComponent,
-    RegistroSolicitudPagoComponent,
-    FormatoSolicitudPagoComponent,
-    PopupFacturaComponent,
-    PopupCargarArchivosComponent,
-    AprobacionSolicitudPagoComponent,
-    FormatoSolicitudPagoAprobacionComponent,
-    PopupSolicitudPagoAprobacionComponent,
-    PopupSolicitudPagoRechazoComponent,
     PlanPagoComponent,
     PlanPagoEditComponent,
     TerceroComponent,
@@ -232,10 +212,6 @@ export function tokenGetter() {
     PopupActividadEspecificaComponent,
     PopupRubroPresupuestalComponent,
     PopupCompromisoComponent,
-    RegistroAprobacionSolicitudPagoComponent,
-    FormatoSolicitudPagoEditComponent,
-    PopupSolicitudPagoComponent,
-    PopupSolicitudPagoEditComponent,
     SolicitudDisponibilidadPresupuestalComponent,
     SolicitudDisponibilidadPresupuestalEditComponent,
     PlanAnualAdquisicionComponent,
