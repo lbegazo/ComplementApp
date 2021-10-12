@@ -657,6 +657,40 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        public async Task<IActionResult> ObtenerLiquidacionIdsParaObligacionArchivo([FromQuery(Name = "terceroId")] int? terceroId,
+                                                             [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
+                                                             [FromQuery(Name = "procesado")] int? procesado,
+                                                             [FromQuery] UserParams userParams)
+        {
+            try
+            {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+                userParams.PciId = pciId;
+                List<int> listIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
+                bool? esProcesado = null;
+
+                if (procesado.HasValue)
+                {
+                    esProcesado = (procesado.Value == 1) ? (true) : (false);
+                }
+
+                var lista = await _repo.ObtenerLiquidacionIdsParaObligacionArchivo( terceroId, listIds, esProcesado, userParams);
+                return Ok(lista);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            throw new Exception($"No se pudo obtener la lista de liquidaciones");
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public async Task<IActionResult> DescargarListaDetalleLiquidacion([FromQuery(Name = "terceroId")] int? terceroId,
                                                            [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
                                                            [FromQuery(Name = "procesado")] int? procesado,
@@ -702,7 +736,6 @@ namespace ComplementApp.API.Controllers
         [Route("ObtenerListaLiquidacionIdParaArchivo")]
         public async Task<IActionResult> ObtenerListaLiquidacionIdParaArchivo([FromQuery(Name = "listaLiquidacionId")] string listaLiquidacionId,
                                                                                 [FromQuery(Name = "listaEstadoId")] string listaEstadoId,
-                                                                                [FromQuery(Name = "seleccionarTodo")] int? seleccionarTodo,
                                                                                 [FromQuery(Name = "terceroId")] int? terceroId,
                                                                                 [FromQuery(Name = "conRubroFuncionamiento")] int? conRubroFuncionamiento,
                                                                                 [FromQuery(Name = "conRubroUsoPresupuestal")] int? conRubroUsoPresupuestal
@@ -715,7 +748,6 @@ namespace ComplementApp.API.Controllers
             string resultado = string.Empty;
             RespuestaSolicitudPago respuestaSolicitud = new RespuestaSolicitudPago();
             List<int> listaEstadoIds = listaEstadoId.Split(',').Select(int.Parse).ToList();
-            bool esSeleccionarTodo = seleccionarTodo > 0 ? true : false;
             bool esRubroFuncionamiento = conRubroFuncionamiento > 0 ? true : false;
             bool esRubroUsoPresupuestal = conRubroUsoPresupuestal > 0 ? true : false;
 
@@ -747,24 +779,9 @@ namespace ComplementApp.API.Controllers
             {
                 #region Obtener lista de liquidaciones a procesar
 
-                if (esSeleccionarTodo)
+                if (!string.IsNullOrEmpty(listaLiquidacionId))
                 {
-                    #region esSeleccionarTodo
-
-                    liquidacionIdsTotal = await _repo.ObtenerLiquidacionIdsParaArchivoObligacion(pciId, terceroId, listaEstadoIds, false);
-
-                    #endregion esSeleccionarTodo
-                }
-                else
-                {
-                    #region Selección manual
-
-                    if (!string.IsNullOrEmpty(listaLiquidacionId))
-                    {
-                        liquidacionIdsTotal = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
-                    }
-
-                    #endregion Selección manual
+                    liquidacionIdsTotal = listaLiquidacionId.Split(',').Select(int.Parse).ToList();
                 }
 
                 #endregion Obtener lista de liquidaciones a procesar

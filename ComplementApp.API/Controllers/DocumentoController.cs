@@ -247,17 +247,17 @@ namespace ComplementApp.API.Controllers
                     file = archivo;
                 }
 
-                if (tipoArchivo == 2 && archivo.FileName.ToUpper().Contains("COMPROMISO"))
+                if (tipoArchivo == 2 && archivo.FileName.ToUpper().Contains("CRP"))
                 {
                     file = archivo;
                 }
 
-                if (tipoArchivo == 3 && archivo.FileName.ToUpper().Contains("OBLIGA"))
+                if (tipoArchivo == 3 && archivo.FileName.ToUpper().Contains("OB"))
                 {
                     file = archivo;
                 }
 
-                if (tipoArchivo == 4 && archivo.FileName.ToUpper().Contains("ORDENES"))
+                if (tipoArchivo == 4 && archivo.FileName.ToUpper().Contains("OP"))
                 {
                     file = archivo;
                 }

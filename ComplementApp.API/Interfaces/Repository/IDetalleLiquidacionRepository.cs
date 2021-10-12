@@ -52,6 +52,11 @@ namespace ComplementApp.API.Interfaces.Repository
                     bool? procesado,
                     UserParams userParams);
 
+        Task<List<int>> ObtenerLiquidacionIdsParaObligacionArchivo(int? terceroId,
+                                                                    List<int> listaEstadoId,
+                                                                    bool? procesado,
+                                                                    UserParams userParams);
+
         Task<bool> ValidarLiquidacionSinClavePresupuestal(
                                    int? terceroId,
                                    List<int> listaEstadoId, int pciId);

@@ -285,14 +285,38 @@ export class ObligacionPresupuestalComponent implements OnInit {
       this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
       this.liquidacionesSeleccionadas = [];
 
-      this.listaPlanPago.forEach((val: FormatoCausacionyLiquidacionPago) => {
-        this.liquidacionesSeleccionadas.push(val.detalleLiquidacionId);
-      });
+      // this.listaPlanPago.forEach((val: FormatoCausacionyLiquidacionPago) => {
+      //   this.liquidacionesSeleccionadas.push(val.detalleLiquidacionId);
+      // });
+      this.ObtenerLiquidacionIdsParaObligacionArchivo();
     } else {
       this.seleccionaTodas = false;
       this.listaPlanPago.forEach((item) => (item.esSeleccionada = checked));
       this.liquidacionesSeleccionadas = [];
     }
+  }
+
+  ObtenerLiquidacionIdsParaObligacionArchivo() {
+    this.listaEstadoId =
+      EstadoPlanPago.ConLiquidacionDeducciones.value.toString();
+
+    this.liquidacionService
+      .ObtenerLiquidacionIdsParaObligacionArchivo(
+        this.listaEstadoId,
+        this.terceroId,
+        0,
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage
+      )
+      .subscribe(
+        (documentos: number[]) => {
+          this.liquidacionesSeleccionadas = documentos;
+        },
+        (error) => {
+          this.alertify.error(error);
+        },
+        () => {}
+      );
   }
 
   descargarArchivo(response) {
@@ -423,7 +447,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
   DescargarArchivoDetalleLiquidacion() {
     let listaIds: number[] = [];
 
-    const esSeleccionarTodas = this.seleccionaTodas ? 1 : 0;
     let listaCadenaIds = '';
     let listaLiquidacionId = '';
     this.listaEstadoId =
@@ -435,16 +458,14 @@ export class ObligacionPresupuestalComponent implements OnInit {
     if (this.facturaHeaderForm.valid) {
       //#region Obtener lista de ids: listaCadenaIds
 
-      if (!this.seleccionaTodas) {
-        if (
-          this.liquidacionesSeleccionadas &&
-          this.liquidacionesSeleccionadas.length > 0
-        ) {
-          listaIds = this.liquidacionesSeleccionadas.filter(
-            (v, i) => this.liquidacionesSeleccionadas.indexOf(v) === i
-          );
-          listaCadenaIds = listaIds.join();
-        }
+      if (
+        this.liquidacionesSeleccionadas &&
+        this.liquidacionesSeleccionadas.length > 0
+      ) {
+        listaIds = this.liquidacionesSeleccionadas.filter(
+          (v, i) => this.liquidacionesSeleccionadas.indexOf(v) === i
+        );
+        listaCadenaIds = listaIds.join();
       }
 
       //#endregion Obtener lista de ids
@@ -458,7 +479,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
         .ObtenerListaLiquidacionIdParaArchivo(
           listaCadenaIds,
           this.listaEstadoId,
-          esSeleccionarTodas,
           this.terceroId,
           conRubroFuncionamiento,
           conRubroUsoPresupuestal
@@ -570,7 +590,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                               .ObtenerListaLiquidacionIdParaArchivo(
                                                 listaCadenaIds,
                                                 this.listaEstadoId,
-                                                esSeleccionarTodas,
                                                 this.terceroId,
                                                 conRubroFuncionamiento,
                                                 conRubroUsoPresupuestal
@@ -700,7 +719,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                 listaCadenaIds,
                                                                                 this
                                                                                   .listaEstadoId,
-                                                                                esSeleccionarTodas,
                                                                                 this
                                                                                   .terceroId,
                                                                                 conRubroFuncionamiento,
@@ -875,7 +893,6 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                                                       listaCadenaIds,
                                                                                                                       this
                                                                                                                         .listaEstadoId,
-                                                                                                                      esSeleccionarTodas,
                                                                                                                       this
                                                                                                                         .terceroId,
                                                                                                                       conRubroFuncionamiento,

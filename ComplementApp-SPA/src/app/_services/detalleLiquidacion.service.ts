@@ -290,6 +290,35 @@ export class DetalleLiquidacionService {
       );
   }
 
+  ObtenerLiquidacionIdsParaObligacionArchivo(
+    listaEstadoId: string,
+    terceroId?: number,
+    procesado?: number,
+    page?,
+    pagesize?
+  ): Observable<number[]> {
+    const path = 'ObtenerLiquidacionIdsParaObligacionArchivo';
+
+    let params = new HttpParams();
+    params = params.append('listaEstadoId', listaEstadoId);
+    if (terceroId > 0) {
+      params = params.append('terceroId', terceroId.toString());
+    }
+    if (procesado != null) {
+      params = params.append('procesado', procesado.toString());
+    }
+    if (page != null) {
+      params = params.append('pageNumber', page);
+    }
+    if (pagesize != null) {
+      params = params.append('pageSize', pagesize);
+    }
+
+    return this.http.get<number[]>(this.baseUrl + path, {
+      params,
+    });
+  }
+
   public DescargarListaDetalleLiquidacion(
     listaEstadoId: string,
     terceroId?: number,
@@ -345,7 +374,6 @@ export class DetalleLiquidacionService {
   ObtenerListaLiquidacionIdParaArchivo(
     listaLiquidacionId: string,
     listaEstadoId: string,
-    seleccionarTodo: number,
     terceroId: number,
     conRubroFuncionamiento: number,
     conRubroUsoPresupuestal: number
@@ -372,9 +400,6 @@ export class DetalleLiquidacionService {
     }
     if (terceroId > 0) {
       params = params.append('terceroId', terceroId.toString());
-    }
-    if (seleccionarTodo != null) {
-      params = params.append('seleccionarTodo', seleccionarTodo.toString());
     }
 
     return this.http.get<RespuestaSolicitudPago>(this.baseUrl + path, {
