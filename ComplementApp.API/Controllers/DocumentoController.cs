@@ -9,11 +9,18 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models.ExcelDocumento;
+using System.Security.Claims;
+using System.Linq;
 
 namespace ComplementApp.API.Controllers
 {
     public class DocumentoController : BaseApiController
     {
+         #region Variable
+        int pciId = 0;
+        string valorPciId = string.Empty;
+
+        #endregion 
 
         #region Propiedades
 
@@ -145,6 +152,12 @@ namespace ComplementApp.API.Controllers
             int tipoArchivo = 0;
             if (Request.Form.Files.Count > 0)
             {
+                valorPciId = User.FindFirst(ClaimTypes.Role).Value;
+                if (!string.IsNullOrEmpty(valorPciId))
+                {
+                    pciId = int.Parse(valorPciId);
+                }
+
                 IFormFile file = null;
                 IFormFile fileCdp = null;
                 IFormFile fileCompromiso = null;
@@ -208,16 +221,29 @@ namespace ComplementApp.API.Controllers
                     #region Insertar lista en la base de datos
 
                     if (listaCdp != null && listaCdp.Count > 0)
+                    {
+                        listaCdp.Select(c => {c.PciId = pciId; return c;}).ToList();
                         _repo.InsertarListaDocumentoCDP(listaCdp);
+                    }
 
                     if (listaCompromiso != null && listaCompromiso.Count > 0)
+                    {
+                        listaCompromiso.Select(c => {c.PciId = pciId; return c;}).ToList();
                         _repo.InsertarListaDocumentoCompromiso(listaCompromiso);
+                    }
 
                     if (listaObligacion != null && listaObligacion.Count > 0)
+                    {
+                        listaObligacion.Select(c => {c.PciId = pciId; return c;}).ToList();
                         _repo.InsertarListaDocumentoObligacion(listaObligacion);
+                    }
 
                     if (listaOrdenPago != null && listaOrdenPago.Count > 0)
+                    {
+                        listaOrdenPago.Select(c => {c.PciId = pciId; return c;}).ToList();
+                        
                         _repo.InsertarListaDocumentoOrdenPago(listaOrdenPago);
+                    }
 
                     #endregion Insertar lista en la base de datos
 

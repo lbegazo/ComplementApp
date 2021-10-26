@@ -167,5 +167,8 @@ namespace ComplementApp.API.Models.ExcelDocumento
 
         [Column(TypeName = "VARCHAR(250)")]
         public string ObjetoCompromiso { get; set; }
+
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

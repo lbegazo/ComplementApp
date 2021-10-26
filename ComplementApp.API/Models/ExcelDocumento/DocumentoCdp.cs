@@ -84,5 +84,8 @@ namespace ComplementApp.API.Models.ExcelDocumento
 
         [Column(TypeName = "VARCHAR(3000)")]
         public string Reintegros { get; set; }
+
+        public int? PciId { get; set; }
+        public Pci Pci { get; set; }
     }
 }

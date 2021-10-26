@@ -633,6 +633,7 @@ namespace ComplementApp.API.Services
 
         public List<DocumentoCdp> obtenerListaDocumentoCdp(DataTable dtCabecera)
         {
+            string valor = string.Empty;
             DocumentoCdp documento = null;
             List<DocumentoCdp> listaDocumento = new List<DocumentoCdp>();
             int numValue = 0;
@@ -669,20 +670,32 @@ namespace ComplementApp.API.Services
                 documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[11].ToString(), 10);
 
                 if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[12].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorInicial = value;
+                }
 
                 if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[13].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorOperacion = value;
+                }
 
                 if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[14].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorActual = value;
+                }
 
                 if (!(row as DataRow).ItemArray[15].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[15].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[15].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.SaldoPorComprometer = value;
+                }
 
                 documento.Objeto = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 250);
                 documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[17].ToString(), 50);
@@ -705,6 +718,7 @@ namespace ComplementApp.API.Services
             int numValue = 0;
             decimal value = 0;
             DateTime fecha;
+            string valor = string.Empty;
 
             foreach (var row in dtCabecera.Rows)
             {
@@ -735,20 +749,32 @@ namespace ComplementApp.API.Services
                 documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[10].ToString(), 10);
 
                 if (!(row as DataRow).ItemArray[11].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[11].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[11].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorInicial = value;
+                }
 
                 if (!(row as DataRow).ItemArray[12].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[12].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[12].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorOperacion = value;
+                }
 
                 if (!(row as DataRow).ItemArray[13].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[13].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[13].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorActual = value;
+                }
 
                 if (!(row as DataRow).ItemArray[14].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[14].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[14].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.SaldoPorUtilizar = value;
+                }
 
                 documento.TipoIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[15].ToString(), 100);
                 documento.NumeroIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[16].ToString(), 20);
@@ -789,6 +815,7 @@ namespace ComplementApp.API.Services
             int numValue = 0;
             decimal value = 0;
             DateTime fecha;
+            string valor = string.Empty;
 
             foreach (var row in dtCabecera.Rows)
             {
@@ -811,17 +838,27 @@ namespace ComplementApp.API.Services
 
                 documento.Estado = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[3].ToString(), 100);
 
+
                 if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[4].ToString(), out value))
-                        documento.ValorActual = value;
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
+                        documento.ValorDeduccion = value;
+                }
 
                 if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
-                        documento.ValorDeduccion = value;
+                {
+                    valor = (row as DataRow).ItemArray[5].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
+                        documento.ValorObligadoNoOrdenado = value;
+                }
 
                 if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
-                        documento.ValorObligadoNoOrdenado = value;
+                {
+                    valor = (row as DataRow).ItemArray[6].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
+                        documento.ValorActual = value;
+                }
 
                 documento.TipoIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), 100);
                 documento.NumeroIdentificacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[8].ToString(), 20);
@@ -838,21 +875,32 @@ namespace ComplementApp.API.Services
                 documento.DescripcionRubroPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[19].ToString(), 250);
 
                 if (!(row as DataRow).ItemArray[20].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[20].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[20].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorInicial = value;
+                }
 
                 if (!(row as DataRow).ItemArray[21].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[21].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[21].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorOperacion = value;
+                }
 
                 if (!(row as DataRow).ItemArray[22].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[22].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[22].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorActual = value;
+                }
 
                 if (!(row as DataRow).ItemArray[23].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[23].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[23].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.SaldoPorUtilizar = value;
-
+                }
 
                 documento.FuenteFinanciacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 50);
                 documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 50);
@@ -895,6 +943,7 @@ namespace ComplementApp.API.Services
             int numValue = 0;
             decimal value = 0;
             DateTime fecha;
+            string valor = string.Empty;
 
             foreach (var row in dtCabecera.Rows)
             {
@@ -917,17 +966,28 @@ namespace ComplementApp.API.Services
 
                 documento.Estado = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[3].ToString(), 100);
 
+
+
                 if (!(row as DataRow).ItemArray[4].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[4].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[4].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorBruto = value;
+                }
 
                 if (!(row as DataRow).ItemArray[5].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[5].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[5].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorDeduccion = value;
+                }
 
                 if (!(row as DataRow).ItemArray[6].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[6].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[6].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorNeto = value;
+                }
 
                 documento.TipoBeneficiario = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[7].ToString(), 100);
                 documento.VigenciaPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[8].ToString(), 100);
@@ -948,21 +1008,34 @@ namespace ComplementApp.API.Services
                 documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[23].ToString(), 50);
                 documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 10);
 
+
                 if (!(row as DataRow).ItemArray[25].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[25].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[25].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorPesos = value;
+                }
 
                 if (!(row as DataRow).ItemArray[26].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[26].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[26].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorMoneda = value;
+                }
 
                 if (!(row as DataRow).ItemArray[27].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[27].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[27].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorReintegradoPesos = value;
+                }
 
                 if (!(row as DataRow).ItemArray[28].ToString().Equals(string.Empty))
-                    if (decimal.TryParse((row as DataRow).ItemArray[28].ToString(), out value))
+                {
+                    valor = (row as DataRow).ItemArray[28].ToString().Replace(",", "");
+                    if (decimal.TryParse(valor, out value))
                         documento.ValorReintegradoMoneda = value;
+                }
 
                 documento.TesoreriaPagadora = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[29].ToString(), 100);
                 documento.IdentificacionPagaduria = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[30].ToString(), 100);
