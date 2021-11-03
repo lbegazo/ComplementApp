@@ -604,7 +604,7 @@ namespace ComplementApp.API.Data
                              NombreTercero = t.Nombre,
                              SaldoActual = c.SaldoActual,
                              ValorTotal = c.ValorTotal,
-                             TerceroId = c.TerceroId,
+                             TerceroId = c.TerceroId.Value,
                          })
                         .OrderBy(x => x.Crp);
 
@@ -654,7 +654,7 @@ namespace ComplementApp.API.Data
                              NombreTercero = t.Nombre,
                              SaldoActual = c.SaldoActual,
                              ValorTotal = c.ValorTotal,
-                             TerceroId = c.TerceroId,
+                             TerceroId = c.TerceroId.Value,
                          })
                         .OrderBy(x => x.Crp);
 

@@ -46,7 +46,7 @@ export class ArchivoMainComponent implements OnInit {
       url: this.baseUrl + 'documento/upload',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
-      allowedFileType: ['xls'],
+      allowedFileType: ['compress'],
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 10 * 1024 * 1024,

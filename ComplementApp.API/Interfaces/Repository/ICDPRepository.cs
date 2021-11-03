@@ -13,6 +13,7 @@ namespace ComplementApp.API.Interfaces.Repository
         Task<CDPDto> ObtenerCDPPorCompromiso(long crp);
         Task<PagedList<CDPDto>> ObtenerDetallePlanAnualAdquisicion(long cdp, int instancia, UserParams userParams);
         Task<PagedList<CDPDto>> ObtenerListaCdpParaVinculacion(long? cdp, int instancia, UserParams userParams);
+        Task InsertarDataCDPDeReporte(int tipoDocumento);
         
     }
 }

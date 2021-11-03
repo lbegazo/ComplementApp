@@ -13,6 +13,7 @@ using ComplementApp.API.Models;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models.ExcelDocumento;
+using System.IO.Compression;
 
 namespace ComplementApp.API.Services
 {
@@ -49,10 +50,32 @@ namespace ComplementApp.API.Services
             {
                 using (var package = new ExcelPackage())
                 {
-                    using (var stream = new MemoryStream())
+                    // using (var stream = new MemoryStream())
+                    // {
+                    //     file.CopyTo(stream);
+                    //     package.Load(stream);
+                    // }
+
+                    using (var stream = file.OpenReadStream())
+                    using (var archive = new ZipArchive(stream))
                     {
-                        file.CopyTo(stream);
-                        package.Load(stream);
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            var innerFile = entry;
+
+                            if (innerFile != null)
+                            {
+                                using (var stream2 = innerFile.Open())
+                                {
+                                    using (var ms = new MemoryStream())
+                                    {
+                                        stream2.CopyTo(ms);
+                                        package.Load(ms);
+                                    }
+                                }
+                            }
+                            break;
+                        }
                     }
 
                     #region Cargar Cabecera
@@ -903,8 +926,8 @@ namespace ComplementApp.API.Services
                 }
 
                 documento.FuenteFinanciacion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 50);
-                documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 50);
-                documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[26].ToString(), 10);
+                documento.SituacionFondo = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 10);
+                documento.RecursoPresupuestal = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[26].ToString(), 50);
                 documento.Concepto = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[27].ToString(), 3000);
 
                 documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[28].ToString(), 100);

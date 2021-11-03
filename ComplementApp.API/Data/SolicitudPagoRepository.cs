@@ -52,7 +52,7 @@ namespace ComplementApp.API.Data
                                  Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
-                                 TerceroId = c.TerceroId,
+                                 TerceroId = c.TerceroId.Value,
                              })
                           .Distinct()
                           .OrderBy(x => x.Crp);
@@ -83,7 +83,7 @@ namespace ComplementApp.API.Data
                                  Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
-                                 TerceroId = c.TerceroId,
+                                 TerceroId = c.TerceroId.Value,
                              })
                             .Distinct()
                             .OrderBy(x => x.Crp);
@@ -108,7 +108,7 @@ namespace ComplementApp.API.Data
                                  Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
-                                 TerceroId = c.TerceroId,
+                                 TerceroId = c.TerceroId.Value,
                              })
                             .Distinct()
                             .OrderBy(x => x.Crp);
@@ -140,7 +140,7 @@ namespace ComplementApp.API.Data
                          Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
                          NumeroIdentificacionTercero = t.NumeroIdentificacion,
                          NombreTercero = t.Nombre,
-                         TerceroId = c.TerceroId,
+                         TerceroId = c.TerceroId.Value,
                      })
                     .Distinct()
                     .OrderBy(x => x.Detalle6)
@@ -306,7 +306,7 @@ namespace ComplementApp.API.Data
                              Crp = c.Crp,
                              Fecha = c.Fecha, //Fecha compromiso
                              Detalle4 = c.Detalle4, //objeto contrato
-                             TerceroId = c.TerceroId,
+                             TerceroId = c.TerceroId.Value,
                              ValorInicial = c.ValorInicial,
                              Operacion = c.Operacion, //Valor adicion/reduccion
                              ValorTotal = c.ValorTotal, //valor actual
@@ -448,7 +448,7 @@ namespace ComplementApp.API.Data
                              Fecha = c.Fecha, //Fecha compromiso
                              Detalle4 = c.Detalle4, //objeto contrato
                              Detalle6 = c.Detalle6.Trim(), //Numero de contrato
-                             TerceroId = c.TerceroId,
+                             TerceroId = c.TerceroId.Value,
                              ValorInicial = c.ValorInicial,
                              Operacion = c.Operacion, //Valor adicion/reduccion
                              ValorTotal = c.ValorTotal, //valor actual
@@ -634,7 +634,7 @@ namespace ComplementApp.API.Data
                              Crp = c.Crp,
                              Fecha = c.Fecha, //Fecha compromiso
                              Detalle4 = c.Detalle4, //objeto contrato
-                             TerceroId = c.TerceroId,
+                             TerceroId = c.TerceroId.Value,
                              Detalle7 = c.Detalle7,//Modalidad de contrato
                              ValorInicial = c.ValorInicial,
                              Operacion = c.Operacion, //Valor adicion/reduccion

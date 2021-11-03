@@ -10,98 +10,70 @@ using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models.ExcelDocumento;
 using System.Security.Claims;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ComplementApp.API.Controllers
 {
     public class DocumentoController : BaseApiController
     {
-         #region Variable
+        #region Variable
         int pciId = 0;
         string valorPciId = string.Empty;
-
-        #endregion 
-
-        #region Propiedades
-
-        private readonly IDocumentoRepository _repo;
-        private readonly DataContext _dataContext;
-        private readonly IProcesoDocumentoExcel _documento;
 
         const string nombreHojaCabecera = "BD";
         const string nombreHojaDetalle = "DetallePresup";
 
         const string nombreHojaPlanPago = "PlanesPago";
+        #endregion Variable
+
+        #region Propiedades
+
+        private readonly IDocumentoRepository _repo;
+        private readonly DataContext _dataContext;
+        private readonly IProcesoDocumentoExcel _excelDocumento;
+        private readonly IDocumentoService _docService;
 
         #endregion Propiedades
 
-        public DocumentoController(IDocumentoRepository repo, DataContext dataContext, IProcesoDocumentoExcel documento)
+        public DocumentoController(IDocumentoRepository repo, DataContext dataContext, IProcesoDocumentoExcel documento, ICDPRepository cdpRepo, IDocumentoService docService)
         {
-            _documento = documento;
+            _excelDocumento = documento;
             _repo = repo;
             _dataContext = dataContext;
+            _docService = docService;
         }
 
         [HttpPost]
         [Route("upload")]
-        public IActionResult ActualizarBaseDeDatos()
+        public async Task<IActionResult> ActualizarBaseDeDatos()
         {
-
             if (Request.Form.Files.Count > 0)
             {
-                using var transaction = _dataContext.Database.BeginTransaction();
+                IFormFile file = Request.Form.Files[0];
 
-                try
-                {
-                    IFormFile file = Request.Form.Files[0];
+                if (file == null || file.Length <= 0)
+                    return BadRequest("El archivo se encuentra vacío");
 
-                    if (file == null || file.Length <= 0)
-                        return BadRequest("El archivo se encuentra vacío");
+                if (!Path.GetExtension(file.FileName).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+                    return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: zip");
 
-                    if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                        return BadRequest("El archivo no es soportado, el archivo debe tener la extensión: xlsx");
+                #region Obtener información del archivo excel
 
-                    #region Obtener información del archivo excel
+                DataTable dtCabecera = _excelDocumento.ObtenerCabeceraDeExcel(file);
 
-                    DataTable dtCabecera = _documento.ObtenerCabeceraDeExcel(file);
-                    //DataTable dtDetalle = _documento.ObtenerDetalleDeExcel(file);
-                    // DataTable dtPlanPago = _documento.ObtenerPlanPagosDeExcel(file);
+                #endregion
 
-                    #endregion
+                #region Mapear datos en la lista de Dtos
 
-                    #region Mapear datos en la lista de Dtos
+                List<CDPDto> listaDocumento = _excelDocumento.obtenerListaDeCDP(dtCabecera);
 
-                    List<CDPDto> listaDocumento = _documento.obtenerListaDeCDP(dtCabecera);
-                    // List<DetalleCDPDto> listaDetalle = _documento.obtenerListaDeDetalleCDP(dtDetalle);
-                    // List<PlanPagoDto> listaPlanPago = _documento.obtenerListaDePlanPago(dtPlanPago);
+                #endregion
 
-                    #endregion
+                #region Registrar lista CDP
 
-                    var result = _documento.EliminarInformacionCDP();
+                 await _docService.CargarInformacionCDP(listaDocumento); 
 
-                    #region Insertar lista en la base de datos
-
-                    var EsCabeceraCorrecto = _repo.InsertaCabeceraCDP(listaDocumento);
-                    // var EsDetalleCorrecto = _repo.InsertaDetalleCDP(listaDetalle);
-                    // var EsPlanPagoCorrecto = _repo.InsertaPlanDePago(listaPlanPago);
-
-                    #endregion Insertar lista en la base de datos
-
-                    if (!EsCabeceraCorrecto)
-                        throw new ArgumentException("No se pudo registrar: " + nombreHojaCabecera);
-
-                    // if (!EsDetalleCorrecto)
-                    //     throw new ArgumentException("No se pudieron registrar: " + nombreHojaDetalle);
-
-                    // if (!EsPlanPagoCorrecto)
-                    //     throw new ArgumentException("No se pudo registrar:" + nombreHojaPlanPago);
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                #endregion Registrar lista CDP
             }
             else
             {
@@ -147,7 +119,7 @@ namespace ComplementApp.API.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public IActionResult ActualizarDocumentosBase()
+        public async Task<IActionResult> ActualizarDocumentosBase()
         {
             int tipoArchivo = 0;
             if (Request.Form.Files.Count > 0)
@@ -184,70 +156,27 @@ namespace ComplementApp.API.Controllers
 
                     #region Obtener información del archivo excel
 
-                    DataTable dtCdp = _documento.ObtenerInformacionDocumentoExcel(fileCdp, 23);
-                    DataTable dtCompromiso = _documento.ObtenerInformacionDocumentoExcel(fileCompromiso, 35);
-                    DataTable dtObligacion = _documento.ObtenerInformacionDocumentoExcel(fileObligacion, 40);
-                    DataTable dtOrdenPago = _documento.ObtenerInformacionDocumentoExcel(fileOrdenPago, 50);
+                    DataTable dtCdp = _excelDocumento.ObtenerInformacionDocumentoExcel(fileCdp, 23);
+                    DataTable dtCompromiso = _excelDocumento.ObtenerInformacionDocumentoExcel(fileCompromiso, 35);
+                    DataTable dtObligacion = _excelDocumento.ObtenerInformacionDocumentoExcel(fileObligacion, 40);
+                    DataTable dtOrdenPago = _excelDocumento.ObtenerInformacionDocumentoExcel(fileOrdenPago, 50);
 
                     #endregion
 
                     #region Mapear datos en la lista de Dtos
 
-                    List<DocumentoCdp> listaCdp = _documento.obtenerListaDocumentoCdp(dtCdp);
-                    List<DocumentoCompromiso> listaCompromiso = _documento.obtenerListaDocumentoCompromiso(dtCompromiso);
-                    List<DocumentoObligacion> listaObligacion = _documento.obtenerListaDocumentoObligacion(dtObligacion);
-                    List<DocumentoOrdenPago> listaOrdenPago = _documento.obtenerListaDocumentoOrdenPago(dtOrdenPago);
+                    List<DocumentoCdp> listaCdp = _excelDocumento.obtenerListaDocumentoCdp(dtCdp);
+                    List<DocumentoCompromiso> listaCompromiso = _excelDocumento.obtenerListaDocumentoCompromiso(dtCompromiso);
+                    List<DocumentoObligacion> listaObligacion = _excelDocumento.obtenerListaDocumentoObligacion(dtObligacion);
+                    List<DocumentoOrdenPago> listaOrdenPago = _excelDocumento.obtenerListaDocumentoOrdenPago(dtOrdenPago);
 
                     #endregion
 
-                    using var transaction = _dataContext.Database.BeginTransaction();
+                    #region Insertar, Eliminar y Registrar CDP
 
-                    #region Eliminar datos previos
+                    await _docService.CargaDocumentoGestionPresupuestal(pciId, tipoArchivo, listaCdp, listaCompromiso, listaObligacion, listaOrdenPago);
 
-                    if (tipoArchivo == 1)
-                        _repo.EliminarDocumentoCDP();
-
-                    if (tipoArchivo == 2)
-                        _repo.EliminarDocumentoCompromiso();
-
-                    if (tipoArchivo == 3)
-                        _repo.EliminarDocumentoObligacion();
-
-                    if (tipoArchivo == 4)
-                        _repo.EliminarDocumentoOrdenPago();
-
-                    #endregion Eliminar datos previos
-
-                    #region Insertar lista en la base de datos
-
-                    if (listaCdp != null && listaCdp.Count > 0)
-                    {
-                        listaCdp.Select(c => {c.PciId = pciId; return c;}).ToList();
-                        _repo.InsertarListaDocumentoCDP(listaCdp);
-                    }
-
-                    if (listaCompromiso != null && listaCompromiso.Count > 0)
-                    {
-                        listaCompromiso.Select(c => {c.PciId = pciId; return c;}).ToList();
-                        _repo.InsertarListaDocumentoCompromiso(listaCompromiso);
-                    }
-
-                    if (listaObligacion != null && listaObligacion.Count > 0)
-                    {
-                        listaObligacion.Select(c => {c.PciId = pciId; return c;}).ToList();
-                        _repo.InsertarListaDocumentoObligacion(listaObligacion);
-                    }
-
-                    if (listaOrdenPago != null && listaOrdenPago.Count > 0)
-                    {
-                        listaOrdenPago.Select(c => {c.PciId = pciId; return c;}).ToList();
-                        
-                        _repo.InsertarListaDocumentoOrdenPago(listaOrdenPago);
-                    }
-
-                    #endregion Insertar lista en la base de datos
-
-                    transaction.Commit();
+                    #endregion Insertar, Eliminar y Registrar CDP
                 }
                 catch (Exception)
                 {
@@ -312,6 +241,7 @@ namespace ComplementApp.API.Controllers
             }
             return 0;
         }
+
 
         #endregion Carga Registro Gestion Presupuestal
 

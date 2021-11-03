@@ -7,6 +7,9 @@ using ComplementApp.API.Dtos;
 using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Helpers;
 using System;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ComplementApp.API.Data
 {
@@ -319,6 +322,25 @@ namespace ComplementApp.API.Data
                          .OrderBy(x => x.Cdp);
 
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+        public async Task InsertarDataCDPDeReporte(int tipoDocumento)
+        {
+            try
+            {
+                using (var command = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "USP_TCDP_InsertarData";
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@TipoDocumentoId", tipoDocumento));
+                    command.Transaction = _context.Database.CurrentTransaction.GetDbTransaction();
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
