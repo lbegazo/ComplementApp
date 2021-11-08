@@ -447,6 +447,10 @@ namespace ComplementApp.API.Controllers
                         formato.PagosRealizados = pagosRealizados;
                     }
                 }
+                else
+                {
+                    return BadRequest($"Debe registrar el contrato para el compromiso " + crp.ToString());
+                }
                 return Ok(formato);
             }
             catch (Exception)

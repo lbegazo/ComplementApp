@@ -76,7 +76,7 @@ export class PopupFacturaComponent implements OnInit {
             }
           } else {
             this.alertify.warning(
-              'No existen Facturas en estado por “Obligar” para el compromiso ' +
+              'No existen planes de pago con saldo por pagar para el compromiso ' +
                 this.crp
             );
           }
@@ -119,7 +119,7 @@ export class PopupFacturaComponent implements OnInit {
             }
           } else {
             this.alertify.warning(
-              'No existen Facturas en estado por “Obligar” para el compromiso ' +
+              'No existen planes de pago con saldo por pagar para el compromiso ' +
                 this.crp
             );
           }

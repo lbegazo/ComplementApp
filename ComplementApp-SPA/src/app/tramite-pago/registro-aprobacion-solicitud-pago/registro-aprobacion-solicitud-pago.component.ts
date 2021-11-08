@@ -274,9 +274,7 @@ export class RegistroAprobacionSolicitudPagoComponent implements OnInit {
 
   ObtenerFormatoSolicitudPago() {
     this.solicitudPagoService
-      .ObtenerFormatoSolicitudPago(
-        this.planPagoSeleccionado.crp
-      )
+      .ObtenerFormatoSolicitudPago(this.planPagoSeleccionado.crp)
       .subscribe(
         (response: FormatoSolicitudPagoDto) => {
           if (response !== null) {
@@ -291,11 +289,7 @@ export class RegistroAprobacionSolicitudPagoComponent implements OnInit {
             }
           }
         },
-        (error) => {
-          this.alertify.error(
-            'Hubo un error al obtener el formato de liquidación.'
-          );
-        },
+        (error) => {},
         () => {
           if (
             this.formatoSolicitudPago &&
