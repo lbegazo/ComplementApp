@@ -613,8 +613,9 @@ namespace ComplementApp.API.Data
                                                                          new { Crp = dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value }
                                join cp in _context.ClavePresupuestalContable on cpc.ClavePresupuestalContableId equals cp.ClavePresupuestalContableId
                                join rc in _context.RelacionContable on cp.RelacionContableId equals rc.RelacionContableId
-                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
-                               join sf in _context.SituacionFondo on cp.SituacionFondoId equals sf.SituacionFondoId
+                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
+                               from cuco in CuentaContable.DefaultIfEmpty()
+                               join sf in _context.SituacionFondo on cp.SituacionFondoId equals sf.SituacionFondoId                               
                                join ff in _context.FuenteFinanciacion on cp.FuenteFinanciacionId equals ff.FuenteFinanciacionId
                                join rpr in _context.RecursoPresupuestal on cp.RecursoPresupuestalId equals rpr.RecursoPresupuestalId
                                join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
@@ -641,7 +642,7 @@ namespace ComplementApp.API.Data
                                    TipoGastoCodigo = tga.Codigo,
                                    UsoContable = rc.UsoContable.ToString(),
                                    TipoOperacion = rc.TipoOperacion.ToString(),
-                                   NumeroCuenta = cc.NumeroCuenta,
+                                   NumeroCuenta = cuco.NumeroCuenta,
                                    ClavePresupuestalContableId = cpc.ClavePresupuestalContableId.Value,
                                })
                                 .Distinct()

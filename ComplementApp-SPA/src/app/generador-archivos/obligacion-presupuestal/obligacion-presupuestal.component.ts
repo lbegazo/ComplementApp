@@ -493,6 +493,7 @@ export class ObligacionPresupuestalComponent implements OnInit {
                 listaLiquidacionId = response.numeroFactura;
               } else {
                 listaLiquidacionId = '';
+                this.alertify.warning(response.mensaje);
               }
 
               //#region Cabecera
@@ -609,6 +610,7 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                         response.numeroFactura;
                                                     } else {
                                                       listaLiquidacionId = '';
+                                                      this.alertify.warning(response.mensaje);
                                                     }
 
                                                     //#region Cabecera
@@ -744,6 +746,7 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                     } else {
                                                                                       listaLiquidacionId =
                                                                                         '';
+                                                                                        this.alertify.warning(response.mensaje);
                                                                                     }
                                                                                     //#region Cabecera
 
@@ -915,6 +918,7 @@ export class ObligacionPresupuestalComponent implements OnInit {
                                                                                                                         } else {
                                                                                                                           listaLiquidacionId =
                                                                                                                             '';
+                                                                                                                            this.alertify.warning(response.mensaje);
                                                                                                                         }
 
                                                                                                                         //#region Cabecera

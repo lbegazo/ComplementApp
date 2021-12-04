@@ -30,7 +30,7 @@ namespace ComplementApp.API
         {
             /*The order is not important*/
 
-            services.AddApplicationServices(_config);
+        services.AddApplicationServices(_config);
             services.AddControllers()
             .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =
                                      Newtonsoft.Json.ReferenceLoopHandling.Ignore);

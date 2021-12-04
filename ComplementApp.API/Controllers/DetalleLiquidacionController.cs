@@ -831,11 +831,22 @@ namespace ComplementApp.API.Controllers
                 if (liquidacionIds.Count < cantidadMinimaLiquidacion)
                 {
                     //return BadRequest("La cantidad mínima de liquidaciones para la creación del archivo debe ser " + cantidadMinimaLiquidacion);
+                    respuestaSolicitud.Respuesta = false;
+                    if(esRubroFuncionamiento)
+                    {
+                        respuestaSolicitud.Mensaje = "Para la creación del archivo, la cantidad mínima de liquidaciones de Rubro de Funcionamiento debe ser:  " + cantidadMinimaLiquidacion;
+                    }
+                    else 
+                    {
+                        respuestaSolicitud.Mensaje = "Para la creación del archivo, la cantidad mínima de liquidaciones de Rubro de Inversión debe ser:  " + cantidadMinimaLiquidacion;
+                    }
+                    
                     return Ok(respuestaSolicitud);
                 }
                 else
                 {
                     resultado = string.Join(",", liquidacionIds);
+                    respuestaSolicitud.Respuesta = true;
                     respuestaSolicitud.NumeroFactura = resultado;
                 }
                 return Ok(respuestaSolicitud);

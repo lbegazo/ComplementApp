@@ -18,6 +18,7 @@ import { ParametroLiquidacionTercero } from 'src/app/_models/parametroLiquidacio
 import { PlanPago } from 'src/app/_models/planPago';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { GeneralService } from 'src/app/_services/general.service';
+import { ListaService } from 'src/app/_services/lista.service';
 
 @Component({
   selector: 'app-popup-solicitud-pago-edit',
@@ -26,6 +27,7 @@ import { GeneralService } from 'src/app/_services/general.service';
 })
 export class PopupSolicitudPagoEditComponent implements OnInit {
   // Datos de ingreso
+  parametroSalarioMinimo: ValorSeleccion;
   listaActividadEconomica: ValorSeleccion[];
   listaMeses: ValorSeleccion[];
   formatoSolicitudPagoEdit: FormatoSolicitudPago;
@@ -51,10 +53,12 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private alertify: AlertifyService
+    private alertify: AlertifyService,
+    private listaService: ListaService
   ) {}
 
   ngOnInit() {
+    this.cargarParametroSalarioMinimo();
     this.idMesSelecionado = this.dateObj.getUTCMonth() + 1;
     this.mesSeleccionado = this.listaMeses.filter(
       (x) => x.id === this.idMesSelecionado
@@ -349,6 +353,7 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
   replicarValorFacturado() {
     let valorBaseGravableC = 0;
     let baseCotizacionC = '';
+    let valorSalarioMinimo = 0;
     const formValues = Object.assign({}, this.popupForm.value);
 
     const valorFacturado = +GeneralService.obtenerValorAbsoluto(
@@ -358,6 +363,20 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
     if (this.parametroLiquidacionTercero) {
       valorBaseGravableC =
         valorFacturado * this.parametroLiquidacionTercero.baseAporteSalud;
+
+      if (this.parametroSalarioMinimo) {       
+        this.parametroSalarioMinimo.valor = this.parametroSalarioMinimo.valor.replace(',', '');
+        this.parametroSalarioMinimo.valor = this.parametroSalarioMinimo.valor.replace('.', '');
+        valorSalarioMinimo = GeneralService.obtenerValorAbsoluto(
+          this.parametroSalarioMinimo.valor
+        );
+        
+      }
+
+      if (valorBaseGravableC < valorSalarioMinimo) {
+        valorBaseGravableC = valorSalarioMinimo;
+      }
+
       baseCotizacionC = GeneralService.obtenerFormatoMoney(valorBaseGravableC);
 
       this.popupForm.patchValue({
@@ -441,6 +460,17 @@ export class PopupSolicitudPagoEditComponent implements OnInit {
     }
 
     return resultado;
+  }
+
+  cargarParametroSalarioMinimo() {
+    this.listaService.ObtenerParametroGeneralXNombre('SalarioMinimo').subscribe(
+      (data: ValorSeleccion) => {
+        this.parametroSalarioMinimo = data;
+      },
+      (error) => {
+        this.alertify.error(error);
+      }
+    );
   }
 
   //#region Controles
