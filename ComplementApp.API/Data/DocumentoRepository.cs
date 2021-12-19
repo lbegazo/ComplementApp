@@ -242,8 +242,11 @@ namespace ComplementApp.API.Data
 
                     if (tercero != null)
                     {
-                        cdp.Tercero = tercero;
                         cdp.TerceroId = tercero.TerceroId;
+                    }
+                    else
+                    {
+                        cdp.TerceroId = null;
                     }
                 }
 
@@ -325,8 +328,11 @@ namespace ComplementApp.API.Data
 
                     if (tercero != null)
                     {
-                        cdp.Tercero = tercero;
                         cdp.TerceroId = tercero.TerceroId;
+                    }
+                    else
+                    {
+                        cdp.TerceroId = null;
                     }
                 }
 

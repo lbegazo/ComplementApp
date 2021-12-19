@@ -84,7 +84,7 @@ namespace ComplementApp.API.Services
                 var planPagoDto = await _planPagoRepository.ObtenerDetallePlanPago(planPagoId);
 
                 IEnumerable<ParametroGeneral> parametroGenerales = await _repoLista.ObtenerParametrosGenerales();
-                var parametros = parametroGenerales.ToList();
+                var parametrosGeneral = parametroGenerales.ToList();
 
                 ParametroLiquidacionTercero parametroLiquidacion = await _terceroRepository.ObtenerParametroLiquidacionXTercero(planPagoDto.TerceroId, pciId);
 
@@ -96,48 +96,63 @@ namespace ComplementApp.API.Services
 
                 ICollection<CriterioCalculoReteFuente> listaCriterioReteFuente = await _repoLista.ObtenerListaCriterioCalculoReteFuente();
 
+
                 if (parametroGenerales != null && parametroLiquidacion != null && listaCriterioReteFuente != null)
                 {
                     if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                     {
-                        if (!parametroLiquidacion.Subcontrata)
+                        decimal valorSalarioMinimo = 0;
+                        var parametroSalarioMinimo = await _repoLista.ObtenerParametroGeneralXNombre("SalarioMinimo");
+
+                        if (parametroSalarioMinimo != null)
                         {
-                            if (!planPagoDto.Viaticos)
+                            valorSalarioMinimo = Convert.ToDecimal(parametroSalarioMinimo.Valor.Replace(",", string.Empty));
+
+                            if (!parametroLiquidacion.Subcontrata)
                             {
-                                var HonorarioSinIva = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
-
-                                if (HonorarioSinIva > 0)
+                                if (!planPagoDto.Viaticos)
                                 {
+                                    var HonorarioSinIva = parametroLiquidacion.HonorarioSinIva.HasValue ? parametroLiquidacion.HonorarioSinIva.Value : 0;
 
-                                    formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(solicitudPago, parametroLiquidacion,
-                                                                                parametros, listaCriterioReteFuente.ToList(),
-                                                                                listaDeduccionesDto.ToList());
+                                    if (HonorarioSinIva > 0)
+                                    {
+
+                                        formato = await ObtenerFormatoCausacion_ContratoPrestacionServicio(solicitudPago, parametroLiquidacion,
+                                                                                    valorSalarioMinimo, parametrosGeneral,
+                                                                                    listaCriterioReteFuente.ToList(),
+                                                                                    listaDeduccionesDto.ToList());
+                                    }
+                                    else
+                                    {
+                                        throw new Exception($"Debe registrar el valor del honorario para el tercero");
+                                    }
                                 }
                                 else
                                 {
-                                    throw new Exception($"Debe registrar el valor del honorario para el tercero");
+                                    //Contratistas con viaticos liquida de otra manera
+                                    formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacion,
+                                                                                                parametrosGeneral, listaCriterioReteFuente.ToList());
                                 }
                             }
                             else
                             {
-                                //Contratistas con viaticos liquida de otra manera
-                                formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacion,
-                                                                                            parametros, listaCriterioReteFuente.ToList());
+                                formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacion,
+                                                                                                        parametrosGeneral, listaCriterioReteFuente.ToList(),
+                                                                                                        listaDeduccionesDto.ToList());
                             }
                         }
                         else
                         {
-                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacion,
-                                                                                                    parametros, listaCriterioReteFuente.ToList(),
-                                                                                                    listaDeduccionesDto.ToList());
+                            throw new Exception("No esta definido el salario mínimo vigente");
                         }
+
                     }
                     else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
                     {
                         if (parametroLiquidacion.TipoPago == (int)TipoPago.Fijo)
                         {
                             formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacion,
-                                                                                                    parametros, listaCriterioReteFuente.ToList(),
+                                                                                                    parametrosGeneral, listaCriterioReteFuente.ToList(),
                                                                                                     listaDeduccionesDto.ToList());
                         }
                         else
@@ -146,7 +161,7 @@ namespace ComplementApp.API.Services
 
                             formato = ObtenerFormatoCausacion_ProveedoresConDeduccionVariable(solicitudPago,
                                                                         parametroLiquidacion,
-                                                                        parametros, listaCriterioReteFuente.ToList(),
+                                                                        parametrosGeneral, listaCriterioReteFuente.ToList(),
                                                                         listaDeduccionesDto.ToList(), valorBaseGravable);
                         }
 
@@ -154,7 +169,7 @@ namespace ComplementApp.API.Services
                     else if (parametroLiquidacion.ModalidadContrato == (int)ModalidadContrato.ProveedorSinDescuento)
                     {
                         formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacion,
-                                                                                  parametros, listaCriterioReteFuente.ToList());
+                                                                                  parametrosGeneral, listaCriterioReteFuente.ToList());
                     }
 
                     formato.PlanPagoId = planPagoId;
@@ -173,6 +188,7 @@ namespace ComplementApp.API.Services
         private async Task<FormatoCausacionyLiquidacionPagos> ObtenerFormatoCausacion_ContratoPrestacionServicio(
                                             FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
+                                            decimal valorSalarioMinimo,
                                             List<ParametroGeneral> parametroGenerales,
                                             List<CriterioCalculoReteFuente> listaCriterioReteFuente,
                                             List<DeduccionDto> listaDeducciones)
@@ -233,8 +249,9 @@ namespace ComplementApp.API.Services
 
             #region Calcular valores y obtener formato
 
-            formatoIgual = await CalcularValoresFormatoContratoPrestacionServicio(solicitudPago, parametroLiquidacion, parametroGenerales, numeroDiasLaborados: 30, factorCalculo);
-            formatoIgual30 = await CalcularValoresBaseGravableParaContratoPrestacionServicio(solicitudPago, parametroLiquidacion, parametroGenerales);
+            formatoIgual = await CalcularValoresFormatoContratoPrestacionServicio(solicitudPago, parametroLiquidacion, parametroGenerales, valorSalarioMinimo, numeroDiasLaborados: 30, factorCalculo);
+
+            formatoIgual30 = await CalcularValoresBaseGravableParaContratoPrestacionServicio(solicitudPago, parametroLiquidacion, parametroGenerales, valorSalarioMinimo);
 
             formato = formatoIgual;
             baseGravableUvtCalculada = formatoIgual30.BaseGravableUvtCalculada;
@@ -423,6 +440,7 @@ namespace ComplementApp.API.Services
                                             FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
                                             List<ParametroGeneral> parametroGenerales,
+                                            decimal valorSalarioMinimo,
                                             int numeroDiasLaborados,
                                             decimal factorCalculo)
         {
@@ -535,7 +553,8 @@ namespace ComplementApp.API.Services
             }
 
             C3valorIva = C1honorario * PLtarifaIva;
-            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            C7baseAporteSalud = baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -731,7 +750,8 @@ namespace ComplementApp.API.Services
         private async Task<FormatoCausacionyLiquidacionPagos> CalcularValoresBaseGravableParaContratoPrestacionServicio(
                                                  FormatoSolicitudPago solicitudPago,
                                                  ParametroLiquidacionTercero parametroLiquidacion,
-                                                 List<ParametroGeneral> parametroGenerales)
+                                                 List<ParametroGeneral> parametroGenerales,
+                                                 decimal valorSalarioMinimo)
         {
             #region variables 
 
@@ -825,7 +845,8 @@ namespace ComplementApp.API.Services
             }
 
             C3valorIva = C1honorario * PLtarifaIva;
-            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            C7baseAporteSalud = baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -1463,51 +1484,67 @@ namespace ComplementApp.API.Services
 
                                 if (solicitud.Tercero.ModalidadContrato == (int)ModalidadContrato.ContratoPrestacionServicio)
                                 {
-                                    if (!parametroLiquidacionTercero.Subcontrata)
+                                    decimal valorSalarioMinimo = 0;
+
+                                    var task = _repoLista.ObtenerParametroGeneralXNombre("SalarioMinimo");
+                                    task.Wait();
+                                    var parametroSalarioMinimo = task.Result;
+
+                                    if (parametroSalarioMinimo != null)
                                     {
-                                        if (!solicitud.PlanPago.Viaticos)
+                                        valorSalarioMinimo = Convert.ToDecimal(parametroSalarioMinimo.Valor.Replace(",", string.Empty));
+                                        if (!parametroLiquidacionTercero.Subcontrata)
                                         {
-                                            if (listaDetalleLiquidacionMesAnterior != null && listaDetalleLiquidacionMesAnterior.Count > 0)
+                                            if (!solicitud.PlanPago.Viaticos)
                                             {
-                                                detalleLiquidacionMesAnterior = listaDetalleLiquidacionMesAnterior
-                                                                                .Where(x => x.TerceroId == solicitudPago.TerceroId)
-                                                                                .FirstOrDefault();
-                                            }
-                                            if (listaDetalleLiquidacionMesAnteriorViatico != null && listaDetalleLiquidacionMesAnteriorViatico.Count > 0)
-                                            {
-                                                listaLiquidacionMesAnteriorViaticoXTercero = listaDetalleLiquidacionMesAnteriorViatico
-                                                                                            .Where(x => x.TerceroId == solicitudPago.TerceroId)
-                                                                                            .ToList();
-                                            }
+                                                if (listaDetalleLiquidacionMesAnterior != null && listaDetalleLiquidacionMesAnterior.Count > 0)
+                                                {
+                                                    detalleLiquidacionMesAnterior = listaDetalleLiquidacionMesAnterior
+                                                                                    .Where(x => x.TerceroId == solicitudPago.TerceroId)
+                                                                                    .FirstOrDefault();
+                                                }
+                                                if (listaDetalleLiquidacionMesAnteriorViatico != null && listaDetalleLiquidacionMesAnteriorViatico.Count > 0)
+                                                {
+                                                    listaLiquidacionMesAnteriorViaticoXTercero = listaDetalleLiquidacionMesAnteriorViatico
+                                                                                                .Where(x => x.TerceroId == solicitudPago.TerceroId)
+                                                                                                .ToList();
+                                                }
 
-                                            var HonorarioSinIva = parametroLiquidacionTercero.HonorarioSinIva.HasValue ? parametroLiquidacionTercero.HonorarioSinIva.Value : 0;
+                                                var HonorarioSinIva = parametroLiquidacionTercero.HonorarioSinIva.HasValue ? parametroLiquidacionTercero.HonorarioSinIva.Value : 0;
 
-                                            if (HonorarioSinIva > 0)
-                                            {
-                                                formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacionTercero,
-                                                                                            listaParametrosGenerales, listaCriterioCalculoReteFuente,
-                                                                                            listaDeduccionesDto.ToList(),
-                                                                                            listaLiquidacionMesAnteriorViaticoXTercero,
-                                                                                            detalleLiquidacionMesAnterior);
+                                                if (HonorarioSinIva > 0)
+                                                {
+                                                    formato = ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacionTercero,
+                                                                                                valorSalarioMinimo,
+                                                                                                listaParametrosGenerales, listaCriterioCalculoReteFuente,
+                                                                                                listaDeduccionesDto.ToList(),
+                                                                                                listaLiquidacionMesAnteriorViaticoXTercero,
+                                                                                                detalleLiquidacionMesAnterior);
+                                                }
+                                                else
+                                                {
+                                                    throw new Exception($"Debe registrar el valor del honorario para el tercero");
+                                                }
                                             }
                                             else
                                             {
-                                                throw new Exception($"Debe registrar el valor del honorario para el tercero");
+                                                //Contratistas con viaticos liquida de otra manera
+                                                formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacionTercero,
+                                                                                                            listaParametrosGenerales, listaCriterioCalculoReteFuente);
                                             }
                                         }
                                         else
                                         {
-                                            //Contratistas con viaticos liquida de otra manera
-                                            formato = ObtenerFormatoCausacion_ProveedoresSinDeduccion(solicitudPago, parametroLiquidacionTercero,
-                                                                                                        listaParametrosGenerales, listaCriterioCalculoReteFuente);
+                                            formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacionTercero,
+                                                                                                            listaParametrosGenerales,
+                                                                                                            listaCriterioCalculoReteFuente,
+                                                                                                            listaDeduccionesDto.ToList());
                                         }
+
                                     }
                                     else
                                     {
-                                        formato = ObtenerFormatoCausacion_ProveedoresConDeduccionFijo(solicitudPago, parametroLiquidacionTercero,
-                                                                                                        listaParametrosGenerales,
-                                                                                                        listaCriterioCalculoReteFuente,
-                                                                                                        listaDeduccionesDto.ToList());
+                                        throw new Exception("Debe definir el valor de salario mínimo");
                                     }
                                 }
                                 else if (solicitud.Tercero.ModalidadContrato == (int)ModalidadContrato.ProveedorConDescuento)
@@ -1578,6 +1615,7 @@ namespace ComplementApp.API.Services
 
         private FormatoCausacionyLiquidacionPagos ObtenerFormatoCausacion_ContratoPrestacionServicioMasivo(FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
+                                            decimal valorSalarioMinimo,
                                             List<ParametroGeneral> parametroGenerales,
                                             List<CriterioCalculoReteFuente> listaCriterioReteFuente,
                                             List<DeduccionDto> listaDeducciones,
@@ -1639,13 +1677,13 @@ namespace ComplementApp.API.Services
 
             #region Calcular valores y obtener formato
 
-            formatoIgual = CalcularValoresFormatoContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacion,
+            formatoIgual = CalcularValoresFormatoContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacion, valorSalarioMinimo,
                                                                                 parametroGenerales, numeroDiasLaborados: 30,
                                                                                 listaDetalleLiquidacionMesAnteriorViatico,
                                                                                 detalleLiquidacionMesAnterior,
                                                                                 factorCalculo);
 
-            formatoIgual30 = CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacion,
+            formatoIgual30 = CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(solicitudPago, parametroLiquidacion, valorSalarioMinimo,
                                                                                                 parametroGenerales,
                                                                                                 listaDetalleLiquidacionMesAnteriorViatico);
 
@@ -1775,6 +1813,7 @@ namespace ComplementApp.API.Services
         private FormatoCausacionyLiquidacionPagos CalcularValoresFormatoContratoPrestacionServicioMasivo(
                                             FormatoSolicitudPago solicitudPago,
                                             ParametroLiquidacionTercero parametroLiquidacion,
+                                            decimal valorSalarioMinimo,
                                             List<ParametroGeneral> parametroGenerales,
                                             int numeroDiasLaborados,
                                             List<DetalleLiquidacion> listaDetalleLiquidacionMesAnteriorViatico,
@@ -1885,7 +1924,8 @@ namespace ComplementApp.API.Services
             }
 
             C3valorIva = C1honorario * PLtarifaIva;
-            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            C7baseAporteSalud = baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -2081,6 +2121,7 @@ namespace ComplementApp.API.Services
         private FormatoCausacionyLiquidacionPagos CalcularValoresBaseGravableParaContratoPrestacionServicioMasivo(
                                                           FormatoSolicitudPago solicitudPago,
                                                           ParametroLiquidacionTercero parametroLiquidacion,
+                                                          decimal valorSalarioMinimo,
                                                           List<ParametroGeneral> parametroGenerales,
                                                           List<DetalleLiquidacion> listaDetalleLiquidacionMesAnteriorViatico)
         {
@@ -2173,7 +2214,8 @@ namespace ComplementApp.API.Services
             }
 
             C3valorIva = C1honorario * PLtarifaIva;
-            C7baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
+            C7baseAporteSalud = baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);

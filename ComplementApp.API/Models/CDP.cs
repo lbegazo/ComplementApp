@@ -58,7 +58,6 @@ namespace ComplementApp.API.Models
         public int RubroPresupuestalId { get; set; }
         public RubroPresupuestal RubroPresupuestal { get; set; }
         public int? TerceroId { get; set; }
-        public Tercero Tercero { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
 
