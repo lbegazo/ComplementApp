@@ -273,10 +273,11 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<RelacionContableDto>> ObtenerRelacionesContableXRubroPresupuestal(int rubroPresupuestalId, int pciId)
         {
             var lista = await (from rc in _context.RelacionContable
-                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId
                                join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
                                join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into tipoGasto
                                from t in tipoGasto.DefaultIfEmpty()
+                               join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
+                               from cuco in CuentaContable.DefaultIfEmpty()
                                where rc.RubroPresupuestalId == rubroPresupuestalId
                                where rc.PciId == pciId
                                select new RelacionContableDto()
@@ -286,9 +287,9 @@ namespace ComplementApp.API.Data
                                    UsoContable = rc.UsoContable,
                                    CuentaContable = new ValorSeleccion()
                                    {
-                                       Id = cc.CuentaContableId,
-                                       Codigo = cc.NumeroCuenta,
-                                       Nombre = cc.DescripcionCuenta,
+                                       Id = rc.CuentaContableId != null ? cuco.CuentaContableId : 0,
+                                       Codigo = rc.CuentaContableId != null ? cuco.NumeroCuenta: string.Empty,
+                                       Nombre = rc.CuentaContableId != null ? cuco.DescripcionCuenta: string.Empty,
                                    },
                                    AtributoContable = new ValorSeleccion()
                                    {
