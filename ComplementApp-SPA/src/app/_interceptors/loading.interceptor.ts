@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BusyService } from '../_services/busy.service';
-import { delay, finalize } from 'rxjs/Operators';
+import { finalize } from 'rxjs/Operators';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {

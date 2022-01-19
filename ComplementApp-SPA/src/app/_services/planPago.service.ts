@@ -11,7 +11,6 @@ import { PlanPago } from '../_models/planPago';
 import { DetallePlanPago } from '../_models/detallePlanPago';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
-import { FormatoCausacionyLiquidacionPago } from '../_models/formatoCausacionyLiquidacionPago';
 import { RadicadoDto } from '../_dto/radicadoDto';
 import { FormaPagoCompromiso } from '../_models/formaPagoCompromiso';
 import { Cdp } from '../_models/cdp';

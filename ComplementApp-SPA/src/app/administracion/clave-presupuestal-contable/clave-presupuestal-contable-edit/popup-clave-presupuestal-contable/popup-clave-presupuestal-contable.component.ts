@@ -57,6 +57,10 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
           })
         );
       }
+    } else {
+      this.alertify.warning(
+        'No existen Usos Presupuestales para el Rubro Presupuestal seleccionado'
+      );
     }
   }
 
@@ -71,7 +75,7 @@ export class PopupClavePresupuestalContableComponent implements OnInit {
       }
     } else {
       this.alertify.warning(
-        'No existen Usos Presupuestales para el Rubro seleccionado'
+        'No existen Relaciones Contables para el Rubro Presupuestal seleccionado'
       );
     }
   }

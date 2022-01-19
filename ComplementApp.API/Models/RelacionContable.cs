@@ -26,5 +26,6 @@ namespace ComplementApp.API.Models
         public int? UsoContable { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+        public bool Estado { get; set; }
     }
 }

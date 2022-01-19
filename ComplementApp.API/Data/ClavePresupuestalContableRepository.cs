@@ -228,6 +228,7 @@ namespace ComplementApp.API.Data
                                           Id = rp.RubroPresupuestalId,
                                           Codigo = rp.Identificacion,
                                           Nombre = rp.Nombre,
+                                          Valor = rp.PadreContableId.HasValue ? rp.PadreContableId.Value.ToString() : string.Empty
                                       },
                                       Tercero = new ValorSeleccion()
                                       {
@@ -272,14 +273,23 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<RelacionContableDto>> ObtenerRelacionesContableXRubroPresupuestal(int rubroPresupuestalId, int pciId)
         {
+            //Obtener el padre contable Id asociado al rubro presupuestal
+            var padreContableId = await _context.RubroPresupuestal
+                                 .Where(rp => rp.RubroPresupuestalId == rubroPresupuestalId)
+                                 .Select(rp => rp.PadreContableId)
+                                 .FirstOrDefaultAsync();
+
+
+            //La relación contable esta relacionado al padre contable(rubro presupuestal)
             var lista = await (from rc in _context.RelacionContable
                                join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
                                join tg in _context.TipoGasto on rc.TipoGastoId equals tg.TipoGastoId into tipoGasto
                                from t in tipoGasto.DefaultIfEmpty()
                                join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
                                from cuco in CuentaContable.DefaultIfEmpty()
-                               where rc.RubroPresupuestalId == rubroPresupuestalId
+                               where rc.RubroPresupuestalId == padreContableId
                                where rc.PciId == pciId
+                               where rc.Estado == true
                                select new RelacionContableDto()
                                {
                                    RelacionContableId = rc.RelacionContableId,
@@ -288,8 +298,8 @@ namespace ComplementApp.API.Data
                                    CuentaContable = new ValorSeleccion()
                                    {
                                        Id = rc.CuentaContableId != null ? cuco.CuentaContableId : 0,
-                                       Codigo = rc.CuentaContableId != null ? cuco.NumeroCuenta: string.Empty,
-                                       Nombre = rc.CuentaContableId != null ? cuco.DescripcionCuenta: string.Empty,
+                                       Codigo = rc.CuentaContableId != null ? cuco.NumeroCuenta : string.Empty,
+                                       Nombre = rc.CuentaContableId != null ? cuco.DescripcionCuenta : string.Empty,
                                    },
                                    AtributoContable = new ValorSeleccion()
                                    {

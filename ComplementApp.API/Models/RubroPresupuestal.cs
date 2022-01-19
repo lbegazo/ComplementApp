@@ -18,5 +18,8 @@ namespace ComplementApp.API.Models
 
         [Required]
         public int? PadreRubroId { get; set; }
+
+        [Required]
+        public int? PadreContableId { get; set; }
     }
 }

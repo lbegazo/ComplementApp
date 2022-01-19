@@ -207,6 +207,10 @@ namespace ComplementApp.API.Data
             modelBuilder.Entity<FormatoSolicitudPago>()
             .Property(b => b.EsSaludVencida)
             .HasDefaultValue(0);
+
+            modelBuilder.Entity<RelacionContable>()
+                .Property(b => b.Estado)
+                .HasDefaultValue(1);
         }
 
     }

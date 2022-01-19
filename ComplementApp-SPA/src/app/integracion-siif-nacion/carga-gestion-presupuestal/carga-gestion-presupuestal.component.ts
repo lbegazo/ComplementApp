@@ -32,7 +32,6 @@ export class CargaGestionPresupuestalComponent implements OnInit {
       this.transaccion = data['transaccion'];
       if (this.transaccion) {
         this.nombreTransaccion = this.transaccion.nombre;
-        console.log(this.nombreTransaccion);
       }
     });
 
