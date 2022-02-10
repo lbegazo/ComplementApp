@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   Resolve,
-  Router,
   ActivatedRouteSnapshot,
 } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';

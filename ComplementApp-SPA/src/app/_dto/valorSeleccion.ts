@@ -4,4 +4,6 @@ export class ValorSeleccion {
   nombre: string;
   tipoDocumento: string;
   valor: string;
+  seleccionado?: boolean;
+  seleccionable?: boolean;
 }

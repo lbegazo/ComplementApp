@@ -156,7 +156,7 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<ActionResult> ObtenerRelacionesContableXRubroPresupuestal([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId, string filtro)
+        public async Task<ActionResult> ObtenerRelacionesContableXRubroPresupuestal([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId)
         {
             try
             {
@@ -166,7 +166,7 @@ namespace ComplementApp.API.Controllers
                     pciId = int.Parse(valorPciId);
                 }
 
-                var lista = await _repo.ObtenerRelacionesContableXRubroPresupuestal(rubroPresupuestalId, pciId, filtro);
+                var lista = await _repo.ObtenerRelacionesContableXRubroPresupuestal(rubroPresupuestalId, pciId);
                 return Ok(lista);
             }
             catch (Exception)
@@ -179,11 +179,11 @@ namespace ComplementApp.API.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public async Task<ActionResult> ObtenerUsosPresupuestalesXRubroPresupuestal([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId, [FromQuery(Name = "rubroPresupuestalId")] string filtro)
+        public async Task<ActionResult> ObtenerUsosPresupuestalesXRubroPresupuestal([FromQuery(Name = "rubroPresupuestalId")] int rubroPresupuestalId)
         {
             try
             {
-                var lista = await _repo.ObtenerUsosPresupuestalesXRubroPresupuestal(rubroPresupuestalId, filtro);
+                var lista = await _repo.ObtenerUsosPresupuestalesXRubroPresupuestal(rubroPresupuestalId);
                 return Ok(lista);
             }
             catch (Exception)

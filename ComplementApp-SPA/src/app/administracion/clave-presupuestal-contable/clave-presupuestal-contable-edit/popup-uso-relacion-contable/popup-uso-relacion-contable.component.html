@@ -1,0 +1,308 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 addPadding">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 5px">
+          <h4 class="modal-title pull-left" style="margin: 0px">{{ title }}</h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="bsModalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div
+          class="modal-body"
+          style="padding-top: 0px; background-color: gainsboro"
+        >
+          <!--USO PRESUPUESTAL-->
+          <h3>USO PRESUPUESTAL</h3>
+          <div class="row mt-2">
+            <div class="col-sm-6">
+              <input
+                type="text"
+                [(ngModel)]="filterCodigoUso"
+                class="form-control"
+                placeholder="Ingrese el código del uso presupuestal"
+                (ngModelChange)="filterCodigoUso = $event.toUpperCase().trim()"
+              />
+            </div>
+            <div class="col-sm-6">
+              <input
+                type="text"
+                [(ngModel)]="filterNombreUso"
+                class="form-control"
+                placeholder="Ingrese el nombre del uso presupuestal"
+                (ngModelChange)="filterNombreUso = $event.toUpperCase().trim()"
+              />
+            </div>
+          </div>
+          <div class="row mt-2">
+            <!--GRILLA USO PRESUPUESTAL-->
+            <table
+              mat-table
+              [dataSource]="listaFiltradaUsoPresupuestal"
+              class="mat-elevation-z8"
+            >
+              <ng-container matColumnDef="selection">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td
+                  mat-cell
+                  *matCellDef="let element; let rowIndex = index"
+                  class="inner"
+                  style="padding: 5px; width: 2%"
+                >
+                  <mat-radio-button
+                    color="primary"
+                    name="rhSelectionRadioUso"
+                    [value]="rowIndex"
+                    *ngIf="element.seleccionable"
+                    (click)="selectUsoPresupuestal($event, element)"
+                    [checked]="element.seleccionado"
+                    style="width: 100%; height: 100%"
+                  >
+                  </mat-radio-button>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="codigo">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>IDENTIFICACION</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 12px; width: 35%"
+                  class="inner center"
+                >
+                  {{ element.codigo }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nombre">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner"
+                >
+                  <strong>USO PRESUPUESTAL</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 12px; width: 63%"
+                  class="inner"
+                >
+                  {{ element.nombre }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedUsoColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedUsoColumns"
+              ></tr>
+            </table>
+          </div>
+          <h3>RELACION CONTABLE</h3>
+          <!--RELACION CONTABLE-->
+          <div class="row mt-2">
+            <div class="col-sm-6">
+              <input
+                type="text"
+                [(ngModel)]="filterNumeroContable"
+                class="form-control"
+                placeholder="Ingrese el número de la cuenta contable"
+                (ngModelChange)="
+                  filterNumeroContable = $event.toUpperCase().trim()
+                "
+              />
+            </div>
+
+            <div class="col-sm-6">
+              <input
+                type="text"
+                [(ngModel)]="filterNombreContable"
+                class="form-control"
+                placeholder="Ingrese el nombre de la cuenta contable"
+                (ngModelChange)="
+                  filterNombreContable = $event.toUpperCase().trim()
+                "
+              />
+            </div>
+          </div>
+          <div class="row mt-2">
+            <!--GRILLA RELACION CONTABLE-->
+            <table
+              mat-table
+              [dataSource]="listaFiltradaRelacionContable"
+              class="mat-elevation-z8"
+            >
+              <ng-container matColumnDef="selection">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td
+                  mat-cell
+                  *matCellDef="let element; let rowIndex = index"
+                  class="inner"
+                  style="padding: 5px; width: 2%"
+                >
+                  <mat-radio-button
+                    color="primary"
+                    name="rhSelectionRadioContable"
+                    [value]="rowIndex"
+                    *ngIf="element.seleccionable"
+                    (click)="selectRelacionContable($event, element)"
+                    [checked]="element.seleccionado"
+                    style="width: 100%; height: 100%"
+                  >
+                  </mat-radio-button>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="cuentaContableCodigo">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>NUMERO</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 13px; width: 14%"
+                  class="inner center"
+                >
+                  {{ element.cuentaContable.codigo }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="cuentaContableNombre">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>CUENTA CONTABLE</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 12px; width: 28%"
+                  class="inner"
+                >
+                  {{ element.cuentaContable.nombre }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="atributoContableNombre">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>ATRIBUTO CONTABLE</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 13px; width: 20%"
+                  class="inner center"
+                >
+                  {{ element.atributoContable.nombre }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="tipoGastoNombre">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>TIPO GASTO</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 13px; width: 20%"
+                  class="inner center"
+                >
+                  {{ element.tipoGasto.nombre }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="tipoOperacion">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>TIPO OPER.</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 13px; width: 8%"
+                  class="inner center"
+                >
+                  {{ element.tipoOperacion }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="usoContable">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="font-size: 13px"
+                  class="inner center"
+                >
+                  <strong>USO CONTABLE</strong>
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="font-size: 13px; width: 8%"
+                  class="inner center"
+                >
+                  {{ element.usoContable }}
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedRelacionContableColumns"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedRelacionContableColumns"
+              ></tr>
+            </table>
+          </div>
+        </div>
+        <div class="form-group right" style="margin: 0px">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onAceptar()"
+            [disabled]="!habilitaControlAceptar"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

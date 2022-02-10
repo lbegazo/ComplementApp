@@ -7,4 +7,6 @@ export interface RelacionContableDto {
   cuentaContable: ValorSeleccion;
   atributoContable: ValorSeleccion;
   tipoGasto: ValorSeleccion;
+  seleccionado?: boolean;
+  seleccionable?: boolean;
 }

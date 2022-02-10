@@ -15,7 +15,8 @@ import { ValorSeleccion } from 'src/app/_dto/valorSeleccion';
 import { Cdp } from 'src/app/_models/cdp';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ClavePresupuestalContableService } from 'src/app/_services/clavePresupuestalContable.service';
-import { PopupClavePresupuestalContableComponent } from './popup-clave-presupuestal-contable/popup-clave-presupuestal-contable.component';
+// import { PopupClavePresupuestalContableComponent } from './popup-clave-presupuestal-contable/popup-clave-presupuestal-contable.component';
+import { PopupUsoRelacionContableComponent } from './popup-uso-relacion-contable/popup-uso-relacion-contable.component';
 
 @Component({
   selector: 'app-clave-presupuestal-contable-edit',
@@ -84,12 +85,9 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
     });
   }
 
-  cargarListaUsosPresupuestales() {}
-
   abrirPopup(index: number) {
     if (this.listaClavePresupuestalContable.length > 0) {
       const clavePresupuestal = this.listaClavePresupuestalContable[index];
-
       //#region Abrir Popup
 
       const initialState = {
@@ -98,7 +96,7 @@ export class ClavePresupuestalContableEditComponent implements OnInit {
       };
 
       this.bsModalRef = this.modalService.show(
-        PopupClavePresupuestalContableComponent,
+        PopupUsoRelacionContableComponent,
         Object.assign({ initialState }, { class: 'gray modal-lg' })
       );
 

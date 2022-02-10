@@ -1,0 +1,47 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.addPadding {
+  padding: 10px;
+}
+
+.inner {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  padding: 5px 5px;
+}
+
+// table td {
+//   padding: 0px;
+//   vertical-align: top;
+// }
+
+.aplicaBackground {
+  background-color: white;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+input[type="text"] {
+  background-color: white;
+  height: 30px;
+  padding: 0px;
+}
+
+.control {
+  background-color: white;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}

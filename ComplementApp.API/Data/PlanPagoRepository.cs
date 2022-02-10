@@ -95,8 +95,6 @@ namespace ComplementApp.API.Data
             return await lista.ToListAsync();
         }
 
-
-
         public async Task<PagedList<PlanPago>> ObtenerListaPlanPagoXCompromiso(long crp,
                                                                                 List<int> listaEstadoId,
                                                                                 UserParams userParams)

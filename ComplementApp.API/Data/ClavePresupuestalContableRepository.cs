@@ -299,18 +299,18 @@ namespace ComplementApp.API.Data
                                    {
                                        Id = rc.CuentaContableId != null ? cuco.CuentaContableId : 0,
                                        Codigo = rc.CuentaContableId != null ? cuco.NumeroCuenta : string.Empty,
-                                       Nombre = rc.CuentaContableId != null ? cuco.DescripcionCuenta : string.Empty,
+                                       Nombre = rc.CuentaContableId != null ? cuco.DescripcionCuenta.ToUpper() : string.Empty,
                                    },
                                    AtributoContable = new ValorSeleccion()
                                    {
                                        Id = ac.AtributoContableId,
-                                       Nombre = ac.Nombre
+                                       Nombre = ac.Nombre.ToUpper()
                                    },
 
                                    TipoGasto = new ValorSeleccion()
                                    {
                                        Id = rc.TipoGastoId != null ? t.TipoGastoId : 0,
-                                       Nombre = rc.TipoGastoId != null ? t.Nombre : string.Empty
+                                       Nombre = rc.TipoGastoId != null ? t.Nombre.ToUpper() : string.Empty
                                    }
                                })
                                  .Distinct()

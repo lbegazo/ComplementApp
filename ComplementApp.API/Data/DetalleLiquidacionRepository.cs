@@ -615,7 +615,7 @@ namespace ComplementApp.API.Data
                                join rc in _context.RelacionContable on cp.RelacionContableId equals rc.RelacionContableId
                                join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
                                from cuco in CuentaContable.DefaultIfEmpty()
-                               join sf in _context.SituacionFondo on cp.SituacionFondoId equals sf.SituacionFondoId                               
+                               join sf in _context.SituacionFondo on cp.SituacionFondoId equals sf.SituacionFondoId
                                join ff in _context.FuenteFinanciacion on cp.FuenteFinanciacionId equals ff.FuenteFinanciacionId
                                join rpr in _context.RecursoPresupuestal on cp.RecursoPresupuestalId equals rpr.RecursoPresupuestalId
                                join ac in _context.AtributoContable on rc.AtributoContableId equals ac.AtributoContableId
@@ -642,7 +642,10 @@ namespace ComplementApp.API.Data
                                    TipoGastoCodigo = tga.Codigo,
                                    UsoContable = rc.UsoContable.ToString(),
                                    TipoOperacion = rc.TipoOperacion.ToString(),
-                                   NumeroCuenta = cuco.NumeroCuenta,
+                                   NumeroCuenta = (!string.IsNullOrWhiteSpace(ac.Codigo) &&
+                                                    !string.IsNullOrWhiteSpace(tga.Codigo) &&
+                                                    !string.IsNullOrWhiteSpace(rc.TipoOperacion.ToString()))
+                                                    ? string.Empty : (!string.IsNullOrWhiteSpace(rc.UsoContable.ToString())) ? cuco.NumeroCuenta : string.Empty,
                                    ClavePresupuestalContableId = cpc.ClavePresupuestalContableId.Value,
                                })
                                 .Distinct()

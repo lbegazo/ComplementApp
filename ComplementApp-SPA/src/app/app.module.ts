@@ -22,8 +22,13 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatTableModule } from '@angular/material/table';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioModule } from '@angular/material/radio';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppComponent } from './app.component';
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
@@ -139,6 +144,7 @@ import { IntegracionSiifNacionModule } from './integracion-siif-nacion/integraci
 import { TramitePagoModule } from './tramite-pago/tramite-pago.module';
 import { GeneradorArchivosModule } from './generador-archivos/generador-archivos.module';
 import { ListaTipoArchivoResolver } from './_resolvers/lista-TipoArchivo.resolver';
+import { PopupUsoRelacionContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/popup-uso-relacion-contable/popup-uso-relacion-contable.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -225,6 +231,7 @@ export function tokenGetter() {
     VincularCdpSolicitudEditComponent,
     GraficoTestComponent,
     MetaEjecucionPresupuestalComponent,
+    PopupUsoRelacionContableComponent,
   ],
   imports: [
     BrowserModule,
@@ -248,6 +255,11 @@ export function tokenGetter() {
     MatToolbarModule,
     MatButtonModule,
     FlexLayoutModule,
+    MatTableModule,
+    MatStepperModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatRadioModule,
     AppRoutingModule,
     NgxSpinnerModule,
     JwtModule.forRoot({
@@ -259,7 +271,7 @@ export function tokenGetter() {
     }),
     IntegracionSiifNacionModule,
     TramitePagoModule,
-    GeneradorArchivosModule
+    GeneradorArchivosModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-Co' },

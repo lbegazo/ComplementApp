@@ -502,7 +502,7 @@ namespace ComplementApp.API.Controllers
                         planPago.ValorInicial = item.Valor;
                         planPago.ValorAdicion = 0;
                         planPago.ValorAPagar = item.Valor;
-                        planPago.SaldoDisponible = 0;
+                        planPago.SaldoDisponible = item.Valor;
                         planPago.UsuarioIdModificacion = usuarioId;
                         planPago.Viaticos = item.Viaticos;
                         planPago.FechaModificacion = _generalInterface.ObtenerFechaHoraActual();
