@@ -209,6 +209,21 @@ namespace ComplementApp.API.Data
             return detalleLiquidacionAnterior;
         }
 
+        public async Task<bool> ExisteLiquidacionAnterior(long crp, long terceroId, int pciId)
+        {
+            var detalleLiquidacion = await (from dl in _context.DetalleLiquidacion
+                                            where dl.EstadoId == (int)EstadoDetalleLiquidacion.Generado
+                                            where dl.PciId == pciId
+                                            where dl.Crp == crp
+                                            where dl.TerceroId == terceroId
+                                            select dl)
+                                            .ToListAsync();
+
+            var resultado = detalleLiquidacion?.Count > 0 ? true : false;
+            return resultado;
+        }
+
+
         public async Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId, int pciId)
         {
             DetalleLiquidacion liquidacion = null;

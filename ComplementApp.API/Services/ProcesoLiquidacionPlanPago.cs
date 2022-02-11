@@ -471,6 +471,7 @@ namespace ComplementApp.API.Services
             C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
 
             int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
+            bool existeLiquidacionAnterior = false;
 
             decimal cuatroSMLV = 0;
 
@@ -552,9 +553,11 @@ namespace ComplementApp.API.Services
                 }
             }
 
+            existeLiquidacionAnterior = await _repo.ExisteLiquidacionAnterior(solicitudPago.Crp, solicitudPago.TerceroId, parametroLiquidacion.PciId.Value);
+
             C3valorIva = C1honorario * PLtarifaIva;
             var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
-            C7baseAporteSalud = baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo;
+            C7baseAporteSalud = existeLiquidacionAnterior ? (baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo): solicitudPago.BaseCotizacion;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -779,6 +782,7 @@ namespace ComplementApp.API.Services
             C25BaseGravableRenta = 0, C26BaseGravableRentaUvt = 0;
 
             int C26BaseGravableRentaUvtFinal = 0, C2honorarioUvtFinal = 0;
+            bool existeLiquidacionAnterior = false;
 
             decimal cuatroSMLV = 0;
 
@@ -844,9 +848,11 @@ namespace ComplementApp.API.Services
                 }
             }
 
+            existeLiquidacionAnterior = await _repo.ExisteLiquidacionAnterior(solicitudPago.Crp, solicitudPago.TerceroId, parametroLiquidacion.PciId.Value);
+
             C3valorIva = C1honorario * PLtarifaIva;
             var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
-            C7baseAporteSalud = baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo;
+            C7baseAporteSalud = existeLiquidacionAnterior ? baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo: solicitudPago.BaseCotizacion;
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);

@@ -24,6 +24,8 @@ namespace ComplementApp.API.Interfaces.Repository
 
         Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosAnterior(long terceroId, int pciId);
 
+        Task<bool> ExisteLiquidacionAnterior(long crp, long terceroId, int pciId);
+
         Task<DetalleLiquidacion> ObtenerDetalleLiquidacionAnterior(int terceroId, int pciId);
 
         Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionViaticosMesAnteriorXTerceroIds(List<int> listaTerceroId, int pciId);
