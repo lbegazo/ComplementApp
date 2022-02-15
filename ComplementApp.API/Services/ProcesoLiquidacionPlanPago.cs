@@ -205,7 +205,7 @@ namespace ComplementApp.API.Services
             int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
             decimal factorCalculo = 0;
 
-            decimal valor = 0;
+            decimal valor = 0, valorRentaCalculado = 0;
 
             #endregion variables 
 
@@ -280,10 +280,10 @@ namespace ComplementApp.API.Services
                 factorIncremento = criterioReteFuente.Factor;
                 tarifaCalculo = criterioReteFuente.Tarifa;
             }
-            else
-            {
-                throw new Exception($"No se pudo obtener el criterio de calculo de rendimiento");
-            }
+            // else
+            // {
+            //     throw new Exception($"No se pudo obtener el criterio de calculo de retención en la fuente");
+            // }
 
             if (listaDeducciones != null && listaDeducciones.Count > 0)
             {
@@ -295,8 +295,16 @@ namespace ComplementApp.API.Services
                         if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                         {
                             deduccion.Base = baseGravableFinal;
-                            var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
+                            if (criterioReteFuente != null)
+                            {
+                                valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
                                                             + factorIncremento) * valorUvt) * factorCalculo;
+                            }
+                            else
+                            {
+                                valorRentaCalculado = 0;
+                            }
+
                             deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
 
                             if (deduccion.Base > 0)
@@ -557,7 +565,16 @@ namespace ComplementApp.API.Services
 
             C3valorIva = C1honorario * PLtarifaIva;
             var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
-            C7baseAporteSalud = existeLiquidacionAnterior ? (baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo): solicitudPago.BaseCotizacion;
+
+            if (solicitudPago.BaseCotizacion < valorSalarioMinimo)
+            {
+                C7baseAporteSalud = solicitudPago.BaseCotizacion;
+            }
+            else
+            {
+                C7baseAporteSalud = existeLiquidacionAnterior ? (baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo) : solicitudPago.BaseCotizacion;
+            }
+
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -852,7 +869,16 @@ namespace ComplementApp.API.Services
 
             C3valorIva = C1honorario * PLtarifaIva;
             var baseAporteSalud = (C1honorario - viaticosPagados) * PLbaseAporteSalud;
-            C7baseAporteSalud = existeLiquidacionAnterior ? baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo: solicitudPago.BaseCotizacion;
+
+            if (solicitudPago.BaseCotizacion < valorSalarioMinimo)
+            {
+                C7baseAporteSalud = solicitudPago.BaseCotizacion;
+            }
+            else
+            {
+                C7baseAporteSalud = existeLiquidacionAnterior ? (baseAporteSalud > valorSalarioMinimo ? baseAporteSalud : valorSalarioMinimo) : solicitudPago.BaseCotizacion;
+            }
+
             C8aporteASalud = C7baseAporteSalud * (PLaporteSalud);
             C8aporteASalud = this._generalInterface.ObtenerValorRedondeadoAl100XEncima(C8aporteASalud);
             C9aporteAPension = C7baseAporteSalud * (PLaportePension);
@@ -1639,7 +1665,7 @@ namespace ComplementApp.API.Services
             valorUvt, baseGravableUvtCalculada = 0, factorCalculo = 0;
             int C32NumeroDiaLaborados = 0, baseGravableUvtFinal = 0;
 
-            decimal valor = 0;
+            decimal valor = 0, valorRentaCalculado = 0;
 
             #endregion variables 
 
@@ -1720,10 +1746,10 @@ namespace ComplementApp.API.Services
                 factorIncremento = criterioReteFuente.Factor;
                 tarifaCalculo = criterioReteFuente.Tarifa;
             }
-            else
-            {
-                throw new Exception($"No se pudo obtener el criterio de calculo de rendimiento");
-            }
+            // else
+            // {
+            //     throw new Exception($"No se pudo obtener el criterio de calculo de retención en la fuente");
+            // }
 
             if (listaDeducciones != null && listaDeducciones.Count > 0)
             {
@@ -1735,8 +1761,16 @@ namespace ComplementApp.API.Services
                         if (DeduccionEsParametroGeneral(parametrosCodigoRenta, deduccion.Codigo))
                         {
                             deduccion.Base = baseGravableFinal;
-                            var valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
-                                                            + factorIncremento) * valorUvt) * factorCalculo;
+
+                            if (criterioReteFuente != null)
+                            {
+                                valorRentaCalculado = ((((tarifaCalculo / 100) * (baseGravableUvtCalculada - valorMinimoRango))
+                                                                + factorIncremento) * valorUvt) * factorCalculo;
+                            }
+                            else
+                            {
+                                valorRentaCalculado = 0;
+                            }
                             deduccion.Valor = this._generalInterface.ObtenerValorRedondeadoCPS(valorRentaCalculado);
 
                             if (deduccion.Base > 0)

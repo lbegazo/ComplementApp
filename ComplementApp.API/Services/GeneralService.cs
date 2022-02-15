@@ -31,7 +31,7 @@ namespace ComplementApp.API.Services
         public decimal ObtenerValorRedondeadoCPS(decimal valor)
         {
             decimal resultado = 0;
-            if (valor <= 100)
+            if (valor > 0 && valor <= 100)
             {
                 resultado = valor + (100 - valor);
             }
