@@ -14,6 +14,7 @@ using ComplementApp.API.Interfaces.Repository;
 using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models.ExcelDocumento;
 using System.IO.Compression;
+using System.Net.Http;
 
 namespace ComplementApp.API.Services
 {
@@ -239,18 +240,20 @@ namespace ComplementApp.API.Services
 
             try
             {
-                var webrequest = (HttpWebRequest)System.Net.WebRequest.Create(url);
-                webrequest.Credentials = new NetworkCredential(user, pass);
+                // var webrequest = (HttpWebRequest)System.Net.WebRequest.Create(url);
+                var client = new HttpClient();
+                var webrequest = await client.GetAsync(url);
+                // webrequest.Credentials = new NetworkCredential(user, pass);
                 //webrequest.Accept = "text/html, application/xhtml+xml, application/xml; q=0.9, */*; q=0.8";
                 webrequest.Headers.Add("Accept-Encoding", "gzip, deflate, br");
 
-                using (var response = await webrequest.GetResponseAsync())
-                {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        result = reader.ReadToEnd();
-                    }
-                }
+                // using (var response = await webrequest.GetResponseAsync())
+                // {
+                //     using (var reader = new StreamReader(response.GetResponseStream()))
+                //     {
+                //         result = reader.ReadToEnd();
+                //     }
+                // }
             }
             catch (Exception)
             {

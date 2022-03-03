@@ -54,6 +54,12 @@ namespace ComplementApp.API.Interfaces.Repository
                     bool? procesado,
                     UserParams userParams);
 
+        Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerLiquidacionesObligacionExportarExcel(
+        int? terceroId,
+        List<int> listaEstadoId,
+        bool? procesado,
+        UserParams userParams);
+
         Task<List<int>> ObtenerLiquidacionIdsParaObligacionArchivo(int? terceroId,
                                                                     List<int> listaEstadoId,
                                                                     bool? procesado,

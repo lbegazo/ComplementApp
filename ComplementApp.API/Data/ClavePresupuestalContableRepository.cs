@@ -304,13 +304,13 @@ namespace ComplementApp.API.Data
                                    AtributoContable = new ValorSeleccion()
                                    {
                                        Id = ac.AtributoContableId,
-                                       Nombre = ac.Nombre.ToUpper()
+                                       Nombre = ac.Codigo +'-'+ ac.Nombre.ToUpper()
                                    },
 
                                    TipoGasto = new ValorSeleccion()
                                    {
                                        Id = rc.TipoGastoId != null ? t.TipoGastoId : 0,
-                                       Nombre = rc.TipoGastoId != null ? t.Nombre.ToUpper() : string.Empty
+                                       Nombre = rc.TipoGastoId != null ? t.Codigo+'-'+ t.Nombre.ToUpper() : string.Empty
                                    }
                                })
                                  .Distinct()

@@ -715,7 +715,7 @@ namespace ComplementApp.API.Controllers
                     esProcesado = (procesado.Value == 1) ? (true) : (false);
                 }
 
-                var pagedList = await _repo.ObtenerLiquidacionesParaObligacionArchivo(terceroId, listIds, esProcesado, userParams);
+                var pagedList = await _repo.ObtenerLiquidacionesObligacionExportarExcel(terceroId, listIds, esProcesado, userParams);
                 var lista = _mapper.Map<IEnumerable<FormatoCausacionyLiquidacionPagos>>(pagedList);
 
                 if (lista != null)

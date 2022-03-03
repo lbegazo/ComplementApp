@@ -397,6 +397,59 @@ namespace ComplementApp.API.Data
             return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }
 
+
+ public async Task<PagedList<FormatoCausacionyLiquidacionPagos>> ObtenerLiquidacionesObligacionExportarExcel(
+                    int? terceroId,
+                    List<int> listaEstadoId,
+                    bool? procesado,
+                    UserParams userParams)
+        {
+            var listaCompromisoConClave = (from pp in _context.ClavePresupuestalContable
+                                           where pp.PciId == userParams.PciId
+                                           select pp.Crp).ToHashSet();
+
+            var lista = (from dl in _context.DetalleLiquidacion
+                         join sp in _context.FormatoSolicitudPago on new { FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value } equals new { sp.FormatoSolicitudPagoId }
+                         join dsp in _context.DetalleFormatoSolicitudPago on new { sp.FormatoSolicitudPagoId } equals new { dsp.FormatoSolicitudPagoId }                         
+                         join rp in _context.RubroPresupuestal on new { dsp.RubroPresupuestalId } equals new { rp.RubroPresupuestalId }
+                         join c in _context.PlanPago on new { dl.PlanPagoId, dl.PciId } equals new { c.PlanPagoId, c.PciId }
+                         join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         
+                         join cpc in _context.ClavePresupuestalContable on  new { ClavePresupuestalContableId = dsp.ClavePresupuestalContableId.Value } equals 
+                                                                            new { cpc.ClavePresupuestalContableId } into ClavePresupuestal
+                         from cp in ClavePresupuestal.DefaultIfEmpty()
+                         join ff in _context.FuenteFinanciacion on new { cp.FuenteFinanciacionId } equals new { ff.FuenteFinanciacionId } into FuenteFinanciacion
+                         from ff in FuenteFinanciacion.DefaultIfEmpty()                        
+                         
+                         where dl.EstadoId != (int)EstadoDetalleLiquidacion.Rechazado
+                         where dl.PciId == userParams.PciId
+                         where (dl.TerceroId == terceroId || terceroId == null)
+                         where (dl.Procesado == false)
+                         select new FormatoCausacionyLiquidacionPagos()
+                         {
+                             DetalleLiquidacionId = dl.DetalleLiquidacionId,
+                             PlanPagoId = dl.PlanPagoId,
+                             Crp = dl.Crp.ToString(),
+                             FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value,
+                             IdentificacionTercero = dl.NumeroIdentificacion,
+                             NombreTercero = dl.Nombre,
+                             NumeroRadicadoSupervisor = dl.NumeroRadicado,
+                             FechaRadicadoSupervisor = dl.FechaRadicado,
+                             ValorTotal = dsp.ValorAPagar,
+                             TieneClavePresupuestalContable = listaCompromisoConClave.Contains(c.Crp),
+                             IdentificacionRubroPresupuestal = rp.Identificacion,
+                             FuenteFinanciacion = ff.Nombre
+                         });
+
+            if (lista != null)
+            {
+                lista.OrderBy(c => c.FechaRadicadoSupervisor);
+            }
+
+            return await PagedList<FormatoCausacionyLiquidacionPagos>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
+        }
+
+
         public async Task<List<int>> ObtenerLiquidacionIdsParaObligacionArchivo(int? terceroId,
                     List<int> listaEstadoId,
                     bool? procesado,
