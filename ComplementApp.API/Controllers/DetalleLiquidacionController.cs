@@ -1370,6 +1370,7 @@ namespace ComplementApp.API.Controllers
                 }
             }
             stringBuilder.Replace("ñ", "n");
+            stringBuilder.Replace("&nbsp;", "");
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
