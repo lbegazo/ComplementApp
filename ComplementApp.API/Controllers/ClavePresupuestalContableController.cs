@@ -73,9 +73,9 @@ namespace ComplementApp.API.Controllers
 
                 return Ok(listaDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
             throw new Exception($"No se pudo obtener la lista de compromisos");

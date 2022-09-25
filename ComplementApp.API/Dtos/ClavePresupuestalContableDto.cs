@@ -5,7 +5,7 @@ namespace ComplementApp.API.Dtos
     public class ClavePresupuestalContableDto
     {
         public int ClavePresupuestalContableId { get; set; }
-        public int CdpId { get; set; }
+        public int DocumentoCompromisoId { get; set; }
         public long Crp { get; set; }
         public string Pci { get; set; }
         public string Dependencia { get; set; }

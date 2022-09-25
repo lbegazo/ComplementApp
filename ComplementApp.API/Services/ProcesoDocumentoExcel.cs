@@ -15,13 +15,13 @@ using ComplementApp.API.Interfaces.Service;
 using ComplementApp.API.Models.ExcelDocumento;
 using System.IO.Compression;
 using System.Net.Http;
+using System.Linq;
 
 namespace ComplementApp.API.Services
 {
     public class ProcesoDocumentoExcel : IProcesoDocumentoExcel
     {
         #region Propiedades
-
         private readonly IDocumentoRepository _repo;
         private readonly DataContext _dataContext;
         const int maxLongitudDetalle = 250;
@@ -742,9 +742,22 @@ namespace ComplementApp.API.Services
             DocumentoCompromiso documento = null;
             List<DocumentoCompromiso> listaDocumento = new List<DocumentoCompromiso>();
             int numValue = 0;
+            long numBigValue = 0;
             decimal value = 0;
             DateTime fecha;
             string valor = string.Empty;
+            var listaTerceros = (from t in _dataContext.Tercero
+                                 join ti in _dataContext.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
+                                select new TerceroDto()
+                               {
+                                   TerceroId = t.TerceroId,
+
+                                   TipoDocumentoIdentidadId = t.TipoIdentificacion,
+                                   TipoDocumentoIdentidad = ti.Nombre,
+                                   NumeroIdentificacion = t.NumeroIdentificacion,
+                                   Nombre = t.Nombre}).ToList();
+
+            var listaRubrosPresupuestales = _dataContext.RubroPresupuestal.ToList();
 
             foreach (var row in dtCabecera.Rows)
             {
@@ -812,7 +825,13 @@ namespace ComplementApp.API.Services
                 documento.EntidadNit = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[22].ToString(), 100);
                 documento.EntidadDescripcion = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[23].ToString(), 250);
                 documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[24].ToString(), 50);
-                documento.Cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 50);
+
+                //documento.Cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[25].ToString(), 50);
+                if (!(row as DataRow).ItemArray[25].ToString().Equals(string.Empty))
+                    if (Int64.TryParse((row as DataRow).ItemArray[25].ToString(), out numBigValue))
+                        documento.Cdp = numBigValue;
+
+
                 documento.Compromisos = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[26].ToString(), 6000);
                 documento.CuentasXPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[27].ToString(), 6000);
                 documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[28].ToString(), 6000);
@@ -827,6 +846,44 @@ namespace ComplementApp.API.Services
                 documento.TipoDocumentoSoporte = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[32].ToString(), 100);
                 documento.NumeroDocumentoSoporte = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[33].ToString(), 100);
                 documento.Observaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[34].ToString(), 250);
+
+                #region Rubro Presupuestal
+
+                if (!string.IsNullOrEmpty(documento.IdentificacionRubroPresupuestal))
+                {
+                    var rubro = listaRubrosPresupuestales
+                                    .Where(c => c.Identificacion.ToUpper() == documento.IdentificacionRubroPresupuestal.ToUpper())
+                                    .FirstOrDefault();
+                    if (rubro != null)
+                    {
+                        documento.RubroPresupuestalId = rubro.RubroPresupuestalId;
+                    }
+                }
+
+                #endregion Rubro Presupuestal
+
+
+                #region Tercero
+
+                if (!string.IsNullOrEmpty(documento.NumeroIdentificacion))
+                {
+                    var tercero = listaTerceros
+                                .Where(c => c.NumeroIdentificacion == documento.NumeroIdentificacion
+                                            && c.TipoDocumentoIdentidad.ToUpper() == documento.TipoIdentificacion.ToUpper()
+                                            ).FirstOrDefault();
+
+                    if (tercero != null)
+                    {
+                        documento.TerceroId = tercero.TerceroId;
+                    }
+                    else
+                    {
+                        documento.TerceroId = null;
+                    }
+                }
+
+                #endregion Tercero
+
 
                 listaDocumento.Add(documento);
             }

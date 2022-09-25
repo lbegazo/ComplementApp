@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,18 +32,19 @@ namespace ComplementApp.API.Data
 
             if (tipo == (int)TipoOperacionTransaccion.Creacion)
             {
-                lista = (from c in _context.CDP
+                lista = (from c in _context.DocumentoCompromiso
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where !listaCompromisos.Contains(c.Crp)
+                         where !listaCompromisos.Contains(c.NumeroDocumento)
                          where c.PciId == userParams.PciId
-                         where c.Instancia == (int)TipoDocumento.Compromiso
-                         where c.SaldoActual > 0 //Saldo Disponible
+                         //where c.Instancia == (int)TipoDocumento.Compromiso
+                         where c.SaldoPorUtilizar > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
-                             Crp = c.Crp,
+                             Crp = c.NumeroDocumento,
+                             //bool success = Int64.TryParse(c.Cdp, out long number);
                              Cdp = c.Cdp,
-                             Detalle4 = c.Detalle4,
+                             Detalle4 = c.Observaciones,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
                          })
@@ -52,18 +54,18 @@ namespace ComplementApp.API.Data
             else
             {
                 lista = (from cla in _context.ClavePresupuestalContable
-                         join c in _context.CDP on cla.Crp equals c.Crp
+                         join c in _context.DocumentoCompromiso on cla.Crp equals c.NumeroDocumento
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where cla.PciId == c.PciId
-                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         //where c.Instancia == (int)TipoDocumento.Compromiso
                          where cla.PciId == userParams.PciId
-                         where c.SaldoActual > 0 //Saldo Disponible
+                         where c.SaldoPorUtilizar > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
-                             Crp = c.Crp,
+                             Crp = c.NumeroDocumento,
                              Cdp = c.Cdp,
-                             Detalle4 = c.Detalle4,
+                             Detalle4 = c.Observaciones,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
                          })
@@ -77,7 +79,7 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<ClavePresupuestalContableDto>> ObtenerListaClavePresupuestalContable(int pciId)
         {
             var lista = (from cla in _context.ClavePresupuestalContable
-                         join c in _context.CDP on cla.Crp equals c.Crp
+                         join c in _context.DocumentoCompromiso on cla.Crp equals c.NumeroDocumento
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          join rp in _context.RubroPresupuestal on cla.RubroPresupuestalId equals rp.RubroPresupuestalId
                          join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
@@ -89,7 +91,7 @@ namespace ComplementApp.API.Data
                          from atrCon in AtributoContable.DefaultIfEmpty()
                          join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
                          from usoPre in UsoPresupuestal.DefaultIfEmpty()
-                         where c.Instancia == (int)TipoDocumento.Compromiso
+                         //where c.Instancia == (int)TipoDocumento.Compromiso
                          where cla.PciId == c.PciId
                          where cla.PciId == rc.PciId
                          where cla.PciId == usoPre.PciId
@@ -97,8 +99,8 @@ namespace ComplementApp.API.Data
                          where rp.RubroPresupuestalId == c.RubroPresupuestalId
                          select new ClavePresupuestalContableDto()
                          {
-                             Crp = c.Crp,
-                             Detalle4 = c.Detalle4,
+                             Crp = c.NumeroDocumento,
+                             Detalle4 = c.Observaciones,
 
                              Tercero = new ValorSeleccion()
                              {
@@ -143,20 +145,20 @@ namespace ComplementApp.API.Data
         {
 
             var detalles = await (from rp in _context.RubroPresupuestal
-                                  join c in _context.CDP on rp.RubroPresupuestalId equals c.RubroPresupuestalId
+                                  join c in _context.DocumentoCompromiso on rp.RubroPresupuestalId equals c.RubroPresupuestalId
                                   join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                                  join sf in _context.SituacionFondo on c.Detalle9 equals sf.Nombre
-                                  join ff in _context.FuenteFinanciacion on c.Detalle8 equals ff.Nombre
-                                  join r in _context.RecursoPresupuestal on c.Detalle10 equals r.Codigo
-                                  where c.Crp == crp
-                                  where c.Instancia == (int)TipoDocumento.Compromiso
+                                  join sf in _context.SituacionFondo on c.SituacionFondo equals sf.Nombre
+                                  join ff in _context.FuenteFinanciacion on c.FuenteFinanciacion equals ff.Nombre
+                                  join r in _context.RecursoPresupuestal on c.RecursoPresupuestal.ToUpper() equals r.Nombre.ToUpper()
+                                  where c.NumeroDocumento == crp
+                                  //where c.Instancia == (int)TipoDocumento.Compromiso
                                   where c.PciId == pciId
                                   select new ClavePresupuestalContableDto()
                                   {
-                                      CdpId = c.CdpId,
-                                      Crp = c.Crp,
-                                      Dependencia = c.Detalle2,
-                                      DependenciaDescripcion = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
+                                      DocumentoCompromisoId = c.DocumentoCompromisoId,
+                                      Crp = c.NumeroDocumento,
+                                      Dependencia = c.Dependencia	,
+                                      DependenciaDescripcion = c.Dependencia + " " + (c.DependenciaDescripcion.Length > 100 ? c.DependenciaDescripcion.Substring(0, 100) + "..." : c.DependenciaDescripcion),
                                       RubroPresupuestal = new ValorSeleccion()
                                       {
                                           Id = rp.RubroPresupuestalId,
@@ -172,17 +174,17 @@ namespace ComplementApp.API.Data
                                       FuenteFinanciacion = new ValorSeleccion()
                                       {
                                           Id = ff.FuenteFinanciacionId,
-                                          Nombre = c.Detalle8
+                                          Nombre = ff.Nombre
                                       },
                                       SituacionFondo = new ValorSeleccion()
                                       {
                                           Id = sf.SituacionFondoId,
-                                          Nombre = c.Detalle9
+                                          Nombre = sf.Nombre
                                       },
                                       RecursoPresupuestal = new ValorSeleccion()
                                       {
                                           Id = r.RecursoPresupuestalId,
-                                          Codigo = c.Detalle10,
+                                          Codigo = r.Codigo,
                                           Nombre = r.Nombre
                                       },
                                   })
@@ -197,11 +199,11 @@ namespace ComplementApp.API.Data
 
             var detalles = await (from cla in _context.ClavePresupuestalContable
                                   join rp in _context.RubroPresupuestal on cla.RubroPresupuestalId equals rp.RubroPresupuestalId
-                                  join c in _context.CDP on cla.Crp equals c.Crp
+                                  join c in _context.DocumentoCompromiso on cla.Crp equals c.NumeroDocumento
                                   join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                                  join sf in _context.SituacionFondo on c.Detalle9 equals sf.Nombre
-                                  join ff in _context.FuenteFinanciacion on c.Detalle8 equals ff.Nombre
-                                  join r in _context.RecursoPresupuestal on c.Detalle10 equals r.Codigo
+                                  join sf in _context.SituacionFondo on c.SituacionFondo equals sf.Nombre
+                                  join ff in _context.FuenteFinanciacion on c.FuenteFinanciacion equals ff.Nombre
+                                  join r in _context.RecursoPresupuestal on c.RecursoPresupuestal.ToUpper() equals r.Nombre.ToUpper()
                                   join rc in _context.RelacionContable on cla.RelacionContableId equals rc.RelacionContableId
                                   join cc in _context.CuentaContable on rc.CuentaContableId equals cc.CuentaContableId into CuentaContable
                                   from cuCo in CuentaContable.DefaultIfEmpty()
@@ -209,9 +211,9 @@ namespace ComplementApp.API.Data
                                                                          new { UsoPresupuestalId = up.UsoPresupuestalId, PciId = up.PciId.Value } into UsoPresupuestal
                                   from usoPre in UsoPresupuestal.DefaultIfEmpty()
                                   where rp.RubroPresupuestalId == c.RubroPresupuestalId
-                                  where c.Instancia == (int)TipoDocumento.Compromiso
-                                  where cla.Crp == crp
-                                  where cla.Dependencia == c.Detalle2
+                                  //where c.Instancia == (int)TipoDocumento.Compromiso
+                                  where cla.Crp == c.NumeroDocumento
+                                  where cla.Dependencia == c.Dependencia
                                   where cla.PciId == c.PciId
                                   where cla.PciId == rc.PciId
                                   where cla.PciId == pciId
@@ -219,10 +221,10 @@ namespace ComplementApp.API.Data
                                   select new ClavePresupuestalContableDto()
                                   {
                                       ClavePresupuestalContableId = cla.ClavePresupuestalContableId,
-                                      CdpId = c.CdpId,
-                                      Crp = c.Crp,
-                                      Dependencia = c.Detalle2,
-                                      DependenciaDescripcion = c.Detalle2 + " " + (c.Detalle3.Length > 100 ? c.Detalle3.Substring(0, 100) + "..." : c.Detalle3),
+                                      DocumentoCompromisoId = c.DocumentoCompromisoId,
+                                      Crp = c.NumeroDocumento,
+                                      Dependencia = c.Dependencia,
+                                      DependenciaDescripcion = c.Dependencia + " " + (c.DependenciaDescripcion.Length > 100 ? c.DependenciaDescripcion.Substring(0, 100) + "..." : c.DependenciaDescripcion),
                                       RubroPresupuestal = new ValorSeleccion()
                                       {
                                           Id = rp.RubroPresupuestalId,
@@ -239,17 +241,17 @@ namespace ComplementApp.API.Data
                                       FuenteFinanciacion = new ValorSeleccion()
                                       {
                                           Id = ff.FuenteFinanciacionId,
-                                          Nombre = c.Detalle8
+                                          Nombre = ff.Nombre
                                       },
                                       SituacionFondo = new ValorSeleccion()
                                       {
                                           Id = sf.SituacionFondoId,
-                                          Nombre = c.Detalle9
+                                          Nombre = sf.Nombre
                                       },
                                       RecursoPresupuestal = new ValorSeleccion()
                                       {
                                           Id = r.RecursoPresupuestalId,
-                                          Codigo = c.Detalle10,
+                                          Codigo = r.Codigo,
                                           Nombre = r.Nombre
                                       },
                                       RelacionContable = new ValorSeleccion()

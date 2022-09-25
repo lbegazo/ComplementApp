@@ -94,8 +94,7 @@ namespace ComplementApp.API.Models.ExcelDocumento
         [Column(TypeName = "VARCHAR(50)")]
         public string SolicitudCdp { get; set; }
 
-        [Column(TypeName = "VARCHAR(50)")]
-        public string Cdp { get; set; }
+        public long Cdp { get; set; }
 
         [Column(TypeName = "VARCHAR(6000)")]
         public string Compromisos { get; set; }
@@ -121,10 +120,13 @@ namespace ComplementApp.API.Models.ExcelDocumento
         public string NumeroDocumentoSoporte { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]
-        public string Observaciones { get; set; }
-
+        public string Observaciones { get; set; }        
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
 
+        //TODO 
+        //Crear columnas y registrarlas
+        public int? RubroPresupuestalId { get; set; }
+        public int? TerceroId { get; set; }
     }
 }
