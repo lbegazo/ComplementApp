@@ -653,7 +653,6 @@ namespace ComplementApp.API.Data
 
         public async Task<ICollection<DetalleLiquidacion>> ObtenerListaDetalleLiquidacionSinClavePresupuestalXIds(List<int> listaLiquidacionId)
         {
-            //cusba
             var lista = await (from dl in _context.DetalleLiquidacion
                                join sp in _context.FormatoSolicitudPago on new { Crp = dl.Crp, FormatoSolicitudPagoId = dl.FormatoSolicitudPagoId.Value, dl.PciId } equals
                                                                            new { Crp = sp.Crp, FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId, sp.PciId }

@@ -27,18 +27,17 @@ namespace ComplementApp.API.Data
 
         public async Task<CDPDto> ObtenerCDP(int usuarioId, int numeroCDP)
         {
-            var cdp = await (from c in _context.CDP
-                             join d in _context.PlanAdquisicion on c.Cdp equals d.Cdp
+            var cdp = await (from c in _context.DocumentoCdp
+                             join d in _context.PlanAdquisicion on c.NumeroDocumento equals d.Cdp
                              where d.UsuarioId == usuarioId
-                             where c.Cdp == numeroCDP
-                             where c.Instancia == (int)TipoDocumento.Cdp
+                             where c.NumeroDocumento == numeroCDP
                              select new CDPDto()
                              {
-                                 Instancia = c.Instancia,
-                                 Cdp = c.Cdp,
-                                 Fecha = c.Fecha,
-                                 Detalle1 = c.Detalle1, //Estado
-                                 Detalle4 = c.Detalle4 //Objeto del bien
+                                 //Instancia = c.Instancia,
+                                 Cdp = c.NumeroDocumento,
+                                 Fecha = c.FechaRegistro,
+                                 Detalle1 = c.Estado, //Estado
+                                 Detalle4 = c.Objeto //Objeto del bien
                              }).FirstOrDefaultAsync();
             return cdp;
         }
@@ -209,19 +208,18 @@ namespace ComplementApp.API.Data
         public async Task<IEnumerable<CDP>> ObtenerListaCDP(int usuarioId)
         {
 
-            var cdps = await (from c in _context.CDP
-                              join d in _context.PlanAdquisicion on c.Cdp equals d.Cdp
+            var cdps = await (from c in _context.DocumentoCdp
+                              join d in _context.PlanAdquisicion on c.NumeroDocumento equals d.Cdp
                               where d.UsuarioId == usuarioId
-                              where c.Instancia == (int)TipoDocumento.Cdp
                               group c by new
                               {
-                                  c.Cdp,
-                                  c.Fecha
+                                  c.NumeroDocumento,
+                                  c.FechaRegistro
                               } into g
                               select new CDP
                               {
-                                  Cdp = g.Key.Cdp,
-                                  Fecha = g.Key.Fecha
+                                  Cdp = g.Key.NumeroDocumento,
+                                  Fecha = g.Key.FechaRegistro
                               }).Distinct()
                               .ToListAsync();
 

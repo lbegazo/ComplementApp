@@ -4,6 +4,7 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221009125849_TDocumentoOrdenPago_UpdateFields")]
+    partial class TDocumentoOrdenPago_UpdateFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1467,11 +1469,13 @@ namespace ComplementApp.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentoOrdenPagoId"), 1L, 1);
 
-                    b.Property<long>("Cdp")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Cdp")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
-                    b.Property<long>("Compromiso")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Compromiso")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<string>("ConceptoPago")
                         .HasColumnType("VARCHAR(1000)");
@@ -1479,8 +1483,9 @@ namespace ComplementApp.API.Migrations
                     b.Property<string>("CuentaPagaduria")
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<long>("CuentasXPagar")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CuentasXPagar")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<string>("Dependencia")
                         .IsRequired()
@@ -1568,8 +1573,9 @@ namespace ComplementApp.API.Migrations
                     b.Property<string>("Obligaciones")
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<long>("OrdenPago")
-                        .HasColumnType("bigint");
+                    b.Property<string>("OrdenPago")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<int?>("PciId")
                         .HasColumnType("int");
@@ -1585,8 +1591,9 @@ namespace ComplementApp.API.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(10)");
 
-                    b.Property<long>("SolicitudCdp")
-                        .HasColumnType("bigint");
+                    b.Property<string>("SolicitudCdp")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<string>("TesoreriaPagadora")
                         .IsRequired()

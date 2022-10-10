@@ -138,29 +138,29 @@ namespace ComplementApp.API.Services
 
                 #region Insertar CDP
 
-                if (listaCdp != null && listaCdp.Count > 0)
-                {
-                    await _cdpRepo.InsertarDataCDPDeReporte(1);
-                    await _dataContext.SaveChangesAsync();
-                }
+                // if (listaCdp != null && listaCdp.Count > 0)
+                // {
+                //     await _cdpRepo.InsertarDataCDPDeReporte(1);
+                //     await _dataContext.SaveChangesAsync();
+                // }
 
-                if (listaCompromiso != null && listaCompromiso.Count > 0)
-                {
-                    await _cdpRepo.InsertarDataCDPDeReporte(2);
-                    await _dataContext.SaveChangesAsync();
-                }
+                // if (listaCompromiso != null && listaCompromiso.Count > 0)
+                // {
+                //     await _cdpRepo.InsertarDataCDPDeReporte(2);
+                //     await _dataContext.SaveChangesAsync();
+                // }
 
-                if (listaObligacion != null && listaObligacion.Count > 0)
-                {
-                    await _cdpRepo.InsertarDataCDPDeReporte(3);
-                    await _dataContext.SaveChangesAsync();
-                }
+                // if (listaObligacion != null && listaObligacion.Count > 0)
+                // {
+                //     await _cdpRepo.InsertarDataCDPDeReporte(3);
+                //     await _dataContext.SaveChangesAsync();
+                // }
 
-                if (listaOrdenPago != null && listaOrdenPago.Count > 0)
-                {
-                    await _cdpRepo.InsertarDataCDPDeReporte(4);
-                    await _dataContext.SaveChangesAsync();
-                }
+                // if (listaOrdenPago != null && listaOrdenPago.Count > 0)
+                // {
+                //     await _cdpRepo.InsertarDataCDPDeReporte(4);
+                //     await _dataContext.SaveChangesAsync();
+                // }
 
                 #endregion Insertar CDP
 

@@ -71,10 +71,9 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<PlanPagoDto>> ObtenerListaPlanPagoTotal(int pciId)
         {
             var lista = (from pp in _context.PlanPago
-                         join c in _context.CDP on pp.Crp equals c.Crp
+                         join c in _context.DocumentoCompromiso on pp.Crp equals c.NumeroDocumento
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where pp.Cdp == c.Cdp
-                         where c.Instancia == (int)TipoDocumento.Compromiso
                          where pp.EstadoPlanPagoId == (int)EstadoPlanPago.PorPagar
                          where pp.PciId == pciId
                          select new PlanPagoDto()
@@ -85,7 +84,7 @@ namespace ComplementApp.API.Data
                              MesPago = pp.MesPago,
                              IdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
-                             DetallePlanPago = c.Detalle4,
+                             DetallePlanPago = c.Observaciones,
                              ValorAPagar = pp.ValorAPagar,
                          })
                          .Distinct()
@@ -145,23 +144,22 @@ namespace ComplementApp.API.Data
         //Utilizado para mostrar la cabecera de la liquidación
         public async Task<DetallePlanPagoDto> ObtenerDetallePlanPago(int planPagoId)
         {
-            var listaCdp = (from c in _context.CDP
-                            join pp in _context.PlanPago on c.Crp equals pp.Crp
+            var listaCdp = (from c in _context.DocumentoCompromiso
+                            join pp in _context.PlanPago on c.NumeroDocumento equals pp.Crp
                             where pp.PlanPagoId == planPagoId
-                            where c.Instancia == (int)TipoDocumento.Compromiso
                             where pp.PciId == c.PciId
                             select new CDPDto
                             {
-                                Crp = c.Crp,
+                                Crp = c.NumeroDocumento,
                                 Cdp = c.Cdp,
                                 PciId = c.PciId.Value,
-                                Detalle4 = c.Detalle4,
-                                Detalle6 = c.Detalle6,
-                                Detalle7 = c.Detalle7,
-                                Fecha = c.Fecha,
-                                Operacion = c.Operacion,
-                                SaldoActual = c.SaldoActual,
-                                ValorTotal = c.ValorTotal,
+                                Detalle4 = c.Observaciones,
+                                Detalle6 = c.NumeroDocumentoSoporte,
+                                Detalle7 = c.TipoDocumentoSoporte,
+                                Fecha = c.FechaRegistro,
+                                Operacion = c.ValorOperacion,
+                                SaldoActual = c.SaldoPorUtilizar,
+                                ValorTotal = c.ValorActual,
                             });
 
 
@@ -259,7 +257,7 @@ namespace ComplementApp.API.Data
         public async Task<DetallePlanPagoDto> ObtenerDetallePlanPagoParaSolicitudPago(int planPagoId)
         {
             return await (from pp in _context.PlanPago
-                          join c in _context.CDP on pp.Crp equals c.Crp
+                          join c in _context.DocumentoCompromiso on pp.Crp equals c.NumeroDocumento
                           join t in _context.Tercero on pp.TerceroId equals t.TerceroId
 
                           join p in _context.ParametroLiquidacionTercero on pp.TerceroId equals p.TerceroId into ParametroTercero
@@ -280,19 +278,18 @@ namespace ComplementApp.API.Data
                           where contra.PciId == super.PciId
 
                           where pp.PlanPagoId == planPagoId
-                          where c.Instancia == (int)TipoDocumento.Compromiso
                           select new DetallePlanPagoDto()
                           {
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
-                              Detalle4 = CortarTexto(c.Detalle4, 50),
+                              Detalle4 = CortarTexto(c.Observaciones, 50),
                               Detalle5 = super.Nombres + ' ' + super.Apellidos,
-                              Detalle6 = c.Detalle6,
-                              Detalle7 = ResumirDetalle7(c.Detalle7),
-                              ValorTotal = c.ValorTotal,
-                              SaldoActual = c.SaldoActual,
-                              Fecha = c.Fecha,
-                              Operacion = c.Operacion,
+                              Detalle6 = c.NumeroDocumentoSoporte,
+                              Detalle7 = ResumirDetalle7(c.TipoDocumentoSoporte),
+                              ValorTotal = c.ValorActual,
+                              SaldoActual = c.SaldoPorUtilizar,
+                              Fecha = c.FechaRegistro,
+                              Operacion = c.ValorOperacion,
                               ModalidadContrato = pt.ModalidadContrato,
                               TipoPago = pt.TipoPago,
 
@@ -320,7 +317,7 @@ namespace ComplementApp.API.Data
         public async Task<ICollection<DetallePlanPagoDto>> ObtenerListaDetallePlanPagoXIds(List<int> listaSolicitudPagoIds)
         {
             return await (from sp in _context.FormatoSolicitudPago
-                          join c in _context.CDP on new { sp.Crp, sp.PciId } equals new { c.Crp, c.PciId }
+                          join c in _context.DocumentoCompromiso on new { sp.Crp, sp.PciId } equals new { Crp=c.NumeroDocumento, c.PciId }
                           join t in _context.Tercero on sp.TerceroId equals t.TerceroId
                           join pp in _context.PlanPago on new { sp.PlanPagoId, sp.PciId } equals new { pp.PlanPagoId, pp.PciId }
 
@@ -340,20 +337,19 @@ namespace ComplementApp.API.Data
                           where contra.PciId == super.PciId
 
                           where listaSolicitudPagoIds.Contains(sp.FormatoSolicitudPagoId)
-                          where c.Instancia == (int)TipoDocumento.Compromiso
                           select new DetallePlanPagoDto()
                           {
                               FormatoSolicitudPagoId = sp.FormatoSolicitudPagoId,
                               PlanPagoId = pp.PlanPagoId,
                               TerceroId = pp.TerceroId,
-                              Detalle4 = CortarTexto(c.Detalle4, 50),
+                              Detalle4 = CortarTexto(c.Observaciones, 50),
                               Detalle5 = super.Nombres + ' ' + super.Apellidos,
-                              Detalle6 = c.Detalle6,
-                              Detalle7 = ResumirDetalle7(c.Detalle7),
-                              ValorTotal = c.ValorTotal,
-                              SaldoActual = c.SaldoActual,
-                              Fecha = c.Fecha,
-                              Operacion = c.Operacion,
+                              Detalle6 = c.NumeroDocumentoSoporte,
+                              Detalle7 = ResumirDetalle7(c.TipoDocumentoSoporte),
+                              ValorTotal = c.ValorActual,
+                              SaldoActual = c.SaldoPorUtilizar,
+                              Fecha = c.FechaRegistro,
+                              Operacion = c.ValorOperacion,
                               ModalidadContrato = pt.ModalidadContrato,
                               TipoPago = pt.TipoPago,
 
@@ -377,9 +373,9 @@ namespace ComplementApp.API.Data
                               Email = super.Email,
                               TextoComprobanteContable = (sp.ObservacionesModificacion.Length > 100 ? sp.ObservacionesModificacion.Substring(0, 100) : sp.ObservacionesModificacion) +
                                                          " " +
-                                                         c.Detalle7 +
+                                                         c.TipoDocumentoSoporte +
                                                           " " +
-                                                          c.Detalle6 +
+                                                          c.NumeroDocumentoSoporte +
                                                            " PER. " +
                                                            sp.FechaInicio.ToString("yyyy-MM-dd") +
                                                            " A " +
@@ -387,7 +383,7 @@ namespace ComplementApp.API.Data
                                                            " SUP. " +
                                                            super.Nombres + ' ' + super.Apellidos +
                                                            " " +
-                                                           c.Detalle4
+                                                           c.Observaciones
                           })
                     .ToListAsync();
         }
@@ -584,24 +580,23 @@ namespace ComplementApp.API.Data
                                     where pp.PciId == userParams.PciId
                                     select pp.Crp).ToHashSet();
 
-            var lista = (from c in _context.CDP
+            var lista = (from c in _context.DocumentoCompromiso
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where !listaCompromisos.Contains(c.Crp)
+                         where !listaCompromisos.Contains(c.NumeroDocumento)
                          where c.PciId == userParams.PciId
-                         where c.Instancia == (int)TipoDocumento.Compromiso
-                         where c.SaldoActual > 0 //Saldo Disponible
-                         where c.Crp == numeroCrp || numeroCrp == null
+                         where c.SaldoPorUtilizar > 0 //Saldo Disponible
+                         where c.NumeroDocumento== numeroCrp || numeroCrp == null
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
                          {
-                             Crp = c.Crp,
+                             Crp = c.NumeroDocumento,
                              Cdp = c.Cdp,
-                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                             Objeto = c.Detalle4,
+                             Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                             Objeto = c.Observaciones,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
-                             SaldoActual = c.SaldoActual,
-                             ValorTotal = c.ValorTotal,
+                             SaldoActual = c.SaldoPorUtilizar,
+                             ValorTotal = c.ValorActual,
                              TerceroId = c.TerceroId.Value,
                          })
                         .OrderBy(x => x.Crp);
@@ -634,24 +629,23 @@ namespace ComplementApp.API.Data
                                     select pp.Crp).ToHashSet();
 
 
-            var lista = (from c in _context.CDP
+            var lista = (from c in _context.DocumentoCompromiso
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where listaCompromisos.Contains(c.Crp)
-                         where c.Instancia == (int)TipoDocumento.Compromiso
-                         where c.SaldoActual > 0 //Saldo Disponible
-                         where c.Crp == numeroCrp || numeroCrp == null
+                         where listaCompromisos.Contains(c.NumeroDocumento)
+                         where c.SaldoPorUtilizar > 0 //Saldo Disponible
+                         where c.NumeroDocumento == numeroCrp || numeroCrp == null
                          where c.TerceroId == terceroId || terceroId == null
                          where c.PciId == userParams.PciId
                          select new CDPDto()
                          {
-                             Crp = c.Crp,
+                             Crp = c.NumeroDocumento,
                              Cdp = c.Cdp,
-                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                             Objeto = c.Detalle4,
+                             Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                             Objeto = c.Observaciones,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
-                             SaldoActual = c.SaldoActual,
-                             ValorTotal = c.ValorTotal,
+                             SaldoActual = c.SaldoPorUtilizar,
+                             ValorTotal = c.ValorActual,
                              TerceroId = c.TerceroId.Value,
                          })
                         .OrderBy(x => x.Crp);
@@ -689,12 +683,11 @@ namespace ComplementApp.API.Data
         {
 
             var lista = await (from pp in _context.PlanPago
-                               join c in _context.CDP on pp.Crp equals c.Crp
+                               join c in _context.DocumentoCompromiso on pp.Crp equals c.NumeroDocumento
                                where pp.TerceroId == c.TerceroId
                                where pp.PciId == pciId
                                where pp.Crp == numeroCrp
-                               where c.Instancia == (int)TipoDocumento.Compromiso
-                               where c.SaldoActual > 0 //Saldo Disponible                                                             
+                               where c.SaldoPorUtilizar > 0 //Saldo Disponible                                                             
                                select new LineaPlanPagoDto()
                                {
                                    PlanPagoId = pp.PlanPagoId,

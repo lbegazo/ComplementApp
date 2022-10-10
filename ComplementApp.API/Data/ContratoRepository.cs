@@ -53,23 +53,22 @@ namespace ComplementApp.API.Data
                                                where c.PciId == userParams.PciId
                                                select c.Crp).ToHashSet();
 
-             var lista = (from c in _context.CDP
+             var lista = (from c in _context.DocumentoCompromiso
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where !listaCompromisosConContrato.Contains(c.Crp)
+                         where !listaCompromisosConContrato.Contains(c.NumeroDocumento)
                          where c.TerceroId == terceroId || terceroId == null
-                         where c.Instancia == (int)TipoDocumento.Compromiso
-                         where c.SaldoActual > 0
+                         where c.SaldoPorUtilizar > 0
                          where c.PciId == userParams.PciId
                          select new CDPDto()
                          {
-                             Crp = c.Crp,
+                             Crp = c.NumeroDocumento,
                              Cdp = c.Cdp,
-                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                             Objeto = c.Detalle4,
+                             Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                             Objeto = c.Observaciones,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
-                             SaldoActual = c.SaldoActual,
-                             ValorTotal = c.ValorTotal,
+                             SaldoActual = c.SaldoPorUtilizar,
+                             ValorTotal = c.ValorActual,
                              TerceroId = c.TerceroId.Value,
 
                          })
@@ -100,22 +99,21 @@ namespace ComplementApp.API.Data
         public async Task<PagedList<CDPDto>> ObtenerCompromisosConContrato(int? terceroId, UserParams userParams)
         {
             var lista = (from con in _context.Contrato
-                         join c in _context.CDP on con.Crp equals c.Crp
+                         join c in _context.DocumentoCompromiso on con.Crp equals c.NumeroDocumento
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
-                         where c.Instancia == (int)TipoDocumento.Compromiso
-                         where c.SaldoActual > 0 //Saldo Disponible
+                         where c.SaldoPorUtilizar > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          where con.PciId == userParams.PciId
                          select new CDPDto()
                          {
-                             Crp = c.Crp,
+                             Crp = c.NumeroDocumento,
                              Cdp = c.Cdp,
-                             Detalle4 = c.Detalle4.Length > 100 ? c.Detalle4.Substring(0, 100) + "..." : c.Detalle4,
-                             Objeto = c.Detalle4,
+                             Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                             Objeto = c.Observaciones,
                              NumeroIdentificacionTercero = t.NumeroIdentificacion,
                              NombreTercero = t.Nombre,
-                             SaldoActual = c.SaldoActual,
-                             ValorTotal = c.ValorTotal,
+                             SaldoActual = c.SaldoPorUtilizar,
+                             ValorTotal = c.ValorActual,
                              TerceroId = c.TerceroId.Value,
                              ContratoId = con.ContratoId,
                          })

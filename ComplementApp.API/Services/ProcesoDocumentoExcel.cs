@@ -1132,10 +1132,17 @@ namespace ComplementApp.API.Services
 
                 documento.ConceptoPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[37].ToString(), 1000);
 
-                documento.SolicitudCdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[38].ToString(), 100);
-                documento.Cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[39].ToString(), 100);
-                documento.Compromisos = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[40].ToString(), 100);
-                documento.CuentasXPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[41].ToString(), 100);
+                var solicitudCdp=this.ObtenerCadenaLimitada((row as DataRow).ItemArray[38].ToString(), 100);
+                documento.SolicitudCdp = !string.IsNullOrEmpty(solicitudCdp)? long.Parse(solicitudCdp):0;
+
+                var cdp = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[39].ToString(), 100);
+                documento.Cdp =  !string.IsNullOrEmpty(cdp)? long.Parse(cdp):0;
+
+                var compromiso = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[40].ToString(), 100);
+                documento.Compromiso = !string.IsNullOrEmpty(compromiso)? long.Parse(compromiso):0;
+
+                var cuentasXPagar = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[41].ToString(), 100);
+                documento.CuentasXPagar = !string.IsNullOrEmpty(cuentasXPagar)? long.Parse(cuentasXPagar):0;
 
                 //FechaCuentaXPagar
                 if (!(row as DataRow).ItemArray[42].ToString().Equals(string.Empty))
@@ -1143,7 +1150,10 @@ namespace ComplementApp.API.Services
                         documento.FechaCuentaXPagar = fecha;
 
                 documento.Obligaciones = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[43].ToString(), 100);
-                documento.OrdenesPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[44].ToString(), 100);
+
+                var ordenPago = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[44].ToString(), 100);
+                documento.OrdenPago = !string.IsNullOrEmpty(ordenPago)?long.Parse(ordenPago):0;
+                
                 documento.Reintegros = this.ObtenerCadenaLimitada((row as DataRow).ItemArray[45].ToString(), 100);
 
                 //FechaDocumentoSoporte

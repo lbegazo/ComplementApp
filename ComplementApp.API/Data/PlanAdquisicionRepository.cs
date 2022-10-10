@@ -36,20 +36,19 @@ namespace ComplementApp.API.Data
                     usuarioIdFiltro = usuarioId;
                 }
 
-                var listaCdp = (from c in _context.CDP
+                var listaCdp = (from c in _context.DocumentoCompromiso
                                 where c.PciId == pciId
-                                where c.Instancia == (int)TipoDocumento.Compromiso
                                 group c by new
                                 {
-                                    c.Crp,
-                                    c.Detalle4,
-                                    c.SaldoActual
+                                    c.NumeroDocumento,
+                                    c.Observaciones,
+                                    c.SaldoPorUtilizar
                                 } into g
                                 select new CDP
                                 {
-                                    Crp = g.Key.Crp,
-                                    Detalle4 = g.Key.Detalle4,
-                                    SaldoActual = g.Key.SaldoActual,
+                                    Crp = g.Key.NumeroDocumento,
+                                    Detalle4 = g.Key.Observaciones,
+                                    SaldoActual = g.Key.SaldoPorUtilizar,
                                 }).OrderBy(t => t.Crp);
 
                 lista = await ((from d in _context.PlanAdquisicion
@@ -148,7 +147,7 @@ namespace ComplementApp.API.Data
             var lista = (from d in _context.PlanAdquisicion
                          join i in _context.RubroPresupuestal on d.RubroPresupuestalId equals i.RubroPresupuestalId
                          join dec in _context.RubroPresupuestal on d.DecretoId equals dec.RubroPresupuestalId
-                         join c in _context.CDP on d.Cdp equals c.Cdp
+                         join c in _context.DocumentoCdp on d.Cdp equals c.NumeroDocumento
                          join u in _context.Usuario on d.UsuarioId equals u.UsuarioId
                          join ag in _context.ActividadGeneral on new { d.ActividadGeneralId } equals new { ag.ActividadGeneralId } into ActividadGeneralDetalle
                          from acGe in ActividadGeneralDetalle.DefaultIfEmpty()
@@ -163,8 +162,7 @@ namespace ComplementApp.API.Data
                          where c.PciId == acGe.PciId
                          where c.PciId == acEs.PciId
                          where c.PciId == u.PciId
-                         where d.RubroPresupuestalId == c.RubroPresupuestalId
-                         where c.Instancia == (int)TipoDocumento.Cdp
+                         where i.Identificacion == c.IdentificacionRubroPresupuestal
                          where d.UsuarioId == usuarioId
                          where d.Cdp == numeroCdp
                          select new DetalleCDPDto()
@@ -180,8 +178,8 @@ namespace ComplementApp.API.Data
                              PlanDeCompras = d.PlanDeCompras,
                              Responsable = u.Nombres + ' ' + u.Apellidos,
                              Dependencia = de.Nombre,
-                             ValorCDP = c.ValorTotal,
-                             SaldoCDP = c.SaldoActual,
+                             ValorCDP = c.ValorActual,
+                             SaldoCDP = c.SaldoPorComprometer,
                              ValorAct = d.ValorAct,
                              SaldoAct = d.SaldoAct,
                              ValorRP = d.ValorRP,

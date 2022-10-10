@@ -128,12 +128,11 @@ namespace ComplementApp.API.Data
                                                     select plt.TerceroId).ToHashSet();
 
                 lista = (from t in _context.Tercero
-                         join c in _context.CDP on t.TerceroId equals c.TerceroId
+                         join c in _context.DocumentoCompromiso on t.TerceroId equals c.TerceroId
                          join ti in _context.TipoDocumentoIdentidad on t.TipoIdentificacion equals ti.TipoDocumentoIdentidadId
                          where !terceroConParametrizacionIds.Contains(t.TerceroId)
                          where c.PciId == userParams.PciId
-                         where c.Instancia == (int)TipoDocumento.Compromiso
-                         where c.SaldoActual > 0 //Saldo Disponible
+                         where c.SaldoPorUtilizar > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          select new TerceroDto()
                          {

@@ -134,25 +134,20 @@ namespace ComplementApp.API.Models.ExcelDocumento
         [Column(TypeName = "VARCHAR(1000)")]
         public string ConceptoPago { get; set; }
 
-        [Column(TypeName = "VARCHAR(100)")]
-        public string SolicitudCdp { get; set; }
+        public long SolicitudCdp { get; set; }
 
-        [Column(TypeName = "VARCHAR(100)")]
-        public string Cdp { get; set; }
+        public long Cdp { get; set; }
 
-        [Column(TypeName = "VARCHAR(100)")]
-        public string Compromisos { get; set; }
+        public long Compromiso { get; set; }
 
-        [Column(TypeName = "VARCHAR(100)")]
-        public string CuentasXPagar { get; set; }
+        public long CuentasXPagar { get; set; }
 
         public DateTime FechaCuentaXPagar { get; set; }
 
         [Column(TypeName = "VARCHAR(100)")]
         public string Obligaciones { get; set; }
 
-        [Column(TypeName = "VARCHAR(100)")]
-        public string OrdenesPago { get; set; }
+        public long OrdenPago { get; set; }
 
         [Column(TypeName = "VARCHAR(100)")]
         public string Reintegros { get; set; }

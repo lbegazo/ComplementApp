@@ -36,7 +36,6 @@ namespace ComplementApp.API.Data
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where !listaCompromisos.Contains(c.NumeroDocumento)
                          where c.PciId == userParams.PciId
-                         //where c.Instancia == (int)TipoDocumento.Compromiso
                          where c.SaldoPorUtilizar > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
                          select new CDPDto()
@@ -57,7 +56,6 @@ namespace ComplementApp.API.Data
                          join c in _context.DocumentoCompromiso on cla.Crp equals c.NumeroDocumento
                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
                          where cla.PciId == c.PciId
-                         //where c.Instancia == (int)TipoDocumento.Compromiso
                          where cla.PciId == userParams.PciId
                          where c.SaldoPorUtilizar > 0 //Saldo Disponible
                          where c.TerceroId == terceroId || terceroId == null
@@ -91,7 +89,6 @@ namespace ComplementApp.API.Data
                          from atrCon in AtributoContable.DefaultIfEmpty()
                          join up in _context.UsoPresupuestal on cla.UsoPresupuestalId equals up.UsoPresupuestalId into UsoPresupuestal
                          from usoPre in UsoPresupuestal.DefaultIfEmpty()
-                         //where c.Instancia == (int)TipoDocumento.Compromiso
                          where cla.PciId == c.PciId
                          where cla.PciId == rc.PciId
                          where cla.PciId == usoPre.PciId
@@ -151,7 +148,6 @@ namespace ComplementApp.API.Data
                                   join ff in _context.FuenteFinanciacion on c.FuenteFinanciacion equals ff.Nombre
                                   join r in _context.RecursoPresupuestal on c.RecursoPresupuestal.ToUpper() equals r.Nombre.ToUpper()
                                   where c.NumeroDocumento == crp
-                                  //where c.Instancia == (int)TipoDocumento.Compromiso
                                   where c.PciId == pciId
                                   select new ClavePresupuestalContableDto()
                                   {
@@ -212,13 +208,11 @@ namespace ComplementApp.API.Data
                                   from usoPre in UsoPresupuestal.DefaultIfEmpty()
                                   where cla.Crp == crp
                                   where rp.RubroPresupuestalId == c.RubroPresupuestalId
-                                  //where c.Instancia == (int)TipoDocumento.Compromiso
                                   where cla.Crp == c.NumeroDocumento
                                   where cla.Dependencia == c.Dependencia
                                   where cla.PciId == c.PciId   
                                   where cla.PciId == rc.PciId 
-                                  where cla.PciId == pciId
-                                  
+                                  where cla.PciId == pciId                                  
 
                                   select new ClavePresupuestalContableDto()
                                   {
