@@ -226,7 +226,7 @@ namespace ComplementApp.API.Data
                                           Id = rp.RubroPresupuestalId,
                                           Codigo = rp.Identificacion,
                                           Nombre = rp.Nombre,
-                                          Valor = rp.PadreContableId.HasValue ? rp.PadreContableId.Value.ToString() : string.Empty
+                                          Valor = rp.PadreContableId>0 ? rp.PadreContableId.ToString() : string.Empty
                                       },
                                       Tercero = new ValorSeleccion()
                                       {
