@@ -145,6 +145,10 @@ import { TramitePagoModule } from './tramite-pago/tramite-pago.module';
 import { GeneradorArchivosModule } from './generador-archivos/generador-archivos.module';
 import { ListaTipoArchivoResolver } from './_resolvers/lista-TipoArchivo.resolver';
 import { PopupUsoRelacionContableComponent } from './administracion/clave-presupuestal-contable/clave-presupuestal-contable-edit/popup-uso-relacion-contable/popup-uso-relacion-contable.component';
+import { SeguimientoMetasAusteridadComponent } from './reporte/seguimiento-metas-austeridad/seguimiento-metas-austeridad.component';
+import { DiasPromedioComponent } from './reporte/dias-promedio/dias-promedio.component';
+// tslint:disable-next-line: max-line-length
+import { ConsultaEjecucionPresupuestalComponent } from './reporte/consulta-ejecucion-presupuestal/consulta-ejecucion-presupuestal.component';
 
 defineLocale('es', esLocale);
 registerLocaleData(localeEsCo, 'es-Co');
@@ -232,6 +236,10 @@ export function tokenGetter() {
     GraficoTestComponent,
     MetaEjecucionPresupuestalComponent,
     PopupUsoRelacionContableComponent,
+    SeguimientoMetasAusteridadComponent,
+    EjecucionPresupuestalComponent,
+    DiasPromedioComponent,
+    ConsultaEjecucionPresupuestalComponent
   ],
   imports: [
     BrowserModule,

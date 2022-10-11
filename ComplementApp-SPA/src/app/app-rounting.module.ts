@@ -57,6 +57,10 @@ import { AdministracionArchivosComponent } from './generador-archivos/administra
 import { ListaTipoArchivoResolver } from './_resolvers/lista-TipoArchivo.resolver';
 import { AprobacionSolicitudPagoComponent } from './tramite-pago/aprobacion-solicitud-pago/aprobacion-solicitud-pago.component';
 import { RegistroSolicitudPagoComponent } from './tramite-pago/registro-solicitud-pago/registro-solicitud-pago.component';
+import { SeguimientoMetasAusteridadComponent } from './reporte/seguimiento-metas-austeridad/seguimiento-metas-austeridad.component';
+import { DiasPromedioComponent } from './reporte/dias-promedio/dias-promedio.component';
+// tslint:disable-next-line: max-line-length
+import { ConsultaEjecucionPresupuestalComponent } from './reporte/consulta-ejecucion-presupuestal/consulta-ejecucion-presupuestal.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -353,6 +357,36 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     component: MetaEjecucionPresupuestalComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_AUSTERIDADGASTO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: SeguimientoMetasAusteridadComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_EJECUCIONPRESUPUESTAL',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: ConsultaEjecucionPresupuestalComponent,
+    resolve: {
+      transaccion: TransaccionResolver,
+      usuarioLogueado: UsuarioDetalleResolver,
+    },
+  },
+  {
+    path: 'CONSULTAS_DIASPROMEDIO',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    component: DiasPromedioComponent,
     resolve: {
       transaccion: TransaccionResolver,
       usuarioLogueado: UsuarioDetalleResolver,

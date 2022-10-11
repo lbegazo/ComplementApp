@@ -260,12 +260,36 @@ namespace ComplementApp.API.Data
             }
             else
             {
-                lista = (from c in _context.DocumentoCdp
-                         //join t in _context.Tercero on c.TerceroId equals t.TerceroId into TerceroCdp
-                         //from terceroCdp in TerceroCdp.DefaultIfEmpty()
+                if (instancia==3)
+                {
+                    lista = (from c in _context.DocumentoCdp
                          where c.NumeroDocumento== cdp
                          where c.PciId == userParams.PciId
-                         //where c.Instancia == instancia
+                         select new CDPDto()
+                         {
+                             Fecha = c.FechaRegistro,
+                             FechaFormato = c.FechaRegistro.ToString(),
+                             Cdp = c.NumeroDocumento,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.ValorOperacion,
+                             ValorTotal = c.ValorActual,
+                             SaldoActual = c.SaldoPorComprometer,
+                             Detalle1 = c.Estado,
+                             Detalle4 = c.Objeto,
+                             Detalle7 = c.Dependencia
+                         })
+                            .Distinct()
+                            .AsQueryable();
+
+                }
+                else if (instancia==4)
+                {
+                    lista = (from c in _context.DocumentoCompromiso
+                          join cd in _context.DocumentoCdp on c.Cdp equals cd.NumeroDocumento
+                          join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                         where cd.NumeroDocumento== cdp
+                         where c.PciId == userParams.PciId
+                         where c.PciId == cd.PciId
                          select new CDPDto()
                          {
                              Fecha = c.FechaRegistro,
@@ -277,17 +301,82 @@ namespace ComplementApp.API.Data
                              ValorInicial = c.ValorInicial,
                              Operacion = c.ValorOperacion,
                              ValorTotal = c.ValorActual,
-                             SaldoActual = c.SaldoPorComprometer,
+                             SaldoActual = c.SaldoPorUtilizar,
                              Detalle1 = c.Estado,
-                             Detalle4 = c.Objeto,
-                             //NumeroIdentificacionTercero = c.TerceroId > 0 ? terceroCdp.NumeroIdentificacion : string.Empty,
-                             //NombreTercero = c.TerceroId > 0 ? terceroCdp.Nombre : string.Empty,
-                            //  NumeroDocumento = (instancia == (int)TipoDocumento.Compromiso ? c.Crp :
-                            //                     (instancia == (int)TipoDocumento.Obligacion ? c.Obligacion :
-                            //                     (instancia == (int)TipoDocumento.OrdenPago ? c.OrdenPago : 0)))
+                             Detalle4 = c.Observaciones,
+                             Detalle7 = c.Dependencia,
+                             NumeroIdentificacionTercero = c.TerceroId > 0 ? t.NumeroIdentificacion : string.Empty,
+                             NombreTercero = c.TerceroId > 0 ? t.Nombre : string.Empty,
+                             NumeroDocumento = c.NumeroDocumento
                          })
                             .Distinct()
                             .AsQueryable();
+
+                }
+                else if (instancia==5)
+                {
+                    lista = (from c in _context.DocumentoObligacion
+                            join co in _context.DocumentoCompromiso on c.Compromisos equals co.NumeroDocumento.ToString()
+                            join cd in _context.DocumentoCdp on co.Cdp equals cd.NumeroDocumento
+                            join t in _context.Tercero on co.TerceroId equals t.TerceroId
+                            where cd.NumeroDocumento == cdp
+                            where c.PciId == userParams.PciId
+                            where co.PciId == cd.PciId
+                         select new CDPDto()
+                         {
+                             Fecha = c.FechaRegistro,
+                             FechaFormato = c.FechaRegistro.ToString(),
+                             Cdp = c.NumeroDocumento,
+                             //Crp = c.Compromisos,
+                             //Obligacion = c.Obligaciones,
+                             //OrdenPago = c.OrdenesPago,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.ValorOperacion,
+                             ValorTotal = c.ValorActual,
+                             SaldoActual = c.SaldoPorUtilizar,
+                             Detalle1 = c.Estado,
+                             Detalle4 = c.Concepto,
+                             Detalle7 = c.Dependencia,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             NumeroDocumento = c.NumeroDocumento
+                         })
+                            .Distinct()
+                            .AsQueryable();
+                }
+                else if (instancia==6)
+                {
+                    lista = (from c in _context.DocumentoOrdenPago
+                            join co in _context.DocumentoCompromiso on c.Compromiso equals co.NumeroDocumento
+                            join cd in _context.DocumentoCdp on co.Cdp equals cd.NumeroDocumento
+                            join t in _context.Tercero on co.TerceroId equals t.TerceroId
+                            where cd.NumeroDocumento== cdp
+                            where c.PciId == userParams.PciId
+                            where co.PciId == cd.PciId
+                         select new CDPDto()
+                         {
+                             Fecha = c.FechaRegistro,
+                             FechaFormato = c.FechaRegistro.ToString(),
+                             Cdp = c.NumeroDocumento,
+                             //Crp = c.Compromisos,
+                             //Obligacion = c.Obligaciones,
+                             //OrdenPago = c.OrdenesPago,
+                             ValorInicial = c.ValorBruto,
+                             Operacion = c.ValorDeduccion,
+                             ValorTotal = c.ValorNeto,
+                             SaldoActual = 0,
+                             Detalle1 = c.Estado,
+                             Detalle4 = c.ConceptoPago,
+                             Detalle7 = c.Dependencia,
+                             NumeroIdentificacionTercero = t.NumeroIdentificacion,
+                             NombreTercero = t.Nombre,
+                             NumeroDocumento = c.NumeroDocumento
+                         })
+                            .Distinct()
+                            .AsQueryable();
+               }
+                
+                
             }
             return await PagedList<CDPDto>.CreateAsync(lista, userParams.PageNumber, userParams.PageSize);
         }

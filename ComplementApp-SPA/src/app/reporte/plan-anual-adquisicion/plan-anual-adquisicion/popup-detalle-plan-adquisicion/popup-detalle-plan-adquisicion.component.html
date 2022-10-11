@@ -19,10 +19,13 @@
               <div style="width: 7%" class="inner aplicaBackground center">
                 <label class="col-form-label fontMedium"><strong>NUM.</strong></label>
               </div>
-              <div style="width: 14%" class="inner aplicaBackground center">
+              <div style="width: 10%" class="inner aplicaBackground center">
                 <label class="col-form-label fontMedium"><strong>ESTADO</strong></label>
               </div>
-              <div style="width: 10%" class="inner aplicaBackground center">
+              <div style="width: 6%" class="inner aplicaBackground center">
+                <label class="col-form-label fontMedium"><strong>DEPEND.</strong></label>
+              </div>
+              <div style="width: 8%" class="inner aplicaBackground center">
                 <label class="col-form-label fontMedium"><strong>FECHA</strong></label>
               </div>
               <div style="width: 10%" class="inner aplicaBackground center">
@@ -53,12 +56,17 @@
                       {{ item?.numeroDocumento }}
                     </p>
                   </div>
-                  <div style="width: 14%" class="inner center">
+                  <div style="width: 10%" class="inner center">
                     <p class="fontSmaller">
                       {{ item?.detalle1 }}
                     </p>
                   </div>
-                  <div style="width: 10%" class="inner center">
+                  <div style="width: 6%" class="inner center">
+                    <p class="fontSmaller">
+                      {{ item?.detalle7 }}
+                    </p>
+                  </div>
+                  <div style="width: 8%" class="inner center">
                     <p class="fontSmaller">
                       {{ item?.fecha | date: "yyyy/MM/dd" }}
                     </p>

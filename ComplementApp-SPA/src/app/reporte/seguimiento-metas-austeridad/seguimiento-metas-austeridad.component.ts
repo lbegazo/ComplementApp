@@ -1,0 +1,32 @@
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Transaccion } from 'src/app/_models/transaccion';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+
+@Component({
+  selector: 'app-seguimiento-metas-austeridad',
+  templateUrl: './seguimiento-metas-austeridad.component.html',
+  styleUrls: ['./seguimiento-metas-austeridad.component.css']
+})
+export class SeguimientoMetasAusteridadComponent implements OnInit {
+
+  transaccion: Transaccion;
+  nombreTransaccion: string;
+
+  constructor(
+    private http: HttpClient,
+    private alertify: AlertifyService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    this.route.data.subscribe((data) => {
+      this.transaccion = data['transaccion'];
+      if (this.transaccion) {
+        this.nombreTransaccion = this.transaccion.nombre;
+      }
+    });
+  }
+
+}

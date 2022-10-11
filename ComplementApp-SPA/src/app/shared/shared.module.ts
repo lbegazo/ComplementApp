@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     DecimalDirective,
     SpecialCharacterDirective,
-    FormatoLiquidacionComponent,
+    FormatoLiquidacionComponent
   ],
   imports: [CommonModule, BrowserModule, FormsModule, ReactiveFormsModule],
   exports: [DecimalDirective, SpecialCharacterDirective, FormatoLiquidacionComponent],
