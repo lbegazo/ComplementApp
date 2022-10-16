@@ -15,7 +15,7 @@ namespace ComplementApp.API.Data
         public static void CargarDataInicial(DataContext context)
         {
             // SeedPosicionPac(context);
-            SeedParametroSistema(context);
+            //SeedParametroSistema(context);
             //SeedTransaccion(context);
             // SeedPci(context);
 
@@ -25,7 +25,7 @@ namespace ComplementApp.API.Data
             // SeedArea(context);
             // SeedTipoOperacion(context);
             // SeedTipoDetalleModificacion(context);
-            // SeedEstado(context);
+            //SeedEstado(context);
             // SeedTercero(context);
             // SeedActividadGeneral(context);
             // SeedUsoPresupuestal(context);
@@ -61,6 +61,7 @@ namespace ComplementApp.API.Data
             // SeedTipoDocumentoIdentidad(context);
 
             // SeedTipoAdminPila(context);
+            SeedModalidadSeleccion(context);
         }
 
         private static void SeedPosicionPac(DataContext context)
@@ -1258,7 +1259,29 @@ namespace ComplementApp.API.Data
             return clearText;
         }
 
+        private static void SeedModalidadSeleccion(DataContext context)
+        {
+            ModalidadSeleccion valor = null;
+            List<ModalidadSeleccion> lista = new List<ModalidadSeleccion>();
 
+            if (!context.ModalidadSeleccion.Any())
+            {
+                if (File.Exists("Data/SeedFiles/_ModalidadSeleccion.json"))
+                {
+                    var data = File.ReadAllText("Data/SeedFiles/_ModalidadSeleccion.json");
+                    var items = JsonConvert.DeserializeObject<List<ModalidadSeleccion>>(data);
+                    var items2 = items.OrderBy(x => x.Codigo);
+                    foreach (var item in items2)
+                    {
+                        valor = new ModalidadSeleccion();
+                        valor.Nombre = item.Nombre;
+                        valor.Codigo = item.Codigo;
+                        context.ModalidadSeleccion.Add(valor);
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
 
     }
 }

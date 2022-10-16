@@ -6,6 +6,10 @@ namespace ComplementApp.API.Models
     [Table("TPci")]
     public class Pci
     {
+        public Pci()
+        {
+            EsNivelCentral=false;
+        }
         public int PciId { get; set; }
 
         [Required]
@@ -21,5 +25,7 @@ namespace ComplementApp.API.Models
 
         [Column(TypeName = "VARCHAR(100)")]
         public string Nit { get; set; }
+
+        public bool EsNivelCentral { get; set; }
     }
 }

@@ -116,6 +116,11 @@ namespace ComplementApp.API.Data
         public DbSet<DocumentoCompromiso> DocumentoCompromiso { get; set; }
         public DbSet<DocumentoObligacion> DocumentoObligacion { get; set; }
         public DbSet<DocumentoOrdenPago> DocumentoOrdenPago { get; set; }
+        public DbSet<ModalidadSeleccion> ModalidadSeleccion { get; set; }
+        public DbSet<DecretoFuturo> DecretoFuturo { get; set; }
+        public DbSet<DetalleDecretoFuturo> DetalleDecretoFuturo { get; set; }
+        public DbSet<PresupuestoFuturo> PresupuestoFuturo { get; set; }
+        public DbSet<DetallePresupuestoFuturo> DetallePresupuestoFuturo { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

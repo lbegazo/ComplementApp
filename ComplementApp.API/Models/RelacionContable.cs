@@ -6,6 +6,10 @@ namespace ComplementApp.API.Models
     [Table("TRelacionContable")]
     public class RelacionContable
     {
+        public RelacionContable()
+        {
+            Estado=false;
+        }
         public int RelacionContableId { get; set; }
 
         public int? RubroPresupuestalId { get; set; }
@@ -26,6 +30,6 @@ namespace ComplementApp.API.Models
         public int? UsoContable { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
-        public bool Estado { get; set; }
+        public bool Estado { get; set; } 
     }
 }

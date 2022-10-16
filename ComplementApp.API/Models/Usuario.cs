@@ -42,5 +42,9 @@ namespace ComplementApp.API.Models
         public ICollection<UsuarioPerfil> UsuarioPerfiles { get; set; }
         public int? PciId { get; set; }
         public Pci Pci { get; set; }
+
+        [Column(TypeName = "VARCHAR(15)")]
+        public string Telefono { get; set; }
+        
     }
 }

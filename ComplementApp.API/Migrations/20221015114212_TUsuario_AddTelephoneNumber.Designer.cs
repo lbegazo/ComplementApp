@@ -4,6 +4,7 @@ using ComplementApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComplementApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221015114212_TUsuario_AddTelephoneNumber")]
+    partial class TUsuario_AddTelephoneNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -654,50 +656,6 @@ namespace ComplementApp.API.Migrations
                     b.ToTable("TCuentaContable");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.DecretoFuturo", b =>
-                {
-                    b.Property<int>("DecretoFuturoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecretoFuturoId"), 1L, 1);
-
-                    b.Property<int?>("Anio")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ApropiacionDisponible")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ApropiacionVigente")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<int?>("FuenteFinanciacionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RecursoPresupuestalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RubroPresupuestalId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("SaldoProgramado")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<int?>("SituacionFondoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DecretoFuturoId");
-
-                    b.HasIndex("PciId");
-
-                    b.HasIndex("RubroPresupuestalId");
-
-                    b.ToTable("TDecretoFuturo");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.Deduccion", b =>
                 {
                     b.Property<int>("DeduccionId")
@@ -783,43 +741,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("DetalleLiquidacionId");
 
                     b.ToTable("TDetalleArchivoLiquidacion");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.DetalleDecretoFuturo", b =>
-                {
-                    b.Property<int>("DetalleDecretoFuturoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleDecretoFuturoId"), 1L, 1);
-
-                    b.Property<int>("DecretoFuturoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("VARCHAR(250)");
-
-                    b.Property<int?>("PciId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RubroPresupuestalId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("SaldoPorProgramar")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorApropiacionVigente")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.HasKey("DetalleDecretoFuturoId");
-
-                    b.HasIndex("DecretoFuturoId");
-
-                    b.HasIndex("PciId");
-
-                    b.HasIndex("RubroPresupuestalId");
-
-                    b.ToTable("TIndicador");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
@@ -1086,32 +1007,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("PlanPagoId");
 
                     b.ToTable("TDetalleLiquidacion");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.DetallePresupuestoFuturo", b =>
-                {
-                    b.Property<int>("DetallePresupuestoFuturoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetallePresupuestoFuturoId"), 1L, 1);
-
-                    b.Property<int>("DecretoFuturoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PresupuestoFuturoId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ValorDecretoFuturo")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.HasKey("DetallePresupuestoFuturoId");
-
-                    b.HasIndex("DecretoFuturoId");
-
-                    b.HasIndex("PresupuestoFuturoId");
-
-                    b.ToTable("TDetallePresupuestoFuturo");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleSolicitudCDP", b =>
@@ -1896,27 +1791,6 @@ namespace ComplementApp.API.Migrations
                     b.ToTable("TLiquidacionDeduccion");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.ModalidadSeleccion", b =>
-                {
-                    b.Property<int>("ModalidadSeleccionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModalidadSeleccionId"), 1L, 1);
-
-                    b.Property<string>("Codigo")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(10)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(250)");
-
-                    b.HasKey("ModalidadSeleccionId");
-
-                    b.ToTable("TModalidadSeleccion");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.NivelAgrupacionPac", b =>
                 {
                     b.Property<int>("NivelAgrupacionPacId")
@@ -2598,115 +2472,6 @@ namespace ComplementApp.API.Migrations
                     b.HasIndex("TerceroId");
 
                     b.ToTable("TPlanPago");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.PresupuestoFuturo", b =>
-                {
-                    b.Property<int>("PresupuestoFuturoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PresupuestoFuturoId"), 1L, 1);
-
-                    b.Property<string>("CodigoUNSPSC")
-                        .HasColumnType("VARCHAR(8000)");
-
-                    b.Property<int>("DependenciaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("VARCHAR(8000)");
-
-                    b.Property<int>("DuracionContrato")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("EsSuministroBYS")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("EstadoActividadPAAId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstadoVigenciaFuturaId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaEstimadaContratacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaRegistro")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FuenteFinanciacionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MesInicio")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MesOferta")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModalidadSeleccionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Observaciones")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PciId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("SaldoActual")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<bool>("SeAplicaLey")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("SeRequiereVigenciaFutura")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Ubicacion")
-                        .HasColumnType("VARCHAR(100)");
-
-                    b.Property<string>("UnidadContratacion")
-                        .HasColumnType("VARCHAR(100)");
-
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioModificacionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioRegistroId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioResponsableId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ValorActual")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorTotal")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.Property<decimal>("ValorVigenciaFutura")
-                        .HasColumnType("decimal(30,8)");
-
-                    b.HasKey("PresupuestoFuturoId");
-
-                    b.HasIndex("DependenciaId");
-
-                    b.HasIndex("FuenteFinanciacionId");
-
-                    b.HasIndex("ModalidadSeleccionId");
-
-                    b.HasIndex("PciId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.HasIndex("UsuarioResponsableId");
-
-                    b.ToTable("TPresupuestoFuturo");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.RecursoPresupuestal", b =>
@@ -3656,21 +3421,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Pci");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.DecretoFuturo", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
-                    b.HasOne("ComplementApp.API.Models.RubroPresupuestal", "RubroPresupuestal")
-                        .WithMany()
-                        .HasForeignKey("RubroPresupuestalId");
-
-                    b.Navigation("Pci");
-
-                    b.Navigation("RubroPresupuestal");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.Deduccion", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.Tercero", "Tercero")
@@ -3724,29 +3474,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("DetalleLiquidacion");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.DetalleDecretoFuturo", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.DecretoFuturo", "DecretoFuturo")
-                        .WithMany("DetalleDecretoFuturo")
-                        .HasForeignKey("DecretoFuturoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId");
-
-                    b.HasOne("ComplementApp.API.Models.RubroPresupuestal", "RubroPresupuestal")
-                        .WithMany()
-                        .HasForeignKey("RubroPresupuestalId");
-
-                    b.Navigation("DecretoFuturo");
-
-                    b.Navigation("Pci");
-
-                    b.Navigation("RubroPresupuestal");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.DetalleFormatoSolicitudPago", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.ClavePresupuestalContable", "ClavePresupuestalContable")
@@ -3793,25 +3520,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Pci");
 
                     b.Navigation("PlanPago");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.DetallePresupuestoFuturo", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.DecretoFuturo", "DecretoFuturo")
-                        .WithMany()
-                        .HasForeignKey("DecretoFuturoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.PresupuestoFuturo", "PresupuestoFuturo")
-                        .WithMany("DetallePresupuestoFuturo")
-                        .HasForeignKey("PresupuestoFuturoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DecretoFuturo");
-
-                    b.Navigation("PresupuestoFuturo");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.DetalleSolicitudCDP", b =>
@@ -4083,55 +3791,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("Tercero");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.PresupuestoFuturo", b =>
-                {
-                    b.HasOne("ComplementApp.API.Models.Dependencia", "Dependencia")
-                        .WithMany()
-                        .HasForeignKey("DependenciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.FuenteFinanciacion", "FuenteFinanciacion")
-                        .WithMany()
-                        .HasForeignKey("FuenteFinanciacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.ModalidadSeleccion", "ModalidadSeleccion")
-                        .WithMany()
-                        .HasForeignKey("ModalidadSeleccionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.Pci", "Pci")
-                        .WithMany()
-                        .HasForeignKey("PciId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComplementApp.API.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
-
-                    b.HasOne("ComplementApp.API.Models.Usuario", "UsuarioResponsable")
-                        .WithMany()
-                        .HasForeignKey("UsuarioResponsableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dependencia");
-
-                    b.Navigation("FuenteFinanciacion");
-
-                    b.Navigation("ModalidadSeleccion");
-
-                    b.Navigation("Pci");
-
-                    b.Navigation("Usuario");
-
-                    b.Navigation("UsuarioResponsable");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.RelacionContable", b =>
                 {
                     b.HasOne("ComplementApp.API.Models.AtributoContable", "AtributoContable")
@@ -4293,11 +3952,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("DetalleArchivo");
                 });
 
-            modelBuilder.Entity("ComplementApp.API.Models.DecretoFuturo", b =>
-                {
-                    b.Navigation("DetalleDecretoFuturo");
-                });
-
             modelBuilder.Entity("ComplementApp.API.Models.Deduccion", b =>
                 {
                     b.Navigation("DeduccionesXTercero");
@@ -4320,11 +3974,6 @@ namespace ComplementApp.API.Migrations
                     b.Navigation("PerfilTransacciones");
 
                     b.Navigation("UsuarioPerfiles");
-                });
-
-            modelBuilder.Entity("ComplementApp.API.Models.PresupuestoFuturo", b =>
-                {
-                    b.Navigation("DetallePresupuestoFuturo");
                 });
 
             modelBuilder.Entity("ComplementApp.API.Models.SolicitudCDP", b =>

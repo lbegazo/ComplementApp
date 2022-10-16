@@ -128,5 +128,45 @@
     "Nombre": "Rechazado",
     "Descripcion": "Rechazado",
     "TipoDocumento": "DetalleLiquidacion"
+  },
+  {
+    "Nombre": "Solicitada",
+    "Descripcion": "Solicitada",
+    "TipoDocumento": "VigenciaFutura"
+  },
+  {
+    "Nombre": "NoSolicitada",
+    "Descripcion": "NoSolicitada",
+    "TipoDocumento": "VigenciaFutura"
+  },
+  {
+    "Nombre": "Registrada",
+    "Descripcion": "Registrada",
+    "TipoDocumento": "ActividadPAA"
+  },
+  {
+    "Nombre": "Verificada",
+    "Descripcion": "Verificada",
+    "TipoDocumento": "ActividadPAA"
+  },
+  {
+    "Nombre": "Aprobada",
+    "Descripcion": "Aprobada",
+    "TipoDocumento": "ActividadPAA"
+  },
+  {
+    "Nombre": "Rechazada",
+    "Descripcion": "Rechazada",
+    "TipoDocumento": "ActividadPAA"
+  },
+  {
+    "Nombre": "Anulada",
+    "Descripcion": "Anulada",
+    "TipoDocumento": "ActividadPAA"
+  },
+  {
+    "Nombre": "Reducida",
+    "Descripcion": "Reducida",
+    "TipoDocumento": "ActividadPAA"
   }
 ]

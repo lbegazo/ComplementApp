@@ -1,0 +1,38 @@
+[
+    {
+      "Codigo": "CCE-16",
+      "Nombre": "Directa"
+    },
+    {
+        "Codigo": "CCE-04",
+        "Nombre": "Prestacion Servicios"
+    },
+    {
+    "Codigo": "CCE-10",
+    "Nombre": "Licitacion"
+    },
+    {
+        "Codigo": "CCE-06",
+        "Nombre": "Servicio Publico"
+    },
+    {
+    "Codigo": "CCE-07",
+    "Nombre": "Interadministrativo"
+    },
+    {
+        "Codigo": "CCE-05",
+        "Nombre": "Bolsa Mecantil"
+    },
+    {
+    "Codigo": "CCE-99",
+    "Nombre": "Vivieres"
+    },
+    {
+        "Codigo": "CCE-02",
+        "Nombre": "Mantenimiento"
+    },
+    {
+        "Codigo": "CCE-11",
+        "Nombre": "Aseo"
+    }
+]
