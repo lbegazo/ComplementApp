@@ -121,6 +121,8 @@ namespace ComplementApp.API.Data
         public DbSet<DetalleDecretoFuturo> DetalleDecretoFuturo { get; set; }
         public DbSet<PresupuestoFuturo> PresupuestoFuturo { get; set; }
         public DbSet<DetallePresupuestoFuturo> DetallePresupuestoFuturo { get; set; }
+        public DbSet<PresupuestoFuturoHistorico> PresupuestoFuturoHistorico { get; set; }
+        public DbSet<DetallePresupuestoFuturoHistorico> DetallePresupuestoFuturoHistorico { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsuarioPerfil>()

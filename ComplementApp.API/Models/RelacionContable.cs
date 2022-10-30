@@ -8,7 +8,7 @@ namespace ComplementApp.API.Models
     {
         public RelacionContable()
         {
-            Estado=false;
+            Estado=true;
         }
         public int RelacionContableId { get; set; }
 

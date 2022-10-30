@@ -292,27 +292,26 @@ namespace ComplementApp.API.Data
         public async Task<FormatoSolicitudPagoDto> ObtenerFormatoSolicitudPago(long crp, int pciId)
         {
             //cusba
-            var lista = (from c in _context.DocumentoOrdenPago
-                        join co in _context.DocumentoCompromiso on c.Compromiso equals co.NumeroDocumento
-                        join t in _context.Tercero on co.TerceroId equals t.TerceroId
-                        join ctro in _context.Contrato on co.NumeroDocumento equals ctro.Crp into FiltroContrato
+            var lista = (from c in _context.DocumentoCompromiso 
+                        join t in _context.Tercero on c.TerceroId equals t.TerceroId
+                        join ctro in _context.Contrato on c.NumeroDocumento equals ctro.Crp into FiltroContrato
                             from filtroContrato in FiltroContrato.DefaultIfEmpty()
                         join sup in _context.Usuario on filtroContrato.Supervisor1Id equals sup.UsuarioId into FiltroSupervisor
                             from filtroSupervisor in FiltroSupervisor.DefaultIfEmpty()                         
-                         where c.Compromiso == crp
+                         where c.NumeroDocumento == crp
                          where c.PciId == pciId
                          select new CDPDto()
                          {
                              Cdp = c.Cdp,
-                             Crp = c.Compromiso,
-                             Fecha = c.FechaPago, //Fecha compromiso
-                             Detalle4 = co.Observaciones, //objeto contrato
-                             TerceroId = co.TerceroId.Value,
-                             ValorInicial = 0 , //c.ValorInicial,
-                             Operacion = c.ValorDeduccion, //Valor adicion/reduccion
-                             ValorTotal = 0, // c.ValorTotal, //valor actual
-                             SaldoActual = 0, // c.SaldoActual, //saldo actual
-                             Detalle7 = c.NumeroDocumentoSoporteCompromiso,
+                             Crp = c.NumeroDocumento,
+                             Fecha = c.FechaRegistro, //Fecha compromiso
+                             Detalle4 = c.Observaciones, //objeto contrato
+                             TerceroId = c.TerceroId.Value,
+                             ValorInicial = c.ValorInicial,
+                             Operacion = c.ValorOperacion, //Valor adicion/reduccion
+                             ValorTotal = c.ValorActual, //valor actual
+                             SaldoActual = c.SaldoPorUtilizar, //saldo actual
+                             Detalle7 = c.TipoDocumentoSoporte,
                          });
 
             var listaAgrupada = (from i in lista

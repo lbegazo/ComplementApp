@@ -61,7 +61,7 @@ namespace ComplementApp.API.Data
             // SeedTipoDocumentoIdentidad(context);
 
             // SeedTipoAdminPila(context);
-            SeedModalidadSeleccion(context);
+            //SeedModalidadSeleccion(context);
         }
 
         private static void SeedPosicionPac(DataContext context)
