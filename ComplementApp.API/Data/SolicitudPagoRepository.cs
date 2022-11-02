@@ -48,7 +48,7 @@ namespace ComplementApp.API.Data
                              select new CDPDto()
                              {
                                  Crp = c.NumeroDocumento,
-                                 Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                                 Detalle4 = c.Observaciones.Length > 200 ? c.Observaciones.Substring(0, 200) + "..." : c.Observaciones,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
                                  TerceroId = c.TerceroId.Value,
@@ -78,7 +78,7 @@ namespace ComplementApp.API.Data
                              select new CDPDto()
                              {
                                  Crp = c.NumeroDocumento,
-                                 Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                                 Detalle4 = c.Observaciones.Length > 200 ? c.Observaciones.Substring(0, 200) + "..." : c.Observaciones,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
                                  TerceroId = c.TerceroId.Value,
@@ -102,7 +102,7 @@ namespace ComplementApp.API.Data
                              select new CDPDto()
                              {
                                  Crp = c.NumeroDocumento,
-                                 Detalle4 = c.Observaciones.Length > 100 ? c.Observaciones.Substring(0, 100) + "..." : c.Observaciones,
+                                 Detalle4 = c.Observaciones.Length > 200 ? c.Observaciones.Substring(0, 200) + "..." : c.Observaciones,
                                  NumeroIdentificacionTercero = t.NumeroIdentificacion,
                                  NombreTercero = t.Nombre,
                                  TerceroId = c.TerceroId.Value,

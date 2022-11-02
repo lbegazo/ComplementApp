@@ -146,6 +146,9 @@ namespace ComplementApp.API.Data
         {
             var listaCdp = (from c in _context.DocumentoCompromiso
                             join pp in _context.PlanPago on c.NumeroDocumento equals pp.Crp
+                            join cla in _context.ClavePresupuestalContable on new { c.NumeroDocumento, c.PciId } equals new {NumeroDocumento=cla.Crp, cla.PciId}
+                            join uso in _context.UsoPresupuestal on cla.UsoPresupuestalId equals uso.UsoPresupuestalId
+                            join rubro in _context.RubroPresupuestal on uso.RubroPresupuestalId equals rubro.RubroPresupuestalId
                             where pp.PlanPagoId == planPagoId
                             where pp.PciId == c.PciId
                             select new CDPDto
@@ -160,6 +163,8 @@ namespace ComplementApp.API.Data
                                 Operacion = c.ValorOperacion,
                                 SaldoActual = c.SaldoPorUtilizar,
                                 ValorTotal = c.ValorActual,
+                                IdentificacionRubro = rubro.Identificacion,
+                                IdentificacionUsoPresupuestal = uso.Identificacion
                             });
 
 
@@ -172,7 +177,9 @@ namespace ComplementApp.API.Data
                                    i.Detalle4,
                                    i.Detalle6,
                                    i.Detalle7,
-                                   i.Fecha
+                                   i.Fecha,
+                                   i.IdentificacionRubro,
+                                   i.IdentificacionUsoPresupuestal
                                }
                                       into grp
                                select new CDPDto()
@@ -184,6 +191,8 @@ namespace ComplementApp.API.Data
                                    Detalle6 = grp.Key.Detalle6,
                                    Detalle7 = grp.Key.Detalle7,
                                    Fecha = grp.Key.Fecha,
+                                   IdentificacionRubro= grp.Key.IdentificacionRubro,
+                                   IdentificacionUsoPresupuestal= grp.Key.IdentificacionUsoPresupuestal,
                                    Operacion = grp.Sum(i => i.Operacion),
                                    SaldoActual = grp.Sum(i => i.SaldoActual),
                                    ValorTotal = grp.Sum(i => i.ValorTotal),
@@ -246,6 +255,9 @@ namespace ComplementApp.API.Data
                               FechaFinalSolicitudPagoFormato = sol.FechaFinal.ToString("yyyy-MM-dd"),
                               IdentificacionTercero = t.NumeroIdentificacion,
                               NombreTercero = CortarTexto(t.Nombre, 30),
+
+                              IdentificacionRubroPresupuestal = c.IdentificacionRubro,
+                              IdentificacionUsoPresupuestal = c.IdentificacionUsoPresupuestal,
 
                               Usuario = (super.Nombres + ' ' + super.Apellidos).Length > 20 ? (super.Nombres + ' ' + super.Apellidos).Substring(0, 20) : (super.Nombres + ' ' + super.Apellidos),
                               Email = super.Email,

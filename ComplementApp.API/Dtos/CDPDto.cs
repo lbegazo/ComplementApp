@@ -13,6 +13,7 @@ namespace ComplementApp.API.Dtos
         public DateTime Fecha { get; set; }
         public string FechaFormato { get; set; }
         public string IdentificacionRubro { get; set; }
+        public string IdentificacionUsoPresupuestal { get; set; }
         public string NombreRubro { get; set; }
         public decimal ValorInicial { get; set; }
         public decimal Operacion { get; set; }

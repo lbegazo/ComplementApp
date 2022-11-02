@@ -174,6 +174,8 @@ namespace ComplementApp.API.Services
 
                     formato.PlanPagoId = planPagoId;
                     formato.FormatoSolicitudPagoId = solicitudPago.FormatoSolicitudPagoId;
+
+                    MapearFormatoCausacionyLiquidacionPagos(planPagoDto, formato);
                 }
             }
             catch (Exception)
@@ -280,10 +282,6 @@ namespace ComplementApp.API.Services
                 factorIncremento = criterioReteFuente.Factor;
                 tarifaCalculo = criterioReteFuente.Tarifa;
             }
-            // else
-            // {
-            //     throw new Exception($"No se pudo obtener el criterio de calculo de retención en la fuente");
-            // }
 
             if (listaDeducciones != null && listaDeducciones.Count > 0)
             {
@@ -2878,7 +2876,14 @@ namespace ComplementApp.API.Services
             return valor;
         }
 
+        private void MapearFormatoCausacionyLiquidacionPagos(DetallePlanPagoDto detallePlanPago, FormatoCausacionyLiquidacionPagos formato)
+        {            
+            formato.IdentificacionRubroPresupuestal = detallePlanPago.IdentificacionRubroPresupuestal;
+            formato.IdentificacionUsoPresupuestal = detallePlanPago.IdentificacionUsoPresupuestal;
+        }
 
         #endregion Funciones Generales
+    
+    
     }
 }

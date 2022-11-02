@@ -154,7 +154,7 @@ namespace ComplementApp.API.Controllers
                 {
                     pciId = int.Parse(valorPciId);
                 }
-                formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(solicitudPagoId, planPagoId, pciId, valorBaseGravable, actividadEconomicaId);
+            formato = await _procesoLiquidacion.ObtenerFormatoCausacionyLiquidacionPago(solicitudPagoId, planPagoId, pciId, valorBaseGravable, actividadEconomicaId);
             }
             catch (Exception)
             {
